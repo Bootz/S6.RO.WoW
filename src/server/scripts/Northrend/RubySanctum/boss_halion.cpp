@@ -295,12 +295,6 @@ struct boss_halionAI : public ScriptedAI
 				return;
 
 			damage_count += dmg;	
-				
-			if(pInstance)
-			{
-				if(pHalionTwilight->isAlive())
-					pHalionTwilight->SetHealth(pHalionTwilight->GetHealth() > dmg ? pHalionTwilight->GetHealth()-dmg : 1);
-			}
 		}
 };
 

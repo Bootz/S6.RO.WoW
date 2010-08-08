@@ -16,24 +16,24 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 */
 
-// Scripted by Lavi & Andu - WoW-Romania Team http://www.wow-romania.ro (if you use this script, do not remove this seal, no matter what other modification you apply to script).
+// Credit to Bolvor for script. Re-scripted by Lavi & Andu - WoW-Romania Team http://www.wow-romania.ro (if you use this script, do not remove this seal, no matter what other modification you apply to script).
 
 #include "ScriptPCH.h"
 #include "icecrown_citadel.h"
 
 enum Yells
 {
-    SAY_AGGRO                     = -1666063,
-    SAY_BELOW_25                  = -1666066,
-    SAY_ABOVE_75                  = -1666065,
-    SAY_DEATH                     = -1666067,
-    SAY_PDEATH                    = -1666068,
-    SAY_END                       = -1666070,
-    SAY_BERSERK                   = -1666069,
-    SAY_OPEN_PORTAL               = -1666064,
-	SVALNA_AGGRO 				  = -1900004,
-	SVALNA_SLAY 				  = -1900005,
-	SVALNA_DEATH 				  = -1900007,
+	SAY_AGGRO                     = -1666063,
+	SAY_BELOW_25                  = -1666066,
+	SAY_ABOVE_75                  = -1666065,
+	SAY_DEATH                     = -1666067,
+	SAY_PDEATH                    = -1666068,
+	SAY_END                       = -1666070,
+	SAY_BERSERK                   = -1666069,
+	SAY_OPEN_PORTAL               = -1666064,
+	SVALNA_AGGRO     	      = -1900004,
+	SVALNA_SLAY 		      = -1900005,
+	SVALNA_DEATH 		      = -1900007,
 };
 
 enum Spells
@@ -62,13 +62,13 @@ enum SvalnaSpells
 {
 	SPELL_AETHER_BURST_10            = 71468,
 	SPELL_AETHER_BURST_25            = 71469,
-	SPELL_AETHER_SHIELD				 = 71463,
-	SPELL_CARESS_OF_DEATH			 = 70078,
-	SPELL_DIVINE_SURGE 				 = 71465,
-	SPELL_IMPALING_SPEAR_KILL		 = 70196,
-	SPELL_IMPALING_SPEAR			 = 71443,
-	SPELL_REVIVE_CHAMPION			 = 70053,	
-	SPELL_REMOVE_SPEAR				 = 71462,
+	SPELL_AETHER_SHIELD		 = 71463,
+	SPELL_CARESS_OF_DEATH		 = 70078,
+	SPELL_DIVINE_SURGE 		 = 71465,
+	SPELL_IMPALING_SPEAR_KILL	 = 70196,
+	SPELL_IMPALING_SPEAR		 = 71443,
+	SPELL_REVIVE_CHAMPION		 = 70053,	
+	SPELL_REMOVE_SPEAR		 = 71462,
 };
 
 enum Creatures
@@ -83,8 +83,8 @@ enum Creatures
     CREATURE_SUPPRESSER                 = 37863,
     CREATURE_ZOMBIE                     = 37934,
     CREATURE_COMBAT_TRIGGER             = 38752,
-	CREATURE_IMPALING_SPEAR 			= 38248,
-	CREATURE_SVALNA 					= 37126,
+    CREATURE_IMPALING_SPEAR 	        = 38248,
+    CREATURE_SVALNA 		        = 37126,
 };
 
 const Position Pos[4] =
@@ -115,8 +115,10 @@ struct boss_valithriaAI : public ScriptedAI
     uint32 Phase;
     uint32 m_uiPortalTimer;
     uint32 m_uiEndTimer;
+    uint32 m_uiEnd3Timer;
     uint32 m_uiSummonTimer;
     uint32 m_uiEnd2Timer;
+    uint32 m_uiResetTimer;
 
     SummonList summons;
 
@@ -182,6 +184,14 @@ struct boss_valithriaAI : public ScriptedAI
         if (!m_pInstance || m_pInstance->GetData(DATA_VALITHRIA_DREAMWALKER_EVENT) != IN_PROGRESS)
             summons.DespawnAll();
 
+        if (m_uiResetTimer <= diff)
+        {
+            if (me->GetDistance2d(me->GetHomePosition().GetPositionX(), me->GetHomePosition().GetPositionY()) > 90)
+                EnterEvadeMode();
+            m_uiResetTimer = 5000;
+        } else m_uiResetTimer -= diff;
+
+
         if (Phase == 1)
         {
             DoStartNoMovement(me->getVictim());
@@ -236,22 +246,30 @@ struct boss_valithriaAI : public ScriptedAI
             {
                 Phase = 2;
                 me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE);
+                me->RemoveAurasDueToSpell(SPELL_CORRUPTION);
+                end = true;
+            }
+
+
+            if ((me->GetHealth()*100 / me->GetMaxHealth()) > 2)
+            {
+                Phase = 4;
+                m_uiEndTimer = 2000;
+                me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE);
                 me->SetReactState(REACT_PASSIVE);
                 me->RemoveAurasDueToSpell(SPELL_CORRUPTION);
-
-                end = true;
             }
         }
 
         if (Phase == 2)
         {
             Phase = 3;
-            m_uiEndTimer = 1000;
-            m_uiEnd2Timer = 6000;
+            m_uiEnd2Timer = 1000;
+            m_uiEnd3Timer = 8000;
             DoScriptText(SAY_END, me);
         }
 
-        if (Phase == 3)
+        if (Phase == 4)
         {
             if (m_uiEndTimer <= diff)
             {
@@ -265,12 +283,25 @@ struct boss_valithriaAI : public ScriptedAI
                 m_uiEndTimer = 50000;
             } else m_uiEndTimer -= diff;
 
+        if (Phase == 3)
+        {
             if (m_uiEnd2Timer <= diff)
             {
                 combat_trigger->ForcedDespawn();
                 me->CastSpell(me, SPELL_DREAM_SLIP, true, 0, 0, 0);
                 m_uiEnd2Timer = 50000;
             } else m_uiEnd2Timer -= diff;
+
+            if (m_uiEnd3Timer <= diff)
+            {
+                Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0);
+                if(pTarget && !pTarget->IsFriendlyTo(me))
+                {
+                    DoCast(pTarget, SPELL_RAGE);
+                }
+                me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                m_uiEnd3Timer = 50000;
+            } else m_uiEnd3Timer -= diff;
         }
 
         if (me->HasAura(SPELL_DREAM_SLIP))
@@ -419,7 +450,7 @@ struct npc_fireskell_iccAI : public ScriptedAI
 
     void EnterCombat(Unit* who)
     {
-        m_uiWasteTimer = 27000;
+        m_uiWasteTimer = 37000;
         m_uiFireballTimer = 5000;
     }
 
@@ -513,7 +544,7 @@ struct npc_glutabomination_iccAI : public ScriptedAI
 
     void EnterCombat(Unit* who)
     {
-        m_uiSprayTimer = 10000;
+        m_uiSprayTimer = 14000;
     }
 
     void UpdateAI(const uint32 diff)

@@ -133,6 +133,7 @@ struct boss_lord_marrowgarAI : public ScriptedAI
     uint32 m_uiBoneStormRemoveTimer;
     uint32 m_uiColdFlameTimer;
     uint32 m_uiBerserkTimer;
+    uint32 m_uiMove;
 
     bool Intro;
 
@@ -316,6 +317,7 @@ struct boss_lord_marrowgarAI : public ScriptedAI
                 DoCast(SPELL_BONE_STORM_CHANNEL);
                 DoScriptText(SAY_BONE_STORM, me);
                 m_uiBoneStormChanelTimer = 45000;
+                m_uiMove = 4000;
             } else m_uiBoneStormChanelTimer -= uiDiff;
 
             if (m_uiSaberSlashTimer <= uiDiff)
@@ -325,12 +327,22 @@ struct boss_lord_marrowgarAI : public ScriptedAI
                 m_uiSaberSlashTimer = 6000;
             } else m_uiSaberSlashTimer -= uiDiff;
 
+            if (me->HasAura(SPELL_BONE_STORM_CHANNEL))
+            {
+		if (m_uiMove <= uiDiff)
+		{
+			Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
+			me->GetMotionMaster()->MovePoint(0, pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ());
+			m_uiMove = 7500;
+		}
+	    } else m_uiMove -= uiDiff;
+
             if (m_uiColdFlameTimer <= uiDiff)
                 {
-                    me->SummonCreature(CREATURE_COLD_FLAME, me->GetPositionX()+20, me->GetPositionY()+20, me->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN, 8000);
-                    me->SummonCreature(CREATURE_COLD_FLAME, me->GetPositionX()-20, me->GetPositionY()-20, me->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN, 8000);
-                    me->SummonCreature(CREATURE_COLD_FLAME, me->GetPositionX()+20, me->GetPositionY()-20, me->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN, 8000);
-                    me->SummonCreature(CREATURE_COLD_FLAME, me->GetPositionX()-20, me->GetPositionY()+20, me->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN, 8000);
+                    me->SummonCreature(CREATURE_COLD_FLAME, me->GetPositionX()+15, me->GetPositionY()+15, me->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN, 8000);
+                    me->SummonCreature(CREATURE_COLD_FLAME, me->GetPositionX()-15, me->GetPositionY()-15, me->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN, 8000);
+                    me->SummonCreature(CREATURE_COLD_FLAME, me->GetPositionX()+15, me->GetPositionY()-15, me->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN, 8000);
+                    me->SummonCreature(CREATURE_COLD_FLAME, me->GetPositionX()-15, me->GetPositionY()+15, me->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN, 8000);
                     m_uiColdFlameTimer = 15000;
                 } else m_uiColdFlameTimer -= uiDiff;
 
