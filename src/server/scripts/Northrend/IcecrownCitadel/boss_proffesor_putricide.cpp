@@ -135,6 +135,7 @@ struct boss_professor_putricideAI : public ScriptedAI
     uint32 m_uiUnboundTimer;
     uint32 m_uiChangeTimer;
     uint32 m_uiTearTimer;
+    uint32 m_uiTear2Timer;
 
     bool m_bIsPhase1;
     bool m_bIsPhase2;
@@ -225,7 +226,7 @@ struct boss_professor_putricideAI : public ScriptedAI
 			if (m_uiTearTimer < uiDiff && getDifficulty() == RAID_DIFFICULTY_10MAN_NORMAL || getDifficulty() == RAID_DIFFICULTY_25MAN_NORMAL)
 			{
 				DoCast(SPELL_TEAR_GAS);
-				m_uiTearTimer = 2000;
+				m_uiTearTimer = 25000;
 			}else m_uiTearTimer -= uiDiff;
 
         if (HealthBelowPct(80) && !m_bIsPhase1)
@@ -239,7 +240,7 @@ struct boss_professor_putricideAI : public ScriptedAI
                 m_uiBombtimer = 28000;
                 m_uiUnstableExperimentTimer = 40000;
                 m_uiAddSpawnTimer = 55000;
-				m_uiTear2Timer = 10000;
+		m_uiTear2Timer = 10000;
                 m_bIsPhase1 = true;
         }
 
@@ -381,7 +382,7 @@ struct npc_volatile_oozeAI : public ScriptedAI
 
         if (OozeAdhesivTimer < diff)
         {
-			Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0)
+	    Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
             if (!pTarget->HasAura(SPELL_OOZE_ADHESIVE))
             {
 				me->AddAura(SPELL_OOZE_ADHESIVE, pTarget);
@@ -455,7 +456,7 @@ struct npc_gas_cloudAI : public ScriptedAI
 			if (!pTarget->HasAura(SPELL_GASEOUS_BLOAT))
 			{
 				for (uint32 i = 0; i < 10; ++i)
-					me->AddAura(pTarget, SPELL_GASEOUS_BLOAT);
+					me->AddAura(SPELL_GASEOUS_BLOAT, pTarget);
 				DissipateTimer = 2000;
 				Move2chaseTimer = 4000;
 			}
