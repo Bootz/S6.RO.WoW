@@ -120,7 +120,7 @@ enum DefileDamage
 	DEFILE_N_25_DAMAGE    =    5000,
 };
 
-#define MOVIE_ID_ARTHAS_DEATH    14
+#define MOVIE_ID_ARTHAS_DEATH    16
 
 const Position MovePosition = {461.792633, -2125.855957, 1040.860107};
 const Position MoveEndingPosition = {503.156525, -2124.516602, 1040.860107};
@@ -339,8 +339,27 @@ struct boss_lich_kingAI : public ScriptedAI
 			{
 			    Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM,1);
 				DoCast(pTarget, RAID_MODE(SPELL_INFEST_10_NORMAL,SPELL_INFEST_25_NORMAL,SPELL_INFEST_10_HEROIC,SPELL_INFEST_25_HEROIC));
-				m_uiInfestTimer = 30000;
-			} else m_uiInfestTimer -= uiDiff;
+                            if (pTarget->GetHealth()*100 / pTarget->GetMaxHealth() < 90)
+                            {
+								std::list<HostileReference*> ThreatList = me->getThreatManager().getThreatList();
+								for (std::list<HostileReference*>::const_iterator itr = ThreatList.begin(); itr != ThreatList.end(); ++itr)
+								{
+									Unit *pTarget = Unit::GetUnit(*me, (*itr)->getUnitGuid());
+									if (!pTarget || pTarget->GetTypeId() != TYPEID_PLAYER)
+										continue;
+
+									Aura *AuraInfest = pTarget->GetAura(RAID_MODE(SPELL_INFEST_10_NORMAL,SPELL_INFEST_25_NORMAL,SPELL_INFEST_10_HEROIC,SPELL_INFEST_25_HEROIC));
+									if (AuraInfest && AuraInfest->GetStackAmount() > 0)
+									{
+										for (uint32 i = 0; i < 1; ++i)
+											pTarget->RemoveAuraFromStack((RAID_MODE(SPELL_INFEST_10_NORMAL,SPELL_INFEST_25_NORMAL,SPELL_INFEST_10_HEROIC,SPELL_INFEST_25_HEROIC)), 0, AURA_REMOVE_BY_DEFAULT);
+									}
+								}
+							}
+			}
+			m_uiInfestTimer = 30000;
+		} else m_uiInfestTimer -= uiDiff;
+
 
 			if (m_uiPlagueSiphonTimer < uiDiff)
 			{
@@ -502,7 +521,7 @@ struct boss_lich_kingAI : public ScriptedAI
 			EndingPhase();
 		else m_uiEndingTimer -= uiDiff;
 
-		if(me->GetHealth()*100 / me->GetMaxHealth() < 70)
+		if(HealthBelowPct(70))
 		{
 		    if(!SwitchPhase1)
 		    {
@@ -512,7 +531,7 @@ struct boss_lich_kingAI : public ScriptedAI
 		    }
 		}
 
-		if(me->GetHealth()*100 / me->GetMaxHealth() < 40)
+		if(HealthBelowPct(40))
 		{
 		    if(!SwitchPhase2)
 		    {
@@ -527,7 +546,7 @@ struct boss_lich_kingAI : public ScriptedAI
 			}
 		}
 
-		if(me->GetHealth()*100 / me->GetMaxHealth() < 11)
+		if(HealthBelowPct(11))
 		{
 		    if(!TriggerSpawned)
 		    {
