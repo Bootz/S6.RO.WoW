@@ -209,20 +209,21 @@ struct boss_festergutAI : public ScriptedAI
             m_uiVileGasTimer = 37000;
         } else m_uiVileGasTimer -= uiDiff;
 
-        if (getDifficulty() == RAID_DIFFICULTY_10MAN_HEROIC || getDifficulty() == RAID_DIFFICULTY_25MAN_HEROIC)
+        if (m_uiGasSporesTimer < uiDiff)
         {
-            if (m_uiGasSporesTimer < uiDiff)
-            {
-                Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
-                if (pTarget && !pTarget->HasAura(SPELL_GAS_SPORES))
-                    {
-                        DoCast(pTarget, SPELL_GAS_SPORES);
-                        me->PlayDirectSound(16911);
-                        me->MonsterTextEmote(EMOTE_GAS_SPORE, 0, true);
-                    }
-                m_uiGasSporesTimer = 23000;
-            } else m_uiGasSporesTimer -= uiDiff;
-        }
+			uint32 count = RAID_MODE(2,2,3,3);
+			for (uint8 i = 1; i <= count; i++)
+			{
+				Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
+				if (pTarget && !pTarget->HasAura(SPELL_GAS_SPORES))
+				{
+					me->AddAura(SPELL_GAS_SPORES, pTarget);
+					me->PlayDirectSound(16911);
+					me->MonsterTextEmote(EMOTE_GAS_SPORE, 0, true);
+				}
+			}
+			m_uiGasSporesTimer = 23000;
+		} else m_uiGasSporesTimer -= uiDiff;
 
         if (m_uiPungentBlightTimer < uiDiff)
         {
