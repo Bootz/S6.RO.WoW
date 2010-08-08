@@ -434,7 +434,7 @@ struct boss_lich_kingAI : public ScriptedAI
 
 			if (m_uiInfestTimer < uiDiff)
 			{
-				DoCast(me, RAID_MODE(SPELL_INFEST_10_NORMAL, SPELL_INFEST_25_NORMAL, SPELL_INFEST_10_HEROIC, SPELL_INFEST_25_HEROIC));
+				DoCast(me->getVictim(), RAID_MODE(SPELL_INFEST_10_NORMAL,SPELL_INFEST_25_NORMAL,SPELL_INFEST_10_HEROIC,SPELL_INFEST_25_HEROIC));
 				m_uiInfestTimer = 30000;
 			} else m_uiInfestTimer -= uiDiff;
 		}
