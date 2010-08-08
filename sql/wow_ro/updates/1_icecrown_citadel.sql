@@ -380,7 +380,6 @@ DELETE FROM spell_linked_spell where `spell_trigger`='-73022';
 DELETE FROM spell_linked_spell where `spell_trigger`='-69783';
 DELETE FROM spell_linked_spell where `spell_trigger`='-70308';
 
-REPLACE INTO spell_linked_spell VALUES (70157, 71665, 1, 'Sindragosa: Frost Tomb => Asphyxiation');
 REPLACE INTO spell_linked_spell VALUES (70117, 70122, 1, 'Sindragosa: Icy Grip Trigger => Icy Grip');
 REPLACE INTO spell_linked_spell VALUES (-71224, 69706, 0, 'Rotface: Mutated Infection => Little Ooze');
 REPLACE INTO spell_linked_spell VALUES (-73022, 69706, 0, 'Rotface: Mutated Infection HC => Little Ooze');
