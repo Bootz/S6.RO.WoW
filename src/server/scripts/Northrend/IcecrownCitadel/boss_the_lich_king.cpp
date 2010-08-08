@@ -435,7 +435,7 @@ struct boss_lich_kingAI : public ScriptedAI
 
 			if (m_uiInfestTimer < uiDiff)
 			{
-				DoCast(me, SPELL_INFEST);
+				DoCast(me->getVictim(), RAID_MODE(SPELL_INFEST_10_NORMAL,SPELL_INFEST_25_NORMAL,SPELL_INFEST_10_HEROIC,SPELL_INFEST_25_HEROIC));
 				m_uiInfestTimer = 30000;
 			} else m_uiInfestTimer -= uiDiff;
 		}
@@ -740,7 +740,7 @@ struct npc_tirion_citadell_iccAI : public ScriptedAI
 				if(m_pInstance)
 					m_pInstance->SetData(DATA_LICH_KING_EVENT, IN_PROGRESS);
 				pLichKing->SetStandState(UNIT_STAND_STATE_STAND);
-				pLichKing->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
+				pLichKing->AddUnitMovementFlag(MOVEMENTFLAG_WALKING);
 				pLichKing->SetSpeed(MOVE_WALK, 1.2f);
 				pLichKing->GetMotionMaster()->MovePoint(0, MovePosition);
 				me->SetUInt32Value(UNIT_NPC_EMOTESTATE, 375);
