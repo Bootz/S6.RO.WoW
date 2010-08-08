@@ -355,8 +355,7 @@ struct boss_lich_kingAI : public ScriptedAI
 											pTarget->RemoveAuraFromStack((RAID_MODE(SPELL_INFEST_10_NORMAL,SPELL_INFEST_25_NORMAL,SPELL_INFEST_10_HEROIC,SPELL_INFEST_25_HEROIC)), 0, AURA_REMOVE_BY_DEFAULT);
 									}
 								}
-							}
-			}
+				}			
 			m_uiInfestTimer = 30000;
 		} else m_uiInfestTimer -= uiDiff;
 
