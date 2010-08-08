@@ -57,7 +57,7 @@ void PossessedAI::JustDied(Unit * /*u*/)
 void PossessedAI::KilledUnit(Unit* victim)
 {
     // We killed a creature, disable victim's loot
-    if (victim->GetTypeId() == TYPEID_UNIT && !((Creature*)victim)->IsDamageEnoughForLootingAndReward()) //Damage control necessary to enable loot for Razuvious
+    if (victim->GetTypeId() == TYPEID_UNIT)
         victim->RemoveFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE);
 }
 

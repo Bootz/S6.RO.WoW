@@ -29,9 +29,8 @@
 #include "UpdateMask.h"
 #include "Unit.h"
 #include "Language.h"
-#include "AuctionHouseBot.h"
 #include "DBCStores.h"
-#include "BattleGroundMgr.h"
+#include "BattlegroundMgr.h"
 #include "Item.h"
 #include "AuctionHouseMgr.h"
 
@@ -100,7 +99,7 @@ void WorldSession::HandleSendMail(WorldPacket & recv_data)
 
     uint64 rc = 0;
     if (normalizePlayerName(receiver))
-        rc = objmgr.GetPlayerGUIDByName(receiver);
+        rc = sObjectMgr.GetPlayerGUIDByName(receiver);
 
     if (!rc)
     {
@@ -128,7 +127,7 @@ void WorldSession::HandleSendMail(WorldPacket & recv_data)
         return;
     }
 
-    Player *receive = objmgr.GetPlayer(rc);
+    Player *receive = sObjectMgr.GetPlayer(rc);
 
     uint32 rc_team = 0;
     uint8 mails_count = 0;                                  //do not allow to send to one player more than 100 mails
@@ -142,7 +141,7 @@ void WorldSession::HandleSendMail(WorldPacket & recv_data)
     }
     else
     {
-        rc_team = objmgr.GetPlayerTeamByGUID(rc);
+        rc_team = sObjectMgr.GetPlayerTeamByGUID(rc);
         if (QueryResult_AutoPtr result = CharacterDatabase.PQuery("SELECT COUNT(*) FROM mail WHERE receiver = '%u'", GUID_LOPART(rc)))
         {
             Field *fields = result->Fetch();
@@ -189,7 +188,7 @@ void WorldSession::HandleSendMail(WorldPacket & recv_data)
 
     uint32 rc_account = receive
         ? receive->GetSession()->GetAccountId()
-        : objmgr.GetPlayerAccountIdByGUID(rc);
+        : sObjectMgr.GetPlayerAccountIdByGUID(rc);
 
     Item* items[MAX_MAIL_ITEMS];
 
@@ -395,10 +394,7 @@ void WorldSession::HandleMailReturnToSender(WorldPacket & recv_data)
                 pl->RemoveMItem(itr2->item_guid);
             }
         }
-        if (m->sender == auctionbot.GetAHBplayerGUID())
-            draft.AddMoney(m->money).SendReturnToSender(GetAccountId(), m->receiver, auctionbot.GetAHBplayerGUID());
-        else
-            draft.AddMoney(m->money).SendReturnToSender(GetAccountId(), m->receiver, m->sender);
+        draft.AddMoney(m->money).SendReturnToSender(GetAccountId(), m->receiver, m->sender);
     }
 
     delete m;                                               //we can deallocate old mail
@@ -446,7 +442,7 @@ void WorldSession::HandleMailTakeItem(WorldPacket & recv_data)
         if (m->COD > 0)                                     //if there is COD, take COD money from player and send them to sender by mail
         {
             uint64 sender_guid = MAKE_NEW_GUID(m->sender, 0, HIGHGUID_PLAYER);
-            Player *receive = objmgr.GetPlayer(sender_guid);
+            Player *receive = sObjectMgr.GetPlayer(sender_guid);
 
             uint32 sender_accId = 0;
 
@@ -461,16 +457,16 @@ void WorldSession::HandleMailTakeItem(WorldPacket & recv_data)
                 else
                 {
                     // can be calculated early
-                    sender_accId = objmgr.GetPlayerAccountIdByGUID(sender_guid);
+                    sender_accId = sObjectMgr.GetPlayerAccountIdByGUID(sender_guid);
 
-                    if (!objmgr.GetPlayerNameByGUID(sender_guid,sender_name))
-                        sender_name = objmgr.GetTrinityStringForDBCLocale(LANG_UNKNOWN);
+                    if (!sObjectMgr.GetPlayerNameByGUID(sender_guid,sender_name))
+                        sender_name = sObjectMgr.GetTrinityStringForDBCLocale(LANG_UNKNOWN);
                 }
                 sLog.outCommand(GetAccountId(),"GM %s (Account: %u) receive mail item: %s (Entry: %u Count: %u) and send COD money: %u to player: %s (Account: %u)",
                     GetPlayerName(),GetAccountId(),it->GetProto()->Name1,it->GetEntry(),it->GetCount(),m->COD,sender_name.c_str(),sender_accId);
             }
             else if (!receive)
-                sender_accId = objmgr.GetPlayerAccountIdByGUID(sender_guid);
+                sender_accId = sObjectMgr.GetPlayerAccountIdByGUID(sender_guid);
 
             // check player existence
             if (receive || sender_accId)
@@ -678,7 +674,7 @@ void WorldSession::HandleMailCreateTextItem(WorldPacket & recv_data)
     }
 
     Item *bodyItem = new Item;                              // This is not bag and then can be used new Item.
-    if (!bodyItem->Create(objmgr.GenerateLowGuid(HIGHGUID_ITEM), MAIL_BODY_ITEM_TEMPLATE, pl))
+    if (!bodyItem->Create(sObjectMgr.GenerateLowGuid(HIGHGUID_ITEM), MAIL_BODY_ITEM_TEMPLATE, pl))
     {
         delete bodyItem;
         return;
@@ -873,11 +869,11 @@ void MailDraft::deleteIncludedItems(bool inDB /*= false*/)
 
 void MailDraft::SendReturnToSender(uint32 sender_acc, uint32 sender_guid, uint32 receiver_guid)
 {
-    Player *receiver = objmgr.GetPlayer(MAKE_NEW_GUID(receiver_guid, 0, HIGHGUID_PLAYER));
+    Player *receiver = sObjectMgr.GetPlayer(MAKE_NEW_GUID(receiver_guid, 0, HIGHGUID_PLAYER));
 
     uint32 rc_account = 0;
     if (!receiver)
-        rc_account = objmgr.GetPlayerAccountIdByGUID(MAKE_NEW_GUID(receiver_guid, 0, HIGHGUID_PLAYER));
+        rc_account = sObjectMgr.GetPlayerAccountIdByGUID(MAKE_NEW_GUID(receiver_guid, 0, HIGHGUID_PLAYER));
 
     if (!receiver && !rc_account)                            // sender not exist
     {
@@ -919,14 +915,7 @@ void MailDraft::SendMailTo(MailReceiver const& receiver, MailSender const& sende
     if (pReceiver)
         prepareItems(pReceiver);                            // generate mail template items
 
-    uint32 mailId = objmgr.GenerateMailID();
-
-    if (receiver.GetPlayerGUIDLow() == auctionbot.GetAHBplayerGUID())
-    {
-        if (sender.GetMailMessageType() == MAIL_AUCTION)        // auction mail with items
-            deleteIncludedItems(true);
-        return;
-    }
+    uint32 mailId = sObjectMgr.GenerateMailID();
 
     time_t deliver_time = time(NULL) + deliver_delay;
 
@@ -937,7 +926,7 @@ void MailDraft::SendMailTo(MailReceiver const& receiver, MailSender const& sende
     if (sender.GetMailMessageType() == MAIL_AUCTION && m_items.empty() && !m_money)
         expire_delay = sWorld.getConfig(CONFIG_MAIL_DELIVERY_DELAY);
     // mail from battlemaster (rewardmarks) should last only one day
-    else if (sender.GetMailMessageType() == MAIL_CREATURE && sBattleGroundMgr.GetBattleMasterBG(sender.GetSenderId()) != BATTLEGROUND_TYPE_NONE)
+    else if (sender.GetMailMessageType() == MAIL_CREATURE && sBattlegroundMgr.GetBattleMasterBG(sender.GetSenderId()) != BATTLEGROUND_TYPE_NONE)
         expire_delay = DAY;
      // default case: expire time if COD 3 days, if no COD 30 days
     else

@@ -18,26 +18,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `db_version`
---
-
-DROP TABLE IF EXISTS `db_version`;
-CREATE TABLE `db_version` (
-  `required_31_world_db_version` bit(1) default NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED COMMENT='Used DB version notes';
-
---
--- Dumping data for table `db_version`
---
-
-LOCK TABLES `db_version` WRITE;
-/*!40000 ALTER TABLE `db_version` DISABLE KEYS */;
-INSERT INTO `db_version` VALUES
-(NULL);
-/*!40000 ALTER TABLE `db_version` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `access_requirement`
 --
 
@@ -81,6 +61,7 @@ CREATE TABLE `achievement_criteria_data` (
   `type` tinyint(3) unsigned NOT NULL DEFAULT '0',
   `value1` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `value2` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `ScriptName` char(64) NOT NULL DEFAULT '',
   PRIMARY KEY (`criteria_id`,`type`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED COMMENT='Achievment system';
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -261,6 +242,7 @@ CREATE TABLE `battleground_template` (
   `HordeStartLoc` mediumint(8) unsigned NOT NULL,
   `HordeStartO` float NOT NULL,
   `Weight` tinyint(2) unsigned NOT NULL DEFAULT 1,
+  `ScriptName` char(64) NOT NULL DEFAULT '',
   `Comment` char(32) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -272,20 +254,20 @@ CREATE TABLE `battleground_template` (
 
 LOCK TABLES `battleground_template` WRITE;
 /*!40000 ALTER TABLE `battleground_template` DISABLE KEYS */;
-INSERT INTO `battleground_template` (`id`,`MinPlayersPerTeam`,`MaxPlayersPerTeam`,`MinLvl`,`MaxLvl`,`AllianceStartLoc`,`AllianceStartO`,`HordeStartLoc`,`HordeStartO`, `Weight`) VALUES
-(1,20,40,51,80,611,2.72532,610,2.27452,1),
-(2,5,10,10,80,769,3.14159,770,3.14159,1),
-(3,8,15,20,80,890,3.40156,889,0.263892,1),
-(4,0,2,10,80,929,0,936,3.14159,1),
-(5,0,2,10,80,939,0,940,3.14159,1),
-(6,0,2,10,80,0,0,0,0,1),
-(7,8,15,61,80,1103,3.40156,1104,0.263892,1),
-(8,0,2,10,80,1258,0,1259,3.14159,1),
-(9,7,15,71,80,1367,0,1368,0,1),
-(10,5,5,10,80,1362,0,1363,0,1),
-(11,5,5,10,80,1364,0,1365,0,1),
-(30,20,40,71,80,1485,0,1486,0,1),
-(32,10,10,0,80,0,0,0,0,1);
+INSERT INTO `battleground_template` (`id`,`MinPlayersPerTeam`,`MaxPlayersPerTeam`,`MinLvl`,`MaxLvl`,`AllianceStartLoc`,`AllianceStartO`,`HordeStartLoc`,`HordeStartO`, `Weight`, `Comment`) VALUES
+(1,20,40,51,80,611,2.72532,610,2.27452,1,'Alterac Valley'),
+(2,5,10,10,80,769,3.14159,770,3.14159,1,'Warsong Gulch'),
+(3,8,15,20,80,890,3.40156,889,0.263892,1,'Arathi Basin'),
+(4,0,2,10,80,929,0,936,3.14159,1,'Nagrand Arena'),
+(5,0,2,10,80,939,0,940,3.14159,1,'Blades''s Edge Arena'),
+(6,0,2,10,80,0,0,0,0,1,'All Arena'),
+(7,8,15,61,80,1103,3.40156,1104,0.263892,1,'Eye of The Storm'),
+(8,0,2,10,80,1258,0,1259,3.14159,1,'Ruins of Lordaeron'),
+(9,7,15,71,80,1367,0,1368,0,1,'Strand of the Ancients'),
+(10,5,5,10,80,1362,0,1363,0,1,'Dalaran Sewers'),
+(11,5,5,10,80,1364,0,1365,0,1,'The Ring of Valor'),
+(30,20,40,71,80,1485,0,1486,0,1,'Isle of Conquest'),
+(32,10,10,0,80,0,0,0,0,1,'Random battleground');
 /*!40000 ALTER TABLE `battleground_template` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -744,6 +726,7 @@ CREATE TABLE `conditions` (
   `ConditionValue2` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `ConditionValue3` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `ErrorTextId` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `ScriptName` char(64) NOT NULL DEFAULT '',
   `Comment` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`SourceTypeOrReferenceId`,`SourceGroup`,`SourceEntry`,`ElseGroup`,`ConditionTypeOrReference`,`ConditionValue1`,`ConditionValue2`,`ConditionValue3`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='Condition System';
@@ -2391,6 +2374,7 @@ CREATE TABLE `game_weather` (
   `winter_rain_chance` tinyint(3) unsigned NOT NULL DEFAULT '25',
   `winter_snow_chance` tinyint(3) unsigned NOT NULL DEFAULT '25',
   `winter_storm_chance` tinyint(3) unsigned NOT NULL DEFAULT '25',
+  `ScriptName` char(64) NOT NULL DEFAULT '',
   PRIMARY KEY (`zone`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED COMMENT='Weather System';
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -2735,7 +2719,6 @@ DROP TABLE IF EXISTS `instance_template`;
 CREATE TABLE `instance_template` (
   `map` smallint(5) unsigned NOT NULL,
   `parent` int(10) unsigned NOT NULL,
-  `access_id` bigint(20) unsigned NOT NULL DEFAULT '0',
   `startLocX` float DEFAULT NULL,
   `startLocY` float DEFAULT NULL,
   `startLocZ` float DEFAULT NULL,
@@ -3856,6 +3839,37 @@ CREATE TABLE `npc_vendor` (
 LOCK TABLES `npc_vendor` WRITE;
 /*!40000 ALTER TABLE `npc_vendor` DISABLE KEYS */;
 /*!40000 ALTER TABLE `npc_vendor` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `outdoorpvp_template`
+--
+
+DROP TABLE IF EXISTS `outdoorpvp_template`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `outdoorpvp_template` (
+  `TypeId` tinyint(2) unsigned NOT NULL,
+  `ScriptName` char(64) NOT NULL DEFAULT '',
+  `comment` text,
+  PRIMARY KEY (`TypeId`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='OutdoorPvP Templates';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `outdoorpvp_template`
+--
+
+LOCK TABLES `outdoorpvp_template` WRITE;
+/*!40000 ALTER TABLE `outdoorpvp_template` DISABLE KEYS */;
+INSERT INTO `outdoorpvp_template` (`TypeId`, `Comment`) VALUES
+(1, 'Hellfire Peninsula'),
+(2, 'Nagrand'),
+(3, 'Terokkar Forest'),
+(4, 'Zangarmarsh'),
+(5, 'Silithus'),
+(6, 'Eastern Plaguelands');
+/*!40000 ALTER TABLE `outdoorpvp_template` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -6307,7 +6321,9 @@ INSERT INTO `spell_linked_spell` (`spell_trigger`,`spell_effect`,`type`,`comment
 ( 69381, 72588, 1, 'Drums of the Wild'),
 ( 69378, 72586, 1, 'Drums of the Forgotten Kings'),
 ( 69377, 72590, 1, 'Runescroll of Fortitude'),
-( 50141, 50001, 0, 'Blood Oath to Blood Oath Aura');
+( 50141, 50001, 0, 'Blood Oath to Blood Oath Aura'),
+( 61263, 61267, 0, 'Intravenous Healing Effect'),
+( 61263, 61268, 0, 'Intravenous Mana Regeneration Effect');
 /*!40000 ALTER TABLE `spell_linked_spell` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -14706,9 +14722,10 @@ CREATE TABLE `spell_script_names` (
 LOCK TABLES `spell_script_names` WRITE;
 /*!40000 ALTER TABLE `spell_script_names` DISABLE KEYS */;
 INSERT INTO `spell_script_names` (`spell_id`,`ScriptName`) VALUES
+-- generic
+( 58601, 'spell_gen_remove_flight_auras'),
 -- warrior
 ( 12975,'spell_warr_last_stand'),
-( 21977,'spell_warr_warriors_wrath'),
 -- paladin
 ( 20425, 'spell_pal_judgement_of_command'),
 (-20473, 'spell_pal_holy_shock'),
@@ -14725,6 +14742,7 @@ INSERT INTO `spell_script_names` (`spell_id`,`ScriptName`) VALUES
 ( 31231, 'spell_rog_cheat_death'),
 ( 51662, 'spell_rog_hunger_for_blood'),
 -- priest
+( 47948, 'spell_pri_pain_and_suffering_proc'),
 (-47540, 'spell_pri_penance'),
 -- death knight
 -- shaman
@@ -14748,6 +14766,7 @@ CREATE TABLE `transports` (
   `entry` mediumint(8) unsigned NOT NULL DEFAULT '0',
   `name` text,
   `period` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `ScriptName` char(64) NOT NULL DEFAULT '',
   PRIMARY KEY (`entry`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED COMMENT='Transports';
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -15677,7 +15696,7 @@ AVG_ROW_LENGTH=0;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `version`
+-- Dumping data for table `vehicle_accessory`
 --
 
 LOCK TABLES `vehicle_accessory` WRITE;

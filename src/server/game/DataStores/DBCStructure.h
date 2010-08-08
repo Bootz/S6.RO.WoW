@@ -90,10 +90,6 @@ struct AchievementCriteriaEntry
         {
             uint32  bgMapID;                                // 3
             uint32  winCount;                               // 4
-            uint32  additionalRequirement1_type;            // 5 additional requirement 1 type
-            uint32  additionalRequirement1_value;           // 6 additional requirement 1 value
-            uint32  additionalRequirement2_type;            // 7 additional requirement 2 type
-            uint32  additionalRequirement2_value;           // 8 additional requirement 1 value
         } win_bg;
 
         // ACHIEVEMENT_CRITERIA_TYPE_REACH_LEVEL            = 5
@@ -210,6 +206,13 @@ struct AchievementCriteriaEntry
             uint32  castCount;                              // 4
         } cast_spell;
 
+        // ACHIEVEMENT_CRITERIA_TYPE_BG_OBJECTIVE_CAPTURE
+        struct
+        {
+            uint32 objectiveId;                             // 3
+            uint32 completeCount;                           // 4
+        } bg_objective;
+
         // ACHIEVEMENT_CRITERIA_TYPE_HONORABLE_KILL_AT_AREA = 31
         struct
         {
@@ -247,7 +250,6 @@ struct AchievementCriteriaEntry
         {
             uint32  unused;                                 // 3
             uint32  count;                                  // 4
-            uint32  flag;                                   // 5 4=in a row
         } win_rated_arena;
 
         // ACHIEVEMENT_CRITERIA_TYPE_HIGHEST_TEAM_RATING    = 38
@@ -375,8 +377,6 @@ struct AchievementCriteriaEntry
         {
             uint32  unused;                                 // 3
             uint32  count;                                  // 4
-            uint32  flag;                                   // 5 =3 for battleground healing
-            uint32  mapid;                                  // 6
         } healing_done;
 
         // ACHIEVEMENT_CRITERIA_TYPE_EQUIP_ITEM             = 57
@@ -485,12 +485,15 @@ struct AchievementCriteriaEntry
         {
             uint32  field3;                                 // 3 main requirement
             uint32  count;                                  // 4 main requirement count
-            uint32  additionalRequirement1_type;            // 5 additional requirement 1 type
-            uint32  additionalRequirement1_value;           // 6 additional requirement 1 value
-            uint32  additionalRequirement2_type;            // 7 additional requirement 2 type
-            uint32  additionalRequirement2_value;           // 8 additional requirement 1 value
         } raw;
     };
+
+    struct
+    {
+        uint32  additionalRequirement_type;
+        uint32  additionalRequirement_value;
+    } additionalRequrements[MAX_CRITERIA_REQUIREMENTS];
+
     //char*  name[16];                                      // 9-24
     //uint32 name_flags;                                    // 25
     uint32  completionFlag;                                 // 26
@@ -518,7 +521,7 @@ struct AreaTableEntry
     // helpers
     bool IsSanctuary() const
     {
-        if (mapid == 609 || ID == 4522 || ID == 4395 || ID == 4553)
+        if (mapid == 609)
             return true;
         return (flags & AREA_FLAG_SANCTUARY);
     }
@@ -1102,7 +1105,7 @@ struct LFGDungeonEntry
     //char*   name[16];                                     // 1-17 Name lang
     uint32  minlevel;                                       // 18
     uint32  maxlevel;                                       // 19
-    uint32  reclevel;                                       // 20      
+    uint32  reclevel;                                       // 20
     uint32  recminlevel;                                    // 21
     uint32  recmaxlevel;                                    // 22
     int32  map;                                             // 23
@@ -1169,9 +1172,9 @@ struct MapEntry
     bool IsNonRaidDungeon() const { return map_type == MAP_INSTANCE; }
     bool Instanceable() const { return map_type == MAP_INSTANCE || map_type == MAP_RAID || map_type == MAP_BATTLEGROUND || map_type == MAP_ARENA; }
     bool IsRaid() const { return map_type == MAP_RAID; }
-    bool IsBattleGround() const { return map_type == MAP_BATTLEGROUND; }
+    bool IsBattleground() const { return map_type == MAP_BATTLEGROUND; }
     bool IsBattleArena() const { return map_type == MAP_ARENA; }
-    bool IsBattleGroundOrArena() const { return map_type == MAP_BATTLEGROUND || map_type == MAP_ARENA; }
+    bool IsBattlegroundOrArena() const { return map_type == MAP_BATTLEGROUND || map_type == MAP_ARENA; }
 
     bool GetEntrancePos(int32 &mapid, float &x, float &y) const
     {
@@ -1219,7 +1222,7 @@ struct PvPDifficultyEntry
     uint32      difficulty;                                 // 5
 
     // helpers
-    BattleGroundBracketId GetBracketId() const { return BattleGroundBracketId(bracketId); }
+    BattlegroundBracketId GetBracketId() const { return BattlegroundBracketId(bracketId); }
 };
 
 struct QuestSortEntry

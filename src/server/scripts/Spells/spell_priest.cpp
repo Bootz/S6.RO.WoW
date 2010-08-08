@@ -22,6 +22,7 @@
  */
 
 #include "ScriptPCH.h"
+#include "SpellAuraEffects.h"
 
 enum PriestSpells
 {
@@ -30,59 +31,89 @@ enum PriestSpells
     PRIEST_SPELL_PENANCE_R1_HEAL                 = 47757,
 };
 
-class spell_pri_penance_SpellScript : public SpellScript
+class spell_pri_pain_and_suffering_proc : public SpellHandlerScript
 {
-    bool Validate(SpellEntry const * spellEntry)
-    {
-        if (!sSpellStore.LookupEntry(PRIEST_SPELL_PENANCE_R1))
-            return false;
-        // can't use other spell than this penance due to spell_ranks dependency
-        if (spellmgr.GetFirstSpellInChain(PRIEST_SPELL_PENANCE_R1) != spellmgr.GetFirstSpellInChain(spellEntry->Id))
-            return false;
+    public:
+        spell_pri_pain_and_suffering_proc() : SpellHandlerScript("spell_pri_pain_and_suffering_proc") { }
 
-        uint8 rank = spellmgr.GetSpellRank(spellEntry->Id);
-        if (!spellmgr.GetSpellWithRank(PRIEST_SPELL_PENANCE_R1_DAMAGE, rank, true))
-            return false;
-        if (!spellmgr.GetSpellWithRank(PRIEST_SPELL_PENANCE_R1_HEAL, rank, true))
-            return false;
+        // 47948 Pain and Suffering (proc)
+        class spell_pri_pain_and_suffering_proc_SpellScript : public SpellScript
+        {
+            void HandleEffectScriptEffect(SpellEffIndex effIndex)
+            {
+                // Refresh Shadow Word: Pain on target
+                if (Unit *unitTarget = GetHitUnit())
+                    if (AuraEffect* aur = unitTarget->GetAuraEffect(SPELL_AURA_PERIODIC_DAMAGE, SPELLFAMILY_PRIEST, 0x8000, 0, 0, GetCaster()->GetGUID()))
+                        aur->GetBase()->RefreshDuration();
+            }
 
-        return true;
-    }
+            void Register()
+            {
+                EffectHandlers += EffectHandlerFn(spell_pri_pain_and_suffering_proc_SpellScript::HandleEffectScriptEffect, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
+            }
+        };
 
-    void HandleDummy(SpellEffIndex effIndex)
-    {
-        Unit *unitTarget = GetHitUnit();
-        if (!unitTarget || !unitTarget->isAlive())
-            return;
-
-        Unit *caster = GetCaster();
-
-        uint8 rank = spellmgr.GetSpellRank(GetSpellInfo()->Id);
-
-        if (caster->IsFriendlyTo(unitTarget))
-            caster->CastSpell(unitTarget, spellmgr.GetSpellWithRank(PRIEST_SPELL_PENANCE_R1_HEAL, rank), false, 0);
-        else
-            caster->CastSpell(unitTarget, spellmgr.GetSpellWithRank(PRIEST_SPELL_PENANCE_R1_DAMAGE, rank), false, 0);
-    }
-
-    void Register()
-    {
-        // add dummy effect spell handler to Penance
-        EffectHandlers += EffectHandlerFn(spell_pri_penance_SpellScript::HandleDummy, EFFECT_0, SPELL_EFFECT_DUMMY);
-    }
+        SpellScript *GetSpellScript() const
+        {
+            return new spell_pri_pain_and_suffering_proc_SpellScript;
+        }
 };
 
-SpellScript *GetSpellScript_spell_pri_penance()
+class spell_pri_penance : public SpellHandlerScript
 {
-    return new spell_pri_penance_SpellScript();
-}
+    public:
+        spell_pri_penance() : SpellHandlerScript("spell_pri_penance") { }
+
+        class spell_pri_penance_SpellScript : public SpellScript
+        {
+            bool Validate(SpellEntry const * spellEntry)
+            {
+                if (!sSpellStore.LookupEntry(PRIEST_SPELL_PENANCE_R1))
+                    return false;
+                // can't use other spell than this penance due to spell_ranks dependency
+                if (sSpellMgr.GetFirstSpellInChain(PRIEST_SPELL_PENANCE_R1) != sSpellMgr.GetFirstSpellInChain(spellEntry->Id))
+                    return false;
+
+                uint8 rank = sSpellMgr.GetSpellRank(spellEntry->Id);
+                if (!sSpellMgr.GetSpellWithRank(PRIEST_SPELL_PENANCE_R1_DAMAGE, rank, true))
+                    return false;
+                if (!sSpellMgr.GetSpellWithRank(PRIEST_SPELL_PENANCE_R1_HEAL, rank, true))
+                    return false;
+
+                return true;
+            }
+
+            void HandleDummy(SpellEffIndex effIndex)
+            {
+                Unit *unitTarget = GetHitUnit();
+                if (!unitTarget || !unitTarget->isAlive())
+                    return;
+
+                Unit *caster = GetCaster();
+
+                uint8 rank = sSpellMgr.GetSpellRank(GetSpellInfo()->Id);
+
+                if (caster->IsFriendlyTo(unitTarget))
+                    caster->CastSpell(unitTarget, sSpellMgr.GetSpellWithRank(PRIEST_SPELL_PENANCE_R1_HEAL, rank), false, 0);
+                else
+                    caster->CastSpell(unitTarget, sSpellMgr.GetSpellWithRank(PRIEST_SPELL_PENANCE_R1_DAMAGE, rank), false, 0);
+            }
+
+            void Register()
+            {
+                // add dummy effect spell handler to Penance
+                EffectHandlers += EffectHandlerFn(spell_pri_penance_SpellScript::HandleDummy, EFFECT_0, SPELL_EFFECT_DUMMY);
+            }
+        };
+
+        SpellScript *GetSpellScript() const
+        {
+            return new spell_pri_penance_SpellScript;
+        }
+};
 
 void AddSC_priest_spell_scripts()
 {
-    Script *newscript;
-
-    newscript = new Script;
-    newscript->Name = "spell_pri_penance";
-    newscript->GetSpellScript = &GetSpellScript_spell_pri_penance;
-    newscript->RegisterSelf();
+    new spell_pri_pain_and_suffering_proc;
+    new spell_pri_penance;
 }

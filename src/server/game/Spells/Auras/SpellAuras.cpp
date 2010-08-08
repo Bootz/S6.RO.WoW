@@ -482,8 +482,8 @@ void Aura::UpdateTargetMap(Unit * caster, bool apply)
     for (std::map<Unit *, uint8>::iterator itr = targets.begin(); itr!= targets.end();)
     {
         bool addUnit = true;
-        // check target immunities 
-        if (itr->first->IsImmunedToSpell(GetSpellProto()) 
+        // check target immunities
+        if (itr->first->IsImmunedToSpell(GetSpellProto())
             || !CanBeAppliedOn(itr->first))
             addUnit = false;
 
@@ -506,7 +506,7 @@ void Aura::UpdateTargetMap(Unit * caster, bool apply)
                     for (Unit::AuraApplicationMap::iterator iter = itr->first->GetAppliedAuras().begin(); iter != itr->first->GetAppliedAuras().end(); ++iter)
                     {
                         Aura const * aura = iter->second->GetBase();
-                        if (!spellmgr.CanAurasStack(GetSpellProto(), aura->GetSpellProto(), aura->GetCasterGUID() == GetCasterGUID()))
+                        if (!sSpellMgr.CanAurasStack(GetSpellProto(), aura->GetSpellProto(), aura->GetCasterGUID() == GetCasterGUID()))
                         {
                             addUnit = false;
                             break;
@@ -844,7 +844,7 @@ void Aura::HandleAuraSpecificMods(AuraApplication const * aurApp, Unit * caster,
     Unit * target = aurApp->GetTarget();
     AuraRemoveMode removeMode = aurApp->GetRemoveMode();
     // spell_area table
-    SpellAreaForAreaMapBounds saBounds = spellmgr.GetSpellAreaForAuraMapBounds(GetId());
+    SpellAreaForAreaMapBounds saBounds = sSpellMgr.GetSpellAreaForAuraMapBounds(GetId());
     if (saBounds.first != saBounds.second)
     {
         uint32 zone, area;
@@ -867,9 +867,9 @@ void Aura::HandleAuraSpecificMods(AuraApplication const * aurApp, Unit * caster,
     if (apply)
     {
         // Apply linked auras (On first aura apply)
-        if (spellmgr.GetSpellCustomAttr(GetId()) & SPELL_ATTR_CU_LINK_AURA)
+        if (sSpellMgr.GetSpellCustomAttr(GetId()) & SPELL_ATTR_CU_LINK_AURA)
         {
-            if (const std::vector<int32> *spell_triggered = spellmgr.GetSpellLinked(GetId() + SPELL_LINK_AURA))
+            if (const std::vector<int32> *spell_triggered = sSpellMgr.GetSpellLinked(GetId() + SPELL_LINK_AURA))
                 for (std::vector<int32>::const_iterator itr = spell_triggered->begin(); itr != spell_triggered->end(); ++itr)
                 {
                     if (*itr < 0)
@@ -1049,16 +1049,6 @@ void Aura::HandleAuraSpecificMods(AuraApplication const * aurApp, Unit * caster,
                     }
                 }
                 break;
-            case SPELLFAMILY_SHAMAN:
-                if (!caster)
-                    break;
-                //Glyph of Totem of Wrath
-                if (GetSpellProto()->SpellFamilyFlags[0] & 0x4000000 && GetSpellProto()->Attributes & 0x00000140)
-                {
-                    if (target->HasAura(63280))
-                        target->CastSpell(target,63283,true);
-                }
-                break;
         }
     }
     // mods at aura remove
@@ -1067,11 +1057,11 @@ void Aura::HandleAuraSpecificMods(AuraApplication const * aurApp, Unit * caster,
         // Remove Linked Auras
         if (removeMode != AURA_REMOVE_BY_STACK && removeMode != AURA_REMOVE_BY_DEATH)
         {
-            if (uint32 customAttr = spellmgr.GetSpellCustomAttr(GetId()))
+            if (uint32 customAttr = sSpellMgr.GetSpellCustomAttr(GetId()))
             {
                 if (customAttr & SPELL_ATTR_CU_LINK_REMOVE)
                 {
-                    if (const std::vector<int32> *spell_triggered = spellmgr.GetSpellLinked(-(int32)GetId()))
+                    if (const std::vector<int32> *spell_triggered = sSpellMgr.GetSpellLinked(-(int32)GetId()))
                         for (std::vector<int32>::const_iterator itr = spell_triggered->begin(); itr != spell_triggered->end(); ++itr)
                         {
                             if (*itr < 0)
@@ -1082,7 +1072,7 @@ void Aura::HandleAuraSpecificMods(AuraApplication const * aurApp, Unit * caster,
                 }
                 if (customAttr & SPELL_ATTR_CU_LINK_AURA)
                 {
-                    if (const std::vector<int32> *spell_triggered = spellmgr.GetSpellLinked(GetId() + SPELL_LINK_AURA))
+                    if (const std::vector<int32> *spell_triggered = sSpellMgr.GetSpellLinked(GetId() + SPELL_LINK_AURA))
                         for (std::vector<int32>::const_iterator itr = spell_triggered->begin(); itr != spell_triggered->end(); ++itr)
                         {
                             if (*itr < 0)
@@ -1338,22 +1328,6 @@ void Aura::HandleAuraSpecificMods(AuraApplication const * aurApp, Unit * caster,
                     break;
             }
             break;
-
-			// Bone Storm
-	        if (GetSpellProto()->SpellIconID == 2836)
-	        {
-	            if (target->HasAura(69076))
-	            {
-		            if(AuraApplication * aura = target->GetAuraApplication(69076, 0))
-		            {
-                        aura->GetBase()->SetDuration(20000);
-                        aura->GetBase()->SetMaxDuration(20000);
-                        aura->ClientUpdate();
-		            }
-	            }
-	            break;
-	        }
-
         case SPELLFAMILY_ROGUE:
             // Stealth
             if (GetSpellProto()->SpellFamilyFlags[0] & 0x00400000)

@@ -9,7 +9,7 @@
 # implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
 add_subdirectory(server)
-add_subdirectory(tools/git_id)
+
 if(TOOLS)
   add_subdirectory(tools)
 endif(TOOLS)

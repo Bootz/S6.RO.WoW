@@ -45,6 +45,7 @@
 #include "WorldSocketMgr.h"
 #include "Log.h"
 #include "WorldLog.h"
+#include "ScriptMgr.h"
 
 #if defined(__GNUC__)
 #pragma pack(1)
@@ -113,7 +114,7 @@ m_OverSpeedPings(0),
 m_LastPingTime(ACE_Time_Value::zero)
 {
     reference_counting_policy().value (ACE_Event_Handler::Reference_Counting_Policy::ENABLED);
-    
+
     msg_queue()->high_water_mark(8*1024*1024);
     msg_queue()->low_water_mark(8*1024*1024);
 }
@@ -185,6 +186,9 @@ int WorldSocket::SendPacket (const WorldPacket& pct)
         }
         sWorldLog.outLog("\n");
     }
+
+    // Create a copy of the original packet; this is to avoid issues if a hook modifies it.
+    sScriptMgr.OnPacketSend(this, WorldPacket(pct));
 
     ServerPktHeader header(pct.size()+2, pct.GetOpcode());
     m_Crypt.EncryptSend ((uint8*)header.header, header.getHeaderLength());
@@ -261,7 +265,7 @@ int WorldSocket::open (void *a)
     }
 
     m_Address = remote_addr.get_host_addr();
-    
+
     // Send startup packet.
     WorldPacket packet (SMSG_AUTH_CHALLENGE, 24);
     packet << uint32(1);                                    // 1...31
@@ -277,14 +281,14 @@ int WorldSocket::open (void *a)
 
     if (SendPacket(packet) == -1)
         return -1;
-    
+
     // Register with ACE Reactor
     if (reactor()->register_handler(this, ACE_Event_Handler::READ_MASK | ACE_Event_Handler::WRITE_MASK) == -1)
     {
         sLog.outError ("WorldSocket::open: unable to register client handler errno = %s", ACE_OS::strerror (errno));
         return -1;
     }
-    
+
     // reactor takes care of the socket from now on
     remove_reference();
 
@@ -705,7 +709,8 @@ int WorldSocket::ProcessIncoming (WorldPacket* new_pct)
         sWorldLog.outLog ("\n");
     }
 
-    try {
+    try
+    {
         switch(opcode)
         {
             case CMSG_PING:
@@ -717,10 +722,11 @@ int WorldSocket::ProcessIncoming (WorldPacket* new_pct)
                     return -1;
                 }
 
+                sScriptMgr.OnPacketReceive(this, WorldPacket(*new_pct));
                 return HandleAuthSession (*new_pct);
             case CMSG_KEEP_ALIVE:
                 DEBUG_LOG ("CMSG_KEEP_ALIVE ,size: %d", new_pct->size());
-
+                sScriptMgr.OnPacketReceive(this, WorldPacket(*new_pct));
                 return 0;
             default:
             {
@@ -731,7 +737,7 @@ int WorldSocket::ProcessIncoming (WorldPacket* new_pct)
                     // Our Idle timer will reset on any non PING opcodes.
                     // Catches people idling on the login screen and any lingering ingame connections.
                     m_Session->ResetTimeOutTime();
-                    
+
                     // OK ,give the packet to WorldSession
                     aptr.release();
                     // WARNINIG here we call it with locks held.
@@ -747,7 +753,7 @@ int WorldSocket::ProcessIncoming (WorldPacket* new_pct)
             }
         }
     }
-    catch(ByteBufferException &)
+    catch (ByteBufferException &)
     {
         sLog.outError("WorldSocket::ProcessIncoming ByteBufferException occured while parsing an instant handled packet (opcode: %u) from client %s, accountid=%i. Disconnected client.",
                 opcode, GetRemoteAddress().c_str(), m_Session?m_Session->GetAccountId():-1);
@@ -775,7 +781,7 @@ int WorldSocket::HandleAuthSession (WorldPacket& recvPacket)
     //uint8 expansion = 0;
     LocaleConstant locale;
     std::string account;
-    Sha1Hash sha1;
+    SHA1Hash sha1;
     BigNumber v, s, g, N;
     WorldPacket packet, SendAddonPacked;
 
@@ -943,7 +949,7 @@ int WorldSocket::HandleAuthSession (WorldPacket& recvPacket)
     }
 
     // Check that Key and account name are the same on client and server
-    Sha1Hash sha;
+    SHA1Hash sha;
 
     uint32 t = 0;
     uint32 seed = m_Seed;
@@ -991,7 +997,7 @@ int WorldSocket::HandleAuthSession (WorldPacket& recvPacket)
     m_Session->LoadTutorialsData();
     m_Session->ReadAddonsInfo(recvPacket);
 
-    // Sleep this Network thread for 
+    // Sleep this Network thread for
     uint32 sleepTime = sWorld.getConfig(CONFIG_SESSION_ADD_DELAY);
     ACE_OS::sleep (ACE_Time_Value (0, sleepTime));
 

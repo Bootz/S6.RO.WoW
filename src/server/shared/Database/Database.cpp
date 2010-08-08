@@ -38,7 +38,7 @@
 
 size_t Database::db_count = 0;
 
-Database::Database() : mMysql(NULL) 
+Database::Database() : mMysql(NULL)
 {
     // before first connection
     if (db_count++ == 0)
@@ -492,7 +492,6 @@ bool Database::CheckRequiredField(char const* table_name, char const* required_n
     // check required field
     QueryResult_AutoPtr result = PQuery("SELECT %s FROM %s LIMIT 1",required_name,table_name);
     if (result)
-
         return true;
 
     // check fail, prepare readabale error message
@@ -515,12 +514,12 @@ bool Database::CheckRequiredField(char const* table_name, char const* required_n
         delete result2;
 
         if (!reqName.empty())
-        {
             sLog.outErrorDb("Table `%s` have field `%s` but expected `%s`! Not all sql updates applied?",table_name,reqName.c_str(),required_name);
-        return false;
-        }
+        else
+            sLog.outErrorDb("Table `%s` not have required_* field but expected `%s`! Not all sql updates applied?",table_name,required_name);
     }
-        sLog.outErrorDb("Table `%s` not have required_* field but expected `%s`! Not all sql updates applied?",table_name,required_name);
+    else
+        sLog.outErrorDb("Table `%s` fields list query fail but expected have `%s`! No records in `%s`?",table_name,required_name,table_name);
 
     return false;
 }

@@ -294,19 +294,6 @@ struct QuestPOI
 typedef std::vector<QuestPOI> QuestPOIVector;
 typedef UNORDERED_MAP<uint32, QuestPOIVector> QuestPOIMap;
 
-#define WEATHER_SEASONS 4
-struct WeatherSeasonChances
-{
-    uint32 rainChance;
-    uint32 snowChance;
-    uint32 stormChance;
-};
-
-struct WeatherZoneChances
-{
-    WeatherSeasonChances data[WEATHER_SEASONS];
-};
-
 struct GraveYardData
 {
     uint32 safeLocId;
@@ -373,7 +360,7 @@ class ObjectMgr
     friend class ACE_Singleton<ObjectMgr, ACE_Null_Mutex>;
     ObjectMgr();
     ~ObjectMgr();
-    
+
     public:
         typedef UNORDERED_MAP<uint32, Item*> ItemMap;
 
@@ -396,8 +383,6 @@ class ObjectMgr
         typedef UNORDERED_MAP<uint32, RepSpilloverTemplate> RepSpilloverTemplateMap;
 
         typedef UNORDERED_MAP<uint32, PointOfInterest> PointOfInterestMap;
-
-        typedef UNORDERED_MAP<uint32, WeatherZoneChances> WeatherZoneMap;
 
         typedef std::vector<std::string> ScriptNameMap;
 
@@ -687,7 +672,6 @@ class ObjectMgr
 
         void LoadNPCSpellClickSpells();
 
-        void LoadWeatherZoneChances();
         void LoadGameTele();
 
         void LoadNpcTextId();
@@ -738,15 +722,6 @@ class ObjectMgr
                     return &*set_itr;
 
             return NULL;
-        }
-
-        WeatherZoneChances const* GetWeatherChances(uint32 zone_id) const
-        {
-            WeatherZoneMap::const_iterator itr = mWeatherZoneMap.find(zone_id);
-            if (itr != mWeatherZoneMap.end())
-                return &itr->second;
-            else
-                return NULL;
         }
 
         CellObjectGuids const& GetCellObjectGuids(uint16 mapid, uint8 spawnMode, uint32 cell_id)
@@ -1034,8 +1009,6 @@ class ObjectMgr
 
         QuestPOIMap         mQuestPOIMap;
 
-        WeatherZoneMap      mWeatherZoneMap;
-
         //character reserved names
         typedef std::set<std::wstring> ReservedNamesMap;
         ReservedNamesMap    m_ReservedNames;
@@ -1122,7 +1095,7 @@ class ObjectMgr
 
 };
 
-#define objmgr (*ACE_Singleton<ObjectMgr, ACE_Null_Mutex>::instance())
+#define sObjectMgr (*ACE_Singleton<ObjectMgr, ACE_Null_Mutex>::instance())
 
 // scripting access functions
  bool LoadTrinityStrings(DatabaseType& db, char const* table,int32 start_value = MAX_CREATURE_AI_TEXT_STRING_ID, int32 end_value = std::numeric_limits<int32>::min());

@@ -29,7 +29,6 @@
 #include "Configuration/Config.h"
 #include "Log.h"
 #include "SystemConfig.h"
-#include "revision_sql.h"
 #include "Util.h"
 #include "SignalHandler.h"
 #include "RealmList.h"
@@ -208,7 +207,7 @@ extern int main(int argc, char **argv)
     sLog.SetLogDBLater(sConfig.GetBoolDefault("EnableLogDB", false)); // set var to enable DB logging once startup finished.
     sLog.SetLogDB(false);
     sLog.SetRealmID(0);                                               // ensure we've set realm to 0 (realmd realmid)
- 
+
     ///- Get the list of realms for the server
     sRealmList->Initialize(sConfig.GetIntDefault("RealmsStateUpdateDelay", 20));
     if (sRealmList->size() == 0)
@@ -347,11 +346,8 @@ bool StartDB()
         sLog.outError("Cannot connect to database");
         return false;
     }
-   if(!LoginDatabase.CheckRequiredField("realmd_db_version",REVISION_DB_REALMD))
-        return false;
-
     LoginDatabase.ThreadStart();
-    
+
     uint32 count = 0;
     sPreparedStatement.LoadAuthserver(&LoginDatabase, count);
     sLog.outString("Loaded %u prepared MySQL statements for auth DB.", count);

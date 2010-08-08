@@ -320,7 +320,7 @@ class HookList
     private:
         typename std::list<T> m_list;
     public:
-        HookList<T> & operator+=(T t) 
+        HookList<T> & operator+=(T t)
         {
             m_list.push_back(t);
             return *this;
@@ -329,6 +329,10 @@ class HookList
         {
             m_list.remove(t);
             return *this;
+        }
+        size_t size()
+        {
+            return m_list.size();
         }
         ListIterator begin()
         {

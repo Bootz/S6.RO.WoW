@@ -33,12 +33,12 @@
 #include "ObjectAccessor.h"
 #include "Creature.h"
 #include "Pet.h"
-#include "BattleGroundMgr.h"
-#include "BattleGround.h"
+#include "BattlegroundMgr.h"
+#include "Battleground.h"
 #include "Guild.h"
 #include "ScriptMgr.h"
 
-enum StableResultCode	
+enum StableResultCode    
 {
     STABLE_ERR_MONEY        = 0x01,                         // "you don't have enough money"
     STABLE_ERR_STABLE       = 0x06,                         // currently used in most fail cases
@@ -179,7 +179,7 @@ void WorldSession::SendTrainerList(uint64 guid, const std::string& strTitle)
                 valid = false;
                 break;
             }
-            if (spellmgr.IsPrimaryProfessionFirstRankSpell(tSpell->learnedSpell[i]))
+            if (sSpellMgr.IsPrimaryProfessionFirstRankSpell(tSpell->learnedSpell[i]))
                 primary_prof_first_rank = true;
         }
         if (!valid)
@@ -203,7 +203,7 @@ void WorldSession::SendTrainerList(uint64 guid, const std::string& strTitle)
         {
             if (!tSpell->learnedSpell[i])
                 continue;
-            if (SpellChainNode const* chain_node = spellmgr.GetSpellChainNode(tSpell->learnedSpell[i]))
+            if (SpellChainNode const* chain_node = sSpellMgr.GetSpellChainNode(tSpell->learnedSpell[i]))
             {
                 if (chain_node->prev)
                 {
@@ -213,7 +213,7 @@ void WorldSession::SendTrainerList(uint64 guid, const std::string& strTitle)
             }
             if (maxReq == 3)
                 break;
-            SpellsRequiringSpellMapBounds spellsRequired = spellmgr.GetSpellsRequiredForSpellBounds(tSpell->learnedSpell[i]);
+            SpellsRequiringSpellMapBounds spellsRequired = sSpellMgr.GetSpellsRequiredForSpellBounds(tSpell->learnedSpell[i]);
             for (SpellsRequiringSpellMap::const_iterator itr2 = spellsRequired.first; itr2 != spellsRequired.second && maxReq < 3; ++itr2)
             {
                 data << uint32(itr2->second);
@@ -331,16 +331,16 @@ void WorldSession::HandleGossipHelloOpcode(WorldPacket & recv_data)
     // If spiritguide, no need for gossip menu, just put player into resurrect queue
     if (unit->isSpiritGuide())
     {
-        BattleGround *bg = _player->GetBattleGround();
+        Battleground *bg = _player->GetBattleground();
         if (bg)
         {
             bg->AddPlayerToResurrectQueue(unit->GetGUID(), _player->GetGUID());
-            sBattleGroundMgr.SendAreaSpiritHealerQueryOpcode(_player, bg, unit->GetGUID());
+            sBattlegroundMgr.SendAreaSpiritHealerQueryOpcode(_player, bg, unit->GetGUID());
             return;
         }
     }
 
-    if (!sScriptMgr.GossipHello(_player, unit))
+    if (!sScriptMgr.OnGossipHello(_player, unit))
     {
 //        _player->TalkedToCreature(unit->GetEntry(), unit->GetGUID());
         _player->PrepareGossipMenu(unit, unit->GetCreatureInfo()->GossipMenuId, true);
@@ -384,7 +384,7 @@ void WorldSession::HandleGossipHelloOpcode(WorldPacket & recv_data)
     }
     else
     {
-        if (!Script->GossipSelect (_player, unit, _player->PlayerTalkClass->GossipOptionSender (option), _player->PlayerTalkClass->GossipOptionAction (option)))
+        if (!Script->OnGossipSelect (_player, unit, _player->PlayerTalkClass->GossipOptionSender (option), _player->PlayerTalkClass->GossipOptionAction (option)))
            unit->OnGossipSelect (_player, option);
     }
 }*/
@@ -421,7 +421,7 @@ void WorldSession::SendSpiritResurrect()
     WorldSafeLocsEntry const *corpseGrave = NULL;
     Corpse *corpse = _player->GetCorpse();
     if (corpse)
-        corpseGrave = objmgr.GetClosestGraveYard(
+        corpseGrave = sObjectMgr.GetClosestGraveYard(
             corpse->GetPositionX(), corpse->GetPositionY(), corpse->GetPositionZ(), corpse->GetMapId(), _player->GetTeam());
 
     // now can spawn bones
@@ -430,7 +430,7 @@ void WorldSession::SendSpiritResurrect()
     // teleport to nearest from corpse graveyard, if different from nearest to player ghost
     if (corpseGrave)
     {
-        WorldSafeLocsEntry const *ghostGrave = objmgr.GetClosestGraveYard(
+        WorldSafeLocsEntry const *ghostGrave = sObjectMgr.GetClosestGraveYard(
             _player->GetPositionX(), _player->GetPositionY(), _player->GetPositionZ(), _player->GetMapId(), _player->GetTeam());
 
         if (corpseGrave != ghostGrave)
@@ -673,7 +673,7 @@ void WorldSession::HandleUnstablePet(WorldPacket & recv_data)
         return;
     }
 
-    CreatureInfo const* creatureInfo = objmgr.GetCreatureTemplate(creature_id);
+    CreatureInfo const* creatureInfo = sObjectMgr.GetCreatureTemplate(creature_id);
     if (!creatureInfo || !creatureInfo->isTameable(_player->CanTameExoticPets()))
     {
         // if problem in exotic pet
@@ -791,7 +791,7 @@ void WorldSession::HandleStableSwapPet(WorldPacket & recv_data)
         return;
     }
 
-    CreatureInfo const* creatureInfo = objmgr.GetCreatureTemplate(creature_id);
+    CreatureInfo const* creatureInfo = sObjectMgr.GetCreatureTemplate(creature_id);
     if (!creatureInfo || !creatureInfo->isTameable(_player->CanTameExoticPets()))
     {
         // if problem in exotic pet
@@ -860,7 +860,7 @@ void WorldSession::HandleRepairItemOpcode(WorldPacket & recv_data)
         uint32 GuildId = _player->GetGuildId();
         if (!GuildId)
             return;
-        Guild *pGuild = objmgr.GetGuildById(GuildId);
+        Guild *pGuild = sObjectMgr.GetGuildById(GuildId);
         if (!pGuild)
             return;
         pGuild->LogBankEvent(GUILD_BANK_LOG_REPAIR_MONEY, 0, _player->GetGUIDLow(), TotalCost);

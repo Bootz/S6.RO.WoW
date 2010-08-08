@@ -36,7 +36,7 @@
 #include "Guild.h"
 #include "World.h"
 #include "ObjectAccessor.h"
-#include "BattleGroundMgr.h"
+#include "BattlegroundMgr.h"
 #include "OutdoorPvPMgr.h"
 #include "MapManager.h"
 #include "SocialMgr.h"
@@ -49,7 +49,7 @@
 WorldSession::WorldSession(uint32 id, WorldSocket *sock, AccountTypes sec, uint8 expansion, time_t mute_time, LocaleConstant locale) :
 LookingForGroup_auto_join(false), LookingForGroup_auto_add(false), m_muteTime(mute_time),
 _player(NULL), m_Socket(sock),_security(sec), _accountId(id), m_expansion(expansion),
-m_sessionDbcLocale(sWorld.GetAvailableDbcLocale(locale)), m_sessionDbLocaleIndex(objmgr.GetIndexForLocale(locale)),
+m_sessionDbcLocale(sWorld.GetAvailableDbcLocale(locale)), m_sessionDbLocaleIndex(sObjectMgr.GetIndexForLocale(locale)),
 _logoutTime(0), m_inQueue(false), m_playerLoading(false), m_playerLogout(false), m_playerRecentlyLogout(false), m_playerSave(false),
 m_latency(0), m_TutorialsChanged(false), m_timeOutTime(0)
 {
@@ -174,12 +174,12 @@ bool WorldSession::Update(uint32 diff)
 {
     /// Update Timeout timer.
     UpdateTimeOutTime(diff);
-    
-    ///- Before we process anything:    
+
+    ///- Before we process anything:
     /// If necessary, kick the player from the character select screen
     if (IsConnectionIdle())
         m_Socket->CloseSocket();
-    
+
     ///- Retrieve packets from the receive queue and call the appropriate handlers
     /// not proccess packets if socket already closed
     WorldPacket* packet;
@@ -196,6 +196,8 @@ bool WorldSession::Update(uint32 diff)
             sLog.outError("SESSION: received non-existed opcode %s (0x%.4X)",
                 LookupOpcodeName(packet->GetOpcode()),
                 packet->GetOpcode());
+
+            sScriptMgr.OnUnknownPacketReceive(m_Socket, WorldPacket(*packet));
         }
         else
         {
@@ -213,6 +215,7 @@ bool WorldSession::Update(uint32 diff)
                         }
                         else if (_player->IsInWorld())
                         {
+                            sScriptMgr.OnPacketReceive(m_Socket, WorldPacket(*packet));
                             (this->*opHandle.handler)(*packet);
                             if (sLog.IsOutDebug() && packet->rpos() < packet->wpos())
                                 LogUnprocessedTail(packet);
@@ -227,6 +230,7 @@ bool WorldSession::Update(uint32 diff)
                         else
                         {
                             // not expected _player or must checked in packet hanlder
+                            sScriptMgr.OnPacketReceive(m_Socket, WorldPacket(*packet));
                             (this->*opHandle.handler)(*packet);
                             if (sLog.IsOutDebug() && packet->rpos() < packet->wpos())
                                 LogUnprocessedTail(packet);
@@ -239,6 +243,7 @@ bool WorldSession::Update(uint32 diff)
                             LogUnexpectedOpcode(packet, "the player is still in world");
                         else
                         {
+                            sScriptMgr.OnPacketReceive(m_Socket, WorldPacket(*packet));
                             (this->*opHandle.handler)(*packet);
                             if (sLog.IsOutDebug() && packet->rpos() < packet->wpos())
                                 LogUnprocessedTail(packet);
@@ -257,6 +262,7 @@ bool WorldSession::Update(uint32 diff)
                         if (packet->GetOpcode() != CMSG_SET_ACTIVE_VOICE_CHANNEL)
                             m_playerRecentlyLogout = false;
 
+                        sScriptMgr.OnPacketReceive(m_Socket, WorldPacket(*packet));
                         (this->*opHandle.handler)(*packet);
                         if (sLog.IsOutDebug() && packet->rpos() < packet->wpos())
                             LogUnprocessedTail(packet);
@@ -364,7 +370,7 @@ void WorldSession::LogoutPlayer(bool Save)
             // give bg rewards and update counters like kill by first from attackers
             // this can't be called for all attackers.
             if (!aset.empty())
-                if (BattleGround *bg = _player->GetBattleGround())
+                if (Battleground *bg = _player->GetBattleground())
                     bg->HandleKillPlayer(_player,*aset.begin());
         }
         else if (_player->HasAuraType(SPELL_AURA_SPIRIT_OF_REDEMPTION))
@@ -377,7 +383,7 @@ void WorldSession::LogoutPlayer(bool Save)
             _player->RepopAtGraveyard();
         }
         //drop a flag if player is carrying it
-        if (BattleGround *bg = _player->GetBattleGround())
+        if (Battleground *bg = _player->GetBattleground())
             bg->EventPlayerLoggedOut(_player);
 
         ///- Teleport to home if the player is in an invalid instance
@@ -388,10 +394,10 @@ void WorldSession::LogoutPlayer(bool Save)
 
         for (int i=0; i < PLAYER_MAX_BATTLEGROUND_QUEUES; ++i)
         {
-            if (BattleGroundQueueTypeId bgQueueTypeId = _player->GetBattleGroundQueueTypeId(i))
+            if (BattlegroundQueueTypeId bgQueueTypeId = _player->GetBattlegroundQueueTypeId(i))
             {
-                _player->RemoveBattleGroundQueueId(bgQueueTypeId);
-                sBattleGroundMgr.m_BattleGroundQueues[ bgQueueTypeId ].RemovePlayer(_player->GetGUID(), true);
+                _player->RemoveBattlegroundQueueId(bgQueueTypeId);
+                sBattlegroundMgr.m_BattlegroundQueues[ bgQueueTypeId ].RemovePlayer(_player->GetGUID(), true);
             }
         }
 
@@ -401,7 +407,7 @@ void WorldSession::LogoutPlayer(bool Save)
             HandleMoveWorldportAckOpcode();
 
         ///- If the player is in a guild, update the guild roster and broadcast a logout message to other guild members
-        Guild *guild = objmgr.GetGuildById(_player->GetGuildId());
+        Guild *guild = sObjectMgr.GetGuildById(_player->GetGuildId());
         if (guild)
         {
             guild->SetMemberStats(_player->GetGUID());
@@ -471,9 +477,6 @@ void WorldSession::LogoutPlayer(bool Save)
         sLog.outDebug("SESSION: Sent SMSG_LOGOUT_COMPLETE Message");
     }
 
-    //Hook for OnLogout Event
-    sScriptMgr.OnLogout(_player);
-
     m_playerLogout = false;
     m_playerSave = false;
     m_playerRecentlyLogout = true;
@@ -524,7 +527,7 @@ void WorldSession::SendNotification(int32 string_id,...)
 
 const char * WorldSession::GetTrinityString(int32 entry) const
 {
-    return objmgr.GetTrinityString(entry,GetSessionDbLocaleIndex());
+    return sObjectMgr.GetTrinityString(entry,GetSessionDbLocaleIndex());
 }
 
 void WorldSession::Handle_NULL(WorldPacket& recvPacket)
@@ -718,8 +721,7 @@ void WorldSession::ReadMovementInfo(WorldPacket &data, MovementInfo *mi)
 
     if (mi->flags & MOVEMENTFLAG_ONTRANSPORT)
     {
-        if (!data.readPackGUID(mi->t_guid))
-            return;
+        data.readPackGUID(mi->t_guid);
 
         data >> mi->t_pos.PositionXYZOStream();
         data >> mi->t_time;

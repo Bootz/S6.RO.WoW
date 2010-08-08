@@ -444,7 +444,7 @@ void LoadDBCStores(const std::string& dataPath)
             continue;
 
         for (int x = 0; x < MAX_DIFFICULTY; ++x)
-            spellmgr.SetSpellDifficultyId(uint32(newEntry.SpellID[x]), spellDiff->ID);
+            sSpellMgr.SetSpellDifficultyId(uint32(newEntry.SpellID[x]), spellDiff->ID);
     }
 
     // create talent spells set
@@ -820,7 +820,7 @@ PvPDifficultyEntry const* GetBattlegroundBracketByLevel(uint32 mapid, uint32 lev
     return NULL;
 }
 
-PvPDifficultyEntry const* GetBattlegroundBracketById(uint32 mapid, BattleGroundBracketId id)
+PvPDifficultyEntry const* GetBattlegroundBracketById(uint32 mapid, BattlegroundBracketId id)
 {
     for (uint32 i = 0; i < sPvPDifficultyStore.GetNumRows(); ++i)
         if (PvPDifficultyEntry const* entry = sPvPDifficultyStore.LookupEntry(i))

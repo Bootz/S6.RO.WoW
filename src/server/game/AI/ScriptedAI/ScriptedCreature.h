@@ -11,10 +11,9 @@
 #include "Creature.h"
 #include "CreatureAI.h"
 #include "CreatureAIImpl.h"
-#include "InstanceData.h"
+#include "InstanceScript.h"
 
 #define SCRIPT_CAST_TYPE dynamic_cast
-//#define SCRIPT_CAST_TYPE static_cast
 
 #define CAST_PLR(a)     (SCRIPT_CAST_TYPE<Player*>(a))
 #define CAST_CRE(a)     (SCRIPT_CAST_TYPE<Creature*>(a))
@@ -25,7 +24,7 @@
 
 #define GET_SPELL(a)    (const_cast<SpellEntry*>(GetSpellStore()->LookupEntry(a)))
 
-class ScriptedInstance;
+class InstanceScript;
 
 class SummonList : public std::list<uint64>
 {
@@ -154,7 +153,7 @@ struct ScriptedAI : public CreatureAI
     //Selects a unit from the creature's current aggro list
     Unit* SelectUnit(SelectAggroTarget pTarget, uint32 uiPosition);
 
-    bool HealthBelowPct(uint32 pct) const { return me->GetHealth() * 100 < me->GetMaxHealth() * pct; }
+    bool HealthBelowPct(uint64 pct) const { return me->GetHealth() * 100 < me->GetMaxHealth() * pct; }
 
     //Returns spells that meet the specified criteria from the creatures spell list
     SpellEntry const* SelectSpell(Unit* Target, uint32 School, uint32 Mechanic, SelectTargetType Targets,  uint32 PowerCostMin, uint32 PowerCostMax, float RangeMin, float RangeMax, SelectEffect Effect);
@@ -251,7 +250,7 @@ struct BossAI : public ScriptedAI
     const uint32 bossId;
     EventMap events;
     SummonList summons;
-    InstanceData * const instance;
+    InstanceScript * const instance;
     const BossBoundaryMap * const boundary;
 
     void JustSummoned(Creature *summon);

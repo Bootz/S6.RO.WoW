@@ -29,7 +29,7 @@
 #include "SpellAuras.h"
 #include "MapManager.h"
 #include "Transport.h"
-#include "BattleGround.h"
+#include "Battleground.h"
 #include "WaypointMovementGenerator.h"
 #include "InstanceSaveMgr.h"
 #include "ObjectMgr.h"
@@ -58,7 +58,7 @@ void WorldSession::HandleMoveWorldportAckOpcode()
 
     // get the destination map entry, not the current one, this will fix homebind and reset greeting
     MapEntry const* mEntry = sMapStore.LookupEntry(loc.GetMapId());
-    InstanceTemplate const* mInstance = objmgr.GetInstanceTemplate(loc.GetMapId());
+    InstanceTemplate const* mInstance = sObjectMgr.GetInstanceTemplate(loc.GetMapId());
 
     // reset instance validity, except if going to an instance inside an instance
     if (GetPlayer()->m_InstanceValid == false && !mInstance)
@@ -102,20 +102,20 @@ void WorldSession::HandleMoveWorldportAckOpcode()
 
     // battleground state prepare (in case join to BG), at relogin/tele player not invited
     // only add to bg group and object, if the player was invited (else he entered through command)
-    if (_player->InBattleGround())
+    if (_player->InBattleground())
     {
         // cleanup setting if outdated
-        if (!mEntry->IsBattleGroundOrArena())
+        if (!mEntry->IsBattlegroundOrArena())
         {
             // We're not in BG
-            _player->SetBattleGroundId(0, BATTLEGROUND_TYPE_NONE);
+            _player->SetBattlegroundId(0, BATTLEGROUND_TYPE_NONE);
             // reset destination bg team
             _player->SetBGTeam(0);
         }
         // join to bg case
-        else if (BattleGround *bg = _player->GetBattleGround())
+        else if (Battleground *bg = _player->GetBattleground())
         {
-            if (_player->IsInvitedForBattleGroundInstance(_player->GetBattleGroundId()))
+            if (_player->IsInvitedForBattlegroundInstance(_player->GetBattlegroundId()))
                 bg->AddPlayer(_player);
         }
     }
@@ -125,7 +125,7 @@ void WorldSession::HandleMoveWorldportAckOpcode()
     // flight fast teleport case
     if (GetPlayer()->GetMotionMaster()->GetCurrentMovementGeneratorType() == FLIGHT_MOTION_TYPE)
     {
-        if (!_player->InBattleGround())
+        if (!_player->InBattleground())
         {
             // short preparations to continue flight
             FlightPathMovementGenerator* flight = (FlightPathMovementGenerator*)(GetPlayer()->GetMotionMaster()->top());
@@ -149,7 +149,7 @@ void WorldSession::HandleMoveWorldportAckOpcode()
         }
     }
 
-    bool allowMount = !mEntry->IsDungeon() || mEntry->IsBattleGroundOrArena();
+    bool allowMount = !mEntry->IsDungeon() || mEntry->IsBattlegroundOrArena();
     if (mInstance)
     {
         Difficulty diff = GetPlayer()->GetDifficulty(mEntry->IsRaid());
@@ -157,7 +157,7 @@ void WorldSession::HandleMoveWorldportAckOpcode()
         {
             if (mapDiff->resetTime)
             {
-                if (uint32 timeReset = sInstanceSaveManager.GetResetTimeFor(mEntry->MapID,diff))
+                if (uint32 timeReset = sInstanceSaveMgr.GetResetTimeFor(mEntry->MapID,diff))
                 {
                     uint32 timeleft = timeReset - time(NULL);
                     GetPlayer()->SendInstanceResetWarning(mEntry->MapID, diff, timeleft);
@@ -195,8 +195,7 @@ void WorldSession::HandleMoveTeleportAck(WorldPacket& recv_data)
     sLog.outDebug("MSG_MOVE_TELEPORT_ACK");
     uint64 guid;
 
-    if (!recv_data.readPackGUID(guid))
-        return;
+    recv_data.readPackGUID(guid);
 
     uint32 flags, time;
     recv_data >> flags >> time;
@@ -264,8 +263,7 @@ void WorldSession::HandleMovementOpcodes(WorldPacket & recv_data)
     /* extract packet */
     uint64 guid;
 
-    if (!recv_data.readPackGUID(guid))
-        return;
+    recv_data.readPackGUID(guid);
 
     MovementInfo movementInfo;
     movementInfo.guid = guid;
@@ -371,9 +369,9 @@ void WorldSession::HandleMovementOpcodes(WorldPacket & recv_data)
 
         if (movementInfo.pos.GetPositionZ() < -500.0f)
         {
-            if (plMover->InBattleGround()
-                && plMover->GetBattleGround()
-                && plMover->GetBattleGround()->HandlePlayerUnderMap(_player))
+            if (plMover->InBattleground()
+                && plMover->GetBattleground()
+                && plMover->GetBattleground()->HandlePlayerUnderMap(_player))
             {
                 // do nothing, the handle already did if returned true
             }
@@ -424,8 +422,7 @@ void WorldSession::HandleForceSpeedChangeAck(WorldPacket &recv_data)
     uint32 unk1;
     float  newspeed;
 
-    if (!recv_data.readPackGUID(guid))
-        return;
+    recv_data.readPackGUID(guid);
 
     // now can skip not our packet
     if (_player->GetGUID() != guid)
@@ -525,8 +522,7 @@ void WorldSession::HandleMoveNotActiveMover(WorldPacket &recv_data)
     sLog.outDebug("WORLD: Recvd CMSG_MOVE_NOT_ACTIVE_MOVER");
 
     uint64 old_mover_guid;
-    if (!recv_data.readPackGUID(old_mover_guid))
-        return;
+    recv_data.readPackGUID(old_mover_guid);
 
     /*if (_player->m_mover->GetGUID() == old_mover_guid)
     {
@@ -558,8 +554,7 @@ void WorldSession::HandleDismissControlledVehicle(WorldPacket &recv_data)
 
     uint64 guid;
 
-    if (!recv_data.readPackGUID(guid))
-        return;
+    recv_data.readPackGUID(guid);
 
     MovementInfo mi;
     mi.guid = guid;
@@ -592,14 +587,12 @@ void WorldSession::HandleChangeSeatsOnControlledVehicle(WorldPacket &recv_data)
     case CMSG_CHANGE_SEATS_ON_CONTROLLED_VEHICLE:
         {
             uint64 guid;        // current vehicle guid
-            if (!recv_data.readPackGUID(guid))
-                return;
+            recv_data.readPackGUID(guid);
 
             ReadMovementInfo(recv_data, &vehicle_base->m_movementInfo);
 
             uint64 accessory;        //  accessory guid
-            if (!recv_data.readPackGUID(accessory))
-                return;
+            recv_data.readPackGUID(accessory);
 
             int8 seatId;
             recv_data >> seatId;
@@ -620,8 +613,7 @@ void WorldSession::HandleChangeSeatsOnControlledVehicle(WorldPacket &recv_data)
     case CMSG_REQUEST_VEHICLE_SWITCH_SEAT:
         {
             uint64 guid;        // current vehicle guid
-            if (!recv_data.readPackGUID(guid))
-                return;
+            recv_data.readPackGUID(guid);
 
             int8 seatId;
             recv_data >> seatId;
@@ -693,8 +685,7 @@ void WorldSession::HandleMoveKnockBackAck(WorldPacket & recv_data)
     sLog.outDebug("CMSG_MOVE_KNOCK_BACK_ACK");
 
     uint64 guid;                                            // guid - unused
-    if (!recv_data.readPackGUID(guid))
-        return;
+    recv_data.readPackGUID(guid);
 
     recv_data.read_skip<uint32>();                          // unk
 
@@ -707,8 +698,7 @@ void WorldSession::HandleMoveHoverAck(WorldPacket& recv_data)
     sLog.outDebug("CMSG_MOVE_HOVER_ACK");
 
     uint64 guid;                                            // guid - unused
-    if (!recv_data.readPackGUID(guid))
-        return;
+    recv_data.readPackGUID(guid);
 
     recv_data.read_skip<uint32>();                          // unk
 
@@ -723,8 +713,7 @@ void WorldSession::HandleMoveWaterWalkAck(WorldPacket& recv_data)
     sLog.outDebug("CMSG_MOVE_WATER_WALK_ACK");
 
     uint64 guid;                                            // guid - unused
-    if (!recv_data.readPackGUID(guid))
-        return;
+    recv_data.readPackGUID(guid);
 
     recv_data.read_skip<uint32>();                          // unk
 

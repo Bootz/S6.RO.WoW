@@ -427,7 +427,7 @@ class Creature : public Unit, public GridObject<Creature>
         bool canWalk() const { return GetCreatureInfo()->InhabitType & INHABIT_GROUND; }
         bool canSwim() const { return GetCreatureInfo()->InhabitType & INHABIT_WATER; }
         //bool canFly()  const { return GetCreatureInfo()->InhabitType & INHABIT_AIR; }
-        
+
         void SetReactState(ReactStates st) { m_reactState = st; }
         ReactStates GetReactState() { return m_reactState; }
         bool HasReactState(ReactStates state) const { return (m_reactState == state); }
@@ -712,7 +712,7 @@ class Creature : public Unit, public GridObject<Creature>
 
         bool DisableReputationGain;
 
-        CreatureInfo const* m_creatureInfo;                 // in difficulty mode > 0 can different from objmgr.::GetCreatureTemplate(GetEntry())
+        CreatureInfo const* m_creatureInfo;                 // in difficulty mode > 0 can different from sObjectMgr.::GetCreatureTemplate(GetEntry())
         CreatureData const* m_creatureData;
 
         uint16 m_LootMode;                                  // bitmask, default LOOT_MODE_DEFAULT, determines what loot will be lootable
