@@ -980,6 +980,8 @@ struct npc_ghoul_iccAI : public ScriptedAI
 			me->SetUInt32Value(UNIT_NPC_EMOTESTATE, 0);
 			m_bIsAggroTimer = true;
 		} else m_uiAggroTimer -= uiDiff;
+        
+                DoMeleeAttackIfReady();
 	}
 };
 
