@@ -81,8 +81,8 @@ enum LichKingSpells
 	SPELL_SUMMON_RAGING_SPIRIT       =    69200,
 	SPELL_SUMMON_VALKYR              =    69037,
 	SPELL_SUMMON_DEFILE              =    72754,
-    SPELL_SUMMON_VILE_SPIRIT         =    70498,
-    SPELL_SUMMON_BROKEN_FROSTMOURNE  =    72406,
+	SPELL_SUMMON_VILE_SPIRIT         =    70498,
+	SPELL_SUMMON_BROKEN_FROSTMOURNE  =    72406,
 	SPELL_INFEST_10_NORMAL           =    70541,
 	SPELL_INFEST_25_NORMAL           =    73779,
 	SPELL_INFEST_10_HEROIC           =    73780,
@@ -114,7 +114,6 @@ enum LichKingSpells
 	SPELL_ICE_PULSE                  =    69091,
 	SPELL_ICE_BURST                  =    69108,
 };
-
 enum DefileDamage
 {
 	DEFILE_N_10_DAMAGE    =    3000,
@@ -435,7 +434,7 @@ struct boss_lich_kingAI : public ScriptedAI
 
 			if (m_uiInfestTimer < uiDiff)
 			{
-				DoCast(me, SPELL_INFEST);
+				DoCast(me, RAID_MODE(SPELL_INFEST_10_NORMAL, SPELL_INFEST_25_NORMAL, SPELL_INFEST_10_HEROIC, SPELL_INFEST_25_HEROIC));
 				m_uiInfestTimer = 30000;
 			} else m_uiInfestTimer -= uiDiff;
 		}
@@ -738,9 +737,9 @@ struct npc_tirion_citadell_iccAI : public ScriptedAI
 			{
 			case 1:
 				if(m_pInstance)
-					m_pInstance->SetData(DATA_LICH_KING_EVENT, IN_PROGRESS);
+				m_pInstance->SetData(DATA_LICH_KING_EVENT, IN_PROGRESS);
 				pLichKing->SetStandState(UNIT_STAND_STATE_STAND);
-				pLichKing->AddUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
+				pLichKing->AddUnitMovementFlag(MOVEMENTFLAG_WALKING);
 				pLichKing->SetSpeed(MOVE_WALK, 1.2f);
 				pLichKing->GetMotionMaster()->MovePoint(0, MovePosition);
 				me->SetUInt32Value(UNIT_NPC_EMOTESTATE, 375);
