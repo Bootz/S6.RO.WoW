@@ -282,6 +282,7 @@ struct boss_valithriaAI : public ScriptedAI
                 me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                 m_uiEndTimer = 50000;
             } else m_uiEndTimer -= diff;
+        }
 
         if (Phase == 3)
         {

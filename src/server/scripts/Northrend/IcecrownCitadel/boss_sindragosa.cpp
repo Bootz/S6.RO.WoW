@@ -159,11 +159,11 @@ struct npc_ice_tombAI : public Scripted_NoMovementAI
         if ((temp && temp->isAlive() && !temp->HasAura(SPELL_ICE_TOMB)) || !temp)
             me->DealDamage(me, me->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
 			
-		if (m_uiAsphyxiationTimer <= uiDiff)
+		if (m_uiAsphyxiationTimer <= diff)
 		{
 			TombPrisoner->CastSpell(TombPrisoner, SPELL_ASPHYXIATION, true);
 			m_uiAsphyxiationTimer = 9999999;
-		} else m_uiAsphyxiationTimer -= uiDiff;
+		} else m_uiAsphyxiationTimer -= diff;
     }
 };
 
@@ -190,6 +190,7 @@ struct boss_sindragosaAI : public ScriptedAI
     uint32 m_uiUnchainedMagicTimer;
     uint32 m_uiMysticBuffetTimer;
     uint32 m_uiIceBombTimer;
+    uint32 m_uiAsphyxiationTimer;
 
     void Reset()
     {
