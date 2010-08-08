@@ -51,174 +51,171 @@ enum
 {
     ACHIEV_TIMED_START_EVENT                      = 18153,
 };
-class boss_drakos : public CreatureScript
-{
-public:
-    boss_drakos() : CreatureScript("boss_drakos") { }
 
-    CreatureAI* GetAI(Creature* pCreature) const
+struct boss_drakosAI : public ScriptedAI
+{
+    boss_drakosAI(Creature* pCreature) : ScriptedAI(pCreature), lSummons(me)
     {
-        return new boss_drakosAI (pCreature);
+        pInstance = pCreature->GetInstanceData();
     }
 
-    struct boss_drakosAI : public ScriptedAI
+    uint32 uiMagicPullTimer;
+    uint32 uiStompTimer;
+    uint32 uiBombSummonTimer;
+
+    bool bPostPull;
+
+    ScriptedInstance* pInstance;
+    SummonList lSummons;
+
+    void Reset()
     {
-        boss_drakosAI(Creature* pCreature) : ScriptedAI(pCreature), lSummons(me)
+        lSummons.DespawnAll();
+        uiMagicPullTimer = 15000;
+        uiStompTimer = 17000;
+        uiBombSummonTimer = 2000;
+
+        bPostPull = false;
+
+        if (pInstance)
+            pInstance->SetData(DATA_DRAKOS_EVENT, NOT_STARTED);
+    }
+
+    void EnterCombat(Unit* /*who*/)
+    {
+        DoScriptText(SAY_AGGRO, me);
+
+        if (pInstance)
+            pInstance->SetData(DATA_DRAKOS_EVENT, IN_PROGRESS);
+    }
+
+    void JustSummoned(Creature* pSummon)
+    {
+        lSummons.Summon(pSummon);
+    }
+
+    void UpdateAI(const uint32 uiDiff)
+    {
+        //Return since we have no target
+        if (!UpdateVictim())
+            return;
+
+        if (uiBombSummonTimer <= uiDiff)
         {
-            pInstance = pCreature->GetInstanceScript();
-        }
+            Position pPosition;
+            me->GetPosition(&pPosition);
 
-        uint32 uiMagicPullTimer;
-        uint32 uiStompTimer;
-        uint32 uiBombSummonTimer;
-
-        bool bPostPull;
-
-        InstanceScript* pInstance;
-        SummonList lSummons;
-
-        void Reset()
-        {
-            lSummons.DespawnAll();
-            uiMagicPullTimer = 15000;
-            uiStompTimer = 17000;
-            uiBombSummonTimer = 2000;
-
-            bPostPull = false;
-
-            if (pInstance)
-                pInstance->SetData(DATA_DRAKOS_EVENT, NOT_STARTED);
-        }
-
-        void EnterCombat(Unit* /*who*/)
-        {
-            DoScriptText(SAY_AGGRO, me);
-
-            if (pInstance)
-                pInstance->SetData(DATA_DRAKOS_EVENT, IN_PROGRESS);
-        }
-
-        void JustSummoned(Creature* pSummon)
-        {
-            lSummons.Summon(pSummon);
-        }
-
-        void UpdateAI(const uint32 uiDiff)
-        {
-            //Return since we have no target
-            if (!UpdateVictim())
-                return;
-
-            if (uiBombSummonTimer <= uiDiff)
+            if (bPostPull)
             {
-                Position pPosition;
-                me->GetPosition(&pPosition);
-
-                if (bPostPull)
-                {
-                    for (uint8 uiI = 0; uiI >= 3; uiI++)
-                    {
-                        me->GetRandomNearPosition(pPosition, float(urand(0,10)));
-                        me->SummonCreature(NPC_UNSTABLE_SPHERE, pPosition);
-                    }
-                }
-                else
+                for (uint8 uiI = 0; uiI >= 3; uiI++)
                 {
                     me->GetRandomNearPosition(pPosition, float(urand(0,10)));
                     me->SummonCreature(NPC_UNSTABLE_SPHERE, pPosition);
                 }
-
-                uiBombSummonTimer = 2000;
-            } else uiBombSummonTimer -= uiDiff;
-
-            if (uiMagicPullTimer <= uiDiff)
+            }
+            else
             {
-                DoCast(SPELL_MAGIC_PULL);
-
-                bPostPull = true;
-
-                uiMagicPullTimer = 15000;
-            } else uiMagicPullTimer -= uiDiff;
-
-            if (uiStompTimer <= uiDiff)
-            {
-                DoScriptText(RAND(SAY_STOMP_1,SAY_STOMP_2,SAY_STOMP_3), me);
-                DoCast(SPELL_THUNDERING_STOMP);
-                uiStompTimer = 17000;
-            } else uiStompTimer -= uiDiff;
-
-            DoMeleeAttackIfReady();
-        }
-
-        void JustDied(Unit* /*killer*/)
-        {
-            DoScriptText(SAY_DEATH, me);
-
-            if (pInstance)
-            {
-                pInstance->SetData(DATA_DRAKOS_EVENT, DONE);
-                // start achievement timer (kill Eregos within 20 min)
-                pInstance->DoStartTimedAchievement(ACHIEVEMENT_TIMED_TYPE_EVENT, ACHIEV_TIMED_START_EVENT);
+                me->GetRandomNearPosition(pPosition, float(urand(0,10)));
+                me->SummonCreature(NPC_UNSTABLE_SPHERE, pPosition);
             }
 
-            lSummons.DespawnAll();
-        }
-        void KilledUnit(Unit* /*victim*/)
+            uiBombSummonTimer = 2000;
+        } else uiBombSummonTimer -= uiDiff;
+
+        if (uiMagicPullTimer <= uiDiff)
         {
-            DoScriptText(RAND(SAY_KILL_1,SAY_KILL_2,SAY_KILL_3), me);
-        }
-    };
+            DoCast(SPELL_MAGIC_PULL);
 
-};
+            bPostPull = true;
 
-class npc_unstable_sphere : public CreatureScript
-{
-public:
-    npc_unstable_sphere() : CreatureScript("npc_unstable_sphere") { }
+            uiMagicPullTimer = 15000;
+        } else uiMagicPullTimer -= uiDiff;
 
-    CreatureAI* GetAI(Creature* pCreature) const
-    {
-        return new npc_unstable_sphereAI (pCreature);
+        if (uiStompTimer <= uiDiff)
+        {
+            DoScriptText(RAND(SAY_STOMP_1,SAY_STOMP_2,SAY_STOMP_3), me);
+            DoCast(SPELL_THUNDERING_STOMP);
+            uiStompTimer = 17000;
+        } else uiStompTimer -= uiDiff;
+
+        DoMeleeAttackIfReady();
     }
 
-    struct npc_unstable_sphereAI : public ScriptedAI
+    void JustDied(Unit* /*killer*/)
     {
-        npc_unstable_sphereAI(Creature* pCreature) : ScriptedAI(pCreature) {}
+        DoScriptText(SAY_DEATH, me);
 
-        uint32 uiPulseTimer;
-        uint32 uiDeathTimer;
-
-        void Reset()
+        if (pInstance)
         {
-            me->SetReactState(REACT_PASSIVE);
-            me->GetMotionMaster()->MoveRandom(40.0f);
-
-            me->AddAura(SPELL_UNSTABLE_SPHERE_PASSIVE, me);
-            me->AddAura(SPELL_UNSTABLE_SPHERE_TIMER, me);
-
-            uiPulseTimer = 3000;
-            uiDeathTimer = 19000;
+            pInstance->SetData(DATA_DRAKOS_EVENT, DONE);
+            // start achievement timer (kill Eregos within 20 min)
+            //pInstance->DoStartTimedAchievement(ACHIEVEMENT_TIMED_TYPE_EVENT, ACHIEV_TIMED_START_EVENT);
         }
 
-        void UpdateAI(const uint32 uiDiff)
-        {
-            if (uiPulseTimer <= uiDiff)
-            {
-                DoCast(SPELL_UNSTABLE_SPHERE_PULSE);
-                uiPulseTimer = 3*IN_MILLISECONDS;
-            } else uiPulseTimer -= uiDiff;
-
-            if (uiDeathTimer <= uiDiff)
-                me->DisappearAndDie();
-            else uiDeathTimer -= uiDiff;
-        }
-    };
-
+        lSummons.DespawnAll();
+    }
+    void KilledUnit(Unit* /*victim*/)
+    {
+        DoScriptText(RAND(SAY_KILL_1,SAY_KILL_2,SAY_KILL_3), me);
+    }
 };
+
+CreatureAI* GetAI_boss_drakos(Creature* pCreature)
+{
+    return new boss_drakosAI (pCreature);
+}
+
+struct npc_unstable_sphereAI : public ScriptedAI
+{
+    npc_unstable_sphereAI(Creature* pCreature) : ScriptedAI(pCreature) {}
+
+    uint32 uiPulseTimer;
+    uint32 uiDeathTimer;
+
+    void Reset()
+    {
+        me->SetReactState(REACT_PASSIVE);
+        me->GetMotionMaster()->MoveRandom(40.0f);
+
+        me->AddAura(SPELL_UNSTABLE_SPHERE_PASSIVE, me);
+        me->AddAura(SPELL_UNSTABLE_SPHERE_TIMER, me);
+
+        uiPulseTimer = 3000;
+        uiDeathTimer = 19000;
+    }
+
+    void UpdateAI(const uint32 uiDiff)
+    {
+        if (uiPulseTimer <= uiDiff)
+        {
+            DoCast(SPELL_UNSTABLE_SPHERE_PULSE);
+            uiPulseTimer = 3*IN_MILLISECONDS;
+        } else uiPulseTimer -= uiDiff;
+
+        if (uiDeathTimer <= uiDiff)
+            me->DisappearAndDie();
+        else uiDeathTimer -= uiDiff;
+    }
+};
+
+CreatureAI* GetAI_npc_unstable_sphere(Creature* pCreature)
+{
+    return new npc_unstable_sphereAI (pCreature);
+}
 
 
 void AddSC_boss_drakos()
 {
-    new boss_drakos();
-    new npc_unstable_sphere();
+    Script* newscript;
+
+    newscript = new Script;
+    newscript->Name = "boss_drakos";
+    newscript->GetAI = &GetAI_boss_drakos;
+    newscript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "npc_unstable_sphere";
+    newscript->GetAI = &GetAI_npc_unstable_sphere;
+    newscript->RegisterSelf();
 }
+
