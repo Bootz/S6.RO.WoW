@@ -107,15 +107,19 @@ struct npc_ice_tombAI : public Scripted_NoMovementAI
     }
 
     uint64 IceTombGUID;
+	Unit* TombPrisoner;
+	uint32 m_uiAsphyxiationTimer;
 
     void SetPrisoner(Unit* uPrisoner)
     {
+		TombPrisoner = uPrisoner;
         IceTombGUID = uPrisoner->GetGUID();
     }
 
     void Reset()
     {
         IceTombGUID = 0;
+		m_uiAsphyxiationTimer = 20000;
     }
 
     void JustDied(Unit *killer)
@@ -154,6 +158,12 @@ struct npc_ice_tombAI : public Scripted_NoMovementAI
         Unit* temp = Unit::GetUnit((*me),IceTombGUID);
         if ((temp && temp->isAlive() && !temp->HasAura(SPELL_ICE_TOMB)) || !temp)
             me->DealDamage(me, me->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+			
+		if (m_uiAsphyxiationTimer <= uiDiff)
+		{
+			TombPrisoner->CastSpell(TombPrisoner, SPELL_ASPHYXIATION, true);
+			m_uiAsphyxiationTimer = 9999999;
+		} else m_uiAsphyxiationTimer -= uiDiff;
     }
 };
 
@@ -180,7 +190,6 @@ struct boss_sindragosaAI : public ScriptedAI
     uint32 m_uiUnchainedMagicTimer;
     uint32 m_uiMysticBuffetTimer;
     uint32 m_uiIceBombTimer;
-    uint32 m_uiAsphyxiationTimer;
 
     void Reset()
     {
@@ -295,7 +304,7 @@ struct boss_sindragosaAI : public ScriptedAI
     void FrostBombTrigger()
     {
         Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM,0);
-        if (pTarget && !pTarget->HasAura(SPELL_ASPHYXIATION))
+        if (pTarget && !pTarget->HasAura(SPELL_ICE_TOMB))
             DoCast(pTarget, SPELL_FROST_BOMB_TRIGGER);
     }
 
@@ -542,7 +551,7 @@ struct npc_frost_bombAI : public ScriptedAI
         for (Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
         if (Player* pTarget = i->getSource())
         {
-            if (pTarget->HasAura(SPELL_ASPHYXIATION))
+            if (pTarget->HasAura(SPELL_ICE_TOMB))
             {
                 pTarget->ApplySpellImmune(0, IMMUNITY_ID, SPELL_FROST_BOMB, true);
                 targets.push_back(pTarget);
