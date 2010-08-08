@@ -75,165 +75,176 @@ enum Creatures
 	CREATURE_ANNOUNCER                    = 35004
 };	
 
-
-struct npc_anstartAI : public ScriptedAI
+class npc_anstart : public CreatureScript
 {
-    npc_anstartAI(Creature *c) : ScriptedAI(c)
-	
-    {
-        pInstance = c->GetInstanceData();
-		
-	me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE|UNIT_FLAG_NOT_SELECTABLE);
+public:
+    npc_anstart() : CreatureScript("npc_anstart") { }
 
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new npc_anstartAI (pCreature);
     }
 
-    uint32 uiIntroTimer;
-
-    uint8 uiIntroPhase;
-
-    IntroPhase Phase;
-
-    Creature* pTrall;	
-    Creature* pGarrosh;	
-    Creature* pKing;	
-    Creature* pLady;	
-    Creature* pHighlord;	
-
-    ScriptedInstance* pInstance;
-	
-
-	
-    void Reset()
+    struct npc_anstartAI : public ScriptedAI
     {
-        Phase = IDLE;
-        uiIntroTimer = 0;
-        uiIntroPhase = 0;
-		pTrall = NULL;	
-        pGarrosh = NULL;	
-        pKing = NULL;	
-        pLady = NULL;	
-        pHighlord = NULL;
-    }
-
-    void MoveInLineOfSight(Unit* pWho)
-    {
-        if (!pWho)
-            return;
-        if (Phase == IDLE && pWho->isTargetableForAttack() && me->IsHostileTo(pWho) && me->IsWithinDistInMap(pWho, 20))
+        npc_anstartAI(Creature *c) : ScriptedAI(c)
+    	
         {
-            Phase = INTRO;
-            me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+            pInstance = c->GetInstanceData();
+    		
+    	me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE|UNIT_FLAG_NOT_SELECTABLE);
 
-            if (pTrall = me->SummonCreature(CREATURE_TRALL, 685.569, 615.103, 435.396, 6.23544, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 20000))
-            {
-			    pTrall->SetReactState(REACT_PASSIVE);	
-                pTrall->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-            }
-            if (pGarrosh = me->SummonCreature(CREATURE_GARROSH, 685.7, 621.134, 435.396, 6.259, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 20000))
-            {
-			    pGarrosh->SetReactState(REACT_PASSIVE);	
-                pGarrosh->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-            }
-            if (pKing = me->SummonCreature(CREATURE_KING, 807.724, 617.9, 435.396, 3.18416, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 20000))
-            {
-			    pKing->SetReactState(REACT_PASSIVE);	
-                pKing->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-            }
-            if (pLady = me->SummonCreature(CREATURE_LADY, 807.401, 613.667, 435.397, 3.0585, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 20000))
-            {
-			    pLady->SetReactState(REACT_PASSIVE);	
-                pLady->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-            }
-            if (pHighlord = me->SummonCreature(CREATURE_HIGHLORD, 746.482, 556.857, 435.396, 1.5898, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 20000))
-            {
-			    pHighlord->SetReactState(REACT_PASSIVE);	
-                pHighlord->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-            }			
         }
-    }
 
-    void AttackStart(Unit* who) {}
+        uint32 uiIntroTimer;
 
-    void UpdateAI(const uint32 diff)
-    {
-                	
-        if (Phase != INTRO)
-            return;
+        uint8 uiIntroPhase;
 
-        if (uiIntroTimer <= diff)
+        IntroPhase Phase;
+
+        Creature* pTrall;	
+        Creature* pGarrosh;	
+        Creature* pKing;	
+        Creature* pLady;	
+        Creature* pHighlord;	
+
+        ScriptedInstance* pInstance;
+    	
+
+    	
+        void Reset()
         {
-            if(!pTrall)
+            Phase = IDLE;
+            uiIntroTimer = 0;
+            uiIntroPhase = 0;
+    		pTrall = NULL;	
+            pGarrosh = NULL;	
+            pKing = NULL;	
+            pLady = NULL;	
+            pHighlord = NULL;
+        }
+
+        void MoveInLineOfSight(Unit* pWho)
+        {
+            if (!pWho)
                 return;
-            if(!pGarrosh)
-                return;	
-            if(!pKing)
-                return;
-            if(!pLady)
-                return;	
-            if(!pHighlord)
-                return;					
-				
-            switch (uiIntroPhase)
+            if (Phase == IDLE && pWho->isTargetableForAttack() && me->IsHostileTo(pWho) && me->IsWithinDistInMap(pWho, 20))
             {
-                case 0:
-                    ++uiIntroPhase;
-                    uiIntroTimer = 4000;
-                    break;
-                case 1:
-                    DoScriptText(AN_1, me);
-                    ++uiIntroPhase;
-                    uiIntroTimer = 10000;
-                    break;
-                case 2:
-                    DoScriptText(AN_2, me);
-                    ++uiIntroPhase;
-                    uiIntroTimer = 13000;
-                    break;
-                case 3:
-                    DoScriptText(AN_3, pTrall);
-                    ++uiIntroPhase;
-                    uiIntroTimer = 8000;
-                    break;
-                case 4:
-                    DoScriptText(AN_4, pGarrosh);
-                    ++uiIntroPhase;
-                    uiIntroTimer = 6000;
-                    break;
-                case 5:
-                    DoScriptText(AN_5, pKing);
-                    ++uiIntroPhase;
-                    uiIntroTimer = 8000;
-                    break;
-                case 6:
-                    DoScriptText(AN_6, pLady);
-                    ++uiIntroPhase;
-                    uiIntroTimer = 8000;
-                    break;
-                case 7:
-                    DoScriptText(AN_7, pHighlord);
-                    ++uiIntroPhase;
-                    uiIntroTimer = 3000;
-                    break;			
-                case 8:
-                    DoScriptText(AN_8, me);
-                    ++uiIntroPhase;
-                    uiIntroTimer = 4000;
-                    break;							
-                case 9:
-                    if (Creature* pAnnouncertoc5 = me->SummonCreature(CREATURE_ANNOUNCER, 746.626, 618.54, 411.09, 4.63158, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 60000))
-                    {	
-						me->DisappearAndDie();             
-       					pAnnouncertoc5->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                        pAnnouncertoc5->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
-                        pAnnouncertoc5->SetReactState(REACT_PASSIVE);
-						
-                        Phase = FINISHED;
-                    }
-                    else Reset();
-                    return;					
+                Phase = INTRO;
+                me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+
+                if (pTrall = me->SummonCreature(CREATURE_TRALL, 685.569, 615.103, 435.396, 6.23544, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 20000))
+                {
+    			    pTrall->SetReactState(REACT_PASSIVE);	
+                    pTrall->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+                }
+                if (pGarrosh = me->SummonCreature(CREATURE_GARROSH, 685.7, 621.134, 435.396, 6.259, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 20000))
+                {
+    			    pGarrosh->SetReactState(REACT_PASSIVE);	
+                    pGarrosh->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+                }
+                if (pKing = me->SummonCreature(CREATURE_KING, 807.724, 617.9, 435.396, 3.18416, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 20000))
+                {
+    			    pKing->SetReactState(REACT_PASSIVE);	
+                    pKing->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+                }
+                if (pLady = me->SummonCreature(CREATURE_LADY, 807.401, 613.667, 435.397, 3.0585, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 20000))
+                {
+    			    pLady->SetReactState(REACT_PASSIVE);	
+                    pLady->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+                }
+                if (pHighlord = me->SummonCreature(CREATURE_HIGHLORD, 746.482, 556.857, 435.396, 1.5898, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 20000))
+                {
+    			    pHighlord->SetReactState(REACT_PASSIVE);	
+                    pHighlord->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+                }			
             }
-        } else uiIntroTimer -= diff;
-    }
+        }
+
+        void AttackStart(Unit* who) {}
+
+        void UpdateAI(const uint32 diff)
+        {
+                    	
+            if (Phase != INTRO)
+                return;
+
+            if (uiIntroTimer <= diff)
+            {
+                if(!pTrall)
+                    return;
+                if(!pGarrosh)
+                    return;	
+                if(!pKing)
+                    return;
+                if(!pLady)
+                    return;	
+                if(!pHighlord)
+                    return;					
+    				
+                switch (uiIntroPhase)
+                {
+                    case 0:
+                        ++uiIntroPhase;
+                        uiIntroTimer = 4000;
+                        break;
+                    case 1:
+                        DoScriptText(AN_1, me);
+                        ++uiIntroPhase;
+                        uiIntroTimer = 10000;
+                        break;
+                    case 2:
+                        DoScriptText(AN_2, me);
+                        ++uiIntroPhase;
+                        uiIntroTimer = 13000;
+                        break;
+                    case 3:
+                        DoScriptText(AN_3, pTrall);
+                        ++uiIntroPhase;
+                        uiIntroTimer = 8000;
+                        break;
+                    case 4:
+                        DoScriptText(AN_4, pGarrosh);
+                        ++uiIntroPhase;
+                        uiIntroTimer = 6000;
+                        break;
+                    case 5:
+                        DoScriptText(AN_5, pKing);
+                        ++uiIntroPhase;
+                        uiIntroTimer = 8000;
+                        break;
+                    case 6:
+                        DoScriptText(AN_6, pLady);
+                        ++uiIntroPhase;
+                        uiIntroTimer = 8000;
+                        break;
+                    case 7:
+                        DoScriptText(AN_7, pHighlord);
+                        ++uiIntroPhase;
+                        uiIntroTimer = 3000;
+                        break;			
+                    case 8:
+                        DoScriptText(AN_8, me);
+                        ++uiIntroPhase;
+                        uiIntroTimer = 4000;
+                        break;							
+                    case 9:
+                        if (Creature* pAnnouncertoc5 = me->SummonCreature(CREATURE_ANNOUNCER, 746.626, 618.54, 411.09, 4.63158, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 60000))
+                        {	
+    						me->DisappearAndDie();         
+           					pAnnouncertoc5->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+                            pAnnouncertoc5->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
+                            pAnnouncertoc5->SetReactState(REACT_PASSIVE);
+    						
+                            Phase = FINISHED;
+                        }
+                        else Reset();
+                        return;					
+                }
+            } else uiIntroTimer -= diff;
+        }
+    };
+
 };
 
 struct npc_announcer_toc5AI : public ScriptedAI
@@ -727,26 +738,8 @@ bool GossipSelect_npc_announcer_toc5(Player* pPlayer, Creature* pCreature, uint3
     return true;
 }
 
-CreatureAI* GetAI_npc_anstart(Creature* pCreature)
-{
-    return new npc_anstartAI (pCreature);
-}
 
 void AddSC_trial_of_the_champion()
 {
-    Script *newscript;
-	
-    newscript = new Script;
-    newscript->Name = "npc_anstart";
-    newscript->GetAI = &GetAI_npc_anstart;
-    newscript->RegisterSelf();
-	
-    Script* NewScript;
-		
-    NewScript = new Script;
-    NewScript->Name = "npc_announcer_toc5";
-    NewScript->GetAI = &GetAI_npc_announcer_toc5;
-    NewScript->pGossipHello = &GossipHello_npc_announcer_toc5;
-    NewScript->pGossipSelect = &GossipSelect_npc_announcer_toc5;
-    NewScript->RegisterSelf();
+    new npc_anstart();
 }

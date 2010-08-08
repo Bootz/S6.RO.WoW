@@ -55,140 +55,142 @@ enum Achievements
 {
     ACHIEVEMENT_GOOD_GRIEF                           = 1866
 };
-
-struct boss_maiden_of_griefAI : public ScriptedAI
+class boss_maiden_of_grief : public CreatureScript
 {
-    boss_maiden_of_griefAI(Creature *c) : ScriptedAI(c)
+public:
+    boss_maiden_of_grief() : CreatureScript("boss_maiden_of_grief") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
     {
-        pInstance = me->GetInstanceData();
+        return new boss_maiden_of_griefAI (pCreature);
     }
 
-    ScriptedInstance* pInstance;
-
-    uint32 PartingSorrowTimer;
-    uint32 StormOfGriefTimer;
-    uint32 ShockOfSorrowTimer;
-    uint32 PillarOfWoeTimer;
-    uint32 AchievTimer;
-
-    void Reset()
+    struct boss_maiden_of_griefAI : public ScriptedAI
     {
-        PartingSorrowTimer = 25000 + rand()%5000;
-        StormOfGriefTimer = 10000;
-        ShockOfSorrowTimer = 20000+rand()%5000;
-        PillarOfWoeTimer = 5000 + rand()%10000;
-        AchievTimer = 0;
-
-        if (pInstance)
-            pInstance->SetData(DATA_MAIDEN_OF_GRIEF_EVENT, NOT_STARTED);
-    }
-
-    void EnterCombat(Unit* who)
-    {
-        DoScriptText(SAY_AGGRO, me);
-
-        if (pInstance)
+        boss_maiden_of_griefAI(Creature *c) : ScriptedAI(c)
         {
-            if (GameObject *pDoor = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_MAIDEN_DOOR)))
-                if (pDoor->GetGoState() == GO_STATE_READY)
-                {
-                    EnterEvadeMode();
-                    return;
-                }
-
-            pInstance->SetData(DATA_MAIDEN_OF_GRIEF_EVENT, IN_PROGRESS);
+            pInstance = me->GetInstanceData();
         }
-    }
 
-    void UpdateAI(const uint32 diff)
-    {
-        //Return since we have no target
-        if (!UpdateVictim())
-            return;
+        ScriptedInstance* pInstance;
 
-        //Achievement counter
-        if (pInstance)
-            if (pInstance->GetData(DATA_MAIDEN_OF_GRIEF_EVENT) == IN_PROGRESS)
-                AchievTimer += diff;
+        uint32 PartingSorrowTimer;
+        uint32 StormOfGriefTimer;
+        uint32 ShockOfSorrowTimer;
+        uint32 PillarOfWoeTimer;
+        uint32 AchievTimer;
 
-        if (IsHeroic())
+        void Reset()
         {
-            if (PartingSorrowTimer <= diff)
+            PartingSorrowTimer = 25000 + rand()%5000;
+            StormOfGriefTimer = 10000;
+            ShockOfSorrowTimer = 20000+rand()%5000;
+            PillarOfWoeTimer = 5000 + rand()%10000;
+            AchievTimer = 0;
+
+            if (pInstance)
+                pInstance->SetData(DATA_MAIDEN_OF_GRIEF_EVENT, NOT_STARTED);
+        }
+
+        void EnterCombat(Unit* who)
+        {
+            DoScriptText(SAY_AGGRO, me);
+
+            if (pInstance)
             {
-                Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
+                if (GameObject *pDoor = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_MAIDEN_DOOR)))
+                    if (pDoor->GetGoState() == GO_STATE_READY)
+                    {
+                        EnterEvadeMode();
+                        return;
+                    }
+
+                pInstance->SetData(DATA_MAIDEN_OF_GRIEF_EVENT, IN_PROGRESS);
+            }
+        }
+
+        void UpdateAI(const uint32 diff)
+        {
+            //Return since we have no target
+            if (!UpdateVictim())
+                return;
+
+            //Achievement counter
+            if (pInstance)
+                if (pInstance->GetData(DATA_MAIDEN_OF_GRIEF_EVENT) == IN_PROGRESS)
+                    AchievTimer += diff;
+
+            if (IsHeroic())
+            {
+                if (PartingSorrowTimer <= diff)
+                {
+                    Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
+
+                    if (pTarget)
+                        DoCast(pTarget, SPELL_PARTING_SORROW);
+
+                    PartingSorrowTimer = 30000 + rand()%10000;
+                } else PartingSorrowTimer -= diff;
+            }
+
+            if (StormOfGriefTimer <= diff)
+            {
+                DoCast(me->getVictim(), SPELL_STORM_OF_GRIEF_N, true);
+                StormOfGriefTimer = 15000 + rand()%5000;
+            } else StormOfGriefTimer -= diff;
+
+            if (ShockOfSorrowTimer <= diff)
+            {
+                DoResetThreat();
+                DoScriptText(SAY_STUN, me);
+                DoCast(me, SPELL_SHOCK_OF_SORROW_N);
+                ShockOfSorrowTimer = 20000 + rand()%10000;
+            } else ShockOfSorrowTimer -= diff;
+
+            if (PillarOfWoeTimer <= diff)
+            {
+                Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
 
                 if (pTarget)
-                    DoCast(pTarget, SPELL_PARTING_SORROW);
+                    DoCast(pTarget, SPELL_PILLAR_OF_WOE_N);
+                else
+                    DoCast(me->getVictim(), SPELL_PILLAR_OF_WOE_N);
 
-                PartingSorrowTimer = 30000 + rand()%10000;
-            } else PartingSorrowTimer -= diff;
+                PillarOfWoeTimer = 5000 + rand()%20000;
+            } else PillarOfWoeTimer -= diff;
+
+            DoMeleeAttackIfReady();
         }
-
-        if (StormOfGriefTimer <= diff)
+        void JustDied(Unit* killer)
         {
-            DoCast(me->getVictim(), SPELL_STORM_OF_GRIEF_N, true);
-            StormOfGriefTimer = 15000 + rand()%5000;
-        } else StormOfGriefTimer -= diff;
+            DoScriptText(SAY_DEATH, me);
 
-        if (ShockOfSorrowTimer <= diff)
-        {
-            DoResetThreat();
-            DoScriptText(SAY_STUN, me);
-            DoCast(me, SPELL_SHOCK_OF_SORROW_N);
-            ShockOfSorrowTimer = 20000 + rand()%10000;
-        } else ShockOfSorrowTimer -= diff;
+            if (pInstance)
+                pInstance->SetData(DATA_MAIDEN_OF_GRIEF_EVENT, DONE);
 
-        if (PillarOfWoeTimer <= diff)
-        {
-            Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
+            AchievementEntry const *AchievGoodGrief = GetAchievementStore()->LookupEntry(ACHIEVEMENT_GOOD_GRIEF);
+            Map* pMap = me->GetMap();
 
-            if (pTarget)
-                DoCast(pTarget, SPELL_PILLAR_OF_WOE_N);
-            else
-                DoCast(me->getVictim(), SPELL_PILLAR_OF_WOE_N);
-
-            PillarOfWoeTimer = 5000 + rand()%20000;
-        } else PillarOfWoeTimer -= diff;
-
-        DoMeleeAttackIfReady();
-    }
-    void JustDied(Unit* killer)
-    {
-        DoScriptText(SAY_DEATH, me);
-
-        if (pInstance)
-            pInstance->SetData(DATA_MAIDEN_OF_GRIEF_EVENT, DONE);
-
-        AchievementEntry const *AchievGoodGrief = GetAchievementStore()->LookupEntry(ACHIEVEMENT_GOOD_GRIEF);
-        Map* pMap = me->GetMap();
-
-        if (IsHeroic() && AchievTimer < 60000 && pMap && pMap->IsDungeon() && AchievGoodGrief)
-        {
-            Map::PlayerList const &players = pMap->GetPlayers();
-                    for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
-                        itr->getSource()->CompletedAchievement(AchievGoodGrief);
+            if (IsHeroic() && AchievTimer < 60000 && pMap && pMap->IsDungeon() && AchievGoodGrief)
+            {
+                Map::PlayerList const &players = pMap->GetPlayers();
+                        for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
+                            itr->getSource()->CompletedAchievement(AchievGoodGrief);
+            }
         }
-    }
-    void KilledUnit(Unit *victim)
-    {
-        if (victim == me)
-            return;
+        void KilledUnit(Unit *victim)
+        {
+            if (victim == me)
+                return;
 
-        DoScriptText(RAND(SAY_SLAY_1,SAY_SLAY_2,SAY_SLAY_3,SAY_SLAY_4), me);
-    }
+            DoScriptText(RAND(SAY_SLAY_1,SAY_SLAY_2,SAY_SLAY_3,SAY_SLAY_4), me);
+        }
+    };
+
 };
 
-CreatureAI* GetAI_boss_maiden_of_grief(Creature* pCreature)
-{
-    return new boss_maiden_of_griefAI (pCreature);
-}
 
 void AddSC_boss_maiden_of_grief()
 {
-    Script *newscript;
-
-    newscript = new Script;
-    newscript->Name = "boss_maiden_of_grief";
-    newscript->GetAI = &GetAI_boss_maiden_of_grief;
-    newscript->RegisterSelf();
+    new boss_maiden_of_grief();
 }

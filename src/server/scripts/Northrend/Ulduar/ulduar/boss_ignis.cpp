@@ -302,112 +302,118 @@ struct boss_ignis_AI : public BossAI
         }
     }
 };
-
-CreatureAI* GetAI_boss_ignis(Creature* pCreature)
+class boss_ignis : public CreatureScript
 {
-    return new boss_ignis_AI (pCreature);
-}
+public:
+    boss_ignis() : CreatureScript("boss_ignis") { }
 
-struct mob_iron_constructAI : public ScriptedAI
-{
-    mob_iron_constructAI(Creature *c) : ScriptedAI(c)
+    CreatureAI* GetAI(Creature* pCreature)
     {
-        pInstance = c->GetInstanceData();
-        me->SetReactState(REACT_PASSIVE);
+        return new boss_ignis_AI (pCreature);
     }
 
-    ScriptedInstance* pInstance;
+};
+class mob_iron_construct : public CreatureScript
+{
+public:
+    mob_iron_construct() : CreatureScript("mob_iron_construct") { }
 
-    bool Brittled;
-
-    void Reset()
+    CreatureAI* GetAI(Creature* pCreature)
     {
-        Brittled = false;
+        return new mob_iron_constructAI (pCreature);
     }
 
-    void DamageTaken(Unit *attacker, uint32 &damage)
+    struct mob_iron_constructAI : public ScriptedAI
     {
-        if (me->HasAura(SPELL_BRITTLE) && damage >= 5000)
+        mob_iron_constructAI(Creature *c) : ScriptedAI(c)
         {
-            DoCast(SPELL_SHATTER);
-            if (Creature *pIgnis = me->GetCreature(*me, pInstance->GetData64(DATA_IGNIS)))
-                if (pIgnis->AI())
-                    pIgnis->AI()->DoAction(ACTION_REMOVE_BUFF);
+            pInstance = c->GetInstanceData();
+            me->SetReactState(REACT_PASSIVE);
+        }
+
+        ScriptedInstance* pInstance;
+
+        bool Brittled;
+
+        void Reset()
+        {
+            Brittled = false;
+        }
+
+        void DamageTaken(Unit *attacker, uint32 &damage)
+        {
+            if (me->HasAura(SPELL_BRITTLE) && damage >= 5000)
+            {
+                DoCast(SPELL_SHATTER);
+                if (Creature *pIgnis = me->GetCreature(*me, pInstance->GetData64(DATA_IGNIS)))
+                    if (pIgnis->AI())
+                        pIgnis->AI()->DoAction(ACTION_REMOVE_BUFF);
                     
-            me->ForcedDespawn(1000);
+                me->ForcedDespawn(1000);
+            }
         }
-    }
 
-    void UpdateAI(const uint32 uiDiff)
-    {
-        Map *cMap = me->GetMap();
-
-        if (me->HasAura(SPELL_MOLTEN) && me->HasAura(SPELL_HEAT))
-            me->RemoveAura(SPELL_HEAT);
-
-        if (Aura * aur = me->GetAura((SPELL_HEAT), GetGUID()))
+        void UpdateAI(const uint32 uiDiff)
         {
-            if (aur->GetStackAmount() >= 10)
-            {
+            Map *cMap = me->GetMap();
+
+            if (me->HasAura(SPELL_MOLTEN) && me->HasAura(SPELL_HEAT))
                 me->RemoveAura(SPELL_HEAT);
-                DoCast(SPELL_MOLTEN);
-                Brittled = false;
+
+            if (Aura * aur = me->GetAura((SPELL_HEAT), GetGUID()))
+            {
+                if (aur->GetStackAmount() >= 10)
+                {
+                    me->RemoveAura(SPELL_HEAT);
+                    DoCast(SPELL_MOLTEN);
+                    Brittled = false;
+                }
             }
+
+            // Water pools
+            if(cMap->GetId() == 603 && !Brittled && me->HasAura(SPELL_MOLTEN))
+                if (me->GetDistance(WATER_1_X, WATER_Y, WATER_Z) <= 18 || me->GetDistance(WATER_2_X, WATER_Y, WATER_Z) <= 18)
+                {
+                    DoCast(SPELL_BRITTLE);
+                    me->RemoveAura(SPELL_MOLTEN);
+                    Brittled = true;
+                }
+
+            DoMeleeAttackIfReady();
+        }
+    };
+
+};
+
+class mob_scorch_ground : public CreatureScript
+{
+public:
+    mob_scorch_ground() : CreatureScript("mob_scorch_ground") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new mob_scorch_groundAI(pCreature);
+    }
+
+    struct mob_scorch_groundAI : public ScriptedAI
+    {
+        mob_scorch_groundAI(Creature* pCreature) : ScriptedAI(pCreature)
+        {
+            me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE | UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_PACIFIED);
         }
 
-        // Water pools
-        if(cMap->GetId() == 603 && !Brittled && me->HasAura(SPELL_MOLTEN))
-            if (me->GetDistance(WATER_1_X, WATER_Y, WATER_Z) <= 18 || me->GetDistance(WATER_2_X, WATER_Y, WATER_Z) <= 18)
-            {
-                DoCast(SPELL_BRITTLE);
-                me->RemoveAura(SPELL_MOLTEN);
-                Brittled = true;
-            }
+        void Reset()
+        {
+            DoCast(me, RAID_MODE(SPELL_GROUND_10, SPELL_GROUND_25));
+        }
+    };
 
-        DoMeleeAttackIfReady();
-    }
 };
 
-CreatureAI* GetAI_mob_iron_construct(Creature* pCreature)
-{
-    return new mob_iron_constructAI (pCreature);
-}
-
-struct mob_scorch_groundAI : public ScriptedAI
-{
-    mob_scorch_groundAI(Creature* pCreature) : ScriptedAI(pCreature)
-    {
-        me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE | UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_PACIFIED);
-    }
-
-    void Reset()
-    {
-        DoCast(me, RAID_MODE(SPELL_GROUND_10, SPELL_GROUND_25));
-    }
-};
-
-CreatureAI* GetAI_mob_scorch_ground(Creature* pCreature)
-{
-    return new mob_scorch_groundAI(pCreature);
-}
 
 void AddSC_boss_ignis()
 {
-    Script *newscript;
-
-    newscript = new Script;
-    newscript->Name = "boss_ignis";
-    newscript->GetAI = &GetAI_boss_ignis;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "mob_iron_construct";
-    newscript->GetAI = &GetAI_mob_iron_construct;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "mob_scorch_ground";
-    newscript->GetAI = &GetAI_mob_scorch_ground;
-    newscript->RegisterSelf();
-
+    new boss_ignis();
+    new mob_iron_construct();
+    new mob_scorch_ground();
 }

@@ -202,1065 +202,1110 @@ enum Actions
 };
 
 Unit* pRootTarget;
-
-struct boss_freyaAI : public BossAI
+class boss_freya : public CreatureScript
 {
-    boss_freyaAI(Creature* pCreature) : BossAI(pCreature, BOSS_FREYA)
+public:
+    boss_freya() : CreatureScript("boss_freya") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
     {
-        pInstance = pCreature->GetInstanceData();
-        me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);
-        me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true); // Death Grip jump effect
+        return new boss_freyaAI(pCreature);
     }
+
+    struct boss_freyaAI : public BossAI
+    {
+        boss_freyaAI(Creature* pCreature) : BossAI(pCreature, BOSS_FREYA)
+        {
+            pInstance = pCreature->GetInstanceData();
+            me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);
+            me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true); // Death Grip jump effect
+        }
     
-    ScriptedInstance* pInstance;
+        ScriptedInstance* pInstance;
 
-    uint8 spawnOrder[3];
-    uint8 spawnedAdds;
-    uint8 EldersCount;
-    int32 uiElemTimer;
-    Creature* Elemental[3];
-    bool checkElementalAlive;
+        uint8 spawnOrder[3];
+        uint8 spawnedAdds;
+        uint8 EldersCount;
+        int32 uiElemTimer;
+        Creature* Elemental[3];
+        bool checkElementalAlive;
 
-    void Reset()
-    {
-        _Reset();
-        
-        spawnedAdds = 0;
-        EldersCount = 0;
-        checkElementalAlive = true;
-        randomizeSpawnOrder();        
-    }
-
-    void KilledUnit(Unit *victim)
-    {
-        DoScriptText(RAND(SAY_SLAY_1,SAY_SLAY_2), me);
-    }
-
-    void JustDied(Unit *victim)
-    {
-        DoScriptText(SAY_DEATH, me);
-        _JustDied();
-
-        me->setFaction(35);
-
-        if (pInstance)
+        void Reset()
         {
-            // Kill credit
-            pInstance->DoUpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_BE_SPELL_TARGET, 65074);
-            // Knock on Wood
-            if (EldersCount == 1)
-                pInstance->DoCompleteAchievement(ACHIEVEMENT_KNOCK_ON_WOOD_1);
-            // Knock, Knock on Wood 
-            if (EldersCount == 2)
-                pInstance->DoCompleteAchievement(ACHIEVEMENT_KNOCK_ON_WOOD_2);
-            // Knock, Knock, Knock on Wood
-            if (EldersCount == 3)
-                pInstance->DoCompleteAchievement(ACHIEVEMENT_KNOCK_ON_WOOD_3);
-            // Getting Back to Nature
-            if (me->HasAura(SPELL_ATTUNED_TO_NATURE))
-                if (me->GetAura(SPELL_ATTUNED_TO_NATURE, 0)->GetStackAmount() >= 25)
-                    pInstance->DoCompleteAchievement(ACHIEVEMENT_BACK_TO_NATURE);
+            _Reset();
+        
+            spawnedAdds = 0;
+            EldersCount = 0;
+            checkElementalAlive = true;
+            randomizeSpawnOrder();    
         }
-        
-        // Hard mode chest
-        // Summon spells not works correctly, chest respawn is infinite
-        Position pos;
-        me->GetRandomNearPosition(pos, 10);
 
-        switch (EldersCount)
+        void KilledUnit(Unit *victim)
         {
-            case 0:
-                //DoCast(RAID_MODE(RAID_10_0_SPELL_FREYA_CHEST, RAID_25_0_SPELL_FREYA_CHEST));
-                me->SummonGameObject(RAID_MODE(194324, 194328), pos.m_positionX, pos.m_positionY, pos.m_positionZ, 0, 0, 0, 1, 0, 0);
-                break;
-            case 1:
-                //DoCast(RAID_MODE(RAID_10_1_SPELL_FREYA_CHEST, RAID_25_1_SPELL_FREYA_CHEST));
-                me->SummonGameObject(RAID_MODE(194325, 194329), pos.m_positionX, pos.m_positionY, pos.m_positionZ, 0, 0, 0, 1, 0, 0);
-                break;
-            case 2:
-                //DoCast(RAID_MODE(RAID_10_2_SPELL_FREYA_CHEST, RAID_25_2_SPELL_FREYA_CHEST));
-                me->SummonGameObject(RAID_MODE(194326, 194330), pos.m_positionX, pos.m_positionY, pos.m_positionZ, 0, 0, 0, 1, 0, 0);
-                break;
-            case 3:
-                //DoCast(RAID_MODE(RAID_10_3_SPELL_FREYA_CHEST, RAID_25_3_SPELL_FREYA_CHEST));
-                me->SummonGameObject(RAID_MODE(194327, 194331), pos.m_positionX, pos.m_positionY, pos.m_positionZ, 0, 0, 0, 1, 0, 0);
-                break;
+            DoScriptText(RAND(SAY_SLAY_1,SAY_SLAY_2), me);
         }
-    }
 
-    void EnterCombat(Unit* pWho)
-    {
-        _EnterCombat();
-        
-        DoCast(me, RAID_MODE(RAID_10_SPELL_TOUCH_OF_EONAR, RAID_25_SPELL_TOUCH_OF_EONAR));
-        for (uint32 i = 0; i < 150; ++i)
-            DoCast(me, SPELL_ATTUNED_TO_NATURE);
-
-        events.ScheduleEvent(EVENT_SUNBEAM, 20000);
-        events.ScheduleEvent(EVENT_EONAR_GIFT, 30000);
-        events.ScheduleEvent(EVENT_SUMMON_ALLIES, 10000);
-        events.ScheduleEvent(EVENT_NATURE_BOMB, 375000);
-        events.ScheduleEvent(EVENT_BERSERK, 600000);
-        
-        // Freya hard mode can be triggered simply by letting the elders alive
-        if(Creature* Brightleaf = Unit::GetCreature(*me, pInstance ? pInstance->GetData64(DATA_BRIGHTLEAF) : 0))
-            if(Brightleaf->isAlive())
-            {
-                EldersCount++;
-                DoCast(SPELL_BRIGHTLEAFS_ESSENCE);
-                me->AddAura(SPELL_BRIGHTLEAFS_ESSENCE, me);
-                events.ScheduleEvent(EVENT_BRIGHTLEAF, urand(15000, 30000));
-            }
-            
-        if(Creature* Ironbranch = Unit::GetCreature(*me, pInstance ? pInstance->GetData64(DATA_IRONBRANCH) : 0))
-            if(Ironbranch->isAlive())
-            {
-                EldersCount++;
-                DoCast(SPELL_IRONBRANCHS_ESSENCE);
-                me->AddAura(SPELL_IRONBRANCHS_ESSENCE, me);
-                events.ScheduleEvent(EVENT_IRONBRANCH, urand(45000, 60000));
-            }
-            
-        if(Creature* Stonebark = Unit::GetCreature(*me, pInstance ? pInstance->GetData64(DATA_STONEBARK) : 0))
-            if(Stonebark->isAlive())
-            {
-                EldersCount++;
-                DoCast(SPELL_STONEBARKS_ESSENCE);
-                me->AddAura(SPELL_STONEBARKS_ESSENCE, me);
-                events.ScheduleEvent(EVENT_STONEBARK, urand(35000, 45000));
-            }
-            
-        if (EldersCount == 0)
-            DoScriptText(SAY_AGGRO, me);
-        else
-            DoScriptText(SAY_AGGRO_WITH_ELDER, me);
-    }
-
-    void UpdateAI(const uint32 diff)
-    {
-        if (!UpdateVictim())
-            return;
-
-        // Elementals must be killed within 12 seconds of each other, or they will all revive and heal
-        if (checkElementalAlive)
-            uiElemTimer = 0;
-        else
+        void JustDied(Unit *victim)
         {
-            uiElemTimer += diff;
-            if (uiElemTimer > 12000)
+            DoScriptText(SAY_DEATH, me);
+            _JustDied();
+
+            me->setFaction(35);
+
+            if (pInstance)
             {
-                for (uint32 i = 0; i < 3; i++)
+                // Kill credit
+                pInstance->DoUpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_BE_SPELL_TARGET, 65074);
+                // Knock on Wood
+                if (EldersCount == 1)
+                    pInstance->DoCompleteAchievement(ACHIEVEMENT_KNOCK_ON_WOOD_1);
+                // Knock, Knock on Wood 
+                if (EldersCount == 2)
+                    pInstance->DoCompleteAchievement(ACHIEVEMENT_KNOCK_ON_WOOD_2);
+                // Knock, Knock, Knock on Wood
+                if (EldersCount == 3)
+                    pInstance->DoCompleteAchievement(ACHIEVEMENT_KNOCK_ON_WOOD_3);
+                // Getting Back to Nature
+                if (me->HasAura(SPELL_ATTUNED_TO_NATURE))
+                    if (me->GetAura(SPELL_ATTUNED_TO_NATURE, 0)->GetStackAmount() >= 25)
+                        pInstance->DoCompleteAchievement(ACHIEVEMENT_BACK_TO_NATURE);
+            }
+        
+            // Hard mode chest
+            // Summon spells not works correctly, chest respawn is infinite
+            Position pos;
+            me->GetRandomNearPosition(pos, 10);
+
+            switch (EldersCount)
+            {
+                case 0:
+                    //DoCast(RAID_MODE(RAID_10_0_SPELL_FREYA_CHEST, RAID_25_0_SPELL_FREYA_CHEST));
+                    me->SummonGameObject(RAID_MODE(194324, 194328), pos.m_positionX, pos.m_positionY, pos.m_positionZ, 0, 0, 0, 1, 0, 0);
+                    break;
+                case 1:
+                    //DoCast(RAID_MODE(RAID_10_1_SPELL_FREYA_CHEST, RAID_25_1_SPELL_FREYA_CHEST));
+                    me->SummonGameObject(RAID_MODE(194325, 194329), pos.m_positionX, pos.m_positionY, pos.m_positionZ, 0, 0, 0, 1, 0, 0);
+                    break;
+                case 2:
+                    //DoCast(RAID_MODE(RAID_10_2_SPELL_FREYA_CHEST, RAID_25_2_SPELL_FREYA_CHEST));
+                    me->SummonGameObject(RAID_MODE(194326, 194330), pos.m_positionX, pos.m_positionY, pos.m_positionZ, 0, 0, 0, 1, 0, 0);
+                    break;
+                case 3:
+                    //DoCast(RAID_MODE(RAID_10_3_SPELL_FREYA_CHEST, RAID_25_3_SPELL_FREYA_CHEST));
+                    me->SummonGameObject(RAID_MODE(194327, 194331), pos.m_positionX, pos.m_positionY, pos.m_positionZ, 0, 0, 0, 1, 0, 0);
+                    break;
+            }
+        }
+
+        void EnterCombat(Unit* pWho)
+        {
+            _EnterCombat();
+        
+            DoCast(me, RAID_MODE(RAID_10_SPELL_TOUCH_OF_EONAR, RAID_25_SPELL_TOUCH_OF_EONAR));
+            for (uint32 i = 0; i < 150; ++i)
+                DoCast(me, SPELL_ATTUNED_TO_NATURE);
+
+            events.ScheduleEvent(EVENT_SUNBEAM, 20000);
+            events.ScheduleEvent(EVENT_EONAR_GIFT, 30000);
+            events.ScheduleEvent(EVENT_SUMMON_ALLIES, 10000);
+            events.ScheduleEvent(EVENT_NATURE_BOMB, 375000);
+            events.ScheduleEvent(EVENT_BERSERK, 600000);
+        
+            // Freya hard mode can be triggered simply by letting the elders alive
+            if(Creature* Brightleaf = Unit::GetCreature(*me, pInstance ? pInstance->GetData64(DATA_BRIGHTLEAF) : 0))
+                if(Brightleaf->isAlive())
                 {
-                    if (Elemental[i]->isAlive())
-                        Elemental[i]->SetHealth(Elemental[i]->GetMaxHealth());
-                    else
-                        Elemental[i]->Respawn();
+                    EldersCount++;
+                    DoCast(SPELL_BRIGHTLEAFS_ESSENCE);
+                    me->AddAura(SPELL_BRIGHTLEAFS_ESSENCE, me);
+                    events.ScheduleEvent(EVENT_BRIGHTLEAF, urand(15000, 30000));
                 }
-                checkElementalAlive = true;
-            }
+            
+            if(Creature* Ironbranch = Unit::GetCreature(*me, pInstance ? pInstance->GetData64(DATA_IRONBRANCH) : 0))
+                if(Ironbranch->isAlive())
+                {
+                    EldersCount++;
+                    DoCast(SPELL_IRONBRANCHS_ESSENCE);
+                    me->AddAura(SPELL_IRONBRANCHS_ESSENCE, me);
+                    events.ScheduleEvent(EVENT_IRONBRANCH, urand(45000, 60000));
+                }
+            
+            if(Creature* Stonebark = Unit::GetCreature(*me, pInstance ? pInstance->GetData64(DATA_STONEBARK) : 0))
+                if(Stonebark->isAlive())
+                {
+                    EldersCount++;
+                    DoCast(SPELL_STONEBARKS_ESSENCE);
+                    me->AddAura(SPELL_STONEBARKS_ESSENCE, me);
+                    events.ScheduleEvent(EVENT_STONEBARK, urand(35000, 45000));
+                }
+            
+            if (EldersCount == 0)
+                DoScriptText(SAY_AGGRO, me);
+            else
+                DoScriptText(SAY_AGGRO_WITH_ELDER, me);
+        }
+
+        void UpdateAI(const uint32 diff)
+        {
+            if (!UpdateVictim())
+                return;
+
+            // Elementals must be killed within 12 seconds of each other, or they will all revive and heal
+            if (checkElementalAlive)
+                uiElemTimer = 0;
             else
             {
-                if (Elemental[0]->isDead())
-                    if (Elemental[1]->isDead())
-                        if (Elemental[2]->isDead())
-                        {
-                            for (uint32 i = 0; i < 3; i++)
-                                Elemental[i]->ForcedDespawn(3000);
-                                
-                            if (Creature* Freya = Unit::GetCreature(*me, pInstance ? pInstance->GetData64(DATA_FREYA) : 0))
-                                Freya->AI()->DoAction(ACTION_ELEMENTAL);
-                        }
-            }
-        }
-                           
-        if (me->getVictim() && !me->getVictim()->GetCharmerOrOwnerPlayerOrPlayerItself())
-            me->Kill(me->getVictim());
-            
-        events.Update(diff);
-                        
-        if (events.GetTimer() > 360000)
-            events.CancelEvent(EVENT_SUMMON_ALLIES);
-            
-        if (me->hasUnitState(UNIT_STAT_CASTING))
-            return;
-
-        while(uint32 eventId = events.ExecuteEvent())
-        {
-            switch(eventId)
-            {
-                case EVENT_SUNBEAM:
-                    if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
-                        if (pTarget->isAlive())
-                            DoCast(pTarget, RAID_MODE(RAID_10_SPELL_SUNBEAM, RAID_25_SPELL_SUNBEAM));
-                    events.ScheduleEvent(EVENT_SUNBEAM, urand(10000, 15000));
-                    break;
-                case EVENT_EONAR_GIFT:
-                    me->MonsterTextEmote(EMOTE_GIFT, 0, true);
-                    DoCast(SPELL_EONAR_GIFT);
-                    events.ScheduleEvent(EVENT_EONAR_GIFT, urand(35000, 45000));
-                    break;
-                case EVENT_SUMMON_ALLIES:
-                    me->MonsterTextEmote(EMOTE_ALLIES, 0, true);
-                    DoCast(me, SPELL_SUMMON_ALLIES);
-                    spawnAdd();
-                    events.ScheduleEvent(EVENT_SUMMON_ALLIES, 60000);
-                    break;
-                case EVENT_NATURE_BOMB:
-                    DoCastAOE(SPELL_NATURE_BOMB_VISUAL);
-                    DoCastAOE(SPELL_NATURE_BOMB);
-                    events.ScheduleEvent(EVENT_NATURE_BOMB, urand(15000, 20000));
-                    break;
-                case EVENT_BRIGHTLEAF:
-                    for (int8 n = 0; n < 3; n++)
-                        if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
-                            DoCast(pTarget, SPELL_SUN_BEAM_SUMMON);
-                    events.ScheduleEvent(EVENT_BRIGHTLEAF, urand(35000, 45000));
-                    break;
-                case EVENT_IRONBRANCH:
-                    if (pRootTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
-                        pRootTarget->CastSpell(pRootTarget,RAID_MODE(RAID_10_SPELL_IRON_ROOTS, RAID_25_SPELL_IRON_ROOTS),true);
-                    events.ScheduleEvent(EVENT_IRONBRANCH, urand(45000, 60000));
-                    break;
-                case EVENT_STONEBARK:
-                    DoCastAOE(RAID_MODE(RAID_10_SPELL_FREYA_GROUND_TREMOR, RAID_25_SPELL_FREYA_GROUND_TREMOR));
-                    events.ScheduleEvent(EVENT_STONEBARK, urand(25000, 30000));
-                    break;
-                case EVENT_BERSERK:
-                    DoCast(me, SPELL_BERSERK, true);
-                    DoScriptText(SAY_BERSERK, me);
-                    events.CancelEvent(EVENT_BERSERK);
-                    break;
-            }
-        }
-
-        DoMeleeAttackIfReady();
-    }
-    
-    void randomizeSpawnOrder()
-    {
-        //Spawn order algorithm
-        spawnOrder[0] = 0; //Detonating Lasher
-        spawnOrder[1] = 1; //Elemental Adds 
-        spawnOrder[2] = 2; //Ancient Conservator
-        
-        //Swaps the entire array
-        for(uint8 n = 0; n < 3; n++)
-        {
-            uint8 random = rand() % 2;
-            uint8 temp = spawnOrder[random];
-            spawnOrder[random] = spawnOrder[n];
-            spawnOrder[n] = temp;
-        }
-    }
-
-    void spawnAdd()
-    {
-        switch(spawnedAdds)
-        {
-            case 0: spawnHandler(spawnOrder[0]);break;
-            case 1: spawnHandler(spawnOrder[1]);break;
-            case 2: spawnHandler(spawnOrder[2]);break;
-        }
-
-        spawnedAdds++;
-        if(spawnedAdds > 2)
-        {
-            spawnedAdds = 0;
-        }
-    }
-
-    void spawnHandler(uint8 add)
-    {
-        switch(add)
-        {
-            case 0:
-            {
-                DoScriptText(SAY_SUMMON_LASHERS, me);
-                //Spawn 10 Detonating Lashers
-                for(uint8 n = 0; n < 10; n++)
+                uiElemTimer += diff;
+                if (uiElemTimer > 12000)
                 {
+                    for (uint32 i = 0; i < 3; i++)
+                    {
+                        if (Elemental[i]->isAlive())
+                            Elemental[i]->SetHealth(Elemental[i]->GetMaxHealth());
+                        else
+                            Elemental[i]->Respawn();
+                    }
+                    checkElementalAlive = true;
+                }
+                else
+                {
+                    if (Elemental[0]->isDead())
+                        if (Elemental[1]->isDead())
+                            if (Elemental[2]->isDead())
+                            {
+                                for (uint32 i = 0; i < 3; i++)
+                                    Elemental[i]->ForcedDespawn(3000);
+                                
+                                if (Creature* Freya = Unit::GetCreature(*me, pInstance ? pInstance->GetData64(DATA_FREYA) : 0))
+                                    Freya->AI()->DoAction(ACTION_ELEMENTAL);
+                            }
+                }
+            }
+                           
+            if (me->getVictim() && !me->getVictim()->GetCharmerOrOwnerPlayerOrPlayerItself())
+                me->Kill(me->getVictim());
+            
+            events.Update(diff);
+                        
+            if (events.GetTimer() > 360000)
+                events.CancelEvent(EVENT_SUMMON_ALLIES);
+            
+            if (me->hasUnitState(UNIT_STAT_CASTING))
+                return;
+
+            while(uint32 eventId = events.ExecuteEvent())
+            {
+                switch(eventId)
+                {
+                    case EVENT_SUNBEAM:
+                        if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
+                            if (pTarget->isAlive())
+                                DoCast(pTarget, RAID_MODE(RAID_10_SPELL_SUNBEAM, RAID_25_SPELL_SUNBEAM));
+                        events.ScheduleEvent(EVENT_SUNBEAM, urand(10000, 15000));
+                        break;
+                    case EVENT_EONAR_GIFT:
+                        me->MonsterTextEmote(EMOTE_GIFT, 0, true);
+                        DoCast(SPELL_EONAR_GIFT);
+                        events.ScheduleEvent(EVENT_EONAR_GIFT, urand(35000, 45000));
+                        break;
+                    case EVENT_SUMMON_ALLIES:
+                        me->MonsterTextEmote(EMOTE_ALLIES, 0, true);
+                        DoCast(me, SPELL_SUMMON_ALLIES);
+                        spawnAdd();
+                        events.ScheduleEvent(EVENT_SUMMON_ALLIES, 60000);
+                        break;
+                    case EVENT_NATURE_BOMB:
+                        DoCastAOE(SPELL_NATURE_BOMB_VISUAL);
+                        DoCastAOE(SPELL_NATURE_BOMB);
+                        events.ScheduleEvent(EVENT_NATURE_BOMB, urand(15000, 20000));
+                        break;
+                    case EVENT_BRIGHTLEAF:
+                        for (int8 n = 0; n < 3; n++)
+                            if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
+                                DoCast(pTarget, SPELL_SUN_BEAM_SUMMON);
+                        events.ScheduleEvent(EVENT_BRIGHTLEAF, urand(35000, 45000));
+                        break;
+                    case EVENT_IRONBRANCH:
+                        if (pRootTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
+                            pRootTarget->CastSpell(pRootTarget,RAID_MODE(RAID_10_SPELL_IRON_ROOTS, RAID_25_SPELL_IRON_ROOTS),true);
+                        events.ScheduleEvent(EVENT_IRONBRANCH, urand(45000, 60000));
+                        break;
+                    case EVENT_STONEBARK:
+                        DoCastAOE(RAID_MODE(RAID_10_SPELL_FREYA_GROUND_TREMOR, RAID_25_SPELL_FREYA_GROUND_TREMOR));
+                        events.ScheduleEvent(EVENT_STONEBARK, urand(25000, 30000));
+                        break;
+                    case EVENT_BERSERK:
+                        DoCast(me, SPELL_BERSERK, true);
+                        DoScriptText(SAY_BERSERK, me);
+                        events.CancelEvent(EVENT_BERSERK);
+                        break;
+                }
+            }
+
+            DoMeleeAttackIfReady();
+        }
+    
+        void randomizeSpawnOrder()
+        {
+            //Spawn order algorithm
+            spawnOrder[0] = 0; //Detonating Lasher
+            spawnOrder[1] = 1; //Elemental Adds 
+            spawnOrder[2] = 2; //Ancient Conservator
+        
+            //Swaps the entire array
+            for(uint8 n = 0; n < 3; n++)
+            {
+                uint8 random = rand() % 2;
+                uint8 temp = spawnOrder[random];
+                spawnOrder[random] = spawnOrder[n];
+                spawnOrder[n] = temp;
+            }
+        }
+
+        void spawnAdd()
+        {
+            switch(spawnedAdds)
+            {
+                case 0: spawnHandler(spawnOrder[0]);break;
+                case 1: spawnHandler(spawnOrder[1]);break;
+                case 2: spawnHandler(spawnOrder[2]);break;
+            }
+
+            spawnedAdds++;
+            if(spawnedAdds > 2)
+            {
+                spawnedAdds = 0;
+            }
+        }
+
+        void spawnHandler(uint8 add)
+        {
+            switch(add)
+            {
+                case 0:
+                {
+                    DoScriptText(SAY_SUMMON_LASHERS, me);
+                    //Spawn 10 Detonating Lashers
+                    for(uint8 n = 0; n < 10; n++)
+                    {
+                        //Make sure that they don't spawn in a pile
+                        int8 randomX = -25 + rand() % 50;
+                        int8 randomY = -25 + rand() % 50;
+                        me->SummonCreature(NPC_DETONATING_LASHER, me->GetPositionX() + randomX, me->GetPositionY() + randomY, me->GetPositionZ(), 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 1500);
+                    }
+                    break;
+                }
+                case 1:
+                {
+                    DoScriptText(SAY_SUMMON_TRIO, me);
                     //Make sure that they don't spawn in a pile
                     int8 randomX = -25 + rand() % 50;
                     int8 randomY = -25 + rand() % 50;
-                    me->SummonCreature(NPC_DETONATING_LASHER, me->GetPositionX() + randomX, me->GetPositionY() + randomY, me->GetPositionZ(), 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 1500);
+                    Elemental[0] = me->SummonCreature(NPC_SNAPLASHER, me->GetPositionX() + randomX, me->GetPositionY() + randomY, me->GetPositionZ(), 0, TEMPSUMMON_MANUAL_DESPAWN);
+                    randomX = -25 + rand() % 50;
+                    randomY = -25 + rand() % 50;
+                    Elemental[1] = me->SummonCreature(NPC_ANCIENT_WATER_SPIRIT, me->GetPositionX() + randomX, me->GetPositionY() + randomY, me->GetPositionZ(), 0, TEMPSUMMON_MANUAL_DESPAWN);
+                    randomX = -25 + rand() % 50;
+                    randomY = -25 + rand() % 50;
+                    Elemental[2] = me->SummonCreature(NPC_STORM_LASHER, me->GetPositionX() + randomX, me->GetPositionY() + randomY, me->GetPositionZ(), 0, TEMPSUMMON_MANUAL_DESPAWN);
+                    break;
                 }
-                break;
-            }
-            case 1:
-            {
-                DoScriptText(SAY_SUMMON_TRIO, me);
-                //Make sure that they don't spawn in a pile
-                int8 randomX = -25 + rand() % 50;
-                int8 randomY = -25 + rand() % 50;
-                Elemental[0] = me->SummonCreature(NPC_SNAPLASHER, me->GetPositionX() + randomX, me->GetPositionY() + randomY, me->GetPositionZ(), 0, TEMPSUMMON_MANUAL_DESPAWN);
-                randomX = -25 + rand() % 50;
-                randomY = -25 + rand() % 50;
-                Elemental[1] = me->SummonCreature(NPC_ANCIENT_WATER_SPIRIT, me->GetPositionX() + randomX, me->GetPositionY() + randomY, me->GetPositionZ(), 0, TEMPSUMMON_MANUAL_DESPAWN);
-                randomX = -25 + rand() % 50;
-                randomY = -25 + rand() % 50;
-                Elemental[2] = me->SummonCreature(NPC_STORM_LASHER, me->GetPositionX() + randomX, me->GetPositionY() + randomY, me->GetPositionZ(), 0, TEMPSUMMON_MANUAL_DESPAWN);
-                break;
-            }
-            case 2: 
-            {
-                DoScriptText(SAY_SUMMON_CONSERVATOR, me);
-                int8 randomX = -25 + rand() % 50;
-                int8 randomY = -25 + rand() % 50;
-                me->SummonCreature(NPC_ANCIENT_CONSERVATOR, me->GetPositionX() + randomX, me->GetPositionY() + randomY, me->GetPositionZ()+1, 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 7000);
-                break;
+                case 2: 
+                {
+                    DoScriptText(SAY_SUMMON_CONSERVATOR, me);
+                    int8 randomX = -25 + rand() % 50;
+                    int8 randomY = -25 + rand() % 50;
+                    me->SummonCreature(NPC_ANCIENT_CONSERVATOR, me->GetPositionX() + randomX, me->GetPositionY() + randomY, me->GetPositionZ()+1, 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 7000);
+                    break;
+                }
             }
         }
-    }
     
-    void DoAction(const int32 action)
-    {
-        switch (action)
+        void DoAction(const int32 action)
         {
-            case ACTION_LASHER:
-                for (uint32 i = 0; i < 2; ++i)
-                    me->RemoveAuraFromStack(SPELL_ATTUNED_TO_NATURE, 0, AURA_REMOVE_BY_DEFAULT);
-                break;
-            case ACTION_ELEMENTAL:
-                checkElementalAlive = true;
-                for (uint32 i = 0; i < 30; ++i)
-                    me->RemoveAuraFromStack(SPELL_ATTUNED_TO_NATURE, 0, AURA_REMOVE_BY_DEFAULT);
-                break;
-            case ACTION_ANCIENT:
-                for (uint32 i = 0; i < 25; ++i)
-                    me->RemoveAuraFromStack(SPELL_ATTUNED_TO_NATURE, 0, AURA_REMOVE_BY_DEFAULT);
-                break;
-            case ACTION_ELEMENTAL_DEAD:
-                checkElementalAlive = false;
-                break;
+            switch (action)
+            {
+                case ACTION_LASHER:
+                    for (uint32 i = 0; i < 2; ++i)
+                        me->RemoveAuraFromStack(SPELL_ATTUNED_TO_NATURE, 0, AURA_REMOVE_BY_DEFAULT);
+                    break;
+                case ACTION_ELEMENTAL:
+                    checkElementalAlive = true;
+                    for (uint32 i = 0; i < 30; ++i)
+                        me->RemoveAuraFromStack(SPELL_ATTUNED_TO_NATURE, 0, AURA_REMOVE_BY_DEFAULT);
+                    break;
+                case ACTION_ANCIENT:
+                    for (uint32 i = 0; i < 25; ++i)
+                        me->RemoveAuraFromStack(SPELL_ATTUNED_TO_NATURE, 0, AURA_REMOVE_BY_DEFAULT);
+                    break;
+                case ACTION_ELEMENTAL_DEAD:
+                    checkElementalAlive = false;
+                    break;
+            }
         }
-    }
+    };
+
 };
 
-CreatureAI* GetAI_boss_freya(Creature* pCreature)
-{
-    return new boss_freyaAI(pCreature);
-}
 
 /*===============================================================================================
 ===============================================================================================*/
 
-
-struct boss_elder_brightleafAI : public ScriptedAI
+class boss_elder_brightleaf : public CreatureScript
 {
-    boss_elder_brightleafAI(Creature* pCreature) : ScriptedAI(pCreature)
+public:
+    boss_elder_brightleaf() : CreatureScript("boss_elder_brightleaf") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
     {
-        m_pInstance = pCreature->GetInstanceData();
+        return new boss_elder_brightleafAI(pCreature);
     }
+
+    struct boss_elder_brightleafAI : public ScriptedAI
+    {
+        boss_elder_brightleafAI(Creature* pCreature) : ScriptedAI(pCreature)
+        {
+            m_pInstance = pCreature->GetInstanceData();
+        }
     
-    ScriptedInstance* m_pInstance;
-    int32 uiUnstableSunbeamTimer;
-    int32 uiSolarFlareTimer;
-    int32 uiUnstableEnergyTimer;
-    int32 uiBrightleafFluxTimer;
+        ScriptedInstance* m_pInstance;
+        int32 uiUnstableSunbeamTimer;
+        int32 uiSolarFlareTimer;
+        int32 uiUnstableEnergyTimer;
+        int32 uiBrightleafFluxTimer;
     
-    void EnterCombat(Unit* pWho)
-    {
-        DoScriptText(SAY_BRIGHTLEAF_AGGRO, me);
-    }
+        void EnterCombat(Unit* pWho)
+        {
+            DoScriptText(SAY_BRIGHTLEAF_AGGRO, me);
+        }
     
-    void KilledUnit(Unit *victim)
-    {
-        if (!(rand()%5))
-             DoScriptText(RAND(SAY_BRIGHTLEAF_SLAY_1,SAY_BRIGHTLEAF_SLAY_2), me);
-    }
+        void KilledUnit(Unit *victim)
+        {
+            if (!(rand()%5))
+                 DoScriptText(RAND(SAY_BRIGHTLEAF_SLAY_1,SAY_BRIGHTLEAF_SLAY_2), me);
+        }
 
-    void JustDied(Unit *victim)
-    {
-        DoScriptText(SAY_BRIGHTLEAF_DEATH, me);
-    }
+        void JustDied(Unit *victim)
+        {
+            DoScriptText(SAY_BRIGHTLEAF_DEATH, me);
+        }
 
 
-    void Reset()
-    {
-        uiUnstableSunbeamTimer = 5000;
-        uiSolarFlareTimer = 10000;
-        uiUnstableEnergyTimer = 20000;
-        uiBrightleafFluxTimer = 0;
-    }
+        void Reset()
+        {
+            uiUnstableSunbeamTimer = 5000;
+            uiSolarFlareTimer = 10000;
+            uiUnstableEnergyTimer = 20000;
+            uiBrightleafFluxTimer = 0;
+        }
 
-    void UpdateAI(const uint32 diff)
-    {
-        if(!UpdateVictim())
-            return;
+        void UpdateAI(const uint32 diff)
+        {
+            if(!UpdateVictim())
+                return;
             
-        if (GetClosestCreatureWithEntry(me, NPC_SUN_BEAM, 4.0f))
-            DoCast(me, SPELL_PHOTOSYNTHESIS, true);
+            if (GetClosestCreatureWithEntry(me, NPC_SUN_BEAM, 4.0f))
+                DoCast(me, SPELL_PHOTOSYNTHESIS, true);
 
-        if(uiUnstableSunbeamTimer <= 0)
-        {
-            if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
-                if (pTarget->isAlive())
-                    me->SummonCreature(NPC_UNSTABLE_SUN_BEAM, pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN, 10000);
-            uiUnstableSunbeamTimer = 8000;
-        }
-        else uiUnstableSunbeamTimer -= diff;
+            if(uiUnstableSunbeamTimer <= 0)
+            {
+                if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
+                    if (pTarget->isAlive())
+                        me->SummonCreature(NPC_UNSTABLE_SUN_BEAM, pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN, 10000);
+                uiUnstableSunbeamTimer = 8000;
+            }
+            else uiUnstableSunbeamTimer -= diff;
 
-        if(uiSolarFlareTimer <= 0)
-        {
-            DoCast(RAID_MODE(RAID_10_SPELL_SOLAR_FLARE, RAID_25_SPELL_SOLAR_FLARE));
-            uiSolarFlareTimer = urand(10000, 15000);
-        }
-        else uiSolarFlareTimer -= diff;
+            if(uiSolarFlareTimer <= 0)
+            {
+                DoCast(RAID_MODE(RAID_10_SPELL_SOLAR_FLARE, RAID_25_SPELL_SOLAR_FLARE));
+                uiSolarFlareTimer = urand(10000, 15000);
+            }
+            else uiSolarFlareTimer -= diff;
             
-        if(uiUnstableEnergyTimer <= 0)
-        {
-            DoCast(RAID_MODE(RAID_10_SPELL_UNSTABLE_ENERGY, RAID_25_SPELL_UNSTABLE_ENERGY));
-            uiUnstableEnergyTimer = 15000;
-        }
-        else uiUnstableEnergyTimer -= diff;
+            if(uiUnstableEnergyTimer <= 0)
+            {
+                DoCast(RAID_MODE(RAID_10_SPELL_UNSTABLE_ENERGY, RAID_25_SPELL_UNSTABLE_ENERGY));
+                uiUnstableEnergyTimer = 15000;
+            }
+            else uiUnstableEnergyTimer -= diff;
             
-        if(uiBrightleafFluxTimer <= 0)
-        {
-            me->RemoveAurasDueToSpell(SPELL_BRIGHTLEAF_FLUX);
-            for (uint32 i = 0; i < urand(1,10); ++i)
-                DoCast(me, SPELL_BRIGHTLEAF_FLUX);
+            if(uiBrightleafFluxTimer <= 0)
+            {
+                me->RemoveAurasDueToSpell(SPELL_BRIGHTLEAF_FLUX);
+                for (uint32 i = 0; i < urand(1,10); ++i)
+                    DoCast(me, SPELL_BRIGHTLEAF_FLUX);
             
-            uiBrightleafFluxTimer = 4000;
-        }
-        else uiBrightleafFluxTimer -= diff;
+                uiBrightleafFluxTimer = 4000;
+            }
+            else uiBrightleafFluxTimer -= diff;
 
-        DoMeleeAttackIfReady();
-    }
+            DoMeleeAttackIfReady();
+        }
+    };
+
 };
 
-CreatureAI* GetAI_boss_elder_brightleaf(Creature* pCreature)
+class creature_sun_beam : public CreatureScript
 {
-    return new boss_elder_brightleafAI(pCreature);
-}
+public:
+    creature_sun_beam() : CreatureScript("creature_sun_beam") { }
 
-struct creature_sun_beamAI : public Scripted_NoMovementAI
-{
-    creature_sun_beamAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
+    CreatureAI* GetAI(Creature* pCreature)
     {
-        m_pInstance = pCreature->GetInstanceData();
-        DoCast(RAID_MODE(RAID_10_SPELL_FREYA_UNSTABLE_ENERGY, RAID_25_SPELL_FREYA_UNSTABLE_ENERGY));
-        DoCast(SPELL_UNSTABLE_SUN_BEAM_VISUAL);
+        return new creature_sun_beamAI(pCreature);
     }
 
-    ScriptedInstance* m_pInstance;
+    struct creature_sun_beamAI : public Scripted_NoMovementAI
+    {
+        creature_sun_beamAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
+        {
+            m_pInstance = pCreature->GetInstanceData();
+            DoCast(RAID_MODE(RAID_10_SPELL_FREYA_UNSTABLE_ENERGY, RAID_25_SPELL_FREYA_UNSTABLE_ENERGY));
+            DoCast(SPELL_UNSTABLE_SUN_BEAM_VISUAL);
+        }
+
+        ScriptedInstance* m_pInstance;
+    };
+
 };
 
-CreatureAI* GetAI_creature_sun_beam(Creature* pCreature)
+class creature_unstable_sun_beam : public CreatureScript
 {
-    return new creature_sun_beamAI(pCreature);
-}
+public:
+    creature_unstable_sun_beam() : CreatureScript("creature_unstable_sun_beam") { }
 
-struct creature_unstable_sun_beamAI : public Scripted_NoMovementAI
-{
-    creature_unstable_sun_beamAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
+    CreatureAI* GetAI(Creature* pCreature)
     {
-        m_pInstance = pCreature->GetInstanceData();
-        DoCast(SPELL_UNSTABLE_SUN_BEAM);
+        return new creature_unstable_sun_beamAI(pCreature);
     }
 
-    ScriptedInstance* m_pInstance;
+    struct creature_unstable_sun_beamAI : public Scripted_NoMovementAI
+    {
+        creature_unstable_sun_beamAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
+        {
+            m_pInstance = pCreature->GetInstanceData();
+            DoCast(SPELL_UNSTABLE_SUN_BEAM);
+        }
+
+        ScriptedInstance* m_pInstance;
+    };
+
 };
 
-CreatureAI* GetAI_creature_unstable_sun_beam(Creature* pCreature)
+class boss_elder_ironbranch : public CreatureScript
 {
-    return new creature_unstable_sun_beamAI(pCreature);
-}
+public:
+    boss_elder_ironbranch() : CreatureScript("boss_elder_ironbranch") { }
 
-struct boss_elder_ironbranchAI : public ScriptedAI
-{
-    boss_elder_ironbranchAI(Creature* pCreature) : ScriptedAI(pCreature)
+    CreatureAI* GetAI(Creature* pCreature)
     {
-        m_pInstance = pCreature->GetInstanceData();
-        Reset();
+        return new boss_elder_ironbranchAI(pCreature);
     }
 
-    ScriptedInstance* m_pInstance;
-    int32 uiImpaleTimer;
-    int32 uiThornSwarmTimer;
-    int32 uiIronRootTimer;
-
-    void Reset()
+    struct boss_elder_ironbranchAI : public ScriptedAI
     {
-        uiImpaleTimer = 15000;
-        uiThornSwarmTimer = 20000;
-        uiIronRootTimer = 8000;
-    }
+        boss_elder_ironbranchAI(Creature* pCreature) : ScriptedAI(pCreature)
+        {
+            m_pInstance = pCreature->GetInstanceData();
+            Reset();
+        }
 
-    void EnterCombat(Unit* pWho)
-    {
-        DoScriptText(SAY_IRONBRANCH_AGGRO, me);
-    }
+        ScriptedInstance* m_pInstance;
+        int32 uiImpaleTimer;
+        int32 uiThornSwarmTimer;
+        int32 uiIronRootTimer;
+
+        void Reset()
+        {
+            uiImpaleTimer = 15000;
+            uiThornSwarmTimer = 20000;
+            uiIronRootTimer = 8000;
+        }
+
+        void EnterCombat(Unit* pWho)
+        {
+            DoScriptText(SAY_IRONBRANCH_AGGRO, me);
+        }
     
-    void KilledUnit(Unit *victim)
-    {
-        if (!(rand()%5))
-             DoScriptText(RAND(SAY_IRONBRANCH_SLAY_1,SAY_IRONBRANCH_SLAY_2), me);
-    }
-
-    void JustDied(Unit *victim)
-    {
-        DoScriptText(SAY_IRONBRANCH_DEATH, me);
-    }
-
-    void UpdateAI(const uint32 diff)
-    {
-        if(!UpdateVictim())
-            return;
-
-        if(uiImpaleTimer <= 0 && me->IsWithinMeleeRange(me->getVictim()))
+        void KilledUnit(Unit *victim)
         {
-            DoCastVictim(RAID_MODE(RAID_10_SPELL_IMPALE, RAID_25_SPELL_IMPALE));
-            uiImpaleTimer = urand(15000, 20000);
+            if (!(rand()%5))
+                 DoScriptText(RAND(SAY_IRONBRANCH_SLAY_1,SAY_IRONBRANCH_SLAY_2), me);
         }
-        else uiImpaleTimer -= diff;
 
-        if(uiThornSwarmTimer <= 0)
+        void JustDied(Unit *victim)
         {
-            if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM))
-                DoCast(pTarget, RAID_MODE(RAID_10_SPELL_THORN_SWARM, RAID_25_SPELL_THORN_SWARM));
-            uiThornSwarmTimer = urand(20000, 24000);
+            DoScriptText(SAY_IRONBRANCH_DEATH, me);
         }
-        else uiThornSwarmTimer -= diff;
 
-        if(uiIronRootTimer <= 0)
+        void UpdateAI(const uint32 diff)
         {
-            pRootTarget = SelectTarget(SELECT_TARGET_RANDOM);
-            if(pRootTarget && !pRootTarget->HasAura(RAID_MODE(RAID_10_SPELL_IMPALE, RAID_25_SPELL_IMPALE)))
-                pRootTarget->CastSpell(me, RAID_MODE(RAID_10_SPELL_IRON_ROOTS, RAID_25_SPELL_IRON_ROOTS), false);
-            uiIronRootTimer = urand(20000, 25000);
-        }
-        else uiIronRootTimer -= diff;
+            if(!UpdateVictim())
+                return;
 
-        DoMeleeAttackIfReady();
-    }
+            if(uiImpaleTimer <= 0 && me->IsWithinMeleeRange(me->getVictim()))
+            {
+                DoCastVictim(RAID_MODE(RAID_10_SPELL_IMPALE, RAID_25_SPELL_IMPALE));
+                uiImpaleTimer = urand(15000, 20000);
+            }
+            else uiImpaleTimer -= diff;
+
+            if(uiThornSwarmTimer <= 0)
+            {
+                if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM))
+                    DoCast(pTarget, RAID_MODE(RAID_10_SPELL_THORN_SWARM, RAID_25_SPELL_THORN_SWARM));
+                uiThornSwarmTimer = urand(20000, 24000);
+            }
+            else uiThornSwarmTimer -= diff;
+
+            if(uiIronRootTimer <= 0)
+            {
+                pRootTarget = SelectTarget(SELECT_TARGET_RANDOM);
+                if(pRootTarget && !pRootTarget->HasAura(RAID_MODE(RAID_10_SPELL_IMPALE, RAID_25_SPELL_IMPALE)))
+                    pRootTarget->CastSpell(me, RAID_MODE(RAID_10_SPELL_IRON_ROOTS, RAID_25_SPELL_IRON_ROOTS), false);
+                uiIronRootTimer = urand(20000, 25000);
+            }
+            else uiIronRootTimer -= diff;
+
+            DoMeleeAttackIfReady();
+        }
+    };
+
 };
 
-CreatureAI* GetAI_boss_elder_ironbranch(Creature* pCreature)
+class creature_iron_roots : public CreatureScript
 {
-    return new boss_elder_ironbranchAI(pCreature);
-}
+public:
+    creature_iron_roots() : CreatureScript("creature_iron_roots") { }
 
-struct creature_iron_rootsAI : public Scripted_NoMovementAI
-{
-    creature_iron_rootsAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
+    CreatureAI* GetAI(Creature* pCreature)
     {
-        m_pInstance = pCreature->GetInstanceData();
-        pPlayer = pRootTarget;
+        return new creature_iron_rootsAI(pCreature);
     }
 
-    ScriptedInstance* m_pInstance;
-    Unit* pPlayer;
-
-    void JustDied(Unit* victim)
+    struct creature_iron_rootsAI : public Scripted_NoMovementAI
     {
-        if (pPlayer)
-            pPlayer->RemoveAurasDueToSpell(RAID_MODE(RAID_10_SPELL_IRON_ROOTS, RAID_25_SPELL_IRON_ROOTS));
-    }
+        creature_iron_rootsAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
+        {
+            m_pInstance = pCreature->GetInstanceData();
+            pPlayer = pRootTarget;
+        }
+
+        ScriptedInstance* m_pInstance;
+        Unit* pPlayer;
+
+        void JustDied(Unit* victim)
+        {
+            if (pPlayer)
+                pPlayer->RemoveAurasDueToSpell(RAID_MODE(RAID_10_SPELL_IRON_ROOTS, RAID_25_SPELL_IRON_ROOTS));
+        }
+    };
+
 };
 
-CreatureAI* GetAI_creature_iron_roots(Creature* pCreature)
+class boss_elder_stonebark : public CreatureScript
 {
-    return new creature_iron_rootsAI(pCreature);
-}
+public:
+    boss_elder_stonebark() : CreatureScript("boss_elder_stonebark") { }
 
-struct boss_elder_stonebarkAI : public ScriptedAI
-{
-    boss_elder_stonebarkAI(Creature* pCreature) : ScriptedAI(pCreature)
+    CreatureAI* GetAI(Creature* pCreature)
     {
-        m_pInstance = pCreature->GetInstanceData();
+        return new boss_elder_stonebarkAI(pCreature);
     }
 
-    ScriptedInstance* m_pInstance;
-    int32 uiGroundTremorTimer;
-    int32 uiFistsOfStoneTimer;
-    int32 uiPetrifiedBarkTimer;
-
-    void Reset()
+    struct boss_elder_stonebarkAI : public ScriptedAI
     {
-        uiGroundTremorTimer = urand(5000, 10000);
-        uiFistsOfStoneTimer = 25000;
-        uiPetrifiedBarkTimer = 35000;
-    }
+        boss_elder_stonebarkAI(Creature* pCreature) : ScriptedAI(pCreature)
+        {
+            m_pInstance = pCreature->GetInstanceData();
+        }
 
-    void EnterCombat(Unit* pWho)
-    {
-        DoScriptText(SAY_STONEBARK_AGGRO, me);
-    }
+        ScriptedInstance* m_pInstance;
+        int32 uiGroundTremorTimer;
+        int32 uiFistsOfStoneTimer;
+        int32 uiPetrifiedBarkTimer;
+
+        void Reset()
+        {
+            uiGroundTremorTimer = urand(5000, 10000);
+            uiFistsOfStoneTimer = 25000;
+            uiPetrifiedBarkTimer = 35000;
+        }
+
+        void EnterCombat(Unit* pWho)
+        {
+            DoScriptText(SAY_STONEBARK_AGGRO, me);
+        }
     
-    void KilledUnit(Unit *victim)
-    {
-        if (!(rand()%5))
-             DoScriptText(RAND(SAY_STONEBARK_SLAY_1,SAY_STONEBARK_SLAY_2), me);
-    }
-
-    void JustDied(Unit *victim)
-    {
-        DoScriptText(SAY_STONEBARK_DEATH, me);
-    }
-
-    void UpdateAI(const uint32 diff)
-    {
-        if(!UpdateVictim() || me->hasUnitState(UNIT_STAT_CASTING))
-            return;
-
-        if(uiGroundTremorTimer <= 0)
+        void KilledUnit(Unit *victim)
         {
-            DoCastVictim(RAID_MODE(RAID_10_SPELL_GROUND_TREMOR, RAID_25_SPELL_GROUND_TREMOR));
-            uiGroundTremorTimer = urand(20000, 25000);
+            if (!(rand()%5))
+                 DoScriptText(RAND(SAY_STONEBARK_SLAY_1,SAY_STONEBARK_SLAY_2), me);
         }
-        else uiGroundTremorTimer -= diff;
 
-        if(uiFistsOfStoneTimer <= 0)
+        void JustDied(Unit *victim)
         {
-            DoCast(me, RAID_MODE(RAID_10_SPELL_PETRIFIED_BARK, RAID_25_SPELL_PETRIFIED_BARK));
-            uiFistsOfStoneTimer = 50000;
+            DoScriptText(SAY_STONEBARK_DEATH, me);
         }
-        else uiFistsOfStoneTimer -= diff;
+
+        void UpdateAI(const uint32 diff)
+        {
+            if(!UpdateVictim() || me->hasUnitState(UNIT_STAT_CASTING))
+                return;
+
+            if(uiGroundTremorTimer <= 0)
+            {
+                DoCastVictim(RAID_MODE(RAID_10_SPELL_GROUND_TREMOR, RAID_25_SPELL_GROUND_TREMOR));
+                uiGroundTremorTimer = urand(20000, 25000);
+            }
+            else uiGroundTremorTimer -= diff;
+
+            if(uiFistsOfStoneTimer <= 0)
+            {
+                DoCast(me, RAID_MODE(RAID_10_SPELL_PETRIFIED_BARK, RAID_25_SPELL_PETRIFIED_BARK));
+                uiFistsOfStoneTimer = 50000;
+            }
+            else uiFistsOfStoneTimer -= diff;
         
-        if(uiPetrifiedBarkTimer <= 0)
-        {
-            DoCast(me, SPELL_FISTS_OF_STONE);
-            uiPetrifiedBarkTimer = 60000;
-        }
-        else uiPetrifiedBarkTimer -= diff;
+            if(uiPetrifiedBarkTimer <= 0)
+            {
+                DoCast(me, SPELL_FISTS_OF_STONE);
+                uiPetrifiedBarkTimer = 60000;
+            }
+            else uiPetrifiedBarkTimer -= diff;
 
-        DoMeleeAttackIfReady();
-    }
+            DoMeleeAttackIfReady();
+        }
+    };
+
 };
 
-CreatureAI* GetAI_boss_elder_stonebark(Creature* pCreature)
+class creature_eonars_gift : public CreatureScript
 {
-    return new boss_elder_stonebarkAI(pCreature);
-}
+public:
+    creature_eonars_gift() : CreatureScript("creature_eonars_gift") { }
 
-struct creature_eonars_giftAI : public Scripted_NoMovementAI
-{
-    creature_eonars_giftAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
+    CreatureAI* GetAI(Creature* pCreature)
     {
-        m_pInstance = pCreature->GetInstanceData();
-        uiLifebindersGiftTimer = 12000;
-        fScale = 0.2;
-        me->SetFloatValue(OBJECT_FIELD_SCALE_X, fScale);
-        uiScaleTimer = 200;
-        DoCast(me, SPELL_PHEROMONES, true);
-        DoCast(me, SPELL_EONAR_VISUAL, true);
+        return new creature_eonars_giftAI(pCreature);
     }
 
-    ScriptedInstance* m_pInstance;
-    int32 uiLifebindersGiftTimer;
-    float fScale;
-    int32 uiScaleTimer;
-
-    void UpdateAI(const uint32 diff)
+    struct creature_eonars_giftAI : public Scripted_NoMovementAI
     {
-        if(uiLifebindersGiftTimer <= 0)
+        creature_eonars_giftAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
         {
-            DoCast(me, RAID_MODE(RAID_10_SPELL_LIFEBINDERS_GIFT, RAID_25_SPELL_LIFEBINDERS_GIFT), true);
+            m_pInstance = pCreature->GetInstanceData();
             uiLifebindersGiftTimer = 12000;
-            me->SetFloatValue(OBJECT_FIELD_SCALE_X, 0);
-            me->ForcedDespawn(1000);
-        }
-        else uiLifebindersGiftTimer -= diff;
-
-        if(uiScaleTimer <= 0)
-        {
-            fScale += 0.025;
+            fScale = 0.2;
             me->SetFloatValue(OBJECT_FIELD_SCALE_X, fScale);
+            uiScaleTimer = 200;
+            DoCast(me, SPELL_PHEROMONES, true);
+            DoCast(me, SPELL_EONAR_VISUAL, true);
         }
-        else uiScaleTimer -= diff;
-    }
+
+        ScriptedInstance* m_pInstance;
+        int32 uiLifebindersGiftTimer;
+        float fScale;
+        int32 uiScaleTimer;
+
+        void UpdateAI(const uint32 diff)
+        {
+            if(uiLifebindersGiftTimer <= 0)
+            {
+                DoCast(me, RAID_MODE(RAID_10_SPELL_LIFEBINDERS_GIFT, RAID_25_SPELL_LIFEBINDERS_GIFT), true);
+                uiLifebindersGiftTimer = 12000;
+                me->SetFloatValue(OBJECT_FIELD_SCALE_X, 0);
+                me->ForcedDespawn(1000);
+            }
+            else uiLifebindersGiftTimer -= diff;
+
+            if(uiScaleTimer <= 0)
+            {
+                fScale += 0.025;
+                me->SetFloatValue(OBJECT_FIELD_SCALE_X, fScale);
+            }
+            else uiScaleTimer -= diff;
+        }
+    };
+
 };
 
-CreatureAI* GetAI_creature_eonars_gift(Creature* pCreature)
+class creature_nature_bomb : public CreatureScript
 {
-    return new creature_eonars_giftAI(pCreature);
-}
+public:
+    creature_nature_bomb() : CreatureScript("creature_nature_bomb") { }
 
-struct creature_nature_bombAI : public Scripted_NoMovementAI
-{
-    creature_nature_bombAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
+    CreatureAI* GetAI(Creature* pCreature)
     {
-        m_pInstance = pCreature->GetInstanceData();
-        uiExplosionTimer = 10000;
-        float x = me->GetPositionX();
-        float y = me->GetPositionY();
-        float z = me->GetPositionZ();
-        pGo = me->SummonGameObject(OBJECT_NATURE_BOMB, x, y, z, 0, 0, 0, 0, 0, 0);
+        return new creature_nature_bombAI(pCreature);
     }
 
-    ScriptedInstance* m_pInstance;
-    int32 uiExplosionTimer;
-    GameObject* pGo;
-
-    void UpdateAI(const uint32 diff)
+    struct creature_nature_bombAI : public Scripted_NoMovementAI
     {
-        if(uiExplosionTimer <= 0)
+        creature_nature_bombAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
         {
-            DoCast(me, RAID_MODE(RAID_10_SPELL_NATURE_BOMB, RAID_25_SPELL_NATURE_BOMB));
+            m_pInstance = pCreature->GetInstanceData();
             uiExplosionTimer = 10000;
-            me->ForcedDespawn(1000);
-            pGo->Use(me);
+            float x = me->GetPositionX();
+            float y = me->GetPositionY();
+            float z = me->GetPositionZ();
+            pGo = me->SummonGameObject(OBJECT_NATURE_BOMB, x, y, z, 0, 0, 0, 0, 0, 0);
         }
-        else uiExplosionTimer -= diff;
-    }
+
+        ScriptedInstance* m_pInstance;
+        int32 uiExplosionTimer;
+        GameObject* pGo;
+
+        void UpdateAI(const uint32 diff)
+        {
+            if(uiExplosionTimer <= 0)
+            {
+                DoCast(me, RAID_MODE(RAID_10_SPELL_NATURE_BOMB, RAID_25_SPELL_NATURE_BOMB));
+                uiExplosionTimer = 10000;
+                me->ForcedDespawn(1000);
+                pGo->Use(me);
+            }
+            else uiExplosionTimer -= diff;
+        }
+    };
+
 };
 
-CreatureAI* GetAI_creature_nature_bomb(Creature* pCreature)
+class creature_detonating_lasher : public CreatureScript
 {
-    return new creature_nature_bombAI(pCreature);
-}
+public:
+    creature_detonating_lasher() : CreatureScript("creature_detonating_lasher") { }
 
-struct creature_detonating_lasherAI : public ScriptedAI
-{
-    creature_detonating_lasherAI(Creature* pCreature) : ScriptedAI(pCreature)
+    CreatureAI* GetAI(Creature* pCreature)
     {
-        m_pInstance = pCreature->GetInstanceData();
+        return new creature_detonating_lasherAI(pCreature);
     }
 
-    ScriptedInstance* m_pInstance;
-    int32 uiFlameLashTimer;
-    int32 uiSwitchTargetTimer;
-
-    void JustDied(Unit* victim)
+    struct creature_detonating_lasherAI : public ScriptedAI
     {
-        DoCast(me, RAID_MODE(RAID_10_SPELL_DETONATE, RAID_25_SPELL_DETONATE));
-
-        if(Creature* Freya = Unit::GetCreature(*me, m_pInstance ? m_pInstance->GetData64(DATA_FREYA) : 0))
-            Freya->AI()->DoAction(ACTION_LASHER);
-    }
-
-    void Reset()
-    {
-        uiFlameLashTimer = urand(5000, 10000);
-        uiSwitchTargetTimer = urand(2000, 4000);
-    }
-
-    void updateAI(const uint32 diff)
-    {
-        if(!UpdateVictim())
-            return;
-
-        if(uiFlameLashTimer <= 0)
+        creature_detonating_lasherAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            DoCastVictim(SPELL_FLAME_LASH);
-            uiFlameLashTimer = urand(5000, 10000);
+            m_pInstance = pCreature->GetInstanceData();
         }
-        else uiFlameLashTimer -= diff;
 
-        if(uiSwitchTargetTimer <= 0)
+        ScriptedInstance* m_pInstance;
+        int32 uiFlameLashTimer;
+        int32 uiSwitchTargetTimer;
+
+        void JustDied(Unit* victim)
         {
-            if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
-                if (pTarget->isAlive())
-                    me->Attack(pTarget, true);
+            DoCast(me, RAID_MODE(RAID_10_SPELL_DETONATE, RAID_25_SPELL_DETONATE));
+
+            if(Creature* Freya = Unit::GetCreature(*me, m_pInstance ? m_pInstance->GetData64(DATA_FREYA) : 0))
+                Freya->AI()->DoAction(ACTION_LASHER);
+        }
+
+        void Reset()
+        {
+            uiFlameLashTimer = urand(5000, 10000);
             uiSwitchTargetTimer = urand(2000, 4000);
         }
-        else uiSwitchTargetTimer -= diff;
 
-        DoMeleeAttackIfReady();
-    }
+        void updateAI(const uint32 diff)
+        {
+            if(!UpdateVictim())
+                return;
+
+            if(uiFlameLashTimer <= 0)
+            {
+                DoCastVictim(SPELL_FLAME_LASH);
+                uiFlameLashTimer = urand(5000, 10000);
+            }
+            else uiFlameLashTimer -= diff;
+
+            if(uiSwitchTargetTimer <= 0)
+            {
+                if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
+                    if (pTarget->isAlive())
+                        me->Attack(pTarget, true);
+                uiSwitchTargetTimer = urand(2000, 4000);
+            }
+            else uiSwitchTargetTimer -= diff;
+
+            DoMeleeAttackIfReady();
+        }
+    };
+
 };
 
-CreatureAI* GetAI_creature_detonating_lasher(Creature* pCreature)
+class creature_ancient_conservator : public CreatureScript
 {
-    return new creature_detonating_lasherAI(pCreature);
-}
+public:
+    creature_ancient_conservator() : CreatureScript("creature_ancient_conservator") { }
 
-struct creature_ancient_conservatorAI : public ScriptedAI
-{
-    creature_ancient_conservatorAI(Creature* pCreature) : ScriptedAI(pCreature)
+    CreatureAI* GetAI(Creature* pCreature)
     {
-        m_pInstance = pCreature->GetInstanceData();
+        return new creature_ancient_conservatorAI(pCreature);
     }
 
-    ScriptedInstance* m_pInstance;
-    int32 uiNaturesFuryTimer;
-    int32 uiSpawnHealthySporeTimer;
-    uint8 healthySporesSpawned;
-    int32 uiSpawnPauseTimer;
+    struct creature_ancient_conservatorAI : public ScriptedAI
+    {
+        creature_ancient_conservatorAI(Creature* pCreature) : ScriptedAI(pCreature)
+        {
+            m_pInstance = pCreature->GetInstanceData();
+        }
+
+        ScriptedInstance* m_pInstance;
+        int32 uiNaturesFuryTimer;
+        int32 uiSpawnHealthySporeTimer;
+        uint8 healthySporesSpawned;
+        int32 uiSpawnPauseTimer;
     
-    void EnterCombat(Unit* pWho)
-    {
-        DoCast(me, SPELL_CONSERVATORS_GRIP);
-    }
-
-    void Reset()
-    {
-        uiNaturesFuryTimer = 5000;
-        uiSpawnHealthySporeTimer = 0;
-        healthySporesSpawned = 0;
-        uiSpawnPauseTimer = 20000;
-    }
-
-    void JustDied(Unit* victim)
-    {
-        if(Creature* Freya = Unit::GetCreature(*me, m_pInstance ? m_pInstance->GetData64(DATA_FREYA) : 0))
-            Freya->AI()->DoAction(ACTION_ANCIENT);
-    }
-
-    void UpdateAI(const uint32 diff)
-    {
-        if(!UpdateVictim() || (me->hasUnitState(UNIT_STAT_CASTING)))
-            return;
-
-        if(uiNaturesFuryTimer <= 0)
+        void EnterCombat(Unit* pWho)
         {
-            Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true);
-            //Prevent casting natures fury on a target that is already affected
-            if(pTarget && !pTarget->HasAura(RAID_MODE(RAID_10_SPELL_NATURES_FURY, RAID_25_SPELL_NATURES_FURY)))
-                DoCast(pTarget, RAID_MODE(RAID_10_SPELL_NATURES_FURY, RAID_25_SPELL_NATURES_FURY));
-            me->AddAura(SPELL_CONSERVATORS_GRIP, me);
+            DoCast(me, SPELL_CONSERVATORS_GRIP);
+        }
+
+        void Reset()
+        {
             uiNaturesFuryTimer = 5000;
-        }
-        else uiNaturesFuryTimer -= diff;
-
-        if(uiSpawnHealthySporeTimer <= 0 && healthySporesSpawned < 10)
-        {
-            for (uint32 i = 0; i < 2; ++i)
-            {
-                Position pos;
-                me->GetRandomNearPosition(pos, 25);
-                me->SummonCreature(NPC_HEALTHY_SPORE, pos, TEMPSUMMON_TIMED_DESPAWN, 20000);
-            }            uiSpawnHealthySporeTimer = 2000;
-        }
-        else uiSpawnHealthySporeTimer -= diff;
-
-        if(uiSpawnPauseTimer <= 0)
-        {
+            uiSpawnHealthySporeTimer = 0;
             healthySporesSpawned = 0;
             uiSpawnPauseTimer = 20000;
-            uiSpawnHealthySporeTimer = 0;
         }
-        else uiSpawnPauseTimer -= diff;
 
-        DoMeleeAttackIfReady();
-    }
+        void JustDied(Unit* victim)
+        {
+            if(Creature* Freya = Unit::GetCreature(*me, m_pInstance ? m_pInstance->GetData64(DATA_FREYA) : 0))
+                Freya->AI()->DoAction(ACTION_ANCIENT);
+        }
+
+        void UpdateAI(const uint32 diff)
+        {
+            if(!UpdateVictim() || (me->hasUnitState(UNIT_STAT_CASTING)))
+                return;
+
+            if(uiNaturesFuryTimer <= 0)
+            {
+                Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true);
+                //Prevent casting natures fury on a target that is already affected
+                if(pTarget && !pTarget->HasAura(RAID_MODE(RAID_10_SPELL_NATURES_FURY, RAID_25_SPELL_NATURES_FURY)))
+                    DoCast(pTarget, RAID_MODE(RAID_10_SPELL_NATURES_FURY, RAID_25_SPELL_NATURES_FURY));
+                me->AddAura(SPELL_CONSERVATORS_GRIP, me);
+                uiNaturesFuryTimer = 5000;
+            }
+            else uiNaturesFuryTimer -= diff;
+
+            if(uiSpawnHealthySporeTimer <= 0 && healthySporesSpawned < 10)
+            {
+                for (uint32 i = 0; i < 2; ++i)
+                {
+                    Position pos;
+                    me->GetRandomNearPosition(pos, 25);
+                    me->SummonCreature(NPC_HEALTHY_SPORE, pos, TEMPSUMMON_TIMED_DESPAWN, 20000);
+                }            uiSpawnHealthySporeTimer = 2000;
+            }
+            else uiSpawnHealthySporeTimer -= diff;
+
+            if(uiSpawnPauseTimer <= 0)
+            {
+                healthySporesSpawned = 0;
+                uiSpawnPauseTimer = 20000;
+                uiSpawnHealthySporeTimer = 0;
+            }
+            else uiSpawnPauseTimer -= diff;
+
+            DoMeleeAttackIfReady();
+        }
+    };
+
 };
 
-CreatureAI* GetAI_creature_ancient_conservator(Creature* pCreature)
+class creature_healthy_spore : public CreatureScript
 {
-    return new creature_ancient_conservatorAI(pCreature);
-}
+public:
+    creature_healthy_spore() : CreatureScript("creature_healthy_spore") { }
 
-struct creature_healthy_sporeAI : public Scripted_NoMovementAI
-{
-    creature_healthy_sporeAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
+    CreatureAI* GetAI(Creature* pCreature)
     {
-        m_pInstance = pCreature->GetInstanceData();
-        DoCast(me, SPELL_HEALTHY_SPORE_VISUAL);
-        DoCast(me, SPELL_POTENT_PHEROMONES);
-        DoCast(me, SPELL_GROW);
+        return new creature_healthy_sporeAI(pCreature);
     }
 
-    ScriptedInstance* m_pInstance;
+    struct creature_healthy_sporeAI : public Scripted_NoMovementAI
+    {
+        creature_healthy_sporeAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
+        {
+            m_pInstance = pCreature->GetInstanceData();
+            DoCast(me, SPELL_HEALTHY_SPORE_VISUAL);
+            DoCast(me, SPELL_POTENT_PHEROMONES);
+            DoCast(me, SPELL_GROW);
+        }
+
+        ScriptedInstance* m_pInstance;
+    };
+
 };
 
-CreatureAI* GetAI_creature_healthy_spore(Creature* pCreature)
+class creature_storm_lasher : public CreatureScript
 {
-    return new creature_healthy_sporeAI(pCreature);
-}
+public:
+    creature_storm_lasher() : CreatureScript("creature_storm_lasher") { }
 
-struct creature_storm_lasherAI : public ScriptedAI
-{
-    creature_storm_lasherAI(Creature* pCreature) : ScriptedAI(pCreature)
+    CreatureAI* GetAI(Creature* pCreature)
     {
-        m_pInstance = pCreature->GetInstanceData();
+        return new creature_storm_lasherAI(pCreature);
     }
 
-    ScriptedInstance* m_pInstance;
-    int32 uiLightningLashTimer;
-    int32 uiStormboltTimer;
-
-    void Reset()
+    struct creature_storm_lasherAI : public ScriptedAI
     {
-        uiLightningLashTimer = 4000;
-        uiStormboltTimer = 15000;
-    }
-
-    void JustDied(Unit* victim)
-    {
-        if(Creature* Freya = Unit::GetCreature(*me, m_pInstance ? m_pInstance->GetData64(DATA_FREYA) : 0))
-            Freya->AI()->DoAction(ACTION_ELEMENTAL_DEAD);
-    }
-
-    void UpdateAI(const uint32 diff)
-    {
-        if(!UpdateVictim() || (me->hasUnitState(UNIT_STAT_CASTING)))
-            return;
-            
-        if(uiLightningLashTimer <= 0)
+        creature_storm_lasherAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM))
-                DoCast(pTarget, RAID_MODE(RAID_10_SPELL_LIGHTNING_LASH, RAID_25_SPELL_LIGHTNING_LASH));
-            uiLightningLashTimer = urand(3000, 6000);
+            m_pInstance = pCreature->GetInstanceData();
         }
-        else uiLightningLashTimer -= diff;
 
-        if(uiStormboltTimer <= 0)
+        ScriptedInstance* m_pInstance;
+        int32 uiLightningLashTimer;
+        int32 uiStormboltTimer;
+
+        void Reset()
         {
-            if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM))
-                DoCast(pTarget, RAID_MODE(RAID_10_SPELL_STORMBOLT, RAID_25_SPELL_STORMBOLT));
+            uiLightningLashTimer = 4000;
             uiStormboltTimer = 15000;
         }
-        else uiStormboltTimer -= diff;
 
-        DoMeleeAttackIfReady();
-    }
-};
-
-CreatureAI* GetAI_creature_storm_lasher(Creature* pCreature)
-{
-    return new creature_storm_lasherAI(pCreature);
-}
-
-struct creature_snaplasherAI : public ScriptedAI
-{
-    creature_snaplasherAI(Creature* pCreature) : ScriptedAI(pCreature)
-    {
-        m_pInstance = pCreature->GetInstanceData();
-//        DoCast(me, 62664);
-    }
-
-    ScriptedInstance* m_pInstance;
-    uint32 health;
-
-    void JustDied(Unit* victim)
-    {
-        if(Creature* Freya = Unit::GetCreature(*me, m_pInstance ? m_pInstance->GetData64(DATA_FREYA) : 0))
-            Freya->AI()->DoAction(ACTION_ELEMENTAL_DEAD);
-    }
-
-    void UpdateAI(const uint32 diff)
-    {
-        if(!UpdateVictim())
-            return;
-
-        DoMeleeAttackIfReady();
-    }
-};
-
-CreatureAI* GetAI_creature_snaplasher(Creature* pCreature)
-{
-    return new creature_snaplasherAI(pCreature);
-}
-
-struct creature_ancient_water_spiritAI : public ScriptedAI
-{
-    creature_ancient_water_spiritAI(Creature* pCreature) : ScriptedAI(pCreature)
-    {
-        m_pInstance = pCreature->GetInstanceData();
-    }
-
-    ScriptedInstance* m_pInstance;
-    int32 uiTidalWaveTimer;
-
-    void Reset()
-    {
-        uiTidalWaveTimer = 10000;
-    }
-
-    void JustDied(Unit* victim)
-    {
-        if(Creature* Freya = Unit::GetCreature(*me, m_pInstance ? m_pInstance->GetData64(DATA_FREYA) : 0))
-            Freya->AI()->DoAction(ACTION_ELEMENTAL_DEAD);
-    }
-
-    void UpdateAI(const uint32 diff)
-    {
-        if(!UpdateVictim())
-            return;
-
-        if(uiTidalWaveTimer <= 0)
+        void JustDied(Unit* victim)
         {
-            DoCastVictim(SPELL_TIDAL_WAVE);
-            uiTidalWaveTimer = 15000;
+            if(Creature* Freya = Unit::GetCreature(*me, m_pInstance ? m_pInstance->GetData64(DATA_FREYA) : 0))
+                Freya->AI()->DoAction(ACTION_ELEMENTAL_DEAD);
         }
-        else uiTidalWaveTimer -= diff;
 
-        DoMeleeAttackIfReady();
-    }
+        void UpdateAI(const uint32 diff)
+        {
+            if(!UpdateVictim() || (me->hasUnitState(UNIT_STAT_CASTING)))
+                return;
+            
+            if(uiLightningLashTimer <= 0)
+            {
+                if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM))
+                    DoCast(pTarget, RAID_MODE(RAID_10_SPELL_LIGHTNING_LASH, RAID_25_SPELL_LIGHTNING_LASH));
+                uiLightningLashTimer = urand(3000, 6000);
+            }
+            else uiLightningLashTimer -= diff;
+
+            if(uiStormboltTimer <= 0)
+            {
+                if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM))
+                    DoCast(pTarget, RAID_MODE(RAID_10_SPELL_STORMBOLT, RAID_25_SPELL_STORMBOLT));
+                uiStormboltTimer = 15000;
+            }
+            else uiStormboltTimer -= diff;
+
+            DoMeleeAttackIfReady();
+        }
+    };
+
 };
 
-CreatureAI* GetAI_creature_ancient_water_spirit(Creature* pCreature)
+class creature_snaplasher : public CreatureScript
 {
-    return new creature_ancient_water_spiritAI(pCreature);
-}
+public:
+    creature_snaplasher() : CreatureScript("creature_snaplasher") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new creature_snaplasherAI(pCreature);
+    }
+
+    struct creature_snaplasherAI : public ScriptedAI
+    {
+        creature_snaplasherAI(Creature* pCreature) : ScriptedAI(pCreature)
+        {
+            m_pInstance = pCreature->GetInstanceData();
+    //        DoCast(me, 62664);
+        }
+
+        ScriptedInstance* m_pInstance;
+        uint32 health;
+
+        void JustDied(Unit* victim)
+        {
+            if(Creature* Freya = Unit::GetCreature(*me, m_pInstance ? m_pInstance->GetData64(DATA_FREYA) : 0))
+                Freya->AI()->DoAction(ACTION_ELEMENTAL_DEAD);
+        }
+
+        void UpdateAI(const uint32 diff)
+        {
+            if(!UpdateVictim())
+                return;
+
+            DoMeleeAttackIfReady();
+        }
+    };
+
+};
+
+class creature_ancient_water_spirit : public CreatureScript
+{
+public:
+    creature_ancient_water_spirit() : CreatureScript("creature_ancient_water_spirit") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new creature_ancient_water_spiritAI(pCreature);
+    }
+
+    struct creature_ancient_water_spiritAI : public ScriptedAI
+    {
+        creature_ancient_water_spiritAI(Creature* pCreature) : ScriptedAI(pCreature)
+        {
+            m_pInstance = pCreature->GetInstanceData();
+        }
+
+        ScriptedInstance* m_pInstance;
+        int32 uiTidalWaveTimer;
+
+        void Reset()
+        {
+            uiTidalWaveTimer = 10000;
+        }
+
+        void JustDied(Unit* victim)
+        {
+            if(Creature* Freya = Unit::GetCreature(*me, m_pInstance ? m_pInstance->GetData64(DATA_FREYA) : 0))
+                Freya->AI()->DoAction(ACTION_ELEMENTAL_DEAD);
+        }
+
+        void UpdateAI(const uint32 diff)
+        {
+            if(!UpdateVictim())
+                return;
+
+            if(uiTidalWaveTimer <= 0)
+            {
+                DoCastVictim(SPELL_TIDAL_WAVE);
+                uiTidalWaveTimer = 15000;
+            }
+            else uiTidalWaveTimer -= diff;
+
+            DoMeleeAttackIfReady();
+        }
+    };
+
+};
+
 
 
 void AddSC_boss_freya()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_freya";
-    newscript->GetAI = &GetAI_boss_freya;
-    newscript->RegisterSelf();
-    
-    newscript = new Script;
-    newscript->Name = "boss_elder_brightleaf";
-    newscript->GetAI = &GetAI_boss_elder_brightleaf;
-    newscript->RegisterSelf();
-        
-    newscript = new Script;
-    newscript->Name = "creature_unstable_sun_beam";
-    newscript->GetAI = &GetAI_creature_unstable_sun_beam;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "creature_sun_beam";
-    newscript->GetAI = &GetAI_creature_sun_beam;
-    newscript->RegisterSelf();
-    
-    newscript = new Script;
-    newscript->Name = "boss_elder_ironbranch";
-    newscript->GetAI = &GetAI_boss_elder_ironbranch;
-    newscript->RegisterSelf();
-    
-    newscript = new Script;
-    newscript->Name = "creature_iron_roots";
-    newscript->GetAI = &GetAI_creature_iron_roots;
-    newscript->RegisterSelf();
-    
-    newscript = new Script;
-    newscript->Name = "boss_elder_stonebark";
-    newscript->GetAI = &GetAI_boss_elder_stonebark;
-    newscript->RegisterSelf();
-    
-    newscript = new Script;
-    newscript->Name = "creature_eonars_gift";
-    newscript->GetAI = &GetAI_creature_eonars_gift;
-    newscript->RegisterSelf();
-    
-    newscript = new Script;
-    newscript->Name = "creature_nature_bomb";
-    newscript->GetAI = &GetAI_creature_nature_bomb;
-    newscript->RegisterSelf();
-    
-    newscript = new Script;
-    newscript->Name = "creature_detonating_lasher";
-    newscript->GetAI = &GetAI_creature_detonating_lasher;
-    newscript->RegisterSelf();
-    
-    newscript = new Script;
-    newscript->Name = "creature_ancient_conservator";
-    newscript->GetAI = &GetAI_creature_ancient_conservator;
-    newscript->RegisterSelf();
-    
-    newscript = new Script;
-    newscript->Name = "creature_healthy_spore";
-    newscript->GetAI = &GetAI_creature_healthy_spore;
-    newscript->RegisterSelf();
-    
-    newscript = new Script;
-    newscript->Name = "creature_storm_lasher";
-    newscript->GetAI = &GetAI_creature_storm_lasher;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "creature_snaplasher";
-    newscript->GetAI = &GetAI_creature_snaplasher;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "creature_ancient_water_spirit";
-    newscript->GetAI = &GetAI_creature_ancient_water_spirit;
-    newscript->RegisterSelf();
+    new boss_freya();
+    new boss_elder_brightleaf();
+    new creature_unstable_sun_beam();
+    new creature_sun_beam();
+    new boss_elder_ironbranch();
+    new creature_iron_roots();
+    new boss_elder_stonebark();
+    new creature_eonars_gift();
+    new creature_nature_bomb();
+    new creature_detonating_lasher();
+    new creature_ancient_conservator();
+    new creature_healthy_spore();
+    new creature_storm_lasher();
+    new creature_snaplasher();
+    new creature_ancient_water_spirit();
 }

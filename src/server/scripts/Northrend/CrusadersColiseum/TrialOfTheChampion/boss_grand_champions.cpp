@@ -971,35 +971,4 @@ CreatureAI* GetAI_boss_rouge_toc5(Creature* pCreature)
 
 void AddSC_boss_grand_champions()
 {
-    Script* NewScript;
-
-    NewScript = new Script;
-    NewScript->Name = "generic_vehicleAI_toc5";
-    NewScript->GetAI = &GetAI_generic_vehicleAI_toc5;
-    NewScript->RegisterSelf();
-
-    NewScript = new Script;
-    NewScript->Name = "boss_warrior_toc5";
-    NewScript->GetAI = &GetAI_boss_warrior_toc5;
-    NewScript->RegisterSelf();
-
-    NewScript = new Script;
-    NewScript->Name = "boss_mage_toc5";
-    NewScript->GetAI = &GetAI_boss_mage_toc5;
-    NewScript->RegisterSelf();
-
-    NewScript = new Script;
-    NewScript->Name = "boss_shaman_toc5";
-    NewScript->GetAI = &GetAI_boss_shaman_toc5;
-    NewScript->RegisterSelf();
-
-    NewScript = new Script;
-    NewScript->Name = "boss_hunter_toc5";
-    NewScript->GetAI = &GetAI_boss_hunter_toc5;
-    NewScript->RegisterSelf();
-
-    NewScript = new Script;
-    NewScript->Name = "boss_rouge_toc5";
-    NewScript->GetAI = &GetAI_boss_rouge_toc5;
-    NewScript->RegisterSelf();
 }

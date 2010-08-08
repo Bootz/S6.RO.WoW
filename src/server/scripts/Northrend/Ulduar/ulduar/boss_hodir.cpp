@@ -355,306 +355,328 @@ struct boss_hodir_AI : public BossAI
         }
     }
 };
-
-CreatureAI* GetAI_boss_hodir(Creature* pCreature)
+class boss_hodir : public CreatureScript
 {
-    return new boss_hodir_AI (pCreature);
-}
+public:
+    boss_hodir() : CreatureScript("boss_hodir") { }
 
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new boss_hodir_AI (pCreature);
+    }
 
-struct mob_icicleAI : public ScriptedAI
-{
-    mob_icicleAI(Creature* pCreature) : ScriptedAI(pCreature)
-    {
-        me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE | UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_PACIFIED);
-        me->SetReactState(REACT_PASSIVE);
-    }
-    
-    int32 IcicleTimer;
-    
-    void UpdateAI(const uint32 diff)
-    {
-        if (IcicleTimer <= diff)
-        {
-            DoCast(me, SPELL_FALL_DAMAGE);
-            DoCast(me, SPELL_ICICLE_FALL);
-            IcicleTimer = 10000;
-        } else IcicleTimer -= diff;
-    }
-    
-    void Reset()
-    {
-        IcicleTimer = 2000;
-    }
 };
 
-CreatureAI* GetAI_mob_icicle(Creature* pCreature)
+class mob_icicle : public CreatureScript
 {
-    return new mob_icicleAI(pCreature);
-}
+public:
+    mob_icicle() : CreatureScript("mob_icicle") { }
 
-struct mob_icicle_snowdriftAI : public ScriptedAI
-{
-    mob_icicle_snowdriftAI(Creature* pCreature) : ScriptedAI(pCreature)
+    CreatureAI* GetAI(Creature* pCreature)
     {
-        me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE | UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_PACIFIED);
-        me->SetReactState(REACT_PASSIVE);
+        return new mob_icicleAI(pCreature);
     }
-    
-    int32 IcicleTimer;
-    
-    void UpdateAI(const uint32 diff)
+
+    struct mob_icicleAI : public ScriptedAI
     {
-        if (IcicleTimer <= diff)
+        mob_icicleAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            DoCast(me, SPELL_FALL_SNOWDRIFT);
-            DoCast(me, SPELL_ICICLE_FALL);
-            IcicleTimer = 10000;
-        } else IcicleTimer -= diff;
-    }
-    
-    void Reset()
-    {
-        IcicleTimer = 2000;
-    }
-};
-
-CreatureAI* GetAI_mob_icicle_snowdrift(Creature* pCreature)
-{
-    return new mob_icicle_snowdriftAI(pCreature);
-}
-
-struct mob_hodir_priestAI : public ScriptedAI
-{
-    mob_hodir_priestAI(Creature* pCreature) : ScriptedAI(pCreature)
-    {
-        pInstance = pCreature->GetInstanceData();
-        me->ApplySpellImmune(0, IMMUNITY_ID, RAID_MODE(64392, 64679), true);
-    }
-
-    ScriptedInstance* pInstance;
-    int32 HealTimer;
-
-    void Reset()
-    {
-        HealTimer = urand(4000, 8000);
-    }
-    
-    void AttackStart(Unit *who)
-    {
-        AttackStartCaster(who, 20);
-    }
-
-    void UpdateAI(const uint32 uiDiff)
-    {
-        if (!UpdateVictim())
-            return;
-            
-        if (HealthBelowPct(35))
-            DoCastAOE(SPELL_GREATER_HEAL);
-
-        if (HealTimer <= uiDiff)
-        {
-            DoCastAOE(SPELL_GREATER_HEAL);
-            HealTimer = urand(12000, 14000);
+            me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE | UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_PACIFIED);
+            me->SetReactState(REACT_PASSIVE);
         }
-        else HealTimer -= uiDiff;
-
-        DoSpellAttackIfReady(SPELL_SMITE);
-    }
-};
-
-CreatureAI* GetAI_mob_hodir_priest(Creature* pCreature)
-{
-    return new mob_hodir_priestAI(pCreature);
-}
-
-struct mob_hodir_shamanAI : public ScriptedAI
-{
-    mob_hodir_shamanAI(Creature* pCreature) : ScriptedAI(pCreature)
-    {
-        pInstance = pCreature->GetInstanceData();
-        me->ApplySpellImmune(0, IMMUNITY_ID, RAID_MODE(64392, 64679), true);
-    }
-
-    ScriptedInstance* pInstance;
-    int32 StormTimer;
-
-    void Reset()
-    {
-        StormTimer = urand(15000, 20000);
-    }
     
-    void AttackStart(Unit *who)
-    {
-        AttackStartCaster(who, 20);
-    }
-
-    void UpdateAI(const uint32 uiDiff)
-    {
-        if (!UpdateVictim())
-            return;
-            
-        if (StormTimer <= uiDiff)
+        int32 IcicleTimer;
+    
+        void UpdateAI(const uint32 diff)
         {
-            DoCast(me, RAID_MODE(SPELL_STORM_CLOUD_10, SPELL_STORM_CLOUD_25));
-            StormTimer = urand(25000, 30000);
+            if (IcicleTimer <= diff)
+            {
+                DoCast(me, SPELL_FALL_DAMAGE);
+                DoCast(me, SPELL_ICICLE_FALL);
+                IcicleTimer = 10000;
+            } else IcicleTimer -= diff;
         }
-        else StormTimer -= uiDiff;
-
-        DoSpellAttackIfReady(SPELL_LAVA_BURST);
-    }
-};
-
-CreatureAI* GetAI_mob_hodir_shaman(Creature* pCreature)
-{
-    return new mob_hodir_shamanAI(pCreature);
-}
-
-struct mob_hodir_druidAI : public ScriptedAI
-{
-    mob_hodir_druidAI(Creature* pCreature) : ScriptedAI(pCreature)
-    {
-        pInstance = pCreature->GetInstanceData();
-        me->ApplySpellImmune(0, IMMUNITY_ID, RAID_MODE(64392, 64679), true);
-    }
-
-    ScriptedInstance* pInstance;
-    int32 StarlightTimer;
-
-    void Reset()
-    {
-        StarlightTimer = urand(10000, 15000);
-    }
     
-    void AttackStart(Unit *who)
-    {
-        AttackStartCaster(who, 20);
-    }
-
-    void UpdateAI(const uint32 uiDiff)
-    {
-        if (!UpdateVictim())
-            return;
-            
-        if (StarlightTimer <= uiDiff)
+        void Reset()
         {
-            DoCast(me, SPELL_STARLIGHT);
-            StarlightTimer = urand(25000, 35000);
+            IcicleTimer = 2000;
         }
-        else StarlightTimer -= uiDiff;
+    };
 
-        DoSpellAttackIfReady(SPELL_WRATH);
-    }
 };
 
-CreatureAI* GetAI_mob_hodir_druid(Creature* pCreature)
+class mob_icicle_snowdrift : public CreatureScript
 {
-    return new mob_hodir_druidAI(pCreature);
-}
+public:
+    mob_icicle_snowdrift() : CreatureScript("mob_icicle_snowdrift") { }
 
-struct mob_hodir_mageAI : public ScriptedAI
-{
-    mob_hodir_mageAI(Creature* pCreature) : ScriptedAI(pCreature)
+    CreatureAI* GetAI(Creature* pCreature)
     {
-        pInstance = pCreature->GetInstanceData();
-        me->ApplySpellImmune(0, IMMUNITY_ID, RAID_MODE(64392, 64679), true);
+        return new mob_icicle_snowdriftAI(pCreature);
     }
 
-    ScriptedInstance* pInstance;
-    int32 FireTimer;
-
-    void Reset()
+    struct mob_icicle_snowdriftAI : public ScriptedAI
     {
-        FireTimer = urand(25000, 30000);
-    }
-    
-    void AttackStart(Unit *who)
-    {
-        AttackStartCaster(who, 20);
-    }
-
-    void UpdateAI(const uint32 uiDiff)
-    {
-        if (!UpdateVictim())
-            return;
-            
-        if (FireTimer <= uiDiff)
+        mob_icicle_snowdriftAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            DoCast(me, SPELL_CONJURE_FIRE);
-            FireTimer = urand(25000, 35000);
+            me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE | UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_PACIFIED);
+            me->SetReactState(REACT_PASSIVE);
         }
-        else FireTimer -= uiDiff;
-
-        DoSpellAttackIfReady(SPELL_FIREBALL);
-    }
-};
-
-CreatureAI* GetAI_mob_hodir_mage(Creature* pCreature)
-{
-    return new mob_hodir_mageAI(pCreature);
-}
-
-struct toasty_fireAI : public ScriptedAI
-{
-    toasty_fireAI(Creature* pCreature) : ScriptedAI(pCreature)
-    {
-        me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE | UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_PACIFIED);
-    }
     
-    void Reset()
-    {
-        DoCast(me, SPELL_SINGED);
-    }
+        int32 IcicleTimer;
+    
+        void UpdateAI(const uint32 diff)
+        {
+            if (IcicleTimer <= diff)
+            {
+                DoCast(me, SPELL_FALL_SNOWDRIFT);
+                DoCast(me, SPELL_ICICLE_FALL);
+                IcicleTimer = 10000;
+            } else IcicleTimer -= diff;
+        }
+    
+        void Reset()
+        {
+            IcicleTimer = 2000;
+        }
+    };
+
 };
 
-CreatureAI* GetAI_toasty_fire(Creature* pCreature)
+class mob_hodir_priest : public CreatureScript
 {
-    return new toasty_fireAI(pCreature);
-}
+public:
+    mob_hodir_priest() : CreatureScript("mob_hodir_priest") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new mob_hodir_priestAI(pCreature);
+    }
+
+    struct mob_hodir_priestAI : public ScriptedAI
+    {
+        mob_hodir_priestAI(Creature* pCreature) : ScriptedAI(pCreature)
+        {
+            pInstance = pCreature->GetInstanceData();
+            me->ApplySpellImmune(0, IMMUNITY_ID, RAID_MODE(64392, 64679), true);
+        }
+
+        ScriptedInstance* pInstance;
+        int32 HealTimer;
+
+        void Reset()
+        {
+            HealTimer = urand(4000, 8000);
+        }
+    
+        void AttackStart(Unit *who)
+        {
+            AttackStartCaster(who, 20);
+        }
+
+        void UpdateAI(const uint32 uiDiff)
+        {
+            if (!UpdateVictim())
+                return;
+            
+            if (HealthBelowPct(35))
+                DoCastAOE(SPELL_GREATER_HEAL);
+
+            if (HealTimer <= uiDiff)
+            {
+                DoCastAOE(SPELL_GREATER_HEAL);
+                HealTimer = urand(12000, 14000);
+            }
+            else HealTimer -= uiDiff;
+
+            DoSpellAttackIfReady(SPELL_SMITE);
+        }
+    };
+
+};
+
+class mob_hodir_shaman : public CreatureScript
+{
+public:
+    mob_hodir_shaman() : CreatureScript("mob_hodir_shaman") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new mob_hodir_shamanAI(pCreature);
+    }
+
+    struct mob_hodir_shamanAI : public ScriptedAI
+    {
+        mob_hodir_shamanAI(Creature* pCreature) : ScriptedAI(pCreature)
+        {
+            pInstance = pCreature->GetInstanceData();
+            me->ApplySpellImmune(0, IMMUNITY_ID, RAID_MODE(64392, 64679), true);
+        }
+
+        ScriptedInstance* pInstance;
+        int32 StormTimer;
+
+        void Reset()
+        {
+            StormTimer = urand(15000, 20000);
+        }
+    
+        void AttackStart(Unit *who)
+        {
+            AttackStartCaster(who, 20);
+        }
+
+        void UpdateAI(const uint32 uiDiff)
+        {
+            if (!UpdateVictim())
+                return;
+            
+            if (StormTimer <= uiDiff)
+            {
+                DoCast(me, RAID_MODE(SPELL_STORM_CLOUD_10, SPELL_STORM_CLOUD_25));
+                StormTimer = urand(25000, 30000);
+            }
+            else StormTimer -= uiDiff;
+
+            DoSpellAttackIfReady(SPELL_LAVA_BURST);
+        }
+    };
+
+};
+
+class mob_hodir_druid : public CreatureScript
+{
+public:
+    mob_hodir_druid() : CreatureScript("mob_hodir_druid") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new mob_hodir_druidAI(pCreature);
+    }
+
+    struct mob_hodir_druidAI : public ScriptedAI
+    {
+        mob_hodir_druidAI(Creature* pCreature) : ScriptedAI(pCreature)
+        {
+            pInstance = pCreature->GetInstanceData();
+            me->ApplySpellImmune(0, IMMUNITY_ID, RAID_MODE(64392, 64679), true);
+        }
+
+        ScriptedInstance* pInstance;
+        int32 StarlightTimer;
+
+        void Reset()
+        {
+            StarlightTimer = urand(10000, 15000);
+        }
+    
+        void AttackStart(Unit *who)
+        {
+            AttackStartCaster(who, 20);
+        }
+
+        void UpdateAI(const uint32 uiDiff)
+        {
+            if (!UpdateVictim())
+                return;
+            
+            if (StarlightTimer <= uiDiff)
+            {
+                DoCast(me, SPELL_STARLIGHT);
+                StarlightTimer = urand(25000, 35000);
+            }
+            else StarlightTimer -= uiDiff;
+
+            DoSpellAttackIfReady(SPELL_WRATH);
+        }
+    };
+
+};
+
+class mob_hodir_mage : public CreatureScript
+{
+public:
+    mob_hodir_mage() : CreatureScript("mob_hodir_mage") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new mob_hodir_mageAI(pCreature);
+    }
+
+    struct mob_hodir_mageAI : public ScriptedAI
+    {
+        mob_hodir_mageAI(Creature* pCreature) : ScriptedAI(pCreature)
+        {
+            pInstance = pCreature->GetInstanceData();
+            me->ApplySpellImmune(0, IMMUNITY_ID, RAID_MODE(64392, 64679), true);
+        }
+
+        ScriptedInstance* pInstance;
+        int32 FireTimer;
+
+        void Reset()
+        {
+            FireTimer = urand(25000, 30000);
+        }
+    
+        void AttackStart(Unit *who)
+        {
+            AttackStartCaster(who, 20);
+        }
+
+        void UpdateAI(const uint32 uiDiff)
+        {
+            if (!UpdateVictim())
+                return;
+            
+            if (FireTimer <= uiDiff)
+            {
+                DoCast(me, SPELL_CONJURE_FIRE);
+                FireTimer = urand(25000, 35000);
+            }
+            else FireTimer -= uiDiff;
+
+            DoSpellAttackIfReady(SPELL_FIREBALL);
+        }
+    };
+
+};
+
+class toasty_fire : public CreatureScript
+{
+public:
+    toasty_fire() : CreatureScript("toasty_fire") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new toasty_fireAI(pCreature);
+    }
+
+    struct toasty_fireAI : public ScriptedAI
+    {
+        toasty_fireAI(Creature* pCreature) : ScriptedAI(pCreature)
+        {
+            me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE | UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_PACIFIED);
+        }
+    
+        void Reset()
+        {
+            DoCast(me, SPELL_SINGED);
+        }
+    };
+
+};
+
 
 
 void AddSC_boss_hodir()
 {
-    Script *newscript;
-    
-    newscript = new Script;
-    newscript->Name = "boss_hodir";
-    newscript->GetAI = &GetAI_boss_hodir;
-    newscript->RegisterSelf();
-    
-    newscript = new Script;
-    newscript->Name = "mob_icicle";
-    newscript->GetAI = &GetAI_mob_icicle;
-    newscript->RegisterSelf();
-    
-    newscript = new Script;
-    newscript->Name = "mob_icicle_snowdrift";
-    newscript->GetAI = &GetAI_mob_icicle_snowdrift;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "mob_hodir_priest";
-    newscript->GetAI = &GetAI_mob_hodir_priest;
-    newscript->RegisterSelf();
-    
-    newscript = new Script;
-    newscript->Name = "mob_hodir_shaman";
-    newscript->GetAI = &GetAI_mob_hodir_shaman;
-    newscript->RegisterSelf();
-    
-    newscript = new Script;
-    newscript->Name = "mob_hodir_druid";
-    newscript->GetAI = &GetAI_mob_hodir_druid;
-    newscript->RegisterSelf();
-    
-    newscript = new Script;
-    newscript->Name = "mob_hodir_mage";
-    newscript->GetAI = &GetAI_mob_hodir_mage;
-    newscript->RegisterSelf();
-    
-    newscript = new Script;
-    newscript->Name = "toasty_fire";
-    newscript->GetAI = &GetAI_toasty_fire;
-    newscript->RegisterSelf();
+    new boss_hodir();
+    new mob_icicle();
+    new mob_icicle_snowdrift();
+    new mob_hodir_priest();
+    new mob_hodir_shaman();
+    new mob_hodir_druid();
+    new mob_hodir_mage();
+    new toasty_fire();
 }

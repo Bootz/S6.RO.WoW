@@ -729,25 +729,4 @@ CreatureAI* GetAI_npc_argent_soldier(Creature* pCreature)
 
 void AddSC_boss_argent_challenge()
 {
-    Script* NewScript;
-
-    NewScript = new Script;
-    NewScript->Name = "boss_eadric";
-    NewScript->GetAI = &GetAI_boss_eadric;
-    NewScript->RegisterSelf();
-
-    NewScript = new Script;
-    NewScript->Name = "boss_paletress";
-    NewScript->GetAI = &GetAI_boss_paletress;
-    NewScript->RegisterSelf();
-
-    NewScript = new Script;
-    NewScript->Name = "npc_memory";
-    NewScript->GetAI = &GetAI_npc_memory;
-    NewScript->RegisterSelf();
-
-    NewScript = new Script;
-    NewScript->Name = "npc_argent_soldier";
-    NewScript->GetAI = &GetAI_npc_argent_soldier;
-    NewScript->RegisterSelf();
 }
