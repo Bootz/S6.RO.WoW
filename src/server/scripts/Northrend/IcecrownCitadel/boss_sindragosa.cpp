@@ -681,7 +681,7 @@ struct npc_spinestalkerAI : public ScriptedAI
         if (m_uiSpinestalkerTailSweep <= uiDiff)
         {
             DoCast(RAID_MODE(SPELL_SPINESTALKER_TAIL_SWEEP_10,SPELL_SPINESTALKER_TAIL_SWEEP_25,SPELL_SPINESTALKER_TAIL_SWEEP_10,SPELL_SPINESTALKER_TAIL_SWEEP_25));
-            m_uiSpinestalkerTailSweep = 2000;
+            m_uiSpinestalkerTailSweep = 6500;
         } else m_uiSpinestalkerTailSweep -= uiDiff;
 
         DoMeleeAttackIfReady();
