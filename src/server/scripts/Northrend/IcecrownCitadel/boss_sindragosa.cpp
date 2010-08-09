@@ -59,6 +59,7 @@ enum Spells
     SPELL_ICE_TOMB_TRIGGER = 69675,
     SPELL_FROST_BOMB = 71053,
     SPELL_MYSTIC_BUFFET = 70128,
+    SPELL_MYSTIC_BUFFET2 = 70127,
     SPELL_BERSERK = 47008,
     SPELL_FROSTBOMBVISUAL = 70022,
     SPELL_ASPHYXIATION = 71665,
@@ -120,6 +121,8 @@ struct npc_ice_tombAI : public Scripted_NoMovementAI
     {
         IceTombGUID = 0;
 		m_uiAsphyxiationTimer = 20000;
+        TombPrisoner->ApplySpellImmune(0, IMMUNITY_ID, SPELL_MYSTIC_BUFFET, true);
+        TombPrisoner->ApplySpellImmune(0, IMMUNITY_ID, SPELL_MYSTIC_BUFFET2, true);
     }
 
     void JustDied(Unit *killer)
@@ -133,6 +136,8 @@ struct npc_ice_tombAI : public Scripted_NoMovementAI
                     {
                         Tomb->RemoveAurasDueToSpell(SPELL_ICE_TOMB);
                         Tomb->RemoveAurasDueToSpell(SPELL_ASPHYXIATION);
+                        Tomb->ApplySpellImmune(0, IMMUNITY_ID, SPELL_MYSTIC_BUFFET, false);
+                        Tomb->ApplySpellImmune(0, IMMUNITY_ID, SPELL_MYSTIC_BUFFET2, false);
                     }
             }
         icetombs.clear();
@@ -149,6 +154,8 @@ struct npc_ice_tombAI : public Scripted_NoMovementAI
                     {
                         Tomb->RemoveAurasDueToSpell(SPELL_ICE_TOMB);
                         Tomb->RemoveAurasDueToSpell(SPELL_ASPHYXIATION);
+                        Tomb->ApplySpellImmune(0, IMMUNITY_ID, SPELL_MYSTIC_BUFFET, false);
+                        Tomb->ApplySpellImmune(0, IMMUNITY_ID, SPELL_MYSTIC_BUFFET2, false);
                     }
             }
     }
@@ -190,7 +197,6 @@ struct boss_sindragosaAI : public ScriptedAI
     uint32 m_uiUnchainedMagicTimer;
     uint32 m_uiMysticBuffetTimer;
     uint32 m_uiIceBombTimer;
-    uint32 m_uiAsphyxiationTimer;
 
     void Reset()
     {
@@ -201,11 +207,10 @@ struct boss_sindragosaAI : public ScriptedAI
         m_uiTailSmashTimer = 10000;
         m_uiBlisteringColdTimer = 35000;
         //m_uiMarkTimer = 20000;
-        m_uiPhaseTimer = 60000;
+        m_uiPhaseTimer = 9999999;
         m_uiBerserkTimer = 600000;
         m_uiUnchainedMagicTimer = 10000;
         m_uiMysticBuffetTimer = 10000;
-        m_uiAsphyxiationTimer = 20000;
         //m_uiIceBombTimer = 30000;
 
         me->SetSpeed(MOVE_WALK, 1.5f, true);
@@ -216,6 +221,7 @@ struct boss_sindragosaAI : public ScriptedAI
         me->SetReactState(REACT_AGGRESSIVE);
 
         me->ApplySpellImmune(0, IMMUNITY_ID, SPELL_MYSTIC_BUFFET, true);
+        me->ApplySpellImmune(0, IMMUNITY_ID, SPELL_MYSTIC_BUFFET2, true);
 
         if (m_pInstance)
             m_pInstance->SetData(DATA_SINDRAGOSA_EVENT, NOT_STARTED);
@@ -353,10 +359,11 @@ struct boss_sindragosaAI : public ScriptedAI
             for (std::vector<Creature*>::const_iterator itr = icetombs.begin(); itr != icetombs.end(); ++itr)
             {
                 if (Creature* pGo = (*itr))
-                    if (pGo->IsInBetween(me, pTarget, 2.0f)
+                    if (pGo->IsInBetween(me, pTarget, 3.5f)
                         && me->GetExactDist2d(pTarget->GetPositionX(), pTarget->GetPositionY()) - me->GetExactDist2d(pGo->GetPositionX(), pGo->GetPositionY()) < 5.0f)
                     {
                         pTarget->ApplySpellImmune(0, IMMUNITY_ID, SPELL_MYSTIC_BUFFET, true);
+                        pTarget->ApplySpellImmune(0, IMMUNITY_ID, SPELL_MYSTIC_BUFFET2, true);
                         targets.push_back(pTarget);
                         break;
                     }
@@ -367,6 +374,8 @@ struct boss_sindragosaAI : public ScriptedAI
 
         for (std::vector<Player*>::const_iterator itr = targets.begin(); itr != targets.end(); ++itr)
             (*itr)->ApplySpellImmune(0, IMMUNITY_ID, SPELL_MYSTIC_BUFFET, false);
+            (*itr)->ApplySpellImmune(0, IMMUNITY_ID, SPELL_MYSTIC_BUFFET2, false);
+
     }
 
     void TakeOff()
@@ -562,7 +571,7 @@ struct npc_frost_bombAI : public ScriptedAI
             for (std::vector<Creature*>::const_iterator itr = icetombs.begin(); itr != icetombs.end(); ++itr)
             {
                 if (Creature* pGo = (*itr))
-                    if (pGo->IsInBetween(me, pTarget, 2.0f)
+                    if (pGo->IsInBetween(me, pTarget, 3.5f)
                         && me->GetExactDist2d(pTarget->GetPositionX(), pTarget->GetPositionY()) - me->GetExactDist2d(pGo->GetPositionX(), pGo->GetPositionY()) < 5.0f)
                     {
                         pTarget->ApplySpellImmune(0, IMMUNITY_ID, SPELL_FROST_BOMB, true);
