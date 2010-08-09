@@ -310,28 +310,31 @@ struct npc_swarming_shadowsAI : public Scripted_NoMovementAI
         } else m_uiSwarmingShadowTimer -= uiDiff;
     }
 };
-
-CreatureAI* GetAIboss_blood_queen_lanathelAI(Creature* pCreature)
+class boss_blood_queen_lanathel : public CreatureScript
 {
-    return new boss_blood_queen_lanathelAI (pCreature);
-}
+public:
+    boss_blood_queen_lanathel() : CreatureScript("boss_blood_queen_lanathel") { }
 
-CreatureAI* GetAInpc_swarming_shadowsAI(Creature* pCreature)
+    CreatureAI* GetAIboss_blood_queen_lanathelAI(Creature* pCreature)
+    {
+        return new boss_blood_queen_lanathelAI (pCreature);
+    }
+
+};
+class npc_swarming_shadows : public CreatureScript
 {
-    return new npc_swarming_shadowsAI (pCreature);
-}
+public:
+    npc_swarming_shadows() : CreatureScript("npc_swarming_shadows") { }
+
+    CreatureAI* GetAInpc_swarming_shadowsAI(Creature* pCreature)
+    {
+        return new npc_swarming_shadowsAI (pCreature);
+    }
+
+};
 
 void AddSC_boss_blood_queen_lana_thel()
 {
-    Script *newscript;
-
-    newscript = new Script;
-    newscript->Name = "boss_blood_queen_lanathel";
-    newscript->GetAI = &GetAIboss_blood_queen_lanathelAI;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_swarming_shadows";
-    newscript->GetAI = &GetAInpc_swarming_shadowsAI;
-    newscript->RegisterSelf();
+    new boss_blood_queen_lanathel();
+    new npc_swarming_shadows();
 }
