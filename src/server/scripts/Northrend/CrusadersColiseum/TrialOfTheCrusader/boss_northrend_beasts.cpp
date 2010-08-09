@@ -930,30 +930,4 @@ CreatureAI* GetAI_mob_FireBomb(Creature* pCreature)
 
 void AddSC_boss_northrend_beasts()
 {
-    Script* NewScript;
-
-    NewScript = new Script;
-    NewScript->Name = "boss_gormok_impaler";
-        NewScript->GetAI = &GetAI_boss_gormok_impaler;
-    NewScript->RegisterSelf();
-
-    NewScript = new Script;
-    NewScript->Name = "boss_acidmaw";
-        NewScript->GetAI = &GetAI_boss_acidmaw;
-    NewScript->RegisterSelf();
-
-    NewScript = new Script;
-    NewScript->Name = "boss_dreadscale";
-        NewScript->GetAI = &GetAI_boss_dreadscale;
-    NewScript->RegisterSelf();
-
-    NewScript = new Script;
-    NewScript->Name = "boss_icehowl";
-        NewScript->GetAI = &GetAI_boss_icehowl;
-    NewScript->RegisterSelf();
-
-        NewScript = new Script;
-    NewScript->Name = "mob_firebomb_trigger";
-        NewScript->GetAI = &GetAI_mob_FireBomb;
-    NewScript->RegisterSelf();
 }

@@ -609,35 +609,4 @@ CreatureAI* GetAI_npc_precious(Creature* pCreature)
 }
 void AddSC_boss_rotface()
 {
-    Script* NewScript;
-
-    NewScript = new Script;
-    NewScript->Name = "boss_rotface";
-    NewScript->GetAI = &GetAI_boss_rotface;
-    NewScript->RegisterSelf();
-
-    NewScript = new Script;
-    NewScript->Name = "npc_ooze_big";
-    NewScript->GetAI = &GetAI_npc_ooze_big;
-    NewScript->RegisterSelf();
-
-    NewScript = new Script;
-    NewScript->Name = "npc_ooze_little";
-    NewScript->GetAI = &GetAI_npc_ooze_little;
-    NewScript->RegisterSelf();
-
-    NewScript = new Script;
-    NewScript->Name = "npc_sticky_ooze";
-    NewScript->GetAI = &GetAI_npc_sticky_ooze;
-    NewScript->RegisterSelf();
-
-    NewScript = new Script;
-    NewScript->Name = "npc_flood_ooze";
-    NewScript->GetAI = &GetAI_npc_flood_ooze;
-    NewScript->RegisterSelf();
-
-    NewScript = new Script;
-    NewScript->Name = "npc_precious";
-    NewScript->GetAI = &GetAI_npc_precious;
-    NewScript->RegisterSelf();
 }

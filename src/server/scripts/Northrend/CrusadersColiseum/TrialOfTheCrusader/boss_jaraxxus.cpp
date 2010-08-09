@@ -86,390 +86,404 @@ enum NPC
         NPC_NETHER_PORTAL                = 34825,
         NPC_MISTRESS_OF_PAIN     = 34826,
 };
-
-struct boss_JaraxxusAI : public ScriptedAI
+class Boss_Jaraxxus : public CreatureScript
 {
-    boss_JaraxxusAI(Creature *pCreature) : ScriptedAI(pCreature), summons(me)
+public:
+    Boss_Jaraxxus() : CreatureScript("Boss_Jaraxxus") { }
+
+    CreatureAI* GetAI_boss_Jaraxxus(Creature* pCreature)
     {
-                m_pInstance = pCreature->GetInstanceData();
+        return new boss_JaraxxusAI (pCreature);
     }
 
-    ScriptedInstance* m_pInstance;
-
-        uint32 uiIncinerateFleshTimer;
-        uint32 uiFelFireballTimer;
-        uint32 uiLegionFlameTimer;
-        uint32 uiFelLightingTimer;
-        uint32 uiVolcanSummonTimer;
-        uint32 uiNetherPowerTimer;
-        uint32 uiNetherPortalTimer;
-        uint32 uiBerserkTimer;
-        uint32 uiTouchOfJaraxxusTimer;
-        uint32 uiCurseOfTheNetherTimer;
-
-        SummonList summons;
-
-        bool m_bIsBerserk;
-
-    void Reset()
+    struct boss_JaraxxusAI : public ScriptedAI
     {
-                uiIncinerateFleshTimer = 20*IN_MILLISECONDS;
-                uiFelFireballTimer = 10*IN_MILLISECONDS;
-                uiLegionFlameTimer = 21*IN_MILLISECONDS;
-                uiFelLightingTimer = 10*IN_MILLISECONDS;
-                uiVolcanSummonTimer = 30*IN_MILLISECONDS;
-                uiNetherPortalTimer = 15*IN_MILLISECONDS;
-                uiBerserkTimer  = 10*MINUTE*IN_MILLISECONDS;
-
-                m_bIsBerserk = false;
-
-                DoCast(me, SPELL_ROOTET_JARAXXUS);
-
-                 summons.DespawnAll();
-
-                 m_pInstance = (ScriptedInstance*)me->GetInstanceData();
-    }
-
-    void EnterCombat(Unit* who)
-    {
-                DoScriptText(SAY_AGGRO,me);
-
-                me->RemoveAurasDueToSpell(SPELL_ROOTET_JARAXXUS);
-        }
-
-        void SummonedCreatureDespawn(Creature *summon)
+        boss_JaraxxusAI(Creature *pCreature) : ScriptedAI(pCreature), summons(me)
         {
-                summons.Despawn(summon);
+                    m_pInstance = pCreature->GetInstanceData();
         }
 
-        void JustReachedHome()
-    {
-        if (m_pInstance)
-                {
-            m_pInstance->SetData(PHASE_4, NOT_STARTED);
-                }
+        ScriptedInstance* m_pInstance;
 
-                if(m_pInstance)
-                {
-                        uint32 count = m_pInstance->GetData(DATA_UPDATE_STATE_UI_COUNT);
-                        count--;
-                        m_pInstance->SetData(DATA_UPDATE_STATE_UI_COUNT, count);
-                        me->ForcedDespawn();
-                }
-    }
+            uint32 uiIncinerateFleshTimer;
+            uint32 uiFelFireballTimer;
+            uint32 uiLegionFlameTimer;
+            uint32 uiFelLightingTimer;
+            uint32 uiVolcanSummonTimer;
+            uint32 uiNetherPowerTimer;
+            uint32 uiNetherPortalTimer;
+            uint32 uiBerserkTimer;
+            uint32 uiTouchOfJaraxxusTimer;
+            uint32 uiCurseOfTheNetherTimer;
 
-    void UpdateAI(const uint32 uiDiff)
-    {
-        if (!UpdateVictim())
-            return;
+            SummonList summons;
 
-                if (uiFelFireballTimer < uiDiff)
-        {
-                        DoCast(me->getVictim(), SPELL_FEL_FIREBALL);
-                        uiFelFireballTimer = 15*IN_MILLISECONDS,30*IN_MILLISECONDS;
-        }
-                else uiFelFireballTimer -= uiDiff;
-
-                if (uiBerserkTimer < uiDiff && !m_bIsBerserk)
-        {
-                        DoCast(me, SPELL_BERSERK);
-                        m_bIsBerserk = true;
-        }
-                else uiBerserkTimer -= uiDiff;
-
-                if (uiVolcanSummonTimer < uiDiff)
-        {
-                        DoCast(me, SPELL_SUMMON_NPC_VULCAN);
-                        uiVolcanSummonTimer = 2*MINUTE*IN_MILLISECONDS;
-        }
-                else uiVolcanSummonTimer -= uiDiff;
-
-                if (uiFelLightingTimer <= uiDiff)
-                {
-                        if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
-                        {
-                                DoCast(pTarget, SPELL_FEL_LIGHTING);
-                                uiFelLightingTimer = urand(15*IN_MILLISECONDS,21*IN_MILLISECONDS);
-                        }
-                }
-                else uiFelLightingTimer -= uiDiff;
-
-                if (uiIncinerateFleshTimer <= uiDiff)
-                {
-                        if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0))
-                        {
-                                DoCast(pTarget, SPELL_INCINERATE_FLESH);
-                                DoScriptText(SAY_FLESH, me);
-                                uiIncinerateFleshTimer = urand(20*IN_MILLISECONDS,21*IN_MILLISECONDS);
-                        }
-                }
-                else uiIncinerateFleshTimer -= uiDiff;
-
-                if (uiNetherPortalTimer <= uiDiff)
-        {
-                        DoScriptText(SAY_SUMMON_SISTER,me);
-            me->SummonCreature(NPC_NETHER_PORTAL, me->GetPositionX(), me->GetPositionY()+5, me->GetPositionZ(), 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000);
-            uiNetherPortalTimer = 2*MINUTE*IN_MILLISECONDS;;
-        }
-                else uiNetherPortalTimer -= uiDiff;
-
-                if (uiLegionFlameTimer < uiDiff)
-        {
-                        if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0))
-                        {
-                                DoCast(pTarget, SPELL_LEGION_FLAME);
-                                uiLegionFlameTimer = urand(25*IN_MILLISECONDS,35*IN_MILLISECONDS);
-                        }
-        }
-                else uiLegionFlameTimer -= uiDiff;
-
-                if (getDifficulty() == RAID_DIFFICULTY_10MAN_HEROIC || getDifficulty() == RAID_DIFFICULTY_25MAN_HEROIC)
-                {
-                if (uiTouchOfJaraxxusTimer < uiDiff)
-        {
-                        if (Unit *target = SelectUnit(SELECT_TARGET_RANDOM, 0))
-                        target->CastSpell(target, SPELL_TOUCH_OF_JARAXXUS, true);
-                        uiTouchOfJaraxxusTimer = urand(40*IN_MILLISECONDS,45*IN_MILLISECONDS);
-        }
-                else uiTouchOfJaraxxusTimer -= uiDiff;
-
-                if (uiCurseOfTheNetherTimer < uiDiff)
-        {
-                        if (Unit *target = SelectUnit(SELECT_TARGET_RANDOM, 0))
-                        target->CastSpell(target, SPELL_CURSE_OF_THE_NETHER, true);
-                        uiCurseOfTheNetherTimer = urand(60*IN_MILLISECONDS,61*IN_MILLISECONDS);
-        }
-                else uiCurseOfTheNetherTimer -= uiDiff;
-        }
-
-        DoMeleeAttackIfReady();
-    }
-
-    void JustDied(Unit* killer)
-    {
-      DoScriptText(SAY_DEATH,me);
-
-          if (m_pInstance)
-                        m_pInstance->SetData(PHASE_4, DONE);
-    }
-};
-
-CreatureAI* GetAI_boss_Jaraxxus(Creature* pCreature)
-{
-    return new boss_JaraxxusAI (pCreature);
-}
-
-struct mob_FireTriggerAI : public Scripted_NoMovementAI
-{
-    mob_FireTriggerAI(Creature *pCreature) : Scripted_NoMovementAI(pCreature)
-    {
-        m_pInstance = pCreature->GetInstanceData();
-    }
-
-    ScriptedInstance* m_pInstance;
-
-    void Reset()
-    {
-                DoCast(me, SPELL_FIRE_DAMAGE);
-                me->SetDisplayId(25206);
-    }
-    void UpdateAI(const uint32 diff)
-    {
-                if (m_pInstance && m_pInstance->GetData(PHASE_4) == NOT_STARTED)
-                {
-                        me->ForcedDespawn();
-                }
-    }
-};
-
-CreatureAI* GetAI_mob_FireTrigger(Creature* pCreature)
-{
-    return new mob_FireTriggerAI (pCreature);
-}
-
-struct mob_VulcanAI : public Scripted_NoMovementAI
-{
-    mob_VulcanAI(Creature *pCreature) : Scripted_NoMovementAI(pCreature), summons(me)
-    {
-        m_pInstance = pCreature->GetInstanceData();
-    }
-
-    ScriptedInstance* m_pInstance;
-
-        SummonList summons;
-
-    void Reset()
-    {
-                me->SetReactState(REACT_PASSIVE);
-
-                if (getDifficulty() == RAID_DIFFICULTY_10MAN_NORMAL || getDifficulty() == RAID_DIFFICULTY_25MAN_NORMAL)
-                {
-                        me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE);
-                }
-    }
-
-        void JustSummoned(Creature *summon)
-        {
-                summons.Summon(summon);
-                summon->AI()->AttackStart(me->getVictim());
-        summon->AI()->DoZoneInCombat();
-        }
-
-    void UpdateAI(const uint32 diff)
-    {
-        if (m_pInstance && m_pInstance->GetData(PHASE_4) == NOT_STARTED)
-                {
-                        me->ForcedDespawn();
-                }
-    }
-};
-
-CreatureAI* GetAI_mob_Vulcan(Creature* pCreature)
-{
-    return new mob_VulcanAI (pCreature);
-}
-
-struct mob_NetherportalAI : public Scripted_NoMovementAI
-{
-    mob_NetherportalAI(Creature *pCreature) : Scripted_NoMovementAI(pCreature), summons(me)
-    {
-        m_pInstance = pCreature->GetInstanceData();
-    }
-
-    ScriptedInstance* m_pInstance;
-
-        uint32 uiNetherPortalEffectTimer;
-        uint32 uiSpellNetherPortal;
-
-        bool m_bIsSummonGuardian;
-
-        SummonList summons;
-
-    void Reset()
-    {
-                uiNetherPortalEffectTimer = urand (1000,2000);
-                uiSpellNetherPortal = urand (1000,2000);
-                me->SetDisplayId(25206);
-                me->SetReactState(REACT_PASSIVE);
-                m_bIsSummonGuardian = false;
-
-                if (getDifficulty() == RAID_DIFFICULTY_10MAN_NORMAL || getDifficulty() == RAID_DIFFICULTY_25MAN_NORMAL)
-                {
-                        me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE);
-                }
-    }
-
-        void JustSummoned(Creature *summon)
-        {
-                if (summon->GetEntry() == NPC_MISTRESS_OF_PAIN)
-                summon->AI()->AttackStart(me->getVictim());
-        summon->AI()->DoZoneInCombat();
-                summons.Summon(summon);
-        }
-
-    void UpdateAI(const uint32 uiDiff)
-    {
-                if (m_pInstance && m_pInstance->GetData(PHASE_4) == NOT_STARTED)
-                {
-                        me->ForcedDespawn();
-                }
-
-                if (uiSpellNetherPortal <= uiDiff && !m_bIsSummonGuardian)
-                {
-                        DoCast(me, SPELL_PORTAL_SUMMON_GUARDIAN);
-                        m_bIsSummonGuardian = true;
-                }
-                else uiSpellNetherPortal -= uiDiff;
-    }
-};
-
-CreatureAI* GetAI_mob_Netherportal(Creature* pCreature)
-{
-    return new mob_NetherportalAI (pCreature);
-
-}
-
-struct mob_mistressofpainAI : public ScriptedAI
-{
-    mob_mistressofpainAI(Creature *pCreature) : ScriptedAI(pCreature)
-    {
-        m_pInstance = pCreature->GetInstanceData();
-    }
-
-    ScriptedInstance* m_pInstance;
-
-        uint32 uiShivanSlashTimer;
-        uint32 uiSpinningPainSpikeTimer;
+            bool m_bIsBerserk;
 
         void Reset()
         {
-                uiShivanSlashTimer = urand(5000,6000);
-                uiSpinningPainSpikeTimer = urand(10000,11000);
+                    uiIncinerateFleshTimer = 20*IN_MILLISECONDS;
+                    uiFelFireballTimer = 10*IN_MILLISECONDS;
+                    uiLegionFlameTimer = 21*IN_MILLISECONDS;
+                    uiFelLightingTimer = 10*IN_MILLISECONDS;
+                    uiVolcanSummonTimer = 30*IN_MILLISECONDS;
+                    uiNetherPortalTimer = 15*IN_MILLISECONDS;
+                    uiBerserkTimer  = 10*MINUTE*IN_MILLISECONDS;
+
+                    m_bIsBerserk = false;
+
+                    DoCast(me, SPELL_ROOTET_JARAXXUS);
+
+                     summons.DespawnAll();
+
+                     m_pInstance = (ScriptedInstance*)me->GetInstanceData();
         }
 
-    void UpdateAI(const uint32 uiDiff)
+        void EnterCombat(Unit* who)
         {
+                    DoScriptText(SAY_AGGRO,me);
 
-        if (m_pInstance && m_pInstance->GetData(PHASE_4) == NOT_STARTED)
-    {
-                me->ForcedDespawn();
+                    me->RemoveAurasDueToSpell(SPELL_ROOTET_JARAXXUS);
+            }
+
+            void SummonedCreatureDespawn(Creature *summon)
+            {
+                    summons.Despawn(summon);
+            }
+
+            void JustReachedHome()
+        {
+            if (m_pInstance)
+                    {
+                m_pInstance->SetData(PHASE_4, NOT_STARTED);
+                    }
+
+                    if(m_pInstance)
+                    {
+                            uint32 count = m_pInstance->GetData(DATA_UPDATE_STATE_UI_COUNT);
+                            count--;
+                            m_pInstance->SetData(DATA_UPDATE_STATE_UI_COUNT, count);
+                            me->ForcedDespawn();
+                    }
         }
 
-        if (!UpdateVictim())
+        void UpdateAI(const uint32 uiDiff)
+        {
+            if (!UpdateVictim())
                 return;
 
-        if (uiShivanSlashTimer < uiDiff)
-    {
-                DoCast(me->getVictim(), SPELL_SHIVAN_SLAH);
-                uiShivanSlashTimer = urand(5000,6000);
-        }
-        else uiShivanSlashTimer -= uiDiff;
+                    if (uiFelFireballTimer < uiDiff)
+            {
+                            DoCast(me->getVictim(), SPELL_FEL_FIREBALL);
+                            uiFelFireballTimer = 15*IN_MILLISECONDS,30*IN_MILLISECONDS;
+            }
+                    else uiFelFireballTimer -= uiDiff;
 
-        if (uiSpinningPainSpikeTimer <= uiDiff)
+                    if (uiBerserkTimer < uiDiff && !m_bIsBerserk)
+            {
+                            DoCast(me, SPELL_BERSERK);
+                            m_bIsBerserk = true;
+            }
+                    else uiBerserkTimer -= uiDiff;
+
+                    if (uiVolcanSummonTimer < uiDiff)
+            {
+                            DoCast(me, SPELL_SUMMON_NPC_VULCAN);
+                            uiVolcanSummonTimer = 2*MINUTE*IN_MILLISECONDS;
+            }
+                    else uiVolcanSummonTimer -= uiDiff;
+
+                    if (uiFelLightingTimer <= uiDiff)
+                    {
+                            if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
+                            {
+                                    DoCast(pTarget, SPELL_FEL_LIGHTING);
+                                    uiFelLightingTimer = urand(15*IN_MILLISECONDS,21*IN_MILLISECONDS);
+                            }
+                    }
+                    else uiFelLightingTimer -= uiDiff;
+
+                    if (uiIncinerateFleshTimer <= uiDiff)
+                    {
+                            if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0))
+                            {
+                                    DoCast(pTarget, SPELL_INCINERATE_FLESH);
+                                    DoScriptText(SAY_FLESH, me);
+                                    uiIncinerateFleshTimer = urand(20*IN_MILLISECONDS,21*IN_MILLISECONDS);
+                            }
+                    }
+                    else uiIncinerateFleshTimer -= uiDiff;
+
+                    if (uiNetherPortalTimer <= uiDiff)
+            {
+                            DoScriptText(SAY_SUMMON_SISTER,me);
+                me->SummonCreature(NPC_NETHER_PORTAL, me->GetPositionX(), me->GetPositionY()+5, me->GetPositionZ(), 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000);
+                uiNetherPortalTimer = 2*MINUTE*IN_MILLISECONDS;;
+            }
+                    else uiNetherPortalTimer -= uiDiff;
+
+                    if (uiLegionFlameTimer < uiDiff)
+            {
+                            if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0))
+                            {
+                                    DoCast(pTarget, SPELL_LEGION_FLAME);
+                                    uiLegionFlameTimer = urand(25*IN_MILLISECONDS,35*IN_MILLISECONDS);
+                            }
+            }
+                    else uiLegionFlameTimer -= uiDiff;
+
+                    if (getDifficulty() == RAID_DIFFICULTY_10MAN_HEROIC || getDifficulty() == RAID_DIFFICULTY_25MAN_HEROIC)
+                    {
+                    if (uiTouchOfJaraxxusTimer < uiDiff)
+            {
+                            if (Unit *target = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                            target->CastSpell(target, SPELL_TOUCH_OF_JARAXXUS, true);
+                            uiTouchOfJaraxxusTimer = urand(40*IN_MILLISECONDS,45*IN_MILLISECONDS);
+            }
+                    else uiTouchOfJaraxxusTimer -= uiDiff;
+
+                    if (uiCurseOfTheNetherTimer < uiDiff)
+            {
+                            if (Unit *target = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                            target->CastSpell(target, SPELL_CURSE_OF_THE_NETHER, true);
+                            uiCurseOfTheNetherTimer = urand(60*IN_MILLISECONDS,61*IN_MILLISECONDS);
+            }
+                    else uiCurseOfTheNetherTimer -= uiDiff;
+            }
+
+            DoMeleeAttackIfReady();
+        }
+
+        void JustDied(Unit* killer)
         {
-                if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
-                {
-                        DoCast(pTarget, SPELL_SPINNING_PAIN_SPIKE);
-                        uiSpinningPainSpikeTimer = urand(15000,16000);
-        }
-        }
-        else uiSpinningPainSpikeTimer -= uiDiff;
+          DoScriptText(SAY_DEATH,me);
 
-        DoMeleeAttackIfReady();
-    }
+              if (m_pInstance)
+                            m_pInstance->SetData(PHASE_4, DONE);
+        }
+    };
+
 };
 
-CreatureAI* GetAI_mob_mistressofpain(Creature* pCreature)
+class Mob_FireTrigger : public CreatureScript
 {
-    return new mob_mistressofpainAI (pCreature);
-}
+public:
+    Mob_FireTrigger() : CreatureScript("Mob_FireTrigger") { }
+
+    CreatureAI* GetAI_mob_FireTrigger(Creature* pCreature)
+    {
+        return new mob_FireTriggerAI (pCreature);
+    }
+
+    struct mob_FireTriggerAI : public Scripted_NoMovementAI
+    {
+        mob_FireTriggerAI(Creature *pCreature) : Scripted_NoMovementAI(pCreature)
+        {
+            m_pInstance = pCreature->GetInstanceData();
+        }
+
+        ScriptedInstance* m_pInstance;
+
+        void Reset()
+        {
+                    DoCast(me, SPELL_FIRE_DAMAGE);
+                    me->SetDisplayId(25206);
+        }
+        void UpdateAI(const uint32 diff)
+        {
+                    if (m_pInstance && m_pInstance->GetData(PHASE_4) == NOT_STARTED)
+                    {
+                            me->ForcedDespawn();
+                    }
+        }
+    };
+
+};
+
+class Mob_Vulcan : public CreatureScript
+{
+public:
+    Mob_Vulcan() : CreatureScript("Mob_Vulcan") { }
+
+    CreatureAI* GetAI_mob_Vulcan(Creature* pCreature)
+    {
+        return new mob_VulcanAI (pCreature);
+    }
+
+    struct mob_VulcanAI : public Scripted_NoMovementAI
+    {
+        mob_VulcanAI(Creature *pCreature) : Scripted_NoMovementAI(pCreature), summons(me)
+        {
+            m_pInstance = pCreature->GetInstanceData();
+        }
+
+        ScriptedInstance* m_pInstance;
+
+            SummonList summons;
+
+        void Reset()
+        {
+                    me->SetReactState(REACT_PASSIVE);
+
+                    if (getDifficulty() == RAID_DIFFICULTY_10MAN_NORMAL || getDifficulty() == RAID_DIFFICULTY_25MAN_NORMAL)
+                    {
+                            me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE);
+                    }
+        }
+
+            void JustSummoned(Creature *summon)
+            {
+                    summons.Summon(summon);
+                    summon->AI()->AttackStart(me->getVictim());
+            summon->AI()->DoZoneInCombat();
+            }
+
+        void UpdateAI(const uint32 diff)
+        {
+            if (m_pInstance && m_pInstance->GetData(PHASE_4) == NOT_STARTED)
+                    {
+                            me->ForcedDespawn();
+                    }
+        }
+    };
+
+};
+
+class Mob_Netherportal : public CreatureScript
+{
+public:
+    Mob_Netherportal() : CreatureScript("Mob_Netherportal") { }
+
+    CreatureAI* GetAI_mob_Netherportal(Creature* pCreature)
+    {
+        return new mob_NetherportalAI (pCreature);
+
+    }
+
+    struct mob_NetherportalAI : public Scripted_NoMovementAI
+    {
+        mob_NetherportalAI(Creature *pCreature) : Scripted_NoMovementAI(pCreature), summons(me)
+        {
+            m_pInstance = pCreature->GetInstanceData();
+        }
+
+        ScriptedInstance* m_pInstance;
+
+            uint32 uiNetherPortalEffectTimer;
+            uint32 uiSpellNetherPortal;
+
+            bool m_bIsSummonGuardian;
+
+            SummonList summons;
+
+        void Reset()
+        {
+                    uiNetherPortalEffectTimer = urand (1000,2000);
+                    uiSpellNetherPortal = urand (1000,2000);
+                    me->SetDisplayId(25206);
+                    me->SetReactState(REACT_PASSIVE);
+                    m_bIsSummonGuardian = false;
+
+                    if (getDifficulty() == RAID_DIFFICULTY_10MAN_NORMAL || getDifficulty() == RAID_DIFFICULTY_25MAN_NORMAL)
+                    {
+                            me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE);
+                    }
+        }
+
+            void JustSummoned(Creature *summon)
+            {
+                    if (summon->GetEntry() == NPC_MISTRESS_OF_PAIN)
+                    summon->AI()->AttackStart(me->getVictim());
+            summon->AI()->DoZoneInCombat();
+                    summons.Summon(summon);
+            }
+
+        void UpdateAI(const uint32 uiDiff)
+        {
+                    if (m_pInstance && m_pInstance->GetData(PHASE_4) == NOT_STARTED)
+                    {
+                            me->ForcedDespawn();
+                    }
+
+                    if (uiSpellNetherPortal <= uiDiff && !m_bIsSummonGuardian)
+                    {
+                            DoCast(me, SPELL_PORTAL_SUMMON_GUARDIAN);
+                            m_bIsSummonGuardian = true;
+                    }
+                    else uiSpellNetherPortal -= uiDiff;
+        }
+    };
+
+};
+
+class Mob_MistressOfPain : public CreatureScript
+{
+public:
+    Mob_MistressOfPain() : CreatureScript("Mob_MistressOfPain") { }
+
+    CreatureAI* GetAI_mob_mistressofpain(Creature* pCreature)
+    {
+        return new mob_mistressofpainAI (pCreature);
+    }
+
+    struct mob_mistressofpainAI : public ScriptedAI
+    {
+        mob_mistressofpainAI(Creature *pCreature) : ScriptedAI(pCreature)
+        {
+            m_pInstance = pCreature->GetInstanceData();
+        }
+
+        ScriptedInstance* m_pInstance;
+
+            uint32 uiShivanSlashTimer;
+            uint32 uiSpinningPainSpikeTimer;
+
+            void Reset()
+            {
+                    uiShivanSlashTimer = urand(5000,6000);
+                    uiSpinningPainSpikeTimer = urand(10000,11000);
+            }
+
+        void UpdateAI(const uint32 uiDiff)
+            {
+
+            if (m_pInstance && m_pInstance->GetData(PHASE_4) == NOT_STARTED)
+        {
+                    me->ForcedDespawn();
+            }
+
+            if (!UpdateVictim())
+                    return;
+
+            if (uiShivanSlashTimer < uiDiff)
+        {
+                    DoCast(me->getVictim(), SPELL_SHIVAN_SLAH);
+                    uiShivanSlashTimer = urand(5000,6000);
+            }
+            else uiShivanSlashTimer -= uiDiff;
+
+            if (uiSpinningPainSpikeTimer <= uiDiff)
+            {
+                    if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
+                    {
+                            DoCast(pTarget, SPELL_SPINNING_PAIN_SPIKE);
+                            uiSpinningPainSpikeTimer = urand(15000,16000);
+            }
+            }
+            else uiSpinningPainSpikeTimer -= uiDiff;
+
+            DoMeleeAttackIfReady();
+        }
+    };
+
+};
+
 
 void AddSC_boss_lord_jaraxxus()
 {
-    Script *newscript;
-
-    newscript = new Script;
-    newscript->Name = "Boss_Jaraxxus";
-    newscript->GetAI = &GetAI_boss_Jaraxxus;
-    newscript->RegisterSelf();
-
-        newscript = new Script;
-    newscript->Name = "Mob_FireTrigger";
-    newscript->GetAI = &GetAI_mob_FireTrigger;
-    newscript->RegisterSelf();
-
-        newscript = new Script;
-    newscript->Name = "Mob_Vulcan";
-    newscript->GetAI = &GetAI_mob_Vulcan;
-    newscript->RegisterSelf();
-
-        newscript = new Script;
-    newscript->Name = "Mob_Netherportal";
-    newscript->GetAI = &GetAI_mob_Netherportal;
-    newscript->RegisterSelf();
-
-        newscript = new Script;
-    newscript->Name = "Mob_MistressOfPain";
-    newscript->GetAI = &GetAI_mob_mistressofpain;
-    newscript->RegisterSelf();
-};
+    new Boss_Jaraxxus();
+    new Mob_FireTrigger();
+    new Mob_Vulcan();
+    new Mob_Netherportal();
+    new Mob_MistressOfPain();
+}

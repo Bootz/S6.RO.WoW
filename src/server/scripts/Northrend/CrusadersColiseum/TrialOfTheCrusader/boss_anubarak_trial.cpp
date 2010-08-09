@@ -350,274 +350,290 @@ struct Boss_Raid_AnubarakAI : public ScriptedAI
         DoScriptText(SAY_DEATH, me);
     }
 };
-
-CreatureAI* GetAI_Raid_Anubarak(Creature* pCreature)
+class Boss_Raid_Anubarak : public CreatureScript
 {
-    return new Boss_Raid_AnubarakAI (pCreature);
-}
+public:
+    Boss_Raid_Anubarak() : CreatureScript("Boss_Raid_Anubarak") { }
 
-struct mob_swarm_scarabAI : public ScriptedAI
-{
-    mob_swarm_scarabAI(Creature *pCreature) : ScriptedAI(pCreature)
+    CreatureAI* GetAI_Raid_Anubarak(Creature* pCreature)
     {
-        m_pInstance = pCreature->GetInstanceData();
-    }
-
-    ScriptedInstance* m_pInstance;
-
-    uint32 AcidTimer;
-    uint32 DeterminationTimer;
-
-    void Reset()
-    {
-        AcidTimer = 6000;
-        DeterminationTimer = 10000;
-    }
-
-    void UpdateAI(const uint32 uiDiff)
-    {
-        if (AcidTimer <= uiDiff)
-        {
-            DoCast(SPELL_ACID_MANDIBLE);
-            AcidTimer = 6000;
-        } else AcidTimer -= uiDiff;
-
-        if (DeterminationTimer <= uiDiff)
-        {
-            DoCast(SPELL_DETERMINATION);
-            DeterminationTimer = 6000;
-        } else DeterminationTimer -= uiDiff;
+        return new Boss_Raid_AnubarakAI (pCreature);
     }
 
 };
-
-CreatureAI* GetAI_mob_swarm_scarab(Creature* pCreature)
+class mob_swarm_scarab : public CreatureScript
 {
-    return new mob_swarm_scarabAI (pCreature);
-}
+public:
+    mob_swarm_scarab() : CreatureScript("mob_swarm_scarab") { }
 
-struct mob_NerubianTriggerAI : public Scripted_NoMovementAI
-{
-    mob_NerubianTriggerAI(Creature *pCreature) : Scripted_NoMovementAI(pCreature)
+    CreatureAI* GetAI(Creature* pCreature)
     {
-        m_pInstance = pCreature->GetInstanceData();
+        return new mob_swarm_scarabAI (pCreature);
     }
 
-    ScriptedInstance* m_pInstance;
-
-    void Reset()
+    struct mob_swarm_scarabAI : public ScriptedAI
+    {
+        mob_swarm_scarabAI(Creature *pCreature) : ScriptedAI(pCreature)
         {
-                DoCast(me, SPELL_NERUBIAN_GROUND_VISUAL);
+            m_pInstance = pCreature->GetInstanceData();
         }
 
-    void UpdateAI(const uint32 uiDiff)
-    {
-    }
-};
+        ScriptedInstance* m_pInstance;
 
-CreatureAI* GetAI_mob_NerubianTrigger(Creature* pCreature)
-{
-    return new mob_NerubianTriggerAI (pCreature);
-}
+        uint32 AcidTimer;
+        uint32 DeterminationTimer;
 
-struct nerubian_burrowerAI : public ScriptedAI
-{
-    nerubian_burrowerAI(Creature *pCreature) : ScriptedAI(pCreature)
-    {
-        m_pInstance = pCreature->GetInstanceData();
-    }
-
-    ScriptedInstance* m_pInstance;
-
-    uint32 ExposeTimer;
-    uint32 ResurfaceTimer;
-
-    void Reset()
-    {
-        ExposeTimer = 9000;
-        ResurfaceTimer = 9999999;
-        me->RemoveAura(SPELL_SUBMERGE);
-        me->ForcedDespawn();
-    }
-
-    void UpdateAI(const uint32 uiDiff)
-    {
-        if (ExposeTimer <= uiDiff)
+        void Reset()
         {
-            Unit* pTarget = SelectUnit(SELECT_TARGET_TOPAGGRO, 0);
-            DoCast(pTarget,SPELL_EXPOSE_WEAKNESS);
-            ExposeTimer = 9000;
-        } else ExposeTimer -= uiDiff;
+            AcidTimer = 6000;
+            DeterminationTimer = 10000;
+        }
 
-        if ((me->GetHealth()*100) / me->GetMaxHealth() < 15)
-            if (!me->HasAura(SPELL_PERMAFROST))
-                {
-                    DoCast(SPELL_SUBMERGE);
-                } else DoCast(SPELL_SUBMERGE_DENIED);
-
-        if (me->HasAura(SPELL_SUBMERGE))
-                ResurfaceTimer = 2000;
-
-        if (ResurfaceTimer <= uiDiff)
+        void UpdateAI(const uint32 uiDiff)
         {
-            ResurfaceTimer = 9999999;
-            Reset();
-        } else ResurfaceTimer -= uiDiff;
-
-    }
-
-};
-
-CreatureAI* GetAI_nerubian_burrower(Creature* pCreature)
-{
-    return new nerubian_burrowerAI (pCreature);
-}
-
-struct frost_sphereAI : public ScriptedAI
-{
-    frost_sphereAI(Creature *pCreature) : ScriptedAI(pCreature)
-    {
-        m_pInstance = pCreature->GetInstanceData();
-    }
-
-    ScriptedInstance* m_pInstance;
-
-    uint32 PermafrostTimer;
-
-    void Reset()
-    {
-        me->SetFlying(true);
-        me->SetSpeed(MOVE_FLIGHT, 0.5f, true);
-        me->GetMotionMaster()->MoveRandom();
-        PermafrostTimer = 9999999;
-    }
-
-    void JustDied(Unit* killer)
-    {
-        DoCast(me, SPELL_PERMAFROST);
-    }
-
-    void UpdateAI(const uint32 uiDiff)
-    {
-        /*if (PermafrostTimer <= uiDiff)
-        {
-
-            PermafrostTimer = 9999999;
-        } else PermafrostTimer -= uiDiff;*/
-
-        /*if (!pAnubarak->isAlive())
+            if (AcidTimer <= uiDiff)
             {
-                me->RemoveAura(SPELL_PERMAFROST);
-                me->ForcedDespawn();
-            }*/
-    }
+                DoCast(SPELL_ACID_MANDIBLE);
+                AcidTimer = 6000;
+            } else AcidTimer -= uiDiff;
+
+            if (DeterminationTimer <= uiDiff)
+            {
+                DoCast(SPELL_DETERMINATION);
+                DeterminationTimer = 6000;
+            } else DeterminationTimer -= uiDiff;
+        }
+
+    };
 
 };
 
-CreatureAI* GetAI_frost_sphere(Creature* pCreature)
+class Mob_NerubianTrigger : public CreatureScript
 {
-    return new frost_sphereAI (pCreature);
-}
+public:
+    Mob_NerubianTrigger() : CreatureScript("Mob_NerubianTrigger") { }
 
-struct creature_impaleAI : public ScriptedAI
-{
-    creature_impaleAI(Creature *pCreature) : ScriptedAI(pCreature)
+    CreatureAI* GetAI_mob_NerubianTrigger(Creature* pCreature)
     {
-        m_pInstance = pCreature->GetInstanceData();
-        pImpale = me;
+        return new mob_NerubianTriggerAI (pCreature);
     }
 
-    ScriptedInstance* m_pInstance;
-
-    bool pursuing;
-    Unit* Target;
-
-    void Reset()
+    struct mob_NerubianTriggerAI : public Scripted_NoMovementAI
     {
-        me->SetSpeed(MOVE_RUN, 0.8f, true);
-        me->SetSpeed(MOVE_WALK, 0.8f, true);
-        if (!me->HasAura(SPELL_IMPALE_TRIGGER))
-            DoCast(SPELL_IMPALE_TRIGGER);
-        pursuing = false;
-    }
+        mob_NerubianTriggerAI(Creature *pCreature) : Scripted_NoMovementAI(pCreature)
+        {
+            m_pInstance = pCreature->GetInstanceData();
+        }
 
-    void JustDied(Unit* killer)
-    {
-        MarkTimer = 5000;        
-        me->RemoveAura(SPELL_IMPALE_TRIGGER);
-    }
+        ScriptedInstance* m_pInstance;
 
-    void SearchAndPursue()
-    {
-        Map* pMap = me->GetMap();
-        Map::PlayerList const &PlayerList = pMap->GetPlayers();
-        for (Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
-            if (Player* i_pl = i->getSource())
-                if (i_pl->isAlive() && i_pl->HasAura(SPELL_PURSUED))
-                    {
-                        me->GetMotionMaster()->MoveChase(i_pl);
-                        Target = i_pl;
-                    }
-        pursuing = true;
-    }
-
-    void UpdateAI(const uint32 uiDiff)
-    {
-        if (!pursuing)
-            SearchAndPursue();
-        if (me->IsWithinDistInMap(Target, 7))
+        void Reset()
             {
-                if (Target->HasAura(SPELL_PERMAFROST))
-                    {
-                        DoCast(Target, SPELL_IMPALE_FAIL);
-                    } else {
-                                DoCast(Target, SPELL_IMPALE_WIN);
-                                DoCast(RAID_MODE(SPELL_IMPALE_10,SPELL_IMPALE_25,SPELL_IMPALE_10,SPELL_IMPALE_25));
-                           }
-                me->RemoveAurasDueToSpell(SPELL_PURSUED);
-                me->RemoveAura(SPELL_IMPALE_TRIGGER);
-                me->ForcedDespawn();
+                    DoCast(me, SPELL_NERUBIAN_GROUND_VISUAL);
             }
-    }
+
+        void UpdateAI(const uint32 uiDiff)
+        {
+        }
+    };
 
 };
 
-CreatureAI* GetAI_creature_impale(Creature* pCreature)
+class nerubian_burrower : public CreatureScript
 {
-    return new creature_impaleAI (pCreature);
-}
+public:
+    nerubian_burrower() : CreatureScript("nerubian_burrower") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new nerubian_burrowerAI (pCreature);
+    }
+
+    struct nerubian_burrowerAI : public ScriptedAI
+    {
+        nerubian_burrowerAI(Creature *pCreature) : ScriptedAI(pCreature)
+        {
+            m_pInstance = pCreature->GetInstanceData();
+        }
+
+        ScriptedInstance* m_pInstance;
+
+        uint32 ExposeTimer;
+        uint32 ResurfaceTimer;
+
+        void Reset()
+        {
+            ExposeTimer = 9000;
+            ResurfaceTimer = 9999999;
+            me->RemoveAura(SPELL_SUBMERGE);
+            me->ForcedDespawn();
+        }
+
+        void UpdateAI(const uint32 uiDiff)
+        {
+            if (ExposeTimer <= uiDiff)
+            {
+                Unit* pTarget = SelectUnit(SELECT_TARGET_TOPAGGRO, 0);
+                DoCast(pTarget,SPELL_EXPOSE_WEAKNESS);
+                ExposeTimer = 9000;
+            } else ExposeTimer -= uiDiff;
+
+            if ((me->GetHealth()*100) / me->GetMaxHealth() < 15)
+                if (!me->HasAura(SPELL_PERMAFROST))
+                    {
+                        DoCast(SPELL_SUBMERGE);
+                    } else DoCast(SPELL_SUBMERGE_DENIED);
+
+            if (me->HasAura(SPELL_SUBMERGE))
+                    ResurfaceTimer = 2000;
+
+            if (ResurfaceTimer <= uiDiff)
+            {
+                ResurfaceTimer = 9999999;
+                Reset();
+            } else ResurfaceTimer -= uiDiff;
+
+        }
+
+    };
+
+};
+
+class frost_sphere : public CreatureScript
+{
+public:
+    frost_sphere() : CreatureScript("frost_sphere") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new frost_sphereAI (pCreature);
+    }
+
+    struct frost_sphereAI : public ScriptedAI
+    {
+        frost_sphereAI(Creature *pCreature) : ScriptedAI(pCreature)
+        {
+            m_pInstance = pCreature->GetInstanceData();
+        }
+
+        ScriptedInstance* m_pInstance;
+
+        uint32 PermafrostTimer;
+
+        void Reset()
+        {
+            me->SetFlying(true);
+            me->SetSpeed(MOVE_FLIGHT, 0.5f, true);
+            me->GetMotionMaster()->MoveRandom();
+            PermafrostTimer = 9999999;
+        }
+
+        void JustDied(Unit* killer)
+        {
+            DoCast(me, SPELL_PERMAFROST);
+        }
+
+        void UpdateAI(const uint32 uiDiff)
+        {
+            /*if (PermafrostTimer <= uiDiff)
+            {
+
+                PermafrostTimer = 9999999;
+            } else PermafrostTimer -= uiDiff;*/
+
+            /*if (!pAnubarak->isAlive())
+                {
+                    me->RemoveAura(SPELL_PERMAFROST);
+                    me->ForcedDespawn();
+                }*/
+        }
+
+    };
+
+};
+
+class creature_impale : public CreatureScript
+{
+public:
+    creature_impale() : CreatureScript("creature_impale") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new creature_impaleAI (pCreature);
+    }
+
+    struct creature_impaleAI : public ScriptedAI
+    {
+        creature_impaleAI(Creature *pCreature) : ScriptedAI(pCreature)
+        {
+            m_pInstance = pCreature->GetInstanceData();
+            pImpale = me;
+        }
+
+        ScriptedInstance* m_pInstance;
+
+        bool pursuing;
+        Unit* Target;
+
+        void Reset()
+        {
+            me->SetSpeed(MOVE_RUN, 0.8f, true);
+            me->SetSpeed(MOVE_WALK, 0.8f, true);
+            if (!me->HasAura(SPELL_IMPALE_TRIGGER))
+                DoCast(SPELL_IMPALE_TRIGGER);
+            pursuing = false;
+        }
+
+        void JustDied(Unit* killer)
+        {
+            MarkTimer = 5000;    
+            me->RemoveAura(SPELL_IMPALE_TRIGGER);
+        }
+
+        void SearchAndPursue()
+        {
+            Map* pMap = me->GetMap();
+            Map::PlayerList const &PlayerList = pMap->GetPlayers();
+            for (Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
+                if (Player* i_pl = i->getSource())
+                    if (i_pl->isAlive() && i_pl->HasAura(SPELL_PURSUED))
+                        {
+                            me->GetMotionMaster()->MoveChase(i_pl);
+                            Target = i_pl;
+                        }
+            pursuing = true;
+        }
+
+        void UpdateAI(const uint32 uiDiff)
+        {
+            if (!pursuing)
+                SearchAndPursue();
+            if (me->IsWithinDistInMap(Target, 7))
+                {
+                    if (Target->HasAura(SPELL_PERMAFROST))
+                        {
+                            DoCast(Target, SPELL_IMPALE_FAIL);
+                        } else {
+                                    DoCast(Target, SPELL_IMPALE_WIN);
+                                    DoCast(RAID_MODE(SPELL_IMPALE_10,SPELL_IMPALE_25,SPELL_IMPALE_10,SPELL_IMPALE_25));
+                               }
+                    me->RemoveAurasDueToSpell(SPELL_PURSUED);
+                    me->RemoveAura(SPELL_IMPALE_TRIGGER);
+                    me->ForcedDespawn();
+                }
+        }
+
+    };
+
+};
+
 
 void AddSC_Raid_Anubarak()
 {
-    Script *newscript;
-
-        newscript = new Script;
-    newscript->Name = "Boss_Raid_Anubarak";
-    newscript->GetAI = &GetAI_Raid_Anubarak;
-    newscript->RegisterSelf();
-
-        newscript = new Script;
-    newscript->Name = "Mob_NerubianTrigger";
-    newscript->GetAI = &GetAI_mob_NerubianTrigger;
-    newscript->RegisterSelf();
-
-        newscript = new Script;
-    newscript->Name = "mob_swarm_scarab";
-    newscript->GetAI = &GetAI_mob_swarm_scarab;
-    newscript->RegisterSelf();
-
-        newscript = new Script;
-    newscript->Name = "nerubian_burrower";
-    newscript->GetAI = &GetAI_nerubian_burrower;
-    newscript->RegisterSelf();
-
-        newscript = new Script;
-    newscript->Name = "frost_sphere";
-    newscript->GetAI = &GetAI_frost_sphere;
-    newscript->RegisterSelf();
-
-        newscript = new Script;
-    newscript->Name = "creature_impale";
-    newscript->GetAI = &GetAI_creature_impale;
-    newscript->RegisterSelf();
-};
+    new Boss_Raid_Anubarak();
+    new Mob_NerubianTrigger();
+    new mob_swarm_scarab();
+    new nerubian_burrower();
+    new frost_sphere();
+    new creature_impale();
+}

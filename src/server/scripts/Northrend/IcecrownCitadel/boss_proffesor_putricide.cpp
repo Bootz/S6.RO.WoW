@@ -708,40 +708,4 @@ CreatureAI* GetAI_boss_professor_putricide(Creature* pCreature)
 
 void AddSC_boss_professor_putricide()
 {
-    Script *NewScript;
-
-    NewScript = new Script;
-    NewScript->Name = "boss_professor_putricide";
-    NewScript->GetAI = &GetAI_boss_professor_putricide;
-    NewScript->RegisterSelf();
-
-    NewScript = new Script;
-    NewScript->Name = "npc_volatile_ooze";
-    NewScript->GetAI = &GetAI_npc_volatile_ooze;
-    NewScript->RegisterSelf();
-
-    NewScript = new Script;
-    NewScript->Name = "npc_choke_bomb";
-    NewScript->GetAI = &GetAI_npc_choke_bomb;
-    NewScript->RegisterSelf();
-
-    NewScript = new Script;
-    NewScript->Name = "npc_puddle_ooze";
-    NewScript->GetAI = &GetAI_npc_puddle_ooze;
-    NewScript->RegisterSelf();
-
-    NewScript = new Script;
-    NewScript->Name = "npc_malleable_goo";
-    NewScript->GetAI = &GetAI_npc_malleable_goo;
-    NewScript->RegisterSelf();
-
-    NewScript = new Script;
-    NewScript->Name = "npc_abomination";
-    NewScript->GetAI = &GetAI_npc_abomination;
-    NewScript->RegisterSelf();
-
-    NewScript = new Script;
-    NewScript->Name = "npc_gas_cloud";
-    NewScript->GetAI = &GetAI_npc_gas_cloud;
-    NewScript->RegisterSelf();
-};
+}

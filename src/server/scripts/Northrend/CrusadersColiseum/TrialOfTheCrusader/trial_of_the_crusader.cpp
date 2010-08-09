@@ -944,37 +944,4 @@ CreatureAI* GetAI_npc_LichKing(Creature* pCreature)
 
 void AddSC_trial_of_the_crussader()
 {
-    Script* NewScript;
-
-    NewScript = new Script;
-    NewScript->Name = "npc_tcrus_announcer";
-        NewScript->GetAI = &GetAI_npc_tcrus_announcer;
-    NewScript->pGossipHello = &GossipHello_npc_tcrus_announcer;
-    NewScript->pGossipSelect = &GossipSelect_npc_tcrus_announcer;
-    NewScript->RegisterSelf();
-
-    NewScript = new Script;
-    NewScript->Name = "npc_tcrus_tirion";
-        NewScript->GetAI = &GetAI_npc_tcrus_tirion;
-    NewScript->RegisterSelf();
-
-    NewScript = new Script;
-    NewScript->Name = "npc_tcrus_fizzlebang";
-        NewScript->GetAI = &GetAI_npc_tcrus_fizzlebang;
-    NewScript->RegisterSelf();
-
-        NewScript = new Script;
-    NewScript->Name = "npc_Garrosh";
-        NewScript->GetAI = &GetAI_npc_Garrosh;
-    NewScript->RegisterSelf();
-
-        NewScript = new Script;
-    NewScript->Name = "npc_LichKing";
-        NewScript->GetAI = &GetAI_npc_LichKing;
-    NewScript->RegisterSelf();
-
-        NewScript = new Script;
-    NewScript->Name = "npc_KingVyrn";
-        NewScript->GetAI = &GetAI_npc_KingVyrn;
-    NewScript->RegisterSelf();
 }
