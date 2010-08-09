@@ -53,10 +53,11 @@ enum eGameObjects
     GO_Mimiron_ELEVATOR     = 194749,
     GO_Keepers_DOOR         = 194255
 };
-class instance_ulduar : public InstanceMapScript
+
+class instance_ulduar : public InstanceMapScript
 {
 public:
-    instance_ulduar() : InstanceMapScript("instance_ulduar") { }
+    instance_ulduar() : InstanceMapScript("instance_ulduar", 603) { }
 
     InstanceData* GetInstanceData_InstanceMapScript(Map* pMap)
     {

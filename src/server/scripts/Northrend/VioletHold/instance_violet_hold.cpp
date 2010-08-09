@@ -102,10 +102,11 @@ enum Achievements
 {
     ACHIEV_DEFENSELESS                            = 1816
 };
-class instance_violet_hold : public InstanceMapScript
+
+class instance_violet_hold : public InstanceMapScript
 {
 public:
-    instance_violet_hold() : InstanceMapScript("instance_violet_hold") { }
+    instance_violet_hold() : InstanceMapScript("instance_violet_hold", 608) { }
 
     InstanceScript* GetInstanceData_InstanceMapScript(Map* pMap)
     {

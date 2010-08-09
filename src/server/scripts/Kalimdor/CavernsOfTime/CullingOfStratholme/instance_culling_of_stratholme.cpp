@@ -27,10 +27,11 @@
 3 - Mal'Ganis
 4 - Infinite Corruptor (Heroic only)
 */
-class instance_culling_of_stratholme : public InstanceMapScript
+
+class instance_culling_of_stratholme : public InstanceMapScript
 {
 public:
-    instance_culling_of_stratholme() : InstanceMapScript("instance_culling_of_stratholme") { }
+    instance_culling_of_stratholme() : InstanceMapScript("instance_culling_of_stratholme", 595) { }
 
     InstanceScript* GetInstanceData_InstanceMapScript(Map* pMap)
     {

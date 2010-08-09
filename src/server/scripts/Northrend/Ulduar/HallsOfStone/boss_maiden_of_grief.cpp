@@ -55,7 +55,8 @@ enum Achievements
 {
     ACHIEVEMENT_GOOD_GRIEF                           = 1866
 };
-class boss_maiden_of_grief : public CreatureScript
+
+class boss_maiden_of_grief : public CreatureScript
 {
 public:
     boss_maiden_of_grief() : CreatureScript("boss_maiden_of_grief") { }

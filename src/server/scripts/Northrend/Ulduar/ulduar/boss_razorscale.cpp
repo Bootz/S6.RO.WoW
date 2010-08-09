@@ -134,7 +134,8 @@ enum Events
     EVENT_FUSE,
     EVENT_SUMMON
 };
-class boss_razorscale : public CreatureScript
+
+class boss_razorscale : public CreatureScript
 {
 public:
     boss_razorscale() : CreatureScript("boss_razorscale") { }

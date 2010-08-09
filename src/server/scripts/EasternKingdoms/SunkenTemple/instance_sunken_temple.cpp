@@ -38,10 +38,11 @@ EndScriptData */
 #define GO_ATALAI_LIGHT2 148937
 
 #define NPC_MALFURION_STORMRAGE 15362
-class instance_sunken_temple : public InstanceMapScript
+
+class instance_sunken_temple : public InstanceMapScript
 {
 public:
-    instance_sunken_temple() : InstanceMapScript("instance_sunken_temple") { }
+    instance_sunken_temple() : InstanceMapScript("instance_sunken_temple", 109) { }
 
     InstanceScript* GetInstanceData_InstanceMapScript(Map* pMap)
     {

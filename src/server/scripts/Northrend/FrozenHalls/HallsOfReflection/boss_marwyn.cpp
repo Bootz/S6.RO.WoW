@@ -46,7 +46,8 @@ enum
 
     SPELL_BERSERK                           = 47008,
 };
-class boss_marwyn : public CreatureScript
+
+class boss_marwyn : public CreatureScript
 {
 public:
     boss_marwyn() : CreatureScript("boss_marwyn") { }

@@ -17,8 +17,6 @@
 
 #include "ScriptPCH.h"
 
-#include "ScriptPCH.h"
-
 /*######
 ##Quest 5441: Lazy Peons
 ##npc_lazy_peon
@@ -36,7 +34,8 @@ enum LazyPeon
     SPELL_BUFF_SLEEP                              = 17743,
     SPELL_AWAKEN_PEON                             = 19938
 };
-class npc_lazy_peon : public CreatureScript
+
+class npc_lazy_peon : public CreatureScript
 {
 public:
     npc_lazy_peon() : CreatureScript("npc_lazy_peon") { }

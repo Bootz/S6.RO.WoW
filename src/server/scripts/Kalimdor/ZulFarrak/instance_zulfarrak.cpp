@@ -86,10 +86,11 @@ float Spawnsway[2][3] =
     {1884.86,1228.62,9},
     {1887.53,1263,41}
 };
-class instance_zulfarrak : public InstanceMapScript
+
+class instance_zulfarrak : public InstanceMapScript
 {
 public:
-    instance_zulfarrak() : InstanceMapScript("instance_zulfarrak") { }
+    instance_zulfarrak() : InstanceMapScript("instance_zulfarrak", 209) { }
 
     InstanceScript* GetInstanceData_InstanceMapScript(Map* pMap)
     {

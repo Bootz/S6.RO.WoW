@@ -26,10 +26,11 @@
 2- Escort Event
 3- Sjonnir The Ironshaper
 */
-class instance_halls_of_stone : public InstanceMapScript
+
+class instance_halls_of_stone : public InstanceMapScript
 {
 public:
-    instance_halls_of_stone() : InstanceMapScript("instance_halls_of_stone") { }
+    instance_halls_of_stone() : InstanceMapScript("instance_halls_of_stone", 599) { }
 
     InstanceData* GetInstanceData_InstanceMapScript(Map* pMap)
     {

@@ -25,10 +25,11 @@
 1- Krick and Ick
 2- Scourgelord Tyrannus
 */
-class instance_pit_of_saron : public InstanceMapScript
+
+class instance_pit_of_saron : public InstanceMapScript
 {
 public:
-    instance_pit_of_saron() : InstanceMapScript("instance_pit_of_saron") { }
+    instance_pit_of_saron() : InstanceMapScript("instance_pit_of_saron", 658) { }
 
     InstanceScript* GetInstanceData_InstanceMapScript(Map* pMap)
     {

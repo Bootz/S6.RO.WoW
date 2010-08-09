@@ -39,10 +39,11 @@ EndScriptData */
 #define ID_DOMO         12018
 #define ID_RAGNAROS     11502
 #define ID_FLAMEWAKERPRIEST     11662
-class instance_molten_core : public InstanceMapScript
+
+class instance_molten_core : public InstanceMapScript
 {
 public:
-    instance_molten_core() : InstanceMapScript("instance_molten_core") { }
+    instance_molten_core() : InstanceMapScript("instance_molten_core", 409) { }
 
     InstanceScript* GetInstance_InstanceMapScript(Map* pMap)
     {

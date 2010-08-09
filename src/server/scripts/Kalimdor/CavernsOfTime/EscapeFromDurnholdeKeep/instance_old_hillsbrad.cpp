@@ -36,10 +36,11 @@ EndScriptData */
 
 #define QUEST_ENTRY_DIVERSION   10283
 #define LODGE_QUEST_TRIGGER     20155
-class instance_old_hillsbrad : public InstanceMapScript
+
+class instance_old_hillsbrad : public InstanceMapScript
 {
 public:
-    instance_old_hillsbrad() : InstanceMapScript("instance_old_hillsbrad") { }
+    instance_old_hillsbrad() : InstanceMapScript("instance_old_hillsbrad", 560) { }
 
     InstanceScript* GetInstanceData_InstanceMapScript(Map* pMap)
     {

@@ -135,7 +135,7 @@ if( NOT WIN32 )
   add_definitions(-D_TRINITY_CORE_CONFIG='"${CONF_DIR}/worldserver.conf"')
 endif()
 
-add_dependencies(worldserver revision.h)
+add_dependencies(worldserver genrev)
 
 if( UNIX )
   set(worldserver_LINK_FLAGS "-pthread ${worldserver_LINK_FLAGS}")
@@ -188,6 +188,13 @@ else()
     ${OPENSSL_LIBRARIES}
     ${ZLIB_LIBRARIES}
     ${OSX_LIBS}
+  )
+endif()
+
+if( WIN32 )
+  add_custom_command(TARGET worldserver
+    POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/worldserver.conf.dist ${CMAKE_BINARY_DIR}/bin/$(ConfigurationName)/
   )
 endif()
 

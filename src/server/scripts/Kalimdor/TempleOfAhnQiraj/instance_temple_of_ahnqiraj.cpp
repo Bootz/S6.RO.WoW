@@ -25,10 +25,11 @@ EndScriptData */
 
 #include "ScriptPCH.h"
 #include "temple_of_ahnqiraj.h"
-class instance_temple_of_ahnqiraj : public InstanceMapScript
+
+class instance_temple_of_ahnqiraj : public InstanceMapScript
 {
 public:
-    instance_temple_of_ahnqiraj() : InstanceMapScript("instance_temple_of_ahnqiraj") { }
+    instance_temple_of_ahnqiraj() : InstanceMapScript("instance_temple_of_ahnqiraj", 531) { }
 
     InstanceScript* GetInstanceData_InstanceMapScript(Map* pMap)
     {

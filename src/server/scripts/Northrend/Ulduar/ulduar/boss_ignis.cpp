@@ -302,7 +302,8 @@ struct boss_ignis_AI : public BossAI
         }
     }
 };
-class boss_ignis : public CreatureScript
+
+class boss_ignis : public CreatureScript
 {
 public:
     boss_ignis() : CreatureScript("boss_ignis") { }

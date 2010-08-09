@@ -82,13 +82,17 @@ void DoScriptText(int32 textEntry, WorldObject* pSource, Unit *pTarget = NULL);
     {
         uint32 _someId;
 
+        private:
+
+            void RegisterSelf();
+
         protected:
 
             MyScriptType(const char* name, uint32 someId)
                 : ScriptObject(name), _someId(someId)
-            { }
-
-            void RegisterSelf();
+            {
+                ScriptMgr::ScriptRegistry<MyScriptType>::AddScript(this);
+            }
 
         public:
 
@@ -101,14 +105,6 @@ void DoScriptText(int32 textEntry, WorldObject* pSource, Unit *pTarget = NULL);
 
             // This is a pure virtual function:
             virtual void OnAnotherEvent(uint32 someArg) = 0;
-    }
-
-    RegisterSelf() should be defined in ScriptMgr.cpp, and simply registers the script
-    with ScriptRegistry:
-
-    void MyScriptType::RegisterSelf()
-    {
-        ScriptMgr::ScriptRegistry<MyScriptType>::AddScript(this);
     }
 
     Next, you need to add a specialization for ScriptRegistry. Put this in the bottom of
@@ -149,40 +145,21 @@ class ScriptObject
 
     public:
 
-        // Called when the script is initialized. Use it to initialize any properties of the script. Do not use
-        // the constructor for this.
-        virtual void OnInitialize() { }
-
-        // Called when the script is deleted. Use it to free memory, etc. Do not use the destructor for this.
-        virtual void OnTeardown() { }
-
         // Do not override this in scripts; it should be overridden by the various script type classes. It indicates
         // whether or not this script type must be assigned in the database.
         virtual bool IsDatabaseBound() const { return false; }
 
         const std::string& GetName() const { return _name; }
 
-        const char* ToString() const { return _name.c_str(); }
-
     protected:
-
-        // Call this to register the script with ScriptMgr.
-        virtual void RegisterSelf() = 0;
 
         ScriptObject(const char* name)
             : _name(std::string(name))
         {
-            // Allow the script to do startup routines.
-            OnInitialize();
-
-            // Register with ScriptMgr.
-            RegisterSelf();
         }
 
         virtual ~ScriptObject()
         {
-            // Allow the script to do cleanup routines.
-            OnTeardown();
         }
 
     private:
@@ -207,11 +184,7 @@ class SpellHandlerScript : public ScriptObject
 {
     protected:
 
-        SpellHandlerScript(const char* name)
-            : ScriptObject(name)
-        { }
-
-        void RegisterSelf();
+        SpellHandlerScript(const char* name);
 
     public:
 
@@ -225,11 +198,7 @@ class AuraHandlerScript : public ScriptObject
 {
     protected:
 
-        AuraHandlerScript(const char* name)
-            : ScriptObject(name)
-        { }
-
-        void RegisterSelf();
+        AuraHandlerScript(const char* name);
 
     public:
 
@@ -243,11 +212,7 @@ class ServerScript : public ScriptObject
 {
     protected:
 
-        ServerScript(const char* name)
-            : ScriptObject(name)
-        { }
-
-        void RegisterSelf();
+        ServerScript(const char* name);
 
     public:
 
@@ -281,11 +246,7 @@ class WorldScript : public ScriptObject, public UpdatableScript<void>
 {
     protected:
 
-        WorldScript(const char* name)
-            : ScriptObject(name)
-        { }
-
-        void RegisterSelf();
+        WorldScript(const char* name);
 
     public:
 
@@ -318,11 +279,7 @@ class FormulaScript : public ScriptObject
 {
     protected:
 
-        FormulaScript(const char* name)
-            : ScriptObject(name)
-        { }
-
-        void RegisterSelf();
+        FormulaScript(const char* name);
 
     public:
 
@@ -347,6 +304,7 @@ class FormulaScript : public ScriptObject
         // Called after calculating experience gain.
         virtual void OnGainCalculation(uint32& gain, Player* player, Unit* unit) { }
 
+        // Called when calculating the experience rate for group experience.
         virtual void OnGroupRateCalculation(float& rate, uint32 count, bool isRaid) { }
 };
 
@@ -394,28 +352,14 @@ class WorldMapScript : public ScriptObject, public MapScript<Map>
 {
     protected:
 
-        WorldMapScript(const char* name, uint32 mapId)
-            : ScriptObject(name), MapScript<Map>(mapId)
-        {
-            if (GetEntry() && !GetEntry()->IsContinent())
-                sLog.outError("WorldMapScript for map %u is invalid.", mapId);
-        }
-
-        void RegisterSelf();
+        WorldMapScript(const char* name, uint32 mapId);
 };
 
 class InstanceMapScript : public ScriptObject, public MapScript<InstanceMap>
 {
     protected:
 
-        InstanceMapScript(const char* name, uint32 mapId = 0)
-            : ScriptObject(name), MapScript<InstanceMap>(mapId)
-        {
-            if (GetEntry() && !GetEntry()->IsDungeon())
-                sLog.outError("InstanceMapScript for map %u is invalid.", mapId);
-        }
-
-        void RegisterSelf();
+        InstanceMapScript(const char* name, uint32 mapId);
 
     public:
 
@@ -429,25 +373,14 @@ class BattlegroundMapScript : public ScriptObject, public MapScript<Battleground
 {
     protected:
 
-        BattlegroundMapScript(const char* name, uint32 mapId)
-            : ScriptObject(name), MapScript<BattlegroundMap>(mapId)
-        {
-            if (GetEntry() && !GetEntry()->IsBattleground())
-                sLog.outError("BattlegroundMapScript for map %u is invalid.", mapId);
-        }
-
-        void RegisterSelf();
+        BattlegroundMapScript(const char* name, uint32 mapId);
 };
 
 class ItemScript : public ScriptObject
 {
     protected:
 
-        ItemScript(const char* name)
-            : ScriptObject(name)
-        { }
-
-        void RegisterSelf();
+        ItemScript(const char* name);
 
     public:
 
@@ -470,11 +403,7 @@ class CreatureScript : public ScriptObject, public UpdatableScript<Creature>
 {
     protected:
 
-        CreatureScript(const char* name)
-            : ScriptObject(name)
-        { }
-
-        void RegisterSelf();
+        CreatureScript(const char* name);
 
     public:
 
@@ -515,11 +444,7 @@ class GameObjectScript : public ScriptObject, public UpdatableScript<GameObject>
 {
     protected:
 
-        GameObjectScript(const char* name)
-            : ScriptObject(name)
-        { }
-
-        void RegisterSelf();
+        GameObjectScript(const char* name);
 
     public:
 
@@ -554,11 +479,7 @@ class AreaTriggerScript : public ScriptObject
 {
     protected:
 
-        AreaTriggerScript(const char* name)
-            : ScriptObject(name)
-        { }
-
-        void RegisterSelf();
+        AreaTriggerScript(const char* name);
 
     public:
 
@@ -572,11 +493,7 @@ class BattlegroundScript : public ScriptObject
 {
     protected:
 
-        BattlegroundScript(const char* name)
-            : ScriptObject(name)
-        { }
-
-        void RegisterSelf();
+        BattlegroundScript(const char* name);
 
     public:
 
@@ -590,11 +507,7 @@ class OutdoorPvPScript : public ScriptObject
 {
     protected:
 
-        OutdoorPvPScript(const char* name)
-            : ScriptObject(name)
-        { }
-
-        void RegisterSelf();
+        OutdoorPvPScript(const char* name);
 
     public:
 
@@ -608,11 +521,7 @@ class CommandScript : public ScriptObject
 {
     protected:
 
-        CommandScript(const char* name)
-            : ScriptObject(name)
-        { }
-
-        void RegisterSelf();
+        CommandScript(const char* name);
 
     public:
 
@@ -624,11 +533,7 @@ class WeatherScript : public ScriptObject, public UpdatableScript<Weather>
 {
     protected:
 
-        WeatherScript(const char* name)
-            : ScriptObject(name)
-        { }
-
-        void RegisterSelf();
+        WeatherScript(const char* name);
 
     public:
 
@@ -642,11 +547,7 @@ class AuctionHouseScript : public ScriptObject
 {
     protected:
 
-        AuctionHouseScript(const char* name)
-            : ScriptObject(name)
-        { }
-
-        void RegisterSelf();
+        AuctionHouseScript(const char* name);
 
     public:
 
@@ -667,11 +568,7 @@ class ConditionScript : public ScriptObject
 {
     protected:
 
-        ConditionScript(const char* name)
-            : ScriptObject(name)
-        { }
-
-        void RegisterSelf();
+        ConditionScript(const char* name);
 
     public:
 
@@ -685,11 +582,7 @@ class VehicleScript : public ScriptObject
 {
     protected:
 
-        VehicleScript(const char* name)
-            : ScriptObject(name)
-        { }
-
-        void RegisterSelf();
+        VehicleScript(const char* name);
 
     public:
 
@@ -719,23 +612,14 @@ class DynamicObjectScript : public ScriptObject, public UpdatableScript<DynamicO
 {
     protected:
 
-        DynamicObjectScript(const char* name)
-            : ScriptObject(name)
-        { }
-
-        void RegisterSelf();
+        DynamicObjectScript(const char* name);
 };
 
 class TransportScript : public ScriptObject, public UpdatableScript<Transport>
 {
     protected:
 
-        TransportScript(const char* name)
-            : ScriptObject(name)
-        {
-        }
-
-        void RegisterSelf();
+        TransportScript(const char* name);
 
     public:
 
@@ -758,12 +642,7 @@ class AchievementCriteriaScript : public ScriptObject
 {
     protected:
 
-        AchievementCriteriaScript(const char* name)
-            : ScriptObject(name)
-        {
-        }
-
-        void RegisterSelf();
+        AchievementCriteriaScript(const char* name);
 
     public:
 
@@ -963,6 +842,74 @@ class ScriptMgr
                 // after server startup.
                 static ScriptMap ScriptPointerList;
 
+                static void AddScript(TScript* const script)
+                {
+                    ASSERT(script);
+
+                    // See if the script is using the same memory as another script. If this happens, it means that
+                    // someone forgot to allocate new memory for a script.
+                    for (ScriptMapIterator it = ScriptPointerList.begin(); it != ScriptPointerList.end(); ++it)
+                    {
+                        if (it->second == script)
+                        {
+                            sLog.outError("Script '%s' has same memory pointer as '%s'.",
+                                script->GetName().c_str(), it->second->GetName().c_str());
+
+                            return;
+                        }
+                    }
+
+                    if (script->IsDatabaseBound())
+                    {
+                        // Get an ID for the script. An ID only exists if it's a script that is assigned in the database
+                        // through a script name (or similar).
+                        uint32 id = GetScriptId(script->GetName().c_str());
+                        if (id)
+                        {
+                            // Try to find an existing script.
+                            bool existing = false;
+                            for (ScriptMapIterator it = ScriptPointerList.begin(); it != ScriptPointerList.end(); ++it)
+                            {
+                                // If the script names match...
+                                if (it->second->GetName() == script->GetName())
+                                {
+                                    // ... It exists.
+                                    existing = true;
+                                    break;
+                                }
+                            }
+
+                            // If the script isn't assigned -> assign it!
+                            if (!existing)
+                            {
+                                ScriptPointerList[id] = script;
+                                sScriptMgr.IncrementScriptCount();
+                            }
+                            else
+                            {
+                                // If the script is already assigned -> delete it!
+                                sLog.outError("Script '%s' already assigned with the same script name, so the script can't work.",
+                                    script->GetName().c_str());
+
+                                ASSERT(false); // Error that should be fixed ASAP.
+                            }
+                        }
+                        else
+                        {
+                            // The script uses a script name from database, but isn't assigned to anything.
+                            if (script->GetName().find("example") == std::string::npos)
+                                sLog.outErrorDb("Script named '%s' does not have a script name assigned in database.",
+                                    script->GetName().c_str());
+                        }
+                    }
+                    else
+                    {
+                        // We're dealing with a code-only script; just add it.
+                        ScriptPointerList[_scriptIdCounter++] = script;
+                        sScriptMgr.IncrementScriptCount();
+                    }
+                }
+
                 // Gets a script by its ID (assigned by ObjectMgr).
                 static TScript* GetScriptById(uint32 id)
                 {
@@ -972,9 +919,6 @@ class ScriptMgr
 
                     return NULL;
                 }
-
-                // Attempts to add a new script to the list.
-                static void AddScript(TScript* const script);
         };
 };
 

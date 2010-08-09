@@ -48,10 +48,11 @@ EndScriptData */
 #define C_YSIDA                 16031
 
 #define MAX_ENCOUNTER              6
-class instance_stratholme : public InstanceMapScript
+
+class instance_stratholme : public InstanceMapScript
 {
 public:
-    instance_stratholme() : InstanceMapScript("instance_stratholme") { }
+    instance_stratholme() : InstanceMapScript("instance_stratholme", 329) { }
 
     InstanceScript* GetInstanceData_InstanceMapScript(Map* pMap)
     {

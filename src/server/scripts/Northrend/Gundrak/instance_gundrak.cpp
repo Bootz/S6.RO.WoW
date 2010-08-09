@@ -27,10 +27,11 @@
 3 - Gal'Darah
 4 - Eck the Ferocious
 */
-class instance_gundrak : public InstanceMapScript
+
+class instance_gundrak : public InstanceMapScript
 {
 public:
-    instance_gundrak() : InstanceMapScript("instance_gundrak") { }
+    instance_gundrak() : InstanceMapScript("instance_gundrak", 604) { }
 
     InstanceScript* GetInstanceData_InstanceMapScript(Map* pMap)
     {
@@ -499,7 +500,8 @@ public:
     };
 
 };
-class go_gundrak_altar : public GameObjectScript
+
+class go_gundrak_altar : public GameObjectScript
 {
 public:
     go_gundrak_altar() : GameObjectScript("go_gundrak_altar") { }

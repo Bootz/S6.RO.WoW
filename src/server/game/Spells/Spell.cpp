@@ -231,7 +231,7 @@ void SpellCastTargets::Update(Unit* caster)
             m_itemTargetEntry = m_itemTarget->GetEntry();
     }
     // update positions by transport move
-    if (m_srcTransGUID)
+    if (HasSrc() && m_srcTransGUID)
     {
         if (WorldObject * transport = ObjectAccessor::GetWorldObject(*caster, m_srcTransGUID))
         {
@@ -239,7 +239,7 @@ void SpellCastTargets::Update(Unit* caster)
             m_srcPos.RelocateOffset(m_srcTransOffset);
         }
     }
-    if (m_dstTransGUID)
+    if (HasDst() && m_dstTransGUID)
     {
         if (WorldObject * transport = ObjectAccessor::GetWorldObject(*caster, m_dstTransGUID))
         {
@@ -292,7 +292,7 @@ void SpellCastTargets::OutDebug()
     }
     if (m_targetMask & TARGET_FLAG_STRING)
     {
-        sLog.outString("TARGET_FLAG_STRING: %s", m_strTarget);
+        sLog.outString("TARGET_FLAG_STRING: %s", m_strTarget.c_str());
     }
     sLog.outString("speed: %f", m_speed);
     sLog.outString("elevation: %f", m_elevation);

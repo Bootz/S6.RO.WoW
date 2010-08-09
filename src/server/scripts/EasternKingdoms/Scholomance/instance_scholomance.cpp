@@ -36,10 +36,11 @@ EndScriptData */
 #define GO_GATE_ILLUCIA     177371
 
 #define MAX_ENCOUNTER          2
-class instance_scholomance : public InstanceMapScript
+
+class instance_scholomance : public InstanceMapScript
 {
 public:
-    instance_scholomance() : InstanceMapScript("instance_scholomance") { }
+    instance_scholomance() : InstanceMapScript("instance_scholomance", 289) { }
 
     InstanceScript* GetInstanceData_InstanceMapScript(Map* pMap)
     {

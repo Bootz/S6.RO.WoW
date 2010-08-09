@@ -53,7 +53,7 @@ add_executable(authserver
   ${authserver_SRCS}
 )
 
-add_dependencies(authserver revision.h)
+add_dependencies(authserver genrev)
 
 if( NOT WIN32 )
   add_definitions(-D_TRINITY_REALM_CONFIG='"${CONF_DIR}/authserver.conf"')
@@ -84,6 +84,13 @@ else()
     ${MYSQL_LIBRARY}
     ${OPENSSL_LIBRARIES}
     ${OSX_LIBS}
+  )
+endif()
+
+if( WIN32 )
+  add_custom_command(TARGET authserver
+    POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/authserver.conf.dist ${CMAKE_BINARY_DIR}/bin/$(ConfigurationName)/
   )
 endif()
 

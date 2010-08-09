@@ -25,10 +25,11 @@ enum Factions
 {
     FACTION_HOSTILE_FOR_ALL                       = 16
 };
-class instance_nexus : public InstanceMapScript
+
+class instance_nexus : public InstanceMapScript
 {
 public:
-    instance_nexus() : InstanceMapScript("instance_nexus") { }
+    instance_nexus() : InstanceMapScript("instance_nexus", 576) { }
 
     InstanceScript *GetInstanceData_InstanceMapScript(Map *pMap)
     {
