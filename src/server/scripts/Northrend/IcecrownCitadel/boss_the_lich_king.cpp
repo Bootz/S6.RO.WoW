@@ -91,7 +91,7 @@ enum LichKingSpells
 	SPELL_PLAGUE_SIPHON              =    74074,
 	SPELL_REMORSELES_WINTER          =    68981,
 	SPELL_PAIN_AND_SUFFERING         =    72133,
-	SPELL_SOUL_REAPER                =    69409,
+	SPELL_SOUL_REAPER                =    73798,
 	SPELL_HARVEST_SOUL_TELEPORT      =    71372,
 	SPELL_HARVEST_SOULS              =    74325,
 	SPELL_QUAKE                      =    72262,
