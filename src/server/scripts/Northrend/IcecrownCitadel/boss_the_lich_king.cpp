@@ -66,6 +66,7 @@ enum Creatures
 	CREATURE_DEFILE               =    38757,
 	CREATURE_RAGING_SPIRIT        =    36701,
 	CREATURE_TRIGGER              =    30494,
+	CREATURE_SHAMBLING_HORROR     =    37698,
 };
 
 enum Models
@@ -87,7 +88,7 @@ enum LichKingSpells
 	SPELL_INFEST_25_NORMAL           =    73779,
 	SPELL_INFEST_10_HEROIC           =    73780,
 	SPELL_INFEST_25_HEROIC           =    73781,
-	SPELL_NECROTIC_PLAGUE            =    70337,
+	SPELL_NECROTIC_PLAGUE            =    70338,
 	SPELL_PLAGUE_SIPHON              =    74074,
 	SPELL_REMORSELES_WINTER          =    68981,
 	SPELL_PAIN_AND_SUFFERING         =    72133,
@@ -113,6 +114,9 @@ enum LichKingSpells
 	SPELL_ICE_SPHERE_VISUAL          =    69090,
 	SPELL_ICE_PULSE                  =    69091,
 	SPELL_ICE_BURST                  =    69108,
+	SPELL_SHOCKWAVE					 = 	  72149,
+	SPELL_ENRAGE					 =    72143,
+	SPELL_FRENZY 					 =    28747,
 };
 enum DefileDamage
 {
@@ -149,6 +153,8 @@ Creature* pTirion;
 Creature* pFather;
 Creature* pFrostmourne;
 Creature* pSafeZone;
+Unit* Plagued;
+std::vector<Unit*> targets;
 
 struct boss_lich_kingAI : public ScriptedAI
 {
@@ -183,6 +189,8 @@ struct boss_lich_kingAI : public ScriptedAI
 	uint32 m_uiSummonSpiritTimer;
 	uint32 m_uiRandomSpeechTimer;
 	uint32 m_uiResetTimer;
+	
+	uint8 necroticstack;
 
 	bool TriggerSpawned;
 	bool SwitchPhase1;
@@ -302,6 +310,49 @@ struct boss_lich_kingAI : public ScriptedAI
 		m_uiEndingTimer = uiTimer;
 		++m_uiEndingPhase;
 	}
+	
+	void NecroticJump()
+	{
+		DoCast(me, SPELL_PLAGUE_SIPHON);
+		Plague->RemoveAura(SPELL_NECROTIC_PLAGUE);
+		Map* pMap = me->GetMap();
+        Map::PlayerList const &PlayerList = pMap->GetPlayers();
+        for (Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
+            if (Player* i_pl = i->getSource())
+                if (i_pl->isAlive() && Plagued->IsWithinDistInMap(i_pl, 10))
+					if (i_pl != Plagued)
+						targets.push_back(i_pl);		
+        std::list<Creature*> HorrorList;
+        Trinity::AllCreaturesOfEntryInRange checker(me, CREATURE_SHAMBLING_HORROR, 10.0f);
+        Trinity::CreatureListSearcher<Trinity::AllCreaturesOfEntryInRange> searcher(me, HorrorList, checker);
+        me->VisitNearbyObject(10.0f, searcher);
+		if(!HorrorList.empty())
+			for (std::list<Creature*>::iterator itr = HorrorList.begin(); itr != HorrorList.end(); ++itr)
+				if (!Plagued->IsWithinDistInMap((*itr),10))
+					HorrorList.remove(*itr);
+		uint8 total = targets.size() + HorrorList.size();
+		uint8 rnd = rand()%total;
+		if (rnd)
+		{
+		if (rnd <= targets.size())
+		{
+			std::list<Unit*>::iterator itr = targets.begin();
+			for(uint32 i = 0; i < rnd; ++i)
+				++itr;		
+		}
+		else 
+		{
+			rnd -= targets.size();
+			std::list<Creature*>::iterator itr = HorrorList.begin();
+			for(uint32 i = 0; i < rnd; ++i)
+				++itr;		
+		}
+		
+		(*itr)->AddAura(SPELL_NECROTIC_PLAGUE, (*itr));
+		(*itr)->SetAuraStack(SPELL_NECROTIC_PLAGUE, (*itr), necroticstack);
+		Plagued = (*itr);	
+		}
+	}
 
 	void UpdateAI(const uint32 uiDiff)
 	{
@@ -356,15 +407,8 @@ struct boss_lich_kingAI : public ScriptedAI
 									}
 								}
 				}			
-			m_uiInfestTimer = 30000;
-		} else m_uiInfestTimer -= uiDiff;
-
-
-			if (m_uiPlagueSiphonTimer < uiDiff)
-			{
-				DoCast(me, SPELL_PLAGUE_SIPHON);
-				m_uiPlagueSiphonTimer = 30000;
-			} else m_uiPlagueSiphonTimer -= uiDiff;
+				m_uiInfestTimer = 30000;
+			} else m_uiInfestTimer -= uiDiff;
 
 			if (m_uiSummonDrudgeGhoulsTimer < uiDiff)
 			{
@@ -378,12 +422,36 @@ struct boss_lich_kingAI : public ScriptedAI
 				m_uiSummonShamblingHorrorTimer = 40000;
 			} else m_uiSummonShamblingHorrorTimer -= uiDiff;
 
-			if (m_uiNecroticPlagueTimer < uiDiff)
+			if (m_uiNecroticPlagueTimer < uiDiff && !Plagued)
 			{
 				Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM,1);
 				DoCast(pTarget, SPELL_NECROTIC_PLAGUE);
+				Plagued = pTarget;
+				necroticstack = 1;
 				m_uiNecroticPlagueTimer = 5000;
 			} else m_uiNecroticPlagueTimer -= uiDiff;
+			
+			if (Plagued)
+				if (!Plagued->isAlive()) 
+					{
+					 necroticstack++;
+					 NecroticJump();		
+					}
+				else 
+				{
+				 if (!Plagued->HasAura(SPELL_NECROTIC_PLAGUE) && necroticstack == 1)
+						{
+						 necroticstack++;
+						 NecroticJump();
+						}
+				}
+						
+			if (Plagued->HasAura(SPELL_NECROTIC_PLAGUE) && Plagued->GetAura(SPELL_NECROTIC_PLAGUE)->GetStackAmount() < necroticstack)
+			{
+				necroticstack--;
+				NecroticJump();
+			}
+			  
 		}
 
 		if(m_uiPhase == 2)
@@ -842,6 +910,8 @@ struct npc_ice_puls_iccAI : public ScriptedAI
 	{
 		m_uiIcePulseTimer    = 2000;
 		m_uiIceBurstCheckTimer    = 2000;
+		me->SetSpeed(MOVE_WALK, 0.25f, true);
+        me->SetSpeed(MOVE_RUN, 0.25f, true);
 	}
 
 	void EnterCombat(Unit *who)
@@ -1078,9 +1148,62 @@ struct npc_raging_spirit_iccAI : public ScriptedAI
 	}
 };
 
+struct npc_shambling_horrorAI : public ScriptedAI
+{
+	npc_shambling_horrorAI(Creature *pCreature) : ScriptedAI(pCreature)
+	{
+		m_pInstance = pCreature->GetInstanceData();
+	}
+
+	uint32 ShockwaveTimer;
+	uint32 EnrageTimer;
+	uint8 heroic;
+	
+	void Reset()
+	{
+		ShockwaveTimer = 20000;
+		EnrageTimer = 30000;
+		heroic = RAID_MODE(0,0,1,1);
+	}
+
+	void EnterCombat(Unit *who)
+	{
+		DoZoneInCombat();
+	}
+
+	void UpdateAI(const uint32 uiDiff)
+	{
+		if (!UpdateVictim())
+			return;
+			
+		if (ShockwaveTimer <= uiDiff)	
+		{
+			DoCast(SPELL_SHOCKWAVE);
+			ShockwaveTimer = 20000;
+		} else ShockwaveTimer -= uiDiff;
+		
+		if (EnrageTimer <= uiDiff)
+		{
+			DoCast(me, SPELL_ENRAGE);
+			EnrageTimer = 30000;
+		} else EnrageTimer -= uiDiff;
+			
+		if (heroic)
+			if (((me->GetHealth()*100) / me->GetMaxHealth() == 20) && !me->HasAura(SPELL_FRENZY))
+				DoCast(me, SPELL_FRENZY);
+		
+		DoMeleeAttackIfReady();
+	}
+};
+
 CreatureAI* GetAI_npc_raging_spirit_icc(Creature* pCreature)
 {
 	return new npc_raging_spirit_iccAI (pCreature);
+}
+
+CreatureAI* GetAI_npc_shambling_horror(Creature* pCreature)
+{
+	return new npc_shambling_horrorAI (pCreature);
 }
 
 CreatureAI* GetAI_npc_defile_icc(Creature* pCreature)
@@ -1171,5 +1294,9 @@ void AddSC_boss_lichking()
 	newscript->Name = "npc_raging_spirit_icc";
 	newscript->GetAI = &GetAI_npc_raging_spirit_icc;
 	newscript->RegisterSelf();
+	
+	newscript = new Script;
+	newscript->Name = "npc_shambling_horror";
+	newscript->GetAI = &GetAI_npc_shambling_horror;
+	newscript->RegisterSelf();
 }
-
