@@ -373,8 +373,10 @@ struct boss_sindragosaAI : public ScriptedAI
         MysticBuffet();
 
         for (std::vector<Player*>::const_iterator itr = targets.begin(); itr != targets.end(); ++itr)
-            (*itr)->ApplySpellImmune(0, IMMUNITY_ID, SPELL_MYSTIC_BUFFET, false);
-            (*itr)->ApplySpellImmune(0, IMMUNITY_ID, SPELL_MYSTIC_BUFFET2, false);
+            {
+             (*itr)->ApplySpellImmune(0, IMMUNITY_ID, SPELL_MYSTIC_BUFFET, false);
+             (*itr)->ApplySpellImmune(0, IMMUNITY_ID, SPELL_MYSTIC_BUFFET2, false);
+            }
 
     }
 
