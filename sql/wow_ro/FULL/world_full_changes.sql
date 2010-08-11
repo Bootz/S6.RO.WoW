@@ -6106,3 +6106,9 @@ UPDATE `quest_template` SET `SrcItemId` = 0, `SrcItemCount` = 0, `ReqItemId2` = 
 
 #Fix Cyclone piercing through Divine Shield
 INSERT INTO spell_linked_spell VALUES (642, -33786, -2, 'Divine Shield Immune to Cyclone');
+
+#Bladestorm immunity fixes
+INSERT INTO `spell_linked_spell` (`spell_trigger`, `spell_effect`, `type`, `comment`) VALUES
+(46924, -13810, 2, 'Bladestorm immune at Frost Trap aura');
+INSERT INTO `spell_linked_spell` (`spell_trigger`, `spell_effect`, `type`, `comment`) VALUES
+(46924, -68766, 2, 'Bladestorm immune at Desecration');
