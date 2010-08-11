@@ -17,6 +17,7 @@
 */
 
 // Scripted by Lavi & Andu - WoW-Romania Team http://www.wow-romania.ro (if you use this script, do not remove this seal, no matter what other modification you apply to script).
+//Festergut instead of using his actual proc spells I use an alternative for them so I can control the range. Longer script but better results.
 
 #include "ScriptPCH.h"
 #include "icecrown_citadel.h"
@@ -44,7 +45,7 @@ enum Spells
     SPELL_VILE_GAS             =    72272,
     SPELL_GASTRIC_BLOAT        =    72219,
     SPELL_GAS_VISUAL_SMALL     =    69154,
-    SPELL_GAS_VISUAL_MIDDLE    =    69152,
+    SPELL_GAS_VISUAL_MEDIUM    =    69152,
     SPELL_GAS_VISUAL_BIG       =    69126,
     SPELL_GAS_SPORES           =    69278,
     SPELL_BERSERK              =    47008,
@@ -57,8 +58,12 @@ enum Spells
 
 #define ACHIEV_INOCULATE       RAID_MODE (4577, 4615)
 
+#define GASEOUSBLIGHT_INH1     RAID_MODE (70138, 70140, 70140, 70137)
+#define GASEOUSBLIGHT_INH2     RAID_MODE (69161, 70139, 70139, 70140)
+#define GASEOUSBLIGHT_INH3     RAID_MODE (70468, 69161, 69161, 70139)
+
 #define EMOTE_GAS_SPORE "Festergut farts."
-#define EMOTE_Pungent_Blight "Festergut vomits"
+#define EMOTE_Pungent_Blight "Festergut vomits."
 
 struct boss_festergutAI : public ScriptedAI
 {
@@ -68,7 +73,8 @@ struct boss_festergutAI : public ScriptedAI
     }
 
     ScriptedInstance* m_pInstance;
-
+    
+    uint8 Inhalestack;
     uint32 m_uiPungentBlightTimer;
     uint32 m_uiGastricExplosionTimer;
     uint32 m_uiInhaleBlightTimer;
@@ -77,18 +83,21 @@ struct boss_festergutAI : public ScriptedAI
     uint32 m_uiGastricBloatTimer;
     uint32 m_uiBerserkTimer;
     uint32 m_uiGastricBoom;
+    unit32 m_uiBlightTimer;
     uint64 uiPutricide;
 
     void Reset()
     {
         m_uiPungentBlightTimer = 120000;
-        m_uiInhaleBlightTimer  = 33000;
+        m_uiInhaleBlightTimer  = 32000;
         m_uiVileGasTimer = 30000;
         m_uiGasSporesTimer = 21000;
         m_uiGastricBloatTimer = 15000;
         m_uiBerserkTimer = 300000;
         m_uiGastricBoom = 20000;
+        m_uiBlightTimer = 4000;
         uiPutricide = 0;
+        Inhalestack = 0;
 
         if (m_pInstance)
             m_pInstance->SetData(DATA_FESTERGURT_EVENT, NOT_STARTED);
@@ -110,9 +119,22 @@ struct boss_festergutAI : public ScriptedAI
         DoScriptText(SAY_PUTRICIDE_DEATH, pPutricide);
         me->PlayDirectSound(17124);
 
+        switch(0)
+        {
+        case 0:
+            if (victim->HasAura(72103))
+            {
+                if (victim->GetAura(72103)->GetStackAmount() < 3)
+                m_pInstance->DoCompleteAchievement(ACHIEV_INOCULATE);
+            }
+            break;
+         }
+
         if (m_pInstance)
             m_pInstance->SetData(DATA_FESTERGURT_EVENT, DONE);
-    }
+       }
+
+
 
     void JustReachedHome()
     {
@@ -131,19 +153,7 @@ struct boss_festergutAI : public ScriptedAI
             DoScriptText(SAY_KILL_2, me);
             break;
         }
-
-        switch(0)
-        {
-        case 0:
-            if (victim->HasAura(72103))
-            {
-                if (victim->GetAura(72103)->GetStackAmount() < 3)
-                m_pInstance->DoCompleteAchievement(ACHIEV_INOCULATE);
-            }
-            break;
-        }
      }
-
 
  /*   void SpellHitTarget(Unit *pTarget,const SpellEntry* spell)
     {
@@ -175,6 +185,57 @@ struct boss_festergutAI : public ScriptedAI
         if (!UpdateVictim())
             return;
 
+       If (Inhalestack = 0 && m_uiBlightTimer < uiDiff)
+       { 
+            me->CastCustomSpell(GASEOUSBLIGHT_INH1 , SPELLVALUE_RADIUS_MOD, 60.0f);
+            DoCast(me, SPELL_GAS_VISUAL_BIG);
+            if (me->HasAura(GASEOUSBLIGHT_INH2))
+            {
+                me->RemoveAurasDueToSpell(GASEOUSBLIGHT_INH2);
+                me->RemoveAurasDueToSpell(SPELL_GAS_VISUAL_MEDIUM);
+            }
+            if (me->HasAura(GASEOUSBLIGHT_INH3))
+            {
+                me->RemoveAurasDueToSpell(GASEOUSBLIGHT_INH3);
+                me->RemoveAurasDueToSpell(SPELL_GAS_VISUAL_SMALL);
+            }
+            m_uiBlightTimer = 2000;
+        }else  m_uiBlightTimer -= diff;
+            
+       If (Inhalestack = 1 && m_uiBlightTimer < uiDiff)
+       { 
+            me->CastCustomSpell(GASEOUSBLIGHT_INH2 , SPELLVALUE_RADIUS_MOD, 60.0f);
+            DoCast(me, SPELL_GAS_VISUAL_MEDIUM);
+            if (me->HasAura(GASEOUSBLIGHT_INH1))
+            {
+                me->RemoveAurasDueToSpell(GASEOUSBLIGHT_INH1);
+                me->RemoveAurasDueToSpell(SPELL_GAS_VISUAL_BIG);
+            }
+            if (me->HasAura(GASEOUSBLIGHT_INH3))
+            {
+                me->RemoveAurasDueToSpell(GASEOUSBLIGHT_INH3);
+                me->RemoveAurasDueToSpell(SPELL_GAS_VISUAL_SMALL);
+            }
+            m_uiBlightTimer = 2000;
+        }else  m_uiBlightTimer -= diff;
+
+       If (Inhalestack = 2 && m_uiBlightTimer < uiDiff)
+       { 
+       me->CastCustomSpell(GASEOUSBLIGHT_INH3 , SPELLVALUE_RADIUS_MOD, 60.0f);
+       DoCast(me, SPELL_GAS_VISUAL_SMALL);
+       if (me->HasAura(GASEOUSBLIGHT_INH2))
+            {
+                me->RemoveAurasDueToSpell(GASEOUSBLIGHT_INH2);
+                me->RemoveAurasDueToSpell(SPELL_GAS_VISUAL_MEDIUM);
+            }
+       if (me->HasAura(GASEOUSBLIGHT_INH1))
+            {
+                me->RemoveAurasDueToSpell(GASEOUSBLIGHT_INH1);
+                me->RemoveAurasDueToSpell(SPELL_GAS_VISUAL_BIG);
+            }
+            m_uiBlightTimer = 2000;
+        }else  m_uiBlightTimer -= diff;
+
         if (m_uiGastricBloatTimer < uiDiff)
         {
             Unit* pTarget = SelectUnit(SELECT_TARGET_TOPAGGRO, 0);
@@ -200,8 +261,11 @@ struct boss_festergutAI : public ScriptedAI
                 me->RemoveAurasDueToSpell(SPELL_PUNGENT_BLIGHT);
             }
             DoCast(me, SPELL_INHALE_BLIGHT);
+            Inhalestack++;
             m_uiInhaleBlightTimer = 33000;
         } else m_uiInhaleBlightTimer -= uiDiff;
+
+
 
         if (m_uiVileGasTimer < uiDiff)
         {
@@ -230,10 +294,12 @@ struct boss_festergutAI : public ScriptedAI
         {
             me->MonsterTextEmote(EMOTE_Pungent_Blight, 0, true);
             DoScriptText(SAY_PUNGENT_BLIGHT_1, me);
-            DoCastAOE(SPELL_PUNGENT_BLIGHT);
+            me->CastCustomSpell(SPELL_PUNGENT_BLIGHT , SPELLVALUE_RADIUS_MOD, 60.0f);
+//            DoCastAOE(SPELL_PUNGENT_BLIGHT);
             m_uiPungentBlightTimer = 120000;
             m_uiInhaleBlightTimer = 33000;
             me->RemoveAllAuras();
+            Inhalestack = 0;
         } else m_uiPungentBlightTimer -= uiDiff;
 
         if(m_uiBerserkTimer < uiDiff)
