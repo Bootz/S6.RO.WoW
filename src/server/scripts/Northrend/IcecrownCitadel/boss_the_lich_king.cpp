@@ -336,7 +336,7 @@ struct boss_lich_kingAI : public ScriptedAI
 		{
 		if (rnd <= targets.size())
 		{
-			std::list<Unit*>::iterator itr = targets.begin();
+			std::vector<Unit*>::iterator itr = targets.begin();
 			for(uint32 i = 0; i < rnd; ++i)
 				++itr;
             me->AddAura(SPELL_NECROTIC_PLAGUE, (*itr));
@@ -354,6 +354,8 @@ struct boss_lich_kingAI : public ScriptedAI
             Plagued = (*itr);
 		}
 		}
+		targets.clear();
+		HorrorList.clear();
 	}
 
 	void UpdateAI(const uint32 uiDiff)
