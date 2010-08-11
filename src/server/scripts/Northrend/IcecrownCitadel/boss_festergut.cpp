@@ -43,8 +43,8 @@ enum Spells
     SPELL_INHALE_BLIGHT        =    69165,
     SPELL_VILE_GAS             =    72272,
     SPELL_GASTRIC_BLOAT        =    72219,
-    SPELL_GAS_VISUAL_SMAL      =    69154,
-    SPELL_GAS_VISUAL_MIDDEL    =    69152,
+    SPELL_GAS_VISUAL_SMALL     =    69154,
+    SPELL_GAS_VISUAL_MIDDLE    =    69152,
     SPELL_GAS_VISUAL_BIG       =    69126,
     SPELL_GAS_SPORES           =    69278,
     SPELL_BERSERK              =    47008,
@@ -137,6 +137,7 @@ struct boss_festergutAI : public ScriptedAI
         case 0:
             if (victim->HasAura(72103))
             {
+                if (victim->GetAura(72103)->GetStackAmount() < 3)
                 m_pInstance->DoCompleteAchievement(ACHIEV_INOCULATE);
             }
             break;
@@ -144,7 +145,7 @@ struct boss_festergutAI : public ScriptedAI
      }
 
 
-    void SpellHitTarget(Unit *pTarget,const SpellEntry* spell)
+ /*   void SpellHitTarget(Unit *pTarget,const SpellEntry* spell)
     {
         switch(spell->Id)
         {
@@ -167,7 +168,7 @@ struct boss_festergutAI : public ScriptedAI
                 pTarget->CastSpell(pTarget, SPELL_INOCULATED, true);
             break;
         }
-    }
+    }*/
 
     void UpdateAI(const uint32 uiDiff)
     {
