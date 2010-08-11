@@ -554,32 +554,37 @@ struct npc_puddle_oozeAI : public ScriptedAI
 
     void Reset()
     {
-		GrowStack = 3;
+	GrowStack = 3;
         me->SetReactState(REACT_PASSIVE);
-        me->SetSpeed(MOVE_WALK, 0.1f, true);
-        for (uint32 i = 0; i < 3; ++i)
-			DoCast(me, SPELL_GROW);
-//me->GetAura(SPELL_GROW, 0)->GetStackAmount() = GrowStack;
-		me->CastCustomSpell(SPELL_SLIME_PUDDLE , SPELLVALUE_RADIUS_MOD, GrowStack*3);
-        m_uiPuddleOozeTimer = 6000;
+        DoCast(me, SPELL_GROW);
+        me->SetAuraStack(SPELL_GROW, me, GrowStack);
+        me->CastCustomSpell(SPELL_SLIME_PUDDLE , SPELLVALUE_RADIUS_MOD, GrowStack*3);
         if (!me->HasAura(SPELL_ROOT))
         DoCast(me, SPELL_ROOT);
+        m_uiPuddleOozeTimer = 3000;
         CheckTimer = 6000;
     }
+
     void UpdateAI(const uint32 uiDiff)
     {
         if(m_uiPuddleOozeTimer <= uiDiff)
         {
-			DoCast(SPELL_GROW);
-			GrowStack++;
-			m_uiPuddleOozeTimer = 7000;
+GrowStack++;
+m_uiPuddleOozeTimer = 7000;
         } else m_uiPuddleOozeTimer -= uiDiff;
+
+        while (me->GetAura(SPELL_GROW)->GetStackAmount() < GrowStack)
+        {
+            GrowStack--
+        }
 
         if (CheckTimer <= uiDiff)
         {
-			if (me->GetAura(SPELL_GROW, 0)->GetStackAmount() <= 1)
-				me->ForcedDespawn();
-			CheckTimer = 3000;
+if (GrowStack < 1)
+                {
+me->ForcedDespawn();
+CheckTimer = 3000;
+                }
         } else CheckTimer -= uiDiff;
 
     }
