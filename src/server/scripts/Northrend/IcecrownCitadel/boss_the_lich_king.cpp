@@ -189,7 +189,7 @@ struct boss_lich_kingAI : public ScriptedAI
 	uint32 m_uiSummonSpiritTimer;
 	uint32 m_uiRandomSpeechTimer;
 	uint32 m_uiResetTimer;
-	
+
 	uint8 necroticstack;
 
 	bool TriggerSpawned;
@@ -310,18 +310,18 @@ struct boss_lich_kingAI : public ScriptedAI
 		m_uiEndingTimer = uiTimer;
 		++m_uiEndingPhase;
 	}
-	
+
 	void NecroticJump()
 	{
 		DoCast(me, SPELL_PLAGUE_SIPHON);
-		Plague->RemoveAura(SPELL_NECROTIC_PLAGUE);
+		Plagued->RemoveAura(SPELL_NECROTIC_PLAGUE);
 		Map* pMap = me->GetMap();
         Map::PlayerList const &PlayerList = pMap->GetPlayers();
         for (Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
             if (Player* i_pl = i->getSource())
                 if (i_pl->isAlive() && Plagued->IsWithinDistInMap(i_pl, 10))
 					if (i_pl != Plagued)
-						targets.push_back(i_pl);		
+						targets.push_back(i_pl);
         std::list<Creature*> HorrorList;
         Trinity::AllCreaturesOfEntryInRange checker(me, CREATURE_SHAMBLING_HORROR, 10.0f);
         Trinity::CreatureListSearcher<Trinity::AllCreaturesOfEntryInRange> searcher(me, HorrorList, checker);
@@ -338,19 +338,21 @@ struct boss_lich_kingAI : public ScriptedAI
 		{
 			std::list<Unit*>::iterator itr = targets.begin();
 			for(uint32 i = 0; i < rnd; ++i)
-				++itr;		
+				++itr;
+            me->AddAura(SPELL_NECROTIC_PLAGUE, (*itr));
+            me->SetAuraStack(SPELL_NECROTIC_PLAGUE, (*itr), necroticstack);
+            Plagued = (*itr);
 		}
-		else 
+		else
 		{
 			rnd -= targets.size();
 			std::list<Creature*>::iterator itr = HorrorList.begin();
 			for(uint32 i = 0; i < rnd; ++i)
-				++itr;		
+				++itr;
+            me->AddAura(SPELL_NECROTIC_PLAGUE, (*itr));
+            me->SetAuraStack(SPELL_NECROTIC_PLAGUE, (*itr), necroticstack);
+            Plagued = (*itr);
 		}
-		
-		(*itr)->AddAura(SPELL_NECROTIC_PLAGUE, (*itr));
-		(*itr)->SetAuraStack(SPELL_NECROTIC_PLAGUE, (*itr), necroticstack);
-		Plagued = (*itr);	
 		}
 	}
 
@@ -406,7 +408,7 @@ struct boss_lich_kingAI : public ScriptedAI
 											pTarget->RemoveAuraFromStack((RAID_MODE(SPELL_INFEST_10_NORMAL,SPELL_INFEST_25_NORMAL,SPELL_INFEST_10_HEROIC,SPELL_INFEST_25_HEROIC)), 0, AURA_REMOVE_BY_DEFAULT);
 									}
 								}
-				}			
+				}
 				m_uiInfestTimer = 30000;
 			} else m_uiInfestTimer -= uiDiff;
 
@@ -430,14 +432,14 @@ struct boss_lich_kingAI : public ScriptedAI
 				necroticstack = 1;
 				m_uiNecroticPlagueTimer = 5000;
 			} else m_uiNecroticPlagueTimer -= uiDiff;
-			
+
 			if (Plagued)
-				if (!Plagued->isAlive()) 
+				if (!Plagued->isAlive())
 					{
 					 necroticstack++;
-					 NecroticJump();		
+					 NecroticJump();
 					}
-				else 
+				else
 				{
 				 if (!Plagued->HasAura(SPELL_NECROTIC_PLAGUE) && necroticstack == 1)
 						{
@@ -445,13 +447,13 @@ struct boss_lich_kingAI : public ScriptedAI
 						 NecroticJump();
 						}
 				}
-						
+
 			if (Plagued->HasAura(SPELL_NECROTIC_PLAGUE) && Plagued->GetAura(SPELL_NECROTIC_PLAGUE)->GetStackAmount() < necroticstack)
 			{
 				necroticstack--;
 				NecroticJump();
 			}
-			  
+
 		}
 
 		if(m_uiPhase == 2)
@@ -1050,7 +1052,7 @@ struct npc_ghoul_iccAI : public ScriptedAI
 			me->SetUInt32Value(UNIT_NPC_EMOTESTATE, 0);
 			m_bIsAggroTimer = true;
 		} else m_uiAggroTimer -= uiDiff;
-        
+
                 DoMeleeAttackIfReady();
 	}
 };
@@ -1155,10 +1157,12 @@ struct npc_shambling_horrorAI : public ScriptedAI
 		m_pInstance = pCreature->GetInstanceData();
 	}
 
+    ScriptedInstance* m_pInstance;
+
 	uint32 ShockwaveTimer;
 	uint32 EnrageTimer;
 	uint8 heroic;
-	
+
 	void Reset()
 	{
 		ShockwaveTimer = 20000;
@@ -1175,23 +1179,23 @@ struct npc_shambling_horrorAI : public ScriptedAI
 	{
 		if (!UpdateVictim())
 			return;
-			
-		if (ShockwaveTimer <= uiDiff)	
+
+		if (ShockwaveTimer <= uiDiff)
 		{
 			DoCast(SPELL_SHOCKWAVE);
 			ShockwaveTimer = 20000;
 		} else ShockwaveTimer -= uiDiff;
-		
+
 		if (EnrageTimer <= uiDiff)
 		{
 			DoCast(me, SPELL_ENRAGE);
 			EnrageTimer = 30000;
 		} else EnrageTimer -= uiDiff;
-			
+
 		if (heroic)
 			if (((me->GetHealth()*100) / me->GetMaxHealth() == 20) && !me->HasAura(SPELL_FRENZY))
 				DoCast(me, SPELL_FRENZY);
-		
+
 		DoMeleeAttackIfReady();
 	}
 };
@@ -1294,7 +1298,7 @@ void AddSC_boss_lichking()
 	newscript->Name = "npc_raging_spirit_icc";
 	newscript->GetAI = &GetAI_npc_raging_spirit_icc;
 	newscript->RegisterSelf();
-	
+
 	newscript = new Script;
 	newscript->Name = "npc_shambling_horror";
 	newscript->GetAI = &GetAI_npc_shambling_horror;
