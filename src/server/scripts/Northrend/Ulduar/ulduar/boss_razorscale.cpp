@@ -24,85 +24,104 @@ EndScriptData */
 #include "ScriptPCH.h"
 #include "ulduar.h"
 
-#define SAY_GREET             -1603260
-#define SAY_AGGRO_1           "Give us a moment to prepare to build the turrets."
-#define SAY_AGGRO_2           "Be on the lookout! Mole machines will be surfacing soon with those nasty Iron dwarves aboard!"
-#define SAY_AGGRO_3           "Ready to move out, keep those dwarves off of our backs!"
-#define SAY_GROUND_PHASE      -1603261
-#define SAY_TURRETS           "Fires out! Let's rebuild those turrets!"
+#define SAY_GREET                   -1603260
+#define SAY_AGGRO_1                 "Give us a moment to prepare to build the turrets."
+#define SAY_AGGRO_2                 "Be on the lookout! Mole machines will be surfacing soon with those nasty Iron dwarves aboard!"
+#define SAY_AGGRO_3                 "Ready to move out, keep those dwarves off of our backs!"
+#define SAY_GROUND_PHASE            -1603261
+#define SAY_TURRETS                 "Fires out! Let's rebuild those turrets!"
 
-#define GOSSIP_ITEM_1         "Activate Harpoones!"
-#define EMOTE_HARPOON         "Harpoon Turret is ready for use!"
-#define EMOTE_BREATH          "Razorscale takes a deep breath..."
-#define EMOTE_PERMA           "Razorscale grounded permanently!"
+#define GOSSIP_ITEM_1               "Activate Harpoones!"
+#define EMOTE_HARPOON               "Harpoon Turret is ready for use!"
+#define EMOTE_BREATH                "Razorscale takes a deep breath..."
+#define EMOTE_PERMA                 "Razorscale grounded permanently!"
 
 enum Spells
 {
-    SPELL_FLAMEBUFFET             = 64016,
-    SPELL_FIREBALL_10             = 62796,
-    SPELL_FIREBALL_25             = 63815,
-    SPELL_FLAME_GROUND_10         = 64709,
-    SPELL_FLAME_GROUND_25         = 64734,
-    SPELL_WINGBUFFET              = 62666,
-    SPELL_FLAMEBREATH_10          = 63317,
-    SPELL_FLAMEBREATH_25          = 64021,
-    SPELL_FUSEARMOR               = 64771,
-    SPELL_DEVOURINGFLAME_10       = 63236,
-    SPELL_DEVOURINGFLAME_25       = 64733,
-    SPELL_HARPOON                 = 54933,
-    SPELL_FLAMED                  = 62696,
-    SPELL_STUN                    = 9032,
-    SPELL_BERSERK                 = 47008
+    SPELL_FLAMEBUFFET               = 64016,
+    SPELL_FIREBALL_10               = 62796,
+    SPELL_FIREBALL_25               = 63815,
+    SPELL_FLAME_GROUND_10           = 64709,
+    SPELL_FLAME_GROUND_25           = 64734,
+    SPELL_WINGBUFFET                = 62666,
+    SPELL_FLAMEBREATH_10            = 63317,
+    SPELL_FLAMEBREATH_25            = 64021,
+    SPELL_FUSEARMOR                 = 64771,
+    SPELL_DEVOURING_FLAME           = 63236,
+    SPELL_HARPOON                   = 54933,
+    SPELL_FLAMED                    = 62696,
+    SPELL_STUN                      = 9032,
+    SPELL_BERSERK                   = 47008
 };
 
-const Position Harpoon1 = {594.317, -136.953, 391.516998, 4.544};
-const Position Harpoon2 = {577.449, -136.953, 391.517151, 4.877};
+const Position PosHarpoon[4] =
+{
+{594.317, -136.953, 391.517, 4.544},
+{577.449, -136.953, 391.517, 4.877},
+{607.726, -146.857, 391.517, 4.041},
+{561.449, -146.857, 391.517, 5.426}
+};
 
-const Position posEng1 = {590.442322, -130.550278, 391.516998, 4.789456};
-const Position posEng2 = {574.850159, -133.687439, 391.517151, 4.252456};
- 
-const Position pos1 = {614.975403, -155.138214, 391.517090, 4.154516};
-const Position pos2 = {609.814331, -204.968185, 391.517090, 5.385465};
-const Position pos3 = {563.530884, -201.557312, 391.517090, 4.108194};
-const Position pos4 = {560.231260, -153.677198, 391.517090, 5.402720};
+const Position PosEngSpawn = {591.951477, -95.968292, 391.516998, 0};
 
-const Position RazorFlight = {588.050293, -251.191223, 470.535980, 1.605303};
-const Position RazorGround = {586.966, -175.534, 390.516998, 1.691704};
-const Position WATCHER1 = {629.309, -197.959, 391.516, 1.691704};
-const Position WATCHER2 = {561.045, -214.221, 391.516, 1.691704};
-const Position WATCHER3 = {541.707, -166.307, 391.516, 1.691704};
+const Position PosEngRepair[4] =
+{
+{590.442, -130.550, 391.517, 4.789},
+{574.850, -133.687, 391.517, 4.252},
+{606.567, -143.369, 391.517, 4.434},
+{560.609, -142.967, 391.517, 5.074}
+};
+
+const Position PosDefSpawn[4] =
+{
+{600.75, -104.850, 391.5169, 0},
+{596.38, -110.262, 391.5169, 0},
+{566.47, -103.633, 391.5169, 0},
+{570.41, -108.791, 391.5169, 0}
+};
+
+const Position PosDefCombat[4] =
+{
+{614.975, -155.138, 391.517, 4.154},
+{609.814, -204.968, 391.517, 5.385},
+{563.531, -201.557, 391.517, 4.108},
+{560.231, -153.677, 391.517, 5.403}
+};
+
+const Position RazorFlight = {588.050, -251.191, 470.535980, 1.605303};
+const Position RazorGround = {586.966, -175.534, 391.516998, 1.691704};
 
 enum Mobs
 {
-    RAZORSCALE                    = 33186,
-    NPC_DARK_RUNE_GUARDIAN        = 33388,
-    NPC_DARK_RUNE_SENTINEL        = 33846,
-    NPC_DARK_RUNE_WATCHER         = 33453,
-    MOLE_MACHINE_TRIGGER          = 33245,
-    NPC_COMMANDER                 = 33210,
-    NPC_ENGINEER                  = 33287,
-    NPC_DEFENDER                  = 33816,
-    NPC_HARPOON                   = 33184,
-    MOLE_MACHINE_GOB              = 194316
+    RAZORSCALE                      = 33186,
+    NPC_DARK_RUNE_GUARDIAN          = 33388,
+    NPC_DARK_RUNE_SENTINEL          = 33846,
+    NPC_DARK_RUNE_WATCHER           = 33453,
+    MOLE_MACHINE_TRIGGER            = 33245,
+    NPC_COMMANDER                   = 33210,
+    NPC_ENGINEER                    = 33287,
+    NPC_DEFENDER                    = 33816,
+    NPC_HARPOON                     = 33184,
+    GOB_MOLE_MACHINE                = 194316
 };
 
 enum DarkRuneSpells
 {
     // Dark Rune Watcher
-    SPELL_CHAIN_LIGHTNING_10      = 64758,
-    SPELL_CHAIN_LIGHTNING_25      = 64759,
-    SPELL_LIGHTNING_BOLT_10       = 63809,
-    SPELL_LIGHTNING_BOLT_25       = 64696,
+    SPELL_CHAIN_LIGHTNING_10        = 64758,
+    SPELL_CHAIN_LIGHTNING_25        = 64759,
+    SPELL_LIGHTNING_BOLT_10         = 63809,
+    SPELL_LIGHTNING_BOLT_25         = 64696,
     
     // Dark Rune Guardian
-    SPELL_STORMSTRIKE             = 64757,
+    SPELL_STORMSTRIKE               = 64757,
     
     // Dark Rune Sentinel
-    SPELL_BATTLE_SHOUT_10         = 46763,
-    SPELL_BATTLE_SHOUT_25         = 64062,
-    SPELL_HEROIC_STRIKE           = 45026,
-    SPELL_WHIRLWIND_10            = 63807,
-    SPELL_WHIRLWIND_25            = 63808,
+    SPELL_BATTLE_SHOUT_10           = 46763,
+    SPELL_BATTLE_SHOUT_25           = 64062,
+    SPELL_HEROIC_STRIKE             = 45026,
+    SPELL_WHIRLWIND_10              = 63807,
+    SPELL_WHIRLWIND_25              = 63808,
 };
 
 #define ACHIEVEMENT_QUICK_SHAVE     RAID_MODE(2919, 2921)
@@ -143,7 +162,7 @@ struct boss_razorscaleAI : public BossAI
         // Do not let Razorscale be affected by Battle Shout buff
         me->ApplySpellImmune(0, IMMUNITY_ID, RAID_MODE(SPELL_BATTLE_SHOUT_10, SPELL_BATTLE_SHOUT_25), true);
         me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);
-        me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true); // Death Grip jump effect
+        me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true);  // Death Grip
         pInstance = pCreature->GetInstanceData();
         pMap = me->GetMap();
     }
@@ -155,7 +174,7 @@ struct boss_razorscaleAI : public BossAI
     uint32 EnrageTimer;
     uint32 FlyCount;
     
-    Creature* Harpoon[2];
+    Creature* Harpoon[4];
     Creature* MoleTrigger;
     bool PermaGround;
     bool Enraged;
@@ -172,15 +191,15 @@ struct boss_razorscaleAI : public BossAI
     void EnterCombat(Unit* who)
     {
         _EnterCombat();
-        Harpoon[0] = me->SummonCreature(NPC_HARPOON, Harpoon1, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 0);
-        Harpoon[1] = me->SummonCreature(NPC_HARPOON, Harpoon2, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 0);
+        for (uint8 n = 0; n < RAID_MODE(2,4); ++n)
+            Harpoon[n] = me->SummonCreature(NPC_HARPOON, PosHarpoon[n], TEMPSUMMON_CORPSE_TIMED_DESPAWN, 0);
         me->SetSpeed(MOVE_FLIGHT, 3.0f, true);
         me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
         me->SetReactState(REACT_PASSIVE);
         phase = PHASE_GROUND;
         events.SetPhase(PHASE_GROUND);
         FlyCount = 0;
-        EnrageTimer = 15*60*1000; // Enrage in 15 min
+        EnrageTimer = 15*60*1000;   // Enrage in 15 min
         Enraged = false;
         events.ScheduleEvent(EVENT_FLIGHT, 0, 0, PHASE_GROUND);
         DoZoneInCombat();
@@ -243,7 +262,7 @@ struct boss_razorscaleAI : public BossAI
                     case EVENT_LAND:
                         me->SetFlying(false);
                         me->NearTeleportTo(586.966, -175.534, 391.516998, 1.691704);
-                        me->CastSpell(me, SPELL_STUN, true);
+                        DoCast(me, SPELL_STUN, true);
                         me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                         if (Creature *pCommander = me->GetCreature(*me, pInstance->GetData64(DATA_EXP_COMMANDER)))
                             pCommander->AI()->DoAction(ACTION_GROUND_PHASE);
@@ -253,10 +272,9 @@ struct boss_razorscaleAI : public BossAI
                         events.ScheduleEvent(EVENT_FLIGHT, 35000, 0, PHASE_GROUND);
                         return;
                     case EVENT_HARPOON:
-                        if (Harpoon[0])
-                            Harpoon[0]->CastSpell(me, SPELL_HARPOON, true);
-                        if (Harpoon[1])
-                            Harpoon[1]->CastSpell(me, SPELL_HARPOON, true);
+                        for (uint8 n = 0; n < RAID_MODE(2,4); ++n)
+                            if (Harpoon[n])
+                                Harpoon[n]->CastSpell(me, SPELL_HARPOON, true);
                         events.ScheduleEvent(EVENT_HARPOON, 1500, 0, PHASE_GROUND);
                         return;
                     case EVENT_BREATH:
@@ -266,11 +284,10 @@ struct boss_razorscaleAI : public BossAI
                         events.CancelEvent(EVENT_BREATH);
                         return;
                     case EVENT_BUFFET:
-                        if (Harpoon[0])
-                            Harpoon[0]->CastSpell(Harpoon[0], SPELL_FLAMED, true);
-                        if (Harpoon[1])
-                            Harpoon[1]->CastSpell(Harpoon[1], SPELL_FLAMED, true);
                         DoCastAOE(SPELL_WINGBUFFET);
+                        for (uint8 n = 0; n < RAID_MODE(2,4); ++n)
+                            if (Harpoon[n])
+                                Harpoon[n]->CastSpell(Harpoon[n], SPELL_FLAMED, true);
                         events.CancelEvent(EVENT_BUFFET);
                         return;
                 }
@@ -298,7 +315,7 @@ struct boss_razorscaleAI : public BossAI
                         return;
                     case EVENT_DEVOURING:
                         if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 200, true))
-                            DoCast(pTarget, RAID_MODE(SPELL_DEVOURINGFLAME_10, SPELL_DEVOURINGFLAME_25));
+                            DoCast(pTarget, SPELL_DEVOURING_FLAME);
                         events.ScheduleEvent(EVENT_DEVOURING, 10000, 0, PHASE_PERMAGROUND);
                         return;
                     case EVENT_BUFFET:
@@ -335,7 +352,7 @@ struct boss_razorscaleAI : public BossAI
                         return;
                     case EVENT_DEVOURING:
                         if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 200, true))
-                            DoCast(pTarget, RAID_MODE(SPELL_DEVOURINGFLAME_10, SPELL_DEVOURINGFLAME_25));
+                            DoCast(pTarget, SPELL_DEVOURING_FLAME);
                         events.ScheduleEvent(EVENT_DEVOURING, 10000, 0, PHASE_FLIGHT);
                         return;
                     case EVENT_SUMMON:
@@ -375,9 +392,9 @@ struct boss_razorscaleAI : public BossAI
         uint8 random = urand(1,4);
         for (uint8 i = 0; i < random; ++i)
         {
-            float x = irand(540.0f, 640.0f);   // Safe range is between 500 and 650
-            float y = irand(-230.0f, -195.0f); // Safe range is between -235 and -145
-            float z = 391.5f;                  // Ground level
+            float x = irand(540.0f, 640.0f);    // Safe range is between 500 and 650
+            float y = irand(-230.0f, -195.0f);  // Safe range is between -235 and -145
+            float z = 391.5f;                   // Ground level
             MoleTrigger = me->SummonCreature(MOLE_MACHINE_TRIGGER, x, y, z, 0, TEMPSUMMON_TIMED_DESPAWN, 10000);
         }
     }
@@ -414,31 +431,16 @@ struct npc_expedition_commanderAI : public ScriptedAI
     ScriptedInstance* pInstance;
     SummonList summons;
 
-    uint32 uiTimer;
     bool greet;
-
-    uint64 m_uiCommanderGUID;
+    uint32 uiTimer;
     uint8  uiPhase;
-    Creature* engineer[2];
+    Creature* engineer[4];
     Creature* defender[4];
-
-    void Initialize()
-    {
-        uiTimer =0;
-        uiPhase = 0;
-        engineer[0] = 0;
-        engineer[1] = 0;
-        defender[0] = 0;
-        defender[1] = 0;
-        defender[2] = 0;
-        defender[3] = 0;
-    }
-
-    std::list<Creature*> GuardList;
 
     void Reset()
     {
         uiTimer = 0;
+        uiPhase = 0;
         greet = false;
     }
     
@@ -451,13 +453,7 @@ struct npc_expedition_commanderAI : public ScriptedAI
         }
         ScriptedAI::MoveInLineOfSight(who);
     }
-
-    void MovementInform(uint32 uiType, uint32 uiId)
-    {
-        if (uiType != POINT_MOTION_TYPE)
-            return;
-    }
-    
+   
     void JustSummoned(Creature *summon)
     {
         summons.Summon(summon);
@@ -480,8 +476,6 @@ struct npc_expedition_commanderAI : public ScriptedAI
         {
             switch(uiPhase)
             {
-                case 0:
-                    break;
                 case 1:
                     pInstance->SetBossState(BOSS_RAZORSCALE, IN_PROGRESS);
                     summons.DespawnAll();
@@ -489,62 +483,43 @@ struct npc_expedition_commanderAI : public ScriptedAI
                     uiPhase = 2;
                     break;
                 case 2:
-                    engineer[0] = me->SummonCreature(NPC_ENGINEER, 591.951477, -95.968292, 391.516998, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 120000);
-                    engineer[0]->RemoveUnitMovementFlag(MOVEMENTFLAG_WALKING);
-                    engineer[0]->SetSpeed(MOVE_RUN, 0.5f);
-                    engineer[0]->SetHomePosition(posEng1);
-                    engineer[0]->GetMotionMaster()->MoveTargetedHome();
-                    engineer[1] = me->SummonCreature(NPC_ENGINEER, 591.951477, -95.968292, 391.516998, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 120000);
-                    engineer[1]->RemoveUnitMovementFlag(MOVEMENTFLAG_WALKING);
-                    engineer[1]->SetSpeed(MOVE_RUN, 0.5f);
-                    engineer[1]->SetHomePosition(posEng2);
-                    engineer[1]->GetMotionMaster()->MoveTargetedHome();
-                    engineer[0]->MonsterYell(SAY_AGGRO_1, LANG_UNIVERSAL, 0);
+                    for (uint8 n = 0; n < RAID_MODE(2,4); ++n)
+                    {
+                        engineer[n] = me->SummonCreature(NPC_ENGINEER, PosEngSpawn, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 3000);
+                        engineer[n]->RemoveUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
+                        engineer[n]->SetSpeed(MOVE_RUN, 0.5f);
+                        engineer[n]->SetHomePosition(PosEngRepair[n]);
+                        engineer[n]->GetMotionMaster()->MoveTargetedHome();
+                    }
+                    engineer[0]->MonsterYell(SAY_AGGRO_3, LANG_UNIVERSAL, 0);
                     uiPhase = 3;
                     uiTimer = 14000;
                     break;
                 case 3:
+                    for (uint8 n = 0; n < 4; ++n)
+                    {
+                        defender[n] = me->SummonCreature(NPC_DEFENDER, PosDefSpawn[n], TEMPSUMMON_CORPSE_TIMED_DESPAWN, 3000);
+                        defender[n] ->RemoveUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
+                        defender[n] ->SetHomePosition(PosDefCombat[n]);
+                        defender[n] ->GetMotionMaster()->MoveTargetedHome();
+                    }
                     uiPhase = 4;
                     break;
                 case 4:
-                    defender[0] = me->SummonCreature(NPC_DEFENDER, 600.75, -104.85, 391.516998, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 120000);
-                    defender[0] ->RemoveUnitMovementFlag(MOVEMENTFLAG_WALKING);
-                    defender[0] ->SetHomePosition(pos1);
-                    defender[0] ->GetMotionMaster()->MoveTargetedHome();
-
-                    defender[1] = me->SummonCreature(NPC_DEFENDER, 596.38, -110.26, 391.516998, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 120000);
-                    defender[1] ->RemoveUnitMovementFlag(MOVEMENTFLAG_WALKING);
-                    defender[1] ->SetHomePosition(pos2);
-                    defender[1] ->GetMotionMaster()->MoveTargetedHome();
-                    
-                    defender[2] = me->SummonCreature(NPC_DEFENDER, 566.47, -103.63, 391.516998, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 120000);
-                    defender[2] ->RemoveUnitMovementFlag(MOVEMENTFLAG_WALKING);
-                    defender[2] ->SetHomePosition(pos3);
-                    defender[2] ->GetMotionMaster()->MoveTargetedHome();
-
-                    defender[3] = me->SummonCreature(NPC_DEFENDER, 570.41, -108.79, 391.516998, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 120000);
-                    defender[3] ->RemoveUnitMovementFlag(MOVEMENTFLAG_WALKING);
-                    defender[3] ->SetHomePosition(pos4);
-                    defender[3] ->GetMotionMaster()->MoveTargetedHome();
+                    for (uint8 n = 0; n < RAID_MODE(2,4); ++n)
+                        engineer[n]->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_USESTANDING);
+                    for (uint8 n = 0; n < 4; ++n)
+                        defender[n]->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_READY2H);
+                    me->MonsterYell(SAY_AGGRO_2, LANG_UNIVERSAL, 0);
+                    uiTimer = 16000;
                     uiPhase = 5;
                     break;
                 case 5:
-                    engineer[0]->HandleEmoteCommand(EMOTE_STATE_USESTANDING);
-                    engineer[1]->HandleEmoteCommand(EMOTE_STATE_USESTANDING);
-                    defender[0]->HandleEmoteCommand(EMOTE_STATE_READY2H);
-                    defender[1]->HandleEmoteCommand(EMOTE_STATE_READY2H);
-                    defender[2]->HandleEmoteCommand(EMOTE_STATE_READY2H);
-                    defender[3]->HandleEmoteCommand(EMOTE_STATE_READY2H);
-                    me->MonsterYell(SAY_AGGRO_2, LANG_UNIVERSAL, 0);
-                    uiTimer = 16000;
-                    uiPhase = 6;
-                    break;
-                case 6:
                     if (Creature *pRazorscale = me->GetCreature(*me, pInstance->GetData64(DATA_RAZORSCALE)))
                         if (pRazorscale->AI())
                             pRazorscale->AI()->DoAction(ACTION_EVENT_START);
-                    engineer[0]->MonsterYell(SAY_AGGRO_3, LANG_UNIVERSAL, 0);
-                    uiPhase =7;
+                    engineer[0]->MonsterYell(SAY_AGGRO_1, LANG_UNIVERSAL, 0);
+                    uiPhase = 6;
                     break;
             }
             if (!UpdateVictim())
@@ -755,7 +730,7 @@ struct mole_machine_triggerAI : public ScriptedAI
 
     void Reset()
     {
-        MoleMachine = me->SummonGameObject(MOLE_MACHINE_GOB, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), urand(0,6), 0, 0, 0, 0, 300);
+        MoleMachine = me->SummonGameObject(GOB_MOLE_MACHINE, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), urand(0,6), 0, 0, 0, 0, 300);
         if (MoleMachine)
             MoleMachine->SetGoState(GO_STATE_ACTIVE);
         SummomTimer = 6000;
