@@ -569,21 +569,21 @@ struct npc_puddle_oozeAI : public ScriptedAI
     {
         if(m_uiPuddleOozeTimer <= uiDiff)
         {
-GrowStack++;
-m_uiPuddleOozeTimer = 7000;
+        GrowStack++;
+        m_uiPuddleOozeTimer = 7000;
         } else m_uiPuddleOozeTimer -= uiDiff;
 
         while (me->GetAura(SPELL_GROW)->GetStackAmount() < GrowStack)
         {
-            GrowStack--
+            GrowStack--;
         }
 
         if (CheckTimer <= uiDiff)
         {
-if (GrowStack < 1)
+        if (GrowStack < 1)
                 {
-me->ForcedDespawn();
-CheckTimer = 3000;
+                me->ForcedDespawn();
+                CheckTimer = 3000;
                 }
         } else CheckTimer -= uiDiff;
 
