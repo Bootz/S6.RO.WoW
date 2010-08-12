@@ -57,7 +57,7 @@ class boss_drakos : public CreatureScript
 public:
     boss_drakos() : CreatureScript("boss_drakos") { }
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new boss_drakosAI (pCreature);
     }
@@ -66,7 +66,7 @@ public:
     {
         boss_drakosAI(Creature* pCreature) : ScriptedAI(pCreature), lSummons(me)
         {
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
         }
 
         uint32 uiMagicPullTimer;
@@ -75,7 +75,7 @@ public:
 
         bool bPostPull;
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
         SummonList lSummons;
 
         void Reset()
@@ -159,7 +159,7 @@ public:
             {
                 pInstance->SetData(DATA_DRAKOS_EVENT, DONE);
                 // start achievement timer (kill Eregos within 20 min)
-                //pInstance->DoStartTimedAchievement(ACHIEVEMENT_TIMED_TYPE_EVENT, ACHIEV_TIMED_START_EVENT);
+                pInstance->DoStartTimedAchievement(ACHIEVEMENT_TIMED_TYPE_EVENT, ACHIEV_TIMED_START_EVENT);
             }
 
             lSummons.DespawnAll();
@@ -178,7 +178,7 @@ class npc_unstable_sphere : public CreatureScript
 public:
     npc_unstable_sphere() : CreatureScript("npc_unstable_sphere") { }
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new npc_unstable_sphereAI (pCreature);
     }
@@ -217,7 +217,6 @@ public:
     };
 
 };
-
 
 
 void AddSC_boss_drakos()

@@ -99,7 +99,7 @@ public:
         return false;
     }
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new boss_volkhanAI(pCreature);
     }
@@ -108,10 +108,10 @@ public:
     {
         boss_volkhanAI(Creature *pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
 
         std::list<uint64> m_lGolemGUIDList;
 
@@ -146,7 +146,7 @@ public:
                 m_pInstance->SetData(TYPE_VOLKHAN, NOT_STARTED);
         }
 
-        void EnterCombat(Unit* pWho)
+        void EnterCombat(Unit* /*pWho*/)
         {
             DoScriptText(SAY_AGGRO, me);
 
@@ -167,7 +167,7 @@ public:
             }
         }
 
-        void JustDied(Unit* pKiller)
+        void JustDied(Unit* /*pKiller*/)
         {
             DoScriptText(SAY_DEATH, me);
             DespawnGolem();
@@ -191,7 +191,7 @@ public:
             }
         }
 
-        void KilledUnit(Unit* pVictim)
+        void KilledUnit(Unit* /*pVictim*/)
         {
             DoScriptText(RAND(SAY_SLAY_1,SAY_SLAY_2,SAY_SLAY_3), me);
         }
@@ -232,7 +232,7 @@ public:
             }
         }
 
-        void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
+        void SpellHit(Unit* /*pCaster*/, const SpellEntry* pSpell)
         {
             if (pSpell->Id == SPELL_TEMPER_DUMMY)
                 m_bIsStriking = true;
@@ -386,7 +386,7 @@ class mob_molten_golem : public CreatureScript
 public:
     mob_molten_golem() : CreatureScript("mob_molten_golem") { }
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new mob_molten_golemAI(pCreature);
     }
@@ -425,7 +425,7 @@ public:
             }
         }
 
-        void DamageTaken(Unit* pDoneBy, uint32 &uiDamage)
+        void DamageTaken(Unit* /*pDoneBy*/, uint32 &uiDamage)
         {
             if (uiDamage > me->GetHealth())
             {
@@ -443,7 +443,7 @@ public:
             }
         }
 
-        void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
+        void SpellHit(Unit* /*pCaster*/, const SpellEntry* pSpell)
         {
             //this is the dummy effect of the spells
             if (pSpell->Id == SPELL_SHATTER_N || pSpell->Id == SPELL_SHATTER_H)

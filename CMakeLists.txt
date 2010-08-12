@@ -82,21 +82,18 @@ endif()
 option(SERVERS "Build worldserver and authserver" 1)
 option(SCRIPTS "Build worldserver with scripts included" 1)
 option(TOOLS "Build map/vmap extraction/assembler tools" 0)
-option(CLI "Build worldserver with commandline-interface included" 1)
 option(DEBUG "Build worldserver with additional debug-code included" 0)
 option(SCRIPTPCH "Use precompiled headers when compiling scripts project" 1)
 option(GAMEPCH "Use precompiled headers when compiling game project" 1)
 option(SQL "Copy SQL files during installation" 0)
 option(WARNINGS "Enable all compile-warnings during compile" 0)
 
+#
+# Search for readline on *nixbased systems (CLI-handler)
+#
+
 if( UNIX )
-  option(CENTOS "CENTOS" 0)
-  if( CENTOS )
-    add_definitions(-DCENTOS)
-    find_termcap()
-  else()
-    find_readline()
-  endif()
+  find_readline()
 endif()
 
 #
@@ -104,8 +101,20 @@ endif()
 #
 
 if( PREFIX )
-  set(CMAKE_INSTALL_PREFIX ${PREFIX})
+  set(CMAKE_INSTALL_PREFIX "${PREFIX}")
 endif()
+
+#
+# Example: Check the CMake preload parameters (Commented out by default)
+#
+# Overload CMAKE_INSTALL_PREFIX if not being set properly
+#if( WIN32 )
+#  if( NOT CYGWIN )
+#    if( NOT CMAKE_INSTALL_PREFIX )
+#      set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/bin")
+#    endif()
+#  endif()
+#endif()
 
 #
 # Handle debugmode compiles (this will require further work for proper WIN32-setups)
@@ -120,23 +129,25 @@ endif()
 #
 
 if( MSVC )
-  # Set up MSVC to dump binaries in the <builddir>/bin/<buildtype>/ folder
-  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+  # Set up MSVC to dump files in the <builddir>/bin/<buildtype>/ folder for testing builds before install
+
+  # executable binaries (.exe-files, and .dll-files on DLL-capable platforms)
   set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-  set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
+  # other parts like static libraries etc - commented out as it's not needed - shown here as an example only
+  #set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+  #set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 endif()
 
 #
 # Set default configuration-directory (used on NIX-based platforms only)
 #
 
-
 if( NOT CONF_DIR )
   set(CONF_DIR ${CMAKE_INSTALL_PREFIX}/etc)
 endif()
 
 set(LIBSDIR ${CMAKE_INSTALL_PREFIX}/lib)
-
 
 #####
 ##### Build-preparation
@@ -172,12 +183,12 @@ message("")
 # Output information about installation-directories and locations
 #
 
+message("* Install core to       : ${CMAKE_INSTALL_PREFIX}")
 if( UNIX )
-  message("* Install core to       : ${CMAKE_INSTALL_PREFIX}")
   message("* Install libraries to  : ${LIBSDIR}")
   message("* Install configs to    : ${CONF_DIR}")
-  message("")
 endif()
+message("")
 
 #
 # Show infomation about the options selected during configuration
@@ -189,24 +200,30 @@ else()
   message("* Build servers         : No")
 endif()
 
+if( GAMEPCH )
+  message("* Build game w/PCH      : Yes (default)")
+else()
+  message("* Build game w/PCH      : No")
+endif()
+
 if( SCRIPTS )
   message("* Build with scripts    : Yes (default)")
   add_definitions(-DSCRIPTS)
 else()
   message("* Build with scripts    : No")
+  set(SCRIPTPCH 0)
+endif()
+
+if( SCRIPTPCH )
+  message("* Build scripts w/PCH   : Yes (default)")
+else()
+  message("* Build scripts w/PCH   : No")
 endif()
 
 if( TOOLS )
   message("* Build map/vmap tools  : Yes")
 else()
   message("* Build map/vmap tools  : No  (default)")
-endif()
-
-if( CLI )
-  message("* Build with CLI        : Yes (default)")
-  add_definitions(-DENABLE_CLI)
-else()
-  message("* Build with CLI        : No")
 endif()
 
 if( DEBUG )
@@ -217,18 +234,6 @@ if( DEBUG )
   endif()
 else()
   message("* Build in debug-mode   : No  (default)")
-endif()
-
-if( GAMEPCH )
-  message("* Build game w/PCH      : Yes (default)")
-else()
-  message("* Build game w/PCH      : No")
-endif()
-
-if( SCRIPTPCH )
-  message("* Build scripts w/PCH   : Yes (default)")
-else()
-  message("* Build scripts w/PCH   : No")
 endif()
 
 if( WARNINGS )
@@ -243,8 +248,8 @@ else()
   elseif( WIN32 )
     # Disable warnings in Visual Studio 8 and above
     if(MSVC AND NOT CMAKE_GENERATOR MATCHES "Visual Studio 7")
-      set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /wd4996 /wd4355 /wd4244 /wd4985 /wd4267")
-      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4996 /wd4355 /wd4244 /wd4985 /wd4267")
+      set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /wd4996 /wd4355 /wd4244 /wd4985 /wd4267 /wd4619")
+      set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4996 /wd4355 /wd4244 /wd4985 /wd4267 /wd4619")
     endif()
     add_definitions(-D_CRT_SECURE_NO_WARNINGS)
   endif()
@@ -271,7 +276,7 @@ message("")
 
 if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
   set(MACOSX 1)
-  set(OSX_LIBS /opt/local/lib/libcrypto.dylib)
+  set(OSX_LIBS /usr/lib/libcrypto.dylib)
   add_definitions(-D__ASSERTMACROS__)
 endif()
 
@@ -304,15 +309,14 @@ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH 1)
 #
 
 if( UNIX )
-configure_file(
-  "${CMAKE_CURRENT_SOURCE_DIR}/cmake/cmake_uninstall.cmake.in"
-  "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
-  IMMEDIATE @ONLY
-)
-
-add_custom_target(uninstall
-  "${CMAKE_COMMAND}" -P "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
-)
+  configure_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/cmake_uninstall.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
+    IMMEDIATE @ONLY
+  )
+  add_custom_target(uninstall
+    "${CMAKE_COMMAND}" -P "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake"
+  )
 endif()
 
 #

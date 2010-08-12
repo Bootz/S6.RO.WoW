@@ -748,9 +748,9 @@ bool Player::Create(uint32 guidlow, const std::string& name, uint8 race, uint8 c
 
     InitRunes();
 
-    SetUInt32Value (PLAYER_FIELD_COINAGE, sWorld.getConfig(CONFIG_START_PLAYER_MONEY));
-    SetUInt32Value (PLAYER_FIELD_HONOR_CURRENCY, sWorld.getConfig(CONFIG_START_HONOR_POINTS));
-    SetUInt32Value (PLAYER_FIELD_ARENA_CURRENCY, sWorld.getConfig(CONFIG_START_ARENA_POINTS));
+    SetUInt32Value(PLAYER_FIELD_COINAGE, sWorld.getConfig(CONFIG_START_PLAYER_MONEY));
+    SetHonorPoints(sWorld.getConfig(CONFIG_START_HONOR_POINTS));
+    SetArenaPoints(sWorld.getConfig(CONFIG_START_ARENA_POINTS));
 
     // start with every map explored
     if (sWorld.getConfig(CONFIG_START_ALL_EXPLORED))
@@ -1812,7 +1812,8 @@ bool Player::TeleportTo(uint32 mapid, float x, float y, float z, float orientati
 
     if ((GetSession()->GetSecurity() < SEC_GAMEMASTER) && sDisableMgr.IsDisabledFor(DISABLE_TYPE_MAP, mapid, this))
     {
-        sLog.outError("Player %s tried to enter a forbidden map", GetName());
+        sLog.outError("Player %s tried to enter a forbidden map %u", GetName(), mapid);
+        SendTransferAborted(mapid, TRANSFER_ABORT_MAP_NOT_ALLOWED);
         return false;
     }
 
@@ -2613,6 +2614,8 @@ void Player::GiveXP(uint32 xp, Unit* victim)
 
     uint8 level = getLevel();
 
+    sScriptMgr.OnGivePlayerXP(this, xp, victim);
+
     // Favored experience increase START
     uint32 zone = GetZoneId();
     float favored_exp_mult = 0;
@@ -2653,6 +2656,8 @@ void Player::GiveLevel(uint8 level)
 {
     if (level == getLevel())
         return;
+
+    sScriptMgr.OnPlayerLevelChanged(this, level);
 
     PlayerLevelInfo info;
     sObjectMgr.GetPlayerLevelInfo(getRace(),getClass(),level,&info);
@@ -3982,6 +3987,8 @@ uint32 Player::resetTalentsCost() const
 
 bool Player::resetTalents(bool no_cost)
 {
+    sScriptMgr.OnPlayerTalentsReset(this, no_cost);
+
     // not need after this call
     if (HasAtLoginFlag(AT_LOGIN_RESET_TALENTS))
         RemoveAtLoginFlag(AT_LOGIN_RESET_TALENTS, true);
@@ -4067,6 +4074,12 @@ bool Player::resetTalents(bool no_cost)
     */
 
     return true;
+}
+
+void Player::SetFreeTalentPoints(uint32 points)
+{
+    sScriptMgr.OnPlayerFreeTalentPointsChanged(this, points);
+    SetUInt32Value(PLAYER_CHARACTER_POINTS1,points);
 }
 
 Mail* Player::GetMail(uint32 id)
@@ -6837,12 +6850,12 @@ void Player::ModifyHonorPoints(int32 value)
     if (value < 0)
     {
         if (GetHonorPoints() > sWorld.getConfig(CONFIG_MAX_HONOR_POINTS))
-            SetUInt32Value(PLAYER_FIELD_HONOR_CURRENCY, sWorld.getConfig(CONFIG_MAX_HONOR_POINTS) + value);
+            SetHonorPoints(sWorld.getConfig(CONFIG_MAX_HONOR_POINTS) + value);
         else
-            SetUInt32Value(PLAYER_FIELD_HONOR_CURRENCY, GetHonorPoints() > uint32(-value) ? GetHonorPoints() + value : 0);
+            SetHonorPoints(GetHonorPoints() > uint32(-value) ? GetHonorPoints() + value : 0);
     }
     else
-        SetUInt32Value(PLAYER_FIELD_HONOR_CURRENCY, GetHonorPoints() < sWorld.getConfig(CONFIG_MAX_HONOR_POINTS) - value ? GetHonorPoints() + value : sWorld.getConfig(CONFIG_MAX_HONOR_POINTS));
+        SetHonorPoints(GetHonorPoints() < sWorld.getConfig(CONFIG_MAX_HONOR_POINTS) - value ? GetHonorPoints() + value : sWorld.getConfig(CONFIG_MAX_HONOR_POINTS));
 }
 
 void Player::ModifyArenaPoints(int32 value)
@@ -6850,12 +6863,12 @@ void Player::ModifyArenaPoints(int32 value)
     if (value < 0)
     {
         if (GetArenaPoints() > sWorld.getConfig(CONFIG_MAX_ARENA_POINTS))
-            SetUInt32Value(PLAYER_FIELD_ARENA_CURRENCY, sWorld.getConfig(CONFIG_MAX_ARENA_POINTS) + value);
+            SetArenaPoints(sWorld.getConfig(CONFIG_MAX_ARENA_POINTS) + value);
         else
-            SetUInt32Value(PLAYER_FIELD_ARENA_CURRENCY, GetArenaPoints() > uint32(-value) ? GetArenaPoints() + value : 0);
+            SetArenaPoints(GetArenaPoints() > uint32(-value) ? GetArenaPoints() + value : 0);
     }
     else
-        SetUInt32Value(PLAYER_FIELD_ARENA_CURRENCY, GetArenaPoints() < sWorld.getConfig(CONFIG_MAX_ARENA_POINTS) - value ? GetArenaPoints() + value : sWorld.getConfig(CONFIG_MAX_ARENA_POINTS));
+        SetArenaPoints(GetArenaPoints() < sWorld.getConfig(CONFIG_MAX_ARENA_POINTS) - value ? GetArenaPoints() + value : sWorld.getConfig(CONFIG_MAX_ARENA_POINTS));
 }
 
 uint32 Player::GetGuildIdFromDB(uint64 guid)
@@ -11458,7 +11471,7 @@ Item* Player::_StoreItem(uint16 pos, Item *pItem, uint32 count, bool clone, bool
 
             // need update known currency
             if (slot >= CURRENCYTOKEN_SLOT_START && slot < CURRENCYTOKEN_SLOT_END)
-                UpdateKnownCurrencies(pItem->GetEntry(), true);
+                AddKnownCurrency(pItem->GetEntry());
 
             if (IsInWorld() && update)
             {
@@ -11765,9 +11778,6 @@ void Player::RemoveItem(uint8 bag, uint8 slot, bool update)
                     }
                 }
             }
-            // need update known currency
-            else if (slot >= CURRENCYTOKEN_SLOT_START && slot < CURRENCYTOKEN_SLOT_END)
-                UpdateKnownCurrencies(pItem->GetEntry(), false);
 
             m_items[slot] = NULL;
             SetUInt64Value(PLAYER_FIELD_INV_SLOT_HEAD + (slot * 2), 0);
@@ -11892,9 +11902,6 @@ void Player::DestroyItem(uint8 bag, uint8 slot, bool update)
                 // equipment visual show
                 SetVisibleItemSlot(slot, NULL);
             }
-            // need update known currency
-            else if (slot >= CURRENCYTOKEN_SLOT_START && slot < CURRENCYTOKEN_SLOT_END)
-                UpdateKnownCurrencies(pItem->GetEntry(), false);
 
             m_items[slot] = NULL;
         }
@@ -15937,7 +15944,7 @@ bool Player::LoadFromDB(uint32 guid, SqlQueryHolder *holder)
     if (arena_currency > sWorld.getConfig(CONFIG_MAX_ARENA_POINTS))
         arena_currency = sWorld.getConfig(CONFIG_MAX_ARENA_POINTS);
 
-    SetUInt32Value(PLAYER_FIELD_ARENA_CURRENCY, arena_currency);
+    SetArenaPoints(arena_currency);
 
     // check arena teams integrity
     for (uint32 arena_slot = 0; arena_slot < MAX_ARENA_SLOT; ++arena_slot)
@@ -15955,7 +15962,7 @@ bool Player::LoadFromDB(uint32 guid, SqlQueryHolder *holder)
             SetArenaTeamInfoField(arena_slot, ArenaTeamInfoType(j), 0);
     }
 
-    SetUInt32Value(PLAYER_FIELD_HONOR_CURRENCY, fields[40].GetUInt32());
+    SetHonorPoints(fields[40].GetUInt32());
     SetUInt32Value(PLAYER_FIELD_TODAY_CONTRIBUTION, fields[41].GetUInt32());
     SetUInt32Value(PLAYER_FIELD_YESTERDAY_CONTRIBUTION, fields[42].GetUInt32());
     SetUInt32Value(PLAYER_FIELD_LIFETIME_HONORABLE_KILLS, fields[43].GetUInt32());
@@ -18570,35 +18577,29 @@ void Player::BuildPlayerChat(WorldPacket *data, uint8 msgtype, const std::string
 
 void Player::Say(const std::string& text, const uint32 language)
 {
+    sScriptMgr.OnPlayerChat(this, CHAT_MSG_SAY, language, text);
+
     WorldPacket data(SMSG_MESSAGECHAT, 200);
     BuildPlayerChat(&data, CHAT_MSG_SAY, text, language);
     SendMessageToSetInRange(&data,sWorld.getConfig(CONFIG_LISTEN_RANGE_SAY),true);
-
-    if (sWorld.getConfig(CONFIG_CHATLOG_PUBLIC))
-        sLog.outChat("[SAY] Player %s says (language %u): %s",
-            GetName(), language, text.c_str());
 }
 
 void Player::Yell(const std::string& text, const uint32 language)
 {
+    sScriptMgr.OnPlayerChat(this, CHAT_MSG_YELL, language, text);
+
     WorldPacket data(SMSG_MESSAGECHAT, 200);
     BuildPlayerChat(&data, CHAT_MSG_YELL, text, language);
     SendMessageToSetInRange(&data,sWorld.getConfig(CONFIG_LISTEN_RANGE_YELL),true);
-
-    if (sWorld.getConfig(CONFIG_CHATLOG_PUBLIC))
-        sLog.outChat("[YELL] Player %s yells (language %u): %s",
-            GetName(), language, text.c_str());
 }
 
 void Player::TextEmote(const std::string& text)
 {
+    sScriptMgr.OnPlayerChat(this, CHAT_MSG_EMOTE, LANG_UNIVERSAL, text);
+
     WorldPacket data(SMSG_MESSAGECHAT, 200);
     BuildPlayerChat(&data, CHAT_MSG_EMOTE, text, LANG_UNIVERSAL);
     SendMessageToSetInRange(&data,sWorld.getConfig(CONFIG_LISTEN_RANGE_TEXTEMOTE),true, !sWorld.getConfig(CONFIG_ALLOW_TWO_SIDE_INTERACTION_CHAT));
-
-    if (sWorld.getConfig(CONFIG_CHATLOG_PUBLIC))
-        sLog.outChat("[TEXTEMOTE] Player %s emotes: %s",
-            GetName(), text.c_str());
 }
 
 void Player::Whisper(const std::string& text, uint32 language,uint64 receiver)
@@ -18608,9 +18609,7 @@ void Player::Whisper(const std::string& text, uint32 language,uint64 receiver)
 
     Player *rPlayer = sObjectMgr.GetPlayer(receiver);
 
-    if (sWorld.getConfig(CONFIG_CHATLOG_WHISPER))
-        sLog.outChat("[WHISPER] Player %s tells %s: %s",
-            GetName(), rPlayer->GetName(), text.c_str());
+    sScriptMgr.OnPlayerChat(this, CHAT_MSG_WHISPER, language, text, rPlayer);
 
     // when player you are whispering to is dnd, he cannot receive your message, unless you are in gm mode
     if (!rPlayer->isDND() || isGameMaster())
@@ -19561,6 +19560,68 @@ void Player::InitDisplayIds()
     }
 }
 
+inline bool Player::_StoreOrEquipNewItem(uint32 vendorslot, uint32 item, uint8 count, uint8 bag, uint8 slot, int32 price, ItemPrototype const *pProto, Creature *pVendor, VendorItem const* crItem, bool bStore)
+{
+    ItemPosCountVec vDest;
+    uint16 uiDest;
+    uint8 msg = bStore ? 
+        CanStoreNewItem(bag, slot, vDest, item, pProto->BuyCount * count) :
+        CanEquipNewItem(slot, uiDest, item, false);
+    if (msg != EQUIP_ERR_OK)
+    {
+        SendEquipError(msg, NULL, NULL, item);
+        return false;
+    }
+
+    ModifyMoney(-price);
+
+    if (crItem->ExtendedCost)                            // case for new honor system
+    {
+        ItemExtendedCostEntry const* iece = sItemExtendedCostStore.LookupEntry(crItem->ExtendedCost);
+        if (iece->reqhonorpoints)
+            ModifyHonorPoints(- int32(iece->reqhonorpoints * count));
+
+        if (iece->reqarenapoints)
+            ModifyArenaPoints(- int32(iece->reqarenapoints * count));
+
+        for (uint8 i = 0; i < 5; ++i)
+        {
+            if (iece->reqitem[i])
+                DestroyItemCount(iece->reqitem[i], (iece->reqitemcount[i] * count), true);
+        }
+    }
+
+    Item* it = bStore ?
+        StoreNewItem(vDest, item, true) :
+        EquipNewItem(uiDest, item, true);
+    if (it)
+    {
+        uint32 new_count = pVendor->UpdateVendorItemCurrentCount(crItem,pProto->BuyCount * count);
+
+        WorldPacket data(SMSG_BUY_ITEM, (8+4+4+4));
+        data << uint64(pVendor->GetGUID());
+        data << uint32(vendorslot + 1);                   // numbered from 1 at client
+        data << int32(crItem->maxcount > 0 ? new_count : 0xFFFFFFFF);
+        data << uint32(count);
+        GetSession()->SendPacket(&data);
+        SendNewItem(it, pProto->BuyCount * count, true, false, false);
+
+        if (!bStore)
+            AutoUnequipOffhandIfNeed();
+
+        if (pProto->Flags & ITEM_PROTO_FLAG_REFUNDABLE && crItem->ExtendedCost && pProto->GetMaxStackSize() == 1)
+        {
+            it->SetFlag(ITEM_FIELD_FLAGS, ITEM_FLAG_REFUNDABLE);
+            it->SetRefundRecipient(GetGUIDLow());
+            it->SetPaidMoney(price);
+            it->SetPaidExtendedCost(crItem->ExtendedCost);
+            it->SaveRefundDataToDB();
+            AddRefundReference(it->GetGUIDLow());
+        }
+    }
+    return true;
+}
+
 // Return true is the bought item has a max count to force refresh of window by caller
 bool Player::BuyItemFromVendorSlot(uint64 vendorguid, uint32 vendorslot, uint32 item, uint8 count, uint8 bag, uint8 slot)
 {
@@ -19598,13 +19659,13 @@ bool Player::BuyItemFromVendorSlot(uint64 vendorguid, uint32 vendorslot, uint32 
 
     if (vendorslot >= vItems->GetItemCount())
     {
-        SendBuyError( BUY_ERR_CANT_FIND_ITEM, pCreature, item, 0);
+        SendBuyError(BUY_ERR_CANT_FIND_ITEM, pCreature, item, 0);
         return false;
     }
 
     VendorItem const* crItem = vItems->GetItem(vendorslot);
     // store diff item (cheating)
-    if(!crItem || crItem->item != item)
+    if (!crItem || crItem->item != item)
     {
         SendBuyError(BUY_ERR_CANT_FIND_ITEM, pCreature, item, 0);
         return false;
@@ -19682,54 +19743,8 @@ bool Player::BuyItemFromVendorSlot(uint64 vendorguid, uint32 vendorslot, uint32 
 
     if ((bag == NULL_BAG && slot == NULL_SLOT) || IsInventoryPos(bag, slot))
     {
-        ItemPosCountVec dest;
-        uint8 msg = CanStoreNewItem(bag, slot, dest, item, pProto->BuyCount * count);
-        if (msg != EQUIP_ERR_OK)
-        {
-            SendEquipError(msg, NULL, NULL, item);
+        if (!_StoreOrEquipNewItem(vendorslot, item, count, bag, slot, price, pProto, pCreature, crItem, true))
             return false;
-        }
-
-        ModifyMoney(-(int32)price);
-
-        if (crItem->ExtendedCost)                            // case for new honor system
-        {
-            ItemExtendedCostEntry const* iece = sItemExtendedCostStore.LookupEntry(crItem->ExtendedCost);
-            if (iece->reqhonorpoints)
-                ModifyHonorPoints(- int32(iece->reqhonorpoints * count));
-
-            if (iece->reqarenapoints)
-                ModifyArenaPoints(- int32(iece->reqarenapoints * count));
-
-            for (uint8 i = 0; i < 5; ++i)
-            {
-                if (iece->reqitem[i])
-                    DestroyItemCount(iece->reqitem[i], (iece->reqitemcount[i] * count), true);
-            }
-        }
-
-        if (Item *it = StoreNewItem(dest, item, true))
-        {
-            uint32 new_count = pCreature->UpdateVendorItemCurrentCount(crItem,pProto->BuyCount * count);
-
-            WorldPacket data(SMSG_BUY_ITEM, (8+4+4+4));
-            data << uint64(pCreature->GetGUID());
-            data << uint32(vendorslot+1);                   // numbered from 1 at client
-            data << int32(crItem->maxcount > 0 ? new_count : 0xFFFFFFFF);
-            data << uint32(count);
-            GetSession()->SendPacket(&data);
-            SendNewItem(it, pProto->BuyCount*count, true, false, false);
-
-            if (pProto->Flags & ITEM_PROTO_FLAG_REFUNDABLE && crItem->ExtendedCost && pProto->GetMaxStackSize() == 1)
-            {
-                it->SetFlag(ITEM_FIELD_FLAGS, ITEM_FLAG_REFUNDABLE);
-                it->SetRefundRecipient(GetGUIDLow());
-                it->SetPaidMoney(price);
-                it->SetPaidExtendedCost(crItem->ExtendedCost);
-                it->SaveRefundDataToDB();
-                AddRefundReference(it->GetGUIDLow());
-            }
-        }
     }
     else if (IsEquipmentPos(bag, slot))
     {
@@ -19738,57 +19753,8 @@ bool Player::BuyItemFromVendorSlot(uint64 vendorguid, uint32 vendorslot, uint32 
             SendEquipError(EQUIP_ERR_ITEM_CANT_BE_EQUIPPED, NULL, NULL);
             return false;
         }
-
-        uint16 dest;
-        uint8 msg = CanEquipNewItem(slot, dest, item, false);
-        if (msg != EQUIP_ERR_OK)
-        {
-            SendEquipError(msg, NULL, NULL, item);
+        if (!_StoreOrEquipNewItem(vendorslot, item, count, bag, slot, price, pProto, pCreature, crItem, false))
             return false;
-        }
-
-        ModifyMoney(-(int32)price);
-        if (crItem->ExtendedCost)                            // case for new honor system
-        {
-            ItemExtendedCostEntry const* iece = sItemExtendedCostStore.LookupEntry(crItem->ExtendedCost);
-            if (iece->reqhonorpoints)
-                ModifyHonorPoints(- int32(iece->reqhonorpoints * count));
-
-            if (iece->reqarenapoints)
-                ModifyArenaPoints(- int32(iece->reqarenapoints * count));
-
-            for (uint8 i = 0; i < 5; ++i)
-            {
-                if (iece->reqitem[i])
-                    DestroyItemCount(iece->reqitem[i], iece->reqitemcount[i] * count, true);
-            }
-        }
-
-        if (Item *it = EquipNewItem(dest, item, true))
-        {
-            uint32 new_count = pCreature->UpdateVendorItemCurrentCount(crItem,pProto->BuyCount * count);
-
-            WorldPacket data(SMSG_BUY_ITEM, (8+4+4+4));
-            data << uint64(pCreature->GetGUID());
-            data << uint32(vendorslot + 1);                 // numbered from 1 at client
-            data << int32(crItem->maxcount > 0 ? new_count : 0xFFFFFFFF);
-            data << uint32(count);
-            GetSession()->SendPacket(&data);
-
-            SendNewItem(it, pProto->BuyCount*count, true, false, false);
-
-            AutoUnequipOffhandIfNeed();
-
-            if (pProto->Flags & ITEM_PROTO_FLAG_REFUNDABLE && crItem->ExtendedCost && pProto->GetMaxStackSize() == 1)
-            {
-                it->SetFlag(ITEM_FIELD_FLAGS, ITEM_FLAG_REFUNDABLE);
-                it->SetRefundRecipient(GetGUIDLow());
-                it->SetPaidMoney(price);
-                it->SetPaidExtendedCost(crItem->ExtendedCost);
-                it->SaveRefundDataToDB();
-                AddRefundReference(it->GetGUIDLow());
-            }
-        }
     }
     else
     {
@@ -20700,6 +20666,28 @@ void Player::UpdateVisibilityForPlayer()
 void Player::InitPrimaryProfessions()
 {
     SetFreePrimaryProfessions(sWorld.getConfig(CONFIG_MAX_PRIMARY_TRADE_SKILL));
+}
+
+void Player::ModifyMoney(int32 d)
+{
+    sScriptMgr.OnPlayerMoneyChanged(this, d);
+
+    if (d < 0)
+        SetMoney (GetMoney() > uint32(-d) ? GetMoney() + d : 0);
+    else
+    {
+        uint32 newAmount = 0;
+        if (GetMoney() < uint32(MAX_MONEY_AMOUNT - d))
+            newAmount = GetMoney() + d;
+        else
+        {
+            // "At Gold Limit"
+            newAmount = MAX_MONEY_AMOUNT;
+            if (d)
+                SendEquipError(EQUIP_ERR_TOO_MUCH_GOLD, NULL, NULL);
+        }
+        SetMoney (newAmount);
+    }
 }
 
 Unit * Player::GetSelectedUnit() const
@@ -23115,15 +23103,10 @@ void Player::LearnPetTalent(uint64 petGuid, uint32 talentId, uint32 talentRank)
     pet->SetFreeTalentPoints(CurTalentPoints - (talentRank - curtalent_maxrank + 1));
 }
 
-void Player::UpdateKnownCurrencies(uint32 itemId, bool apply)
+void Player::AddKnownCurrency(uint32 itemId)
 {
     if (CurrencyTypesEntry const* ctEntry = sCurrencyTypesStore.LookupEntry(itemId))
-    {
-        if (apply)
-            SetFlag64(PLAYER_FIELD_KNOWN_CURRENCIES,(1LL << (ctEntry->BitIndex-1)));
-        else
-            RemoveFlag64(PLAYER_FIELD_KNOWN_CURRENCIES,(1LL << (ctEntry->BitIndex-1)));
-    }
+        SetFlag64(PLAYER_FIELD_KNOWN_CURRENCIES, (1LL << (ctEntry->BitIndex-1)));
 }
 
 void Player::UpdateFallInformationIfNeed(MovementInfo const& minfo,uint16 opcode)

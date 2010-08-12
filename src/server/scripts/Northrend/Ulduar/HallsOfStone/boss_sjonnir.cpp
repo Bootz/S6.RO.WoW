@@ -87,7 +87,7 @@ class boss_sjonnir : public CreatureScript
 public:
     boss_sjonnir() : CreatureScript("boss_sjonnir") { }
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new boss_sjonnirAI (pCreature);
     }
@@ -96,7 +96,7 @@ public:
     {
         boss_sjonnirAI(Creature *c) : ScriptedAI(c), lSummons(me)
         {
-            pInstance = c->GetInstanceData();
+            pInstance = c->GetInstanceScript();
         }
 
         bool bIsFrenzy;
@@ -112,7 +112,7 @@ public:
 
         SummonList lSummons;
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
 
         void Reset()
         {
@@ -133,7 +133,7 @@ public:
                 pInstance->SetData(DATA_SJONNIR_EVENT, NOT_STARTED);
         }
 
-        void EnterCombat(Unit* who)
+        void EnterCombat(Unit* /*who*/)
         {
             DoScriptText(SAY_AGGRO, me);
 
@@ -218,7 +218,7 @@ public:
             lSummons.Summon(summon);
         }
 
-        void JustDied(Unit* killer)
+        void JustDied(Unit* /*killer*/)
         {
             DoScriptText(SAY_DEATH, me);
             lSummons.DespawnAll();
@@ -230,7 +230,7 @@ public:
                     pInstance->DoCompleteAchievement(ACHIEV_ABUSE_THE_OOZE);
             }
         }
-        void KilledUnit(Unit *victim)
+        void KilledUnit(Unit * victim)
         {
             if (victim == me)
                 return;
@@ -251,7 +251,7 @@ class mob_malformed_ooze : public CreatureScript
 public:
     mob_malformed_ooze() : CreatureScript("mob_malformed_ooze") { }
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new mob_malformed_oozeAI(pCreature);
     }
@@ -295,7 +295,7 @@ class mob_iron_sludge : public CreatureScript
 public:
     mob_iron_sludge() : CreatureScript("mob_iron_sludge") { }
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new mob_iron_sludgeAI(pCreature);
     }
@@ -304,16 +304,16 @@ public:
     {
         mob_iron_sludgeAI(Creature *c) : ScriptedAI(c)
         {
-            pInstance = c->GetInstanceData();
+            pInstance = c->GetInstanceScript();
         }
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
 
-        void JustDied(Unit* pKiller)
+        void JustDied(Unit* /*pKiller*/)
         {
             if (pInstance)
                 if (Creature* pSjonnir = Unit::GetCreature(*me, pInstance->GetData64(DATA_SJONNIR)))
-                    CAST_AI(boss_sjonnirAI, pSjonnir->AI())->KilledIronSludge();
+                    CAST_AI(boss_sjonnir::boss_sjonnirAI, pSjonnir->AI())->KilledIronSludge();
         }
     };
 

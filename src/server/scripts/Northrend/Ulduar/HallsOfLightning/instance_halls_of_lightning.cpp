@@ -38,14 +38,14 @@ class instance_halls_of_lightning : public InstanceMapScript
 public:
     instance_halls_of_lightning() : InstanceMapScript("instance_halls_of_lightning", 602) { }
 
-    InstanceData* GetInstanceData_InstanceMapScript(Map* pMap)
+    InstanceScript* GetInstanceScript(InstanceMap* pMap) const
     {
         return new instance_halls_of_lightning_InstanceMapScript(pMap);
     }
 
-    struct instance_halls_of_lightning_InstanceMapScript : public ScriptedInstance
+    struct instance_halls_of_lightning_InstanceMapScript : public InstanceScript
     {
-        instance_halls_of_lightning_InstanceMapScript(Map* pMap) : ScriptedInstance(pMap) {Initialize();};
+        instance_halls_of_lightning_InstanceMapScript(Map* pMap) : InstanceScript(pMap) {Initialize();};
 
         uint32 m_auiEncounter[MAX_ENCOUNTER];
 
@@ -76,7 +76,7 @@ public:
             m_uiLokenGlobeGUID       = 0;
         }
 
-        void OnCreatureCreate(Creature* pCreature, bool add)
+        void OnCreatureCreate(Creature* pCreature, bool /*add*/)
         {
             switch(pCreature->GetEntry())
             {
@@ -95,7 +95,7 @@ public:
             }
         }
 
-        void OnGameObjectCreate(GameObject* pGo, bool add)
+        void OnGameObjectCreate(GameObject* pGo, bool /*add*/)
         {
             switch(pGo->GetEntry())
             {

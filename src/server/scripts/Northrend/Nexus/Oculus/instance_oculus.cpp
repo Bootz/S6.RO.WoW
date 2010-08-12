@@ -18,7 +18,7 @@
 #include "ScriptPCH.h"
 #include "oculus.h"
 
-#define MAX_ENCOUNTER 5
+#define MAX_ENCOUNTER 4
 
 /* The Occulus encounters:
 0 - Drakos the Interrogator
@@ -26,71 +26,38 @@
 2 - Mage-Lord Urom
 3 - Ley-Guardian Eregos */
 
-struct Locations {
-	float x,y,z,o;
-};
-
-static Locations BossMoveLoc[]=
-{
-    {951.233337, 1034.698608, 359.967377, 1.119904}, // Verdisa
-	{943.559143, 1045.573730, 359.967377, 0.365921}, // Belgar
-    {944.670776, 1058.858032, 359.967377, 5.639870}  // Eternos
-};
-class instance_oculus : public InstanceMapScript
+class instance_oculus : public InstanceMapScript
 {
 public:
-    instance_oculus() : InstanceMapScript("instance_oculus") { }
+    instance_oculus() : InstanceMapScript("instance_oculus", 578) { }
 
-    InstanceData* GetInstanceData_InstanceMapScript(Map* pMap)
+    InstanceScript* GetInstanceScript(InstanceMap* pMap) const
     {
         return new instance_oculus_InstanceMapScript(pMap);
     }
 
-    struct instance_oculus_InstanceMapScript : public ScriptedInstance
+    struct instance_oculus_InstanceMapScript : public InstanceScript
     {
-        instance_oculus_InstanceMapScript(Map* pMap) : ScriptedInstance(pMap) {Initialize();};
+        instance_oculus_InstanceMapScript(Map* pMap) : InstanceScript(pMap) {Initialize();};
 
         uint64 uiDrakos;
         uint64 uiVaros;
         uint64 uiUrom;
         uint64 uiEregos;
-    	uint64 uiBera;
-    	uint64 uiVerdisa;
-    	uint64 uiEternos;
 
+        uint8 uiPlataformUrom;
 
         uint8 m_auiEncounter[MAX_ENCOUNTER];
         std::string str_data;
 
-    	void Initialize()
-        {		
-            memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
-    		uiDrakos = 0;
-    		uiVaros = 0;
-    		uiUrom = 0;
-    		uiEregos = 0;
-    		uiBera = 0;
-    		uiVerdisa = 0;
-    		uiEternos = 0;
-        }
+        std::list<uint64> GameObjectList;
 
-    	std::list<uint64> GameObjectList;
-
-    	void OnGameObjectCreate(GameObject* pGO, bool bAdd)
+        void Initialize()
         {
-            if (pGO->GetEntry() == GO_DRAGON_CAGE_DOOR)
-            {
-                if (DATA_DRAKOS_EVENT == DONE)
-                    pGO->SetGoState(GO_STATE_ACTIVE);
-                else
-                    pGO->SetGoState(GO_STATE_READY);
-        
-                GameObjectList.push_back(pGO->GetGUID());
-            }
+            uiPlataformUrom = 0;
         }
 
-
-        void OnCreatureCreate(Creature* pCreature, bool add)
+        void OnCreatureCreate(Creature* pCreature, bool /*add*/)
         {
             switch(pCreature->GetEntry())
             {
@@ -105,24 +72,20 @@ public:
                     break;
                 case CREATURE_EREGOS:
                     uiEregos = pCreature->GetGUID();
-    				pCreature->SetUnitMovementFlags(MOVEMENTFLAG_FLYING);
-    				break;
-    			case CREATURE_AZURE_GUARDIAN:
-    				pCreature->SetUnitMovementFlags(MOVEMENTFLAG_FLYING);
                     break;
-    			case NPC_BELGARISTRASZ:
-    				uiBera = pCreature->GetGUID();
-    				pCreature->SetReactState(REACT_PASSIVE);
-    				break;
-    			case NPC_VERDISA:
-    				uiVerdisa = pCreature->GetGUID();
-    				pCreature->SetReactState(REACT_PASSIVE);
-    				break;
-    			case NPC_ETERNOS :
-    				uiEternos = pCreature->GetGUID();
-    				pCreature->SetReactState(REACT_PASSIVE);
-    				break;
-    			break;	
+            }
+        }
+
+        void OnGameObjectCreate(GameObject* pGO, bool bAdd)
+        {
+            if (pGO->GetEntry() == GO_DRAGON_CAGE_DOOR)
+            {
+                if (DATA_DRAKOS_EVENT == DONE)
+                    pGO->SetGoState(GO_STATE_ACTIVE);
+                else
+                    pGO->SetGoState(GO_STATE_READY);
+
+                GameObjectList.push_back(pGO->GetGUID());
             }
         }
 
@@ -132,37 +95,8 @@ public:
             {
                 case DATA_DRAKOS_EVENT:
                     m_auiEncounter[0] = data;
-    				if (data == DONE)
-    				{
+                    if (data == DONE)
                         OpenCageDoors();
-    					if(uiBera)
-    						{
-    							Creature* pBera = instance->GetCreature(uiBera);
-    							if(pBera)
-    							{
-    								pBera->SetUnitMovementFlags(MOVEMENTFLAG_WALKING);
-    								pBera->GetMotionMaster()->MovePoint(1,BossMoveLoc[1].x,BossMoveLoc[1].y,BossMoveLoc[1].z);
-    							}
-    						}
-    						if(uiVerdisa)
-    						{
-    							Creature* pVerdisa = instance->GetCreature(uiVerdisa);
-    							if(pVerdisa)
-    							{
-    								pVerdisa->SetUnitMovementFlags(MOVEMENTFLAG_WALKING);
-    								pVerdisa->GetMotionMaster()->MovePoint(2,BossMoveLoc[0].x,BossMoveLoc[0].y,BossMoveLoc[0].z);
-    							}
-    						}
-    						if(uiEternos)
-    						{
-    							Creature* pEternos = instance->GetCreature(uiEternos);
-    							if(pEternos)
-    							{
-    								pEternos->SetUnitMovementFlags(MOVEMENTFLAG_WALKING);
-    								pEternos->GetMotionMaster()->MovePoint(3,BossMoveLoc[2].x,BossMoveLoc[2].y,BossMoveLoc[2].z);
-    							}
-    						}
-    				}
                     break;
                 case DATA_VAROS_EVENT:
                     m_auiEncounter[1] = data;
@@ -172,19 +106,10 @@ public:
                     break;
                 case DATA_EREGOS_EVENT:
                     m_auiEncounter[3] = data;
-    				if(data == DONE)
-    				{
-    					Creature* pBera =  instance->GetCreature(uiBera);
-    					if (pBera)
-                        {
-                            pBera->SummonGameObject(instance->IsHeroic()? GO_CACHE_OF_ERAGOS_H : GO_CACHE_OF_ERAGOS,1017.197632,1051.705078,605.625916,0.054135,0, 0, 0, 0,90000000);
-                        }
-    				}
                     break;
-    			case DATA_CENTRIFUGE_CONSTRUCT_EVENT:
-    				m_auiEncounter[4] = data;
-    				break;
-
+                case DATA_UROM_PLATAFORM:
+                    uiPlataformUrom = data;
+                    break;
             }
 
             if (data == DONE)
@@ -199,7 +124,7 @@ public:
                 case DATA_VAROS_EVENT:                 return m_auiEncounter[1];
                 case DATA_UROM_EVENT:                  return m_auiEncounter[2];
                 case DATA_EREGOS_EVENT:                return m_auiEncounter[3];
-    			case DATA_CENTRIFUGE_CONSTRUCT_EVENT:  return m_auiEncounter[4];;
+                case DATA_UROM_PLATAFORM:              return uiPlataformUrom;
             }
 
             return 0;
@@ -218,7 +143,7 @@ public:
             return 0;
         }
 
-    	void OpenCageDoors()
+        void OpenCageDoors()
         {
             if (GameObjectList.empty())
                 return;
@@ -230,14 +155,12 @@ public:
             }
         }
 
-
-
         std::string GetSaveData()
         {
             OUT_SAVE_INST_DATA;
 
             std::ostringstream saveStream;
-            saveStream << "T O " << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2] << " " << m_auiEncounter[3] << " " << m_auiEncounter[4];
+            saveStream << "T O " << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2] << " " << m_auiEncounter[3];
 
             str_data = saveStream.str();
 
@@ -256,10 +179,10 @@ public:
             OUT_LOAD_INST_DATA(in);
 
             char dataHead1, dataHead2;
-            uint16 data0, data1, data2, data3, data4;
+            uint16 data0, data1, data2, data3;
 
             std::istringstream loadStream(in);
-            loadStream >> dataHead1 >> dataHead2 >> data0 >> data1 >> data2 >> data3 >> data4;
+            loadStream >> dataHead1 >> dataHead2 >> data0 >> data1 >> data2 >> data3;
 
             if (dataHead1 == 'T' && dataHead2 == 'O')
             {
@@ -267,7 +190,6 @@ public:
                 m_auiEncounter[1] = data1;
                 m_auiEncounter[2] = data2;
                 m_auiEncounter[3] = data3;
-    			m_auiEncounter[4] = data4;
 
                 for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
                     if (m_auiEncounter[i] == IN_PROGRESS)

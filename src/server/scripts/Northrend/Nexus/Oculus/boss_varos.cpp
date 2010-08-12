@@ -23,15 +23,13 @@ enum Spells
     SPELL_ENERGIZE_CORES                          = 50785, //Damage 5938 to 6562, effec2 Triggers 54069, effect3 Triggers 56251
     SPELL_ENERGIZE_CORES_TRIGGER_1                = 54069,
     SPELL_ENERGIZE_CORES_TRIGGER_2                = 56251,
-    H_SPELL_ENERGIZE_CORES                        = 59372, //Damage 9025 to 9975, effect2 Triggers 54069, effect 56251
+    SPELL_ENERGIZE_CORES_2                        = 59372, //Damage 9025 to 9975, effect2 Triggers 54069, effect 56251
     SPELL_CALL_AZURE_RING_CAPTAIN                 = 51002, //Effect    Send Event (12229)
     SPELL_CALL_AZURE_RING_CAPTAIN_2               = 51006, //Effect    Send Event (10665)
     SPELL_CALL_AZURE_RING_CAPTAIN_3               = 51007, //Effect    Send Event (18454)
     SPELL_CALL_AZURE_RING_CAPTAIN_4               = 51008, //Effect    Send Event (18455)
     SPELL_CALL_AMPLIFY_MAGIC                      = 51054,
-    SPELL_CALL_AMPLIFY_MAGIC_2                    = 59371,
-	SPELL_ARCANE_SHIELD                           = 53813,
-	SPELL_PARACHUTE								  = 61243
+    SPELL_CALL_AMPLIFY_MAGIC_2                    = 59371
 };
 //not in db
 enum Yells
@@ -51,7 +49,7 @@ class boss_varos : public CreatureScript
 public:
     boss_varos() : CreatureScript("boss_varos") { }
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new boss_varosAI (pCreature);
     }
@@ -60,90 +58,41 @@ public:
     {
         boss_varosAI(Creature *c) : ScriptedAI(c)
         {
-            pInstance = c->GetInstanceData();
+            pInstance = c->GetInstanceScript();
         }
 
-        ScriptedInstance* pInstance;
-    	bool started,JiustYell;
-    	uint32 uiEnergizeCore_Timer;
+        InstanceScript* pInstance;
 
         void Reset()
         {
             if (pInstance)
                 pInstance->SetData(DATA_VAROS_EVENT, NOT_STARTED);
-    		me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
-            me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-            me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-    		DoCast(SPELL_ARCANE_SHIELD);
-    		uiEnergizeCore_Timer = 10000;
-    		me->SetReactState(REACT_PASSIVE);
-    		started = false;
-    		JiustYell = false;
         }
-        void EnterCombat(Unit* who)
+        void EnterCombat(Unit* /*who*/)
         {
             DoScriptText(SAY_AGGRO, me);
 
             if (pInstance)
                 pInstance->SetData(DATA_VAROS_EVENT, IN_PROGRESS);
         }
-
-    	void UpdateAI(const uint32 diff)
+        void AttackStart(Unit* /*who*/) {}
+        void MoveInLineOfSight(Unit* /*who*/) {}
+        void UpdateAI(const uint32 /*diff*/)
         {
-    		if(!pInstance)
-    			return;
-
-    		if(!JiustYell && pInstance->GetData(DATA_DRAKOS_EVENT) == DONE)
-    		{
-    			DoScriptText(SAY_SPAWN, me);
-    			JiustYell = true;
-    		}
-    		if(!started && pInstance->GetData(DATA_CENTRIFUGE_CONSTRUCT_EVENT) == 10)
-    		{
-    			me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
-    			me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-    			me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-    			me->RemoveAllAuras();
-    			me->SetReactState(REACT_AGGRESSIVE);
-    			started=true;
-    		}
             //Return since we have no target
-    		if (!started || !UpdateVictim())
+            if (!UpdateVictim())
                 return;
 
-    		if(uiEnergizeCore_Timer <= diff)
-    		{
-    			DoCast(me->getVictim(),SPELL_ENERGIZE_CORES);
-    			uiEnergizeCore_Timer = 10000;
-    		} else uiEnergizeCore_Timer -= diff;
-
             DoMeleeAttackIfReady();
-
-    		std::list<HostileReference*>& m_threatlist = me->getThreatManager().getThreatList();
-            std::list<HostileReference*>::const_iterator i = m_threatlist.begin();
-            for (i = m_threatlist.begin(); i!= m_threatlist.end(); ++i)
-            {
-                Unit* pUnit = Unit::GetUnit((*me), (*i)->getUnitGuid());
-    			if (pUnit && (pUnit->GetTypeId() == TYPEID_PLAYER) )
-                {
-    				Vehicle* v = pUnit->GetVehicle();
-    				if(v)
-    				{
-    					pUnit->ExitVehicle();
-    					v->Dismiss();
-    					DoCast(pUnit,SPELL_PARACHUTE);					
-    				}
-                }
-            }
         }
-        void JustDied(Unit* killer)
+        void JustDied(Unit* /*killer*/)
         {
             DoScriptText(SAY_DEATH, me);
 
             if (pInstance)
                 pInstance->SetData(DATA_VAROS_EVENT, DONE);
         }
-        void KilledUnit(Unit *victim)
+        void KilledUnit(Unit * victim)
         {
             if (victim == me)
                 return;

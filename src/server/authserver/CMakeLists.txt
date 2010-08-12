@@ -25,6 +25,7 @@ set(authserver_SRCS
 if( WIN32 )
 set(authserver_SRCS
     ${authserver_SRCS}
+    ${sources_Debugging}
     authserver.rc
 )
 endif()
@@ -97,4 +98,7 @@ endif()
 if( UNIX )
   install(TARGETS authserver DESTINATION bin)
   install(FILES  authserver.conf.dist DESTINATION etc)
+elseif( WIN32 )
+  install(TARGETS authserver DESTINATION "${CMAKE_INSTALL_PREFIX}")
+  install(FILES authserver.conf.dist DESTINATION "${CMAKE_INSTALL_PREFIX}")
 endif()

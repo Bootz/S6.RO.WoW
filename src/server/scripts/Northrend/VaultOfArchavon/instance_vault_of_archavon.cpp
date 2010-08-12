@@ -32,9 +32,9 @@ class instance_archavon : public InstanceMapScript
 public:
     instance_archavon() : InstanceMapScript("instance_archavon", 624) { }
 
-    InstanceScript* GetInstanceData_InstanceMapScript(Map* map)
+    InstanceScript* GetInstanceScript(InstanceMap* pMap) const
     {
-        return new instance_archavon_InstanceMapScript(map);
+        return new instance_archavon_InstanceMapScript(pMap);
     }
 
     struct instance_archavon_InstanceMapScript : public InstanceScript

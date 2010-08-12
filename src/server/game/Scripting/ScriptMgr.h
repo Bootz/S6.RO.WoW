@@ -652,6 +652,56 @@ class AchievementCriteriaScript : public ScriptObject
         virtual bool OnCheck(Player* source, Unit* target) = 0;
 };
 
+class PlayerScript : public ScriptObject
+{
+protected:
+    PlayerScript(const char* name);
+
+public:
+    bool IsDatabaseBound() const { return false; }
+
+    // Called when a player kills another player
+    virtual void OnPVPKill(Player *killer, Player *killed) { }
+
+    // Called when a player kills a creature
+    virtual void OnCreatureKill(Player *killer, Creature *killed) { }
+
+    // Called when a player is killed by a creature
+    virtual void OnPlayerKilledByCreature(Creature *killer, Player *killed) { }
+
+    // Called when a player's level changes (right before the level is applied)
+    virtual void OnLevelChanged(Player *player, uint8 newLevel) { }
+
+    // Called when a player's free talent points change (right before the change is applied)
+    virtual void OnFreeTalentPointsChanged(Player *player, uint32 points) { }
+
+    // Called when a player's talent points are reset (right before the reset is done)
+    virtual void OnTalentsReset(Player *player, bool no_cost) { }
+
+    // Called when a player's money is modified (before the modification is done)
+    virtual void OnMoneyChanged(Player *player, int32& amount) { }
+
+    // Called when a player gains XP (before anything is given)
+    virtual void OnGiveXP(Player *player, uint32& amount, Unit *victim) { }
+
+    // Called when a player's reputation changes (before it is actually changed)
+    virtual void OnReputationChange(Player *player, uint32 factionID, int32& standing, bool incremental) { }
+
+    // Called when a player sends a chat message. param depends on the chat type:
+    // CHAT_MSG_WHISPER - Player*: receiver;
+    // CHAT_MSG_PARTY, CHAT_MSG_PARTY_LEADER - Group*: group of player;
+    // CHAT_MSG_OFFICER, CHAT_MSG_GUILD - Guild*: guild of player;
+    // CHAT_MSG_RAID, CHAT_MSG_RAID_LEADER, CHAT_MSG_RAID_WARNING - Group*: group of player;
+    // CHAT_MSG_BATTLEGROUND, CHAT_MSG_BATTLEGROUND_LEADER - Group*: group of player;
+    // CHAT_MSG_CHANNEL - Channel*: channel player speaks to;
+    // other - NULL.
+    virtual void OnChat(Player* player, uint32 type, uint32 lang, std::string msg, void* param = NULL) { }
+
+    // Both of the below are called on emote opcodes
+    virtual void OnEmote(Player* player, uint32 emote) { }
+    virtual void OnTextEmote(Player* player, uint32 text_emote, uint32 emoteNum, uint64 guid) { }
+};
+
 // Placed here due to ScriptRegistry::AddScript dependency.
 #define sScriptMgr (*ACE_Singleton<ScriptMgr, ACE_Null_Mutex>::instance())
 
@@ -823,6 +873,20 @@ class ScriptMgr
     public: /* AchievementCriteriaScript */
 
         bool OnCriteriaCheck(AchievementCriteriaData const* data, Player* source, Unit* target);
+
+    public: /* PlayerScript */
+        void OnPVPKill(Player *killer, Player *killed);
+        void OnCreatureKill(Player *killer, Creature *killed);
+        void OnPlayerKilledByCreature(Creature *killer, Player *killed);
+        void OnPlayerLevelChanged(Player *player, uint8 newLevel);
+        void OnPlayerFreeTalentPointsChanged(Player *player, uint32 newPoints);
+        void OnPlayerTalentsReset(Player *player, bool no_cost);
+        void OnPlayerMoneyChanged(Player *player, int32& amount);
+        void OnGivePlayerXP(Player *player, uint32& amount, Unit *victim);
+        void OnPlayerReputationChange(Player *player, uint32 factionID, int32& standing, bool incremental);
+        void OnPlayerChat(Player* player, uint32 type, uint32 lang, std::string msg, void* param = NULL);
+        void OnPlayerEmote(Player* player, uint32 emote);
+        void OnPlayerTextEmote(Player* player, uint32 text_emote, uint32 emoteNum, uint64 guid);
 
     public: /* ScriptRegistry */
 

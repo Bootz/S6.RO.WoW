@@ -27,12 +27,15 @@
 enum LFGenum
 {
     LFG_TIME_ROLECHECK       = 2*MINUTE,
+    LFG_TIME_PROPOSAL        = 2*MINUTE,
+    LFG_VOTES_NEEDED         = 3,
     LFG_TANKS_NEEDED         = 1,
     LFG_HEALERS_NEEDED       = 1,
     LFG_DPS_NEEDED           = 3,
     LFG_QUEUEUPDATE_INTERVAL = 15000,
     LFG_SPELL_COOLDOWN       = 71328,
     LFG_SPELL_DESERTER       = 71041,
+    LFG_MAX_KICKS            = 3,
 };
 
 enum LfgType
@@ -45,8 +48,16 @@ enum LfgType
     LFG_TYPE_RANDOM  = 6,
 };
 
+enum LfgProposalState
+{
+    LFG_PROPOSAL_INITIATING = 0,
+    LFG_PROPOSAL_FAILED     = 1,
+    LFG_PROPOSAL_SUCCESS    = 2,
+};
+
 enum LfgGroupType
 {
+    LFG_GROUPTYPE_ALL          = 0,                         // Internal use, represents all groups.
     LFG_GROUPTYPE_CLASSIC      = 1,
     LFG_GROUPTYPE_BC_NORMAL    = 2,
     LFG_GROUPTYPE_BC_HEROIC    = 3,
@@ -72,6 +83,19 @@ enum LfgLockStatusType
     LFG_LOCKSTATUS_QUEST_NOT_COMPLETED       = 1022,
     LFG_LOCKSTATUS_MISSING_ITEM              = 1025,
     LFG_LOCKSTATUS_NOT_IN_SEASON             = 1031,
+};
+
+enum LfgTeleportError
+{
+    //LFG_TELEPORTERROR_UNK1           = 0,                 // No reaction
+    LFG_TELEPORTERROR_PLAYER_DEAD      = 1,
+    LFG_TELEPORTERROR_FALLING          = 2,
+    //LFG_TELEPORTERROR_UNK2           = 3,                 // You can't do that right now
+    LFG_TELEPORTERROR_FATIGUE          = 4,
+    //LFG_TELEPORTERROR_UNK3           = 5,                 // No reaction
+    LFG_TELEPORTERROR_INVALID_LOCATION = 6,
+    //LFG_TELEPORTERROR_UNK4           = 7,                 // You can't do that right now
+    //LFG_TELEPORTERROR_UNK5           = 8,                 // You can't do that right now
 };
 
 enum LfgJoinResult
@@ -107,6 +131,7 @@ enum LfgRoleCheckResult
     LFG_ROLECHECK_NO_ROLE      = 6,                         // Someone selected no role
 };
 
+// TODO: Remove me, will not be needed when Reward moved to quest system
 enum LfgRandomDungeonEntries
 {
     LFG_ALL_DUNGEONS       = 0,
@@ -131,6 +156,13 @@ enum LfgRewardEnums
     LFG_REWARD_LK_NORMAL80 = 7,
     LFG_REWARD_LK_HEROIC   = 8,
     LFG_REWARD_DATA_SIZE   = 10,
+};
+
+enum LfgDungeonStatus
+{
+    LFG_STATUS_SAVED     = 0,
+    LFG_STATUS_NOT_SAVED = 1,
+    LFG_STATUS_COMPLETE  = 2,
 };
 
 const uint32 RewardDungeonData[LFG_REWARD_DATA_SIZE+1][5] =
@@ -182,24 +214,53 @@ struct LfgReward
     uint32 stackCount;
 };
 
-typedef std::set<LfgLockStatus*> LfgLockStatusSet;
-typedef std::vector<LfgReward*> LfgRewardList;
-typedef std::map<uint64, LfgLockStatusSet*> LfgLockStatusMap;
+typedef std::map<uint32, uint8> LfgRolesMap;
+typedef std::map<uint32, int8> LfgAnswerMap;
+typedef std::list<uint64> LfgGuidList;
 typedef std::map<uint32, LfgDungeonSet*> LfgDungeonMap;
-
-typedef std::map<uint64, int8> LfgAnswerMap;
-typedef std::map<uint64, uint8> LfgRolesMap;
-typedef std::set<uint64> LfgGuidSet;
 
 // Stores player or group queue info
 struct LfgQueueInfo
 {
+    LfgQueueInfo(): tanks(LFG_TANKS_NEEDED), healers(LFG_HEALERS_NEEDED), dps(LFG_DPS_NEEDED) {};
     time_t joinTime;                                        // Player queue join time (to calculate wait times)
-    uint32 dungeonId;                                       // Selected Player/Group Dungeon
-    LfgRolesMap roles;                                      // Selected Player Role/s
     uint8 tanks;                                            // Tanks needed
     uint8 healers;                                          // Healers needed
     uint8 dps;                                              // Dps needed
+    LfgDungeonSet dungeons;                                 // Selected Player/Group Dungeon/s
+    LfgRolesMap roles;                                      // Selected Player Role/s
+};
+
+struct LfgProposalPlayer
+{
+    LfgProposalPlayer(): role(0), accept(-1), groupLowGuid(0) {};
+    uint8 role;                                             // Proposed role
+    int8 accept;                                            // Accept status (-1 not answer | 0 Not agree | 1 agree)
+    uint32 groupLowGuid;                                    // Original group guid (Low guid) 0 if no original group
+};
+
+typedef std::map<uint32, LfgProposalPlayer*> LfgProposalPlayerMap;
+
+// Stores all Dungeon Proposal after matching candidates
+struct LfgProposal
+{
+    LfgProposal(uint32 dungeon): state(LFG_PROPOSAL_INITIATING), groupLowGuid(0), dungeonId(dungeon), leaderLowGuid(0) {}
+
+    ~LfgProposal()
+    {
+        for (LfgProposalPlayerMap::iterator it = players.begin(); it != players.end(); ++it)
+            delete it->second;
+        players.clear();
+        queues.clear();
+    };
+    uint32 dungeonId;                                       // Dungeon to join
+    LfgProposalState state;                                 // State of the proposal
+    uint32 groupLowGuid;                                    // Proposal group (0 if new)
+    uint32 leaderLowGuid;                                   // Leader guid.
+    time_t cancelTime;                                      // Time when we will cancel this proposal
+    LfgGuidList queues;                                     // Queue Ids to remove/readd
+    LfgProposalPlayerMap players;                           // Player current groupId
+
 };
 
 // Stores all rolecheck info of a group that wants to join LFG
@@ -209,70 +270,78 @@ struct LfgRoleCheck
     LfgRolesMap roles;
     LfgRoleCheckResult result;
     LfgDungeonSet dungeons;
-    uint64 leader;
+    uint32 leader;
 };
 
+typedef std::set<Player*> PlayerSet;
+typedef std::set<LfgLockStatus*> LfgLockStatusSet;
+typedef std::vector<LfgReward*> LfgRewardList;
+typedef std::map<uint32, LfgReward*> LfgRewardMap;
+typedef std::vector<LfgProposal*> LfgProposalList;
+typedef std::map<uint32, LfgLockStatusSet*> LfgLockStatusMap;
 typedef std::map<uint64, LfgQueueInfo*> LfgQueueInfoMap;
 typedef std::map<uint32, LfgRoleCheck*> LfgRoleCheckMap;
-
-class LFGQueue
-{
-    public:
-        LFGQueue();
-        ~LFGQueue();
-
-        void Update();
-        void AddToQueue(uint64 guid, LfgQueueInfo *pqInfo);
-        bool RemoveFromQueue(uint64 guid);
-        LfgQueueInfo* GetQueueInfo(uint64 guid);
-    private:
-        LfgQueueInfoMap m_LfgQueue;
-        int32 avgWaitTime;
-        int32 waitTimeTanks;
-        int32 waitTimeHealer;
-        int32 waitTimeDps;
-};
-
-typedef std::map<uint8, LFGQueue *> LFGQueueMap;
+typedef std::map<uint32, LfgProposal*> LfgProposalMap;
+typedef std::list<Player *> LfgPlayerList;
 
 class LFGMgr
 {
     friend class ACE_Singleton<LFGMgr, ACE_Null_Mutex>;
-    LFGMgr();
     public:
-       ~LFGMgr();
+        LFGMgr();
+        ~LFGMgr();
 
         void InitLFG();
-        void SendLfgPlayerInfo(Player *plr);
-        void SendLfgPartyInfo(Player *plr);
         void Join(Player *plr);
         void Leave(Player *plr, Group *grp = NULL);
+        void OfferContinue(Group *grp);
+        void TeleportPlayer(Player *plr, bool out);
+        void UpdateProposal(uint32 proposalId, uint32 lowGuid, uint8 accept);
         void UpdateRoleCheck(Group *grp, Player *plr = NULL);
         void Update(uint32 diff);
 
+        void SendLfgPlayerInfo(Player *plr);
+        void SendLfgPartyInfo(Player *plr);
+        bool isRandomDungeon(uint32 dungeonId);
+
     private:
+        void SendUpdateProposal(Player *plr, uint32 proposalId, LfgProposal *pProp);
+        void SendLfgPlayerReward(Player *plr);
+
         void BuildLfgRoleCheck(WorldPacket &data, LfgRoleCheck *pRoleCheck);
         void BuildAvailableRandomDungeonList(WorldPacket &data, Player *plr);
-        void BuildRewardBlock(WorldPacket &data, uint32 dungeon, Player *plr);
         void BuildPlayerLockDungeonBlock(WorldPacket &data, LfgLockStatusSet *lockSet);
         void BuildPartyLockDungeonBlock(WorldPacket &data, LfgLockStatusMap *lockMap);
-        bool CheckGroupRoles(LfgRolesMap &groles, bool removeLeaderFlag = true);
 
+        void AddToQueue(uint64 guid, LfgRolesMap *roles, LfgDungeonSet *dungeons);
+        bool RemoveFromQueue(uint64 guid);
+        void FindNewGroups(LfgGuidList &check, LfgGuidList all, LfgProposalList *proposals);
+        bool CheckGroupRoles(LfgRolesMap &groles, bool removeLeaderFlag = true);
+        void RemoveProposal(LfgProposalMap::iterator itProposal, LfgUpdateType type);
+
+        LfgLockStatusMap* GetGroupLockStatusDungeons(PlayerSet *pPlayers, LfgDungeonSet *dungeons);
         LfgLockStatusMap* GetPartyLockStatusDungeons(Player *plr, LfgDungeonSet *dungeons);
         LfgLockStatusSet* GetPlayerLockStatusDungeons(Player *plr, LfgDungeonSet *dungeons);
-        LfgDungeonSet* GetRandomDungeons(uint8 level, uint8 expansion);
         LfgDungeonSet* GetDungeonsByRandom(uint32 randomdungeon);
+        LfgDungeonSet* GetRandomDungeons(uint8 level, uint8 expansion);
         LfgDungeonSet* GetAllDungeons();
         LfgReward* GetRandomDungeonReward(uint32 dungeon, bool done, uint8 level);
         uint8 GetDungeonGroupType(uint32 dungeon);
 
-        LfgRewardList m_RewardList;
-        LfgRewardList m_RewardDoneList;
-        LfgDungeonMap m_DungeonsMap;
-
-        LFGQueueMap m_Queues;
-        LfgRoleCheckMap m_RoleChecks;
-        uint32 m_QueueTimer;
+        LfgRewardList m_RewardList;                         // TODO: Change it to list of quests
+        LfgRewardList m_RewardDoneList;                     // TODO: Change it to list of quests
+        LfgDungeonMap m_CachedDungeonMap;                   // Stores all dungeons by groupType
+        LfgQueueInfoMap m_QueueInfoMap;                     // Queued groups
+        LfgGuidList m_currentQueue;                         // Ordered list. Used to find groups
+        LfgGuidList m_newToQueue;                           // New groups to add to queue;
+        LfgProposalMap m_Proposals;                         // Current Proposals
+        LfgRoleCheckMap m_RoleChecks;                       // Current Role checks
+        uint32 m_QueueTimer;                                // used to check interval of update
+        uint32 m_lfgProposalId;                             // used as internal counter for proposals
+        int32 m_avgWaitTime;
+        int32 m_waitTimeTanks;
+        int32 m_waitTimeHealer;
+        int32 m_waitTimeDps;
         bool m_update;
 };
 

@@ -20,22 +20,37 @@ add_definitions("-Wall")
 add_definitions("-ggdb")
 add_definitions("-O3")
 
+if( UNIX )
+  include_directories(
+    ${CMAKE_SOURCE_DIR}/externals/libmpq
+  )
+elseif( WIN32 )
+  include_directories(
+    ${CMAKE_SOURCE_DIR}/externals/libmpq
+    ${CMAKE_SOURCE_DIR}/externals/libmpq/win
+  )
+endif()
+
 add_executable(vmap3extractor ${sources})
 
 if(WIN32)
   target_link_libraries(vmap3extractor
-    mpq
     bzip2
     zlib
+    mpq
   )
 else()
   target_link_libraries(vmap3extractor
-    mpq
     ${BZIP2_LIBRARIES}
     ${ZLIB_LIBRARIES}
+    mpq
   )
 endif()
 
+add_dependencies(vmap3extractor mpq)
+
 if( UNIX )
   install(TARGETS vmap3extractor DESTINATION bin)
+elseif( WIN32 )
+  install(TARGETS vmap3extractor DESTINATION "${CMAKE_INSTALL_PREFIX}")
 endif()

@@ -25,7 +25,6 @@
 #include "ItemPrototype.h"
 #include "Unit.h"
 #include "Item.h"
-
 #include "DatabaseEnv.h"
 #include "NPCHandler.h"
 #include "QuestDef.h"
@@ -844,6 +843,12 @@ enum CharDeleteMethod
                                                  // the name gets freed up and appears as deleted ingame
 };
 
+enum CurrencyItems
+{
+    ITEM_HONOR_POINTS_ID    = 43308,
+    ITEM_ARENA_POINTS_ID    = 43307
+};
+
 class PlayerTaxi
 {
     public:
@@ -1242,6 +1247,7 @@ class Player : public Unit, public GridObject<Player>
         }
         void SendNewItem(Item *item, uint32 count, bool received, bool created, bool broadcast = false);
         bool BuyItemFromVendorSlot(uint64 vendorguid, uint32 vendorslot, uint32 item, uint8 count, uint8 bag, uint8 slot);
+        bool _StoreOrEquipNewItem(uint32 vendorslot, uint32 item, uint8 count, uint8 bag, uint8 slot, int32 price, ItemPrototype const *pProto, Creature *pVendor, VendorItem const* crItem, bool bStore);
 
         float GetReputationPriceDiscount(Creature const* pCreature) const;
 
@@ -1441,25 +1447,8 @@ class Player : public Unit, public GridObject<Player>
         void setWeaponChangeTimer(uint32 time) {m_weaponChangeTimer = time;}
 
         uint32 GetMoney() { return GetUInt32Value (PLAYER_FIELD_COINAGE); }
-        void ModifyMoney(int32 d)
-        {
-            if (d < 0)
-                SetMoney (GetMoney() > uint32(-d) ? GetMoney() + d : 0);
-            else
-            {
-                uint32 newAmount = 0;
-                if (GetMoney() < uint32(MAX_MONEY_AMOUNT - d))
-                    newAmount = GetMoney() + d;
-                else
-                {
-                    // "At Gold Limit"
-                    newAmount = MAX_MONEY_AMOUNT;
-                    if (d)
-                        SendEquipError(EQUIP_ERR_TOO_MUCH_GOLD, NULL, NULL);
-                }
-                SetMoney (newAmount);
-            }
-        }
+        void ModifyMoney(int32 d);
+
         void SetMoney(uint32 value)
         {
             SetUInt32Value (PLAYER_FIELD_COINAGE, value);
@@ -1553,7 +1542,7 @@ class Player : public Unit, public GridObject<Player>
         uint32 GetReputation(uint32 factionentry);
         std::string GetGuildName();
         uint32 GetFreeTalentPoints() const { return GetUInt32Value(PLAYER_CHARACTER_POINTS1); }
-        void SetFreeTalentPoints(uint32 points) { SetUInt32Value(PLAYER_CHARACTER_POINTS1,points); }
+        void SetFreeTalentPoints(uint32 points);
         bool resetTalents(bool no_cost = false);
         uint32 resetTalentsCost() const;
         void InitTalentForLevel();
@@ -1938,6 +1927,18 @@ class Player : public Unit, public GridObject<Player>
         void ModifyHonorPoints(int32 value);
         void ModifyArenaPoints(int32 value);
         uint32 GetMaxPersonalArenaRatingRequirement(uint32 minarenaslot);
+        void SetHonorPoints(uint32 value)
+        {
+            SetUInt32Value(PLAYER_FIELD_HONOR_CURRENCY, value);
+            if (value)
+                AddKnownCurrency(ITEM_HONOR_POINTS_ID); // Arena Points
+        }
+        void SetArenaPoints(uint32 value)
+        {
+            SetUInt32Value(PLAYER_FIELD_ARENA_CURRENCY, value);
+            if (value)
+                AddKnownCurrency(ITEM_ARENA_POINTS_ID); // Arena Points
+        }
 
         //End of PvP System
 
@@ -2232,7 +2233,14 @@ class Player : public Unit, public GridObject<Player>
         void SetAtLoginFlag(AtLoginFlags f) { m_atLoginFlags |= f; }
         void RemoveAtLoginFlag(AtLoginFlags f, bool in_db_also = false);
 
-        LookingForGroup m_lookingForGroup;
+        // Dungeon Finder
+        bool isLfgDungeonDone(const uint32 entry) { return m_LookingForGroup.donerandomDungeons.find(entry) != m_LookingForGroup.donerandomDungeons.end(); }  
+        LfgDungeonSet *GetLfgDungeons() { return &m_LookingForGroup.applyDungeons; }
+        LfgDungeonSet *GetLfgDungeonsDone() { return &m_LookingForGroup.donerandomDungeons; }
+        std::string GetLfgComment() { return m_LookingForGroup.comment; }
+        void SetLfgComment(std::string _comment) { m_LookingForGroup.comment = _comment; }
+        uint8 GetLfgRoles() { return m_LookingForGroup.roles; }
+        void SetLfgRoles(uint8 _roles) { m_LookingForGroup.roles = _roles; }
 
         // Temporarily removed pet cache
         uint32 GetTemporaryUnsummonedPetNumber() const { return m_temporaryUnsummonedPetNumber; }
@@ -2493,10 +2501,10 @@ class Player : public Unit, public GridObject<Player>
 
         float m_auraBaseMod[BASEMOD_END][MOD_END];
         int16 m_baseRatingValue[MAX_COMBAT_RATING];
-        uint16 m_baseSpellPower;
-        uint16 m_baseFeralAP;
-        uint16 m_baseManaRegen;
-        uint16 m_baseHealthRegen;
+        uint32 m_baseSpellPower;
+        uint32 m_baseFeralAP;
+        uint32 m_baseManaRegen;
+        uint32 m_baseHealthRegen;
 
         SpellModList m_spellMods[MAX_SPELLMOD];
         //uint32 m_pad;
@@ -2596,7 +2604,9 @@ class Player : public Unit, public GridObject<Player>
         void SendRefundInfo(Item* item);
         void RefundItem(Item* item);
 
-        void UpdateKnownCurrencies(uint32 itemId, bool apply);
+        // know currencies are not removed at any point (0 displayed)
+        void AddKnownCurrency(uint32 itemId);
+
         int32 CalculateReputationGain(uint32 creatureOrQuestLevel, int32 rep, int32 faction, bool for_quest, bool noQuestBonus = false);
         void AdjustQuestReqItemCount(Quest const* pQuest, QuestStatusData& questStatusData);
 
@@ -2651,6 +2661,8 @@ class Player : public Unit, public GridObject<Player>
         uint32 m_timeSyncTimer;
         uint32 m_timeSyncClient;
         uint32 m_timeSyncServer;
+
+        LookingForGroup m_LookingForGroup;
 };
 
 void AddItemsSetItem(Player*player,Item *item);

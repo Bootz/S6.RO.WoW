@@ -32,14 +32,14 @@ class instance_halls_of_stone : public InstanceMapScript
 public:
     instance_halls_of_stone() : InstanceMapScript("instance_halls_of_stone", 599) { }
 
-    InstanceData* GetInstanceData_InstanceMapScript(Map* pMap)
+    InstanceScript* GetInstanceScript(InstanceMap* pMap) const
     {
         return new instance_halls_of_stone_InstanceMapScript(pMap);
     }
 
-    struct instance_halls_of_stone_InstanceMapScript : public ScriptedInstance
+    struct instance_halls_of_stone_InstanceMapScript : public InstanceScript
     {
-        instance_halls_of_stone_InstanceMapScript(Map* pMap) : ScriptedInstance(pMap) {Initialize();};
+        instance_halls_of_stone_InstanceMapScript(Map* pMap) : InstanceScript(pMap) {Initialize();};
 
         uint64 uiMaidenOfGrief;
         uint64 uiKrystallus;
@@ -89,7 +89,7 @@ public:
                 m_auiEncounter[i] = NOT_STARTED;
         }
 
-        void OnCreatureCreate(Creature* pCreature, bool add)
+        void OnCreatureCreate(Creature* pCreature, bool /*add*/)
         {
             switch(pCreature->GetEntry())
             {
@@ -103,7 +103,7 @@ public:
             }
         }
 
-        void OnGameObjectCreate(GameObject* pGo, bool add)
+        void OnGameObjectCreate(GameObject* pGo, bool /*add*/)
         {
             switch(pGo->GetEntry())
             {
