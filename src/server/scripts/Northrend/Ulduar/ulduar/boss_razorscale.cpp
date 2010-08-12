@@ -486,7 +486,7 @@ struct npc_expedition_commanderAI : public ScriptedAI
                     for (uint8 n = 0; n < RAID_MODE(2,4); ++n)
                     {
                         engineer[n] = me->SummonCreature(NPC_ENGINEER, PosEngSpawn, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 3000);
-                        engineer[n]->RemoveUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
+                        engineer[n]->RemoveUnitMovementFlag(MOVEMENTFLAG_WALKING);
                         engineer[n]->SetSpeed(MOVE_RUN, 0.5f);
                         engineer[n]->SetHomePosition(PosEngRepair[n]);
                         engineer[n]->GetMotionMaster()->MoveTargetedHome();
@@ -499,7 +499,7 @@ struct npc_expedition_commanderAI : public ScriptedAI
                     for (uint8 n = 0; n < 4; ++n)
                     {
                         defender[n] = me->SummonCreature(NPC_DEFENDER, PosDefSpawn[n], TEMPSUMMON_CORPSE_TIMED_DESPAWN, 3000);
-                        defender[n] ->RemoveUnitMovementFlag(MOVEMENTFLAG_WALK_MODE);
+                        defender[n] ->RemoveUnitMovementFlag(MOVEMENTFLAG_WALKING);
                         defender[n] ->SetHomePosition(PosDefCombat[n]);
                         defender[n] ->GetMotionMaster()->MoveTargetedHome();
                     }

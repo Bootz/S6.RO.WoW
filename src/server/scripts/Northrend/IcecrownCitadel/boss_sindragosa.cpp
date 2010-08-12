@@ -98,7 +98,7 @@ Creature* pSpinestalker;
 Creature* pSindragosa;
 
 std::vector<Creature*> icetombs;
-std::vector<Player*> targets;
+std::vector<Player*> targetss;
 
 struct npc_ice_tombAI : public Scripted_NoMovementAI
 {
@@ -364,7 +364,7 @@ struct boss_sindragosaAI : public ScriptedAI
                     {
                         pTarget->ApplySpellImmune(0, IMMUNITY_ID, SPELL_MYSTIC_BUFFET, true);
                         pTarget->ApplySpellImmune(0, IMMUNITY_ID, SPELL_MYSTIC_BUFFET2, true);
-                        targets.push_back(pTarget);
+                        targetss.push_back(pTarget);
                         break;
                     }
             }
@@ -372,7 +372,7 @@ struct boss_sindragosaAI : public ScriptedAI
 
         MysticBuffet();
 
-        for (std::vector<Player*>::const_iterator itr = targets.begin(); itr != targets.end(); ++itr)
+        for (std::vector<Player*>::const_iterator itr = targetss.begin(); itr != targetss.end(); ++itr)
             {
              (*itr)->ApplySpellImmune(0, IMMUNITY_ID, SPELL_MYSTIC_BUFFET, false);
              (*itr)->ApplySpellImmune(0, IMMUNITY_ID, SPELL_MYSTIC_BUFFET2, false);
@@ -566,7 +566,7 @@ struct npc_frost_bombAI : public ScriptedAI
             if (pTarget->HasAura(SPELL_ICE_TOMB))
             {
                 pTarget->ApplySpellImmune(0, IMMUNITY_ID, SPELL_FROST_BOMB, true);
-                targets.push_back(pTarget);
+                targetss.push_back(pTarget);
                 continue;
             }
 
@@ -577,7 +577,7 @@ struct npc_frost_bombAI : public ScriptedAI
                         && me->GetExactDist2d(pTarget->GetPositionX(), pTarget->GetPositionY()) - me->GetExactDist2d(pGo->GetPositionX(), pGo->GetPositionY()) < 5.0f)
                     {
                         pTarget->ApplySpellImmune(0, IMMUNITY_ID, SPELL_FROST_BOMB, true);
-                        targets.push_back(pTarget);
+                        targetss.push_back(pTarget);
                         break;
                     }
             }
@@ -585,7 +585,7 @@ struct npc_frost_bombAI : public ScriptedAI
 
         DoCast(SPELL_FROST_BOMB);
 
-        for (std::vector<Player*>::const_iterator itr = targets.begin(); itr != targets.end(); ++itr)
+        for (std::vector<Player*>::const_iterator itr = targetss.begin(); itr != targetss.end(); ++itr)
             (*itr)->ApplySpellImmune(0, IMMUNITY_ID, SPELL_FROST_BOMB, false);
     }
 
