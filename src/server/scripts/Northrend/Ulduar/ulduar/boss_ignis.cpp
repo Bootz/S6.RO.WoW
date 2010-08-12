@@ -66,7 +66,7 @@ enum Events
     EVENT_BERSERK
 };
 
-#define EMOTE_JETS    "Ignis the Furnace Master begins to cast Flame Jets!"
+#define EMOTE_JETS              "Ignis the Furnace Master begins to cast Flame Jets!"
 
 enum Mobs
 {
@@ -74,7 +74,7 @@ enum Mobs
     GROUND_SCORCH                               = 33221
 };
 
-#define ACTION_REMOVE_BUFF                        20
+#define ACTION_REMOVE_BUFF                      20
 
 enum ConstructSpells
 {
@@ -83,56 +83,57 @@ enum ConstructSpells
     SPELL_BRITTLE                               = 62382,
     SPELL_SHATTER                               = 62383,
     SPELL_GROUND_10                             = 62548,
-    SPELL_GROUND_25                             = 63476
+    SPELL_GROUND_25                             = 63476,
+    SPELL_FROZEN_POSITION                       = 69609
 };
 
 // Achievements
-#define ACHIEVEMENT_STOKIN_THE_FURNACE        RAID_MODE(2930, 2929)
-#define ACHIEVEMENT_SHATTERED                 RAID_MODE(2925, 2926)
-#define MAX_ENCOUNTER_TIME                    4 * 60 * 1000
+#define ACHIEVEMENT_STOKIN_THE_FURNACE          RAID_MODE(2930, 2929)
+#define ACHIEVEMENT_SHATTERED                   RAID_MODE(2925, 2926)
+#define MAX_ENCOUNTER_TIME                      4 * 60 * 1000
 
 // Water coords
-#define WATER_1_X                                646.77
-#define WATER_2_X                                526.77
-#define WATER_Y                                  277.79
-#define WATER_Z                                  359.88
+#define WATER_1_X                               646.77
+#define WATER_2_X                               526.77
+#define WATER_Y                                 277.79
+#define WATER_Z                                 359.88
 
 const Position Pos[20] =
 {
-{630.366,216.772,360.891,3.001970},
-{630.594,231.846,360.891,3.124140},
-{630.435,337.246,360.886,3.211410},
-{630.493,313.349,360.886,3.054330},
-{630.444,321.406,360.886,3.124140},
-{630.366,247.307,360.888,3.211410},
-{630.698,305.311,360.886,3.001970},
-{630.500,224.559,360.891,3.054330},
-{630.668,239.840,360.890,3.159050},
-{630.384,329.585,360.886,3.159050},
-{543.220,313.451,360.886,0.104720},
-{543.356,329.408,360.886,6.248280},
-{543.076,247.458,360.888,6.213370},
-{543.117,232.082,360.891,0.069813},
-{543.161,305.956,360.886,0.157080},
-{543.277,321.482,360.886,0.052360},
-{543.316,337.468,360.886,6.195920},
-{543.280,239.674,360.890,6.265730},
-{543.265,217.147,360.891,0.174533},
-{543.256,224.831,360.891,0.122173}
+{630.366,216.772,360.891,M_PI},
+{630.594,231.846,360.891,M_PI},
+{630.435,337.246,360.886,M_PI},
+{630.493,313.349,360.886,M_PI},
+{630.444,321.406,360.886,M_PI},
+{630.366,247.307,360.888,M_PI},
+{630.698,305.311,360.886,M_PI},
+{630.500,224.559,360.891,M_PI},
+{630.668,239.840,360.890,M_PI},
+{630.384,329.585,360.886,M_PI},
+{543.220,313.451,360.886,0},
+{543.356,329.408,360.886,0},
+{543.076,247.458,360.888,0},
+{543.117,232.082,360.891,0},
+{543.161,305.956,360.886,0},
+{543.277,321.482,360.886,0},
+{543.316,337.468,360.886,0},
+{543.280,239.674,360.890,0},
+{543.265,217.147,360.891,0},
+{543.256,224.831,360.891,0}
 };
 
 struct boss_ignis_AI : public BossAI
 {
     boss_ignis_AI(Creature *pCreature) : BossAI(pCreature, BOSS_IGNIS), vehicle(me->GetVehicleKit())
     {
-        assert(vehicle);
         pInstance = pCreature->GetInstanceData();
         me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);
-        me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true); // Death Grip jump effect
+        me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true);  // Death Grip
     }
 
     Vehicle *vehicle;
     ScriptedInstance *pInstance;
+    std::vector<Creature *> construct_list;
     
     uint32 SlagPotGUID;
     uint32 EncounterTime;
@@ -143,8 +144,13 @@ struct boss_ignis_AI : public BossAI
     {
         _Reset();
         
+        construct_list.clear();
+        
         if (vehicle)
             vehicle->RemoveAllPassengers();
+            
+        for (uint8 n = 0; n < 20; n++)
+            me->SummonCreature(MOB_IRON_CONSTRUCT, Pos[n], TEMPSUMMON_CORPSE_TIMED_DESPAWN, 3000);
     }
 
     void EnterCombat(Unit *who)
@@ -185,7 +191,7 @@ struct boss_ignis_AI : public BossAI
         if (!UpdateVictim())
             return;
 
-        if(me->GetPositionY() < 150 || me->GetPositionX() < 450 || me->getVictim()->GetTypeId() == !TYPEID_PLAYER)
+        if (me->GetPositionY() < 150 || me->GetPositionX() < 450 || me->getVictim()->GetTypeId() == !TYPEID_PLAYER)
         {
             me->RemoveAllAuras();
             me->DeleteThreatList();
@@ -253,10 +259,20 @@ struct boss_ignis_AI : public BossAI
                     events.ScheduleEvent(EVENT_SCORCH, 25000);
                     break;
                 case EVENT_CONSTRUCT:
-                    DoScriptText(SAY_SUMMON, me);
-                    DoSummon(MOB_IRON_CONSTRUCT, Pos[rand()%20], 30000, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT);
-                    DoCast(SPELL_STRENGHT);
-                    DoCast(me, SPELL_ACTIVATE_CONSTRUCT);
+                    if (!construct_list.empty())
+                    {
+                        std::vector<Creature*>::iterator itr = (construct_list.begin()+rand()%construct_list.size());
+                        Creature* pTarget = *itr;
+                        if (pTarget)
+                        {
+                            DoScriptText(SAY_SUMMON, me);
+                            DoCast(me, SPELL_STRENGHT, true);
+                            DoCast(SPELL_ACTIVATE_CONSTRUCT);
+                            pTarget->setFaction(16);
+                            pTarget->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE);
+                            construct_list.erase(itr);
+                        }
+                    }
                     events.ScheduleEvent(EVENT_CONSTRUCT, RAID_MODE(40000, 30000));
                     break;
                 case EVENT_BERSERK:
@@ -279,12 +295,9 @@ struct boss_ignis_AI : public BossAI
     {
         if (summon->GetEntry() == MOB_IRON_CONSTRUCT)
         {
-            summon->setFaction(16);
-            summon->SetReactState(REACT_AGGRESSIVE);
-            summon->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_PACIFIED | UNIT_FLAG_STUNNED | UNIT_FLAG_DISABLE_MOVE);
+            construct_list.push_back(summon);
         }
-        summon->AI()->AttackStart(me->getVictim());
-        summon->AI()->DoZoneInCombat();
+
         summons.Summon(summon);
     }
 
@@ -314,6 +327,7 @@ struct mob_iron_constructAI : public ScriptedAI
     {
         pInstance = c->GetInstanceData();
         me->SetReactState(REACT_PASSIVE);
+        me->AddAura(SPELL_FROZEN_POSITION, me);
     }
 
     ScriptedInstance* pInstance;
@@ -329,12 +343,24 @@ struct mob_iron_constructAI : public ScriptedAI
     {
         if (me->HasAura(SPELL_BRITTLE) && damage >= 5000)
         {
-            DoCast(SPELL_SHATTER);
+            DoCastAOE(SPELL_SHATTER, true);
             if (Creature *pIgnis = me->GetCreature(*me, pInstance->GetData64(DATA_IGNIS)))
                 if (pIgnis->AI())
                     pIgnis->AI()->DoAction(ACTION_REMOVE_BUFF);
                     
             me->ForcedDespawn(1000);
+        }
+    }
+    
+    void SpellHit(Unit* caster, const SpellEntry *spell)
+    {
+        if (spell->Id == SPELL_ACTIVATE_CONSTRUCT && me->HasReactState(REACT_PASSIVE))
+        {
+            me->SetReactState(REACT_AGGRESSIVE);
+            me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PACIFIED | UNIT_FLAG_STUNNED | UNIT_FLAG_DISABLE_MOVE);
+            me->RemoveAurasDueToSpell(SPELL_FROZEN_POSITION);
+            me->AI()->AttackStart(caster->getVictim());
+            me->AI()->DoZoneInCombat();
         }
     }
 
@@ -350,7 +376,7 @@ struct mob_iron_constructAI : public ScriptedAI
             if (aur->GetStackAmount() >= 10)
             {
                 me->RemoveAura(SPELL_HEAT);
-                DoCast(SPELL_MOLTEN);
+                DoCast(me, SPELL_MOLTEN, true);
                 Brittled = false;
             }
         }
@@ -359,7 +385,7 @@ struct mob_iron_constructAI : public ScriptedAI
         if(cMap->GetId() == 603 && !Brittled && me->HasAura(SPELL_MOLTEN))
             if (me->GetDistance(WATER_1_X, WATER_Y, WATER_Z) <= 18 || me->GetDistance(WATER_2_X, WATER_Y, WATER_Z) <= 18)
             {
-                DoCast(SPELL_BRITTLE);
+                me->AddAura(SPELL_BRITTLE, me);
                 me->RemoveAura(SPELL_MOLTEN);
                 Brittled = true;
             }
