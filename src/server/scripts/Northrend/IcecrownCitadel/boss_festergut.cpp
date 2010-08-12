@@ -111,7 +111,7 @@ struct boss_festergutAI : public ScriptedAI
             m_pInstance->SetData(DATA_FESTERGURT_EVENT, IN_PROGRESS);
     }
 
-    void JustDied(Unit* pKiller)
+    void JustDied(Unit* victim)
     {
         DoScriptText(SAY_DEATH_1, me);
         uiPutricide = (m_pInstance ? m_pInstance->GetData64(DATA_PROFESSOR_PUTRICIDE) : 0);
@@ -185,7 +185,7 @@ struct boss_festergutAI : public ScriptedAI
         if (!UpdateVictim())
             return;
 
-       If (Inhalestack = 0 && m_uiBlightTimer < uiDiff)
+       If (Inhalestack == 0 && m_uiBlightTimer < uiDiff)
        { 
             me->CastCustomSpell(GASEOUSBLIGHT_INH1 , SPELLVALUE_RADIUS_MOD, 60.0f);
             DoCast(me, SPELL_GAS_VISUAL_BIG);
