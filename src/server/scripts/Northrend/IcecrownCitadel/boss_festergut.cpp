@@ -200,7 +200,7 @@ struct boss_festergutAI : public ScriptedAI
                 me->RemoveAurasDueToSpell(SPELL_GAS_VISUAL_SMALL);
             }
             m_uiBlightTimer = 2000;
-        }else  m_uiBlightTimer -= diff;
+        } else  m_uiBlightTimer -= uiDiff;
             
        If (Inhalestack = 1 && m_uiBlightTimer < uiDiff)
        { 
@@ -217,7 +217,7 @@ struct boss_festergutAI : public ScriptedAI
                 me->RemoveAurasDueToSpell(SPELL_GAS_VISUAL_SMALL);
             }
             m_uiBlightTimer = 2000;
-        }else  m_uiBlightTimer -= diff;
+        } else  m_uiBlightTimer -= uiDiff;
 
        If (Inhalestack = 2 && m_uiBlightTimer < uiDiff)
        { 
@@ -234,7 +234,7 @@ struct boss_festergutAI : public ScriptedAI
                 me->RemoveAurasDueToSpell(SPELL_GAS_VISUAL_BIG);
             }
             m_uiBlightTimer = 2000;
-        }else  m_uiBlightTimer -= diff;
+        } else  m_uiBlightTimer -= uiDiff;
 
         if (m_uiGastricBloatTimer < uiDiff)
         {
