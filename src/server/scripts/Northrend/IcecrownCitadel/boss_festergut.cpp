@@ -306,7 +306,7 @@ struct boss_festergutAI : public ScriptedAI
         {
             DoCast(me, SPELL_BERSERK);
             m_uiBerserkTimer = 300000;
-        }
+        } else m_uiBerserkTimer -= uiDiff;
 
         DoMeleeAttackIfReady();
     }
