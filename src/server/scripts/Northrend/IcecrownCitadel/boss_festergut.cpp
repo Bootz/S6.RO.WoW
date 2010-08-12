@@ -185,7 +185,7 @@ struct boss_festergutAI : public ScriptedAI
         if (!UpdateVictim())
             return;
 
-       If (Inhalestack = 0 && m_uiBlightTimer < uiDiff)
+       if (Inhalestack = 0 && m_uiBlightTimer < uiDiff)
        { 
             me->CastCustomSpell(GASEOUSBLIGHT_INH1 , SPELLVALUE_RADIUS_MOD, 60.0f);
             DoCast(me, SPELL_GAS_VISUAL_BIG);
@@ -202,7 +202,7 @@ struct boss_festergutAI : public ScriptedAI
             m_uiBlightTimer = 2000;
         } else  m_uiBlightTimer -= uiDiff;
             
-       If (Inhalestack = 1 && m_uiBlightTimer < uiDiff)
+       if (Inhalestack = 1 && m_uiBlightTimer < uiDiff)
        { 
             me->CastCustomSpell(GASEOUSBLIGHT_INH2 , SPELLVALUE_RADIUS_MOD, 60.0f);
             DoCast(me, SPELL_GAS_VISUAL_MEDIUM);
@@ -219,7 +219,7 @@ struct boss_festergutAI : public ScriptedAI
             m_uiBlightTimer = 2000;
         } else  m_uiBlightTimer -= uiDiff;
 
-       If (Inhalestack = 2 && m_uiBlightTimer < uiDiff)
+       if (Inhalestack = 2 && m_uiBlightTimer < uiDiff)
        { 
        me->CastCustomSpell(GASEOUSBLIGHT_INH3 , SPELLVALUE_RADIUS_MOD, 60.0f);
        DoCast(me, SPELL_GAS_VISUAL_SMALL);
