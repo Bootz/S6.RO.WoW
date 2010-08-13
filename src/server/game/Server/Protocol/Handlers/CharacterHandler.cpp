@@ -1207,7 +1207,7 @@ void WorldSession::HandleCharFactionOrRaceChange(WorldPacket& recv_data)
     }
 
     // check name limitations
-    if (GetSecurity() == SEC_PLAYER && objmgr.IsReservedName(newname))
+    if (GetSecurity() == SEC_PLAYER && sObjectMgr.IsReservedName(newname))
     {
         WorldPacket data(SMSG_CHAR_FACTION_CHANGE, 1);
         data << uint8(CHAR_NAME_RESERVED);
@@ -1216,7 +1216,7 @@ void WorldSession::HandleCharFactionOrRaceChange(WorldPacket& recv_data)
     }
 
     // character with this name already exist
-    if (uint64 newguid = objmgr.GetPlayerGUIDByName(newname))
+    if (uint64 newguid = sObjectMgr.GetPlayerGUIDByName(newname))
     {
         if (newguid != guid)
         {
@@ -1248,7 +1248,7 @@ void WorldSession::HandleCharFactionOrRaceChange(WorldPacket& recv_data)
 		Player::LeaveAllArenaTeams(GUID_LOPART(guid));
 
 		// Search each faction is targeted
-		BattleGroundTeamId team = BG_TEAM_ALLIANCE;
+		BattlegroundTeamId team = BG_TEAM_ALLIANCE;
 		switch(race)
 		{
 			case RACE_ORC:
