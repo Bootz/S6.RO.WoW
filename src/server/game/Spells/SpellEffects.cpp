@@ -4839,68 +4839,6 @@ void Spell::EffectScriptEffect(uint32 effIndex)
                 case 26465:
                     unitTarget->RemoveAuraFromStack(26464);
                     return;
-<<<<<<< HEAD:src/server/game/Spells/SpellEffects.cpp
-                // Orb teleport spells
-                case 25140:
-                case 25143:
-                case 25650:
-                case 25652:
-                case 29128:
-                case 29129:
-                case 35376:
-                case 35727:
-                {
-                    if (!unitTarget)
-                        return;
-
-                    uint32 spellid;
-                    switch(m_spellInfo->Id)
-                    {
-                        case 25140: spellid =  32571; break;
-                        case 25143: spellid =  32572; break;
-                        case 25650: spellid =  30140; break;
-                        case 25652: spellid =  30141; break;
-                        case 29128: spellid =  32568; break;
-                        case 29129: spellid =  32569; break;
-                        case 35376: spellid =  25649; break;
-                        case 35727: spellid =  35730; break;
-                        default:
-                            return;
-                    }
-
-                    unitTarget->CastSpell(unitTarget,spellid,false);
-                    return;
-                }
-		case 62575:
-		{
-			if(m_caster->GetOwner())
-				m_caster->GetOwner()->CastSpell(unitTarget,62626,true );
-			return;
-		}
-		case 62960:
-		{
-			if (!unitTarget)
-				return;
-			m_caster->CastSpell(unitTarget,62563,true );
-			m_caster->CastSpell(unitTarget,68321,true );
-			
-			return;
-		}
-		case 62626:
-		case 68321:
-		{
-			if(!unitTarget)
-				return;
-			if (unitTarget->GetAura(62719))
-				unitTarget->RemoveAuraFromStack(62719);
-
-			if(unitTarget->GetAura(64100))
-				unitTarget->RemoveAuraFromStack(64100);
-			return;
-		}
-		
-=======
->>>>>>> tc:src/server/game/Spells/SpellEffects.cpp
                 // Shadow Flame (All script effects, not just end ones to prevent player from dodging the last triggered spell)
                 case 22539:
                 case 22972:
@@ -5702,7 +5640,6 @@ void Spell::EffectScriptEffect(uint32 effIndex)
                     break;
                 }
                 case 64142:                                 // Upper Deck - Create Foam Sword
-		{
                     if (unitTarget->GetTypeId() != TYPEID_PLAYER)
                         return;
                     Player *plr = unitTarget->ToPlayer();
@@ -5713,19 +5650,6 @@ void Spell::EffectScriptEffect(uint32 effIndex)
                             return;
                     DoCreateItem(effIndex, itemId[urand(0,4)]);
                     return;
-		}
-		case 63845:
-		{
-			if(m_caster->GetTypeId()!=TYPEID_PLAYER)
-				return;
-
-			if(m_caster->ToPlayer()->GetTeamId()==TEAM_ALLIANCE)
-				DoCreateItem(0,46069);
-			else
-				DoCreateItem(0,46070);
-
-			break;
-		}
             }
             break;
         }
@@ -5885,9 +5809,7 @@ void Spell::EffectScriptEffect(uint32 effIndex)
                             {
                                 int32 TickCount = aurEff->GetTotalTicks();
                                 spellId = 53353; // 53353 Chimera Shot - Serpent
-                                basePoint = aurEff->GetAmount();
-                                basePoint = m_caster->SpellDamageBonus(unitTarget, aurEff->GetSpellProto(), basePoint, DOT);
-                                basePoint*=(TickCount*40/100);
+                                basePoint = aurEff->GetAmount() * TickCount * 40 / 100;
                             }
                             // Viper Sting - Instantly restores mana to you equal to 60% of the total amount drained by your Viper Sting.
                             else if (familyFlag[1] & 0x00000080)
