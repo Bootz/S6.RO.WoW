@@ -37,7 +37,8 @@ enum eTexts
 	SAY_DEATH = -1752020,
 	SAY_SPECIAL = -1752021
 };
-class boss_zarithrian : public CreatureScript
+
+class boss_zarithrian : public CreatureScript
 {
 public:
     boss_zarithrian() : CreatureScript("boss_zarithrian") { }
@@ -51,10 +52,10 @@ public:
     {
     	boss_zarithrianAI(Creature *pCreature) : ScriptedAI(pCreature)
     	{
-    		pInstance = me->GetInstanceData();
+    		pInstance = me->GetInstanceScript();
     	}
 
-    	InstanceData *pInstance;
+    	InstanceScript *pInstance;
 
     	uint32 uiCleaveArmorTimer;
     	uint32 uiIntimidatingRoarTimer;
@@ -155,7 +156,8 @@ public:
 
 };
 
-class npc_onyx_flamecaller : public CreatureScript
+
+class npc_onyx_flamecaller : public CreatureScript
 {
 public:
     npc_onyx_flamecaller() : CreatureScript("npc_onyx_flamecaller") { }
@@ -169,10 +171,10 @@ public:
     {
     	npc_onyx_flamecallerAI(Creature *pCreature) : ScriptedAI(pCreature)
     	{
-    		pInstance = me->GetInstanceData();
+    		pInstance = me->GetInstanceScript();
     	}
 
-    	InstanceData* pInstance;
+    	InstanceScript* pInstance;
 
     	uint32 uiLavaAttackTimer;
     	uint32 uiBlastNovaTimer;

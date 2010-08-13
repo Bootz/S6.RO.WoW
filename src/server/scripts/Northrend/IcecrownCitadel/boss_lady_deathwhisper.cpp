@@ -82,7 +82,8 @@ enum Yells
     SAY_DEATH              =    -1665916,
     SAY_DOMINATE_MIND      =    -1665914,
 };
-class boss_lady_deathwisper : public CreatureScript
+
+class boss_lady_deathwisper : public CreatureScript
 {
 public:
     boss_lady_deathwisper() : CreatureScript("boss_lady_deathwisper") { }
@@ -96,10 +97,10 @@ public:
     {
         boss_lady_deathwisperAI(Creature *pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
 
         uint32 m_uiPhase;
         uint32 m_uiDominateMindTimer;
@@ -448,7 +449,8 @@ public:
     };
 
 };
-class npc_shade : public CreatureScript
+
+class npc_shade : public CreatureScript
 {
 public:
     npc_shade() : CreatureScript("npc_shade") { }
@@ -462,10 +464,10 @@ public:
     {
         npc_shadeAI(Creature *pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
 
             uint32 m_uiShade1Timer;
 

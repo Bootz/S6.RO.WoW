@@ -81,7 +81,8 @@ enum SaurfangSpells
 #define ACHIEV_MESS       RAID_MODE(4537, 4613)
 
 Creature* pSaurfang;
-class boss_saurfang : public CreatureScript
+
+class boss_saurfang : public CreatureScript
 {
 public:
     boss_saurfang() : CreatureScript("boss_saurfang") { }
@@ -95,11 +96,11 @@ public:
     {
         boss_saurfangAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
             pSaurfang = me;
         }
 
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
 
         uint32 m_uiBoilingBloodTimer;
         uint32 m_uiBloodNovaTimer;
@@ -280,7 +281,8 @@ public:
     };
 
 };
-class npc_bloodbeast : public CreatureScript
+
+class npc_bloodbeast : public CreatureScript
 {
 public:
     npc_bloodbeast() : CreatureScript("npc_bloodbeast") { }
@@ -294,10 +296,10 @@ public:
     {
         npc_bloodbeastAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
 
         bool ScentOfBlood;
 

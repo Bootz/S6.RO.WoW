@@ -112,7 +112,8 @@ enum Creatures
 
 
 const Position CenterOfArena = {563.734558, 173.907974, 394.326874};
-class boss_gormok_impaler : public CreatureScript
+
+class boss_gormok_impaler : public CreatureScript
 {
 public:
     boss_gormok_impaler() : CreatureScript("boss_gormok_impaler") { }
@@ -126,10 +127,10 @@ public:
     {
         boss_gormok_impalerAI(Creature *pCreature) : ScriptedAI(pCreature)
         {
-                    m_pInstance = pCreature->GetInstanceData();
+                    m_pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
 
             uint32 m_uiImpaleTimer;
             uint32 m_uiStaggeringStompTimer;
@@ -269,7 +270,8 @@ public:
 
 };
 
-class boss_acidmaw : public CreatureScript
+
+class boss_acidmaw : public CreatureScript
 {
 public:
     boss_acidmaw() : CreatureScript("boss_acidmaw") { }
@@ -283,10 +285,10 @@ public:
     {
         boss_acidmawAI(Creature* pCreature) : ScriptedAI(pCreature)
             {
-                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+                    m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             }
 
-            ScriptedInstance* m_pInstance;
+            InstanceScript* m_pInstance;
 
             uint32 m_uiPhase;
             uint32 m_uiPhase1Timer;
@@ -476,7 +478,8 @@ public:
 
 };
 
-class boss_dreadscale : public CreatureScript
+
+class boss_dreadscale : public CreatureScript
 {
 public:
     boss_dreadscale() : CreatureScript("boss_dreadscale") { }
@@ -490,10 +493,10 @@ public:
     {
         boss_dreadscaleAI(Creature* pCreature) : ScriptedAI(pCreature)
             {
-                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+                    m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             }
 
-            ScriptedInstance* m_pInstance;
+            InstanceScript* m_pInstance;
 
             uint32 m_uiPhase;
             uint32 m_uiPhase1Timer;
@@ -665,7 +668,8 @@ public:
 
 };
 
-class boss_icehowl : public CreatureScript
+
+class boss_icehowl : public CreatureScript
 {
 public:
     boss_icehowl() : CreatureScript("boss_icehowl") { }
@@ -679,10 +683,10 @@ public:
     {
         boss_icehowlAI(Creature* pCreature) : ScriptedAI(pCreature)
             {
-                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+                    m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             }
 
-            ScriptedInstance* m_pInstance;
+            InstanceScript* m_pInstance;
 
             /********** Phase 1  ************/
             uint32 m_uiArticBreathTimer;
@@ -867,7 +871,8 @@ public:
 
 };
 
-class mob_firebomb_trigger : public CreatureScript
+
+class mob_firebomb_trigger : public CreatureScript
 {
 public:
     mob_firebomb_trigger() : CreatureScript("mob_firebomb_trigger") { }
@@ -881,10 +886,10 @@ public:
     {
         mob_FireBombAI(Creature *pCreature) : Scripted_NoMovementAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
 
             uint32 m_uiDespawnTimer;
             uint32 m_uiFireBombTimer;
@@ -925,10 +930,10 @@ struct mob_SnowboldAI : public ScriptedAI
 {
     mob_SnowboldAI(Creature *pCreature) : ScriptedAI(pCreature)
     {
-        m_pInstance = pCreature->GetInstanceData();
+        m_pInstance = pCreature->GetInstanceScript();
     }
 
-    ScriptedInstance* m_pInstance;
+    InstanceScript* m_pInstance;
 
         uint32 m_uiBatterTimer;
         uint32 m_uiHeadCrackTimer;

@@ -31,10 +31,11 @@
 #define FWHALLS       9997
 #define QUEEN         70861
 #define LICHKING      70860
-class icecrown_teleporter : public UnknownScript
+
+class icecrown_teleporter : public GameObjectScript
 {
 public:
-    icecrown_teleporter() : UnknownScript("icecrown_teleporter") { }
+    icecrown_teleporter() : GameObjectScript("icecrown_teleporter") { }
 
     bool GOSelect( Player *pPlayer, GameObject *pGO, uint32 sender, uint32 action )
     {
@@ -99,7 +100,7 @@ public:
 
     bool GoHello( Player *pPlayer, GameObject *pGO )
     {
-        ScriptedInstance *pInstance = (ScriptedInstance *) pGO->GetInstanceData();
+        InstanceScript *pInstance = (InstanceScript *) pGO->GetInstanceScript();
         if(!pInstance) return true;
 
         if(pInstance)

@@ -121,7 +121,7 @@ void AggroAllPlayers(Creature* pTemp)
 
 bool GrandChampionsOutVehicle(Creature* me)
 {
-    ScriptedInstance* pInstance = me->GetInstanceData();
+    InstanceScript* pInstance = me->GetInstanceScript();
 
     if (!pInstance)
         return false;
@@ -145,7 +145,8 @@ bool GrandChampionsOutVehicle(Creature* me)
 * Generic AI for vehicles used by npcs in ToC, it needs more improvements.  *
 * Script Complete: 25%.                                                     *
 */
-class generic_vehicleAI_toc5 : public CreatureScript
+
+class generic_vehicleAI_toc5 : public CreatureScript
 {
 public:
     generic_vehicleAI_toc5() : CreatureScript("generic_vehicleAI_toc5") { }
@@ -162,12 +163,12 @@ public:
             SetDespawnAtEnd(false);
             uiWaypointPath = 0;
 
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
         }
 
 
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
 
         uint32 uiShieldBreakerTimer;
         uint32 uiBuffTimer;
@@ -294,7 +295,8 @@ public:
 };
 
 
-// Marshal Jacob Alerius && Mokra the Skullcrusher || Warriorclass boss_warrior_toc5 : public CreatureScript
+// Marshal Jacob Alerius && Mokra the Skullcrusher || Warrior
+class boss_warrior_toc5 : public CreatureScript
 {
 public:
     boss_warrior_toc5() : CreatureScript("boss_warrior_toc5") { }
@@ -308,7 +310,7 @@ public:
     {
         boss_warrior_toc5AI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
 
             bDone = false;
             bHome = false;
@@ -320,7 +322,7 @@ public:
             me->SetFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_OOC_NOT_ATTACKABLE);
         }
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
 
         uint8 uiPhase;
         uint32 uiPhaseTimer;
@@ -432,7 +434,8 @@ public:
 };
 
 
-// Ambrose Boltspark && Eressea Dawnsinger || Mageclass boss_mage_toc5 : public CreatureScript
+// Ambrose Boltspark && Eressea Dawnsinger || Mage
+class boss_mage_toc5 : public CreatureScript
 {
 public:
     boss_mage_toc5() : CreatureScript("boss_mage_toc5") { }
@@ -446,7 +449,7 @@ public:
     {
         boss_mage_toc5AI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
 
             bDone = false;
             bHome = false;
@@ -458,7 +461,7 @@ public:
             me->SetFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_OOC_NOT_ATTACKABLE);
         }
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
 
         uint8 uiPhase;
         uint32 uiPhaseTimer;
@@ -566,7 +569,8 @@ public:
 };
 
 
-// Colosos && Runok Wildmane || Shamanclass boss_shaman_toc5 : public CreatureScript
+// Colosos && Runok Wildmane || Shaman
+class boss_shaman_toc5 : public CreatureScript
 {
 public:
     boss_shaman_toc5() : CreatureScript("boss_shaman_toc5") { }
@@ -580,7 +584,7 @@ public:
     {
         boss_shaman_toc5AI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
 
             bDone = false;
             bHome = false;
@@ -592,7 +596,7 @@ public:
             me->SetFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_OOC_NOT_ATTACKABLE);
         }
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
 
         uint8 uiPhase;
         uint32 uiPhaseTimer;
@@ -715,7 +719,8 @@ public:
 };
 
 
-// Jaelyne Evensong && Zul'tore || Hunterclass boss_hunter_toc5 : public CreatureScript
+// Jaelyne Evensong && Zul'tore || Hunter
+class boss_hunter_toc5 : public CreatureScript
 {
 public:
     boss_hunter_toc5() : CreatureScript("boss_hunter_toc5") { }
@@ -729,7 +734,7 @@ public:
     {
         boss_hunter_toc5AI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
 
             bDone = false;
             bHome = false;
@@ -741,7 +746,7 @@ public:
             me->SetFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_OOC_NOT_ATTACKABLE);
         }
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
 
         uint8 uiPhase;
         uint32 uiPhaseTimer;
@@ -888,7 +893,8 @@ public:
 };
 
 
-// Lana Stouthammer Evensong && Deathstalker Visceri || Rougeclass boss_rouge_toc5 : public CreatureScript
+// Lana Stouthammer Evensong && Deathstalker Visceri || Rouge
+class boss_rouge_toc5 : public CreatureScript
 {
 public:
     boss_rouge_toc5() : CreatureScript("boss_rouge_toc5") { }
@@ -902,7 +908,7 @@ public:
     {
         boss_rouge_toc5AI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
 
             bDone = false;
             bHome = false;
@@ -914,7 +920,7 @@ public:
             me->SetFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_OOC_NOT_ATTACKABLE);
         }
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
 
         uint8 uiPhase;
         uint32 uiPhaseTimer;

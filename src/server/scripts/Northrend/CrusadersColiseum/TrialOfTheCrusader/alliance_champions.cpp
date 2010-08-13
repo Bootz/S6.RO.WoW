@@ -177,7 +177,8 @@ enum HardmodeSpells
 /* Tyrius Duskblade - 34461     */
 /* Death Knight                 */
 /********************************/
-class boss_tyrius_duskblade : public CreatureScript
+
+class boss_tyrius_duskblade : public CreatureScript
 {
 public:
     boss_tyrius_duskblade() : CreatureScript("boss_tyrius_duskblade") { }
@@ -192,10 +193,10 @@ public:
         boss_tyrius_duskbladeAI(Creature* pCreature) : ScriptedAI(pCreature)
             {
                     Reset();
-                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+                    m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             }
 
-            ScriptedInstance* m_pInstance;
+            InstanceScript* m_pInstance;
         bool m_bIsRegularMode;
 
         void Reset()
@@ -258,7 +259,8 @@ public:
 /* Kavina Grovesong - 34460     */
 /* Druid                        */
 /********************************/
-class boss_kavina_grovesong : public CreatureScript
+
+class boss_kavina_grovesong : public CreatureScript
 {
 public:
     boss_kavina_grovesong() : CreatureScript("boss_kavina_grovesong") { }
@@ -273,10 +275,10 @@ public:
         boss_kavina_grovesongAI(Creature* pCreature) : ScriptedAI(pCreature)
             {
                     Reset();
-                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+                    m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             }
 
-            ScriptedInstance* m_pInstance;
+            InstanceScript* m_pInstance;
         bool m_bIsRegularMode;
 
         void Reset()
@@ -338,7 +340,8 @@ public:
 /* Melador Valestrider - 34469  */
 /* Druid                        */
 /********************************/
-class boss_melador_valestrider : public CreatureScript
+
+class boss_melador_valestrider : public CreatureScript
 {
 public:
     boss_melador_valestrider() : CreatureScript("boss_melador_valestrider") { }
@@ -353,10 +356,10 @@ public:
         boss_melador_valestriderAI(Creature* pCreature) : ScriptedAI(pCreature)
             {
                     Reset();
-                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+                    m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             }
 
-            ScriptedInstance* m_pInstance;
+            InstanceScript* m_pInstance;
         bool m_bIsRegularMode;
 
         void Reset()
@@ -418,7 +421,8 @@ public:
 /* Alyssia Moonstalker - 34467  */
 /* Hunter                       */
 /********************************/
-class boss_alyssia_moonstalker : public CreatureScript
+
+class boss_alyssia_moonstalker : public CreatureScript
 {
 public:
     boss_alyssia_moonstalker() : CreatureScript("boss_alyssia_moonstalker") { }
@@ -433,10 +437,10 @@ public:
         boss_alyssia_moonstalkerAI(Creature* pCreature) : ScriptedAI(pCreature)
             {
                     Reset();
-                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+                    m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             }
 
-            ScriptedInstance* m_pInstance;
+            InstanceScript* m_pInstance;
         bool m_bIsRegularMode;
 
         void Reset()
@@ -498,7 +502,8 @@ public:
 /* Noozle Whizzlestick - 34468  */
 /* Mage                         */
 /********************************/
-class boss_noozle_whizzlestick : public CreatureScript
+
+class boss_noozle_whizzlestick : public CreatureScript
 {
 public:
     boss_noozle_whizzlestick() : CreatureScript("boss_noozle_whizzlestick") { }
@@ -513,10 +518,10 @@ public:
         boss_noozle_whizzlestickAI(Creature* pCreature) : ScriptedAI(pCreature)
             {
                     Reset();
-                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+                    m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             }
 
-            ScriptedInstance* m_pInstance;
+            InstanceScript* m_pInstance;
         bool m_bIsRegularMode;
 
         void Reset()
@@ -578,7 +583,8 @@ public:
 /* Velanaa - 34465              */
 /* Paladin                      */
 /********************************/
-class boss_velanaa : public CreatureScript
+
+class boss_velanaa : public CreatureScript
 {
 public:
     boss_velanaa() : CreatureScript("boss_velanaa") { }
@@ -593,10 +599,10 @@ public:
         boss_velanaaAI(Creature* pCreature) : ScriptedAI(pCreature)
             {
                     Reset();
-                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+                    m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             }
 
-            ScriptedInstance* m_pInstance;
+            InstanceScript* m_pInstance;
         bool m_bIsRegularMode;
 
         void Reset()
@@ -658,7 +664,8 @@ public:
 /* Baelnor Lightbearer - 34471  */
 /* Paladin                      */
 /********************************/
-class boss_baelnor_lightbearer : public CreatureScript
+
+class boss_baelnor_lightbearer : public CreatureScript
 {
 public:
     boss_baelnor_lightbearer() : CreatureScript("boss_baelnor_lightbearer") { }
@@ -673,10 +680,10 @@ public:
         boss_baelnor_lightbearerAI(Creature* pCreature) : ScriptedAI(pCreature)
             {
                     Reset();
-                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+                    m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             }
 
-            ScriptedInstance* m_pInstance;
+            InstanceScript* m_pInstance;
         bool m_bIsRegularMode;
 
         void Reset()
@@ -738,7 +745,8 @@ public:
 /* Anthar Forgemender - 34466   */
 /* Priest                       */
 /********************************/
-class boss_anthar_forgemender : public CreatureScript
+
+class boss_anthar_forgemender : public CreatureScript
 {
 public:
     boss_anthar_forgemender() : CreatureScript("boss_anthar_forgemender") { }
@@ -753,10 +761,10 @@ public:
         boss_anthar_forgemenderAI(Creature* pCreature) : ScriptedAI(pCreature)
             {
                     Reset();
-                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+                    m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             }
 
-            ScriptedInstance* m_pInstance;
+            InstanceScript* m_pInstance;
         bool m_bIsRegularMode;
 
         void Reset()
@@ -818,7 +826,8 @@ public:
 /* Brienna Nightfell - 34473    */
 /* Priest                       */
 /********************************/
-class boss_brienna_nightfell : public CreatureScript
+
+class boss_brienna_nightfell : public CreatureScript
 {
 public:
     boss_brienna_nightfell() : CreatureScript("boss_brienna_nightfell") { }
@@ -833,10 +842,10 @@ public:
         boss_brienna_nightfellAI(Creature* pCreature) : ScriptedAI(pCreature)
             {
                     Reset();
-                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+                    m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             }
 
-            ScriptedInstance* m_pInstance;
+            InstanceScript* m_pInstance;
         bool m_bIsRegularMode;
 
         void Reset()
@@ -898,7 +907,8 @@ public:
 /* Irieth Shadowstep - 34472    */
 /* Rogue                        */
 /********************************/
-class boss_irieth_shadowstepe : public CreatureScript
+
+class boss_irieth_shadowstepe : public CreatureScript
 {
 public:
     boss_irieth_shadowstepe() : CreatureScript("boss_irieth_shadowstepe") { }
@@ -913,10 +923,10 @@ public:
         boss_irieth_shadowstepeAI(Creature* pCreature) : ScriptedAI(pCreature)
             {
                     Reset();
-                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+                    m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             }
 
-            ScriptedInstance* m_pInstance;
+            InstanceScript* m_pInstance;
         bool m_bIsRegularMode;
 
         void Reset()
@@ -978,7 +988,8 @@ public:
 /* Shaabad - 34463              */
 /* Shaman                       */
 /********************************/
-class boss_shaabad : public CreatureScript
+
+class boss_shaabad : public CreatureScript
 {
 public:
     boss_shaabad() : CreatureScript("boss_shaabad") { }
@@ -993,10 +1004,10 @@ public:
         boss_shaabadAI(Creature* pCreature) : ScriptedAI(pCreature)
             {
                     Reset();
-                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+                    m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             }
 
-            ScriptedInstance* m_pInstance;
+            InstanceScript* m_pInstance;
         bool m_bIsRegularMode;
 
         void Reset()
@@ -1058,7 +1069,8 @@ public:
 /* Saamul - 34470               */
 /* Shaman                       */
 /********************************/
-class boss_saamul : public CreatureScript
+
+class boss_saamul : public CreatureScript
 {
 public:
     boss_saamul() : CreatureScript("boss_saamul") { }
@@ -1073,10 +1085,10 @@ public:
         boss_saamulAI(Creature* pCreature) : ScriptedAI(pCreature)
             {
                     Reset();
-                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+                    m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             }
 
-            ScriptedInstance* m_pInstance;
+            InstanceScript* m_pInstance;
         bool m_bIsRegularMode;
 
         void Reset()
@@ -1138,7 +1150,8 @@ public:
 /* Serissa Grimdabbler - 34474  */
 /* Warlock                      */
 /********************************/
-class boss_serissa_grimdabbler : public CreatureScript
+
+class boss_serissa_grimdabbler : public CreatureScript
 {
 public:
     boss_serissa_grimdabbler() : CreatureScript("boss_serissa_grimdabbler") { }
@@ -1153,10 +1166,10 @@ public:
         boss_serissa_grimdabblerAI(Creature* pCreature) : ScriptedAI(pCreature)
             {
                     Reset();
-                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+                    m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             }
 
-            ScriptedInstance* m_pInstance;
+            InstanceScript* m_pInstance;
         bool m_bIsRegularMode;
 
         void Reset()
@@ -1218,7 +1231,8 @@ public:
 /* Shocuul - 34475              */
 /* Warrior                      */
 /********************************/
-class boss_shocuul : public CreatureScript
+
+class boss_shocuul : public CreatureScript
 {
 public:
     boss_shocuul() : CreatureScript("boss_shocuul") { }
@@ -1233,10 +1247,10 @@ public:
         boss_shocuulAI(Creature* pCreature) : ScriptedAI(pCreature)
             {
                     Reset();
-                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+                    m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             }
 
-            ScriptedInstance* m_pInstance;
+            InstanceScript* m_pInstance;
         bool m_bIsRegularMode;
 
         void Reset()
