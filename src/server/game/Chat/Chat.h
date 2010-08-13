@@ -264,6 +264,7 @@ class ChatHandler
         bool HandleListObjectCommand(const char* args);
 
         bool HandleLookupAreaCommand(const char* args);
+        bool HandleLookupAchievementCommand(const char* args);
         bool HandleLookupCreatureCommand(const char* args);
         bool HandleLookupEventCommand(const char* args);
         bool HandleLookupFactionCommand(const char * args);
@@ -479,6 +480,9 @@ class ChatHandler
         bool HandleTeleDelCommand(const char * args);
         bool HandleTeleGroupCommand(const char* args);
         bool HandleTeleNameCommand(const char* args);
+
+        bool HandleAchievementsAddCommand(const char * args);
+        bool HandleAchievementsRemoveCommand(const char *args);
 
         bool HandleTitlesAddCommand(const char* args);
         bool HandleTitlesCurrentCommand(const char* args);
