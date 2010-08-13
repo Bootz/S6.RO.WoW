@@ -717,7 +717,16 @@ void WorldSession::HandlePetCastSpellOpcode(WorldPacket& recvPacket)
         sLog.outError("WORLD: unknown PET spell id %i", spellid);
         return;
     }
-
+    
+    switch(spellid)
+    {
+	    case 64077:
+	    {
+		    _player->CastSpell(caster, spellid, true);
+		    return;
+	    }
+    }
+    
     if (spellInfo->StartRecoveryCategory > 0) //Check if spell is affected by GCD
         if (caster->GetTypeId() == TYPEID_UNIT && caster->ToCreature()->GetGlobalCooldown() > 0)
         {

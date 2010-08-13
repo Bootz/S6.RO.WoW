@@ -5009,6 +5009,34 @@ void Spell::EffectScriptEffect(uint32 effIndex)
                     unitTarget->CastSpell(unitTarget,spellid,false);
                     return;
                 }
+		case 62575:
+		{
+			if(m_caster->GetOwner())
+				m_caster->GetOwner()->CastSpell(unitTarget,62626,true );
+			return;
+		}
+		case 62960:
+		{
+			if (!unitTarget)
+				return;
+			m_caster->CastSpell(unitTarget,62563,true );
+			m_caster->CastSpell(unitTarget,68321,true );
+			
+			return;
+		}
+		case 62626:
+		case 68321:
+		{
+			if(!unitTarget)
+				return;
+			if (unitTarget->GetAura(62719))
+				unitTarget->RemoveAuraFromStack(62719);
+
+			if(unitTarget->GetAura(64100))
+				unitTarget->RemoveAuraFromStack(64100);
+			return;
+		}
+		
                 // Shadow Flame (All script effects, not just end ones to prevent player from dodging the last triggered spell)
                 case 22539:
                 case 22972:
@@ -5901,6 +5929,7 @@ void Spell::EffectScriptEffect(uint32 effIndex)
                     break;
                 }
                 case 64142:                                 // Upper Deck - Create Foam Sword
+		{
                     if (unitTarget->GetTypeId() != TYPEID_PLAYER)
                         return;
                     Player *plr = unitTarget->ToPlayer();
@@ -5911,6 +5940,19 @@ void Spell::EffectScriptEffect(uint32 effIndex)
                             return;
                     DoCreateItem(effIndex, itemId[urand(0,4)]);
                     return;
+		}
+		case 63845:
+		{
+			if(m_caster->GetTypeId()!=TYPEID_PLAYER)
+				return;
+
+			if(m_caster->ToPlayer()->GetTeamId()==TEAM_ALLIANCE)
+				DoCreateItem(0,46069);
+			else
+				DoCreateItem(0,46070);
+
+			break;
+		}
             }
             break;
         }
