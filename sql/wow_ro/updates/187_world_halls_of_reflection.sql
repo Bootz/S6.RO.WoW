@@ -28,7 +28,9 @@ UPDATE `creature_template` SET `scale`='1' WHERE `entry` IN (37223);
 UPDATE `creature_template` SET `scale`='0.8' WHERE `entry` IN (36658, 37225, 37223, 37226, 37554);
 UPDATE `creature_template` SET `unit_flags`='768', `type_flags`='268435564' WHERE `entry` IN (38177, 38176, 38173, 38172, 38567, 38175);
 UPDATE `creature_template` SET `AIName`='', `Scriptname`='npc_frostworn_general' WHERE `entry`=36723;
-
+update `creature_template` set `AIName`='', `Scriptname`='npc_raging_gnoul' where `entry` in (36940);
+update `creature_template` set `AIName`='', `Scriptname`='npc_risen_witch_doctor' where `entry` in (36941);
+update `creature_template` set `AIName`='', `Scriptname`='npc_abon' where `entry` in (37069);
 -- conditions
 REPLACE INTO `conditions`  VALUES 
 (13, 0, 69431, 0, 18, 1, 37496, 0, 0, NULL),

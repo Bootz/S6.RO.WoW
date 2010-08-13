@@ -5174,6 +5174,9 @@ UPDATE `creature_template` SET `scale`='1' WHERE `entry` IN (37223);
 UPDATE `creature_template` SET `scale`='0.8' WHERE `entry` IN (36658, 37225, 37223, 37226, 37554);
 UPDATE `creature_template` SET `unit_flags`='768', `type_flags`='268435564' WHERE `entry` IN (38177, 38176, 38173, 38172, 38567, 38175);
 UPDATE `creature_template` SET `AIName`='', `Scriptname`='npc_frostworn_general' WHERE `entry`=36723;
+update `creature_template` set `AIName`='', `Scriptname`='npc_raging_gnoul' where `entry` in (36940);
+update `creature_template` set `AIName`='', `Scriptname`='npc_risen_witch_doctor' where `entry` in (36941);
+update `creature_template` set `AIName`='', `Scriptname`='npc_abon' where `entry` in (37069);
 
 -- conditions
 REPLACE INTO `conditions`  VALUES 
@@ -6467,6 +6470,8 @@ UPDATE `creature_template` SET `ScriptName`='npc_crok_scourgebane' WHERE `entry`
 UPDATE `creature_template` SET `ScriptName`='npc_valis_windchaser' WHERE `entry`=33974;
 UPDATE `creature_template` SET `ScriptName`='npc_rugan_steelbelly' WHERE `entry`=33972;
 UPDATE `creature_template` SET `ScriptName`='npc_jeran_lockwood' WHERE `entry`=33973;
+UPDATE `creature_template` SET `Scriptname`='npc_justicar_mariel_trueheart' WHERE `entry` = '33817';
+
 
 -- Debug QuestRelation A2
 DELETE FROM `creature_questrelation` WHERE `quest` IN (13828, 13672, 13679, 13684, 13685, 13689, 13688, 13690);
