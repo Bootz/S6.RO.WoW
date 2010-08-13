@@ -6206,7 +6206,6 @@ UPDATE `quest_template` SET `NextQuestId`=13721, `NextQuestInChain`=13721, `Excl
 UPDATE `quest_template` SET `NextQuestId`=13722, `NextQuestInChain`=13722, `ExclusiveGroup`=13696 WHERE `entry`=13711;
 
 UPDATE `quest_template` SET `PrevQuestId`=0, `ExclusiveGroup`=0 WHERE `entry` IN (13697, 13719, 13720, 13721, 13722);
-4
 UPDATE `quest_template` SET `NextQuestId`=13726, `NextQuestInChain`=13726 WHERE `entry`=13697;
 UPDATE `quest_template` SET `NextQuestId`=13727, `NextQuestInChain`=13727  WHERE `entry`=13719;
 UPDATE `quest_template` SET `NextQuestId`=13728, `NextQuestInChain`=13728  WHERE `entry`=13720;
@@ -6544,7 +6543,7 @@ INSERT INTO `script_texts` (`npc_entry`, `entry`, `content_default`, `content_lo
 (0, -1850006, 'Prepare your self !', 'Prepare your self! !',''),
 (0, -1850007, 'You think you have the courage in you? Will see.', 'You think you have the courage in you? Will see.',''),
 (0, -1850008, 'Impressive demonstration. I think you\re quite able to join the ranks of the valiant.', 'Impressive demonstration. I think you\re quite able to join the ranks of the valiant.',''),
-(0, -1850009, 'I \ 've won. You'll probably have more luck next time.', I\'ve won. You'll probably have more luck next time.',''),
+(0, -1850009, 'I\'ve won. You\'ll probably have more luck next time.', 'I\'ve won. You\'ll probably have more luck next time.',''),
 (0, -1850010, 'I am defeated. Nice battle !', 'I am defeated. Nice battle !',''),
 (0, -1850011, 'It seems that I\'ve underestimated your skills. Well done.', 'It seems that I\'ve underestimated your skills. Well done.',''),
-(0, -1850012, 'You\'ll probably have more luck next time.', 'You\'ll probably have more luck next time.','');
+(0, -1850012, 'You\'ll probably have more luck next time.', '','');
