@@ -944,37 +944,37 @@ CreatureAI* GetAI_npc_LichKing(Creature* pCreature)
 
 void AddSC_trial_of_the_crussader()
 {
-    Script* NewScript;
+    Script *newscript;
 
-    NewScript = new Script;
-    NewScript->Name = "npc_tcrus_announcer";
-        NewScript->GetAI = &GetAI_npc_tcrus_announcer;
-    NewScript->pGossipHello = &GossipHello_npc_tcrus_announcer;
-    NewScript->pGossipSelect = &GossipSelect_npc_tcrus_announcer;
-    NewScript->RegisterSelf();
+    newscript = new Script;
+    newscript->Name = "npc_tcrus_announcer";
+        newscript->GetAI = &GetAI_npc_tcrus_announcer;
+    newscript->pGossipHello = &GossipHello_npc_tcrus_announcer;
+    newscript->pGossipSelect = &GossipSelect_npc_tcrus_announcer;
+    newscript->RegisterSelf();
 
-    NewScript = new Script;
-    NewScript->Name = "npc_tcrus_tirion";
-        NewScript->GetAI = &GetAI_npc_tcrus_tirion;
-    NewScript->RegisterSelf();
+    newscript = new Script;
+    newscript->Name = "npc_tcrus_tirion";
+        newscript->GetAI = &GetAI_npc_tcrus_tirion;
+    newscript->RegisterSelf();
 
-    NewScript = new Script;
-    NewScript->Name = "npc_tcrus_fizzlebang";
-        NewScript->GetAI = &GetAI_npc_tcrus_fizzlebang;
-    NewScript->RegisterSelf();
+    newscript = new Script;
+    newscript->Name = "npc_tcrus_fizzlebang";
+        newscript->GetAI = &GetAI_npc_tcrus_fizzlebang;
+    newscript->RegisterSelf();
 
-        NewScript = new Script;
-    NewScript->Name = "npc_Garrosh";
-        NewScript->GetAI = &GetAI_npc_Garrosh;
-    NewScript->RegisterSelf();
+        newscript = new Script;
+    newscript->Name = "npc_Garrosh";
+        newscript->GetAI = &GetAI_npc_Garrosh;
+    newscript->RegisterSelf();
 
-        NewScript = new Script;
-    NewScript->Name = "npc_LichKing";
-        NewScript->GetAI = &GetAI_npc_LichKing;
-    NewScript->RegisterSelf();
+        newscript = new Script;
+    newscript->Name = "npc_LichKing";
+        newscript->GetAI = &GetAI_npc_LichKing;
+    newscript->RegisterSelf();
 
-        NewScript = new Script;
-    NewScript->Name = "npc_KingVyrn";
-        NewScript->GetAI = &GetAI_npc_KingVyrn;
-    NewScript->RegisterSelf();
+        newscript = new Script;
+    newscript->Name = "npc_KingVyrn";
+        newscript->GetAI = &GetAI_npc_KingVyrn;
+    newscript->RegisterSelf();
 }

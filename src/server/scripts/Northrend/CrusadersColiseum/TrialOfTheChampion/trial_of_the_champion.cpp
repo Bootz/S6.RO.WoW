@@ -740,13 +740,11 @@ void AddSC_trial_of_the_champion()
     newscript->Name = "npc_anstart";
     newscript->GetAI = &GetAI_npc_anstart;
     newscript->RegisterSelf();
-	
-    Script* NewScript;
-		
-    NewScript = new Script;
-    NewScript->Name = "npc_announcer_toc5";
-    NewScript->GetAI = &GetAI_npc_announcer_toc5;
-    NewScript->pGossipHello = &GossipHello_npc_announcer_toc5;
-    NewScript->pGossipSelect = &GossipSelect_npc_announcer_toc5;
-    NewScript->RegisterSelf();
+
+    newscript = new Script;
+    newscript->Name = "npc_announcer_toc5";
+    newscript->GetAI = &GetAI_npc_announcer_toc5;
+    newscript->pGossipHello = &GossipHello_npc_announcer_toc5;
+    newscript->pGossipSelect = &GossipSelect_npc_announcer_toc5;
+    newscript->RegisterSelf();
 }

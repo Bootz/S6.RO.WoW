@@ -572,7 +572,7 @@ CreatureAI* GetAI_cr_light_essence(Creature *pCreature)
 
 void AddSC_twin_valkyr()
 {
-    Script* newscript;
+    Script *newscript;
 
     newscript = new Script;
     newscript->Name = "boss_fjola";

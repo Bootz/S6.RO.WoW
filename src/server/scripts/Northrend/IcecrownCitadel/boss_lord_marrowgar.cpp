@@ -421,19 +421,19 @@ CreatureAI* GetAI_npc_bone_spike(Creature* pCreature)
 
 void AddSC_boss_marrowgar()
 {
-    Script* NewScript;
-    NewScript = new Script;
-    NewScript->Name = "boss_lord_marrowgar";
-    NewScript->GetAI = &GetAI_boss_lord_marrowgar;
-    NewScript->RegisterSelf();
+    Script *newscript;
+    newscript = new Script;
+    newscript->Name = "boss_lord_marrowgar";
+    newscript->GetAI = &GetAI_boss_lord_marrowgar;
+    newscript->RegisterSelf();
 
-    NewScript = new Script;
-    NewScript->Name = "npc_cold_flame";
-    NewScript->GetAI = &GetAI_npc_cold_flame;
-    NewScript->RegisterSelf();
+    newscript = new Script;
+    newscript->Name = "npc_cold_flame";
+    newscript->GetAI = &GetAI_npc_cold_flame;
+    newscript->RegisterSelf();
 
-    NewScript = new Script;
-    NewScript->Name = "npc_bone_spike";
-    NewScript->GetAI = &GetAI_npc_bone_spike;
-    NewScript->RegisterSelf();
+    newscript = new Script;
+    newscript->Name = "npc_bone_spike";
+    newscript->GetAI = &GetAI_npc_bone_spike;
+    newscript->RegisterSelf();
 }

@@ -603,25 +603,25 @@ CreatureAI* GetAI_npc_gr(Creature* pCreature)
 
 void AddSC_boss_black_knight()
 {		
-	Script* NewScript;
+	Script *newscript;
 	
-    NewScript = new Script;
-    NewScript->Name = "boss_black_knight";
-    NewScript->GetAI = &GetAI_boss_black_knight;
-    NewScript->RegisterSelf();
+    newscript = new Script;
+    newscript->Name = "boss_black_knight";
+    newscript->GetAI = &GetAI_boss_black_knight;
+    newscript->RegisterSelf();
 
-    NewScript = new Script;
-    NewScript->Name = "npc_risen_ghoul";
-    NewScript->GetAI = &GetAI_npc_risen_ghoul;
-    NewScript->RegisterSelf();
+    newscript = new Script;
+    newscript->Name = "npc_risen_ghoul";
+    newscript->GetAI = &GetAI_npc_risen_ghoul;
+    newscript->RegisterSelf();
 
-    NewScript = new Script;
-    NewScript->Name = "npc_black_knight_skeletal_gryphon";
-    NewScript->GetAI = &GetAI_npc_black_knight_skeletal_gryphon;
-    NewScript->RegisterSelf();
+    newscript = new Script;
+    newscript->Name = "npc_black_knight_skeletal_gryphon";
+    newscript->GetAI = &GetAI_npc_black_knight_skeletal_gryphon;
+    newscript->RegisterSelf();
 	
-    NewScript = new Script;
-    NewScript->Name = "npc_gr";
-    NewScript->GetAI = &GetAI_npc_gr;
-    NewScript->RegisterSelf();
+    newscript = new Script;
+    newscript->Name = "npc_gr";
+    newscript->GetAI = &GetAI_npc_gr;
+    newscript->RegisterSelf();
 }

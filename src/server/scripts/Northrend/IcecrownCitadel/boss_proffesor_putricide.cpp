@@ -713,40 +713,40 @@ CreatureAI* GetAI_boss_professor_putricide(Creature* pCreature)
 
 void AddSC_boss_professor_putricide()
 {
-    Script *NewScript;
+    Script *newscript;
 
-    NewScript = new Script;
-    NewScript->Name = "boss_professor_putricide";
-    NewScript->GetAI = &GetAI_boss_professor_putricide;
-    NewScript->RegisterSelf();
+    newscript = new Script;
+    newscript->Name = "boss_professor_putricide";
+    newscript->GetAI = &GetAI_boss_professor_putricide;
+    newscript->RegisterSelf();
 
-    NewScript = new Script;
-    NewScript->Name = "npc_volatile_ooze";
-    NewScript->GetAI = &GetAI_npc_volatile_ooze;
-    NewScript->RegisterSelf();
+    newscript = new Script;
+    newscript->Name = "npc_volatile_ooze";
+    newscript->GetAI = &GetAI_npc_volatile_ooze;
+    newscript->RegisterSelf();
 
-    NewScript = new Script;
-    NewScript->Name = "npc_choke_bomb";
-    NewScript->GetAI = &GetAI_npc_choke_bomb;
-    NewScript->RegisterSelf();
+    newscript = new Script;
+    newscript->Name = "npc_choke_bomb";
+    newscript->GetAI = &GetAI_npc_choke_bomb;
+    newscript->RegisterSelf();
 
-    NewScript = new Script;
-    NewScript->Name = "npc_puddle_ooze";
-    NewScript->GetAI = &GetAI_npc_puddle_ooze;
-    NewScript->RegisterSelf();
+    newscript = new Script;
+    newscript->Name = "npc_puddle_ooze";
+    newscript->GetAI = &GetAI_npc_puddle_ooze;
+    newscript->RegisterSelf();
 
-    NewScript = new Script;
-    NewScript->Name = "npc_malleable_goo";
-    NewScript->GetAI = &GetAI_npc_malleable_goo;
-    NewScript->RegisterSelf();
+    newscript = new Script;
+    newscript->Name = "npc_malleable_goo";
+    newscript->GetAI = &GetAI_npc_malleable_goo;
+    newscript->RegisterSelf();
 
-    NewScript = new Script;
-    NewScript->Name = "npc_abomination";
-    NewScript->GetAI = &GetAI_npc_abomination;
-    NewScript->RegisterSelf();
+    newscript = new Script;
+    newscript->Name = "npc_abomination";
+    newscript->GetAI = &GetAI_npc_abomination;
+    newscript->RegisterSelf();
 
-    NewScript = new Script;
-    NewScript->Name = "npc_gas_cloud";
-    NewScript->GetAI = &GetAI_npc_gas_cloud;
-    NewScript->RegisterSelf();
+    newscript = new Script;
+    newscript->Name = "npc_gas_cloud";
+    newscript->GetAI = &GetAI_npc_gas_cloud;
+    newscript->RegisterSelf();
 };

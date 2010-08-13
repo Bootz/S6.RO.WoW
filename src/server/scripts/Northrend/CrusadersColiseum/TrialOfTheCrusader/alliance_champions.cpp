@@ -1213,75 +1213,75 @@ CreatureAI* GetAI_boss_shocuul(Creature* pCreature)
 
 void AddSC_boss_tc_alliance_champions()
 {
-    Script* NewScript;
+    Script *newscript;
 
-    NewScript = new Script;
-    NewScript->Name = "boss_tyrius_duskblade";
-        NewScript->GetAI = &GetAI_boss_tyrius_duskblade;
-    NewScript->RegisterSelf();
+    newscript = new Script;
+    newscript->Name = "boss_tyrius_duskblade";
+        newscript->GetAI = &GetAI_boss_tyrius_duskblade;
+    newscript->RegisterSelf();
 
-    NewScript = new Script;
-    NewScript->Name = "boss_kavina_grovesong";
-        NewScript->GetAI = &GetAI_boss_kavina_grovesong;
-    NewScript->RegisterSelf();
+    newscript = new Script;
+    newscript->Name = "boss_kavina_grovesong";
+        newscript->GetAI = &GetAI_boss_kavina_grovesong;
+    newscript->RegisterSelf();
 
-    NewScript = new Script;
-    NewScript->Name = "boss_melador_valestrider";
-        NewScript->GetAI = &GetAI_boss_melador_valestrider;
-    NewScript->RegisterSelf();
+    newscript = new Script;
+    newscript->Name = "boss_melador_valestrider";
+        newscript->GetAI = &GetAI_boss_melador_valestrider;
+    newscript->RegisterSelf();
 
-    NewScript = new Script;
-    NewScript->Name = "boss_alyssia_moonstalker";
-        NewScript->GetAI = &GetAI_boss_alyssia_moonstalker;
-    NewScript->RegisterSelf();
+    newscript = new Script;
+    newscript->Name = "boss_alyssia_moonstalker";
+        newscript->GetAI = &GetAI_boss_alyssia_moonstalker;
+    newscript->RegisterSelf();
 
-    NewScript = new Script;
-    NewScript->Name = "boss_noozle_whizzlestick";
-        NewScript->GetAI = &GetAI_boss_noozle_whizzlestick;
-    NewScript->RegisterSelf();
+    newscript = new Script;
+    newscript->Name = "boss_noozle_whizzlestick";
+        newscript->GetAI = &GetAI_boss_noozle_whizzlestick;
+    newscript->RegisterSelf();
 
-    NewScript = new Script;
-    NewScript->Name = "boss_velanaa";
-        NewScript->GetAI = &GetAI_boss_velanaa;
-    NewScript->RegisterSelf();
+    newscript = new Script;
+    newscript->Name = "boss_velanaa";
+        newscript->GetAI = &GetAI_boss_velanaa;
+    newscript->RegisterSelf();
 
-    NewScript = new Script;
-    NewScript->Name = "boss_baelnor_lightbearer";
-        NewScript->GetAI = &GetAI_boss_baelnor_lightbearer;
-    NewScript->RegisterSelf();
+    newscript = new Script;
+    newscript->Name = "boss_baelnor_lightbearer";
+        newscript->GetAI = &GetAI_boss_baelnor_lightbearer;
+    newscript->RegisterSelf();
 
-    NewScript = new Script;
-    NewScript->Name = "boss_anthar_forgemender";
-        NewScript->GetAI = &GetAI_boss_anthar_forgemender;
-    NewScript->RegisterSelf();
+    newscript = new Script;
+    newscript->Name = "boss_anthar_forgemender";
+        newscript->GetAI = &GetAI_boss_anthar_forgemender;
+    newscript->RegisterSelf();
 
-    NewScript = new Script;
-    NewScript->Name = "boss_brienna_nightfell";
-        NewScript->GetAI = &GetAI_boss_brienna_nightfell;
-    NewScript->RegisterSelf();
+    newscript = new Script;
+    newscript->Name = "boss_brienna_nightfell";
+        newscript->GetAI = &GetAI_boss_brienna_nightfell;
+    newscript->RegisterSelf();
 
-    NewScript = new Script;
-    NewScript->Name = "boss_irieth_shadowstepe";
-        NewScript->GetAI = &GetAI_boss_irieth_shadowstepe;
-    NewScript->RegisterSelf();
+    newscript = new Script;
+    newscript->Name = "boss_irieth_shadowstepe";
+        newscript->GetAI = &GetAI_boss_irieth_shadowstepe;
+    newscript->RegisterSelf();
 
-    NewScript = new Script;
-    NewScript->Name = "boss_shaabad";
-        NewScript->GetAI = &GetAI_boss_shaabad;
-    NewScript->RegisterSelf();
+    newscript = new Script;
+    newscript->Name = "boss_shaabad";
+        newscript->GetAI = &GetAI_boss_shaabad;
+    newscript->RegisterSelf();
 
-    NewScript = new Script;
-    NewScript->Name = "boss_saamul";
-        NewScript->GetAI = &GetAI_boss_saamul;
-    NewScript->RegisterSelf();
+    newscript = new Script;
+    newscript->Name = "boss_saamul";
+        newscript->GetAI = &GetAI_boss_saamul;
+    newscript->RegisterSelf();
 
-    NewScript = new Script;
-    NewScript->Name = "boss_serissa_grimdabbler";
-        NewScript->GetAI = &GetAI_boss_serissa_grimdabbler;
-    NewScript->RegisterSelf();
+    newscript = new Script;
+    newscript->Name = "boss_serissa_grimdabbler";
+        newscript->GetAI = &GetAI_boss_serissa_grimdabbler;
+    newscript->RegisterSelf();
 
-    NewScript = new Script;
-    NewScript->Name = "boss_shocuul";
-        NewScript->GetAI = &GetAI_boss_shocuul;
-    NewScript->RegisterSelf();
+    newscript = new Script;
+    newscript->Name = "boss_shocuul";
+        newscript->GetAI = &GetAI_boss_shocuul;
+    newscript->RegisterSelf();
 }
