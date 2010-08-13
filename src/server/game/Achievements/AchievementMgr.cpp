@@ -446,6 +446,14 @@ void AchievementMgr::DeleteFromDB(uint32 lowguid)
     CharacterDatabase.CommitTransaction ();
 }
 
+void AchievementMgr::DeleteAchievementFromDB(uint32 lowguid, uint32 achi_id)
+{
+    CharacterDatabase.BeginTransaction ();
+    CharacterDatabase.PExecute("DELETE FROM character_achievement WHERE guid = %u AND achievement = %u",lowguid,achi_id);
+    CharacterDatabase.CommitTransaction ();
+    SaveToDB();
+}
+
 void AchievementMgr::SaveToDB()
 {
     if (!m_completedAchievements.empty())

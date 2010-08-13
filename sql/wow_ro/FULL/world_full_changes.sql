@@ -4810,6 +4810,8 @@ UPDATE `creature_template` SET `ScriptName` = 'boss_elder_stonebark' WHERE `entr
 UPDATE `creature_template` SET `ScriptName` = 'boss_elder_brightleaf' WHERE `entry` =32195;
 UPDATE `creature_template` SET `ScriptName` = 'creature_iron_roots' WHERE `entry` =33088;
 UPDATE `creature_template` SET `ScriptName` = 'creature_sun_beam' WHERE `entry` =33170;
+-- XT-002 vehicle id
+UPDATE `creature_template` SET `unit_flags` = 33554432, `type_flags` = 0, `VehicleId` = 335 WHERE `entry` = 33293;
 
 SET FOREIGN_KEY_CHECKS=0;
 -- ----------------------------
@@ -6552,3 +6554,14 @@ INSERT INTO `script_texts` (`npc_entry`, `entry`, `content_default`, `content_lo
 (0, -1850010, 'I am defeated. Nice battle !', 'I am defeated. Nice battle !',''),
 (0, -1850011, 'It seems that I\'ve underestimated your skills. Well done.', 'It seems that I\'ve underestimated your skills. Well done.',''),
 (0, -1850012, 'You\'ll probably have more luck next time.', '','');
+
+ALTER TABLE db_version CHANGE COLUMN required_424_argent_quests required_436_world_command bit;
+
+-- Achievement lookup & add
+DELETE FROM command WHERE NAME IN ('lookup achievement', 'achievement add', 'achievement remove');
+INSERT INTO command (name, security, help) VALUES
+('lookup achievement', 1, 'Syntax: .lookup achievement $achievementname\r\n\r\nLooks up an achievement by $achievementname, and returns all matches with their Achievement ID\'s.');
+INSERT INTO command (name, security, help) VALUES
+('achievement add', 2, 'Syntax: .achievement add $achievementID\r\n\r\Adds the achievement with selected ID\'s.');
+INSERT INTO command (name, security, help) VALUES
+('achievement remove', 2, 'Syntax: .achievement remove $achievementID\r\n\r\removes the achievement with selected ID\'s.');

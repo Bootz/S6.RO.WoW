@@ -273,29 +273,25 @@ public:
             }
         
             // Hard mode chest
-            // Summon spells not works correctly, chest respawn is infinite
-            Position pos;
-            me->GetRandomNearPosition(pos, 10);
+            uint32 chest;
 
             switch (EldersCount)
             {
                 case 0:
-                    //DoCast(RAID_MODE(RAID_10_0_SPELL_FREYA_CHEST, RAID_25_0_SPELL_FREYA_CHEST));
-                    me->SummonGameObject(RAID_MODE(194324, 194328), pos.m_positionX, pos.m_positionY, pos.m_positionZ, 0, 0, 0, 1, 0, 0);
+                    chest = RAID_MODE(194324, 194328);
                     break;
                 case 1:
-                    //DoCast(RAID_MODE(RAID_10_1_SPELL_FREYA_CHEST, RAID_25_1_SPELL_FREYA_CHEST));
-                    me->SummonGameObject(RAID_MODE(194325, 194329), pos.m_positionX, pos.m_positionY, pos.m_positionZ, 0, 0, 0, 1, 0, 0);
+                    chest = RAID_MODE(194325, 194329);
                     break;
                 case 2:
-                    //DoCast(RAID_MODE(RAID_10_2_SPELL_FREYA_CHEST, RAID_25_2_SPELL_FREYA_CHEST));
-                    me->SummonGameObject(RAID_MODE(194326, 194330), pos.m_positionX, pos.m_positionY, pos.m_positionZ, 0, 0, 0, 1, 0, 0);
+                    chest = RAID_MODE(194326, 194330);
                     break;
                 case 3:
-                    //DoCast(RAID_MODE(RAID_10_3_SPELL_FREYA_CHEST, RAID_25_3_SPELL_FREYA_CHEST));
-                    me->SummonGameObject(RAID_MODE(194327, 194331), pos.m_positionX, pos.m_positionY, pos.m_positionZ, 0, 0, 0, 1, 0, 0);
+                    chest = RAID_MODE(194327, 194331);
                     break;
             }
+        // Summon spells not work correctly, chest respawn is infinite
+        me->SummonGameObject(chest,(me->GetPositionX()+15*cos(me->GetOrientation())),(me->GetPositionY()+15*sin(me->GetOrientation())),me->GetPositionZ(),me->GetOrientation(),0,0,1,0,0);
         }
 
         void EnterCombat(Unit* pWho)

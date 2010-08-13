@@ -2293,6 +2293,24 @@ bool ChatHandler::HandleAchievementsAddCommand(const char *args)
 
 bool ChatHandler::HandleAchievementsRemoveCommand(const char *args)
 {
+    Player* targetPlayer = getSelectedPlayer();
+
+    if (!targetPlayer)
+    {
+        SendSysMessage(LANG_PLAYER_NOT_FOUND);
+        SetSentErrorMessage(true);
+        return false;
+    }
+    uint32 id = atoi((char*)args);
+    AchievementEntry const *achievement = sAchievementStore.LookupEntry(id);
+    if (!achievement)
+        return false;
+    if (!targetPlayer->GetAchievementMgr().HasAchieved(achievement))
+    {
+        SetSentErrorMessage(true);
+        return false;
+    }
+    targetPlayer->GetAchievementMgr().DeleteAchievementFromDB(targetPlayer->GetGUIDLow(), id);
     return true;
 }
 
