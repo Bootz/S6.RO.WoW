@@ -132,7 +132,7 @@ enum Yells
     SAY_BRUNDIR_BERSERK                         = -1603047,
 };
 
-bool IsEncounterComplete(ScriptedInstance* pInstance, Creature* me)
+bool IsEncounterComplete(InstanceScript* pInstance, Creature* me)
 {
    if (!pInstance || !me)
         return false;
@@ -157,7 +157,7 @@ bool IsEncounterComplete(ScriptedInstance* pInstance, Creature* me)
 }
 
 // Avoid killing bosses one to one
-void CallBosses(ScriptedInstance *pInstance, uint32 caller, Unit *who) {
+void CallBosses(InstanceScript *pInstance, uint32 caller, Unit *who) {
     
     // Respawn if dead
     if(Creature* Steelbreaker = Unit::GetCreature(*who, pInstance ? pInstance->GetData64(DATA_STEELBREAKER) : 0))
@@ -196,7 +196,7 @@ void CallBosses(ScriptedInstance *pInstance, uint32 caller, Unit *who) {
         }
     }
 }
-class boss_steelbreaker : public CreatureScript
+class boss_steelbreaker : public CreatureScript
 {
 public:
     boss_steelbreaker() : CreatureScript("boss_steelbreaker") { }
@@ -210,7 +210,7 @@ public:
     {
         boss_steelbreakerAI(Creature *c) : ScriptedAI(c)
         {
-            pInstance = c->GetInstanceData();
+            pInstance = c->GetInstanceScript();
             me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);
             me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true); // Death Grip jump effect
         }
@@ -241,7 +241,7 @@ public:
         }
 
         EventMap events;
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
         uint32 phase;
 
         void EnterCombat(Unit *who)
@@ -344,7 +344,7 @@ public:
     };
 
 };
-class boss_runemaster_molgeim : public CreatureScript
+class boss_runemaster_molgeim : public CreatureScript
 {
 public:
     boss_runemaster_molgeim() : CreatureScript("boss_runemaster_molgeim") { }
@@ -358,7 +358,7 @@ public:
     {
         boss_runemaster_molgeimAI(Creature *c) : ScriptedAI(c)
         {
-            pInstance = c->GetInstanceData();
+            pInstance = c->GetInstanceScript();
             me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);
             me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true); // Death Grip jump effect
         }
@@ -387,7 +387,7 @@ public:
                 }
         }
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
         EventMap events;
         uint32 phase;
 
@@ -517,7 +517,7 @@ public:
     };
 
 };
-class boss_stormcaller_brundir : public CreatureScript
+class boss_stormcaller_brundir : public CreatureScript
 {
 public:
     boss_stormcaller_brundir() : CreatureScript("boss_stormcaller_brundir") { }
@@ -531,7 +531,7 @@ public:
     {
         boss_stormcaller_brundirAI(Creature *c) : ScriptedAI(c)
         {
-            pInstance = c->GetInstanceData();
+            pInstance = c->GetInstanceScript();
             me->SetReactState(REACT_PASSIVE);
             me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);
             me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true); // Death Grip jump effect
@@ -563,7 +563,7 @@ public:
         }
 
         EventMap events;
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
         uint32 phase;
         uint32 Position;
 
@@ -738,7 +738,7 @@ public:
 /***************
 *  mob_lightning_elemental
 *****************/
-class mob_lightning_elemental : public CreatureScript
+class mob_lightning_elemental : public CreatureScript
 {
 public:
     mob_lightning_elemental() : CreatureScript("mob_lightning_elemental") { }
@@ -774,7 +774,8 @@ public:
 };
 /***************
 *  mob_rune_of_summoning
-*****************/class mob_rune_of_summoning : public CreatureScript
+*****************/
+class mob_rune_of_summoning : public CreatureScript
 {
 public:
     mob_rune_of_summoning() : CreatureScript("mob_rune_of_summoning") { }
@@ -817,7 +818,7 @@ public:
 
 /***************
 *  mob_rune_of_power
-*****************/class mob_rune_of_power : public CreatureScript
+*****************/class mob_rune_of_power : public CreatureScript
 {
 public:
     mob_rune_of_power() : CreatureScript("mob_rune_of_power") { }

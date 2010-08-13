@@ -238,7 +238,7 @@ enum HardmodeSpells
 /* Gorgrim Shadowcleave - 34458 */
 /* Death Knight                 */
 /********************************/
-class boss_gorgrim_shadowcleave : public CreatureScript
+class boss_gorgrim_shadowcleave : public CreatureScript
 {
 public:
     boss_gorgrim_shadowcleave() : CreatureScript("boss_gorgrim_shadowcleave") { }
@@ -252,10 +252,10 @@ public:
     {
         boss_gorgrim_shadowcleaveAI(Creature* pCreature) : ScriptedAI(pCreature)
             {
-                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+                    m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             }
 
-            ScriptedInstance* m_pInstance;
+            InstanceScript* m_pInstance;
 
         void Reset()
         {
@@ -310,7 +310,7 @@ public:
 /* Birana Stormhoof - 34451 */
 /* Druid                    */
 /****************************/
-class boss_birana_stormhoof : public CreatureScript
+class boss_birana_stormhoof : public CreatureScript
 {
 public:
     boss_birana_stormhoof() : CreatureScript("boss_birana_stormhoof") { }
@@ -324,10 +324,10 @@ public:
     {
         boss_birana_stormhoofAI(Creature* pCreature) : ScriptedAI(pCreature)
             {
-                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+                    m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             }
 
-            ScriptedInstance* m_pInstance;
+            InstanceScript* m_pInstance;
 
         void Reset()
         {
@@ -382,7 +382,7 @@ public:
 /* Erin Misthoof - 34459 */
 /* Druid                 */
 /*************************/
-class boss_erin_misthoof : public CreatureScript
+class boss_erin_misthoof : public CreatureScript
 {
 public:
     boss_erin_misthoof() : CreatureScript("boss_erin_misthoof") { }
@@ -396,10 +396,10 @@ public:
     {
         boss_erin_misthoofAI(Creature* pCreature) : ScriptedAI(pCreature)
             {
-                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+                    m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             }
 
-            ScriptedInstance* m_pInstance;
+            InstanceScript* m_pInstance;
 
         void Reset()
         {
@@ -454,7 +454,7 @@ public:
 /* Ruj'kah - 34448      */
 /* Hunter               */
 /************************/
-class boss_rujkah : public CreatureScript
+class boss_rujkah : public CreatureScript
 {
 public:
     boss_rujkah() : CreatureScript("boss_rujkah") { }
@@ -468,10 +468,10 @@ public:
     {
         boss_rujkahAI(Creature* pCreature) : ScriptedAI(pCreature)
             {
-                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+                    m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             }
 
-            ScriptedInstance* m_pInstance;
+            InstanceScript* m_pInstance;
 
         void Reset()
         {
@@ -526,7 +526,7 @@ public:
 /* Ginselle Blightslinger - 34449 */
 /* Mage                           */
 /**********************************/
-class boss_ginselle_blightslinger : public CreatureScript
+class boss_ginselle_blightslinger : public CreatureScript
 {
 public:
     boss_ginselle_blightslinger() : CreatureScript("boss_ginselle_blightslinger") { }
@@ -540,10 +540,10 @@ public:
     {
         boss_ginselle_blightslingerAI(Creature* pCreature) : ScriptedAI(pCreature)
             {
-                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+                    m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             }
 
-            ScriptedInstance* m_pInstance;
+            InstanceScript* m_pInstance;
 
         void Reset()
         {
@@ -598,7 +598,7 @@ public:
 /* Liandra Suncaller - 34445  */
 /* Paladin                    */
 /******************************/
-class boss_liandra_suncaller : public CreatureScript
+class boss_liandra_suncaller : public CreatureScript
 {
 public:
     boss_liandra_suncaller() : CreatureScript("boss_liandra_suncaller") { }
@@ -612,10 +612,10 @@ public:
     {
         boss_liandra_suncallerAI(Creature* pCreature) : ScriptedAI(pCreature)
             {
-                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+                    m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             }
 
-            ScriptedInstance* m_pInstance;
+            InstanceScript* m_pInstance;
 
         void Reset()
         {
@@ -675,10 +675,10 @@ struct boss_malithas_brightbladeAI : public ScriptedAI
 {
     boss_malithas_brightbladeAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-                m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+                m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
 
     void Reset()
     {
@@ -731,7 +731,7 @@ struct boss_malithas_brightbladeAI : public ScriptedAI
 /* Caiphus the Stern - 34447 */
 /* Priest                    */
 /*****************************/
-class boss_caiphus_the_stern : public CreatureScript
+class boss_caiphus_the_stern : public CreatureScript
 {
 public:
     boss_caiphus_the_stern() : CreatureScript("boss_caiphus_the_stern") { }
@@ -745,10 +745,10 @@ public:
     {
         boss_caiphus_the_sternAI(Creature* pCreature) : ScriptedAI(pCreature)
             {
-                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+                    m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             }
 
-            ScriptedInstance* m_pInstance;
+            InstanceScript* m_pInstance;
 
         void Reset()
         {
@@ -803,7 +803,7 @@ public:
 /* Vivienne Blackwhisper - 34441 */
 /* Priest                        */
 /*********************************/
-class boss_vivienne_blackwhisper : public CreatureScript
+class boss_vivienne_blackwhisper : public CreatureScript
 {
 public:
     boss_vivienne_blackwhisper() : CreatureScript("boss_vivienne_blackwhisper") { }
@@ -817,10 +817,10 @@ public:
     {
         boss_vivienne_blackwhisperAI(Creature* pCreature) : ScriptedAI(pCreature)
             {
-                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+                    m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             }
 
-            ScriptedInstance* m_pInstance;
+            InstanceScript* m_pInstance;
 
         void Reset()
         {
@@ -875,7 +875,7 @@ public:
 /* Maz'dinah - 34454    */
 /* Rogue                */
 /************************/
-class boss_mazdinah : public CreatureScript
+class boss_mazdinah : public CreatureScript
 {
 public:
     boss_mazdinah() : CreatureScript("boss_mazdinah") { }
@@ -889,10 +889,10 @@ public:
     {
         boss_mazdinahAI(Creature* pCreature) : ScriptedAI(pCreature)
             {
-                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+                    m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             }
 
-            ScriptedInstance* m_pInstance;
+            InstanceScript* m_pInstance;
 
             void KilledUnit(Unit* who)
             {
@@ -943,7 +943,7 @@ public:
 /* Broln Stouthorn - 34455 */
 /* Shaman                  */
 /***************************/
-class boss_broln_stouthorn : public CreatureScript
+class boss_broln_stouthorn : public CreatureScript
 {
 public:
     boss_broln_stouthorn() : CreatureScript("boss_broln_stouthorn") { }
@@ -957,10 +957,10 @@ public:
     {
         boss_broln_stouthornAI(Creature* pCreature) : ScriptedAI(pCreature)
             {
-                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+                    m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             }
 
-            ScriptedInstance* m_pInstance;
+            InstanceScript* m_pInstance;
 
             void KilledUnit(Unit* who)
             {
@@ -1011,7 +1011,7 @@ public:
 /* Thrakgar - 34444     */
 /* Shaman               */
 /************************/
-class boss_thrakgar : public CreatureScript
+class boss_thrakgar : public CreatureScript
 {
 public:
     boss_thrakgar() : CreatureScript("boss_thrakgar") { }
@@ -1025,10 +1025,10 @@ public:
     {
         boss_thrakgarAI(Creature* pCreature) : ScriptedAI(pCreature)
             {
-                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+                    m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             }
 
-            ScriptedInstance* m_pInstance;
+            InstanceScript* m_pInstance;
 
         void Reset()
         {
@@ -1083,7 +1083,7 @@ public:
 /* Harkzog - 34450       */
 /* Warlock               */
 /*************************/
-class boss_harkzog : public CreatureScript
+class boss_harkzog : public CreatureScript
 {
 public:
     boss_harkzog() : CreatureScript("boss_harkzog") { }
@@ -1097,10 +1097,10 @@ public:
     {
         boss_harkzogAI(Creature* pCreature) : ScriptedAI(pCreature)
             {
-                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+                    m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             }
 
-            ScriptedInstance* m_pInstance;
+            InstanceScript* m_pInstance;
 
         void Reset()
         {
@@ -1155,7 +1155,7 @@ public:
 /* Narrhok Steelbreaker - 34453 */
 /* Warrior                      */
 /********************************/
-class boss_narrhok_steelbreaker : public CreatureScript
+class boss_narrhok_steelbreaker : public CreatureScript
 {
 public:
     boss_narrhok_steelbreaker() : CreatureScript("boss_narrhok_steelbreaker") { }
@@ -1169,10 +1169,10 @@ public:
     {
         boss_narrhok_steelbreakerAI(Creature* pCreature) : ScriptedAI(pCreature)
             {
-                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+                    m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             }
 
-            ScriptedInstance* m_pInstance;
+            InstanceScript* m_pInstance;
 
         void Reset()
         {
@@ -1230,7 +1230,7 @@ public:
 
 
 
-class boss_malithas_brightblader : public CreatureScript
+class boss_malithas_brightblader : public CreatureScript
 {
 public:
     boss_malithas_brightblader() : CreatureScript("boss_malithas_brightblader") { }

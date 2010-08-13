@@ -75,7 +75,7 @@ enum Creatures
 	CREATURE_ANNOUNCER                    = 35004
 };	
 
-class npc_anstart : public CreatureScript
+class npc_anstart : public CreatureScript
 {
 public:
     npc_anstart() : CreatureScript("npc_anstart") { }
@@ -90,7 +90,7 @@ public:
         npc_anstartAI(Creature *c) : ScriptedAI(c)
     	
         {
-            pInstance = c->GetInstanceData();
+            pInstance = c->GetInstanceScript();
     		
     	me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE|UNIT_FLAG_NOT_SELECTABLE);
 
@@ -108,7 +108,7 @@ public:
         Creature* pLady;	
         Creature* pHighlord;	
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
     	
 
     	
@@ -246,7 +246,7 @@ public:
     };
 
 };
-class npc_announcer_toc5 : public CreatureScript
+class npc_announcer_toc5 : public CreatureScript
 {
 public:
     npc_announcer_toc5() : CreatureScript("npc_announcer_toc5") { }
@@ -264,7 +264,7 @@ public:
 
     bool GossipHello(Player* pPlayer, Creature* pCreature)
     {
-        ScriptedInstance* pInstance = pCreature->GetInstanceData();
+        InstanceScript* pInstance = pCreature->GetInstanceScript();
 
         if (pInstance &&
             pInstance->GetData(BOSS_GRAND_CHAMPIONS) == DONE &&
@@ -297,7 +297,7 @@ public:
     {
         npc_announcer_toc5AI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
 
             uiSummonTimes = 0;
             uiPosition = 0;
@@ -327,7 +327,7 @@ public:
             SetArgentChampion();
         }
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
 
         uint8 uiSummonTimes;
         uint8 uiPosition;

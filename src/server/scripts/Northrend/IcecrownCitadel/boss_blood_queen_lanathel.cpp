@@ -74,10 +74,10 @@ struct boss_blood_queen_lanathelAI : public ScriptedAI
 {
     boss_blood_queen_lanathelAI(Creature *pCreature) : ScriptedAI(pCreature)
     {
-        m_pInstance = pCreature->GetInstanceData();
+        m_pInstance = pCreature->GetInstanceScript();
     }
 
-    ScriptedInstance* m_pInstance;
+    InstanceScript* m_pInstance;
 
     uint32 m_uiTwilightBloodboltTimer;
     uint32 m_uiPhaseTimer;
@@ -285,10 +285,10 @@ struct npc_swarming_shadowsAI : public Scripted_NoMovementAI
 {
     npc_swarming_shadowsAI(Creature *pCreature) : Scripted_NoMovementAI(pCreature)
     {
-        m_pInstance = pCreature->GetInstanceData();
+        m_pInstance = pCreature->GetInstanceScript();
     }
 
-    ScriptedInstance* m_pInstance;
+    InstanceScript* m_pInstance;
 
     uint32 m_uiSwarmingShadowTimer;
 
@@ -310,7 +310,7 @@ struct npc_swarming_shadowsAI : public Scripted_NoMovementAI
         } else m_uiSwarmingShadowTimer -= uiDiff;
     }
 };
-class boss_blood_queen_lanathel : public CreatureScript
+class boss_blood_queen_lanathel : public CreatureScript
 {
 public:
     boss_blood_queen_lanathel() : CreatureScript("boss_blood_queen_lanathel") { }
@@ -321,7 +321,7 @@ public:
     }
 
 };
-class npc_swarming_shadows : public CreatureScript
+class npc_swarming_shadows : public CreatureScript
 {
 public:
     npc_swarming_shadows() : CreatureScript("npc_swarming_shadows") { }

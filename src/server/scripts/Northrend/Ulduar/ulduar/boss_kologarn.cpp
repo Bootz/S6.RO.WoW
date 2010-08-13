@@ -102,7 +102,7 @@ uint32 GripTargetGUID;
 // Positiones
 const Position RubbleRight = {1781.814, -3.716, 448.808, 4.211};
 const Position RubbleLeft  = {1781.814, -45.07, 448.808, 2.260};
-class boss_kologarn : public CreatureScript
+class boss_kologarn : public CreatureScript
 {
 public:
     boss_kologarn() : CreatureScript("boss_kologarn") { }
@@ -118,7 +118,7 @@ public:
             left(false), right(false)
         {
             assert(vehicle);
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
             me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_STUNNED);
             me->SetStandState(UNIT_STAND_STATE_SUBMERGED);
@@ -127,7 +127,7 @@ public:
             emerged = false;
         }
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
 
         Vehicle *vehicle;
         bool left, right;
@@ -349,7 +349,7 @@ public:
 
 };
 
-class mob_focused_eyebeam : public CreatureScript
+class mob_focused_eyebeam : public CreatureScript
 {
 public:
     mob_focused_eyebeam() : CreatureScript("mob_focused_eyebeam") { }
@@ -388,7 +388,8 @@ public:
 };
 
 
-// Right Armclass mob_right_arm : public CreatureScript
+// Right Arm
+class mob_right_arm : public CreatureScript
 {
 public:
     mob_right_arm() : CreatureScript("mob_right_arm") { }
@@ -402,11 +403,11 @@ public:
     {
         mob_right_armAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = me->GetInstanceData();
+            m_pInstance = me->GetInstanceScript();
             me->ApplySpellImmune(0, IMMUNITY_ID, 64708, true);
         }
 
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
     
         bool Gripped;
         uint32 ArmDamage;
@@ -514,7 +515,8 @@ public:
 };
 
 
-// Left Armclass mob_left_arm : public CreatureScript
+// Left Arm
+class mob_left_arm : public CreatureScript
 {
 public:
     mob_left_arm() : CreatureScript("mob_left_arm") { }
@@ -528,10 +530,10 @@ public:
     {
         mob_left_armAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = me->GetInstanceData();
+            m_pInstance = me->GetInstanceScript();
         }
 
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
 
         void UpdateAI(const uint32 diff)
         {

@@ -245,7 +245,7 @@ static Locations OtherLoc[]=
 /*######
 ## boss_malygos
 ######*/
- class boss_malygos : public CreatureScript
+ class boss_malygos : public CreatureScript
 {
 public:
     boss_malygos() : CreatureScript("boss_malygos") { }
@@ -259,13 +259,13 @@ public:
     {
         boss_malygosAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+            m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             me->setActive(true);
             Reset();
             m_uiIs10Man = RAID_MODE(true, false);
         }
  
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
     
         uint64 m_AlexstraszaGUID;
     
@@ -1331,7 +1331,8 @@ public:
 };
 /*######
 ## mob_power_spark
-######*/class mob_power_spark : public CreatureScript
+######*/
+class mob_power_spark : public CreatureScript
 {
 public:
     mob_power_spark() : CreatureScript("mob_power_spark") { }
@@ -1345,11 +1346,11 @@ public:
     {
         mob_power_sparkAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+            m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             Reset();
         }
  
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
         bool isDead;
         uint32 m_uiCheckTimer;
         uint64 pMalygosGUID;
@@ -1476,7 +1477,7 @@ public:
 /*######
 ## mob_scion_of_eternity
 ######*/
- class mob_scion_of_eternity : public CreatureScript
+ class mob_scion_of_eternity : public CreatureScript
 {
 public:
     mob_scion_of_eternity() : CreatureScript("mob_scion_of_eternity") { }
@@ -1490,14 +1491,14 @@ public:
     {
         mob_scion_of_eternityAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+            m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             Reset();
             m_uiIs10Man = RAID_MODE(true, false);
         }
     
         bool m_uiIs10Man;
 
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
         uint32 m_uiArcaneBarrageTimer;
         uint32 m_uiMoveTimer;
         uint8 m_uiMovePoint;
@@ -1575,7 +1576,7 @@ public:
 /*######
 ## npc_arcane_overload
 ######*/
-class npc_arcane_overload : public CreatureScript
+class npc_arcane_overload : public CreatureScript
 {
 public:
     npc_arcane_overload() : CreatureScript("npc_arcane_overload") { }
@@ -1589,11 +1590,11 @@ public:
     {
         npc_arcane_overloadAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+            m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             Reset();
         }
     
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
     
         uint32 m_uiProtectTimer;
         bool m_uiAOCasted;
@@ -1669,7 +1670,7 @@ public:
 /*######
 ## mob_nexus_lord
 ######*/
-class mob_nexus_lord : public CreatureScript
+class mob_nexus_lord : public CreatureScript
 {
 public:
     mob_nexus_lord() : CreatureScript("mob_nexus_lord") { }
@@ -1683,12 +1684,12 @@ public:
     {
         mob_nexus_lordAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+            m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             Reset();
             m_uiIs10Man = RAID_MODE(true, false);
         }
     
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
     
         bool m_uiIs10Man;
     
@@ -1740,7 +1741,7 @@ public:
     };
 
 };
-class go_malygos_iris : public GameObjectScript
+class go_malygos_iris : public GameObjectScript
 {
 public:
     go_malygos_iris() : GameObjectScript("go_malygos_iris") { }

@@ -106,10 +106,10 @@ struct Boss_Raid_AnubarakAI : public ScriptedAI
 {
     Boss_Raid_AnubarakAI(Creature *pCreature) : ScriptedAI(pCreature)
     {
-        pInstance = pCreature->GetInstanceData();
+        pInstance = pCreature->GetInstanceScript();
         pAnubarak = me;
     }
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
 
         uint32 m_uiPhase;
         uint32 m_uiSwarmTickTimer;
@@ -350,7 +350,7 @@ struct Boss_Raid_AnubarakAI : public ScriptedAI
         DoScriptText(SAY_DEATH, me);
     }
 };
-class Boss_Raid_Anubarak : public CreatureScript
+class Boss_Raid_Anubarak : public CreatureScript
 {
 public:
     Boss_Raid_Anubarak() : CreatureScript("Boss_Raid_Anubarak") { }
@@ -361,7 +361,7 @@ public:
     }
 
 };
-class mob_swarm_scarab : public CreatureScript
+class mob_swarm_scarab : public CreatureScript
 {
 public:
     mob_swarm_scarab() : CreatureScript("mob_swarm_scarab") { }
@@ -375,10 +375,10 @@ public:
     {
         mob_swarm_scarabAI(Creature *pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
 
         uint32 AcidTimer;
         uint32 DeterminationTimer;
@@ -408,7 +408,7 @@ public:
 
 };
 
-class Mob_NerubianTrigger : public CreatureScript
+class Mob_NerubianTrigger : public CreatureScript
 {
 public:
     Mob_NerubianTrigger() : CreatureScript("Mob_NerubianTrigger") { }
@@ -422,10 +422,10 @@ public:
     {
         mob_NerubianTriggerAI(Creature *pCreature) : Scripted_NoMovementAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
 
         void Reset()
             {
@@ -439,7 +439,7 @@ public:
 
 };
 
-class nerubian_burrower : public CreatureScript
+class nerubian_burrower : public CreatureScript
 {
 public:
     nerubian_burrower() : CreatureScript("nerubian_burrower") { }
@@ -453,10 +453,10 @@ public:
     {
         nerubian_burrowerAI(Creature *pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
 
         uint32 ExposeTimer;
         uint32 ResurfaceTimer;
@@ -499,7 +499,7 @@ public:
 
 };
 
-class frost_sphere : public CreatureScript
+class frost_sphere : public CreatureScript
 {
 public:
     frost_sphere() : CreatureScript("frost_sphere") { }
@@ -513,10 +513,10 @@ public:
     {
         frost_sphereAI(Creature *pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
 
         uint32 PermafrostTimer;
 
@@ -552,7 +552,7 @@ public:
 
 };
 
-class creature_impale : public CreatureScript
+class creature_impale : public CreatureScript
 {
 public:
     creature_impale() : CreatureScript("creature_impale") { }
@@ -566,11 +566,11 @@ public:
     {
         creature_impaleAI(Creature *pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
             pImpale = me;
         }
 
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
 
         bool pursuing;
         Unit* Target;

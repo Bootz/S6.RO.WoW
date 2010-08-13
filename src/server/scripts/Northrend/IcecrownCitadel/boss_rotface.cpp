@@ -100,7 +100,7 @@ Creature* pLittleooze;
 #define EMOTE_BIG_OOZE "Big Ooze can barely maintain its form!"
 #define EMOTE_SLIME_SPRAY "Rotface begins to cast Slime Spray!"
 #define EMOTE_DECIMATE "Precious cries out with a loud, baying howl!"
-class boss_rotface : public CreatureScript
+class boss_rotface : public CreatureScript
 {
 public:
     boss_rotface() : CreatureScript("boss_rotface") { }
@@ -114,9 +114,9 @@ public:
     {
         boss_rotfaceAI(Creature *pCreature) : ScriptedAI(pCreature), summons(me)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
         }
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
         SummonList summons;
 
         uint32 m_uiFloodTimer;
@@ -372,7 +372,7 @@ public:
     };
 
 };
-class npc_ooze_big : public CreatureScript
+class npc_ooze_big : public CreatureScript
 {
 public:
     npc_ooze_big() : CreatureScript("npc_ooze_big") { }
@@ -386,11 +386,11 @@ public:
     {
         npc_ooze_bigAI(Creature *pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
                     pBigooze = me;
         }
 
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
 
         uint32 m_uiStickyOozeTimer;
         uint32 m_uiUnstableOozeTimer;
@@ -436,7 +436,7 @@ public:
     };
 
 };
-class npc_ooze_little : public CreatureScript
+class npc_ooze_little : public CreatureScript
 {
 public:
     npc_ooze_little() : CreatureScript("npc_ooze_little") { }
@@ -450,10 +450,10 @@ public:
     {
         npc_ooze_littleAI(Creature *pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
 
         uint32 m_uiStickyOozeTimer;
             uint32 m_uiBigOozeTimer;
@@ -491,9 +491,9 @@ public:
 
             DoMeleeAttackIfReady();
         }
-    };class npc_sticky_ooze : public CreatureScript
-
+    };
 };
+class npc_sticky_ooze : public CreatureScript
 {
 public:
     npc_sticky_ooze() : CreatureScript("npc_sticky_ooze") { }
@@ -507,9 +507,9 @@ public:
     {
         npc_sticky_oozeAI(Creature *pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
         }
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
         uint32 m_uiStickyOozeTimer;
         void Reset()
         {
@@ -526,9 +526,9 @@ public:
             } else m_uiStickyOozeTimer -= uiDiff;
 
         }
-    };class npc_flood_ooze : public CreatureScript
-
+    };
 };
+class npc_flood_ooze : public CreatureScript
 {
 public:
     npc_flood_ooze() : CreatureScript("npc_flood_ooze") { }
@@ -542,9 +542,9 @@ public:
     {
         npc_flood_oozeAI(Creature *pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
         }
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
         uint32 m_uiFloodOozeTimer;
         uint32 m_uiFloodOoze2Timer;
         void Reset()
@@ -572,7 +572,7 @@ public:
     };
 
 };
-class npc_precious : public CreatureScript
+class npc_precious : public CreatureScript
 {
 public:
     npc_precious() : CreatureScript("npc_precious") { }
@@ -586,9 +586,9 @@ public:
     {
         npc_preciousAI(Creature *pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
         }
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
         uint32 m_uiMortalWoundTimer;
         uint32 m_uiDecimateTimer;
         uint32 m_uiAwakenPlaguedZomiesTimer;
@@ -644,10 +644,6 @@ public:
     };
 
 };
-
-
-
-
 
 void AddSC_boss_rotface()
 {

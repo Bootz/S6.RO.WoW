@@ -64,7 +64,7 @@ enum Spells
 
 #define EMOTE_GAS_SPORE "Festergut farts."
 #define EMOTE_Pungent_Blight "Festergut vomits."
-class boss_festergut : public CreatureScript
+class boss_festergut : public CreatureScript
 {
 public:
     boss_festergut() : CreatureScript("boss_festergut") { }
@@ -78,10 +78,10 @@ public:
     {
         boss_festergutAI(Creature *pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
     
         uint8 Inhalestack;
         uint32 m_uiPungentBlightTimer;
@@ -322,7 +322,7 @@ public:
     };
 
 };
-class npc_stinky : public CreatureScript
+class npc_stinky : public CreatureScript
 {
 public:
     npc_stinky() : CreatureScript("npc_stinky") { }
@@ -336,9 +336,9 @@ public:
     {
         npc_stinkyAI(Creature *pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
         }
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
         uint32 m_uiMortalWoundTimer;
         uint32 m_uiDecimateTimer;
         uint32 m_uiPlagueStench;

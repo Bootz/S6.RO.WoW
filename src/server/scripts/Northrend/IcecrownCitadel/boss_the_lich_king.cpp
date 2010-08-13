@@ -155,7 +155,7 @@ Creature* pFrostmourne;
 Creature* pSafeZone;
 Unit* Plagued;
 std::vector<Unit*> targets;
-class boss_the_lich_king : public CreatureScript
+class boss_the_lich_king : public CreatureScript
 {
 public:
     boss_the_lich_king() : CreatureScript("boss_the_lich_king") { }
@@ -169,11 +169,11 @@ public:
     {
     	boss_lich_kingAI(Creature* pCreature) : ScriptedAI(pCreature), summons(me)
     	{
-    		m_pInstance = pCreature->GetInstanceData();
+    		m_pInstance = pCreature->GetInstanceScript();
     		pLichKing = me;
     	}
 
-    	ScriptedInstance* m_pInstance;
+    	InstanceScript* m_pInstance;
 
     	uint32 m_uiEndingTimer;
     	uint32 m_uiEndingPhase;
@@ -793,7 +793,7 @@ public:
     };
 
 };
-class npc_tirion_icc : public CreatureScript
+class npc_tirion_icc : public CreatureScript
 {
 public:
     npc_tirion_icc() : CreatureScript("npc_tirion_icc") { }
@@ -825,11 +825,11 @@ public:
     {
     	npc_tirion_citadell_iccAI(Creature* pCreature) : ScriptedAI(pCreature)
     	{
-    		m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+    		m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
     		pTirion = me;
     	}
 
-    	ScriptedInstance* m_pInstance;
+    	InstanceScript* m_pInstance;
 
     	uint32 m_uiIntroTimer;
     	uint32 m_uiIntroPhase;
@@ -939,7 +939,7 @@ public:
     };
 
 };
-class npc_ice_puls_icc : public CreatureScript
+class npc_ice_puls_icc : public CreatureScript
 {
 public:
     npc_ice_puls_icc() : CreatureScript("npc_ice_puls_icc") { }
@@ -995,7 +995,7 @@ public:
     };
 
 };
-class npc_valkyr_icc : public CreatureScript
+class npc_valkyr_icc : public CreatureScript
 {
 public:
     npc_valkyr_icc() : CreatureScript("npc_valkyr_icc") { }
@@ -1074,7 +1074,7 @@ public:
     };
 
 };
-class npc_ghoul_icc : public CreatureScript
+class npc_ghoul_icc : public CreatureScript
 {
 public:
     npc_ghoul_icc() : CreatureScript("npc_ghoul_icc") { }
@@ -1131,7 +1131,7 @@ public:
     };
 
 };
-class npc_defile_icc : public CreatureScript
+class npc_defile_icc : public CreatureScript
 {
 public:
     npc_defile_icc() : CreatureScript("npc_defile_icc") { }
@@ -1145,11 +1145,11 @@ public:
     {
     	npc_defile_iccAI(Creature *pCreature) : Scripted_NoMovementAI(pCreature)
     	{
-    		m_pInstance = pCreature->GetInstanceData();
+    		m_pInstance = pCreature->GetInstanceScript();
     		me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE);
     	}
 
-    	ScriptedInstance* m_pInstance;
+    	InstanceScript* m_pInstance;
 
     	uint32 m_uiDefileTimer;
     	uint32 m_uiDefileDamageTimer;
@@ -1212,7 +1212,7 @@ public:
     };
 
 };
-class npc_raging_spirit_icc : public CreatureScript
+class npc_raging_spirit_icc : public CreatureScript
 {
 public:
     npc_raging_spirit_icc() : CreatureScript("npc_raging_spirit_icc") { }
@@ -1246,7 +1246,7 @@ public:
     };
 
 };
-class npc_shambling_horror : public CreatureScript
+class npc_shambling_horror : public CreatureScript
 {
 public:
     npc_shambling_horror() : CreatureScript("npc_shambling_horror") { }
@@ -1260,10 +1260,10 @@ public:
     {
     	npc_shambling_horrorAI(Creature *pCreature) : ScriptedAI(pCreature)
     	{
-    		m_pInstance = pCreature->GetInstanceData();
+    		m_pInstance = pCreature->GetInstanceScript();
     	}
 
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
 
     	uint32 ShockwaveTimer;
     	uint32 EnrageTimer;

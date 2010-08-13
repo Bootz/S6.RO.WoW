@@ -191,7 +191,7 @@ const Position SummonPos[9] =
 {2759.19, 2594.26, 364.397, 0},
 {2753.56, 2584.30, 364.397, 0}
 };
-class boss_mimiron : public CreatureScript
+class boss_mimiron : public CreatureScript
 {
 public:
     boss_mimiron() : CreatureScript("boss_mimiron") { }
@@ -205,13 +205,13 @@ public:
     {
         boss_mimironAI(Creature *pCreature) : BossAI(pCreature, BOSS_MIMIRON)
         {
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
             me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);
             me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true); // Death Grip jump effect
             me->ApplySpellImmune(0, IMMUNITY_ID, 63041, true); // Rocket Strike immunity
             me->SetReactState(REACT_PASSIVE);
         }
-        ScriptedInstance *pInstance;
+        InstanceScript *pInstance;
 
         uint32 uiPhase_timer;
         uint32 uiStep;
@@ -681,7 +681,7 @@ public:
 
 };
 
-class boss_leviathan_mk : public CreatureScript
+class boss_leviathan_mk : public CreatureScript
 {
 public:
     boss_leviathan_mk() : CreatureScript("boss_leviathan_mk") { }
@@ -695,12 +695,12 @@ public:
     {
         boss_leviathan_mkAI(Creature *pCreature) : BossAI(pCreature, BOSS_MIMIRON), pVehicle(me->GetVehicleKit()), phase(PHASE_NULL)
         {
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
             me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);
             me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true); // Death Grip jump effect
             me->ApplySpellImmune(0, IMMUNITY_ID, 63041, true); // Rocket Strike immunity
         }
-        ScriptedInstance *pInstance;
+        InstanceScript *pInstance;
         Phases phase;
         Vehicle *pVehicle;
 
@@ -866,7 +866,7 @@ public:
 
 };
 
-class boss_leviathan_mk_turret : public CreatureScript
+class boss_leviathan_mk_turret : public CreatureScript
 {
 public:
     boss_leviathan_mk_turret() : CreatureScript("boss_leviathan_mk_turret") { }
@@ -880,9 +880,9 @@ public:
     {
         boss_leviathan_mk_turretAI(Creature *pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
         }
-        ScriptedInstance *pInstance;
+        InstanceScript *pInstance;
 
         uint32 uiNapalmShell;
 
@@ -918,7 +918,7 @@ public:
 
 };
 
-class mob_proximity_mine : public CreatureScript
+class mob_proximity_mine : public CreatureScript
 {
 public:
     mob_proximity_mine() : CreatureScript("mob_proximity_mine") { }
@@ -968,7 +968,7 @@ public:
 
 };
 
-class boss_vx_001 : public CreatureScript
+class boss_vx_001 : public CreatureScript
 {
 public:
     boss_vx_001() : CreatureScript("boss_vx_001") { }
@@ -982,12 +982,12 @@ public:
     {
         boss_vx_001AI(Creature *pCreature) : BossAI(pCreature, BOSS_MIMIRON), pVehicle(me->GetVehicleKit()), phase(PHASE_NULL)
         {
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
             me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);
             me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true); // Death Grip jump effect
             me->ApplySpellImmune(0, IMMUNITY_ID, 63041, true); // Rocket Strike immunity
         }
-        ScriptedInstance *pInstance;
+        InstanceScript *pInstance;
         Phases phase;
         Vehicle *pVehicle;
 
@@ -1166,7 +1166,7 @@ public:
 
 };
 
-class rocket_strike : public CreatureScript
+class rocket_strike : public CreatureScript
 {
 public:
     rocket_strike() : CreatureScript("rocket_strike") { }
@@ -1188,7 +1188,7 @@ public:
 
 };
 
-class boss_aerial_unit : public CreatureScript
+class boss_aerial_unit : public CreatureScript
 {
 public:
     boss_aerial_unit() : CreatureScript("boss_aerial_unit") { }
@@ -1202,12 +1202,12 @@ public:
     {
         boss_aerial_unitAI(Creature *pCreature) : BossAI(pCreature, BOSS_MIMIRON), pVehicle(me->GetVehicleKit()), phase(PHASE_NULL)
         {
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
             me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);
             me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true); // Death Grip jump effect
             me->ApplySpellImmune(0, IMMUNITY_ID, 63041, true); // Rocket Strike immunity
         }
-        ScriptedInstance *pInstance;
+        InstanceScript *pInstance;
         Phases phase;
         Vehicle *pVehicle;
 
@@ -1423,7 +1423,7 @@ public:
 
 };
 
-class magnetic_core : public CreatureScript
+class magnetic_core : public CreatureScript
 {
 public:
     magnetic_core() : CreatureScript("magnetic_core") { }
@@ -1438,7 +1438,7 @@ public:
         magnetic_coreAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
             DoCast(SPELL_MAGNETIC_CORE);
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE | UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_PACIFIED);
             me->ForcedDespawn(21000);
             if (Creature *pAerialUnit = Creature::GetCreature((*me), pInstance->GetData64(DATA_AERIAL_UNIT)))
@@ -1446,12 +1446,12 @@ public:
                     //if (pAerialUnit->IsWithinDist2d(me->GetPositionX(), me->GetPositionY(), 10))
                         pAerialUnit->AI()->DoAction(DO_DISABLE_AERIAL);
         }
-        ScriptedInstance *pInstance;
+        InstanceScript *pInstance;
     };
 
 };
 
-class mob_boom_bot : public CreatureScript
+class mob_boom_bot : public CreatureScript
 {
 public:
     mob_boom_bot() : CreatureScript("mob_boom_bot") { }
@@ -1465,12 +1465,12 @@ public:
     {
         mob_boom_botAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
             if (MimironHardMode)
                 DoCast(me, SPELL_EMERGENCY_MODE);
         }
 
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
 
         void JustDied(Unit *victim)
         {
@@ -1480,7 +1480,7 @@ public:
 
 };
 
-class mob_junk_bot : public CreatureScript
+class mob_junk_bot : public CreatureScript
 {
 public:
     mob_junk_bot() : CreatureScript("mob_junk_bot") { }
@@ -1501,7 +1501,7 @@ public:
 
 };
 
-class mob_assault_bot : public CreatureScript
+class mob_assault_bot : public CreatureScript
 {
 public:
     mob_assault_bot() : CreatureScript("mob_assault_bot") { }
@@ -1515,7 +1515,7 @@ public:
     {
         mob_assault_botAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
 
             if (MimironHardMode)
                 DoCast(me, SPELL_EMERGENCY_MODE);
@@ -1523,7 +1523,7 @@ public:
             uiFieldTimer = urand(4000, 6000);
         }
     
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
         uint32 uiFieldTimer;
     
         void UpdateAI(const uint32 diff)
@@ -1548,7 +1548,7 @@ public:
 
 };
 
-class mob_emergency_bot : public CreatureScript
+class mob_emergency_bot : public CreatureScript
 {
 public:
     mob_emergency_bot() : CreatureScript("mob_emergency_bot") { }
@@ -1588,14 +1588,15 @@ public:
 };
 
 
-// DO NOT PUSH THIS BUTTON!class not_push_button : public UnknownScript
+// DO NOT PUSH THIS BUTTON!
+class not_push_button : public GameObjectScript
 {
 public:
-    not_push_button() : UnknownScript("not_push_button") { }
+    not_push_button() : GameObjectScript("not_push_button") { }
 
     bool GOHello(Player* pPlayer, GameObject* pGo)
     {
-        ScriptedInstance* pInstance = pGo->GetInstanceData();
+        InstanceScript* pInstance = pGo->GetInstanceScript();
 
         if (!pInstance)
             return false;
@@ -1608,7 +1609,7 @@ public:
     }
 
 };
-class mob_mimiron_flame : public CreatureScript
+class mob_mimiron_flame : public CreatureScript
 {
 public:
     mob_mimiron_flame() : CreatureScript("mob_mimiron_flame") { }
@@ -1630,7 +1631,7 @@ public:
 
 };
 
-class mob_frost_bomb : public CreatureScript
+class mob_frost_bomb : public CreatureScript
 {
 public:
     mob_frost_bomb() : CreatureScript("mob_frost_bomb") { }

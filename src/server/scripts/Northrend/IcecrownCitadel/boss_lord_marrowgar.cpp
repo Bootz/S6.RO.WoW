@@ -65,7 +65,7 @@ enum NPC
     CREATURE_COLD_FLAME    =    36672,
 };
 
-class npc_bone_spike : public CreatureScript
+class npc_bone_spike : public CreatureScript
 {
 public:
     npc_bone_spike() : CreatureScript("npc_bone_spike") { }
@@ -127,7 +127,7 @@ public:
     };
 
 };
-class boss_lord_marrowgar : public CreatureScript
+class boss_lord_marrowgar : public CreatureScript
 {
 public:
     boss_lord_marrowgar() : CreatureScript("boss_lord_marrowgar") { }
@@ -141,10 +141,10 @@ public:
     {
         boss_lord_marrowgarAI(Creature *pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
 
         uint32 m_uiSaberSlashTimer;
         uint32 m_uiBoneSpikeGraveyardTimer;
@@ -292,7 +292,7 @@ public:
                             if (pTarget && !pTarget->HasAura(SPELL_BONE_SPIKE_IMPALING))
                             {
                                 Creature* Bone = me->SummonCreature(CREATURE_BONE_SPIKE, pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 999999);
-                                CAST_AI(npc_bone_spikeAI, Bone->AI())->SetPrisoner(pTarget);
+                                CAST_AI(npc_bone_spike::npc_bone_spikeAI, Bone->AI())->SetPrisoner(pTarget);
                                 Bone->CastSpell(pTarget, SPELL_BONE_SPIKE_IMPALING, true);
                             }
                         }
@@ -322,7 +322,7 @@ public:
                         if (pTarget && !pTarget->HasAura(SPELL_BONE_SPIKE_IMPALING))
                         {
                             Creature* Bone = me->SummonCreature(CREATURE_BONE_SPIKE, pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 999999);
-                            CAST_AI(npc_bone_spikeAI, Bone->AI())->SetPrisoner(pTarget);
+                            CAST_AI(npc_bone_spike::npc_bone_spikeAI, Bone->AI())->SetPrisoner(pTarget);
                             Bone->CastSpell(pTarget, SPELL_BONE_SPIKE_IMPALING, true);
                         }
                     }
@@ -389,7 +389,7 @@ public:
     };
 
 };
-class npc_cold_flame : public CreatureScript
+class npc_cold_flame : public CreatureScript
 {
 public:
     npc_cold_flame() : CreatureScript("npc_cold_flame") { }
@@ -403,9 +403,9 @@ public:
     {
         npc_cold_flameAI(Creature *pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
         }
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
         uint32 m_uiColdFlameTimer;
         uint32 m_uiColdDespawn;
         void Reset()
