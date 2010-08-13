@@ -29,6 +29,7 @@
 #include "Configuration/Config.h"
 #include "Log.h"
 #include "SystemConfig.h"
+#include "revision_sql.h"
 #include "Util.h"
 #include "SignalHandler.h"
 #include "RealmList.h"
@@ -346,6 +347,9 @@ bool StartDB()
         sLog.outError("Cannot connect to database");
         return false;
     }
+   if(!LoginDatabase.CheckRequiredField("realmd_db_version",REVISION_DB_REALMD))
+        return false;
+
     LoginDatabase.ThreadStart();
 
     uint32 count = 0;

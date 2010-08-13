@@ -29,6 +29,7 @@
 #include "AccountMgr.h"
 #include "SystemConfig.h"
 #include "revision.h"
+#include "revision_nr.h"
 #include "Util.h"
 
 bool ChatHandler::HandleHelpCommand(const char* args)
@@ -102,7 +103,9 @@ bool ChatHandler::HandleServerInfoCommand(const char* /*args*/)
     std::string uptime = secsToTimeString(sWorld.GetUptime());
     uint32 updateTime = sWorld.GetUpdateTime();
 
-    PSendSysMessage(_FULLVERSION);
+//    PSendSysMessage(_FULLVERSION);
+    PSendSysMessage("Created For Romanian Best Private Server: www.wow-romania.ro");
+    PSendSysMessage("Core Revision: " REVISION_NR);
     PSendSysMessage(LANG_CONNECTED_PLAYERS, PlayersNum, MaxPlayersNum);
     PSendSysMessage(LANG_CONNECTED_USERS, activeClientsNum, maxActiveClientsNum, queuedClientsNum, maxQueuedClientsNum);
     PSendSysMessage(LANG_UPTIME, uptime.c_str());

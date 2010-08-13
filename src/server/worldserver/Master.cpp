@@ -26,6 +26,7 @@
 
 #include "Common.h"
 #include "SystemConfig.h"
+#include "revision_nr.h"
 #include "SignalHandler.h"
 #include "World.h"
 #include "WorldRunnable.h"
@@ -41,6 +42,7 @@
 #include "TCSoap.h"
 #include "Timer.h"
 #include "Util.h"
+#include "../shared/revision_sql.h"
 
 #include "TcpSocket.h"
 #include "Utility.h"
@@ -202,7 +204,7 @@ int Master::Run()
     BigNumber seed1;
     seed1.SetRand(16 * 8);
 
-    sLog.outString( "%s (core-daemon)", _FULLVERSION );
+    sLog.outString( "%s (core-daemon)", "TrinityCore Custom Revision: " REVISION_NR);
     sLog.outString( "<Ctrl-C> to stop.\n" );
 
     sLog.outString( " ______                       __");
@@ -455,6 +457,9 @@ bool Master::_StartDB()
         return false;
     }
 
+    if(!WorldDatabase.CheckRequiredField("db_version",REVISION_DB_WORLD))
+        return false;
+
     ///- Get character database info from configuration file
     dbstring = sConfig.GetStringDefault("CharacterDatabaseInfo", "");
     if (dbstring.empty())
@@ -470,6 +475,10 @@ bool Master::_StartDB()
         return false;
     }
 
+    if(!CharacterDatabase.CheckRequiredField("character_db_version",REVISION_DB_CHARACTERS))
+        return false;
+
+
     ///- Get login database info from configuration file
     dbstring = sConfig.GetStringDefault("LoginDatabaseInfo", "");
     if (dbstring.empty())
@@ -484,6 +493,9 @@ bool Master::_StartDB()
         sLog.outError("Cannot connect to login database %s",dbstring.c_str());
         return false;
     }
+
+    if(!LoginDatabase.CheckRequiredField("realmd_db_version",REVISION_DB_REALMD))
+        return false;
 
     ///- Get the realm Id from the configuration file
     realmID = sConfig.GetIntDefault("RealmID", 0);
