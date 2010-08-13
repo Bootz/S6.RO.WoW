@@ -41,11 +41,15 @@ enum NPCs
     NPC_WARMAGE_HALISTER         = 32371,
     NPC_WARMAGE_ILSUDRIA         = 32372
 };
-
-class npc_warmage_violetstand : public CreatureScript
+class npc_warmage_violetstand : public CreatureScript
 {
 public:
     npc_warmage_violetstand() : CreatureScript("npc_warmage_violetstand") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new npc_warmage_violetstandAI(pCreature);
+    }
 
     struct npc_warmage_violetstandAI : public Scripted_NoMovementAI
     {
@@ -98,13 +102,10 @@ public:
         }
     };
 
-    CreatureAI *GetAI(Creature *creature) const
-    {
-        return new npc_warmage_violetstandAI(creature);
-    }
 };
+
 
 void AddSC_crystalsong_forest()
 {
-    new npc_warmage_violetstand;
+    new npc_warmage_violetstand();
 }

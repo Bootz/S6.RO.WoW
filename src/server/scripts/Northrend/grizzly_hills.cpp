@@ -29,6 +29,7 @@ EndContentData */
 
 #include "ScriptPCH.h"
 #include "ScriptedEscortAI.h"
+#include "ScriptedFollowerAI.h"
 
 #define GOSSIP_ITEM1 "You're free to go Orsonn, but first tell me what's wrong with the furbolg."
 #define GOSSIP_ITEM2 "What happened then?"
@@ -55,13 +56,42 @@ enum eEnums
     QUEST_CHILDREN_OF_URSOC     = 12247,
     QUEST_THE_BEAR_GODS_OFFSPRING        = 12231
 };
-
-class npc_orsonn_and_kodian : public CreatureScript
+class npc_orsonn_and_kodian : public CreatureScript
 {
 public:
     npc_orsonn_and_kodian() : CreatureScript("npc_orsonn_and_kodian") { }
 
-    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
+    bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+    {
+        switch(uiAction)
+        {
+            case GOSSIP_ACTION_INFO_DEF+1:
+                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+                pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_ORSONN2, pCreature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF+2:
+                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+                pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_ORSONN3, pCreature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF+3:
+                pPlayer->CLOSE_GOSSIP_MENU();
+                pPlayer->TalkedToCreature(NPC_ORSONN_CREDIT, pCreature->GetGUID());
+                break;
+
+            case GOSSIP_ACTION_INFO_DEF+4:
+                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM5, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
+                pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_KODIAN2, pCreature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF+5:
+                pPlayer->CLOSE_GOSSIP_MENU();
+                pPlayer->TalkedToCreature(NPC_KODIAN_CREDIT, pCreature->GetGUID());
+                break;
+        }
+
+        return true;
+    }
+
+    bool GossipHello(Player* pPlayer, Creature* pCreature)
     {
         if (pCreature->isQuestGiver())
             pPlayer->PrepareQuestMenu(pCreature->GetGUID());
@@ -93,36 +123,8 @@ public:
         return true;
     }
 
-    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
-    {
-        switch(uiAction)
-        {
-            case GOSSIP_ACTION_INFO_DEF+1:
-                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-                pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_ORSONN2, pCreature->GetGUID());
-                break;
-            case GOSSIP_ACTION_INFO_DEF+2:
-                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-                pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_ORSONN3, pCreature->GetGUID());
-                break;
-            case GOSSIP_ACTION_INFO_DEF+3:
-                pPlayer->CLOSE_GOSSIP_MENU();
-                pPlayer->TalkedToCreature(NPC_ORSONN_CREDIT, pCreature->GetGUID());
-                break;
-
-            case GOSSIP_ACTION_INFO_DEF+4:
-                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM5, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
-                pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_KODIAN2, pCreature->GetGUID());
-                break;
-            case GOSSIP_ACTION_INFO_DEF+5:
-                pPlayer->CLOSE_GOSSIP_MENU();
-                pPlayer->TalkedToCreature(NPC_KODIAN_CREDIT, pCreature->GetGUID());
-                break;
-        }
-
-        return true;
-    }
 };
+
 
 /*######
 ## Quest 12027: Mr. Floppy's Perilous Adventure
@@ -154,11 +156,31 @@ enum eFloppy
     SAY_QUEST_COMPLETE          = -1800013  //Thank you for helping me get back to the camp. Go tell Walter that I'm safe now!
 };
 
-//emily
-class npc_emily : public CreatureScript
+//emilyclass npc_emily : public CreatureScript
 {
 public:
     npc_emily() : CreatureScript("npc_emily") { }
+
+    bool QuestAccept(Player* pPlayer, Creature* pCreature, Quest const* quest)
+    {
+        if (quest->GetQuestId() == QUEST_PERILOUS_ADVENTURE)
+        {
+            DoScriptText(SAY_QUEST_ACCEPT, pCreature);
+            if (Creature* Mrfloppy = GetClosestCreatureWithEntry(pCreature, NPC_MRFLOPPY, 180.0f))
+            {
+                Mrfloppy->GetMotionMaster()->MoveFollow(pCreature, PET_FOLLOW_DIST, PET_FOLLOW_ANGLE);
+            }
+
+            if (npc_escortAI* pEscortAI = CAST_AI(npc_emilyAI, (pCreature->AI())))
+                pEscortAI->Start(true, false, pPlayer->GetGUID());
+        }
+        return true;
+    }
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new npc_emilyAI(pCreature);
+    }
 
     struct npc_emilyAI : public npc_escortAI
     {
@@ -308,33 +330,20 @@ public:
         }
     };
 
-    bool OnQuestAccept(Player* pPlayer, Creature* pCreature, Quest const* quest)
-    {
-        if (quest->GetQuestId() == QUEST_PERILOUS_ADVENTURE)
-        {
-            DoScriptText(SAY_QUEST_ACCEPT, pCreature);
-            if (Creature* Mrfloppy = GetClosestCreatureWithEntry(pCreature, NPC_MRFLOPPY, 180.0f))
-            {
-                Mrfloppy->GetMotionMaster()->MoveFollow(pCreature, PET_FOLLOW_DIST, PET_FOLLOW_ANGLE);
-            }
-
-            if (npc_escortAI* pEscortAI = CAST_AI(npc_emily::npc_emilyAI, (pCreature->AI())))
-                pEscortAI->Start(true, false, pPlayer->GetGUID());
-        }
-        return true;
-    }
-
-    CreatureAI *GetAI(Creature *creature) const
-    {
-        return new npc_emilyAI(creature);
-    }
 };
 
+
+
 //mrfloppy
-class npc_mrfloppy : public CreatureScript
+class npc_mrfloppy : public CreatureScript
 {
 public:
     npc_mrfloppy() : CreatureScript("npc_mrfloppy") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new npc_mrfloppyAI(pCreature);
+    }
 
     struct npc_mrfloppyAI : public ScriptedAI
     {
@@ -375,11 +384,8 @@ public:
         }
     };
 
-    CreatureAI *GetAI(Creature *creature) const
-    {
-        return new npc_mrfloppyAI(creature);
-    }
 };
+
 
 // Outhouse Bunny
 
@@ -394,12 +400,15 @@ enum eSounds
 {
     SOUND_FEMALE        = 12671,
     SOUND_MALE          = 12670
-};
-
-class npc_outhouse_bunny : public CreatureScript
+};class npc_outhouse_bunny : public CreatureScript
 {
 public:
     npc_outhouse_bunny() : CreatureScript("npc_outhouse_bunny") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new npc_outhouse_bunnyAI (pCreature);
+    }
 
     struct npc_outhouse_bunnyAI : public ScriptedAI
     {
@@ -439,11 +448,8 @@ public:
         }
     };
 
-    CreatureAI *GetAI(Creature *creature) const
-    {
-        return new npc_outhouse_bunnyAI(creature);
-    }
 };
+
 
 // Tallhorn Stage
 
@@ -451,11 +457,15 @@ enum etallhornstage
 {
     OBJECT_HAUNCH                   = 188665
 };
-
-class npc_tallhorn_stag : public CreatureScript
+class npc_tallhorn_stag : public CreatureScript
 {
 public:
     npc_tallhorn_stag() : CreatureScript("npc_tallhorn_stag") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new npc_tallhorn_stagAI (pCreature);
+    }
 
     struct npc_tallhorn_stagAI : public ScriptedAI
     {
@@ -483,11 +493,8 @@ public:
         }
     };
 
-    CreatureAI *GetAI(Creature *creature) const
-    {
-        return new npc_tallhorn_stagAI(creature);
-    }
 };
+
 
 // Amberpine Woodsman
 
@@ -495,11 +502,15 @@ enum eamberpinewoodsman
 {
     TALLHORN_STAG                   = 26363
 };
-
-class npc_amberpine_woodsman : public CreatureScript
+class npc_amberpine_woodsman : public CreatureScript
 {
 public:
     npc_amberpine_woodsman() : CreatureScript("npc_amberpine_woodsman") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new npc_amberpine_woodsmanAI (pCreature);
+    }
 
     struct npc_amberpine_woodsmanAI : public ScriptedAI
     {
@@ -549,11 +560,8 @@ public:
         }
     };
 
-    CreatureAI *GetAI(Creature *creature) const
-    {
-        return new npc_amberpine_woodsmanAI(creature);
-    }
 };
+
 /*######
 ## Quest 12288: Overwhelmed!
 ######*/
@@ -567,21 +575,25 @@ enum eSkirmisher
     RANDOM_SAY_2             =  -1800045,        //Whoa.. i nearly died there. Thank you, $Race!
     RANDOM_SAY_3             =  -1800046         //Thank you. $Class!
 };
-
-class npc_wounded_skirmisher : public CreatureScript
+class npc_wounded_skirmisher : public CreatureScript
 {
 public:
     npc_wounded_skirmisher() : CreatureScript("npc_wounded_skirmisher") { }
 
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new npc_wounded_skirmisherAI(pCreature);
+    }
+
     struct npc_wounded_skirmisherAI : public ScriptedAI
     {
         npc_wounded_skirmisherAI(Creature *c) : ScriptedAI(c) {}
-
+    
         uint64 uiPlayerGUID;
 
         uint32 DespawnTimer;
 
-        void Reset ()
+        void Reset () 
         {
             DespawnTimer = 5000;
             uiPlayerGUID = 0;
@@ -594,23 +606,23 @@ public:
         }
 
         void SpellHit(Unit *caster, const SpellEntry *spell)
-        {
+        {    
             if (spell->Id == SPELL_RENEW_SKIRMISHER && caster->GetTypeId() == TYPEID_PLAYER
                 && caster->ToPlayer()->GetQuestStatus(12288) == QUEST_STATUS_INCOMPLETE)
-            {
+            {        
                 caster->ToPlayer()->KilledMonsterCredit(CREDIT_NPC, 0);
                 DoScriptText(RAND(RANDOM_SAY_1,RANDOM_SAY_2,RANDOM_SAY_3),caster);
-                if(me->IsStandState())
-                    me->GetMotionMaster()->MovePoint(1, me->GetPositionX()+7, me->GetPositionY()+7, me->GetPositionZ());
+                if(me->IsStandState())        
+                    me->GetMotionMaster()->MovePoint(1, me->GetPositionX()+7, me->GetPositionY()+7, me->GetPositionZ());                                                                               
                 else
                 {
                     me->SetStandState(UNIT_STAND_STATE_STAND);
-                    me->ForcedDespawn(DespawnTimer);
+                    me->ForcedDespawn(DespawnTimer);   
                 }
-
+                
             }
         }
-
+    
         void UpdateAI(const uint32 /*diff*/)
         {
             if (!UpdateVictim())
@@ -619,19 +631,231 @@ public:
         }
     };
 
-    CreatureAI *GetAI(Creature *creature) const
-    {
-        return new npc_wounded_skirmisherAI(creature);
-    }
 };
+
+
+
+/*######
+## Quest 13666 & 13673:  Une lame digne d'un champion!
+######*/
+
+enum eLakeFrog
+{
+	SPELL_WARTSBGONE_LIP_BALM = 62574,
+	SPELL_FROG_LOVE = 62537,
+	SPELL_WARTS = 62581,
+	NPC_MAIDEN_OF_ASHWOOD_LAKE = 33220,
+	MAIDEN_SPAWN
+};
+
+//Script de la grenouilleclass npc_lake_frog : public CreatureScript
+{
+public:
+    npc_lake_frog() : CreatureScript("npc_lake_frog") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new npc_lake_frogAI(pCreature);
+    }
+
+    struct npc_lake_frogAI : public FollowerAI // FollowerAI:Permet au npc de suivre une cible
+    {
+        npc_lake_frogAI(Creature *c) : FollowerAI(c) {}
+
+        uint32 uiFollowTimer; //Temps de poursuite (15 sec)
+        bool following;	//Si la grenouille est en train de suivre le joueur
+    
+        void Reset () 
+        {
+    	following=false;
+    	uiFollowTimer=15000; // 15 sec
+        }
+
+        void UpdateAI(const uint32 diff)
+        {
+            if(following)
+            {
+            	if(uiFollowTimer <= diff)
+           		{
+           			SetFollowComplete();
+    				me->DisappearAndDie();		//d�pop
+    				me->Respawn(true);
+    				Reset();
+           		}
+           		else uiFollowTimer-=diff;
+           	}
+        }
+
+        void ReceiveEmote(Player* pPlayer, uint32 emote)
+        {
+    		if(following) //Si la grenouille a d�ja recu un /bisou il ne se passe rien
+    				return;
+    			
+    		if(emote==TEXTEMOTE_KISS) // Si on fait /bisou
+    		{
+    			if(!pPlayer->HasAura(SPELL_WARTSBGONE_LIP_BALM))
+    				pPlayer->AddAura(SPELL_WARTS,pPlayer);
+    			else if(roll_chance_i(10)) // 10% de chance de trouver la grenouille
+    			{
+    				pPlayer->SummonCreature(NPC_MAIDEN_OF_ASHWOOD_LAKE,me->GetPositionX(),me->GetPositionY(),me->GetPositionZ(),0,TEMPSUMMON_TIMED_DESPAWN,30000);
+    				me->DisappearAndDie();		//d�pop
+    				me->Respawn(true); //Repop 15 secondes plus tard
+    			}
+    			else
+    			{
+    		   		pPlayer->RemoveAura(SPELL_WARTSBGONE_LIP_BALM);	//On enleve le buff mis par l'objet de quete
+    		   		me->AddAura(SPELL_FROG_LOVE,me); //On ajoute l'aura a la grenouille (les coeurs)
+    				StartFollow(pPlayer, 35, NULL); //La grenouille suis le joueur
+    				following=true;
+    			}
+    		}
+        }
+    };
+
+};
+
+
+//Script de la princesse
+#define MAIDEN_DEFAULT_TEXTID 14319
+#define MAIDEN_REWARD_TEXTID 14320
+#define GOSSIP_HELLO_MAIDEN "Ravi d'avoir pu aider, madame. Il paraît que vous êtiez autrefois la gardienne d'une êpêe lêgendaire. Sauriez-vous où je pourrais la trouver ?"
+#define SPELL_SUMMON_ASHWOOD_BRAND 62554class npc_maiden_of_ashwood_lake : public CreatureScript
+{
+public:
+    npc_maiden_of_ashwood_lake() : CreatureScript("npc_maiden_of_ashwood_lake") { }
+
+    bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+    {
+    	switch(uiAction)
+    	{
+    		case GOSSIP_ACTION_INFO_DEF+1:
+    			pPlayer->CastSpell(pPlayer,SPELL_SUMMON_ASHWOOD_BRAND,true);
+    			pPlayer->SEND_GOSSIP_MENU(MAIDEN_REWARD_TEXTID, pCreature->GetGUID());
+    			break;
+    	}
+    	return true;
+    }
+
+    bool GossipHello(Player* pPlayer, Creature* pCreature)
+    {
+    	if(!pPlayer->HasItemCount(44981,1,true))
+    	{
+    		pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HELLO_MAIDEN, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+    		pPlayer->SEND_GOSSIP_MENU(MAIDEN_DEFAULT_TEXTID, pCreature->GetGUID());
+    		pCreature->ForcedDespawn(10000);
+    		return true;
+    	}
+
+    	pPlayer->SEND_GOSSIP_MENU(MAIDEN_DEFAULT_TEXTID, pCreature->GetGUID());
+    	return true;
+    }
+
+};
+
+
+//Quete : Une arme remarquable
+//Quand on utilise l'item:
+//Pop du gameobject 194239 <<NENUFAR
+//Pop du npc 33723
+
+//pop de gob 194238
+#define NPC_TEXTID_MAIDEN_OF_DRAK_MAR_01 -1850000
+#define NPC_TEXTID_MAIDEN_OF_DRAK_MAR_02 -1850001
+#define NPC_TEXTID_MAIDEN_OF_DRAK_MAR_03 -1850002
+#define NPC_TEXTID_MAIDEN_OF_DRAK_MAR_04 -1850003
+#define MAIDEN_OF_DRAK_MAR_TIMER_00 2000
+#define MAIDEN_OF_DRAK_MAR_TIMER_01 5000
+#define MAIDEN_OF_DRAK_MAR_TIMER_02 6000
+#define MAIDEN_OF_DRAK_MAR_TIMER_03 7000
+#define MAIDEN_OF_DRAK_MAR_TIMER_04 20000
+#define MAIDEN_OF_DRAK_MAR_GOB_01 194239
+#define MAIDEN_OF_DRAK_MAR_GOB_02 194238
+//Summon la dame :X: 4602.977 Y: -1600.141 Z: 156.7834 O: 0.7504916class npc_maiden_of_drak_mar : public CreatureScript
+{
+public:
+    npc_maiden_of_drak_mar() : CreatureScript("npc_maiden_of_drak_mar") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+    	return new npc_maiden_of_drak_marAI(pCreature);
+    }
+
+    struct npc_maiden_of_drak_marAI : public ScriptedAI
+    {
+    	uint32 phase;
+    	uint32 uiPhaseTimer;
+    	uint64 firstGobGuid;
+    	uint64 secondGobGuid;
+
+    	npc_maiden_of_drak_marAI(Creature *c) : ScriptedAI(c)
+    	{
+    		phase = 0;
+    		uiPhaseTimer = MAIDEN_OF_DRAK_MAR_TIMER_00;
+    		if(GameObject* go = me->SummonGameObject(MAIDEN_OF_DRAK_MAR_GOB_01,4602.977f,-1600.141f,156.7834f,0.7504916f,0,0,0,0,0))
+    			firstGobGuid = go->GetGUID(); //Pop du n�nuphar
+    	}
+
+    	void UpdateAI(const uint32 diff)
+    	{
+    	    	if(uiPhaseTimer <= diff)
+    	    	{
+    	    		phase++;
+    				switch(phase)
+    				{
+    					case 1:
+    						DoScriptText(NPC_TEXTID_MAIDEN_OF_DRAK_MAR_01, me);
+    						uiPhaseTimer = MAIDEN_OF_DRAK_MAR_TIMER_01;
+    						break;
+    					case 2:
+    						DoScriptText(NPC_TEXTID_MAIDEN_OF_DRAK_MAR_02, me);
+    						uiPhaseTimer = MAIDEN_OF_DRAK_MAR_TIMER_02;
+    						break;
+    					case 3:
+    						DoScriptText(NPC_TEXTID_MAIDEN_OF_DRAK_MAR_03, me);
+    						uiPhaseTimer = MAIDEN_OF_DRAK_MAR_TIMER_03;
+    						break;
+    					case 4:
+    						DoScriptText(NPC_TEXTID_MAIDEN_OF_DRAK_MAR_04, me);
+    						if(GameObject* go = me->SummonGameObject(MAIDEN_OF_DRAK_MAR_GOB_02,4603.351f,-1599.288f,156.8822f,2.234018f,0,0,0,0,0))
+    							secondGobGuid = go->GetGUID(); //Pop de la lame
+    						uiPhaseTimer = MAIDEN_OF_DRAK_MAR_TIMER_04;
+    						break;
+    					case 5:
+    						if(GameObject* go = GameObject::GetGameObject(*me,firstGobGuid))
+    							go->RemoveFromWorld();// D�pop du n�nuphar
+    						if(GameObject* go = GameObject::GetGameObject(*me,secondGobGuid))
+    							go->RemoveFromWorld();// D�pop de la lame 
+    						me->ForcedDespawn();// disparition du pnj
+    						break;
+    					default:// Ne devrait jamais arriver
+    						if(GameObject* go = GameObject::GetGameObject(*me,firstGobGuid))
+    							go->RemoveFromWorld();// D�pop du n�nuphar
+    						if(GameObject* go = GameObject::GetGameObject(*me,secondGobGuid))
+    							go->RemoveFromWorld();// D�pop de la lame
+    						me->ForcedDespawn();// disparition du pnj
+    						break;
+    				}
+    	    	}
+    	    	else
+    	    	{
+    			uiPhaseTimer -= diff;
+    		}
+    	}
+    };
+
+};
+
 
 void AddSC_grizzly_hills()
 {
-    new npc_orsonn_and_kodian;
-    new npc_emily;
-    new npc_mrfloppy;
-    new npc_outhouse_bunny;
-    new npc_tallhorn_stag;
-    new npc_amberpine_woodsman;
-    new npc_wounded_skirmisher;
+    new npc_orsonn_and_kodian();
+    new npc_emily();
+    new npc_mrfloppy();
+    new npc_outhouse_bunny();
+    new npc_tallhorn_stag();
+    new npc_amberpine_woodsman();
+    new npc_wounded_skirmisher();
+    new npc_lake_frog();
+    new npc_maiden_of_ashwood_lake();
+    new npc_maiden_of_drak_mar();
 }

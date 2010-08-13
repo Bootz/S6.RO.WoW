@@ -37,9 +37,6 @@ enum Spells
     SPELL_GROUND_SLAM                              = 50827,
     SPELL_SHATTER                                  = 50810,
     H_SPELL_SHATTER                                = 61546,
-    SPELL_SHATTER_EFFECT                           = 50811,
-    H_SPELL_SHATTER_EFFECT                         = 61547,
-    SPELL_STONED                                   = 50812,
     SPELL_STOMP                                    = 48131,
     H_SPELL_STOMP                                  = 59744
 };
@@ -51,13 +48,12 @@ enum Yells
     SAY_DEATH                                   = -1599009,
     SAY_SHATTER                                 = -1599010
 };
-
-class boss_krystallus : public CreatureScript
+class boss_krystallus : public CreatureScript
 {
 public:
     boss_krystallus() : CreatureScript("boss_krystallus") { }
 
-    CreatureAI* GetAI(Creature* pCreature) const
+    CreatureAI* GetAI(Creature* pCreature)
     {
         return new boss_krystallusAI (pCreature);
     }
@@ -66,7 +62,7 @@ public:
     {
         boss_krystallusAI(Creature *c) : ScriptedAI(c)
         {
-            pInstance = c->GetInstanceScript();
+            pInstance = c->GetInstanceData();
         }
 
         uint32 uiBoulderTossTimer;
@@ -77,7 +73,7 @@ public:
 
         bool bIsSlam;
 
-        InstanceScript* pInstance;
+        ScriptedInstance* pInstance;
 
         void Reset()
         {
@@ -92,7 +88,7 @@ public:
             if (pInstance)
                 pInstance->SetData(DATA_KRYSTALLUS_EVENT, NOT_STARTED);
         }
-        void EnterCombat(Unit* /*who*/)
+        void EnterCombat(Unit* who)
         {
             DoScriptText(SAY_AGGRO, me);
 
@@ -138,14 +134,15 @@ public:
             {
                 if (uiShatterTimer <= diff)
                 {
-                    DoCast(me, DUNGEON_MODE(SPELL_SHATTER, H_SPELL_SHATTER));
+                    DoCast(me, SPELL_SHATTER);
+                    bIsSlam = false;
                 } else uiShatterTimer -= diff;
             }
 
             DoMeleeAttackIfReady();
         }
 
-        void JustDied(Unit* /*killer*/)
+        void JustDied(Unit* killer)
         {
             DoScriptText(SAY_DEATH, me);
 
@@ -153,37 +150,11 @@ public:
                 pInstance->SetData(DATA_KRYSTALLUS_EVENT, DONE);
         }
 
-        void KilledUnit(Unit * victim)
+        void KilledUnit(Unit *victim)
         {
             if (victim == me)
                 return;
             DoScriptText(SAY_KILL, me);
-        }
-
-        void SpellHitTarget(Unit* pTarget, const SpellEntry* pSpell)
-        {
-            //this part should be in the core
-            if (pSpell->Id == SPELL_SHATTER || pSpell->Id == H_SPELL_SHATTER)
-            {
-                //this spell must have custom handling in the core, dealing damage based on distance
-                pTarget->CastSpell(pTarget, DUNGEON_MODE(SPELL_SHATTER_EFFECT, H_SPELL_SHATTER_EFFECT), true);
-
-                if (pTarget->HasAura(SPELL_STONED))
-                    pTarget->RemoveAurasDueToSpell(SPELL_STONED);
-
-                //clear this, if we are still performing
-                if (bIsSlam)
-                {
-                    bIsSlam = false;
-
-                    //and correct movement, if not already
-                    if (me->GetMotionMaster()->GetCurrentMovementGeneratorType() != TARGETED_MOTION_TYPE)
-                    {
-                        if (me->getVictim())
-                            me->GetMotionMaster()->MoveChase(me->getVictim());
-                    }
-                }
-            }
         }
     };
 

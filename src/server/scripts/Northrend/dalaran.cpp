@@ -40,11 +40,15 @@ enum NPCs // All outdoor guards are within 35.0f of these NPCs
     NPC_APPLEBOUGH_A = 29547,
     NPC_SWEETBERRY_H = 29715,
 };
-
-class npc_mageguard_dalaran : public CreatureScript
+class npc_mageguard_dalaran : public CreatureScript
 {
 public:
     npc_mageguard_dalaran() : CreatureScript("npc_mageguard_dalaran") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new npc_mageguard_dalaranAI(pCreature);
+    }
 
     struct npc_mageguard_dalaranAI : public Scripted_NoMovementAI
     {
@@ -104,11 +108,8 @@ public:
         void UpdateAI(const uint32 /*diff*/){}
     };
 
-    CreatureAI *GetAI(Creature *creature) const
-    {
-        return new npc_mageguard_dalaranAI(creature);
-    }
 };
+
 
 /*######
 ## npc_hira_snowdawn
@@ -120,13 +121,23 @@ enum eHiraSnowdawn
 };
 
 #define GOSSIP_TEXT_TRAIN_HIRA "I seek training to ride a steed."
-
-class npc_hira_snowdawn : public CreatureScript
+class npc_hira_snowdawn : public CreatureScript
 {
 public:
     npc_hira_snowdawn() : CreatureScript("npc_hira_snowdawn") { }
 
-    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
+    bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+    {
+        if (uiAction == GOSSIP_ACTION_TRAIN)
+            pPlayer->SEND_TRAINERLIST(pCreature->GetGUID());
+
+        if (uiAction == GOSSIP_ACTION_TRADE)
+            pPlayer->SEND_VENDORLIST(pCreature->GetGUID());
+
+        return true;
+    }
+
+    bool GossipHello(Player* pPlayer, Creature* pCreature)
     {
         if (!pCreature->isVendor() || !pCreature->isTrainer())
             return false;
@@ -141,20 +152,11 @@ public:
         return true;
     }
 
-    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
-    {
-        if (uiAction == GOSSIP_ACTION_TRAIN)
-            pPlayer->SEND_TRAINERLIST(pCreature->GetGUID());
-
-        if (uiAction == GOSSIP_ACTION_TRADE)
-            pPlayer->SEND_VENDORLIST(pCreature->GetGUID());
-
-        return true;
-    }
 };
+
 
 void AddSC_dalaran()
 {
-    new npc_mageguard_dalaran;
-    new npc_hira_snowdawn;
+    new npc_mageguard_dalaran();
+    new npc_hira_snowdawn();
 }

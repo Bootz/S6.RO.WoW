@@ -31,11 +31,15 @@ enum eDrakuruShackles
 
     NPC_RAGECLAW               = 29686
 };
-
-class npc_drakuru_shackles : public CreatureScript
+class npc_drakuru_shackles : public CreatureScript
 {
 public:
     npc_drakuru_shackles() : CreatureScript("npc_drakuru_shackles") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new npc_drakuru_shacklesAI (pCreature);
+    }
 
     struct npc_drakuru_shacklesAI : public ScriptedAI
     {
@@ -94,12 +98,9 @@ public:
         }
     };
 
-
-    CreatureAI *GetAI(Creature *creature) const
-    {
-        return new npc_drakuru_shacklesAI(creature);
-    }
 };
+
+
 
 /*####
 ## npc_captured_rageclaw
@@ -116,11 +117,15 @@ const char * SAY_RAGECLAW_2 =      "ARRRROOOOGGGGAAAA!";
 const char * SAY_RAGECLAW_3 =      "No more mister nice wolvar!";
 
 #define SAY_RAGECLAW RAND(SAY_RAGECLAW_1,SAY_RAGECLAW_2,SAY_RAGECLAW_3)
-
-class npc_captured_rageclaw : public CreatureScript
+class npc_captured_rageclaw : public CreatureScript
 {
 public:
     npc_captured_rageclaw() : CreatureScript("npc_captured_rageclaw") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new npc_captured_rageclawAI (pCreature);
+    }
 
     struct npc_captured_rageclawAI : public ScriptedAI
     {
@@ -177,11 +182,8 @@ public:
        }
     };
 
-    CreatureAI *GetAI(Creature *creature) const
-    {
-        return new npc_captured_rageclawAI(creature);
-    }
 };
+
 
 /*####
 ## npc_gymer
@@ -194,13 +196,23 @@ enum eGymer
     QUEST_STORM_KING_VENGEANCE    = 12919,
     SPELL_GYMER                   = 55568
 };
-
-class npc_gymer : public CreatureScript
+class npc_gymer : public CreatureScript
 {
 public:
     npc_gymer() : CreatureScript("npc_gymer") { }
 
-    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
+    bool GossipSelect(Player* pPlayer, Creature* /*pCreature*/, uint32 /*uiSender*/, uint32 uiAction)
+    {
+        if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
+        {
+            pPlayer->CLOSE_GOSSIP_MENU();
+            pPlayer->CastSpell(pPlayer, SPELL_GYMER, true);
+        }
+
+        return true;
+    }
+
+    bool GossipHello(Player* pPlayer, Creature* pCreature)
     {
         if (pCreature->isQuestGiver())
             pPlayer->PrepareQuestMenu(pCreature->GetGUID());
@@ -216,17 +228,8 @@ public:
         return true;
     }
 
-    bool OnGossipSelect(Player* pPlayer, Creature* /*pCreature*/, uint32 /*uiSender*/, uint32 uiAction)
-    {
-        if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
-        {
-            pPlayer->CLOSE_GOSSIP_MENU();
-            pPlayer->CastSpell(pPlayer, SPELL_GYMER, true);
-        }
-
-        return true;
-    }
 };
+
 
 /*####
 ## npc_gurgthock
@@ -240,7 +243,7 @@ enum eGurgthock
     QUEST_AMPHITHEATER_ANGUISH_YGGDRAS_1          = 12932,
     QUEST_AMPHITHEATER_ANGUISH_MAGNATAUR          = 12933,
     QUEST_AMPHITHEATER_ANGUISH_FROM_BEYOND        = 12934,
-
+ 
     NPC_ORINOKO_TUSKBREAKER                       = 30020,
     NPC_KORRAK_BLOODRAGER                         = 30023,
     NPC_YGGDRAS                                   = 30014,
@@ -317,10 +320,42 @@ const Position AddSpawnPosition[] =
     {5828.899, -2960.15479, 312.751648, 3.53}, // caster location
 };
 
-class npc_gurgthock : public CreatureScript
+class npc_gurgthock : public CreatureScript
 {
 public:
     npc_gurgthock() : CreatureScript("npc_gurgthock") { }
+
+    bool QuestAccept(Player* pPlayer, Creature* pCreature, Quest const* pQuest)
+    {
+        switch (pQuest->GetQuestId())
+        {
+            case QUEST_AMPHITHEATER_ANGUISH_TUSKARRMAGEDDON:
+                pCreature->AI()->SetData(1, pQuest->GetQuestId());
+                break;
+            case QUEST_AMPHITHEATER_ANGUISH_KORRAK_BLOODRAGER:
+                pCreature->AI()->SetData(1, pQuest->GetQuestId());
+                break;
+            case QUEST_AMPHITHEATER_ANGUISH_YGGDRAS_2:
+            case QUEST_AMPHITHEATER_ANGUISH_YGGDRAS_1:
+                pCreature->AI()->SetData(1, pQuest->GetQuestId());
+                break;
+            case QUEST_AMPHITHEATER_ANGUISH_MAGNATAUR:
+                pCreature->AI()->SetData(1, pQuest->GetQuestId());
+                break;
+            case QUEST_AMPHITHEATER_ANGUISH_FROM_BEYOND:
+                pCreature->AI()->SetData(1, pQuest->GetQuestId());
+                break;
+        }
+
+        pCreature->AI()->SetGUID(pPlayer->GetGUID());
+
+        return false;
+    }
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new npc_gurgthockAI(pCreature);
+    }
 
     struct npc_gurgthockAI : public ScriptedAI
     {
@@ -480,7 +515,7 @@ public:
                             }
                             break;
                         case 10:
-                            me->SummonCreature(NPC_YGGDRAS, SpawnPosition[1], TEMPSUMMON_CORPSE_DESPAWN, 1000);
+                            me->SummonCreature(NPC_YGGDRAS, SpawnPosition[1], TEMPSUMMON_CORPSE_DESPAWN, 1000); 
                             DoScriptText(EMOTE_YGGDRAS_SPAWN,me);
                             uiPhase = 0;
                             break;
@@ -511,44 +546,15 @@ public:
                                 pCreature->AI()->SetData(1,uiBossRandom);
                             uiPhase = 0;
                             break;
-                    }
+                    } 
                 }else uiTimer -= uiDiff;
             }
         }
     };
 
-    bool OnQuestAccept(Player* pPlayer, Creature* pCreature, Quest const* pQuest)
-    {
-        switch (pQuest->GetQuestId())
-        {
-            case QUEST_AMPHITHEATER_ANGUISH_TUSKARRMAGEDDON:
-                pCreature->AI()->SetData(1, pQuest->GetQuestId());
-                break;
-            case QUEST_AMPHITHEATER_ANGUISH_KORRAK_BLOODRAGER:
-                pCreature->AI()->SetData(1, pQuest->GetQuestId());
-                break;
-            case QUEST_AMPHITHEATER_ANGUISH_YGGDRAS_2:
-            case QUEST_AMPHITHEATER_ANGUISH_YGGDRAS_1:
-                pCreature->AI()->SetData(1, pQuest->GetQuestId());
-                break;
-            case QUEST_AMPHITHEATER_ANGUISH_MAGNATAUR:
-                pCreature->AI()->SetData(1, pQuest->GetQuestId());
-                break;
-            case QUEST_AMPHITHEATER_ANGUISH_FROM_BEYOND:
-                pCreature->AI()->SetData(1, pQuest->GetQuestId());
-                break;
-        }
-
-        pCreature->AI()->SetGUID(pPlayer->GetGUID());
-
-        return false;
-    }
-
-    CreatureAI *GetAI(Creature *creature) const
-    {
-        return new npc_gurgthockAI(creature);
-    }
 };
+
+
 
 /*####
 ## npc_orinoko_tuskbreaker
@@ -566,11 +572,15 @@ enum eOrinokoTuskbreaker
 
     SAY_CALL_FOR_HELP       = -1571032
 };
-
-class npc_orinoko_tuskbreaker : public CreatureScript
+class npc_orinoko_tuskbreaker : public CreatureScript
 {
 public:
     npc_orinoko_tuskbreaker() : CreatureScript("npc_orinoko_tuskbreaker") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new npc_orinoko_tuskbreakerAI(pCreature);
+    }
 
     struct npc_orinoko_tuskbreakerAI : public ScriptedAI
     {
@@ -686,11 +696,8 @@ public:
         }
     };
 
-    CreatureAI *GetAI(Creature *creature) const
-    {
-        return new npc_orinoko_tuskbreakerAI(creature);
-    }
 };
+
 
 /*####
 ## npc_korrak_bloodrager
@@ -703,11 +710,15 @@ enum eKorrakBloodrager
     SPELL_UPPERCUT = 30471,
     SPELL_ENRAGE   = 42745
 };
-
-class npc_korrak_bloodrager : public CreatureScript
+class npc_korrak_bloodrager : public CreatureScript
 {
 public:
     npc_korrak_bloodrager() : CreatureScript("npc_korrak_bloodrager") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new npc_korrak_bloodragerAI(pCreature);
+    }
 
     struct npc_korrak_bloodragerAI : public npc_escortAI
     {
@@ -784,11 +795,8 @@ public:
         }
     };
 
-    CreatureAI *GetAI(Creature *creature) const
-    {
-        return new npc_korrak_bloodragerAI(creature);
-    }
 };
+
 
 /*####
 ## npc_yggdras
@@ -800,11 +808,15 @@ enum eYggdras
     SPELL_CORRODE_FLESH     = 57076,
     SPELL_JORMUNGAR_SPAWN   = 55859
 };
-
-class npc_yggdras : public CreatureScript
+class npc_yggdras : public CreatureScript
 {
 public:
     npc_yggdras() : CreatureScript("npc_yggdras") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new npc_yggdrasAI(pCreature);
+    }
 
     struct npc_yggdrasAI : public ScriptedAI
     {
@@ -877,15 +889,8 @@ public:
         }
     };
 
-    CreatureAI *GetAI(Creature *creature) const
-    {
-        return new npc_yggdrasAI(creature);
-    }
 };
 
-/*####
-## npc_stinkbeard
-####*/
 
 enum eStinkbeard
 {
@@ -896,10 +901,18 @@ enum eStinkbeard
     SPELL_THUNDERCLAP       = 15588
 };
 
-class npc_stinkbeard : public CreatureScript
+/*####
+## npc_stinkbeard
+####*/
+class npc_stinkbeard : public CreatureScript
 {
 public:
     npc_stinkbeard() : CreatureScript("npc_stinkbeard") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new npc_stinkbeardAI(pCreature);
+    }
 
     struct npc_stinkbeardAI : public npc_escortAI
     {
@@ -965,7 +978,7 @@ public:
                     }
                 }
             }
-
+        
             if (bThunderClap && me->GetHealth()*100 / me->GetMaxHealth() <= 10)
             {
                 DoCastAOE(SPELL_THUNDERCLAP);
@@ -1010,20 +1023,21 @@ public:
         }
     };
 
-    CreatureAI *GetAI(Creature *creature) const
-    {
-        return new npc_stinkbeardAI(creature);
-    }
 };
+
 
 /*####
 ## npc_elemental_lord
 ####*/
-
-class npc_elemental_lord : public CreatureScript
+class npc_elemental_lord : public CreatureScript
 {
 public:
     npc_elemental_lord() : CreatureScript("npc_elemental_lord") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new npc_elemental_lordAI(pCreature);
+    }
 
     struct npc_elemental_lordAI : public ScriptedAI
     {
@@ -1057,7 +1071,7 @@ public:
         }
 
         void SummonAdds()
-        {
+        {    
             if (!Boss[uiBossRandom].uiAdd)
                 return;
 
@@ -1071,7 +1085,7 @@ public:
                     SummonList.push_back(pSummon->GetGUID());
                 }
             }
-
+       
         }
 
         void EnterCombat(Unit* pUnit)
@@ -1082,7 +1096,7 @@ public:
                     if (Creature* pTemp = Unit::GetCreature(*me, *itr))
                     {
                         pTemp->m_CombatDistance = 100.0f; // ugly hack? we are not in a instance sorry. :(
-                        pTemp->AI()->AttackStart(pUnit);
+                        pTemp->AI()->AttackStart(pUnit); 
                     }
                 }
         }
@@ -1109,7 +1123,7 @@ public:
                     }
                 }
             }
-
+        
             if (uiElementalSpellTimer <= uiDiff)
             {
                 DoCastVictim(Boss[uiBossRandom].uiSpell);
@@ -1131,7 +1145,7 @@ public:
                                 pTemp->GetMotionMaster()->MoveChase(pTemp->getVictim());
                         }
                     }
-
+        
                 bAddAttack = true;
             }
 
@@ -1157,20 +1171,21 @@ public:
         }
     };
 
-    CreatureAI *GetAI(Creature* creature) const
-    {
-        return new npc_elemental_lordAI(creature);
-    }
 };
+
 
 /*####
 ## npc_fiend_elemental
 ####*/
-
-class npc_fiend_elemental : public CreatureScript
+class npc_fiend_elemental : public CreatureScript
 {
 public:
     npc_fiend_elemental() : CreatureScript("npc_fiend_elemental") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new npc_fiend_elementalAI(pCreature);
+    }
 
     struct npc_fiend_elementalAI : public ScriptedAI
     {
@@ -1192,10 +1207,10 @@ public:
         {
             if (!pWho)
                 return;
-
+        
             AttackStartNoMove(pWho);
         }
-
+    
         void SetData(uint32 uiData, uint32 uiValue)
         {
             if (uiData == 1)
@@ -1207,7 +1222,7 @@ public:
         {
             if (!UpdateVictim())
                 return;
-
+        
             if (me->GetPositionZ() >= 287.0f)
                 if (uiMissleTimer <= uiDiff)
                 {
@@ -1220,20 +1235,21 @@ public:
         }
     };
 
-    CreatureAI *GetAI(Creature *creature) const
-    {
-        return new npc_fiend_elementalAI(creature);
-    }
 };
+
 
 /*####
 ## npc_released_offspring_harkoa
 ####*/
-
-class npc_released_offspring_harkoa : public CreatureScript
+class npc_released_offspring_harkoa : public CreatureScript
 {
 public:
     npc_released_offspring_harkoa() : CreatureScript("npc_released_offspring_harkoa") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new npc_released_offspring_harkoaAI(pCreature);
+    }
 
     struct npc_released_offspring_harkoaAI : public ScriptedAI
     {
@@ -1254,11 +1270,8 @@ public:
         }
     };
 
-    CreatureAI *GetAI(Creature *creature) const
-    {
-        return new npc_released_offspring_harkoaAI(creature);
-    }
 };
+
 
 /*######
 ## npc_crusade_recruit
@@ -1278,11 +1291,38 @@ enum eCrusade_recruit
 };
 
 #define GOSSIP_ITEM_1 "Get out there and make those Scourge wish they were never reborn!"
-
-class npc_crusade_recruit : public CreatureScript
+class npc_crusade_recruit : public CreatureScript
 {
 public:
     npc_crusade_recruit() : CreatureScript("npc_crusade_recruit") { }
+
+    bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+    {
+        if (uiAction == GOSSIP_ACTION_INFO_DEF +1)
+        {
+            pPlayer->CLOSE_GOSSIP_MENU();
+            pCreature->CastSpell(pPlayer, SPELL_QUEST_CREDIT, true);
+            CAST_AI(npc_crusade_recruitAI, (pCreature->AI()))->m_uiPhase = 1;
+            pCreature->SetInFront(pPlayer);
+            pCreature->SendMovementFlagUpdate();
+        }
+
+        return true;
+    }
+
+    bool GossipHello(Player* pPlayer, Creature* pCreature)
+    {
+        if (pPlayer->GetQuestStatus(QUEST_TROLL_PATROL_INTESTINAL_FORTITUDE) == QUEST_STATUS_INCOMPLETE)
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+
+        pPlayer->SEND_GOSSIP_MENU(GOSSIP_CRUSADE_TEXT, pCreature->GetGUID());
+        return true;
+    }
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new npc_crusade_recruitAI (pCreature);
+    }
 
     struct npc_crusade_recruitAI : public ScriptedAI
     {
@@ -1342,34 +1382,10 @@ public:
         }
     };
 
-    CreatureAI *GetAI(Creature *creature) const
-    {
-        return new npc_crusade_recruitAI(creature);
-    }
-
-    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
-    {
-        if (pPlayer->GetQuestStatus(QUEST_TROLL_PATROL_INTESTINAL_FORTITUDE) == QUEST_STATUS_INCOMPLETE)
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-
-        pPlayer->SEND_GOSSIP_MENU(GOSSIP_CRUSADE_TEXT, pCreature->GetGUID());
-        return true;
-    }
-
-    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
-    {
-        if (uiAction == GOSSIP_ACTION_INFO_DEF +1)
-        {
-            pPlayer->CLOSE_GOSSIP_MENU();
-            pCreature->CastSpell(pPlayer, SPELL_QUEST_CREDIT, true);
-            CAST_AI(npc_crusade_recruit::npc_crusade_recruitAI, (pCreature->AI()))->m_uiPhase = 1;
-            pCreature->SetInFront(pPlayer);
-            pCreature->SendMovementFlagUpdate();
-        }
-
-        return true;
-    }
 };
+
+
+
 
 /*######
 ## Quest 12916: Our Only Hope!
@@ -1381,13 +1397,12 @@ enum eScourgeEnclosure
     QUEST_OUR_ONLY_HOPE                           = 12916,
     NPC_GYMER_DUMMY                               = 29928   //from quest template
 };
-
-class go_scourge_enclosure : public GameObjectScript
+class go_scourge_enclosure : public GameObjectScript
 {
 public:
     go_scourge_enclosure() : GameObjectScript("go_scourge_enclosure") { }
 
-    bool OnGossipHello(Player* pPlayer, GameObject* pGO)
+    bool GOHello(Player* pPlayer, GameObject* pGO)
     {
         if (pPlayer->GetQuestStatus(QUEST_OUR_ONLY_HOPE) == QUEST_STATUS_INCOMPLETE)
         {
@@ -1402,21 +1417,22 @@ public:
         }
         return true;
     }
+
 };
 
 void AddSC_zuldrak()
 {
-    new npc_drakuru_shackles;
-    new npc_captured_rageclaw;
-    new npc_gymer;
-    new npc_gurgthock;
-    new npc_orinoko_tuskbreaker;
-    new npc_korrak_bloodrager;
-    new npc_yggdras;
-    new npc_stinkbeard;
-    new npc_released_offspring_harkoa;
-    new npc_crusade_recruit;
-    new npc_elemental_lord;
-    new npc_fiend_elemental;
-    new go_scourge_enclosure;
+    new npc_drakuru_shackles();
+    new npc_captured_rageclaw();
+    new npc_gymer();
+    new npc_gurgthock();
+    new npc_orinoko_tuskbreaker();
+    new npc_korrak_bloodrager();
+    new npc_yggdras();
+    new npc_stinkbeard();
+    new npc_released_offspring_harkoa();
+    new npc_crusade_recruit();
+    new npc_elemental_lord();
+    new npc_fiend_elemental();
+    new go_scourge_enclosure();
 }

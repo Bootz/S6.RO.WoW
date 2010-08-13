@@ -38,13 +38,23 @@ enum eEnums
 };
 
 #define GOSSIP_ITEM_WHAT_HAPPENED   "Alexstrasza, can you show me what happened here?"
-
-class npc_alexstrasza_wr_gate : public CreatureScript
+class npc_alexstrasza_wr_gate : public CreatureScript
 {
 public:
     npc_alexstrasza_wr_gate() : CreatureScript("npc_alexstrasza_wr_gate") { }
 
-    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
+    bool GossipSelect(Player* pPlayer, Creature* /*pCreature*/, uint32 /*uiSender*/, uint32 uiAction)
+    {
+        if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
+        {
+            pPlayer->CLOSE_GOSSIP_MENU();
+            pPlayer->SendMovieStart(MOVIE_ID_GATES);
+        }
+
+        return true;
+    }
+
+    bool GossipHello(Player* pPlayer, Creature* pCreature)
     {
         if (pCreature->isQuestGiver())
             pPlayer->PrepareQuestMenu(pCreature->GetGUID());
@@ -56,17 +66,8 @@ public:
         return true;
     }
 
-    bool OnGossipSelect(Player* pPlayer, Creature* /*pCreature*/, uint32 /*uiSender*/, uint32 uiAction)
-    {
-        if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
-        {
-            pPlayer->CLOSE_GOSSIP_MENU();
-            pPlayer->SendMovieStart(MOVIE_ID_GATES);
-        }
-
-        return true;
-    }
 };
+
 
 /*######
 ## npc_inquisitor_hallard. Quest 12321
@@ -74,7 +75,7 @@ public:
 
 
 enum eInquisitor
-{
+{    
     NPC_GODFREY                 = 27577,
     SPELL_HOLY_FIRE             = 39323,
 
@@ -109,11 +110,29 @@ enum eInquisitor
 };
 
 #define QUEST_A_RIGHTEOUS_SERMON     12321
-
-class npc_inquisitor_hallard : public CreatureScript
+class npc_inquisitor_hallard : public CreatureScript
 {
 public:
     npc_inquisitor_hallard() : CreatureScript("npc_inquisitor_hallard") { }
+
+    bool QuestAccept(Player* pPlayer, Creature* pCreature, Quest const* quest)
+    {
+        if (quest->GetQuestId() == QUEST_A_RIGHTEOUS_SERMON)
+        {    
+            DoScriptText(SAY_WP_0, pCreature, pPlayer);
+            if (npc_escortAI* pEscortAI = CAST_AI(npc_inquisitor_hallardAI, pCreature->AI()))
+            {
+                pEscortAI->Start(true, false, pPlayer->GetGUID(), 0, true);
+                pCreature->GetMotionMaster()->MovePoint(0, 3801.543, -679.350, 213.75);        
+            }
+        }
+        return true;
+    }
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new npc_inquisitor_hallardAI(pCreature);
+    }
 
     struct npc_inquisitor_hallardAI : public npc_escortAI
     {
@@ -128,22 +147,22 @@ public:
                 return;
             Creature* Godfrey = me->FindNearestCreature(NPC_GODFREY, 50, true);
             if (!Godfrey)
-                return;
+                return;  
             switch (i)
             {
-                case 1:
+                case 1:            
                     DoScriptText(SAY_WP_1, me, Godfrey);
                     me->SetUInt64Value(UNIT_FIELD_TARGET, Godfrey->GetGUID());
                     me->HandleEmoteCommand(5);
                     me->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_QUESTGIVER);
-                    me->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
+                    me->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);            
                     break;
                 case 2:
                     Godfrey->HandleEmoteCommand(434);
                     DoScriptText(SAY_WP_2, me, Godfrey);
                     me->HandleEmoteCommand(15);
                     break;
-                case 3:
+                case 3:            
                     DoScriptText(SAY_WP_3, me, Godfrey);
                     me->HandleEmoteCommand(1);
                     break;
@@ -165,7 +184,7 @@ public:
                     me->HandleEmoteCommand(16);
                     break;
                 case 9:
-                    DoScriptText(SAY_WP_9, me, Godfrey);
+                    DoScriptText(SAY_WP_9, me, Godfrey);            
                     me->HandleEmoteCommand(5);
                     break;
                 case 10:
@@ -229,46 +248,30 @@ public:
                 case 27:
                     DoScriptText(SAY_WP_27, me, Godfrey);
                     me->SetUInt64Value(UNIT_FIELD_TARGET, Godfrey->GetGUID());
-                    Completed = true;
+                    Completed = true;            
                     if (pPlayer)
                         pPlayer->GroupEventHappens(QUEST_A_RIGHTEOUS_SERMON, me);
-                    break;
+                    break;                      
             }
         }
 
         void Reset()
-        {
+        {  
             Completed = false;
         }
 
         void UpdateAI(const uint32 diff)
-        {
-            npc_escortAI::UpdateAI(diff);
+        {      
+            npc_escortAI::UpdateAI(diff);         
         }
     };
 
-    bool OnQuestAccept(Player* pPlayer, Creature* pCreature, Quest const* quest)
-    {
-        if (quest->GetQuestId() == QUEST_A_RIGHTEOUS_SERMON)
-        {
-            DoScriptText(SAY_WP_0, pCreature, pPlayer);
-            if (npc_escortAI* pEscortAI = CAST_AI(npc_inquisitor_hallard::npc_inquisitor_hallardAI, pCreature->AI()))
-            {
-                pEscortAI->Start(true, false, pPlayer->GetGUID(), 0, true);
-                pCreature->GetMotionMaster()->MovePoint(0, 3801.543, -679.350, 213.75);
-            }
-        }
-        return true;
-    }
-
-    CreatureAI *GetAI(Creature *creature) const
-    {
-        return new npc_inquisitor_hallardAI(creature);
-    }
 };
+
+
 
 void AddSC_dragonblight()
 {
-    new npc_alexstrasza_wr_gate;
-    new npc_inquisitor_hallard;
+    new npc_alexstrasza_wr_gate();
+    new npc_inquisitor_hallard();
 }

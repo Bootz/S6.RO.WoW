@@ -1,19 +1,18 @@
-/*
- * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+/* Copyright (C) 2008 - 2010 Trinity <http://www.trinitycore.org/>
+ * Copyright (C) 2006 - 2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
  *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by the
- * Free Software Foundation; either version 2 of the License, or (at your
- * option) any later version.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
  *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
- *
- * You should have received a copy of the GNU General Public License along
- * with this program. If not, see <http://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
 /* ScriptData
@@ -24,6 +23,9 @@ SDCategory: Borean Tundra
 EndScriptData */
 
 /* ContentData
+npc_fizzcrank_fullthrottle
+npc_surristrasz
+npc_tiare
 npc_iruk
 npc_corastrasza
 npc_jenny
@@ -42,6 +44,176 @@ EndContentData */
 #include "ScriptedFollowerAI.h"
 
 /*######
+## npc_fizzcrank_fullthrottle
+######*/
+
+#define GOSSIP_ITEM_GO_ON   "Go on."
+#define GOSSIP_ITEM_TELL_ME "Tell me what's going on out here, Fizzcrank."
+
+enum eFizzcrank
+{
+    GOSSIP_TEXTID_FIZZCRANK1    = 12456,
+    GOSSIP_TEXTID_FIZZCRANK2    = 12457,
+    GOSSIP_TEXTID_FIZZCRANK3    = 12458,
+    GOSSIP_TEXTID_FIZZCRANK4    = 12459,
+    GOSSIP_TEXTID_FIZZCRANK5    = 12460,
+    GOSSIP_TEXTID_FIZZCRANK6    = 12461,
+    GOSSIP_TEXTID_FIZZCRANK7    = 12462,
+    GOSSIP_TEXTID_FIZZCRANK8    = 12463,
+    GOSSIP_TEXTID_FIZZCRANK9    = 12464,
+
+    QUEST_THE_MECHAGNOMES       = 11708
+};
+class npc_fizzcrank_fullthrottle : public CreatureScript
+{
+public:
+    npc_fizzcrank_fullthrottle() : CreatureScript("npc_fizzcrank_fullthrottle") { }
+
+    bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+    {
+        switch(uiAction)
+        {
+            case GOSSIP_ACTION_INFO_DEF+1:
+                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_GO_ON, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+                pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_FIZZCRANK1, pCreature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF+2:
+                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_GO_ON, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+                pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_FIZZCRANK2, pCreature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF+3:
+                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_GO_ON, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 4);
+                pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_FIZZCRANK3, pCreature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF+4:
+                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_GO_ON, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
+                pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_FIZZCRANK4, pCreature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF+5:
+                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_GO_ON, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 6);
+                pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_FIZZCRANK5, pCreature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF+6:
+                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_GO_ON, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 7);
+                pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_FIZZCRANK6, pCreature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF+7:
+                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_GO_ON, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 8);
+                pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_FIZZCRANK7, pCreature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF+8:
+                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_GO_ON, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 9);
+                pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_FIZZCRANK8, pCreature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF+9:
+                pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_FIZZCRANK9, pCreature->GetGUID());
+                pPlayer->AreaExploredOrEventHappens(QUEST_THE_MECHAGNOMES);
+                break;
+        }
+        return true;
+    }
+
+    bool GossipHello(Player* pPlayer, Creature* pCreature)
+    {
+        if (pCreature->isQuestGiver())
+            pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+
+        if (pPlayer->GetQuestStatus(QUEST_THE_MECHAGNOMES) == QUEST_STATUS_INCOMPLETE)
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_TELL_ME, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+
+        pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
+        return true;
+    }
+
+};
+
+
+/*######
+## npc_surristrasz
+######*/
+
+#define GOSSIP_ITEM_FREE_FLIGHT "I'd like passage to the Transitus Shield."
+#define GOSSIP_ITEM_FLIGHT      "May I use a drake to fly elsewhere?"
+
+enum eSurristrasz
+{
+    SPELL_ABMER_TO_COLDARRA     = 46064
+};
+class npc_surristrasz : public CreatureScript
+{
+public:
+    npc_surristrasz() : CreatureScript("npc_surristrasz") { }
+
+    bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+    {
+        if (uiAction == GOSSIP_OPTION_GOSSIP)
+        {
+            pPlayer->CLOSE_GOSSIP_MENU();
+
+            //TaxiPath 795 (amber to coldarra)
+            pPlayer->CastSpell(pPlayer, SPELL_ABMER_TO_COLDARRA, true);
+        }
+
+        if (uiAction == GOSSIP_OPTION_TAXIVENDOR)
+            pPlayer->GetSession()->SendTaxiMenu(pCreature);
+
+        return true;
+    }
+
+    bool GossipHello(Player* pPlayer, Creature* pCreature)
+    {
+        if (pCreature->isQuestGiver())
+            pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+
+        if (pCreature->isTaxi())
+        {
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_FREE_FLIGHT, GOSSIP_SENDER_MAIN, GOSSIP_OPTION_GOSSIP);
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, GOSSIP_ITEM_FLIGHT, GOSSIP_SENDER_MAIN, GOSSIP_OPTION_TAXIVENDOR);
+        }
+
+        pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
+        return true;
+    }
+
+};
+
+
+/*######
+## npc_tiare
+######*/
+
+#define GOSSIP_ITEM_TELEPORT    "Teleport me to Amber Ledge, please."
+
+enum eTiare
+{
+    SPELL_TELEPORT_COLDARRA     = 50135
+};
+class npc_tiare : public CreatureScript
+{
+public:
+    npc_tiare() : CreatureScript("npc_tiare") { }
+
+    bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+    {
+        if (uiAction == GOSSIP_OPTION_GOSSIP)
+        {
+            pPlayer->CLOSE_GOSSIP_MENU();
+            pPlayer->CastSpell(pPlayer, SPELL_TELEPORT_COLDARRA, true);
+        }
+        return true;
+    }
+
+    bool GossipHello(Player* pPlayer, Creature* pCreature)
+    {
+        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_TELEPORT, GOSSIP_SENDER_MAIN, GOSSIP_OPTION_GOSSIP);
+        pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
+        return true;
+    }
+
+};
+
+
+/*######
 ## npc_sinkhole_kill_credit
 ######*/
 
@@ -52,11 +224,15 @@ enum eSinkhole
     SPELL_SUMMON_CART             = 46798,
     SPELL_SUMMON_WORM             = 46800,
 };
-
-class npc_sinkhole_kill_credit : public CreatureScript
+class npc_sinkhole_kill_credit : public CreatureScript
 {
 public:
     npc_sinkhole_kill_credit() : CreatureScript("npc_sinkhole_kill_credit") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new npc_sinkhole_kill_creditAI(pCreature);
+    }
 
     struct npc_sinkhole_kill_creditAI : public ScriptedAI
     {
@@ -153,20 +329,21 @@ public:
 
     };
 
-    CreatureAI *GetAI(Creature *creature) const
-    {
-        return new npc_sinkhole_kill_creditAI(creature);
-    }
 };
+
 
 /*######
 ## npc_khunok_the_behemoth
 ######*/
-
-class npc_khunok_the_behemoth : public CreatureScript
+class npc_khunok_the_behemoth : public CreatureScript
 {
 public:
     npc_khunok_the_behemoth() : CreatureScript("npc_khunok_the_behemoth") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new npc_khunok_the_behemothAI(pCreature);
+    }
 
     struct npc_khunok_the_behemothAI : public ScriptedAI
     {
@@ -193,11 +370,8 @@ public:
         }
     };
 
-    CreatureAI *GetAI(Creature *creature) const
-    {
-        return new npc_khunok_the_behemothAI(creature);
-    }
 };
+
 
 /*######
 ## npc_keristrasza
@@ -209,13 +383,23 @@ enum eKeristrasza
 };
 
 #define GOSSIP_HELLO_KERI   "I am prepared to face Saragosa!"
-
-class npc_keristrasza : public CreatureScript
+class npc_keristrasza : public CreatureScript
 {
 public:
     npc_keristrasza() : CreatureScript("npc_keristrasza") { }
 
-    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
+    bool GossipSelect(Player* pPlayer, Creature* /*pCreature*/, uint32 /*uiSender*/, uint32 uiAction)
+    {
+        if (uiAction == GOSSIP_ACTION_INFO_DEF + 1)
+        {
+            pPlayer->CLOSE_GOSSIP_MENU();
+            pPlayer->CastSpell(pPlayer, SPELL_TELEPORT_TO_SARAGOSA, true);
+        }
+
+        return true;
+    }
+
+    bool GossipHello(Player* pPlayer, Creature* pCreature)
     {
         if (pCreature->isQuestGiver())
             pPlayer->PrepareQuestMenu(pCreature->GetGUID());
@@ -228,17 +412,8 @@ public:
         return true;
     }
 
-    bool OnGossipSelect(Player* pPlayer, Creature* /*pCreature*/, uint32 /*uiSender*/, uint32 uiAction)
-    {
-        if (uiAction == GOSSIP_ACTION_INFO_DEF + 1)
-        {
-            pPlayer->CLOSE_GOSSIP_MENU();
-            pPlayer->CastSpell(pPlayer, SPELL_TELEPORT_TO_SARAGOSA, true);
-        }
-
-        return true;
-    }
 };
+
 
 /*######
 ## npc_corastrasza
@@ -254,25 +429,12 @@ enum eCorastrasza
     QUEST_ACES_HIGH_DAILY                        = 13414,
     QUEST_ACES_HIGH                              = 13413
 };
-
-class npc_corastrasza : public CreatureScript
+class npc_corastrasza : public CreatureScript
 {
 public:
     npc_corastrasza() : CreatureScript("npc_corastrasza") { }
 
-    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
-    {
-        if (pCreature->isQuestGiver())
-            pPlayer->PrepareQuestMenu(pCreature->GetGUID());
-
-        if (pPlayer->GetQuestStatus(QUEST_ACES_HIGH) == QUEST_STATUS_INCOMPLETE || pPlayer->GetQuestStatus(QUEST_ACES_HIGH_DAILY) == QUEST_STATUS_INCOMPLETE) //It's the same dragon for both quests.
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_C_1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-
-        pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
-        return true;
-    }
-
-    bool OnGossipSelect(Player* pPlayer, Creature* /*pCreature*/, uint32 /*uiSender*/, uint32 uiAction)
+    bool GossipSelect(Player* pPlayer, Creature* /*pCreature*/, uint32 /*uiSender*/, uint32 uiAction)
     {
         if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
         {
@@ -285,7 +447,21 @@ public:
 
         return true;
     }
+
+    bool GossipHello(Player* pPlayer, Creature* pCreature)
+    {
+        if (pCreature->isQuestGiver())
+            pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+
+        if (pPlayer->GetQuestStatus(QUEST_ACES_HIGH) == QUEST_STATUS_INCOMPLETE || pPlayer->GetQuestStatus(QUEST_ACES_HIGH_DAILY) == QUEST_STATUS_INCOMPLETE) //It's the same dragon for both quests.
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_C_1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+
+        pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
+        return true;
+    }
+
 };
+
 
 /*######
 ## npc_iruk
@@ -299,23 +475,12 @@ enum eIruk
     SPELL_CREATURE_TOTEM_OF_ISSLIRUK        = 46816,
     GOSSIP_TEXT_I                           = 12585
 };
-
-class npc_iruk : public CreatureScript
+class npc_iruk : public CreatureScript
 {
 public:
     npc_iruk() : CreatureScript("npc_iruk") { }
 
-    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
-    {
-
-        if (pPlayer->GetQuestStatus(QUEST_SPIRITS_WATCH_OVER_US) == QUEST_STATUS_INCOMPLETE)
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_I, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-
-        pPlayer->PlayerTalkClass->SendGossipMenu(GOSSIP_TEXT_I, pCreature->GetGUID());
-        return true;
-    }
-
-    bool OnGossipSelect(Player* pPlayer, Creature* /*pCreature*/, uint32 /*uiSender*/, uint32 uiAction)
+    bool GossipSelect(Player* pPlayer, Creature* /*pCreature*/, uint32 /*uiSender*/, uint32 uiAction)
     {
         switch (uiAction)
         {
@@ -327,6 +492,17 @@ public:
         }
         return true;
     }
+
+    bool GossipHello(Player* pPlayer, Creature* pCreature)
+    {
+
+        if (pPlayer->GetQuestStatus(QUEST_SPIRITS_WATCH_OVER_US) == QUEST_STATUS_INCOMPLETE)
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_I, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+
+        pPlayer->PlayerTalkClass->SendGossipMenu(GOSSIP_TEXT_I, pCreature->GetGUID());
+        return true;
+    }
+
 };
 
 /*######
@@ -338,12 +514,15 @@ public:
 const uint32 nerubarVictims[3] =
 {
     45526, 45527, 45514
-};
-
-class mob_nerubar_victim : public CreatureScript
+};class mob_nerubar_victim : public CreatureScript
 {
 public:
     mob_nerubar_victim() : CreatureScript("mob_nerubar_victim") { }
+
+    CreatureAI* GetAI(Creature *pCreature)
+    {
+        return new mob_nerubar_victimAI (pCreature);
+    }
 
     struct mob_nerubar_victimAI : public ScriptedAI
     {
@@ -372,12 +551,7 @@ public:
         }
     };
 
-    CreatureAI *GetAI(Creature *creature) const
-    {
-        return new mob_nerubar_victimAI(creature);
-    }
 };
-
 /*######
 ## npc_scourge_prisoner
 ######*/
@@ -386,11 +560,15 @@ enum eScourgePrisoner
 {
     GO_SCOURGE_CAGE = 187867
 };
-
-class npc_scourge_prisoner : public CreatureScript
+class npc_scourge_prisoner : public CreatureScript
 {
 public:
     npc_scourge_prisoner() : CreatureScript("npc_scourge_prisoner") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new npc_scourge_prisonerAI(pCreature);
+    }
 
     struct npc_scourge_prisonerAI : public ScriptedAI
     {
@@ -407,16 +585,11 @@ public:
 
     };
 
-    CreatureAI *GetAI(Creature *creature) const
-    {
-        return new npc_scourge_prisonerAI(creature);
-    }
 };
 
 /*######
 ## npc_jenny
 ######*/
-
 enum eJenny
 {
     QUEST_LOADER_UP             = 11881,
@@ -428,11 +601,15 @@ enum eJenny
     SPELL_CRATES_CARRIED        = 46340,
     SPELL_DROP_CRATE            = 46342
 };
-
-class npc_jenny : public CreatureScript
+class npc_jenny : public CreatureScript
 {
 public:
     npc_jenny() : CreatureScript("npc_jenny") { }
+
+    CreatureAI* GetAI(Creature *pCreature)
+    {
+        return new npc_jennyAI (pCreature);
+    }
 
     struct npc_jennyAI : public ScriptedAI
     {
@@ -480,20 +657,21 @@ public:
         }
     };
 
-    CreatureAI *GetAI(Creature *creature) const
-    {
-        return new npc_jennyAI (creature);
-    }
 };
+
 
 /*######
 ## npc_fezzix_geartwist
 ######*/
-
-class npc_fezzix_geartwist : public CreatureScript
+class npc_fezzix_geartwist : public CreatureScript
 {
 public:
     npc_fezzix_geartwist() : CreatureScript("npc_fezzix_geartwist") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new npc_fezzix_geartwistAI(pCreature);
+    }
 
     struct npc_fezzix_geartwistAI : public ScriptedAI
     {
@@ -524,11 +702,8 @@ public:
         }
     };
 
-    CreatureAI *GetAI(Creature *creature) const
-    {
-        return new npc_fezzix_geartwistAI(creature);
-    }
 };
+
 
 /*######
 ## npc_nesingwary_trapper
@@ -564,11 +739,16 @@ const uint32 CaribouTraps[CaribouTrapsNum] =
     GO_CARIBOU_TRAP_6, GO_CARIBOU_TRAP_7, GO_CARIBOU_TRAP_8, GO_CARIBOU_TRAP_9, GO_CARIBOU_TRAP_10,
     GO_CARIBOU_TRAP_11, GO_CARIBOU_TRAP_12, GO_CARIBOU_TRAP_13, GO_CARIBOU_TRAP_14, GO_CARIBOU_TRAP_15,
 };
-
-class npc_nesingwary_trapper : public CreatureScript
+//#define SAY_NESINGWARY_1 -1571008
+class npc_nesingwary_trapper : public CreatureScript
 {
 public:
     npc_nesingwary_trapper() : CreatureScript("npc_nesingwary_trapper") { }
+
+    CreatureAI* GetAI(Creature *pCreature)
+    {
+        return new npc_nesingwary_trapperAI (pCreature);
+    }
 
     struct npc_nesingwary_trapperAI : public ScriptedAI
     {
@@ -646,15 +826,24 @@ public:
                     case 7:
                     {
                         GameObject *go_caribou = NULL;
-                        for (uint8 i = 0; i < CaribouTrapsNum; ++i)
-                        {
-                            go_caribou = me->FindNearestGameObject(CaribouTraps[i], 5.0f);
-                            if (go_caribou)
+                        if ((go_caribou = me->FindNearestGameObject(GO_CARIBOU_TRAP_1, 5.0f)) ||
+                            (go_caribou = me->FindNearestGameObject(GO_CARIBOU_TRAP_2, 5.0f)) ||
+                            (go_caribou = me->FindNearestGameObject(GO_CARIBOU_TRAP_3, 5.0f)) ||
+                            (go_caribou = me->FindNearestGameObject(GO_CARIBOU_TRAP_4, 5.0f)) ||
+                            (go_caribou = me->FindNearestGameObject(GO_CARIBOU_TRAP_5, 5.0f)) ||
+                            (go_caribou = me->FindNearestGameObject(GO_CARIBOU_TRAP_6, 5.0f)) ||
+                            (go_caribou = me->FindNearestGameObject(GO_CARIBOU_TRAP_7, 5.0f)) ||
+                            (go_caribou = me->FindNearestGameObject(GO_CARIBOU_TRAP_8, 5.0f)) ||
+                            (go_caribou = me->FindNearestGameObject(GO_CARIBOU_TRAP_9, 5.0f)) ||
+                            (go_caribou = me->FindNearestGameObject(GO_CARIBOU_TRAP_10, 5.0f)) ||
+                            (go_caribou = me->FindNearestGameObject(GO_CARIBOU_TRAP_11, 5.0f)) ||
+                            (go_caribou = me->FindNearestGameObject(GO_CARIBOU_TRAP_12, 5.0f)) ||
+                            (go_caribou = me->FindNearestGameObject(GO_CARIBOU_TRAP_13, 5.0f)) ||
+                            (go_caribou = me->FindNearestGameObject(GO_CARIBOU_TRAP_14, 5.0f)) ||
+                            (go_caribou = me->FindNearestGameObject(GO_CARIBOU_TRAP_15, 5.0f)))
                             {
                                 go_caribou->SetGoState(GO_STATE_ACTIVE);
                                 go_caribouGUID = go_caribou->GetGUID();
-                                break;
-                            }
                         }
                         Phase = 8;
                         uiPhaseTimer = 1000;
@@ -669,11 +858,8 @@ public:
         }
     };
 
-    CreatureAI *GetAI(Creature *creature) const
-    {
-        return new npc_nesingwary_trapperAI(creature);
-    }
 };
+
 
 /*######
 ## npc_lurgglbr
@@ -693,11 +879,45 @@ enum eLurgglbr
 #define SAY_WP_1_LUR_END    -1571005
 #define SAY_WP_41_LUR_START -1571006
 #define SAY_WP_41_LUR_END   -1571007*/
-
-class npc_lurgglbr : public CreatureScript
+class npc_lurgglbr : public CreatureScript
 {
 public:
     npc_lurgglbr() : CreatureScript("npc_lurgglbr") { }
+
+    bool QuestAccept(Player* pPlayer, Creature* pCreature, Quest const *pQuest)
+    {
+        if (pQuest->GetQuestId() == QUEST_ESCAPE_WINTERFIN_CAVERNS)
+        {
+            if (GameObject* pGo = pCreature->FindNearestGameObject(GO_CAGE, 5.0f))
+            {
+                pGo->SetRespawnTime(0);
+                pGo->SetGoType(GAMEOBJECT_TYPE_BUTTON);
+                pGo->UseDoorOrButton(20);
+            }
+
+            if (npc_escortAI* pEscortAI = CAST_AI(npc_lurgglbrAI, pCreature->AI()))
+                pEscortAI->Start(true, false, pPlayer->GetGUID());
+
+            switch (pPlayer->GetTeam())
+            {
+                case ALLIANCE:
+                    pCreature->setFaction(FACTION_ESCORTEE_A);
+                    break;
+                default:
+                case HORDE:
+                    pCreature->setFaction(FACTION_ESCORTEE_H);
+                    break;
+            }
+
+            return true;
+        }
+        return false;
+    }
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new npc_lurgglbrAI(pCreature);
+    }
 
     struct npc_lurgglbrAI : public npc_escortAI
     {
@@ -786,41 +1006,9 @@ public:
         }
     };
 
-    CreatureAI *GetAI(Creature *creature) const
-    {
-        return new npc_lurgglbrAI(creature);
-    }
-
-    bool OnQuestAccept(Player* pPlayer, Creature* pCreature, Quest const *pQuest)
-    {
-        if (pQuest->GetQuestId() == QUEST_ESCAPE_WINTERFIN_CAVERNS)
-        {
-            if (GameObject* pGo = pCreature->FindNearestGameObject(GO_CAGE, 5.0f))
-            {
-                pGo->SetRespawnTime(0);
-                pGo->SetGoType(GAMEOBJECT_TYPE_BUTTON);
-                pGo->UseDoorOrButton(20);
-            }
-
-            if (npc_escortAI* pEscortAI = CAST_AI(npc_lurgglbr::npc_lurgglbrAI, pCreature->AI()))
-                pEscortAI->Start(true, false, pPlayer->GetGUID());
-
-            switch (pPlayer->GetTeam())
-            {
-                case ALLIANCE:
-                    pCreature->setFaction(FACTION_ESCORTEE_A);
-                    break;
-                default:
-                case HORDE:
-                    pCreature->setFaction(FACTION_ESCORTEE_H);
-                    break;
-            }
-
-            return true;
-        }
-        return false;
-    }
 };
+
+
 
 /*######
 ## npc_nexus_drake_hatchling
@@ -838,11 +1026,15 @@ enum eNexusDrakeHatchling
     QUEST_DRAKE_HUNT                = 11919,
     QUEST_DRAKE_HUNT_D              = 11940
 };
-
-class npc_nexus_drake_hatchling : public CreatureScript
+class npc_nexus_drake_hatchling : public CreatureScript
 {
 public:
     npc_nexus_drake_hatchling() : CreatureScript("npc_nexus_drake_hatchling") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new npc_nexus_drake_hatchlingAI(pCreature);
+    }
 
     struct npc_nexus_drake_hatchlingAI : public FollowerAI //The spell who makes the npc follow the player is missing, also we can use FollowerAI!
     {
@@ -920,11 +1112,8 @@ public:
         }
     };
 
-    CreatureAI *GetAI(Creature *creature) const
-    {
-        return new npc_nexus_drake_hatchlingAI(creature);
-    }
 };
+
 
 /*######
 ## npc_thassarian
@@ -967,11 +1156,40 @@ enum eThassarian
 };
 
 #define GOSSIP_ITEM_T   "Let's do this, Thassarian. It's now or never."
-
-class npc_thassarian : public CreatureScript
+class npc_thassarian : public CreatureScript
 {
 public:
     npc_thassarian() : CreatureScript("npc_thassarian") { }
+
+    bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+    {
+        switch (uiAction)
+        {
+            case GOSSIP_ACTION_INFO_DEF+1:
+                CAST_AI(npc_escortAI, (pCreature->AI()))->Start(true, false, pPlayer->GetGUID());
+                CAST_AI(npc_escortAI, (pCreature->AI()))->SetMaxPlayerDistance(200.0f);
+                break;
+        }
+        return true;
+    }
+
+    bool GossipHello(Player* pPlayer, Creature* pCreature)
+    {
+        if (pCreature->isQuestGiver())
+            pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+
+        if (pPlayer->GetQuestStatus(QUEST_LAST_RITES) == QUEST_STATUS_INCOMPLETE && pCreature->GetAreaId() == 4125)
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_T, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+
+        pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
+
+        return true;
+    }
+
+    CreatureAI* GetAI(Creature *pCreature)
+    {
+        return new npc_thassarianAI (pCreature);
+    }
 
     struct npc_thassarianAI : public npc_escortAI
     {
@@ -1240,45 +1458,23 @@ public:
         }
     };
 
-    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
-    {
-        if (pCreature->isQuestGiver())
-            pPlayer->PrepareQuestMenu(pCreature->GetGUID());
-
-        if (pPlayer->GetQuestStatus(QUEST_LAST_RITES) == QUEST_STATUS_INCOMPLETE && pCreature->GetAreaId() == 4125)
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_T, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-
-        pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
-
-        return true;
-    }
-
-    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
-    {
-        switch (uiAction)
-        {
-            case GOSSIP_ACTION_INFO_DEF+1:
-                CAST_AI(npc_escortAI, (pCreature->AI()))->Start(true, false, pPlayer->GetGUID());
-                CAST_AI(npc_escortAI, (pCreature->AI()))->SetMaxPlayerDistance(200.0f);
-                break;
-        }
-        return true;
-    }
-
-    CreatureAI *GetAI(Creature *creature) const
-    {
-        return new npc_thassarianAI(creature);
-    }
 };
+
+
+
 
 /*######
 ## npc_image_lich_king
 ######*/
-
-class npc_image_lich_king : public CreatureScript
+class npc_image_lich_king : public CreatureScript
 {
 public:
     npc_image_lich_king() : CreatureScript("npc_image_lich_king") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new npc_image_lich_kingAI (pCreature);
+    }
 
     struct npc_image_lich_kingAI : public ScriptedAI
     {
@@ -1296,24 +1492,25 @@ public:
 
             if (me->isSummon())
                 if (Unit* pSummoner = CAST_SUM(me)->GetSummoner())
-                    CAST_AI(npc_thassarian::npc_thassarianAI,CAST_CRE(pSummoner)->AI())->bArthasInPosition = true;
+                    CAST_AI(npc_thassarianAI,CAST_CRE(pSummoner)->AI())->bArthasInPosition = true;
         }
     };
 
-    CreatureAI *GetAI(Creature *creature) const
-    {
-        return new npc_image_lich_kingAI(creature);
-    }
 };
+
 
 /*######
 ## npc_general_arlos
 ######*/
-
-class npc_general_arlos : public CreatureScript
+class npc_general_arlos : public CreatureScript
 {
 public:
     npc_general_arlos() : CreatureScript("npc_general_arlos") { }
+
+    CreatureAI* GetAI(Creature *pCreature)
+    {
+        return new npc_general_arlosAI(pCreature);
+    }
 
     struct npc_general_arlosAI : public ScriptedAI
     {
@@ -1328,15 +1525,12 @@ public:
             me->CastSpell(me, SPELL_STUN, true);
             if (me->isSummon())
                 if (Unit* pSummoner = CAST_SUM(me)->GetSummoner())
-                    CAST_AI(npc_thassarian::npc_thassarianAI,CAST_CRE(pSummoner)->AI())->bArlosInPosition = true;
+                    CAST_AI(npc_thassarianAI,CAST_CRE(pSummoner)->AI())->bArlosInPosition = true;
         }
     };
 
-    CreatureAI *GetAI(Creature *creature) const
-    {
-        return new npc_general_arlosAI(creature);
-    }
 };
+
 
 /*######
 ## npc_counselor_talbot
@@ -1347,11 +1541,15 @@ enum eCounselorTalbot
     SPELL_DEFLECTION    = 51009,
     SPELL_SOUL_BLAST    = 50992,
 };
-
-class npc_counselor_talbot : public CreatureScript
+class npc_counselor_talbot : public CreatureScript
 {
 public:
     npc_counselor_talbot() : CreatureScript("npc_counselor_talbot") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new npc_counselor_talbotAI (pCreature);
+    }
 
     struct npc_counselor_talbotAI : public ScriptedAI
     {
@@ -1385,7 +1583,7 @@ public:
 
             if (me->isSummon())
                 if (Unit* pSummoner = CAST_SUM(me)->GetSummoner())
-                    CAST_AI(npc_thassarian::npc_thassarianAI,CAST_CRE(pSummoner)->AI())->bTalbotInPosition = true;
+                    CAST_AI(npc_thassarianAI,CAST_CRE(pSummoner)->AI())->bTalbotInPosition = true;
         }
 
         void UpdateAI(const uint32 uiDiff)
@@ -1450,20 +1648,21 @@ public:
         }
     };
 
-    CreatureAI *GetAI(Creature *creature) const
-    {
-        return new npc_counselor_talbotAI(creature);
-    }
 };
+
 
 /*######
 ## npc_leryssa
 ######*/
-
-class npc_leryssa : public CreatureScript
+class npc_leryssa : public CreatureScript
 {
 public:
     npc_leryssa() : CreatureScript("npc_leryssa") { }
+
+    CreatureAI* GetAI(Creature *pCreature)
+    {
+        return new npc_leryssaAI (pCreature);
+    }
 
     struct npc_leryssaAI : public ScriptedAI
     {
@@ -1489,14 +1688,14 @@ public:
             if (!bDone)
             {
                 if (Creature* pTalbot = me->FindNearestCreature(NPC_PRINCE_VALANAR, 50.0f, true))
-                    CAST_AI(npc_counselor_talbot::npc_counselor_talbotAI, pTalbot->AI())->bCheck = true;
+                    CAST_AI(npc_counselor_talbotAI, pTalbot->AI())->bCheck = true;
 
                 me->addUnitState(UNIT_STAT_STUNNED);
                 me->CastSpell(me, SPELL_STUN, true);
 
                 if (me->isSummon())
                     if (Unit* pSummoner = CAST_SUM(me)->GetSummoner())
-                        CAST_AI(npc_thassarian::npc_thassarianAI,CAST_CRE(pSummoner)->AI())->bLeryssaInPosition = true;
+                        CAST_AI(npc_thassarianAI,CAST_CRE(pSummoner)->AI())->bLeryssaInPosition = true;
                 bDone = true;
             }
             else
@@ -1560,7 +1759,7 @@ public:
                             if (Unit* pThassarian = CAST_SUM(me)->GetSummoner())
                             {
                                 DoScriptText(SAY_THASSARIAN_7, pThassarian);
-                                CAST_AI(npc_thassarian::npc_thassarianAI,CAST_CRE(pThassarian)->AI())->uiPhase = 16;
+                                CAST_AI(npc_thassarianAI,CAST_CRE(pThassarian)->AI())->uiPhase = 16;
                             }
                         uiPhaseTimer = 5000;
                         Phase = 0;
@@ -1575,11 +1774,8 @@ public:
         }
     };
 
-    CreatureAI *GetAI(Creature *creature) const
-    {
-        return new npc_leryssaAI(creature);
-    }
 };
+
 
 /*######
 ## npc_beryl_sorcerer
@@ -1594,11 +1790,15 @@ enum eBerylSorcerer
     SPELL_COSMETIC_CHAINS               = 54324,
     SPELL_COSMETIC_ENSLAVE_CHAINS_SELF  = 45631
 };
-
-class npc_beryl_sorcerer : public CreatureScript
+class npc_beryl_sorcerer : public CreatureScript
 {
 public:
     npc_beryl_sorcerer() : CreatureScript("npc_beryl_sorcerer") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new npc_beryl_sorcererAI(pCreature);
+    }
 
     struct npc_beryl_sorcererAI : public FollowerAI
     {
@@ -1652,11 +1852,8 @@ public:
         }
     };
 
-    CreatureAI *GetAI(Creature *creature)
-    {
-        return new npc_beryl_sorcererAI(creature);
-    }
 };
+
 
 /*######
 ## npc_imprisoned_beryl_sorcerer
@@ -1676,11 +1873,15 @@ enum eImprisionedBerylSorcerer
     SAY_IMPRISIONED_BERYL_6         = -1571029,
     SAY_IMPRISIONED_BERYL_7         = -1571030,
 };
-
-class npc_imprisoned_beryl_sorcerer : public CreatureScript
+class npc_imprisoned_beryl_sorcerer : public CreatureScript
 {
 public:
     npc_imprisoned_beryl_sorcerer() : CreatureScript("npc_imprisoned_beryl_sorcerer") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new npc_imprisoned_beryl_sorcererAI(pCreature);
+    }
 
     struct npc_imprisoned_beryl_sorcererAI : public ScriptedAI
     {
@@ -1700,6 +1901,7 @@ public:
 
         void EnterCombat(Unit* /*pWho*/)
         {
+            return;
         }
 
         void SpellHit(Unit* pUnit, const SpellEntry* pSpell)
@@ -1787,11 +1989,8 @@ public:
         }
     };
 
-    CreatureAI *GetAI(Creature *creature) const
-    {
-        return new npc_imprisoned_beryl_sorcererAI(creature);
-    }
 };
+
 
 /*######
 ## npc_mootoo_the_younger
@@ -1808,14 +2007,12 @@ enum Mootoo_the_Younger_Entries
 {
     NPC_MOOTOO_THE_YOUNGER          =25504,
     QUEST_ESCAPING_THE_MIST         =11664
-};
-
-class npc_mootoo_the_younger : public CreatureScript
+};class npc_mootoo_the_younger : public CreatureScript
 {
 public:
     npc_mootoo_the_younger() : CreatureScript("npc_mootoo_the_younger") { }
 
-    bool OnQuestAccept(Player* pPlayer, Creature* pCreature, Quest const* quest)
+    bool QuestAccept(Player* pPlayer, Creature* pCreature, Quest const* quest)
     {
         if (quest->GetQuestId() == QUEST_ESCAPING_THE_MIST)
         {
@@ -1832,6 +2029,11 @@ public:
             CAST_AI(npc_escortAI, (pCreature->AI()))->Start(true, false, pPlayer->GetGUID());
         }
         return true;
+    }
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new npc_mootoo_the_youngerAI(pCreature);
     }
 
     struct npc_mootoo_the_youngerAI : public npc_escortAI
@@ -1882,10 +2084,6 @@ public:
         }
     };
 
-    CreatureAI *GetAI(Creature *creature) const
-    {
-        return new npc_mootoo_the_youngerAI(creature);
-    }
 };
 
 /*######
@@ -1902,13 +2100,12 @@ enum Script_Texts_Bonker_Togglevolt
     SAY_bonker_1                    =-1700002,
     SAY_bonker_2                    =-1700003
 };
-
-class npc_bonker_togglevolt : public CreatureScript
+class npc_bonker_togglevolt : public CreatureScript
 {
 public:
     npc_bonker_togglevolt() : CreatureScript("npc_bonker_togglevolt") { }
 
-    bool OnQuestAccept(Player* pPlayer, Creature* pCreature, Quest const* quest)
+    bool QuestAccept(Player* pPlayer, Creature* pCreature, Quest const* quest)
     {
         if (quest->GetQuestId() == QUEST_GET_ME_OUTA_HERE)
         {
@@ -1925,6 +2122,11 @@ public:
             CAST_AI(npc_escortAI, (pCreature->AI()))->Start(true, true, pPlayer->GetGUID());
         }
         return true;
+    }
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new npc_bonker_togglevoltAI(pCreature);
     }
 
     struct npc_bonker_togglevoltAI : public npc_escortAI
@@ -1975,11 +2177,8 @@ public:
         }
     };
 
-    CreatureAI *GetAI(Creature *creature) const
-    {
-        return new npc_bonker_togglevoltAI(creature);
-    }
 };
+
 
 /*######
 ## Help Those That Cannot Help Themselves, Quest 11876
@@ -2021,11 +2220,15 @@ const uint32 MammothTraps[MammothTrapsNum] =
     GO_MAMMOTH_TRAP_16, GO_MAMMOTH_TRAP_17, GO_MAMMOTH_TRAP_18, GO_MAMMOTH_TRAP_19, GO_MAMMOTH_TRAP_20,
     GO_MAMMOTH_TRAP_21, GO_MAMMOTH_TRAP_22
 };
-
-class npc_trapped_mammoth_calf : public CreatureScript
+class npc_trapped_mammoth_calf : public CreatureScript
 {
 public:
     npc_trapped_mammoth_calf() : CreatureScript("npc_trapped_mammoth_calf") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new npc_trapped_mammoth_calfAI(pCreature);
+    }
 
     struct npc_trapped_mammoth_calfAI : public ScriptedAI
     {
@@ -2036,19 +2239,34 @@ public:
 
         void Reset()
         {
+            GameObject *pTrap;
+
             uiTimer = 1500;
             bStarted = false;
 
-            GameObject* pTrap;
-            for (uint8 i = 0; i < MammothTrapsNum; ++i)
-            {
-                pTrap = me->FindNearestGameObject(MammothTraps[i],11.0f);
-                if (pTrap)
-                {
+            if ((pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_1,1.0f)) ||
+                (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_2,1.0f)) ||
+                (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_3,1.0f)) ||
+                (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_4,1.0f)) ||
+                (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_5,1.0f)) ||
+                (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_6,1.0f)) ||
+                (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_7,1.0f)) ||
+                (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_8,1.0f)) ||
+                (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_9,1.0f)) ||
+                (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_10,1.0f)) ||
+                (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_11,1.0f)) ||
+                (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_12,1.0f)) ||
+                (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_13,1.0f)) ||
+                (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_14,1.0f)) ||
+                (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_15,1.0f)) ||
+                (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_16,1.0f)) ||
+                (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_17,1.0f)) ||
+                (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_18,1.0f)) ||
+                (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_19,1.0f)) ||
+                (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_20,1.0f)) ||
+                (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_21,1.0f)) ||
+                (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_22,1.0f)))
                     pTrap->SetGoState(GO_STATE_ACTIVE);
-                    return;
-                }
-            }
         }
 
         void UpdateAI(const uint32 diff)
@@ -2074,28 +2292,39 @@ public:
 
         void MovementInform(uint32 uiType, uint32 /*uiId*/)
         {
-
+            GameObject* pTrap;
             if (uiType != POINT_MOTION_TYPE)
                 return;
             me->DisappearAndDie();
-            GameObject* pTrap;
-            for (uint8 i = 0; i < MammothTrapsNum; ++i)
-            {
-                pTrap = me->FindNearestGameObject(MammothTraps[i],11.0f);
-                if (pTrap)
-                {
+
+            if ((pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_1,11.0f)) ||
+                (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_2,11.0f)) ||
+                (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_3,11.0f)) ||
+                (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_4,11.0f)) ||
+                (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_5,11.0f)) ||
+                (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_6,11.0f)) ||
+                (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_7,11.0f)) ||
+                (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_8,11.0f)) ||
+                (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_9,11.0f)) ||
+                (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_10,11.0f)) ||
+                (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_11,11.0f)) ||
+                (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_12,11.0f)) ||
+                (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_13,11.0f)) ||
+                (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_14,11.0f)) ||
+                (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_15,11.0f)) ||
+                (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_16,11.0f)) ||
+                (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_17,11.0f)) ||
+                (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_18,11.0f)) ||
+                (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_19,11.0f)) ||
+                (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_20,11.0f)) ||
+                (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_21,11.0f)) ||
+                (pTrap = me->FindNearestGameObject(GO_MAMMOTH_TRAP_22,11.0f)))
                     pTrap->SetLootState(GO_JUST_DEACTIVATED);
-                    return;
-                }
-            }
         }
     };
 
-    CreatureAI *GetAI(Creature *creature) const
-    {
-        return new npc_trapped_mammoth_calfAI(creature);
-    }
 };
+
 
 /*######
 ## Quest 11653: Hah... You're Not So Big Now!
@@ -2109,11 +2338,15 @@ enum eNotSoBig
     SPELL_AURA_NOTSOBIG_3                         = 45677,
     SPELL_AURA_NOTSOBIG_4                         = 45681
 };
-
-class npc_magmoth_crusher : public CreatureScript
+class npc_magmoth_crusher : public CreatureScript
 {
 public:
     npc_magmoth_crusher() : CreatureScript("npc_magmoth_crusher") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new npc_magmoth_crusherAI(pCreature);
+    }
 
     struct npc_magmoth_crusherAI : public ScriptedAI
     {
@@ -2126,18 +2359,15 @@ public:
                 (me->HasAura(SPELL_AURA_NOTSOBIG_1) || me->HasAura(SPELL_AURA_NOTSOBIG_2) ||
                 me->HasAura(SPELL_AURA_NOTSOBIG_3) || me->HasAura(SPELL_AURA_NOTSOBIG_4)))
             {
-                Quest const* qInfo = sObjectMgr.GetQuestTemplate(QUEST_YOU_RE_NOT_SO_BIG_NOW);
+                Quest const* qInfo = objmgr.GetQuestTemplate(QUEST_YOU_RE_NOT_SO_BIG_NOW);
                 if (qInfo)
                     CAST_PLR(pKiller)->KilledMonsterCredit(qInfo->ReqCreatureOrGOId[0],0);
             }
         }
     };
 
-    CreatureAI *GetAI(Creature *creature) const
-    {
-        return new npc_magmoth_crusherAI(creature);
-    }
 };
+
 
 /*######
 ## Quest 11608: Bury Those Cockroaches!
@@ -2145,11 +2375,15 @@ public:
 
 #define QUEST_BURY_THOSE_COCKROACHES            11608
 #define SPELL_SEAFORIUM_DEPTH_CHARGE_EXPLOSION  45502
-
-class npc_seaforium_depth_charge : public CreatureScript
+class npc_seaforium_depth_charge : public CreatureScript
 {
 public:
     npc_seaforium_depth_charge() : CreatureScript("npc_seaforium_depth_charge") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new npc_seaforium_depth_chargeAI(pCreature);
+    }
 
     struct npc_seaforium_depth_chargeAI : public ScriptedAI
     {
@@ -2183,11 +2417,8 @@ public:
         }
     };
 
-    CreatureAI *GetAI(Creature *creature) const
-    {
-        return new npc_seaforium_depth_chargeAI(creature);
-    }
 };
+
 
 /*######
 ## Help Those That Cannot Help Themselves, Quest 11876
@@ -2198,11 +2429,15 @@ enum eValiancekeepcannons
     GO_VALIANCE_KEEP_CANNON_1                     = 187560,
     GO_VALIANCE_KEEP_CANNON_2                     = 188692
 };
-
-class npc_valiance_keep_cannoneer : public CreatureScript
+class npc_valiance_keep_cannoneer : public CreatureScript
 {
 public:
     npc_valiance_keep_cannoneer() : CreatureScript("npc_valiance_keep_cannoneer") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new npc_valiance_keep_cannoneerAI(pCreature);
+    }
 
     struct npc_valiance_keep_cannoneerAI : public ScriptedAI
     {
@@ -2235,11 +2470,8 @@ public:
 
     };
 
-    CreatureAI *GetAI(Creature *creature) const
-    {
-        return new npc_valiance_keep_cannoneerAI(creature);
-    }
 };
+
 
 /*******************************************************
  * npc_warmage_coldarra
@@ -2257,11 +2489,15 @@ enum NPCs
     NPC_WARMAGE_CALANDRA         = 27173,
     NPC_WARMAGE_WATKINS          = 27904
 };
-
-class npc_warmage_coldarra : public CreatureScript
+class npc_warmage_coldarra : public CreatureScript
 {
 public:
     npc_warmage_coldarra() : CreatureScript("npc_warmage_coldarra") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new npc_warmage_coldarraAI(pCreature);
+    }
 
     struct npc_warmage_coldarraAI : public Scripted_NoMovementAI
     {
@@ -2340,38 +2576,38 @@ public:
         }
     };
 
-    CreatureAI *GetAI(Creature *creature) const
-    {
-        return new npc_warmage_coldarraAI(creature);
-    }
 };
+
 
 void AddSC_borean_tundra()
 {
-    new npc_sinkhole_kill_credit;
-    new npc_khunok_the_behemoth;
-    new npc_keristrasza;
-    new npc_corastrasza;
-    new npc_iruk;
-    new mob_nerubar_victim;
-    new npc_scourge_prisoner;
-    new npc_jenny;
-    new npc_fezzix_geartwist;
-    new npc_nesingwary_trapper;
-    new npc_lurgglbr;
-    new npc_nexus_drake_hatchling;
-    new npc_thassarian;
-    new npc_image_lich_king;
-    new npc_counselor_talbot;
-    new npc_leryssa;
-    new npc_general_arlos;
-    new npc_beryl_sorcerer;
-    new npc_imprisoned_beryl_sorcerer;
-    new npc_mootoo_the_younger;
-    new npc_bonker_togglevolt;
-    new npc_trapped_mammoth_calf;
-    new npc_magmoth_crusher;
-    new npc_seaforium_depth_charge;
-    new npc_valiance_keep_cannoneer;
-    new npc_warmage_coldarra;
+    new npc_fizzcrank_fullthrottle();
+    new npc_surristrasz();
+    new npc_tiare();
+    new npc_sinkhole_kill_credit();
+    new npc_khunok_the_behemoth();
+    new npc_keristrasza();
+    new npc_corastrasza();
+    new npc_iruk();
+    new mob_nerubar_victim();
+    new npc_scourge_prisoner();
+    new npc_jenny();
+    new npc_fezzix_geartwist();
+    new npc_nesingwary_trapper();
+    new npc_lurgglbr();
+    new npc_nexus_drake_hatchling();
+    new npc_thassarian();
+    new npc_image_lich_king();
+    new npc_counselor_talbot();
+    new npc_leryssa();
+    new npc_general_arlos();
+    new npc_beryl_sorcerer();
+    new npc_imprisoned_beryl_sorcerer();
+    new npc_mootoo_the_younger();
+    new npc_bonker_togglevolt();
+    new npc_trapped_mammoth_calf();
+    new npc_magmoth_crusher();
+    new npc_seaforium_depth_charge();
+    new npc_valiance_keep_cannoneer();
+    new npc_warmage_coldarra();
 }

@@ -1,20 +1,3 @@
-/*
- * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
- *
- * This program is free software; you can redistribute it and/or modify it
- * under the terms of the GNU General Public License as published by the
- * Free Software Foundation; either version 2 of the License, or (at your
- * option) any later version.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
- * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
- * more details.
- *
- * You should have received a copy of the GNU General Public License along
- * with this program. If not, see <http://www.gnu.org/licenses/>.
- */
-
 #include "ScriptPCH.h"
 #include "obsidian_sanctum.h"
 
@@ -23,30 +6,31 @@
 /* Obsidian Sanctum encounters:
 0 - Sartharion
 */
-
-class instance_obsidian_sanctum : public InstanceMapScript
+class instance_obsidian_sanctum : public InstanceMapScript
 {
 public:
-    instance_obsidian_sanctum() : InstanceMapScript("instance_obsidian_sanctum", 615) { }
+    instance_obsidian_sanctum() : InstanceMapScript("instance_obsidian_sanctum") { }
 
-    InstanceScript* GetInstanceScript(InstanceMap* pMap) const
+    InstanceData* GetInstanceData_InstanceMapScript(Map* pMap)
     {
         return new instance_obsidian_sanctum_InstanceMapScript(pMap);
     }
 
-    struct instance_obsidian_sanctum_InstanceMapScript : public InstanceScript
+    struct instance_obsidian_sanctum_InstanceMapScript : public ScriptedInstance
     {
-        instance_obsidian_sanctum_InstanceMapScript(Map* pMap) : InstanceScript(pMap) {Initialize();};
+        instance_obsidian_sanctum_InstanceMapScript(Map* pMap) : ScriptedInstance(pMap) {Initialize();};
 
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         uint64 m_uiSartharionGUID;
         uint64 m_uiTenebronGUID;
         uint64 m_uiShadronGUID;
         uint64 m_uiVesperonGUID;
+        uint64 m_uiDiscipleOfVesperonGUID;
 
         bool m_bTenebronKilled;
         bool m_bShadronKilled;
         bool m_bVesperonKilled;
+        bool LoadedItr;
 
         void Initialize()
         {
@@ -60,9 +44,10 @@ public:
             m_bTenebronKilled = false;
             m_bShadronKilled = false;
             m_bVesperonKilled = false;
+            LoadedItr = false;
         }
 
-        void OnCreatureCreate(Creature* pCreature, bool /*add*/)
+        void OnCreatureCreate(Creature* pCreature, bool add)
         {
             switch(pCreature->GetEntry())
             {
@@ -83,19 +68,11 @@ public:
                     m_uiVesperonGUID = pCreature->GetGUID();
                     pCreature->setActive(true);
                     break;
+                case NPC_DISCIPLE_OF_VESPERON:
+                    m_uiDiscipleOfVesperonGUID = pCreature->GetGUID();
+                    pCreature->setActive(true);
+                    break;
             }
-        }
-
-        void SetData(uint32 uiType, uint32 uiData)
-        {
-            if (uiType == TYPE_SARTHARION_EVENT)
-                m_auiEncounter[0] = uiData;
-            else if(uiType == TYPE_TENEBRON_PREKILLED)
-                m_bTenebronKilled = true;
-            else if(uiType == TYPE_SHADRON_PREKILLED)
-                m_bShadronKilled = true;
-            else if(uiType == TYPE_VESPERON_PREKILLED)
-                m_bVesperonKilled = true;
         }
 
         uint32 GetData(uint32 uiType)
@@ -124,8 +101,22 @@ public:
                     return m_uiShadronGUID;
                 case DATA_VESPERON:
                     return m_uiVesperonGUID;
+                case DATA_DISCIPLE_OF_VESPERON:
+                    return m_uiDiscipleOfVesperonGUID;
             }
             return 0;
+        }
+
+        void SetData(uint32 uiType, uint32 uiData)
+        {
+            if (uiType == TYPE_SARTHARION_EVENT)
+                m_auiEncounter[0] = uiData;
+            else if(uiType == TYPE_TENEBRON_PREKILLED)
+                m_bTenebronKilled = true;
+            else if(uiType == TYPE_SHADRON_PREKILLED)
+                m_bShadronKilled = true;
+            else if(uiType == TYPE_VESPERON_PREKILLED)
+                m_bVesperonKilled = true;
         }
     };
 

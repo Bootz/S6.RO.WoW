@@ -131,13 +131,12 @@ static Position SpawnLocations[]=
     {946.992, 397.016, 208.374},
     {960.748, 382.944, 208.374},
 };
-
-class mob_tribuna_controller : public CreatureScript
+class mob_tribuna_controller : public CreatureScript
 {
 public:
     mob_tribuna_controller() : CreatureScript("mob_tribuna_controller") { }
 
-    CreatureAI* GetAI(Creature* pCreature) const
+    CreatureAI* GetAI(Creature* pCreature)
     {
         return new mob_tribuna_controllerAI(pCreature);
     }
@@ -146,11 +145,11 @@ public:
     {
         mob_tribuna_controllerAI(Creature *c) : ScriptedAI(c)
         {
-            pInstance = c->GetInstanceScript();
+            pInstance = c->GetInstanceData();
             SetCombatMovement(false);
         }
 
-        InstanceScript* pInstance;
+        ScriptedInstance* pInstance;
 
         uint32 uiKaddrakEncounterTimer;
         uint32 uiMarnakEncounterTimer;
@@ -264,24 +263,23 @@ public:
     };
 
 };
-
-class npc_brann_hos : public CreatureScript
+class npc_brann_hos : public CreatureScript
 {
 public:
     npc_brann_hos() : CreatureScript("npc_brann_hos") { }
 
-    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+    bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
     {
         if (uiAction == GOSSIP_ACTION_INFO_DEF+1 || uiAction == GOSSIP_ACTION_INFO_DEF+2)
         {
             pPlayer->CLOSE_GOSSIP_MENU();
-            CAST_AI(npc_brann_hos::npc_brann_hosAI, pCreature->AI())->StartWP();
+            CAST_AI(npc_brann_hosAI, pCreature->AI())->StartWP();
         }
 
         return true;
     }
 
-    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
+    bool GossipHello(Player* pPlayer, Creature* pCreature)
     {
         if (pCreature->isQuestGiver())
             pPlayer->PrepareQuestMenu(pCreature->GetGUID());
@@ -292,7 +290,7 @@ public:
         return true;
     }
 
-    CreatureAI* GetAI(Creature* pCreature) const
+    CreatureAI* GetAI(Creature* pCreature)
     {
         return new npc_brann_hosAI(pCreature);
     }
@@ -301,7 +299,7 @@ public:
     {
         npc_brann_hosAI(Creature *c) : npc_escortAI(c)
         {
-            pInstance = c->GetInstanceScript();
+            pInstance = c->GetInstanceData();
         }
 
         uint32 uiStep;
@@ -310,7 +308,7 @@ public:
         uint64 uiControllerGUID;
         std::list<uint64> lDwarfGUIDList;
 
-        InstanceScript* pInstance;
+        ScriptedInstance* pInstance;
 
         bool bIsBattle;
         bool bIsLowHP;
@@ -356,7 +354,7 @@ public:
                     {
                         if (!pCreature->isAlive())
                             pCreature->Respawn();
-                        CAST_AI(mob_tribuna_controller::mob_tribuna_controllerAI, pCreature->AI())->UpdateFacesList();
+                        CAST_AI(mob_tribuna_controllerAI, pCreature->AI())->UpdateFacesList();
                         uiControllerGUID = pCreature->GetGUID();
                     }
                     break;
@@ -422,7 +420,7 @@ public:
             Start();
         }
 
-        void DamageTaken(Unit* /*done_by*/, uint32 & /*damage*/)
+        void DamageTaken(Unit* done_by, uint32 &damage)
         {
             if (!bHasBeenDamaged)
                 bHasBeenDamaged = true;
@@ -471,7 +469,7 @@ public:
                         if (pInstance)
                             pInstance->HandleGameObject(pInstance->GetData64(DATA_GO_KADDRAK),true);
                         if (Creature* pTemp = Unit::GetCreature(*me, uiControllerGUID))
-                            CAST_AI(mob_tribuna_controller::mob_tribuna_controllerAI, pTemp->AI())->bKaddrakActivated = true;
+                            CAST_AI(mob_tribuna_controllerAI, pTemp->AI())->bKaddrakActivated = true;
                         JumpToNextStep(5000);
                         break;
                     case 9:
@@ -495,7 +493,7 @@ public:
                         if (pInstance)
                             pInstance->HandleGameObject(pInstance->GetData64(DATA_GO_MARNAK),true);
                         if (Creature* pTemp = Unit::GetCreature(*me, uiControllerGUID))
-                            CAST_AI(mob_tribuna_controller::mob_tribuna_controllerAI, pTemp->AI())->bMarnakActivated = true;
+                            CAST_AI(mob_tribuna_controllerAI, pTemp->AI())->bMarnakActivated = true;
                         JumpToNextStep(10000);
                         break;
                     case 13:
@@ -527,7 +525,7 @@ public:
                         if (pInstance)
                             pInstance->HandleGameObject(pInstance->GetData64(DATA_GO_ABEDNEUM),true);
                         if (Creature* pTemp = Unit::GetCreature(*me, uiControllerGUID))
-                            CAST_AI(mob_tribuna_controller::mob_tribuna_controllerAI, pTemp->AI())->bAbedneumActivated = true;
+                            CAST_AI(mob_tribuna_controllerAI, pTemp->AI())->bAbedneumActivated = true;
                         JumpToNextStep(5000);
                         break;
                     case 19:
@@ -706,6 +704,8 @@ public:
                             pInstance->HandleGameObject(pInstance->GetData64(DATA_GO_MARNAK),false);
                             pInstance->HandleGameObject(pInstance->GetData64(DATA_GO_ABEDNEUM),false);
                             pInstance->HandleGameObject(pInstance->GetData64(DATA_GO_SKY_FLOOR),false);
+                            pInstance->HandleGameObject(pInstance->GetData64(GO_TRIBUNAL_CHEST),true);
+                            pInstance->HandleGameObject(pInstance->GetData64(GO_TRIBUNAL_CHEST_HERO),true);
                         }
                         Player* pPlayer = GetPlayerForEscort();
                         if (pPlayer)
