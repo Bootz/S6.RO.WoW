@@ -1251,80 +1251,6 @@ public:
 
 void AddSC_boss_tc_horde_champions()
 {
-<<<<<<< HEAD:src/server/scripts/Northrend/CrusadersColiseum/TrialOfTheCrusader/horde_champions.cpp
-    Script *newscript;
-
-    newscript = new Script;
-    newscript->Name = "boss_gorgrim_shadowcleave";
-        newscript->GetAI = &GetAI_boss_gorgrim_shadowcleave;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "boss_birana_stormhoof";
-        newscript->GetAI = &GetAI_boss_birana_stormhoof;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "boss_erin_misthoof";
-        newscript->GetAI = &GetAI_boss_erin_misthoof;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "boss_rujkah";
-        newscript->GetAI = &GetAI_boss_rujkah;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "boss_ginselle_blightslinger";
-        newscript->GetAI = &GetAI_boss_ginselle_blightslinger;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "boss_liandra_suncaller";
-        newscript->GetAI = &GetAI_boss_liandra_suncaller;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "boss_malithas_brightblader";
-        newscript->GetAI = &GetAI_boss_malithas_brightblader;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "boss_caiphus_the_stern";
-        newscript->GetAI = &GetAI_boss_caiphus_the_stern;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "boss_vivienne_blackwhisper";
-        newscript->GetAI = &GetAI_boss_vivienne_blackwhisper;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "boss_mazdinah";
-        newscript->GetAI = &GetAI_boss_mazdinah;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "boss_broln_stouthorn";
-        newscript->GetAI = &GetAI_boss_broln_stouthorn;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "boss_thrakgar";
-        newscript->GetAI = &GetAI_boss_thrakgar;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "boss_harkzog";
-        newscript->GetAI = &GetAI_boss_harkzog;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "boss_narrhok_steelbreaker";
-        newscript->GetAI = &GetAI_boss_narrhok_steelbreaker;
-    newscript->RegisterSelf();
-}
-=======
     new boss_gorgrim_shadowcleave();
     new boss_birana_stormhoof();
     new boss_erin_misthoof();
@@ -1340,4 +1266,3 @@ void AddSC_boss_tc_horde_champions()
     new boss_harkzog();
     new boss_narrhok_steelbreaker();
 }
->>>>>>> tc:src/server/scripts/Northrend/CrusadersColiseum/TrialOfTheCrusader/horde_champions.cpp

@@ -988,42 +988,6 @@ public:
 
 void AddSC_trial_of_the_crussader()
 {
-<<<<<<< HEAD:src/server/scripts/Northrend/CrusadersColiseum/TrialOfTheCrusader/trial_of_the_crusader.cpp
-    Script *newscript;
-
-    newscript = new Script;
-    newscript->Name = "npc_tcrus_announcer";
-        newscript->GetAI = &GetAI_npc_tcrus_announcer;
-    newscript->pGossipHello = &GossipHello_npc_tcrus_announcer;
-    newscript->pGossipSelect = &GossipSelect_npc_tcrus_announcer;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_tcrus_tirion";
-        newscript->GetAI = &GetAI_npc_tcrus_tirion;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_tcrus_fizzlebang";
-        newscript->GetAI = &GetAI_npc_tcrus_fizzlebang;
-    newscript->RegisterSelf();
-
-        newscript = new Script;
-    newscript->Name = "npc_Garrosh";
-        newscript->GetAI = &GetAI_npc_Garrosh;
-    newscript->RegisterSelf();
-
-        newscript = new Script;
-    newscript->Name = "npc_LichKing";
-        newscript->GetAI = &GetAI_npc_LichKing;
-    newscript->RegisterSelf();
-
-        newscript = new Script;
-    newscript->Name = "npc_KingVyrn";
-        newscript->GetAI = &GetAI_npc_KingVyrn;
-    newscript->RegisterSelf();
-}
-=======
     new npc_tcrus_announcer();
     new npc_tcrus_tirion();
     new npc_tcrus_fizzlebang();
@@ -1031,4 +995,3 @@ void AddSC_trial_of_the_crussader()
     new npc_LichKing();
     new npc_KingVyrn();
 }
->>>>>>> tc:src/server/scripts/Northrend/CrusadersColiseum/TrialOfTheCrusader/trial_of_the_crusader.cpp

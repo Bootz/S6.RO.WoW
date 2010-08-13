@@ -1013,44 +1013,10 @@ public:
 
 void AddSC_boss_grand_champions()
 {
-<<<<<<< HEAD:src/server/scripts/Northrend/CrusadersColiseum/TrialOfTheChampion/boss_grand_champions.cpp
-    Script *newscript;
-
-    newscript = new Script;
-    newscript->Name = "generic_vehicleAI_toc5";
-    newscript->GetAI = &GetAI_generic_vehicleAI_toc5;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "boss_warrior_toc5";
-    newscript->GetAI = &GetAI_boss_warrior_toc5;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "boss_mage_toc5";
-    newscript->GetAI = &GetAI_boss_mage_toc5;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "boss_shaman_toc5";
-    newscript->GetAI = &GetAI_boss_shaman_toc5;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "boss_hunter_toc5";
-    newscript->GetAI = &GetAI_boss_hunter_toc5;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "boss_rouge_toc5";
-    newscript->GetAI = &GetAI_boss_rouge_toc5;
-    newscript->RegisterSelf();
-=======
     new generic_vehicleAI_toc5();
     new boss_warrior_toc5();
     new boss_mage_toc5();
     new boss_shaman_toc5();
     new boss_hunter_toc5();
     new boss_rouge_toc5();
->>>>>>> tc:src/server/scripts/Northrend/CrusadersColiseum/TrialOfTheChampion/boss_grand_champions.cpp
 }

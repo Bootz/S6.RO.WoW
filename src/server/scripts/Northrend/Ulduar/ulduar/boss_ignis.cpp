@@ -322,13 +322,7 @@ public:
 
     CreatureAI* GetAI(Creature* pCreature)
     {
-<<<<<<< HEAD:src/server/scripts/Northrend/Ulduar/ulduar/boss_ignis.cpp
-        pInstance = c->GetInstanceData();
-        me->SetReactState(REACT_PASSIVE);
-        me->AddAura(SPELL_FROZEN_POSITION, me);
-=======
         return new boss_ignis_AI (pCreature);
->>>>>>> tc:src/server/scripts/Northrend/Ulduar/ulduar/boss_ignis.cpp
     }
 
 };
@@ -346,33 +340,10 @@ public:
     {
         mob_iron_constructAI(Creature *c) : ScriptedAI(c)
         {
-<<<<<<< HEAD:src/server/scripts/Northrend/Ulduar/ulduar/boss_ignis.cpp
-            DoCastAOE(SPELL_SHATTER, true);
-            if (Creature *pIgnis = me->GetCreature(*me, pInstance->GetData64(DATA_IGNIS)))
-                if (pIgnis->AI())
-                    pIgnis->AI()->DoAction(ACTION_REMOVE_BUFF);
-                    
-            me->ForcedDespawn(1000);
-        }
-    }
-    
-    void SpellHit(Unit* caster, const SpellEntry *spell)
-    {
-        if (spell->Id == SPELL_ACTIVATE_CONSTRUCT && me->HasReactState(REACT_PASSIVE))
-        {
-            me->SetReactState(REACT_AGGRESSIVE);
-            me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PACIFIED | UNIT_FLAG_STUNNED | UNIT_FLAG_DISABLE_MOVE);
-            me->RemoveAurasDueToSpell(SPELL_FROZEN_POSITION);
-            me->AI()->AttackStart(caster->getVictim());
-            me->AI()->DoZoneInCombat();
-        }
-    }
-=======
             pInstance = c->GetInstanceData();
             me->SetReactState(REACT_PASSIVE);
             me->AddAura(SPELL_FROZEN_POSITION, me);
         }
->>>>>>> tc:src/server/scripts/Northrend/Ulduar/ulduar/boss_ignis.cpp
 
         ScriptedInstance* pInstance;
 
@@ -387,11 +358,6 @@ public:
         {
             if (me->HasAura(SPELL_BRITTLE) && damage >= 5000)
             {
-<<<<<<< HEAD:src/server/scripts/Northrend/Ulduar/ulduar/boss_ignis.cpp
-                me->RemoveAura(SPELL_HEAT);
-                DoCast(me, SPELL_MOLTEN, true);
-                Brittled = false;
-=======
                 DoCastAOE(SPELL_SHATTER, true);
                 if (Creature *pIgnis = me->GetCreature(*me, pInstance->GetData64(DATA_IGNIS)))
                     if (pIgnis->AI())
@@ -410,7 +376,6 @@ public:
                 me->RemoveAurasDueToSpell(SPELL_FROZEN_POSITION);
                 me->AI()->AttackStart(caster->getVictim());
                 me->AI()->DoZoneInCombat();
->>>>>>> tc:src/server/scripts/Northrend/Ulduar/ulduar/boss_ignis.cpp
             }
         }
 
@@ -423,18 +388,12 @@ public:
 
             if (Aura * aur = me->GetAura((SPELL_HEAT), GetGUID()))
             {
-<<<<<<< HEAD:src/server/scripts/Northrend/Ulduar/ulduar/boss_ignis.cpp
-                me->AddAura(SPELL_BRITTLE, me);
-                me->RemoveAura(SPELL_MOLTEN);
-                Brittled = true;
-=======
                 if (aur->GetStackAmount() >= 10)
                 {
                     me->RemoveAura(SPELL_HEAT);
                     DoCast(me, SPELL_MOLTEN, true);
                     Brittled = false;
                 }
->>>>>>> tc:src/server/scripts/Northrend/Ulduar/ulduar/boss_ignis.cpp
             }
 
             // Water pools

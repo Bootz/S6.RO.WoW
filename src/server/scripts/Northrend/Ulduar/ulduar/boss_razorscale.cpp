@@ -61,7 +61,6 @@ const Position PosHarpoon[4] =
 {607.726, -146.857, 391.517, 4.041},
 {561.449, -146.857, 391.517, 5.426}
 };
-<<<<<<< HEAD:src/server/scripts/Northrend/Ulduar/ulduar/boss_razorscale.cpp
 
 const Position PosEngSpawn = {591.951477, -95.968292, 391.516998, 0};
 
@@ -89,35 +88,6 @@ const Position PosDefCombat[4] =
 {560.231, -153.677, 391.517, 5.403}
 };
 
-=======
-
-const Position PosEngSpawn = {591.951477, -95.968292, 391.516998, 0};
-
-const Position PosEngRepair[4] =
-{
-{590.442, -130.550, 391.517, 4.789},
-{574.850, -133.687, 391.517, 4.252},
-{606.567, -143.369, 391.517, 4.434},
-{560.609, -142.967, 391.517, 5.074}
-};
-
-const Position PosDefSpawn[4] =
-{
-{600.75, -104.850, 391.5169, 0},
-{596.38, -110.262, 391.5169, 0},
-{566.47, -103.633, 391.5169, 0},
-{570.41, -108.791, 391.5169, 0}
-};
-
-const Position PosDefCombat[4] =
-{
-{614.975, -155.138, 391.517, 4.154},
-{609.814, -204.968, 391.517, 5.385},
-{563.531, -201.557, 391.517, 4.108},
-{560.231, -153.677, 391.517, 5.403}
-};
-
->>>>>>> tc:src/server/scripts/Northrend/Ulduar/ulduar/boss_razorscale.cpp
 const Position RazorFlight = {588.050, -251.191, 470.535980, 1.605303};
 const Position RazorGround = {586.966, -175.534, 391.516998, 1.691704};
 
@@ -190,16 +160,7 @@ public:
 
     CreatureAI* GetAI(Creature* pCreature)
     {
-<<<<<<< HEAD:src/server/scripts/Northrend/Ulduar/ulduar/boss_razorscale.cpp
-        // Do not let Razorscale be affected by Battle Shout buff
-        me->ApplySpellImmune(0, IMMUNITY_ID, RAID_MODE(SPELL_BATTLE_SHOUT_10, SPELL_BATTLE_SHOUT_25), true);
-        me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);
-        me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true);  // Death Grip
-        pInstance = pCreature->GetInstanceData();
-        pMap = me->GetMap();
-=======
         return new boss_razorscaleAI (pCreature);
->>>>>>> tc:src/server/scripts/Northrend/Ulduar/ulduar/boss_razorscale.cpp
     }
 
     struct boss_razorscaleAI : public BossAI
@@ -222,17 +183,10 @@ public:
         uint32 EnrageTimer;
         uint32 FlyCount;
     
-<<<<<<< HEAD:src/server/scripts/Northrend/Ulduar/ulduar/boss_razorscale.cpp
-    Creature* Harpoon[4];
-    Creature* MoleTrigger;
-    bool PermaGround;
-    bool Enraged;
-=======
         Creature* Harpoon[4];
         Creature* MoleTrigger;
         bool PermaGround;
         bool Enraged;
->>>>>>> tc:src/server/scripts/Northrend/Ulduar/ulduar/boss_razorscale.cpp
 
         void Reset()
         {
@@ -243,24 +197,6 @@ public:
             PermaGround = false;
         }
 
-<<<<<<< HEAD:src/server/scripts/Northrend/Ulduar/ulduar/boss_razorscale.cpp
-    void EnterCombat(Unit* who)
-    {
-        _EnterCombat();
-        for (uint8 n = 0; n < RAID_MODE(2,4); ++n)
-            Harpoon[n] = me->SummonCreature(NPC_HARPOON, PosHarpoon[n], TEMPSUMMON_CORPSE_TIMED_DESPAWN, 0);
-        me->SetSpeed(MOVE_FLIGHT, 3.0f, true);
-        me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-        me->SetReactState(REACT_PASSIVE);
-        phase = PHASE_GROUND;
-        events.SetPhase(PHASE_GROUND);
-        FlyCount = 0;
-        EnrageTimer = 15*60*1000;   // Enrage in 15 min
-        Enraged = false;
-        events.ScheduleEvent(EVENT_FLIGHT, 0, 0, PHASE_GROUND);
-        DoZoneInCombat();
-    }
-=======
         void EnterCombat(Unit* who)
         {
             _EnterCombat();
@@ -277,7 +213,6 @@ public:
             events.ScheduleEvent(EVENT_FLIGHT, 0, 0, PHASE_GROUND);
             DoZoneInCombat();
         }
->>>>>>> tc:src/server/scripts/Northrend/Ulduar/ulduar/boss_razorscale.cpp
 
         void JustDied(Unit* Killer)
         {
@@ -316,54 +251,6 @@ public:
             {
                 while (uint32 eventId = events.ExecuteEvent())
                 {
-<<<<<<< HEAD:src/server/scripts/Northrend/Ulduar/ulduar/boss_razorscale.cpp
-                    case EVENT_FLIGHT:
-                        phase = PHASE_FLIGHT;
-                        events.SetPhase(PHASE_FLIGHT);
-                        me->SetFlying(true);
-                        me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                        me->SetReactState(REACT_PASSIVE);
-                        me->AttackStop();
-                        me->RemoveAllAuras();
-                        me->GetMotionMaster()->MovePoint(0,RazorFlight);
-                        events.ScheduleEvent(EVENT_FIREBALL, 7000, 0, PHASE_FLIGHT);
-                        events.ScheduleEvent(EVENT_DEVOURING, 10000, 0, PHASE_FLIGHT);
-                        events.ScheduleEvent(EVENT_SUMMON, 5000, 0, PHASE_FLIGHT);
-                        events.ScheduleEvent(EVENT_GROUND, 75000, 0, PHASE_FLIGHT);
-                        ++FlyCount;
-                        return;
-                    case EVENT_LAND:
-                        me->SetFlying(false);
-                        me->NearTeleportTo(586.966, -175.534, 391.516998, 1.691704);
-                        DoCast(me, SPELL_STUN, true);
-                        me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                        if (Creature *pCommander = me->GetCreature(*me, pInstance->GetData64(DATA_EXP_COMMANDER)))
-                            pCommander->AI()->DoAction(ACTION_GROUND_PHASE);
-                        events.ScheduleEvent(EVENT_HARPOON, 0, 0, PHASE_GROUND);
-                        events.ScheduleEvent(EVENT_BREATH, 30000, 0, PHASE_GROUND);
-                        events.ScheduleEvent(EVENT_BUFFET, 33000, 0, PHASE_GROUND);
-                        events.ScheduleEvent(EVENT_FLIGHT, 35000, 0, PHASE_GROUND);
-                        return;
-                    case EVENT_HARPOON:
-                        for (uint8 n = 0; n < RAID_MODE(2,4); ++n)
-                            if (Harpoon[n])
-                                Harpoon[n]->CastSpell(me, SPELL_HARPOON, true);
-                        events.ScheduleEvent(EVENT_HARPOON, 1500, 0, PHASE_GROUND);
-                        return;
-                    case EVENT_BREATH:
-                        me->MonsterTextEmote(EMOTE_BREATH, 0, true);
-                        DoCastAOE(RAID_MODE(SPELL_FLAMEBREATH_10, SPELL_FLAMEBREATH_25));
-                        events.CancelEvent(EVENT_HARPOON);
-                        events.CancelEvent(EVENT_BREATH);
-                        return;
-                    case EVENT_BUFFET:
-                        DoCastAOE(SPELL_WINGBUFFET);
-                        for (uint8 n = 0; n < RAID_MODE(2,4); ++n)
-                            if (Harpoon[n])
-                                Harpoon[n]->CastSpell(Harpoon[n], SPELL_FLAMED, true);
-                        events.CancelEvent(EVENT_BUFFET);
-                        return;
-=======
                     switch(eventId)
                     {
                         case EVENT_FLIGHT:
@@ -413,42 +300,12 @@ public:
                             events.CancelEvent(EVENT_BUFFET);
                             return;
                     }
->>>>>>> tc:src/server/scripts/Northrend/Ulduar/ulduar/boss_razorscale.cpp
                 }
             }
             if (phase == PHASE_PERMAGROUND)
             {
                 while (uint32 eventId = events.ExecuteEvent())
                 {
-<<<<<<< HEAD:src/server/scripts/Northrend/Ulduar/ulduar/boss_razorscale.cpp
-                    case EVENT_FLAME:
-                        DoCastAOE(SPELL_FLAMEBUFFET);
-                        events.ScheduleEvent(EVENT_FLAME, 10000, 0, PHASE_PERMAGROUND);
-                        return;
-                    case EVENT_BREATH:
-                        me->MonsterTextEmote(EMOTE_BREATH, 0, true);
-                        DoCastVictim(RAID_MODE(SPELL_FLAMEBREATH_10, SPELL_FLAMEBREATH_25));
-                        events.ScheduleEvent(EVENT_BREATH, 20000, 0, PHASE_PERMAGROUND);
-                        return;
-                    case EVENT_FIREBALL:
-                        if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 200, true))
-                            DoCast(pTarget, RAID_MODE(SPELL_FIREBALL_10, SPELL_FIREBALL_25));
-                        events.ScheduleEvent(EVENT_FIREBALL, 3000, 0, PHASE_PERMAGROUND);
-                        return;
-                    case EVENT_DEVOURING:
-                        if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 200, true))
-                            DoCast(pTarget, SPELL_DEVOURING_FLAME);
-                        events.ScheduleEvent(EVENT_DEVOURING, 10000, 0, PHASE_PERMAGROUND);
-                        return;
-                    case EVENT_BUFFET:
-                        DoCastAOE(SPELL_WINGBUFFET);
-                        events.CancelEvent(EVENT_BUFFET);
-                        return;
-                    case EVENT_FUSE:
-                        DoCastVictim(SPELL_FUSEARMOR);
-                        events.ScheduleEvent(EVENT_FUSE, 10000, 0, PHASE_PERMAGROUND);
-                        return;
-=======
                     switch(eventId)
                     {
                         case EVENT_FLAME:
@@ -479,7 +336,6 @@ public:
                             events.ScheduleEvent(EVENT_FUSE, 10000, 0, PHASE_PERMAGROUND);
                             return;
                     }
->>>>>>> tc:src/server/scripts/Northrend/Ulduar/ulduar/boss_razorscale.cpp
                 }
 
                 DoMeleeAttackIfReady();
@@ -488,30 +344,6 @@ public:
             {
                 if (uint32 eventId = events.ExecuteEvent())
                 {
-<<<<<<< HEAD:src/server/scripts/Northrend/Ulduar/ulduar/boss_razorscale.cpp
-                    case EVENT_GROUND:
-                        phase = PHASE_GROUND;
-                        events.SetPhase(PHASE_GROUND);
-                        if (Harpoon[0])
-                            Harpoon[0]->MonsterTextEmote(EMOTE_HARPOON, 0, true);
-                        me->GetMotionMaster()->MovePoint(0,RazorGround);
-                        events.ScheduleEvent(EVENT_LAND, 5500, 0, PHASE_GROUND);
-                        return;
-                    case EVENT_FIREBALL:
-                        if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 200, true))
-                            DoCast(pTarget, RAID_MODE(SPELL_FIREBALL_10, SPELL_FIREBALL_25));
-                        events.ScheduleEvent(EVENT_FIREBALL, 3000, 0, PHASE_FLIGHT);
-                        return;
-                    case EVENT_DEVOURING:
-                        if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 200, true))
-                            DoCast(pTarget, SPELL_DEVOURING_FLAME);
-                        events.ScheduleEvent(EVENT_DEVOURING, 10000, 0, PHASE_FLIGHT);
-                        return;
-                    case EVENT_SUMMON:
-                        SummonAdds();
-                        events.ScheduleEvent(EVENT_SUMMON, 45000, 0, PHASE_FLIGHT);
-                        return;
-=======
                     switch(eventId)
                     {
                         case EVENT_GROUND:
@@ -537,7 +369,6 @@ public:
                             events.ScheduleEvent(EVENT_SUMMON, 45000, 0, PHASE_FLIGHT);
                             return;
                     }
->>>>>>> tc:src/server/scripts/Northrend/Ulduar/ulduar/boss_razorscale.cpp
                 }
             }
         }
@@ -565,12 +396,6 @@ public:
 
         void SummonAdds()
         {
-<<<<<<< HEAD:src/server/scripts/Northrend/Ulduar/ulduar/boss_razorscale.cpp
-            float x = irand(540.0f, 640.0f);    // Safe range is between 500 and 650
-            float y = irand(-230.0f, -195.0f);  // Safe range is between -235 and -145
-            float z = 391.5f;                   // Ground level
-            MoleTrigger = me->SummonCreature(MOLE_MACHINE_TRIGGER, x, y, z, 0, TEMPSUMMON_TIMED_DESPAWN, 10000);
-=======
             // Adds will come in waves from mole machines. One mole can spawn a Dark Rune Watcher
             // with 1-2 Guardians, or a lone Sentinel. Up to 4 mole machines can spawn adds at any given time.
             uint8 random = urand(1,4);
@@ -581,7 +406,6 @@ public:
                 float z = 391.5f;                   // Ground level
                 MoleTrigger = me->SummonCreature(MOLE_MACHINE_TRIGGER, x, y, z, 0, TEMPSUMMON_TIMED_DESPAWN, 10000);
             }
->>>>>>> tc:src/server/scripts/Northrend/Ulduar/ulduar/boss_razorscale.cpp
         }
     
         void DoAction(const int32 action)
@@ -940,14 +764,7 @@ public:
 
     CreatureAI* GetAI(Creature* pCreature)
     {
-<<<<<<< HEAD:src/server/scripts/Northrend/Ulduar/ulduar/boss_razorscale.cpp
-        MoleMachine = me->SummonGameObject(GOB_MOLE_MACHINE, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), urand(0,6), 0, 0, 0, 0, 300);
-        if (MoleMachine)
-            MoleMachine->SetGoState(GO_STATE_ACTIVE);
-        SummomTimer = 6000;
-=======
         return new mole_machine_triggerAI(pCreature);
->>>>>>> tc:src/server/scripts/Northrend/Ulduar/ulduar/boss_razorscale.cpp
     }
 
     struct mole_machine_triggerAI : public ScriptedAI

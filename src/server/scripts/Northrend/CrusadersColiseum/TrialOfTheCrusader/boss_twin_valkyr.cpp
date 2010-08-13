@@ -607,39 +607,9 @@ public:
 
 void AddSC_twin_valkyr()
 {
-<<<<<<< HEAD:src/server/scripts/Northrend/CrusadersColiseum/TrialOfTheCrusader/boss_twin_valkyr.cpp
-    Script *newscript;
-
-    newscript = new Script;
-    newscript->Name = "boss_fjola";
-    newscript->GetAI = &GetAI_boss_fjola;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "boss_eydis";
-    newscript->GetAI = &GetAI_boss_eydis;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "mob_valkyr_orb";
-    newscript->GetAI = &GetAI_mob_valkyr_orb;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "cr_dark_essence";
-    newscript->GetAI = &GetAI_cr_dark_essence;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "cr_light_essence";
-    newscript->GetAI = &GetAI_cr_light_essence;
-    newscript->RegisterSelf();
-}
-=======
     new boss_fjola();
     new boss_eydis();
     new mob_valkyr_orb();
     new cr_dark_essence();
     new cr_light_essence();
 }
->>>>>>> tc:src/server/scripts/Northrend/CrusadersColiseum/TrialOfTheCrusader/boss_twin_valkyr.cpp

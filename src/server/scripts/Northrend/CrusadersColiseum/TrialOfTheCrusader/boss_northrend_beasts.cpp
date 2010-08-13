@@ -965,39 +965,9 @@ struct mob_SnowboldAI : public ScriptedAI
 
 void AddSC_boss_northrend_beasts()
 {
-<<<<<<< HEAD:src/server/scripts/Northrend/CrusadersColiseum/TrialOfTheCrusader/boss_northrend_beasts.cpp
-    Script *newscript;
-
-    newscript = new Script;
-    newscript->Name = "boss_gormok_impaler";
-        newscript->GetAI = &GetAI_boss_gormok_impaler;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "boss_acidmaw";
-        newscript->GetAI = &GetAI_boss_acidmaw;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "boss_dreadscale";
-        newscript->GetAI = &GetAI_boss_dreadscale;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "boss_icehowl";
-        newscript->GetAI = &GetAI_boss_icehowl;
-    newscript->RegisterSelf();
-
-        newscript = new Script;
-    newscript->Name = "mob_firebomb_trigger";
-        newscript->GetAI = &GetAI_mob_FireBomb;
-    newscript->RegisterSelf();
-}
-=======
     new boss_gormok_impaler();
     new boss_acidmaw();
     new boss_dreadscale();
     new boss_icehowl();
     new mob_firebomb_trigger();
 }
->>>>>>> tc:src/server/scripts/Northrend/CrusadersColiseum/TrialOfTheCrusader/boss_northrend_beasts.cpp

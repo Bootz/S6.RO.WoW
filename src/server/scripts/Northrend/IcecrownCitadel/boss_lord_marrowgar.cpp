@@ -442,26 +442,7 @@ public:
 
 void AddSC_boss_marrowgar()
 {
-<<<<<<< HEAD:src/server/scripts/Northrend/IcecrownCitadel/boss_lord_marrowgar.cpp
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_lord_marrowgar";
-    newscript->GetAI = &GetAI_boss_lord_marrowgar;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_cold_flame";
-    newscript->GetAI = &GetAI_npc_cold_flame;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_bone_spike";
-    newscript->GetAI = &GetAI_npc_bone_spike;
-    newscript->RegisterSelf();
-}
-=======
     new boss_lord_marrowgar();
     new npc_cold_flame();
     new npc_bone_spike();
 }
->>>>>>> tc:src/server/scripts/Northrend/IcecrownCitadel/boss_lord_marrowgar.cpp

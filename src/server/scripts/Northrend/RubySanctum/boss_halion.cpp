@@ -779,40 +779,6 @@ public:
 
 void AddSC_boss_halion()
 {
-<<<<<<< HEAD:src/server/scripts/Northrend/RubySanctum/boss_halion.cpp
-        Script* newscript;
-
-        newscript = new Script;
-        newscript->Name = "boss_halion";
-        newscript->GetAI = &GetAI_boss_halion;
-        newscript->RegisterSelf();
-
-        newscript = new Script;
-        newscript->Name = "boss_twilight_halion";
-        newscript->GetAI = &GetAI_boss_twilight_halion;
-        newscript->RegisterSelf();
-		
-		newscript = new Script;
-        newscript->Name = "npc_meteor_strike";
-        newscript->GetAI = &GetAI_npc_meteor_strike;
-        newscript->RegisterSelf();
-		
-		newscript = new Script;
-        newscript->Name = "npc_combustion";
-        newscript->GetAI = &GetAI_npc_combustion;
-        newscript->RegisterSelf();
-		
-		newscript = new Script;
-        newscript->Name = "npc_consumption";
-        newscript->GetAI = &GetAI_npc_consumption;
-        newscript->RegisterSelf();
-		
-		newscript = new Script;
-        newscript->Name = "npc_meteor_flame";
-        newscript->GetAI = &GetAI_npc_meteor_flame;
-        newscript->RegisterSelf();
-}
-=======
     new boss_halion();
     new boss_twilight_halion();
     new npc_meteor_strike();
@@ -820,4 +786,3 @@ void AddSC_boss_halion()
     new npc_consumption();
     new npc_meteor_flame();
 }
->>>>>>> tc:src/server/scripts/Northrend/RubySanctum/boss_halion.cpp

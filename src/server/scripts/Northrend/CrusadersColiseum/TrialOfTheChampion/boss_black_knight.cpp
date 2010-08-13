@@ -630,34 +630,9 @@ public:
 
 
 void AddSC_boss_black_knight()
-<<<<<<< HEAD:src/server/scripts/Northrend/CrusadersColiseum/TrialOfTheChampion/boss_black_knight.cpp
-{		
-	Script *newscript;
-	
-    newscript = new Script;
-    newscript->Name = "boss_black_knight";
-    newscript->GetAI = &GetAI_boss_black_knight;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_risen_ghoul";
-    newscript->GetAI = &GetAI_npc_risen_ghoul;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_black_knight_skeletal_gryphon";
-    newscript->GetAI = &GetAI_npc_black_knight_skeletal_gryphon;
-    newscript->RegisterSelf();
-	
-    newscript = new Script;
-    newscript->Name = "npc_gr";
-    newscript->GetAI = &GetAI_npc_gr;
-    newscript->RegisterSelf();
-=======
 {
     new boss_black_knight();
     new npc_risen_ghoul();
     new npc_black_knight_skeletal_gryphon();
     new npc_gr();
->>>>>>> tc:src/server/scripts/Northrend/CrusadersColiseum/TrialOfTheChampion/boss_black_knight.cpp
 }

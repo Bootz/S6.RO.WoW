@@ -757,32 +757,8 @@ public:
 
 void AddSC_boss_argent_challenge()
 {
-<<<<<<< HEAD:src/server/scripts/Northrend/CrusadersColiseum/TrialOfTheChampion/boss_argent_challenge.cpp
-    Script *newscript;
-
-    newscript = new Script;
-    newscript->Name = "boss_eadric";
-    newscript->GetAI = &GetAI_boss_eadric;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "boss_paletress";
-    newscript->GetAI = &GetAI_boss_paletress;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_memory";
-    newscript->GetAI = &GetAI_npc_memory;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_argent_soldier";
-    newscript->GetAI = &GetAI_npc_argent_soldier;
-    newscript->RegisterSelf();
-=======
     new boss_eadric();
     new boss_paletress();
     new npc_memory();
     new npc_argent_soldier();
->>>>>>> tc:src/server/scripts/Northrend/CrusadersColiseum/TrialOfTheChampion/boss_argent_challenge.cpp
 }

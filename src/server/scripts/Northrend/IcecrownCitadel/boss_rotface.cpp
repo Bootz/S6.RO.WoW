@@ -651,40 +651,6 @@ public:
 
 void AddSC_boss_rotface()
 {
-<<<<<<< HEAD:src/server/scripts/Northrend/IcecrownCitadel/boss_rotface.cpp
-    Script *newscript;
-
-    newscript = new Script;
-    newscript->Name = "boss_rotface";
-    newscript->GetAI = &GetAI_boss_rotface;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_ooze_big";
-    newscript->GetAI = &GetAI_npc_ooze_big;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_ooze_little";
-    newscript->GetAI = &GetAI_npc_ooze_little;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_sticky_ooze";
-    newscript->GetAI = &GetAI_npc_sticky_ooze;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_flood_ooze";
-    newscript->GetAI = &GetAI_npc_flood_ooze;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_precious";
-    newscript->GetAI = &GetAI_npc_precious;
-    newscript->RegisterSelf();
-}
-=======
     new boss_rotface();
     new npc_ooze_big();
     new npc_ooze_little();
@@ -692,4 +658,3 @@ void AddSC_boss_rotface()
     new npc_flood_ooze();
     new npc_precious();
 }
->>>>>>> tc:src/server/scripts/Northrend/IcecrownCitadel/boss_rotface.cpp

@@ -61,60 +61,17 @@ enum Spells
 #define GASEOUSBLIGHT_INH1     RAID_MODE (70138, 70140, 70140, 70137)
 #define GASEOUSBLIGHT_INH2     RAID_MODE (69161, 70139, 70139, 70140)
 #define GASEOUSBLIGHT_INH3     RAID_MODE (70468, 69161, 69161, 70139)
-<<<<<<< HEAD:src/server/scripts/Northrend/IcecrownCitadel/boss_festergut.cpp
-
-#define EMOTE_GAS_SPORE "Festergut farts."
-#define EMOTE_Pungent_Blight "Festergut vomits."
-=======
->>>>>>> tc:src/server/scripts/Northrend/IcecrownCitadel/boss_festergut.cpp
 
 #define EMOTE_GAS_SPORE "Festergut farts."
 #define EMOTE_Pungent_Blight "Festergut vomits."
 class boss_festergut : public CreatureScript
 {
-<<<<<<< HEAD:src/server/scripts/Northrend/IcecrownCitadel/boss_festergut.cpp
-    boss_festergutAI(Creature *pCreature) : ScriptedAI(pCreature)
-    {
-        m_pInstance = pCreature->GetInstanceData();
-    }
-
-    ScriptedInstance* m_pInstance;
-    
-    uint8 Inhalestack;
-    uint32 m_uiPungentBlightTimer;
-    uint32 m_uiGastricExplosionTimer;
-    uint32 m_uiInhaleBlightTimer;
-    uint32 m_uiGasSporesTimer;
-    uint32 m_uiVileGasTimer;
-    uint32 m_uiGastricBloatTimer;
-    uint32 m_uiBerserkTimer;
-    uint32 m_uiGastricBoom;
-    uint32 m_uiBlightTimer;
-    uint64 uiPutricide;
-=======
 public:
     boss_festergut() : CreatureScript("boss_festergut") { }
->>>>>>> tc:src/server/scripts/Northrend/IcecrownCitadel/boss_festergut.cpp
 
     CreatureAI* GetAI(Creature* pCreature)
     {
-<<<<<<< HEAD:src/server/scripts/Northrend/IcecrownCitadel/boss_festergut.cpp
-        m_uiPungentBlightTimer = 120000;
-        m_uiInhaleBlightTimer  = 32000;
-        m_uiVileGasTimer = 30000;
-        m_uiGasSporesTimer = 21000;
-        m_uiGastricBloatTimer = 15000;
-        m_uiBerserkTimer = 300000;
-        m_uiGastricBoom = 20000;
-        m_uiBlightTimer = 4000;
-        uiPutricide = 0;
-        Inhalestack = 0;
-
-        if (m_pInstance)
-            m_pInstance->SetData(DATA_FESTERGURT_EVENT, NOT_STARTED);
-=======
         return new boss_festergutAI(pCreature);
->>>>>>> tc:src/server/scripts/Northrend/IcecrownCitadel/boss_festergut.cpp
     }
 
     struct boss_festergutAI : public ScriptedAI
@@ -124,32 +81,6 @@ public:
             m_pInstance = pCreature->GetInstanceData();
         }
 
-<<<<<<< HEAD:src/server/scripts/Northrend/IcecrownCitadel/boss_festergut.cpp
-    void JustDied(Unit* victim)
-    {
-        DoScriptText(SAY_DEATH_1, me);
-        uiPutricide = (m_pInstance ? m_pInstance->GetData64(DATA_PROFESSOR_PUTRICIDE) : 0);
-        if (Creature *pPutricide = me->GetCreature(*me, uiPutricide))
-        DoScriptText(SAY_PUTRICIDE_DEATH, pPutricide);
-        me->PlayDirectSound(17124);
-
-        switch(0)
-        {
-        case 0:
-            if (victim->HasAura(72103))
-            {
-                if (victim->GetAura(72103)->GetStackAmount() < 3)
-                m_pInstance->DoCompleteAchievement(ACHIEV_INOCULATE);
-            }
-            break;
-         }
-
-        if (m_pInstance)
-            m_pInstance->SetData(DATA_FESTERGURT_EVENT, DONE);
-       }
-
-
-=======
         ScriptedInstance* m_pInstance;
     
         uint8 Inhalestack;
@@ -176,7 +107,6 @@ public:
             m_uiBlightTimer = 4000;
             uiPutricide = 0;
             Inhalestack = 0;
->>>>>>> tc:src/server/scripts/Northrend/IcecrownCitadel/boss_festergut.cpp
 
             if (m_pInstance)
                 m_pInstance->SetData(DATA_FESTERGURT_EVENT, NOT_STARTED);
@@ -189,13 +119,6 @@ public:
             if (m_pInstance)
                 m_pInstance->SetData(DATA_FESTERGURT_EVENT, IN_PROGRESS);
         }
-<<<<<<< HEAD:src/server/scripts/Northrend/IcecrownCitadel/boss_festergut.cpp
-     }
-
- /*   void SpellHitTarget(Unit *pTarget,const SpellEntry* spell)
-    {
-        switch(spell->Id)
-=======
 
         void JustDied(Unit* victim)
         {
@@ -223,7 +146,6 @@ public:
 
 
         void JustReachedHome()
->>>>>>> tc:src/server/scripts/Northrend/IcecrownCitadel/boss_festergut.cpp
         {
             if(m_pInstance)
                 m_pInstance->SetData(DATA_FESTERGURT_EVENT, FAIL);
@@ -240,75 +162,9 @@ public:
                 DoScriptText(SAY_KILL_2, me);
                 break;
             }
-<<<<<<< HEAD:src/server/scripts/Northrend/IcecrownCitadel/boss_festergut.cpp
-            else
-                pTarget->CastSpell(pTarget, SPELL_INOCULATED, true);
-            break;
-        }
-    }*/
-
-    void UpdateAI(const uint32 uiDiff)
-    {
-        if (!UpdateVictim())
-            return;
-
-       if (Inhalestack = 0 && m_uiBlightTimer < uiDiff)
-       { 
-            me->CastCustomSpell(GASEOUSBLIGHT_INH1 , SPELLVALUE_RADIUS_MOD, 60.0f);
-            DoCast(me, SPELL_GAS_VISUAL_BIG);
-            if (me->HasAura(GASEOUSBLIGHT_INH2))
-            {
-                me->RemoveAurasDueToSpell(GASEOUSBLIGHT_INH2);
-                me->RemoveAurasDueToSpell(SPELL_GAS_VISUAL_MEDIUM);
-            }
-            if (me->HasAura(GASEOUSBLIGHT_INH3))
-            {
-                me->RemoveAurasDueToSpell(GASEOUSBLIGHT_INH3);
-                me->RemoveAurasDueToSpell(SPELL_GAS_VISUAL_SMALL);
-            }
-            m_uiBlightTimer = 2000;
-        } else  m_uiBlightTimer -= uiDiff;
-            
-       if (Inhalestack = 1 && m_uiBlightTimer < uiDiff)
-       { 
-            me->CastCustomSpell(GASEOUSBLIGHT_INH2 , SPELLVALUE_RADIUS_MOD, 60.0f);
-            DoCast(me, SPELL_GAS_VISUAL_MEDIUM);
-            if (me->HasAura(GASEOUSBLIGHT_INH1))
-            {
-                me->RemoveAurasDueToSpell(GASEOUSBLIGHT_INH1);
-                me->RemoveAurasDueToSpell(SPELL_GAS_VISUAL_BIG);
-            }
-            if (me->HasAura(GASEOUSBLIGHT_INH3))
-            {
-                me->RemoveAurasDueToSpell(GASEOUSBLIGHT_INH3);
-                me->RemoveAurasDueToSpell(SPELL_GAS_VISUAL_SMALL);
-            }
-            m_uiBlightTimer = 2000;
-        } else  m_uiBlightTimer -= uiDiff;
-
-       if (Inhalestack = 2 && m_uiBlightTimer < uiDiff)
-       { 
-       me->CastCustomSpell(GASEOUSBLIGHT_INH3 , SPELLVALUE_RADIUS_MOD, 60.0f);
-       DoCast(me, SPELL_GAS_VISUAL_SMALL);
-       if (me->HasAura(GASEOUSBLIGHT_INH2))
-            {
-                me->RemoveAurasDueToSpell(GASEOUSBLIGHT_INH2);
-                me->RemoveAurasDueToSpell(SPELL_GAS_VISUAL_MEDIUM);
-            }
-       if (me->HasAura(GASEOUSBLIGHT_INH1))
-            {
-                me->RemoveAurasDueToSpell(GASEOUSBLIGHT_INH1);
-                me->RemoveAurasDueToSpell(SPELL_GAS_VISUAL_BIG);
-            }
-            m_uiBlightTimer = 2000;
-        } else  m_uiBlightTimer -= uiDiff;
-
-        if (m_uiGastricBloatTimer < uiDiff)
-=======
          }
 
      /*   void SpellHitTarget(Unit *pTarget,const SpellEntry* spell)
->>>>>>> tc:src/server/scripts/Northrend/IcecrownCitadel/boss_festergut.cpp
         {
             switch(spell->Id)
             {
@@ -316,20 +172,9 @@ public:
                 HandleTouchedSpells(pTarget, SPELL_BLIGHTED_SPORES);
                 break;
             }
-<<<<<<< HEAD:src/server/scripts/Northrend/IcecrownCitadel/boss_festergut.cpp
-            DoCast(me, SPELL_INHALE_BLIGHT);
-            Inhalestack++;
-            m_uiInhaleBlightTimer = 33000;
-        } else m_uiInhaleBlightTimer -= uiDiff;
-
-
-
-        if (m_uiVileGasTimer < uiDiff)
-=======
         }
 
         void HandleTouchedSpells(Unit *pTarget, uint32 TouchedType)
->>>>>>> tc:src/server/scripts/Northrend/IcecrownCitadel/boss_festergut.cpp
         {
             switch(TouchedType)
             {
@@ -346,23 +191,6 @@ public:
 
         void UpdateAI(const uint32 uiDiff)
         {
-<<<<<<< HEAD:src/server/scripts/Northrend/IcecrownCitadel/boss_festergut.cpp
-            me->MonsterTextEmote(EMOTE_Pungent_Blight, 0, true);
-            DoScriptText(SAY_PUNGENT_BLIGHT_1, me);
-            me->CastCustomSpell(SPELL_PUNGENT_BLIGHT , SPELLVALUE_RADIUS_MOD, 60.0f);
-//            DoCastAOE(SPELL_PUNGENT_BLIGHT);
-            m_uiPungentBlightTimer = 120000;
-            m_uiInhaleBlightTimer = 33000;
-            me->RemoveAllAuras();
-            Inhalestack = 0;
-        } else m_uiPungentBlightTimer -= uiDiff;
-
-        if(m_uiBerserkTimer < uiDiff)
-        {
-            DoCast(me, SPELL_BERSERK);
-            m_uiBerserkTimer = 300000;
-        } else m_uiBerserkTimer -= uiDiff;
-=======
             if (!UpdateVictim())
                 return;
 
@@ -492,7 +320,6 @@ public:
             DoMeleeAttackIfReady();
         }
     };
->>>>>>> tc:src/server/scripts/Northrend/IcecrownCitadel/boss_festergut.cpp
 
 };
 class npc_stinky : public CreatureScript

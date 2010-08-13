@@ -99,12 +99,7 @@ Creature* pSindragosa;
 
 std::vector<Creature*> icetombs;
 std::vector<Player*> targetss;
-<<<<<<< HEAD:src/server/scripts/Northrend/IcecrownCitadel/boss_sindragosa.cpp
-
-struct npc_ice_tombAI : public Scripted_NoMovementAI
-=======
 class npc_ice_tomb : public CreatureScript
->>>>>>> tc:src/server/scripts/Northrend/IcecrownCitadel/boss_sindragosa.cpp
 {
 public:
     npc_ice_tomb() : CreatureScript("npc_ice_tomb") { }
@@ -116,44 +111,20 @@ public:
 
     struct npc_ice_tombAI : public Scripted_NoMovementAI
     {
-<<<<<<< HEAD:src/server/scripts/Northrend/IcecrownCitadel/boss_sindragosa.cpp
-        IceTombGUID = 0;
-		m_uiAsphyxiationTimer = 20000;
-        TombPrisoner->ApplySpellImmune(0, IMMUNITY_ID, SPELL_MYSTIC_BUFFET, true);
-        TombPrisoner->ApplySpellImmune(0, IMMUNITY_ID, SPELL_MYSTIC_BUFFET2, true);
-    }
-=======
         npc_ice_tombAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
         {
             IceTombGUID = 0;
         }
->>>>>>> tc:src/server/scripts/Northrend/IcecrownCitadel/boss_sindragosa.cpp
 
         uint64 IceTombGUID;
     	Unit* TombPrisoner;
     	uint32 m_uiAsphyxiationTimer;
 
-<<<<<<< HEAD:src/server/scripts/Northrend/IcecrownCitadel/boss_sindragosa.cpp
-            if (IceTombGUID)
-            {
-                Unit* Tomb = Unit::GetUnit((*me), IceTombGUID);
-                if (Tomb)
-                    {
-                        Tomb->RemoveAurasDueToSpell(SPELL_ICE_TOMB);
-                        Tomb->RemoveAurasDueToSpell(SPELL_ASPHYXIATION);
-                        Tomb->ApplySpellImmune(0, IMMUNITY_ID, SPELL_MYSTIC_BUFFET, false);
-                        Tomb->ApplySpellImmune(0, IMMUNITY_ID, SPELL_MYSTIC_BUFFET2, false);
-                    }
-            }
-        icetombs.clear();
-    }
-=======
         void SetPrisoner(Unit* uPrisoner)
         {
     		TombPrisoner = uPrisoner;
             IceTombGUID = uPrisoner->GetGUID();
         }
->>>>>>> tc:src/server/scripts/Northrend/IcecrownCitadel/boss_sindragosa.cpp
 
         void Reset()
         {
@@ -163,24 +134,9 @@ public:
             TombPrisoner->ApplySpellImmune(0, IMMUNITY_ID, SPELL_MYSTIC_BUFFET2, true);
         }
 
-<<<<<<< HEAD:src/server/scripts/Northrend/IcecrownCitadel/boss_sindragosa.cpp
-            if (IceTombGUID)
-            {
-                Unit* Tomb = Unit::GetUnit((*me), IceTombGUID);
-                if (Tomb)
-                    {
-                        Tomb->RemoveAurasDueToSpell(SPELL_ICE_TOMB);
-                        Tomb->RemoveAurasDueToSpell(SPELL_ASPHYXIATION);
-                        Tomb->ApplySpellImmune(0, IMMUNITY_ID, SPELL_MYSTIC_BUFFET, false);
-                        Tomb->ApplySpellImmune(0, IMMUNITY_ID, SPELL_MYSTIC_BUFFET2, false);
-                    }
-            }
-    }
-=======
         void JustDied(Unit *killer)
         {
             if (killer->GetGUID() != me->GetGUID())
->>>>>>> tc:src/server/scripts/Northrend/IcecrownCitadel/boss_sindragosa.cpp
 
                 if (IceTombGUID)
                 {
@@ -246,36 +202,10 @@ public:
             pSindragosa = me;
         }
 
-<<<<<<< HEAD:src/server/scripts/Northrend/IcecrownCitadel/boss_sindragosa.cpp
-    uint32 m_uiBreathTimer;
-    uint32 m_uiCleaveTimer;
-    uint32 m_uiTailSmashTimer;
-    uint32 m_uiBlisteringColdTimer;
-    uint32 m_uiBerserkTimer;
-    uint32 m_uiMarkTimer;
-    uint32 m_uiIceBoltTriggerTimer;
-    uint32 m_uiPhaseTimer;
-    uint32 m_uiUnchainedMagicTimer;
-    uint32 m_uiMysticBuffetTimer;
-    uint32 m_uiIceBombTimer;
-=======
         ScriptedInstance* m_pInstance;
->>>>>>> tc:src/server/scripts/Northrend/IcecrownCitadel/boss_sindragosa.cpp
 
         uint8 Phase;
 
-<<<<<<< HEAD:src/server/scripts/Northrend/IcecrownCitadel/boss_sindragosa.cpp
-        m_uiBreathTimer = 15000;
-        m_uiCleaveTimer = 10000;
-        m_uiTailSmashTimer = 10000;
-        m_uiBlisteringColdTimer = 35000;
-        //m_uiMarkTimer = 20000;
-        m_uiPhaseTimer = 9999999;
-        m_uiBerserkTimer = 600000;
-        m_uiUnchainedMagicTimer = 10000;
-        m_uiMysticBuffetTimer = 10000;
-        //m_uiIceBombTimer = 30000;
-=======
         uint32 m_uiBreathTimer;
         uint32 m_uiCleaveTimer;
         uint32 m_uiTailSmashTimer;
@@ -287,7 +217,6 @@ public:
         uint32 m_uiUnchainedMagicTimer;
         uint32 m_uiMysticBuffetTimer;
         uint32 m_uiIceBombTimer;
->>>>>>> tc:src/server/scripts/Northrend/IcecrownCitadel/boss_sindragosa.cpp
 
         void Reset()
         {
@@ -304,14 +233,9 @@ public:
             m_uiMysticBuffetTimer = 10000;
             //m_uiIceBombTimer = 30000;
 
-<<<<<<< HEAD:src/server/scripts/Northrend/IcecrownCitadel/boss_sindragosa.cpp
-        me->ApplySpellImmune(0, IMMUNITY_ID, SPELL_MYSTIC_BUFFET, true);
-        me->ApplySpellImmune(0, IMMUNITY_ID, SPELL_MYSTIC_BUFFET2, true);
-=======
             me->SetSpeed(MOVE_WALK, 1.5f, true);
             me->SetSpeed(MOVE_RUN, 1.5f, true);
             me->SetSpeed(MOVE_FLIGHT, 2.5f, true);
->>>>>>> tc:src/server/scripts/Northrend/IcecrownCitadel/boss_sindragosa.cpp
 
             me->SetFlying(false);
             me->SetReactState(REACT_AGGRESSIVE);
@@ -452,17 +376,6 @@ public:
             for (Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
             if (Player* pTarget = i->getSource())
             {
-<<<<<<< HEAD:src/server/scripts/Northrend/IcecrownCitadel/boss_sindragosa.cpp
-                if (Creature* pGo = (*itr))
-                    if (pGo->IsInBetween(me, pTarget, 3.5f)
-                        && me->GetExactDist2d(pTarget->GetPositionX(), pTarget->GetPositionY()) - me->GetExactDist2d(pGo->GetPositionX(), pGo->GetPositionY()) < 5.0f)
-                    {
-                        pTarget->ApplySpellImmune(0, IMMUNITY_ID, SPELL_MYSTIC_BUFFET, true);
-                        pTarget->ApplySpellImmune(0, IMMUNITY_ID, SPELL_MYSTIC_BUFFET2, true);
-                        targetss.push_back(pTarget);
-                        break;
-                    }
-=======
                 for (std::vector<Creature*>::const_iterator itr = icetombs.begin(); itr != icetombs.end(); ++itr)
                 {
                     if (Creature* pGo = (*itr))
@@ -475,26 +388,15 @@ public:
                             break;
                         }
                 }
->>>>>>> tc:src/server/scripts/Northrend/IcecrownCitadel/boss_sindragosa.cpp
             }
 
             MysticBuffet();
 
-<<<<<<< HEAD:src/server/scripts/Northrend/IcecrownCitadel/boss_sindragosa.cpp
-        for (std::vector<Player*>::const_iterator itr = targetss.begin(); itr != targetss.end(); ++itr)
-            {
-             (*itr)->ApplySpellImmune(0, IMMUNITY_ID, SPELL_MYSTIC_BUFFET, false);
-             (*itr)->ApplySpellImmune(0, IMMUNITY_ID, SPELL_MYSTIC_BUFFET2, false);
-            }
-
-    }
-=======
             for (std::vector<Player*>::const_iterator itr = targetss.begin(); itr != targetss.end(); ++itr)
                 {
                  (*itr)->ApplySpellImmune(0, IMMUNITY_ID, SPELL_MYSTIC_BUFFET, false);
                  (*itr)->ApplySpellImmune(0, IMMUNITY_ID, SPELL_MYSTIC_BUFFET2, false);
                 }
->>>>>>> tc:src/server/scripts/Northrend/IcecrownCitadel/boss_sindragosa.cpp
 
         }
 
@@ -682,17 +584,8 @@ public:
 
         void JustDied(Unit *killer)
         {
-<<<<<<< HEAD:src/server/scripts/Northrend/IcecrownCitadel/boss_sindragosa.cpp
-            if (pTarget->HasAura(SPELL_ICE_TOMB))
-            {
-                pTarget->ApplySpellImmune(0, IMMUNITY_ID, SPELL_FROST_BOMB, true);
-                targetss.push_back(pTarget);
-                continue;
-            }
-=======
             me->RemoveAura(SPELL_FROSTBOMBVISUAL);
         }
->>>>>>> tc:src/server/scripts/Northrend/IcecrownCitadel/boss_sindragosa.cpp
 
         void WorkAroundForLoS()
         {
@@ -701,16 +594,6 @@ public:
             for (Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
             if (Player* pTarget = i->getSource())
             {
-<<<<<<< HEAD:src/server/scripts/Northrend/IcecrownCitadel/boss_sindragosa.cpp
-                if (Creature* pGo = (*itr))
-                    if (pGo->IsInBetween(me, pTarget, 3.5f)
-                        && me->GetExactDist2d(pTarget->GetPositionX(), pTarget->GetPositionY()) - me->GetExactDist2d(pGo->GetPositionX(), pGo->GetPositionY()) < 5.0f)
-                    {
-                        pTarget->ApplySpellImmune(0, IMMUNITY_ID, SPELL_FROST_BOMB, true);
-                        targetss.push_back(pTarget);
-                        break;
-                    }
-=======
                 if (pTarget->HasAura(SPELL_ICE_TOMB))
                 {
                     pTarget->ApplySpellImmune(0, IMMUNITY_ID, SPELL_FROST_BOMB, true);
@@ -729,20 +612,13 @@ public:
                             break;
                         }
                 }
->>>>>>> tc:src/server/scripts/Northrend/IcecrownCitadel/boss_sindragosa.cpp
             }
 
             DoCast(SPELL_FROST_BOMB);
 
-<<<<<<< HEAD:src/server/scripts/Northrend/IcecrownCitadel/boss_sindragosa.cpp
-        for (std::vector<Player*>::const_iterator itr = targetss.begin(); itr != targetss.end(); ++itr)
-            (*itr)->ApplySpellImmune(0, IMMUNITY_ID, SPELL_FROST_BOMB, false);
-    }
-=======
             for (std::vector<Player*>::const_iterator itr = targetss.begin(); itr != targetss.end(); ++itr)
                 (*itr)->ApplySpellImmune(0, IMMUNITY_ID, SPELL_FROST_BOMB, false);
         }
->>>>>>> tc:src/server/scripts/Northrend/IcecrownCitadel/boss_sindragosa.cpp
 
         void UpdateAI(const uint32 uiDiff)
         {

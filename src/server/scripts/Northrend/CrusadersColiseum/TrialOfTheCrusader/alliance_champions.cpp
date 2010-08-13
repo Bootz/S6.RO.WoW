@@ -1311,80 +1311,6 @@ public:
 
 void AddSC_boss_tc_alliance_champions()
 {
-<<<<<<< HEAD:src/server/scripts/Northrend/CrusadersColiseum/TrialOfTheCrusader/alliance_champions.cpp
-    Script *newscript;
-
-    newscript = new Script;
-    newscript->Name = "boss_tyrius_duskblade";
-        newscript->GetAI = &GetAI_boss_tyrius_duskblade;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "boss_kavina_grovesong";
-        newscript->GetAI = &GetAI_boss_kavina_grovesong;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "boss_melador_valestrider";
-        newscript->GetAI = &GetAI_boss_melador_valestrider;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "boss_alyssia_moonstalker";
-        newscript->GetAI = &GetAI_boss_alyssia_moonstalker;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "boss_noozle_whizzlestick";
-        newscript->GetAI = &GetAI_boss_noozle_whizzlestick;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "boss_velanaa";
-        newscript->GetAI = &GetAI_boss_velanaa;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "boss_baelnor_lightbearer";
-        newscript->GetAI = &GetAI_boss_baelnor_lightbearer;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "boss_anthar_forgemender";
-        newscript->GetAI = &GetAI_boss_anthar_forgemender;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "boss_brienna_nightfell";
-        newscript->GetAI = &GetAI_boss_brienna_nightfell;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "boss_irieth_shadowstepe";
-        newscript->GetAI = &GetAI_boss_irieth_shadowstepe;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "boss_shaabad";
-        newscript->GetAI = &GetAI_boss_shaabad;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "boss_saamul";
-        newscript->GetAI = &GetAI_boss_saamul;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "boss_serissa_grimdabbler";
-        newscript->GetAI = &GetAI_boss_serissa_grimdabbler;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "boss_shocuul";
-        newscript->GetAI = &GetAI_boss_shocuul;
-    newscript->RegisterSelf();
-}
-=======
     new boss_tyrius_duskblade();
     new boss_kavina_grovesong();
     new boss_melador_valestrider();
@@ -1400,4 +1326,3 @@ void AddSC_boss_tc_alliance_champions()
     new boss_serissa_grimdabbler();
     new boss_shocuul();
 }
->>>>>>> tc:src/server/scripts/Northrend/CrusadersColiseum/TrialOfTheCrusader/alliance_champions.cpp

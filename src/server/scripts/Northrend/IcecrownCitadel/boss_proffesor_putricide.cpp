@@ -589,47 +589,13 @@ public:
 
     CreatureAI* GetAI(Creature* pCreature)
     {
-<<<<<<< HEAD:src/server/scripts/Northrend/IcecrownCitadel/boss_proffesor_putricide.cpp
-	GrowStack = 3;
-        me->SetReactState(REACT_PASSIVE);
-        DoCast(me, SPELL_GROW);
-        me->SetAuraStack(SPELL_GROW, me, GrowStack);
-        me->CastCustomSpell(SPELL_SLIME_PUDDLE , SPELLVALUE_RADIUS_MOD, GrowStack*3);
-        if (!me->HasAura(SPELL_ROOT))
-        DoCast(me, SPELL_ROOT);
-        m_uiPuddleOozeTimer = 3000;
-        CheckTimer = 6000;
-    }
-
-    void UpdateAI(const uint32 uiDiff)
-=======
         return new npc_puddle_oozeAI(pCreature);
     }
 
     struct npc_puddle_oozeAI : public ScriptedAI
->>>>>>> tc:src/server/scripts/Northrend/IcecrownCitadel/boss_proffesor_putricide.cpp
     {
         npc_puddle_oozeAI(Creature *pCreature) : ScriptedAI(pCreature)
         {
-<<<<<<< HEAD:src/server/scripts/Northrend/IcecrownCitadel/boss_proffesor_putricide.cpp
-        GrowStack++;
-        m_uiPuddleOozeTimer = 7000;
-        } else m_uiPuddleOozeTimer -= uiDiff;
-
-        while (me->GetAura(SPELL_GROW)->GetStackAmount() < GrowStack)
-        {
-            GrowStack--;
-        }
-
-        if (CheckTimer <= uiDiff)
-        {
-        if (GrowStack < 1)
-                {
-                me->ForcedDespawn();
-                CheckTimer = 3000;
-                }
-        } else CheckTimer -= uiDiff;
-=======
             m_pInstance = pCreature->GetInstanceData();
             pPuddle = me;
         }
@@ -676,7 +642,6 @@ public:
 
         }
     };class npc_abomination : public CreatureScript
->>>>>>> tc:src/server/scripts/Northrend/IcecrownCitadel/boss_proffesor_putricide.cpp
 
 };
 {
@@ -797,45 +762,6 @@ public:
 
 void AddSC_boss_professor_putricide()
 {
-<<<<<<< HEAD:src/server/scripts/Northrend/IcecrownCitadel/boss_proffesor_putricide.cpp
-    Script *newscript;
-
-    newscript = new Script;
-    newscript->Name = "boss_professor_putricide";
-    newscript->GetAI = &GetAI_boss_professor_putricide;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_volatile_ooze";
-    newscript->GetAI = &GetAI_npc_volatile_ooze;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_choke_bomb";
-    newscript->GetAI = &GetAI_npc_choke_bomb;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_puddle_ooze";
-    newscript->GetAI = &GetAI_npc_puddle_ooze;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_malleable_goo";
-    newscript->GetAI = &GetAI_npc_malleable_goo;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_abomination";
-    newscript->GetAI = &GetAI_npc_abomination;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_gas_cloud";
-    newscript->GetAI = &GetAI_npc_gas_cloud;
-    newscript->RegisterSelf();
-};
-=======
     new boss_professor_putricide();
     new npc_volatile_ooze();
     new npc_choke_bomb();
@@ -844,4 +770,3 @@ void AddSC_boss_professor_putricide()
     new npc_abomination();
     new npc_gas_cloud();
 }
->>>>>>> tc:src/server/scripts/Northrend/IcecrownCitadel/boss_proffesor_putricide.cpp

@@ -750,22 +750,6 @@ public:
 
 void AddSC_trial_of_the_champion()
 {
-<<<<<<< HEAD:src/server/scripts/Northrend/CrusadersColiseum/TrialOfTheChampion/trial_of_the_champion.cpp
-    Script *newscript;
-	
-    newscript = new Script;
-    newscript->Name = "npc_anstart";
-    newscript->GetAI = &GetAI_npc_anstart;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_announcer_toc5";
-    newscript->GetAI = &GetAI_npc_announcer_toc5;
-    newscript->pGossipHello = &GossipHello_npc_announcer_toc5;
-    newscript->pGossipSelect = &GossipSelect_npc_announcer_toc5;
-    newscript->RegisterSelf();
-=======
     new npc_anstart();
     new npc_announcer_toc5();
->>>>>>> tc:src/server/scripts/Northrend/CrusadersColiseum/TrialOfTheChampion/trial_of_the_champion.cpp
 }
