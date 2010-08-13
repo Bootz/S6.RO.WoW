@@ -15,9 +15,10 @@ file(GLOB_RECURSE scripts_outland Outland/*.cpp Outland/*.h)
 file(GLOB_RECURSE scripts_world World/*.cpp World/*.h)
 file(GLOB_RECURSE scripts_spells Spells/*.cpp Spells/*.h)
 file(GLOB_RECURSE scripts_examples Examples/*.cpp Examples/*.h)
+file(GLOB_RECURSE scripts_outdoorpvp OutdoorPvP/*.cpp OutdoorPvP/*.h)
 
 # Enable precompiled headers when using the GCC compiler.
-if(PCH)
+if( SCRIPTPCH )
   include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
   )
@@ -31,7 +32,7 @@ set(scripts_STAT_SRCS
   ${scripts_world}
   ${scripts_spells}
   ${scripts_examples}
-  Custom/on_events.cpp
+  ${scripts_outdoorpvp}
   ../game/AI/ScriptedAI/ScriptedEscortAI.cpp
   ../game/AI/ScriptedAI/ScriptedCreature.cpp
   ../game/AI/ScriptedAI/ScriptedFollowerAI.cpp
@@ -39,7 +40,15 @@ set(scripts_STAT_SRCS
   ../game/AI/ScriptedAI/ScriptedSimpleAI.cpp
 )
 
-message("-- Added Scriptengine to SCRIPTS lib")
+if(MSVC)
+  set(scripts_STAT_SRCS
+    ${scripts_STAT_SRCS}
+    PrecompiledHeaders/ScriptPCH.cpp
+    PrecompiledHeaders/ScriptPCH.h
+  )
+endif()
+
+message("-- Added Script Library to SCRIPTS lib")
 
 include_directories(
   ${ACE_INCLUDE_DIR}
@@ -72,9 +81,10 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/src/server/game/AI/EventAI
   ${CMAKE_SOURCE_DIR}/src/server/game/AI/ScriptedAI
   ${CMAKE_SOURCE_DIR}/src/server/game/AuctionHouse
-  ${CMAKE_SOURCE_DIR}/src/server/game/BattleGrounds
+  ${CMAKE_SOURCE_DIR}/src/server/game/Battlegrounds
   ${CMAKE_SOURCE_DIR}/src/server/game/Calendar
   ${CMAKE_SOURCE_DIR}/src/server/game/Chat
+  ${CMAKE_SOURCE_DIR}/src/server/game/Chat/Channels
   ${CMAKE_SOURCE_DIR}/src/server/game/Conditions
   ${CMAKE_SOURCE_DIR}/src/server/shared/Configuration
   ${CMAKE_SOURCE_DIR}/src/server/game/Combat
@@ -90,6 +100,7 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/src/server/game/Entities/Object/Updates
   ${CMAKE_SOURCE_DIR}/src/server/game/Entities/Pet
   ${CMAKE_SOURCE_DIR}/src/server/game/Entities/Player
+  ${CMAKE_SOURCE_DIR}/src/server/game/Entities/Transport
   ${CMAKE_SOURCE_DIR}/src/server/game/Entities/Unit
   ${CMAKE_SOURCE_DIR}/src/server/game/Entities/Vehicle
   ${CMAKE_SOURCE_DIR}/src/server/game/Events
@@ -109,7 +120,6 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/src/server/game/Movement/Waypoints
   ${CMAKE_SOURCE_DIR}/src/server/game/Opcodes
   ${CMAKE_SOURCE_DIR}/src/server/game/OutdoorPvP
-  ${CMAKE_SOURCE_DIR}/src/server/game/OutdoorPvP/Zones
   ${CMAKE_SOURCE_DIR}/src/server/game/Pools
   ${CMAKE_SOURCE_DIR}/src/server/game/PrecompiledHeaders
   ${CMAKE_SOURCE_DIR}/src/server/game/Quests
@@ -124,23 +134,19 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/src/server/game/Tools
   ${CMAKE_SOURCE_DIR}/src/server/game/Weather
   ${CMAKE_SOURCE_DIR}/src/server/game/World
+  ${CMAKE_SOURCE_DIR}/src/server/scripts/PrecompiledHeaders
   ${MYSQL_INCLUDE_DIR}
 )
 
-# Add ScriptPCH.cpp to project on Windows
-if(MSVC)
-set(scripts_STAT_SRCS
-    ../game/PrecompiledHeaders/ScriptPCH.cpp
-    ${scripts_STAT_SRCS})
-endif()
-
 add_library(scripts STATIC ${scripts_STAT_SRCS})
 
+add_dependencies(scripts genrev)
+
 # Generate precompiled header
-if(PCH)
+if( SCRIPTPCH )
   if(CMAKE_COMPILER_IS_GNUCXX)
-    add_precompiled_header(scripts ${CMAKE_SOURCE_DIR}/src/server/game/PrecompiledHeaders/ScriptPCH.h)
+    add_precompiled_header(scripts ${CMAKE_SOURCE_DIR}/src/server/scripts/PrecompiledHeaders/ScriptPCH.h)
   elseif(MSVC)
-    add_native_precompiled_header(scripts ${CMAKE_SOURCE_DIR}/src/server/game/PrecompiledHeaders/ScriptPCH)
+    add_native_precompiled_header(scripts ${CMAKE_SOURCE_DIR}/src/server/scripts/PrecompiledHeaders/ScriptPCH)
   endif()
 endif()

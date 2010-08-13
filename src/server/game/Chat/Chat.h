@@ -22,9 +22,13 @@
 #define TRINITYCORE_CHAT_H
 
 #include "SharedDefines.h"
+#include "Player.h"
+
+#include <vector>
 
 class ChatHandler;
 class WorldSession;
+class WorldObject;
 class Creature;
 class Player;
 class Unit;
@@ -96,7 +100,8 @@ class ChatHandler
         void SendGlobalGMSysMessage(const char *str);
 
         static bool SetDataForCommandInTable(ChatCommand *table, const char* text, uint32 security, std::string const& help, std::string const& fullcommand);
-        bool ExecuteCommandInTable(ChatCommand *table, const char* text, const std::string& fullcommand);
+        bool ExecuteCommandInTables(std::vector<ChatCommand*> const& tables, const char* text, const std::string& fullcmd);
+        bool ExecuteCommandInTable(ChatCommand *table, const char* text, const std::string& fullcmd);
         bool ShowHelpForCommand(ChatCommand *table, const char* cmd);
         bool ShowHelpForSubCommands(ChatCommand *table, char const* cmd, char const* subcmd);
 
@@ -111,7 +116,6 @@ class ChatHandler
         bool HandleAccountSetGmLevelCommand(const char* args);
         bool HandleAccountSetPasswordCommand(const char* args);
 
-        bool HandleAHBotOptionsCommand(const char * args);
         bool HandleNameAnnounceCommand(const char* args);
         bool HandleGMNameAnnounceCommand(const char* args);
         bool HandleGMAnnounceCommand(const char* args);
@@ -134,8 +138,6 @@ class ChatHandler
         bool HandleCastTargetCommand(const char *args);
 
         bool HandleCharacterCustomizeCommand(const char * args);
-        bool HandleCharacterChangeFactionCommand(const char* args);
-        bool HandleCharacterChangeRaceCommand(const char* args);
         bool HandleCharacterDeletedDeleteCommand(const char* args);
         bool HandleCharacterDeletedListCommand(const char* args);
         bool HandleCharacterDeletedRestoreCommand(const char* args);
@@ -493,14 +495,6 @@ class ChatHandler
         bool HandleWpShowCommand(const char* args);
         bool HandleReloadAllPaths(const char *args);
 
-        bool HandleWintergraspStatusCommand(const char *args);
-        bool HandleWintergraspStartCommand(const char *args);
-        bool HandleWintergraspStopCommand(const char *args);
-        bool HandleWintergraspEnableCommand(const char *args);
-        bool HandleWintergraspSwitchTeamCommand(const char *args);
-        bool HandleWintergraspTimerCommand(const char *args);
-
-
         bool HandleHelpCommand(const char* args);
         bool HandleCommandsCommand(const char* args);
         bool HandleStartCommand(const char* args);
@@ -530,7 +524,6 @@ class ChatHandler
         bool HandleListFreezeCommand(const char* args);
 
         bool HandleCooldownCommand(const char* args);
-		bool HandleAddAchieveCommand(const char* args);
         bool HandleUnLearnCommand(const char* args);
         bool HandleGetDistanceCommand(const char* args);
         bool HandleModifyStandStateCommand(const char* args);

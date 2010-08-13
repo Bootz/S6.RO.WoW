@@ -177,1042 +177,1141 @@ enum HardmodeSpells
 /* Tyrius Duskblade - 34461     */
 /* Death Knight                 */
 /********************************/
-
-struct boss_tyrius_duskbladeAI : public ScriptedAI
+class boss_tyrius_duskblade : public CreatureScript
 {
-    boss_tyrius_duskbladeAI(Creature* pCreature) : ScriptedAI(pCreature)
-        {
-                Reset();
-                m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        }
+public:
+    boss_tyrius_duskblade() : CreatureScript("boss_tyrius_duskblade") { }
 
-        ScriptedInstance* m_pInstance;
-    bool m_bIsRegularMode;
-
-    void Reset()
+    CreatureAI* GetAI(Creature* pCreature)
     {
+        return new boss_tyrius_duskbladeAI(pCreature);
     }
 
-        void KilledUnit(Unit* who)
+    struct boss_tyrius_duskbladeAI : public ScriptedAI
+    {
+        boss_tyrius_duskbladeAI(Creature* pCreature) : ScriptedAI(pCreature)
+            {
+                    Reset();
+                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+            }
+
+            ScriptedInstance* m_pInstance;
+        bool m_bIsRegularMode;
+
+        void Reset()
         {
-                if(!m_pInstance)
-                        return;
-
-/*      if(m_pInstance->OnRaidWipe())
-                {
-                        uint32 count = m_pInstance->GetData(DATA_UPDATE_STATE_UI_COUNT);
-                        count--;
-                        m_pInstance->SetData(DATA_UPDATE_STATE_UI_COUNT, count);
-                }*/
         }
 
-        void Aggro(Unit* pWho)
-    {
-    }
+            void KilledUnit(Unit* who)
+            {
+                    if(!m_pInstance)
+                            return;
 
-        void JustDied(Unit* pKiller)
-    {
-                if(!m_pInstance)
-                        return;
+    /*      if(m_pInstance->OnRaidWipe())
+                    {
+                            uint32 count = m_pInstance->GetData(DATA_UPDATE_STATE_UI_COUNT);
+                            count--;
+                            m_pInstance->SetData(DATA_UPDATE_STATE_UI_COUNT, count);
+                    }*/
+            }
 
-        if(!me->FindNearestCreature(34461, 200, true)
-                && !me->FindNearestCreature(34460, 200, true)
-                && !me->FindNearestCreature(34469, 200, true)
-                && !me->FindNearestCreature(34467, 200, true)
-                && !me->FindNearestCreature(34468, 200, true)
-                && !me->FindNearestCreature(34465, 200, true)
-                && !me->FindNearestCreature(34471, 200, true)
-                && !me->FindNearestCreature(34466, 200, true)
-                && !me->FindNearestCreature(34473, 200, true)
-                && !me->FindNearestCreature(34472, 200, true)
-                && !me->FindNearestCreature(34463, 200, true)
-                && !me->FindNearestCreature(34470, 200, true)
-                && !me->FindNearestCreature(34474, 200, true)
-                && !me->FindNearestCreature(34475, 200, true))
-                {
-                m_pInstance->SetData(PHASE_5, DONE);
-                }
+            void Aggro(Unit* pWho)
+        {
         }
 
-        void UpdateAI(const uint32 diff)
-    {
-        if (!UpdateVictim())
-            return;
+            void JustDied(Unit* pKiller)
+        {
+                    if(!m_pInstance)
+                            return;
 
-                DoMeleeAttackIfReady();
-        }
+            if(!me->FindNearestCreature(34461, 200, true)
+                    && !me->FindNearestCreature(34460, 200, true)
+                    && !me->FindNearestCreature(34469, 200, true)
+                    && !me->FindNearestCreature(34467, 200, true)
+                    && !me->FindNearestCreature(34468, 200, true)
+                    && !me->FindNearestCreature(34465, 200, true)
+                    && !me->FindNearestCreature(34471, 200, true)
+                    && !me->FindNearestCreature(34466, 200, true)
+                    && !me->FindNearestCreature(34473, 200, true)
+                    && !me->FindNearestCreature(34472, 200, true)
+                    && !me->FindNearestCreature(34463, 200, true)
+                    && !me->FindNearestCreature(34470, 200, true)
+                    && !me->FindNearestCreature(34474, 200, true)
+                    && !me->FindNearestCreature(34475, 200, true))
+                    {
+                    m_pInstance->SetData(PHASE_5, DONE);
+                    }
+            }
+
+            void UpdateAI(const uint32 diff)
+        {
+            if (!UpdateVictim())
+                return;
+
+                    DoMeleeAttackIfReady();
+            }
+    };
+
 };
 
 /********************************/
 /* Kavina Grovesong - 34460     */
 /* Druid                        */
 /********************************/
-
-struct boss_kavina_grovesongAI : public ScriptedAI
+class boss_kavina_grovesong : public CreatureScript
 {
-    boss_kavina_grovesongAI(Creature* pCreature) : ScriptedAI(pCreature)
-        {
-                Reset();
-                m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        }
+public:
+    boss_kavina_grovesong() : CreatureScript("boss_kavina_grovesong") { }
 
-        ScriptedInstance* m_pInstance;
-    bool m_bIsRegularMode;
-
-    void Reset()
+    CreatureAI* GetAI(Creature* pCreature)
     {
+        return new boss_kavina_grovesongAI(pCreature);
     }
 
-        void KilledUnit(Unit* who)
+    struct boss_kavina_grovesongAI : public ScriptedAI
+    {
+        boss_kavina_grovesongAI(Creature* pCreature) : ScriptedAI(pCreature)
+            {
+                    Reset();
+                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+            }
+
+            ScriptedInstance* m_pInstance;
+        bool m_bIsRegularMode;
+
+        void Reset()
         {
-                if(!m_pInstance)
-                        return;
-
-/*      if(m_pInstance->OnRaidWipe())
-                {
-                        uint32 count = m_pInstance->GetData(DATA_UPDATE_STATE_UI_COUNT);
-                        count--;
-                        m_pInstance->SetData(DATA_UPDATE_STATE_UI_COUNT, count);
-                }*/
         }
 
-        void Aggro(Unit* pWho)
-    {
-    }
+            void KilledUnit(Unit* who)
+            {
+                    if(!m_pInstance)
+                            return;
 
-        void JustDied(Unit* pKiller)
-    {
-                if(!m_pInstance)
-                        return;
+    /*      if(m_pInstance->OnRaidWipe())
+                    {
+                            uint32 count = m_pInstance->GetData(DATA_UPDATE_STATE_UI_COUNT);
+                            count--;
+                            m_pInstance->SetData(DATA_UPDATE_STATE_UI_COUNT, count);
+                    }*/
+            }
 
-        if(!me->FindNearestCreature(34461, 200, true)
-                && !me->FindNearestCreature(34460, 200, true)
-                && !me->FindNearestCreature(34469, 200, true)
-                && !me->FindNearestCreature(34467, 200, true)
-                && !me->FindNearestCreature(34468, 200, true)
-                && !me->FindNearestCreature(34465, 200, true)
-                && !me->FindNearestCreature(34471, 200, true)
-                && !me->FindNearestCreature(34466, 200, true)
-                && !me->FindNearestCreature(34473, 200, true)
-                && !me->FindNearestCreature(34472, 200, true)
-                && !me->FindNearestCreature(34463, 200, true)
-                && !me->FindNearestCreature(34470, 200, true)
-                && !me->FindNearestCreature(34474, 200, true)
-                && !me->FindNearestCreature(34475, 200, true))
-                {
-                m_pInstance->SetData(PHASE_5, DONE);
-                }
+            void Aggro(Unit* pWho)
+        {
         }
 
-        void UpdateAI(const uint32 diff)
-    {
-        if (!UpdateVictim())
-            return;
+            void JustDied(Unit* pKiller)
+        {
+                    if(!m_pInstance)
+                            return;
 
-                DoMeleeAttackIfReady();
-        }
+            if(!me->FindNearestCreature(34461, 200, true)
+                    && !me->FindNearestCreature(34460, 200, true)
+                    && !me->FindNearestCreature(34469, 200, true)
+                    && !me->FindNearestCreature(34467, 200, true)
+                    && !me->FindNearestCreature(34468, 200, true)
+                    && !me->FindNearestCreature(34465, 200, true)
+                    && !me->FindNearestCreature(34471, 200, true)
+                    && !me->FindNearestCreature(34466, 200, true)
+                    && !me->FindNearestCreature(34473, 200, true)
+                    && !me->FindNearestCreature(34472, 200, true)
+                    && !me->FindNearestCreature(34463, 200, true)
+                    && !me->FindNearestCreature(34470, 200, true)
+                    && !me->FindNearestCreature(34474, 200, true)
+                    && !me->FindNearestCreature(34475, 200, true))
+                    {
+                    m_pInstance->SetData(PHASE_5, DONE);
+                    }
+            }
+
+            void UpdateAI(const uint32 diff)
+        {
+            if (!UpdateVictim())
+                return;
+
+                    DoMeleeAttackIfReady();
+            }
+    };
+
 };
 /********************************/
 /* Melador Valestrider - 34469  */
 /* Druid                        */
 /********************************/
-
-struct boss_melador_valestriderAI : public ScriptedAI
+class boss_melador_valestrider : public CreatureScript
 {
-    boss_melador_valestriderAI(Creature* pCreature) : ScriptedAI(pCreature)
-        {
-                Reset();
-                m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        }
+public:
+    boss_melador_valestrider() : CreatureScript("boss_melador_valestrider") { }
 
-        ScriptedInstance* m_pInstance;
-    bool m_bIsRegularMode;
-
-    void Reset()
+    CreatureAI* GetAI(Creature* pCreature)
     {
+        return new boss_melador_valestriderAI(pCreature);
     }
 
-        void KilledUnit(Unit* who)
+    struct boss_melador_valestriderAI : public ScriptedAI
+    {
+        boss_melador_valestriderAI(Creature* pCreature) : ScriptedAI(pCreature)
+            {
+                    Reset();
+                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+            }
+
+            ScriptedInstance* m_pInstance;
+        bool m_bIsRegularMode;
+
+        void Reset()
         {
-                if(!m_pInstance)
-                        return;
-
-/*      if(m_pInstance->OnRaidWipe())
-                {
-                        uint32 count = m_pInstance->GetData(DATA_UPDATE_STATE_UI_COUNT);
-                        count--;
-                        m_pInstance->SetData(DATA_UPDATE_STATE_UI_COUNT, count);
-                }*/
         }
 
-        void Aggro(Unit* pWho)
-    {
-    }
+            void KilledUnit(Unit* who)
+            {
+                    if(!m_pInstance)
+                            return;
 
-        void JustDied(Unit* pKiller)
-    {
-                if(!m_pInstance)
-                        return;
+    /*      if(m_pInstance->OnRaidWipe())
+                    {
+                            uint32 count = m_pInstance->GetData(DATA_UPDATE_STATE_UI_COUNT);
+                            count--;
+                            m_pInstance->SetData(DATA_UPDATE_STATE_UI_COUNT, count);
+                    }*/
+            }
 
-        if(!me->FindNearestCreature(34461, 200, true)
-                && !me->FindNearestCreature(34460, 200, true)
-                && !me->FindNearestCreature(34469, 200, true)
-                && !me->FindNearestCreature(34467, 200, true)
-                && !me->FindNearestCreature(34468, 200, true)
-                && !me->FindNearestCreature(34465, 200, true)
-                && !me->FindNearestCreature(34471, 200, true)
-                && !me->FindNearestCreature(34466, 200, true)
-                && !me->FindNearestCreature(34473, 200, true)
-                && !me->FindNearestCreature(34472, 200, true)
-                && !me->FindNearestCreature(34463, 200, true)
-                && !me->FindNearestCreature(34470, 200, true)
-                && !me->FindNearestCreature(34474, 200, true)
-                && !me->FindNearestCreature(34475, 200, true))
-                {
-                m_pInstance->SetData(PHASE_5, DONE);
-                }
+            void Aggro(Unit* pWho)
+        {
         }
 
-        void UpdateAI(const uint32 diff)
-    {
-        if (!UpdateVictim())
-            return;
+            void JustDied(Unit* pKiller)
+        {
+                    if(!m_pInstance)
+                            return;
 
-                DoMeleeAttackIfReady();
-        }
+            if(!me->FindNearestCreature(34461, 200, true)
+                    && !me->FindNearestCreature(34460, 200, true)
+                    && !me->FindNearestCreature(34469, 200, true)
+                    && !me->FindNearestCreature(34467, 200, true)
+                    && !me->FindNearestCreature(34468, 200, true)
+                    && !me->FindNearestCreature(34465, 200, true)
+                    && !me->FindNearestCreature(34471, 200, true)
+                    && !me->FindNearestCreature(34466, 200, true)
+                    && !me->FindNearestCreature(34473, 200, true)
+                    && !me->FindNearestCreature(34472, 200, true)
+                    && !me->FindNearestCreature(34463, 200, true)
+                    && !me->FindNearestCreature(34470, 200, true)
+                    && !me->FindNearestCreature(34474, 200, true)
+                    && !me->FindNearestCreature(34475, 200, true))
+                    {
+                    m_pInstance->SetData(PHASE_5, DONE);
+                    }
+            }
+
+            void UpdateAI(const uint32 diff)
+        {
+            if (!UpdateVictim())
+                return;
+
+                    DoMeleeAttackIfReady();
+            }
+    };
+
 };
 /********************************/
 /* Alyssia Moonstalker - 34467  */
 /* Hunter                       */
 /********************************/
-
-struct boss_alyssia_moonstalkerAI : public ScriptedAI
+class boss_alyssia_moonstalker : public CreatureScript
 {
-    boss_alyssia_moonstalkerAI(Creature* pCreature) : ScriptedAI(pCreature)
-        {
-                Reset();
-                m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        }
+public:
+    boss_alyssia_moonstalker() : CreatureScript("boss_alyssia_moonstalker") { }
 
-        ScriptedInstance* m_pInstance;
-    bool m_bIsRegularMode;
-
-    void Reset()
+    CreatureAI* GetAI(Creature* pCreature)
     {
+        return new boss_alyssia_moonstalkerAI(pCreature);
     }
 
-        void KilledUnit(Unit* who)
+    struct boss_alyssia_moonstalkerAI : public ScriptedAI
+    {
+        boss_alyssia_moonstalkerAI(Creature* pCreature) : ScriptedAI(pCreature)
+            {
+                    Reset();
+                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+            }
+
+            ScriptedInstance* m_pInstance;
+        bool m_bIsRegularMode;
+
+        void Reset()
         {
-                if(!m_pInstance)
-                        return;
-
-                if(m_pInstance)
-                {
-                        uint32 count = m_pInstance->GetData(DATA_UPDATE_STATE_UI_COUNT);
-                        count--;
-                        m_pInstance->SetData(DATA_UPDATE_STATE_UI_COUNT, count);
-                }
         }
 
-        void Aggro(Unit* pWho)
-    {
-    }
+            void KilledUnit(Unit* who)
+            {
+                    if(!m_pInstance)
+                            return;
 
-        void JustDied(Unit* pKiller)
-    {
-                if(!m_pInstance)
-                        return;
+                    if(m_pInstance)
+                    {
+                            uint32 count = m_pInstance->GetData(DATA_UPDATE_STATE_UI_COUNT);
+                            count--;
+                            m_pInstance->SetData(DATA_UPDATE_STATE_UI_COUNT, count);
+                    }
+            }
 
-        if(!me->FindNearestCreature(34461, 200, true)
-                && !me->FindNearestCreature(34460, 200, true)
-                && !me->FindNearestCreature(34469, 200, true)
-                && !me->FindNearestCreature(34467, 200, true)
-                && !me->FindNearestCreature(34468, 200, true)
-                && !me->FindNearestCreature(34465, 200, true)
-                && !me->FindNearestCreature(34471, 200, true)
-                && !me->FindNearestCreature(34466, 200, true)
-                && !me->FindNearestCreature(34473, 200, true)
-                && !me->FindNearestCreature(34472, 200, true)
-                && !me->FindNearestCreature(34463, 200, true)
-                && !me->FindNearestCreature(34470, 200, true)
-                && !me->FindNearestCreature(34474, 200, true)
-                && !me->FindNearestCreature(34475, 200, true))
-                {
-                m_pInstance->SetData(PHASE_5, DONE);
-                }
+            void Aggro(Unit* pWho)
+        {
         }
 
-        void UpdateAI(const uint32 diff)
-    {
-        if (!UpdateVictim())
-            return;
+            void JustDied(Unit* pKiller)
+        {
+                    if(!m_pInstance)
+                            return;
 
-                DoMeleeAttackIfReady();
-        }
+            if(!me->FindNearestCreature(34461, 200, true)
+                    && !me->FindNearestCreature(34460, 200, true)
+                    && !me->FindNearestCreature(34469, 200, true)
+                    && !me->FindNearestCreature(34467, 200, true)
+                    && !me->FindNearestCreature(34468, 200, true)
+                    && !me->FindNearestCreature(34465, 200, true)
+                    && !me->FindNearestCreature(34471, 200, true)
+                    && !me->FindNearestCreature(34466, 200, true)
+                    && !me->FindNearestCreature(34473, 200, true)
+                    && !me->FindNearestCreature(34472, 200, true)
+                    && !me->FindNearestCreature(34463, 200, true)
+                    && !me->FindNearestCreature(34470, 200, true)
+                    && !me->FindNearestCreature(34474, 200, true)
+                    && !me->FindNearestCreature(34475, 200, true))
+                    {
+                    m_pInstance->SetData(PHASE_5, DONE);
+                    }
+            }
+
+            void UpdateAI(const uint32 diff)
+        {
+            if (!UpdateVictim())
+                return;
+
+                    DoMeleeAttackIfReady();
+            }
+    };
+
 };
 /********************************/
 /* Noozle Whizzlestick - 34468  */
 /* Mage                         */
 /********************************/
-
-struct boss_noozle_whizzlestickAI : public ScriptedAI
+class boss_noozle_whizzlestick : public CreatureScript
 {
-    boss_noozle_whizzlestickAI(Creature* pCreature) : ScriptedAI(pCreature)
-        {
-                Reset();
-                m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        }
+public:
+    boss_noozle_whizzlestick() : CreatureScript("boss_noozle_whizzlestick") { }
 
-        ScriptedInstance* m_pInstance;
-    bool m_bIsRegularMode;
-
-    void Reset()
+    CreatureAI* GetAI(Creature* pCreature)
     {
+        return new boss_noozle_whizzlestickAI(pCreature);
     }
 
-        void KilledUnit(Unit* who)
+    struct boss_noozle_whizzlestickAI : public ScriptedAI
+    {
+        boss_noozle_whizzlestickAI(Creature* pCreature) : ScriptedAI(pCreature)
+            {
+                    Reset();
+                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+            }
+
+            ScriptedInstance* m_pInstance;
+        bool m_bIsRegularMode;
+
+        void Reset()
         {
-                if(!m_pInstance)
-                        return;
-
-/*      if(m_pInstance->OnRaidWipe())
-                {
-                        uint32 count = m_pInstance->GetData(DATA_UPDATE_STATE_UI_COUNT);
-                        count--;
-                        m_pInstance->SetData(DATA_UPDATE_STATE_UI_COUNT, count);
-                }*/
         }
 
-        void Aggro(Unit* pWho)
-    {
-    }
+            void KilledUnit(Unit* who)
+            {
+                    if(!m_pInstance)
+                            return;
 
-        void JustDied(Unit* pKiller)
-    {
-                if(!m_pInstance)
-                        return;
+    /*      if(m_pInstance->OnRaidWipe())
+                    {
+                            uint32 count = m_pInstance->GetData(DATA_UPDATE_STATE_UI_COUNT);
+                            count--;
+                            m_pInstance->SetData(DATA_UPDATE_STATE_UI_COUNT, count);
+                    }*/
+            }
 
-        if(!me->FindNearestCreature(34461, 200, true)
-                && !me->FindNearestCreature(34460, 200, true)
-                && !me->FindNearestCreature(34469, 200, true)
-                && !me->FindNearestCreature(34467, 200, true)
-                && !me->FindNearestCreature(34468, 200, true)
-                && !me->FindNearestCreature(34465, 200, true)
-                && !me->FindNearestCreature(34471, 200, true)
-                && !me->FindNearestCreature(34466, 200, true)
-                && !me->FindNearestCreature(34473, 200, true)
-                && !me->FindNearestCreature(34472, 200, true)
-                && !me->FindNearestCreature(34463, 200, true)
-                && !me->FindNearestCreature(34470, 200, true)
-                && !me->FindNearestCreature(34474, 200, true)
-                && !me->FindNearestCreature(34475, 200, true))
-                {
-                m_pInstance->SetData(PHASE_5, DONE);
-                }
+            void Aggro(Unit* pWho)
+        {
         }
 
-        void UpdateAI(const uint32 diff)
-    {
-        if (!UpdateVictim())
-            return;
+            void JustDied(Unit* pKiller)
+        {
+                    if(!m_pInstance)
+                            return;
 
-                DoMeleeAttackIfReady();
-        }
+            if(!me->FindNearestCreature(34461, 200, true)
+                    && !me->FindNearestCreature(34460, 200, true)
+                    && !me->FindNearestCreature(34469, 200, true)
+                    && !me->FindNearestCreature(34467, 200, true)
+                    && !me->FindNearestCreature(34468, 200, true)
+                    && !me->FindNearestCreature(34465, 200, true)
+                    && !me->FindNearestCreature(34471, 200, true)
+                    && !me->FindNearestCreature(34466, 200, true)
+                    && !me->FindNearestCreature(34473, 200, true)
+                    && !me->FindNearestCreature(34472, 200, true)
+                    && !me->FindNearestCreature(34463, 200, true)
+                    && !me->FindNearestCreature(34470, 200, true)
+                    && !me->FindNearestCreature(34474, 200, true)
+                    && !me->FindNearestCreature(34475, 200, true))
+                    {
+                    m_pInstance->SetData(PHASE_5, DONE);
+                    }
+            }
+
+            void UpdateAI(const uint32 diff)
+        {
+            if (!UpdateVictim())
+                return;
+
+                    DoMeleeAttackIfReady();
+            }
+    };
+
 };
 /********************************/
 /* Velanaa - 34465              */
 /* Paladin                      */
 /********************************/
-
-struct boss_velanaaAI : public ScriptedAI
+class boss_velanaa : public CreatureScript
 {
-    boss_velanaaAI(Creature* pCreature) : ScriptedAI(pCreature)
-        {
-                Reset();
-                m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        }
+public:
+    boss_velanaa() : CreatureScript("boss_velanaa") { }
 
-        ScriptedInstance* m_pInstance;
-    bool m_bIsRegularMode;
-
-    void Reset()
+    CreatureAI* GetAI(Creature* pCreature)
     {
+        return new boss_velanaaAI(pCreature);
     }
 
-        void KilledUnit(Unit* who)
+    struct boss_velanaaAI : public ScriptedAI
+    {
+        boss_velanaaAI(Creature* pCreature) : ScriptedAI(pCreature)
+            {
+                    Reset();
+                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+            }
+
+            ScriptedInstance* m_pInstance;
+        bool m_bIsRegularMode;
+
+        void Reset()
         {
-                if(!m_pInstance)
-                        return;
-
-/*      if(m_pInstance->OnRaidWipe())
-                {
-                        uint32 count = m_pInstance->GetData(DATA_UPDATE_STATE_UI_COUNT);
-                        count--;
-                        m_pInstance->SetData(DATA_UPDATE_STATE_UI_COUNT, count);
-                }*/
         }
 
-        void Aggro(Unit* pWho)
-    {
-    }
+            void KilledUnit(Unit* who)
+            {
+                    if(!m_pInstance)
+                            return;
 
-        void JustDied(Unit* pKiller)
-    {
-                if(!m_pInstance)
-                        return;
+    /*      if(m_pInstance->OnRaidWipe())
+                    {
+                            uint32 count = m_pInstance->GetData(DATA_UPDATE_STATE_UI_COUNT);
+                            count--;
+                            m_pInstance->SetData(DATA_UPDATE_STATE_UI_COUNT, count);
+                    }*/
+            }
 
-        if(!me->FindNearestCreature(34461, 200, true)
-                && !me->FindNearestCreature(34460, 200, true)
-                && !me->FindNearestCreature(34469, 200, true)
-                && !me->FindNearestCreature(34467, 200, true)
-                && !me->FindNearestCreature(34468, 200, true)
-                && !me->FindNearestCreature(34465, 200, true)
-                && !me->FindNearestCreature(34471, 200, true)
-                && !me->FindNearestCreature(34466, 200, true)
-                && !me->FindNearestCreature(34473, 200, true)
-                && !me->FindNearestCreature(34472, 200, true)
-                && !me->FindNearestCreature(34463, 200, true)
-                && !me->FindNearestCreature(34470, 200, true)
-                && !me->FindNearestCreature(34474, 200, true)
-                && !me->FindNearestCreature(34475, 200, true))
-                {
-                m_pInstance->SetData(PHASE_5, DONE);
-                }
+            void Aggro(Unit* pWho)
+        {
         }
 
-        void UpdateAI(const uint32 diff)
-    {
-        if (!UpdateVictim())
-            return;
+            void JustDied(Unit* pKiller)
+        {
+                    if(!m_pInstance)
+                            return;
 
-                DoMeleeAttackIfReady();
-        }
+            if(!me->FindNearestCreature(34461, 200, true)
+                    && !me->FindNearestCreature(34460, 200, true)
+                    && !me->FindNearestCreature(34469, 200, true)
+                    && !me->FindNearestCreature(34467, 200, true)
+                    && !me->FindNearestCreature(34468, 200, true)
+                    && !me->FindNearestCreature(34465, 200, true)
+                    && !me->FindNearestCreature(34471, 200, true)
+                    && !me->FindNearestCreature(34466, 200, true)
+                    && !me->FindNearestCreature(34473, 200, true)
+                    && !me->FindNearestCreature(34472, 200, true)
+                    && !me->FindNearestCreature(34463, 200, true)
+                    && !me->FindNearestCreature(34470, 200, true)
+                    && !me->FindNearestCreature(34474, 200, true)
+                    && !me->FindNearestCreature(34475, 200, true))
+                    {
+                    m_pInstance->SetData(PHASE_5, DONE);
+                    }
+            }
+
+            void UpdateAI(const uint32 diff)
+        {
+            if (!UpdateVictim())
+                return;
+
+                    DoMeleeAttackIfReady();
+            }
+    };
+
 };
 /********************************/
 /* Baelnor Lightbearer - 34471  */
 /* Paladin                      */
 /********************************/
-
-struct boss_baelnor_lightbearerAI : public ScriptedAI
+class boss_baelnor_lightbearer : public CreatureScript
 {
-    boss_baelnor_lightbearerAI(Creature* pCreature) : ScriptedAI(pCreature)
-        {
-                Reset();
-                m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        }
+public:
+    boss_baelnor_lightbearer() : CreatureScript("boss_baelnor_lightbearer") { }
 
-        ScriptedInstance* m_pInstance;
-    bool m_bIsRegularMode;
-
-    void Reset()
+    CreatureAI* GetAI(Creature* pCreature)
     {
+        return new boss_baelnor_lightbearerAI(pCreature);
     }
 
-        void KilledUnit(Unit* who)
+    struct boss_baelnor_lightbearerAI : public ScriptedAI
+    {
+        boss_baelnor_lightbearerAI(Creature* pCreature) : ScriptedAI(pCreature)
+            {
+                    Reset();
+                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+            }
+
+            ScriptedInstance* m_pInstance;
+        bool m_bIsRegularMode;
+
+        void Reset()
         {
-                if(!m_pInstance)
-                        return;
-
-/*      if(m_pInstance->OnRaidWipe())
-                {
-                        uint32 count = m_pInstance->GetData(DATA_UPDATE_STATE_UI_COUNT);
-                        count--;
-                        m_pInstance->SetData(DATA_UPDATE_STATE_UI_COUNT, count);
-                }*/
         }
 
-        void Aggro(Unit* pWho)
-    {
-    }
+            void KilledUnit(Unit* who)
+            {
+                    if(!m_pInstance)
+                            return;
 
-        void JustDied(Unit* pKiller)
-    {
-                if(!m_pInstance)
-                        return;
+    /*      if(m_pInstance->OnRaidWipe())
+                    {
+                            uint32 count = m_pInstance->GetData(DATA_UPDATE_STATE_UI_COUNT);
+                            count--;
+                            m_pInstance->SetData(DATA_UPDATE_STATE_UI_COUNT, count);
+                    }*/
+            }
 
-        if(!me->FindNearestCreature(34461, 200, true)
-                && !me->FindNearestCreature(34460, 200, true)
-                && !me->FindNearestCreature(34469, 200, true)
-                && !me->FindNearestCreature(34467, 200, true)
-                && !me->FindNearestCreature(34468, 200, true)
-                && !me->FindNearestCreature(34465, 200, true)
-                && !me->FindNearestCreature(34471, 200, true)
-                && !me->FindNearestCreature(34466, 200, true)
-                && !me->FindNearestCreature(34473, 200, true)
-                && !me->FindNearestCreature(34472, 200, true)
-                && !me->FindNearestCreature(34463, 200, true)
-                && !me->FindNearestCreature(34470, 200, true)
-                && !me->FindNearestCreature(34474, 200, true)
-                && !me->FindNearestCreature(34475, 200, true))
-                {
-                m_pInstance->SetData(PHASE_5, DONE);
-                }
+            void Aggro(Unit* pWho)
+        {
         }
 
-        void UpdateAI(const uint32 diff)
-    {
-        if (!UpdateVictim())
-            return;
+            void JustDied(Unit* pKiller)
+        {
+                    if(!m_pInstance)
+                            return;
 
-                DoMeleeAttackIfReady();
-        }
+            if(!me->FindNearestCreature(34461, 200, true)
+                    && !me->FindNearestCreature(34460, 200, true)
+                    && !me->FindNearestCreature(34469, 200, true)
+                    && !me->FindNearestCreature(34467, 200, true)
+                    && !me->FindNearestCreature(34468, 200, true)
+                    && !me->FindNearestCreature(34465, 200, true)
+                    && !me->FindNearestCreature(34471, 200, true)
+                    && !me->FindNearestCreature(34466, 200, true)
+                    && !me->FindNearestCreature(34473, 200, true)
+                    && !me->FindNearestCreature(34472, 200, true)
+                    && !me->FindNearestCreature(34463, 200, true)
+                    && !me->FindNearestCreature(34470, 200, true)
+                    && !me->FindNearestCreature(34474, 200, true)
+                    && !me->FindNearestCreature(34475, 200, true))
+                    {
+                    m_pInstance->SetData(PHASE_5, DONE);
+                    }
+            }
+
+            void UpdateAI(const uint32 diff)
+        {
+            if (!UpdateVictim())
+                return;
+
+                    DoMeleeAttackIfReady();
+            }
+    };
+
 };
 /********************************/
 /* Anthar Forgemender - 34466   */
 /* Priest                       */
 /********************************/
-
-struct boss_anthar_forgemenderAI : public ScriptedAI
+class boss_anthar_forgemender : public CreatureScript
 {
-    boss_anthar_forgemenderAI(Creature* pCreature) : ScriptedAI(pCreature)
-        {
-                Reset();
-                m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        }
+public:
+    boss_anthar_forgemender() : CreatureScript("boss_anthar_forgemender") { }
 
-        ScriptedInstance* m_pInstance;
-    bool m_bIsRegularMode;
-
-    void Reset()
+    CreatureAI* GetAI(Creature* pCreature)
     {
+        return new boss_anthar_forgemenderAI(pCreature);
     }
 
-        void KilledUnit(Unit* who)
+    struct boss_anthar_forgemenderAI : public ScriptedAI
+    {
+        boss_anthar_forgemenderAI(Creature* pCreature) : ScriptedAI(pCreature)
+            {
+                    Reset();
+                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+            }
+
+            ScriptedInstance* m_pInstance;
+        bool m_bIsRegularMode;
+
+        void Reset()
         {
-                if(!m_pInstance)
-                        return;
-
-/*      if(m_pInstance->OnRaidWipe())
-                {
-                        uint32 count = m_pInstance->GetData(DATA_UPDATE_STATE_UI_COUNT);
-                        count--;
-                        m_pInstance->SetData(DATA_UPDATE_STATE_UI_COUNT, count);
-                }*/
         }
 
-        void Aggro(Unit* pWho)
-    {
-    }
+            void KilledUnit(Unit* who)
+            {
+                    if(!m_pInstance)
+                            return;
 
-        void JustDied(Unit* pKiller)
-    {
-                if(!m_pInstance)
-                        return;
+    /*      if(m_pInstance->OnRaidWipe())
+                    {
+                            uint32 count = m_pInstance->GetData(DATA_UPDATE_STATE_UI_COUNT);
+                            count--;
+                            m_pInstance->SetData(DATA_UPDATE_STATE_UI_COUNT, count);
+                    }*/
+            }
 
-        if(!me->FindNearestCreature(34461, 200, true)
-                && !me->FindNearestCreature(34460, 200, true)
-                && !me->FindNearestCreature(34469, 200, true)
-                && !me->FindNearestCreature(34467, 200, true)
-                && !me->FindNearestCreature(34468, 200, true)
-                && !me->FindNearestCreature(34465, 200, true)
-                && !me->FindNearestCreature(34471, 200, true)
-                && !me->FindNearestCreature(34466, 200, true)
-                && !me->FindNearestCreature(34473, 200, true)
-                && !me->FindNearestCreature(34472, 200, true)
-                && !me->FindNearestCreature(34463, 200, true)
-                && !me->FindNearestCreature(34470, 200, true)
-                && !me->FindNearestCreature(34474, 200, true)
-                && !me->FindNearestCreature(34475, 200, true))
-                {
-                m_pInstance->SetData(PHASE_5, DONE);
-                }
+            void Aggro(Unit* pWho)
+        {
         }
 
-        void UpdateAI(const uint32 diff)
-    {
-        if (!UpdateVictim())
-            return;
+            void JustDied(Unit* pKiller)
+        {
+                    if(!m_pInstance)
+                            return;
 
-                DoMeleeAttackIfReady();
-        }
+            if(!me->FindNearestCreature(34461, 200, true)
+                    && !me->FindNearestCreature(34460, 200, true)
+                    && !me->FindNearestCreature(34469, 200, true)
+                    && !me->FindNearestCreature(34467, 200, true)
+                    && !me->FindNearestCreature(34468, 200, true)
+                    && !me->FindNearestCreature(34465, 200, true)
+                    && !me->FindNearestCreature(34471, 200, true)
+                    && !me->FindNearestCreature(34466, 200, true)
+                    && !me->FindNearestCreature(34473, 200, true)
+                    && !me->FindNearestCreature(34472, 200, true)
+                    && !me->FindNearestCreature(34463, 200, true)
+                    && !me->FindNearestCreature(34470, 200, true)
+                    && !me->FindNearestCreature(34474, 200, true)
+                    && !me->FindNearestCreature(34475, 200, true))
+                    {
+                    m_pInstance->SetData(PHASE_5, DONE);
+                    }
+            }
+
+            void UpdateAI(const uint32 diff)
+        {
+            if (!UpdateVictim())
+                return;
+
+                    DoMeleeAttackIfReady();
+            }
+    };
+
 };
 /********************************/
 /* Brienna Nightfell - 34473    */
 /* Priest                       */
 /********************************/
-
-struct boss_brienna_nightfellAI : public ScriptedAI
+class boss_brienna_nightfell : public CreatureScript
 {
-    boss_brienna_nightfellAI(Creature* pCreature) : ScriptedAI(pCreature)
-        {
-                Reset();
-                m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        }
+public:
+    boss_brienna_nightfell() : CreatureScript("boss_brienna_nightfell") { }
 
-        ScriptedInstance* m_pInstance;
-    bool m_bIsRegularMode;
-
-    void Reset()
+    CreatureAI* GetAI(Creature* pCreature)
     {
+        return new boss_brienna_nightfellAI(pCreature);
     }
 
-        void KilledUnit(Unit* who)
+    struct boss_brienna_nightfellAI : public ScriptedAI
+    {
+        boss_brienna_nightfellAI(Creature* pCreature) : ScriptedAI(pCreature)
+            {
+                    Reset();
+                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+            }
+
+            ScriptedInstance* m_pInstance;
+        bool m_bIsRegularMode;
+
+        void Reset()
         {
-                if(!m_pInstance)
-                        return;
-
-/*      if(m_pInstance->OnRaidWipe())
-                {
-                        uint32 count = m_pInstance->GetData(DATA_UPDATE_STATE_UI_COUNT);
-                        count--;
-                        m_pInstance->SetData(DATA_UPDATE_STATE_UI_COUNT, count);
-                }*/
         }
 
-        void Aggro(Unit* pWho)
-    {
-    }
+            void KilledUnit(Unit* who)
+            {
+                    if(!m_pInstance)
+                            return;
 
-        void JustDied(Unit* pKiller)
-    {
-                if(!m_pInstance)
-                        return;
+    /*      if(m_pInstance->OnRaidWipe())
+                    {
+                            uint32 count = m_pInstance->GetData(DATA_UPDATE_STATE_UI_COUNT);
+                            count--;
+                            m_pInstance->SetData(DATA_UPDATE_STATE_UI_COUNT, count);
+                    }*/
+            }
 
-        if(!me->FindNearestCreature(34461, 200, true)
-                && !me->FindNearestCreature(34460, 200, true)
-                && !me->FindNearestCreature(34469, 200, true)
-                && !me->FindNearestCreature(34467, 200, true)
-                && !me->FindNearestCreature(34468, 200, true)
-                && !me->FindNearestCreature(34465, 200, true)
-                && !me->FindNearestCreature(34471, 200, true)
-                && !me->FindNearestCreature(34466, 200, true)
-                && !me->FindNearestCreature(34473, 200, true)
-                && !me->FindNearestCreature(34472, 200, true)
-                && !me->FindNearestCreature(34463, 200, true)
-                && !me->FindNearestCreature(34470, 200, true)
-                && !me->FindNearestCreature(34474, 200, true)
-                && !me->FindNearestCreature(34475, 200, true))
-                {
-                m_pInstance->SetData(PHASE_5, DONE);
-                }
+            void Aggro(Unit* pWho)
+        {
         }
 
-        void UpdateAI(const uint32 diff)
-    {
-        if (!UpdateVictim())
-            return;
+            void JustDied(Unit* pKiller)
+        {
+                    if(!m_pInstance)
+                            return;
 
-                DoMeleeAttackIfReady();
-        }
+            if(!me->FindNearestCreature(34461, 200, true)
+                    && !me->FindNearestCreature(34460, 200, true)
+                    && !me->FindNearestCreature(34469, 200, true)
+                    && !me->FindNearestCreature(34467, 200, true)
+                    && !me->FindNearestCreature(34468, 200, true)
+                    && !me->FindNearestCreature(34465, 200, true)
+                    && !me->FindNearestCreature(34471, 200, true)
+                    && !me->FindNearestCreature(34466, 200, true)
+                    && !me->FindNearestCreature(34473, 200, true)
+                    && !me->FindNearestCreature(34472, 200, true)
+                    && !me->FindNearestCreature(34463, 200, true)
+                    && !me->FindNearestCreature(34470, 200, true)
+                    && !me->FindNearestCreature(34474, 200, true)
+                    && !me->FindNearestCreature(34475, 200, true))
+                    {
+                    m_pInstance->SetData(PHASE_5, DONE);
+                    }
+            }
+
+            void UpdateAI(const uint32 diff)
+        {
+            if (!UpdateVictim())
+                return;
+
+                    DoMeleeAttackIfReady();
+            }
+    };
+
 };
 /********************************/
 /* Irieth Shadowstep - 34472    */
 /* Rogue                        */
 /********************************/
-
-struct boss_irieth_shadowstepeAI : public ScriptedAI
+class boss_irieth_shadowstepe : public CreatureScript
 {
-    boss_irieth_shadowstepeAI(Creature* pCreature) : ScriptedAI(pCreature)
-        {
-                Reset();
-                m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        }
+public:
+    boss_irieth_shadowstepe() : CreatureScript("boss_irieth_shadowstepe") { }
 
-        ScriptedInstance* m_pInstance;
-    bool m_bIsRegularMode;
-
-    void Reset()
+    CreatureAI* GetAI(Creature* pCreature)
     {
+        return new boss_irieth_shadowstepeAI(pCreature);
     }
 
-        void KilledUnit(Unit* who)
+    struct boss_irieth_shadowstepeAI : public ScriptedAI
+    {
+        boss_irieth_shadowstepeAI(Creature* pCreature) : ScriptedAI(pCreature)
+            {
+                    Reset();
+                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+            }
+
+            ScriptedInstance* m_pInstance;
+        bool m_bIsRegularMode;
+
+        void Reset()
         {
-                if(!m_pInstance)
-                        return;
-
-/*      if(m_pInstance->OnRaidWipe())
-                {
-                        uint32 count = m_pInstance->GetData(DATA_UPDATE_STATE_UI_COUNT);
-                        count--;
-                        m_pInstance->SetData(DATA_UPDATE_STATE_UI_COUNT, count);
-                }*/
         }
 
-        void Aggro(Unit* pWho)
-    {
-    }
+            void KilledUnit(Unit* who)
+            {
+                    if(!m_pInstance)
+                            return;
 
-        void JustDied(Unit* pKiller)
-    {
-                if(!m_pInstance)
-                        return;
+    /*      if(m_pInstance->OnRaidWipe())
+                    {
+                            uint32 count = m_pInstance->GetData(DATA_UPDATE_STATE_UI_COUNT);
+                            count--;
+                            m_pInstance->SetData(DATA_UPDATE_STATE_UI_COUNT, count);
+                    }*/
+            }
 
-        if(!me->FindNearestCreature(34461, 200, true)
-                && !me->FindNearestCreature(34460, 200, true)
-                && !me->FindNearestCreature(34469, 200, true)
-                && !me->FindNearestCreature(34467, 200, true)
-                && !me->FindNearestCreature(34468, 200, true)
-                && !me->FindNearestCreature(34465, 200, true)
-                && !me->FindNearestCreature(34471, 200, true)
-                && !me->FindNearestCreature(34466, 200, true)
-                && !me->FindNearestCreature(34473, 200, true)
-                && !me->FindNearestCreature(34472, 200, true)
-                && !me->FindNearestCreature(34463, 200, true)
-                && !me->FindNearestCreature(34470, 200, true)
-                && !me->FindNearestCreature(34474, 200, true)
-                && !me->FindNearestCreature(34475, 200, true))
-                {
-                m_pInstance->SetData(PHASE_5, DONE);
-                }
+            void Aggro(Unit* pWho)
+        {
         }
 
-        void UpdateAI(const uint32 diff)
-    {
-        if (!UpdateVictim())
-            return;
+            void JustDied(Unit* pKiller)
+        {
+                    if(!m_pInstance)
+                            return;
 
-                DoMeleeAttackIfReady();
-        }
+            if(!me->FindNearestCreature(34461, 200, true)
+                    && !me->FindNearestCreature(34460, 200, true)
+                    && !me->FindNearestCreature(34469, 200, true)
+                    && !me->FindNearestCreature(34467, 200, true)
+                    && !me->FindNearestCreature(34468, 200, true)
+                    && !me->FindNearestCreature(34465, 200, true)
+                    && !me->FindNearestCreature(34471, 200, true)
+                    && !me->FindNearestCreature(34466, 200, true)
+                    && !me->FindNearestCreature(34473, 200, true)
+                    && !me->FindNearestCreature(34472, 200, true)
+                    && !me->FindNearestCreature(34463, 200, true)
+                    && !me->FindNearestCreature(34470, 200, true)
+                    && !me->FindNearestCreature(34474, 200, true)
+                    && !me->FindNearestCreature(34475, 200, true))
+                    {
+                    m_pInstance->SetData(PHASE_5, DONE);
+                    }
+            }
+
+            void UpdateAI(const uint32 diff)
+        {
+            if (!UpdateVictim())
+                return;
+
+                    DoMeleeAttackIfReady();
+            }
+    };
+
 };
 /********************************/
 /* Shaabad - 34463              */
 /* Shaman                       */
 /********************************/
-
-struct boss_shaabadAI : public ScriptedAI
+class boss_shaabad : public CreatureScript
 {
-    boss_shaabadAI(Creature* pCreature) : ScriptedAI(pCreature)
-        {
-                Reset();
-                m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        }
+public:
+    boss_shaabad() : CreatureScript("boss_shaabad") { }
 
-        ScriptedInstance* m_pInstance;
-    bool m_bIsRegularMode;
-
-    void Reset()
+    CreatureAI* GetAI(Creature* pCreature)
     {
+        return new boss_shaabadAI(pCreature);
     }
 
-        void KilledUnit(Unit* who)
+    struct boss_shaabadAI : public ScriptedAI
+    {
+        boss_shaabadAI(Creature* pCreature) : ScriptedAI(pCreature)
+            {
+                    Reset();
+                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+            }
+
+            ScriptedInstance* m_pInstance;
+        bool m_bIsRegularMode;
+
+        void Reset()
         {
-                if(!m_pInstance)
-                        return;
-
-/*      if(m_pInstance->OnRaidWipe())
-                {
-                        uint32 count = m_pInstance->GetData(DATA_UPDATE_STATE_UI_COUNT);
-                        count--;
-                        m_pInstance->SetData(DATA_UPDATE_STATE_UI_COUNT, count);
-                }*/
         }
 
-        void Aggro(Unit* pWho)
-    {
-    }
+            void KilledUnit(Unit* who)
+            {
+                    if(!m_pInstance)
+                            return;
 
-        void JustDied(Unit* pKiller)
-    {
-                if(!m_pInstance)
-                        return;
+    /*      if(m_pInstance->OnRaidWipe())
+                    {
+                            uint32 count = m_pInstance->GetData(DATA_UPDATE_STATE_UI_COUNT);
+                            count--;
+                            m_pInstance->SetData(DATA_UPDATE_STATE_UI_COUNT, count);
+                    }*/
+            }
 
-        if(!me->FindNearestCreature(34461, 200, true)
-                && !me->FindNearestCreature(34460, 200, true)
-                && !me->FindNearestCreature(34469, 200, true)
-                && !me->FindNearestCreature(34467, 200, true)
-                && !me->FindNearestCreature(34468, 200, true)
-                && !me->FindNearestCreature(34465, 200, true)
-                && !me->FindNearestCreature(34471, 200, true)
-                && !me->FindNearestCreature(34466, 200, true)
-                && !me->FindNearestCreature(34473, 200, true)
-                && !me->FindNearestCreature(34472, 200, true)
-                && !me->FindNearestCreature(34463, 200, true)
-                && !me->FindNearestCreature(34470, 200, true)
-                && !me->FindNearestCreature(34474, 200, true)
-                && !me->FindNearestCreature(34475, 200, true))
-                {
-                m_pInstance->SetData(PHASE_5, DONE);
-                }
+            void Aggro(Unit* pWho)
+        {
         }
 
-        void UpdateAI(const uint32 diff)
-    {
-        if (!UpdateVictim())
-            return;
+            void JustDied(Unit* pKiller)
+        {
+                    if(!m_pInstance)
+                            return;
 
-                DoMeleeAttackIfReady();
-        }
+            if(!me->FindNearestCreature(34461, 200, true)
+                    && !me->FindNearestCreature(34460, 200, true)
+                    && !me->FindNearestCreature(34469, 200, true)
+                    && !me->FindNearestCreature(34467, 200, true)
+                    && !me->FindNearestCreature(34468, 200, true)
+                    && !me->FindNearestCreature(34465, 200, true)
+                    && !me->FindNearestCreature(34471, 200, true)
+                    && !me->FindNearestCreature(34466, 200, true)
+                    && !me->FindNearestCreature(34473, 200, true)
+                    && !me->FindNearestCreature(34472, 200, true)
+                    && !me->FindNearestCreature(34463, 200, true)
+                    && !me->FindNearestCreature(34470, 200, true)
+                    && !me->FindNearestCreature(34474, 200, true)
+                    && !me->FindNearestCreature(34475, 200, true))
+                    {
+                    m_pInstance->SetData(PHASE_5, DONE);
+                    }
+            }
+
+            void UpdateAI(const uint32 diff)
+        {
+            if (!UpdateVictim())
+                return;
+
+                    DoMeleeAttackIfReady();
+            }
+    };
+
 };
 /********************************/
 /* Saamul - 34470               */
 /* Shaman                       */
 /********************************/
-
-struct boss_saamulAI : public ScriptedAI
+class boss_saamul : public CreatureScript
 {
-    boss_saamulAI(Creature* pCreature) : ScriptedAI(pCreature)
-        {
-                Reset();
-                m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        }
+public:
+    boss_saamul() : CreatureScript("boss_saamul") { }
 
-        ScriptedInstance* m_pInstance;
-    bool m_bIsRegularMode;
-
-    void Reset()
+    CreatureAI* GetAI(Creature* pCreature)
     {
+        return new boss_saamulAI(pCreature);
     }
 
-        void KilledUnit(Unit* who)
+    struct boss_saamulAI : public ScriptedAI
+    {
+        boss_saamulAI(Creature* pCreature) : ScriptedAI(pCreature)
+            {
+                    Reset();
+                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+            }
+
+            ScriptedInstance* m_pInstance;
+        bool m_bIsRegularMode;
+
+        void Reset()
         {
-                if(!m_pInstance)
-                        return;
-
-/*      if(m_pInstance->OnRaidWipe())
-                {
-                        uint32 count = m_pInstance->GetData(DATA_UPDATE_STATE_UI_COUNT);
-                        count--;
-                        m_pInstance->SetData(DATA_UPDATE_STATE_UI_COUNT, count);
-                }*/
         }
 
-        void Aggro(Unit* pWho)
-    {
-    }
+            void KilledUnit(Unit* who)
+            {
+                    if(!m_pInstance)
+                            return;
 
-        void JustDied(Unit* pKiller)
-    {
-                if(!m_pInstance)
-                        return;
+    /*      if(m_pInstance->OnRaidWipe())
+                    {
+                            uint32 count = m_pInstance->GetData(DATA_UPDATE_STATE_UI_COUNT);
+                            count--;
+                            m_pInstance->SetData(DATA_UPDATE_STATE_UI_COUNT, count);
+                    }*/
+            }
 
-        if(!me->FindNearestCreature(34461, 200, true)
-                && !me->FindNearestCreature(34460, 200, true)
-                && !me->FindNearestCreature(34469, 200, true)
-                && !me->FindNearestCreature(34467, 200, true)
-                && !me->FindNearestCreature(34468, 200, true)
-                && !me->FindNearestCreature(34465, 200, true)
-                && !me->FindNearestCreature(34471, 200, true)
-                && !me->FindNearestCreature(34466, 200, true)
-                && !me->FindNearestCreature(34473, 200, true)
-                && !me->FindNearestCreature(34472, 200, true)
-                && !me->FindNearestCreature(34463, 200, true)
-                && !me->FindNearestCreature(34470, 200, true)
-                && !me->FindNearestCreature(34474, 200, true)
-                && !me->FindNearestCreature(34475, 200, true))
-                {
-                m_pInstance->SetData(PHASE_5, DONE);
-                }
+            void Aggro(Unit* pWho)
+        {
         }
 
-        void UpdateAI(const uint32 diff)
-    {
-        if (!UpdateVictim())
-            return;
+            void JustDied(Unit* pKiller)
+        {
+                    if(!m_pInstance)
+                            return;
 
-                DoMeleeAttackIfReady();
-        }
+            if(!me->FindNearestCreature(34461, 200, true)
+                    && !me->FindNearestCreature(34460, 200, true)
+                    && !me->FindNearestCreature(34469, 200, true)
+                    && !me->FindNearestCreature(34467, 200, true)
+                    && !me->FindNearestCreature(34468, 200, true)
+                    && !me->FindNearestCreature(34465, 200, true)
+                    && !me->FindNearestCreature(34471, 200, true)
+                    && !me->FindNearestCreature(34466, 200, true)
+                    && !me->FindNearestCreature(34473, 200, true)
+                    && !me->FindNearestCreature(34472, 200, true)
+                    && !me->FindNearestCreature(34463, 200, true)
+                    && !me->FindNearestCreature(34470, 200, true)
+                    && !me->FindNearestCreature(34474, 200, true)
+                    && !me->FindNearestCreature(34475, 200, true))
+                    {
+                    m_pInstance->SetData(PHASE_5, DONE);
+                    }
+            }
+
+            void UpdateAI(const uint32 diff)
+        {
+            if (!UpdateVictim())
+                return;
+
+                    DoMeleeAttackIfReady();
+            }
+    };
+
 };
 /********************************/
 /* Serissa Grimdabbler - 34474  */
 /* Warlock                      */
 /********************************/
-
-struct boss_serissa_grimdabblerAI : public ScriptedAI
+class boss_serissa_grimdabbler : public CreatureScript
 {
-    boss_serissa_grimdabblerAI(Creature* pCreature) : ScriptedAI(pCreature)
-        {
-                Reset();
-                m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        }
+public:
+    boss_serissa_grimdabbler() : CreatureScript("boss_serissa_grimdabbler") { }
 
-        ScriptedInstance* m_pInstance;
-    bool m_bIsRegularMode;
-
-    void Reset()
+    CreatureAI* GetAI(Creature* pCreature)
     {
+        return new boss_serissa_grimdabblerAI(pCreature);
     }
 
-        void KilledUnit(Unit* who)
+    struct boss_serissa_grimdabblerAI : public ScriptedAI
+    {
+        boss_serissa_grimdabblerAI(Creature* pCreature) : ScriptedAI(pCreature)
+            {
+                    Reset();
+                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+            }
+
+            ScriptedInstance* m_pInstance;
+        bool m_bIsRegularMode;
+
+        void Reset()
         {
-                if(!m_pInstance)
-                        return;
-
-/*      if(m_pInstance->OnRaidWipe())
-                {
-                        uint32 count = m_pInstance->GetData(DATA_UPDATE_STATE_UI_COUNT);
-                        count--;
-                        m_pInstance->SetData(DATA_UPDATE_STATE_UI_COUNT, count);
-                }*/
         }
 
-        void Aggro(Unit* pWho)
-    {
-    }
+            void KilledUnit(Unit* who)
+            {
+                    if(!m_pInstance)
+                            return;
 
-        void JustDied(Unit* pKiller)
-    {
-                if(!m_pInstance)
-                        return;
+    /*      if(m_pInstance->OnRaidWipe())
+                    {
+                            uint32 count = m_pInstance->GetData(DATA_UPDATE_STATE_UI_COUNT);
+                            count--;
+                            m_pInstance->SetData(DATA_UPDATE_STATE_UI_COUNT, count);
+                    }*/
+            }
 
-        if(!me->FindNearestCreature(34461, 200, true)
-                && !me->FindNearestCreature(34460, 200, true)
-                && !me->FindNearestCreature(34469, 200, true)
-                && !me->FindNearestCreature(34467, 200, true)
-                && !me->FindNearestCreature(34468, 200, true)
-                && !me->FindNearestCreature(34465, 200, true)
-                && !me->FindNearestCreature(34471, 200, true)
-                && !me->FindNearestCreature(34466, 200, true)
-                && !me->FindNearestCreature(34473, 200, true)
-                && !me->FindNearestCreature(34472, 200, true)
-                && !me->FindNearestCreature(34463, 200, true)
-                && !me->FindNearestCreature(34470, 200, true)
-                && !me->FindNearestCreature(34474, 200, true)
-                && !me->FindNearestCreature(34475, 200, true))
-                {
-                m_pInstance->SetData(PHASE_5, DONE);
-                }
+            void Aggro(Unit* pWho)
+        {
         }
 
-        void UpdateAI(const uint32 diff)
-    {
-        if (!UpdateVictim())
-            return;
+            void JustDied(Unit* pKiller)
+        {
+                    if(!m_pInstance)
+                            return;
 
-                DoMeleeAttackIfReady();
-        }
+            if(!me->FindNearestCreature(34461, 200, true)
+                    && !me->FindNearestCreature(34460, 200, true)
+                    && !me->FindNearestCreature(34469, 200, true)
+                    && !me->FindNearestCreature(34467, 200, true)
+                    && !me->FindNearestCreature(34468, 200, true)
+                    && !me->FindNearestCreature(34465, 200, true)
+                    && !me->FindNearestCreature(34471, 200, true)
+                    && !me->FindNearestCreature(34466, 200, true)
+                    && !me->FindNearestCreature(34473, 200, true)
+                    && !me->FindNearestCreature(34472, 200, true)
+                    && !me->FindNearestCreature(34463, 200, true)
+                    && !me->FindNearestCreature(34470, 200, true)
+                    && !me->FindNearestCreature(34474, 200, true)
+                    && !me->FindNearestCreature(34475, 200, true))
+                    {
+                    m_pInstance->SetData(PHASE_5, DONE);
+                    }
+            }
+
+            void UpdateAI(const uint32 diff)
+        {
+            if (!UpdateVictim())
+                return;
+
+                    DoMeleeAttackIfReady();
+            }
+    };
+
 };
 /********************************/
 /* Shocuul - 34475              */
 /* Warrior                      */
 /********************************/
-
-struct boss_shocuulAI : public ScriptedAI
+class boss_shocuul : public CreatureScript
 {
-    boss_shocuulAI(Creature* pCreature) : ScriptedAI(pCreature)
-        {
-                Reset();
-                m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        }
+public:
+    boss_shocuul() : CreatureScript("boss_shocuul") { }
 
-        ScriptedInstance* m_pInstance;
-    bool m_bIsRegularMode;
-
-    void Reset()
+    CreatureAI* GetAI(Creature* pCreature)
     {
+        return new boss_shocuulAI(pCreature);
     }
 
-        void KilledUnit(Unit* who)
+    struct boss_shocuulAI : public ScriptedAI
+    {
+        boss_shocuulAI(Creature* pCreature) : ScriptedAI(pCreature)
+            {
+                    Reset();
+                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+            }
+
+            ScriptedInstance* m_pInstance;
+        bool m_bIsRegularMode;
+
+        void Reset()
         {
-                if(!m_pInstance)
-                        return;
-
-/*      if(m_pInstance->OnRaidWipe())
-                {
-                        uint32 count = m_pInstance->GetData(DATA_UPDATE_STATE_UI_COUNT);
-                        count--;
-                        m_pInstance->SetData(DATA_UPDATE_STATE_UI_COUNT, count);
-                }*/
         }
 
-        void Aggro(Unit* pWho)
-    {
-    }
+            void KilledUnit(Unit* who)
+            {
+                    if(!m_pInstance)
+                            return;
 
-        void JustDied(Unit* pKiller)
-    {
-                if(!m_pInstance)
-                        return;
+    /*      if(m_pInstance->OnRaidWipe())
+                    {
+                            uint32 count = m_pInstance->GetData(DATA_UPDATE_STATE_UI_COUNT);
+                            count--;
+                            m_pInstance->SetData(DATA_UPDATE_STATE_UI_COUNT, count);
+                    }*/
+            }
 
-        if(!me->FindNearestCreature(34461, 200, true)
-                && !me->FindNearestCreature(34460, 200, true)
-                && !me->FindNearestCreature(34469, 200, true)
-                && !me->FindNearestCreature(34467, 200, true)
-                && !me->FindNearestCreature(34468, 200, true)
-                && !me->FindNearestCreature(34465, 200, true)
-                && !me->FindNearestCreature(34471, 200, true)
-                && !me->FindNearestCreature(34466, 200, true)
-                && !me->FindNearestCreature(34473, 200, true)
-                && !me->FindNearestCreature(34472, 200, true)
-                && !me->FindNearestCreature(34463, 200, true)
-                && !me->FindNearestCreature(34470, 200, true)
-                && !me->FindNearestCreature(34474, 200, true)
-                && !me->FindNearestCreature(34475, 200, true))
-                {
-                m_pInstance->SetData(PHASE_5, DONE);
-                }
+            void Aggro(Unit* pWho)
+        {
         }
 
-        void UpdateAI(const uint32 diff)
-    {
-        if (!UpdateVictim())
-            return;
+            void JustDied(Unit* pKiller)
+        {
+                    if(!m_pInstance)
+                            return;
 
-                DoMeleeAttackIfReady();
-        }
+            if(!me->FindNearestCreature(34461, 200, true)
+                    && !me->FindNearestCreature(34460, 200, true)
+                    && !me->FindNearestCreature(34469, 200, true)
+                    && !me->FindNearestCreature(34467, 200, true)
+                    && !me->FindNearestCreature(34468, 200, true)
+                    && !me->FindNearestCreature(34465, 200, true)
+                    && !me->FindNearestCreature(34471, 200, true)
+                    && !me->FindNearestCreature(34466, 200, true)
+                    && !me->FindNearestCreature(34473, 200, true)
+                    && !me->FindNearestCreature(34472, 200, true)
+                    && !me->FindNearestCreature(34463, 200, true)
+                    && !me->FindNearestCreature(34470, 200, true)
+                    && !me->FindNearestCreature(34474, 200, true)
+                    && !me->FindNearestCreature(34475, 200, true))
+                    {
+                    m_pInstance->SetData(PHASE_5, DONE);
+                    }
+            }
+
+            void UpdateAI(const uint32 diff)
+        {
+            if (!UpdateVictim())
+                return;
+
+                    DoMeleeAttackIfReady();
+            }
+    };
+
 };
 
-CreatureAI* GetAI_boss_tyrius_duskblade(Creature* pCreature)
-{
-    return new boss_tyrius_duskbladeAI(pCreature);
-}
 
-CreatureAI* GetAI_boss_kavina_grovesong(Creature* pCreature)
-{
-    return new boss_kavina_grovesongAI(pCreature);
-}
 
-CreatureAI* GetAI_boss_melador_valestrider(Creature* pCreature)
-{
-    return new boss_melador_valestriderAI(pCreature);
-}
 
-CreatureAI* GetAI_boss_alyssia_moonstalker(Creature* pCreature)
-{
-    return new boss_alyssia_moonstalkerAI(pCreature);
-}
 
-CreatureAI* GetAI_boss_noozle_whizzlestick(Creature* pCreature)
-{
-    return new boss_noozle_whizzlestickAI(pCreature);
-}
 
-CreatureAI* GetAI_boss_velanaa(Creature* pCreature)
-{
-    return new boss_velanaaAI(pCreature);
-}
 
-CreatureAI* GetAI_boss_baelnor_lightbearer(Creature* pCreature)
-{
-    return new boss_baelnor_lightbearerAI(pCreature);
-}
 
-CreatureAI* GetAI_boss_anthar_forgemender(Creature* pCreature)
-{
-    return new boss_anthar_forgemenderAI(pCreature);
-}
 
-CreatureAI* GetAI_boss_brienna_nightfell(Creature* pCreature)
-{
-    return new boss_brienna_nightfellAI(pCreature);
-}
 
-CreatureAI* GetAI_boss_irieth_shadowstepe(Creature* pCreature)
-{
-    return new boss_irieth_shadowstepeAI(pCreature);
-}
 
-CreatureAI* GetAI_boss_shaabad(Creature* pCreature)
-{
-    return new boss_shaabadAI(pCreature);
-}
 
-CreatureAI* GetAI_boss_saamul(Creature* pCreature)
-{
-    return new boss_saamulAI(pCreature);
-}
 
-CreatureAI* GetAI_boss_serissa_grimdabbler(Creature* pCreature)
-{
-    return new boss_serissa_grimdabblerAI(pCreature);
-}
 
-CreatureAI* GetAI_boss_shocuul(Creature* pCreature)
-{
-    return new boss_shocuulAI(pCreature);
-}
 
 void AddSC_boss_tc_alliance_champions()
 {
+<<<<<<< HEAD:src/server/scripts/Northrend/CrusadersColiseum/TrialOfTheCrusader/alliance_champions.cpp
     Script *newscript;
 
     newscript = new Script;
@@ -1285,3 +1384,20 @@ void AddSC_boss_tc_alliance_champions()
         newscript->GetAI = &GetAI_boss_shocuul;
     newscript->RegisterSelf();
 }
+=======
+    new boss_tyrius_duskblade();
+    new boss_kavina_grovesong();
+    new boss_melador_valestrider();
+    new boss_alyssia_moonstalker();
+    new boss_noozle_whizzlestick();
+    new boss_velanaa();
+    new boss_baelnor_lightbearer();
+    new boss_anthar_forgemender();
+    new boss_brienna_nightfell();
+    new boss_irieth_shadowstepe();
+    new boss_shaabad();
+    new boss_saamul();
+    new boss_serissa_grimdabbler();
+    new boss_shocuul();
+}
+>>>>>>> tc:src/server/scripts/Northrend/CrusadersColiseum/TrialOfTheCrusader/alliance_champions.cpp

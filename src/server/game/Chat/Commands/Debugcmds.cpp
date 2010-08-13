@@ -29,7 +29,7 @@
 #include "Unit.h"
 #include "GossipDef.h"
 #include "Language.h"
-#include "BattleGroundMgr.h"
+#include "BattlegroundMgr.h"
 #include <fstream>
 #include "ObjectMgr.h"
 #include "Cell.h"
@@ -649,13 +649,13 @@ bool ChatHandler::HandleDebugGetItemStateCommand(const char* args)
 
 bool ChatHandler::HandleDebugBattlegroundCommand(const char * /*args*/)
 {
-    sBattleGroundMgr.ToggleTesting();
+    sBattlegroundMgr.ToggleTesting();
     return true;
 }
 
 bool ChatHandler::HandleDebugArenaCommand(const char * /*args*/)
 {
-    sBattleGroundMgr.ToggleArenaTesting();
+    sBattlegroundMgr.ToggleArenaTesting();
     return true;
 }
 
@@ -777,7 +777,7 @@ bool ChatHandler::HandleDebugSpawnVehicle(const char* args)
 
     uint32 id = (uint32)atoi(i);
 
-    CreatureInfo const *ci = objmgr.GetCreatureTemplate(entry);
+    CreatureInfo const *ci = sObjectMgr.GetCreatureTemplate(entry);
 
     if (!ci)
         return false;
@@ -791,7 +791,7 @@ bool ChatHandler::HandleDebugSpawnVehicle(const char* args)
 
     Map *map = m_session->GetPlayer()->GetMap();
 
-    if (!v->Create(objmgr.GenerateLowGuid(HIGHGUID_VEHICLE), map, m_session->GetPlayer()->GetPhaseMask(), entry, id, m_session->GetPlayer()->GetTeam(), x, y, z, o))
+    if (!v->Create(sObjectMgr.GenerateLowGuid(HIGHGUID_VEHICLE), map, m_session->GetPlayer()->GetPhaseMask(), entry, id, m_session->GetPlayer()->GetTeam(), x, y, z, o))
     {
         delete v;
         return false;
@@ -896,8 +896,8 @@ bool ChatHandler::HandleDebugItemExpireCommand(const char* args)
     if (!i)
         return false;
 
-    m_session->GetPlayer()->DestroyItem(i->GetBagSlot(),i->GetSlot(), true);
-    sScriptMgr.ItemExpire(m_session->GetPlayer(),i->GetProto());
+    m_session->GetPlayer()->DestroyItem(i->GetBagSlot(), i->GetSlot(), true);
+    sScriptMgr.OnItemExpire(m_session->GetPlayer(), i->GetProto());
 
     return true;
 }

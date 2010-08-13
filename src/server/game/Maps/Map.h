@@ -39,7 +39,7 @@
 
 class Unit;
 class WorldPacket;
-class InstanceData;
+class InstanceScript;
 class Group;
 class InstanceSave;
 class Object;
@@ -50,7 +50,7 @@ class CreatureGroup;
 struct ScriptInfo;
 struct ScriptAction;
 struct Position;
-class BattleGround;
+class Battleground;
 class MapInstanced;
 class InstanceMap;
 
@@ -212,7 +212,6 @@ struct InstanceTemplate
 {
     uint32 map;
     uint32 parent;
-    uint32 access_id;
     float startLocX;
     float startLocY;
     float startLocZ;
@@ -249,6 +248,8 @@ class Map : public GridRefManager<NGridType>
         Map(uint32 id, time_t, uint32 InstanceId, uint8 SpawnMode, Map* _parent = NULL);
         virtual ~Map();
 
+        MapEntry const* GetEntry() const { return i_mapEntry; }
+
         // currently unused for normal maps
         bool CanUnload(uint32 diff)
         {
@@ -264,13 +265,6 @@ class Map : public GridRefManager<NGridType>
         template<class T> void Remove(T *, bool);
 
         virtual void Update(const uint32&);
-
-        /*
-        void MessageBroadcast(Player *, WorldPacket *, bool to_self);
-        void MessageBroadcast(WorldObject *, WorldPacket *);
-        void MessageDistBroadcast(Player *, WorldPacket *, float dist, bool to_self, bool own_team_only = false);
-        void MessageDistBroadcast(WorldObject *, WorldPacket *, float dist);
-        */
 
         float GetVisibilityDistance() const { return m_VisibleDistance; }
         //function for setting up visibility distance for maps on per-type/per-Id basis
@@ -370,15 +364,14 @@ class Map : public GridRefManager<NGridType>
         MapDifficulty const* GetMapDifficulty() const;
 
         bool Instanceable() const { return i_mapEntry && i_mapEntry->Instanceable(); }
-        // NOTE: this duplicate of Instanceable(), but Instanceable() can be changed when BG also will be instanceable
         bool IsDungeon() const { return i_mapEntry && i_mapEntry->IsDungeon(); }
         bool IsNonRaidDungeon() const { return i_mapEntry && i_mapEntry->IsNonRaidDungeon(); }
         bool IsRaid() const { return i_mapEntry && i_mapEntry->IsRaid(); }
         bool IsRaidOrHeroicDungeon() const { return IsRaid() || i_spawnMode > DUNGEON_DIFFICULTY_NORMAL; }
         bool IsHeroic() const { return IsRaid() ? i_spawnMode >= RAID_DIFFICULTY_10MAN_HEROIC : i_spawnMode >= DUNGEON_DIFFICULTY_HEROIC; }
-        bool IsBattleGround() const { return i_mapEntry && i_mapEntry->IsBattleGround(); }
+        bool IsBattleground() const { return i_mapEntry && i_mapEntry->IsBattleground(); }
         bool IsBattleArena() const { return i_mapEntry && i_mapEntry->IsBattleArena(); }
-        bool IsBattleGroundOrArena() const { return i_mapEntry && i_mapEntry->IsBattleGroundOrArena(); }
+        bool IsBattlegroundOrArena() const { return i_mapEntry && i_mapEntry->IsBattlegroundOrArena(); }
         bool GetEntrancePos(int32 &mapid, float &x, float &y)
         {
             if (!i_mapEntry)
@@ -527,7 +520,7 @@ class Map : public GridRefManager<NGridType>
         time_t i_gridExpiry;
 
         //used for fast base_map (e.g. MapInstanced class object) search for
-        //InstanceMaps and BattleGroundMaps...
+        //InstanceMaps and BattlegroundMaps...
         Map* m_parentMap;
 
         NGridType* i_grids[MAX_NUMBER_OF_GRIDS][MAX_NUMBER_OF_GRIDS];
@@ -599,7 +592,7 @@ class InstanceMap : public Map
         void CreateInstanceData(bool load);
         bool Reset(uint8 method);
         uint32 GetScriptId() { return i_script_id; }
-        InstanceData* GetInstanceData() { return i_data; }
+        InstanceScript* GetInstanceScript() { return i_data; }
         void PermBindAllPlayers(Player *player);
         void UnloadAll();
         bool CanEnter(Player* player);
@@ -613,15 +606,15 @@ class InstanceMap : public Map
     private:
         bool m_resetAfterUnload;
         bool m_unloadWhenEmpty;
-        InstanceData* i_data;
+        InstanceScript* i_data;
         uint32 i_script_id;
 };
 
-class BattleGroundMap : public Map
+class BattlegroundMap : public Map
 {
     public:
-        BattleGroundMap(uint32 id, time_t, uint32 InstanceId, Map* _parent, uint8 spawnMode);
-        ~BattleGroundMap();
+        BattlegroundMap(uint32 id, time_t, uint32 InstanceId, Map* _parent, uint8 spawnMode);
+        ~BattlegroundMap();
 
         bool Add(Player *);
         void Remove(Player *, bool);
@@ -631,10 +624,10 @@ class BattleGroundMap : public Map
         void RemoveAllPlayers();
 
         virtual void InitVisibilityDistance();
-        BattleGround* GetBG() { return m_bg; }
-        void SetBG(BattleGround* bg) { m_bg = bg; }
+        Battleground* GetBG() { return m_bg; }
+        void SetBG(Battleground* bg) { m_bg = bg; }
     private:
-        BattleGround* m_bg;
+        Battleground* m_bg;
 };
 
 /*inline

@@ -315,34 +315,38 @@ struct boss_ignis_AI : public BossAI
         }
     }
 };
-
-CreatureAI* GetAI_boss_ignis(Creature* pCreature)
+class boss_ignis : public CreatureScript
 {
-    return new boss_ignis_AI (pCreature);
-}
+public:
+    boss_ignis() : CreatureScript("boss_ignis") { }
 
-struct mob_iron_constructAI : public ScriptedAI
-{
-    mob_iron_constructAI(Creature *c) : ScriptedAI(c)
+    CreatureAI* GetAI(Creature* pCreature)
     {
+<<<<<<< HEAD:src/server/scripts/Northrend/Ulduar/ulduar/boss_ignis.cpp
         pInstance = c->GetInstanceData();
         me->SetReactState(REACT_PASSIVE);
         me->AddAura(SPELL_FROZEN_POSITION, me);
+=======
+        return new boss_ignis_AI (pCreature);
+>>>>>>> tc:src/server/scripts/Northrend/Ulduar/ulduar/boss_ignis.cpp
     }
 
-    ScriptedInstance* pInstance;
+};
+class mob_iron_construct : public CreatureScript
+{
+public:
+    mob_iron_construct() : CreatureScript("mob_iron_construct") { }
 
-    bool Brittled;
-
-    void Reset()
+    CreatureAI* GetAI(Creature* pCreature)
     {
-        Brittled = false;
+        return new mob_iron_constructAI (pCreature);
     }
 
-    void DamageTaken(Unit *attacker, uint32 &damage)
+    struct mob_iron_constructAI : public ScriptedAI
     {
-        if (me->HasAura(SPELL_BRITTLE) && damage >= 5000)
+        mob_iron_constructAI(Creature *c) : ScriptedAI(c)
         {
+<<<<<<< HEAD:src/server/scripts/Northrend/Ulduar/ulduar/boss_ignis.cpp
             DoCastAOE(SPELL_SHATTER, true);
             if (Creature *pIgnis = me->GetCreature(*me, pInstance->GetData64(DATA_IGNIS)))
                 if (pIgnis->AI())
@@ -363,77 +367,120 @@ struct mob_iron_constructAI : public ScriptedAI
             me->AI()->DoZoneInCombat();
         }
     }
+=======
+            pInstance = c->GetInstanceData();
+            me->SetReactState(REACT_PASSIVE);
+            me->AddAura(SPELL_FROZEN_POSITION, me);
+        }
+>>>>>>> tc:src/server/scripts/Northrend/Ulduar/ulduar/boss_ignis.cpp
 
-    void UpdateAI(const uint32 uiDiff)
-    {
-        Map *cMap = me->GetMap();
+        ScriptedInstance* pInstance;
 
-        if (me->HasAura(SPELL_MOLTEN) && me->HasAura(SPELL_HEAT))
-            me->RemoveAura(SPELL_HEAT);
+        bool Brittled;
 
-        if (Aura * aur = me->GetAura((SPELL_HEAT), GetGUID()))
+        void Reset()
         {
-            if (aur->GetStackAmount() >= 10)
+            Brittled = false;
+        }
+
+        void DamageTaken(Unit *attacker, uint32 &damage)
+        {
+            if (me->HasAura(SPELL_BRITTLE) && damage >= 5000)
             {
+<<<<<<< HEAD:src/server/scripts/Northrend/Ulduar/ulduar/boss_ignis.cpp
                 me->RemoveAura(SPELL_HEAT);
                 DoCast(me, SPELL_MOLTEN, true);
                 Brittled = false;
+=======
+                DoCastAOE(SPELL_SHATTER, true);
+                if (Creature *pIgnis = me->GetCreature(*me, pInstance->GetData64(DATA_IGNIS)))
+                    if (pIgnis->AI())
+                        pIgnis->AI()->DoAction(ACTION_REMOVE_BUFF);
+                    
+                me->ForcedDespawn(1000);
+            }
+        }
+    
+        void SpellHit(Unit* caster, const SpellEntry *spell)
+        {
+            if (spell->Id == SPELL_ACTIVATE_CONSTRUCT && me->HasReactState(REACT_PASSIVE))
+            {
+                me->SetReactState(REACT_AGGRESSIVE);
+                me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PACIFIED | UNIT_FLAG_STUNNED | UNIT_FLAG_DISABLE_MOVE);
+                me->RemoveAurasDueToSpell(SPELL_FROZEN_POSITION);
+                me->AI()->AttackStart(caster->getVictim());
+                me->AI()->DoZoneInCombat();
+>>>>>>> tc:src/server/scripts/Northrend/Ulduar/ulduar/boss_ignis.cpp
             }
         }
 
-        // Water pools
-        if(cMap->GetId() == 603 && !Brittled && me->HasAura(SPELL_MOLTEN))
-            if (me->GetDistance(WATER_1_X, WATER_Y, WATER_Z) <= 18 || me->GetDistance(WATER_2_X, WATER_Y, WATER_Z) <= 18)
+        void UpdateAI(const uint32 uiDiff)
+        {
+            Map *cMap = me->GetMap();
+
+            if (me->HasAura(SPELL_MOLTEN) && me->HasAura(SPELL_HEAT))
+                me->RemoveAura(SPELL_HEAT);
+
+            if (Aura * aur = me->GetAura((SPELL_HEAT), GetGUID()))
             {
+<<<<<<< HEAD:src/server/scripts/Northrend/Ulduar/ulduar/boss_ignis.cpp
                 me->AddAura(SPELL_BRITTLE, me);
                 me->RemoveAura(SPELL_MOLTEN);
                 Brittled = true;
+=======
+                if (aur->GetStackAmount() >= 10)
+                {
+                    me->RemoveAura(SPELL_HEAT);
+                    DoCast(me, SPELL_MOLTEN, true);
+                    Brittled = false;
+                }
+>>>>>>> tc:src/server/scripts/Northrend/Ulduar/ulduar/boss_ignis.cpp
             }
 
-        DoMeleeAttackIfReady();
-    }
+            // Water pools
+            if(cMap->GetId() == 603 && !Brittled && me->HasAura(SPELL_MOLTEN))
+                if (me->GetDistance(WATER_1_X, WATER_Y, WATER_Z) <= 18 || me->GetDistance(WATER_2_X, WATER_Y, WATER_Z) <= 18)
+                {
+                    me->AddAura(SPELL_BRITTLE, me);
+                    me->RemoveAura(SPELL_MOLTEN);
+                    Brittled = true;
+                }
+
+            DoMeleeAttackIfReady();
+        }
+    };
+
 };
 
-CreatureAI* GetAI_mob_iron_construct(Creature* pCreature)
+class mob_scorch_ground : public CreatureScript
 {
-    return new mob_iron_constructAI (pCreature);
-}
+public:
+    mob_scorch_ground() : CreatureScript("mob_scorch_ground") { }
 
-struct mob_scorch_groundAI : public ScriptedAI
-{
-    mob_scorch_groundAI(Creature* pCreature) : ScriptedAI(pCreature)
+    CreatureAI* GetAI(Creature* pCreature)
     {
-        me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE | UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_PACIFIED);
+        return new mob_scorch_groundAI(pCreature);
     }
 
-    void Reset()
+    struct mob_scorch_groundAI : public ScriptedAI
     {
-        DoCast(me, RAID_MODE(SPELL_GROUND_10, SPELL_GROUND_25));
-    }
+        mob_scorch_groundAI(Creature* pCreature) : ScriptedAI(pCreature)
+        {
+            me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE | UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_PACIFIED);
+        }
+
+        void Reset()
+        {
+            DoCast(me, RAID_MODE(SPELL_GROUND_10, SPELL_GROUND_25));
+        }
+    };
+
 };
 
-CreatureAI* GetAI_mob_scorch_ground(Creature* pCreature)
-{
-    return new mob_scorch_groundAI(pCreature);
-}
 
 void AddSC_boss_ignis()
 {
-    Script *newscript;
-
-    newscript = new Script;
-    newscript->Name = "boss_ignis";
-    newscript->GetAI = &GetAI_boss_ignis;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "mob_iron_construct";
-    newscript->GetAI = &GetAI_mob_iron_construct;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "mob_scorch_ground";
-    newscript->GetAI = &GetAI_mob_scorch_ground;
-    newscript->RegisterSelf();
-
+    new boss_ignis();
+    new mob_iron_construct();
+    new mob_scorch_ground();
 }

@@ -13,17 +13,19 @@
 file(GLOB_RECURSE sources_authentication Authentication/*.cpp Authentication/*.h)
 file(GLOB_RECURSE sources_realms Realms/*.cpp Realms/*.h)
 file(GLOB_RECURSE sources_server Server/*.cpp Server/*.h)
+file(GLOB sources_localdir *.cpp *.h)
 
 set(authserver_SRCS
   ${sources_authentication}
   ${sources_realms}
   ${sources_server}
-  Main.cpp
+  ${sources_localdir}
 )
 
 if( WIN32 )
 set(authserver_SRCS
     ${authserver_SRCS}
+    ${sources_Debugging}
     authserver.rc
 )
 endif()
@@ -52,7 +54,7 @@ add_executable(authserver
   ${authserver_SRCS}
 )
 
-add_dependencies(authserver revision.h)
+add_dependencies(authserver genrev)
 
 if( NOT WIN32 )
   add_definitions(-D_TRINITY_REALM_CONFIG='"${CONF_DIR}/authserver.conf"')
@@ -86,7 +88,17 @@ else()
   )
 endif()
 
+if( WIN32 )
+  add_custom_command(TARGET authserver
+    POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/authserver.conf.dist ${CMAKE_BINARY_DIR}/bin/$(ConfigurationName)/
+  )
+endif()
+
 if( UNIX )
   install(TARGETS authserver DESTINATION bin)
   install(FILES  authserver.conf.dist DESTINATION etc)
+elseif( WIN32 )
+  install(TARGETS authserver DESTINATION "${CMAKE_INSTALL_PREFIX}")
+  install(FILES authserver.conf.dist DESTINATION "${CMAKE_INSTALL_PREFIX}")
 endif()

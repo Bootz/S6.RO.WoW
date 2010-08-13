@@ -30,43 +30,52 @@ enum eAgnetta
     QUEST_ITS_THAT_YOUR_GOBLIN      = 12969,
     FACTION_HOSTILE_AT1             = 45
 };
-
-struct npc_agnetta_tyrsdottarAI : public ScriptedAI
+class npc_agnetta_tyrsdottar : public CreatureScript
 {
-    npc_agnetta_tyrsdottarAI(Creature* pCreature) : ScriptedAI(pCreature) { }
+public:
+    npc_agnetta_tyrsdottar() : CreatureScript("npc_agnetta_tyrsdottar") { }
 
-    void Reset()
+    bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
     {
-        me->RestoreFaction();
+        if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
+        {
+            DoScriptText(SAY_AGGRO, pCreature);
+            pPlayer->CLOSE_GOSSIP_MENU();
+            pCreature->setFaction(FACTION_HOSTILE_AT1);
+            pCreature->AI()->AttackStart(pPlayer);
+        }
+
+        return true;
     }
+
+    bool GossipHello(Player* pPlayer, Creature* pCreature)
+    {
+        if (pPlayer->GetQuestStatus(QUEST_ITS_THAT_YOUR_GOBLIN) == QUEST_STATUS_INCOMPLETE)
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_AGNETTA, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+
+        pPlayer->SEND_GOSSIP_MENU(13691, pCreature->GetGUID());
+        return true;
+    }
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new npc_agnetta_tyrsdottarAI(pCreature);
+    }
+
+    struct npc_agnetta_tyrsdottarAI : public ScriptedAI
+    {
+        npc_agnetta_tyrsdottarAI(Creature* pCreature) : ScriptedAI(pCreature) { }
+
+        void Reset()
+        {
+            me->RestoreFaction();
+        }
+    };
+
 };
 
-CreatureAI* GetAI_npc_agnetta_tyrsdottar(Creature* pCreature)
-{
-    return new npc_agnetta_tyrsdottarAI(pCreature);
-}
 
-bool GossipHello_npc_agnetta_tyrsdottar(Player* pPlayer, Creature* pCreature)
-{
-    if (pPlayer->GetQuestStatus(QUEST_ITS_THAT_YOUR_GOBLIN) == QUEST_STATUS_INCOMPLETE)
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_AGNETTA, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
-    pPlayer->SEND_GOSSIP_MENU(13691, pCreature->GetGUID());
-    return true;
-}
-
-bool GossipSelect_npc_agnetta_tyrsdottar(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
-{
-    if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
-    {
-        DoScriptText(SAY_AGGRO, pCreature);
-        pPlayer->CLOSE_GOSSIP_MENU();
-        pCreature->setFaction(FACTION_HOSTILE_AT1);
-        pCreature->AI()->AttackStart(pPlayer);
-    }
-
-    return true;
-}
 
 /*######
 ## npc_frostborn_scout
@@ -80,39 +89,46 @@ enum eFrostbornScout
 {
     QUEST_MISSING_SCOUTS  =  12864
 };
-
-bool GossipHello_npc_frostborn_scout(Player* pPlayer, Creature* pCreature)
+class npc_frostborn_scout : public CreatureScript
 {
+public:
+    npc_frostborn_scout() : CreatureScript("npc_frostborn_scout") { }
 
-    if (pPlayer->GetQuestStatus(QUEST_MISSING_SCOUTS) == QUEST_STATUS_INCOMPLETE)
+    bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
     {
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-        pPlayer->PlayerTalkClass->SendGossipMenu(13611, pCreature->GetGUID());
+        switch (uiAction)
+        {
+        case GOSSIP_ACTION_INFO_DEF+1:
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
+            pPlayer->PlayerTalkClass->SendGossipMenu(13612, pCreature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+2:
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
+            pPlayer->PlayerTalkClass->SendGossipMenu(13613, pCreature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+3:
+            pPlayer->PlayerTalkClass->SendGossipMenu(13614, pCreature->GetGUID());
+            pPlayer->AreaExploredOrEventHappens(QUEST_MISSING_SCOUTS);
+            break;
+        }
+
+        return true;
     }
 
-    return true;
-}
-
-bool GossipSelect_npc_frostborn_scout(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
-{
-    switch (uiAction)
+    bool GossipHello(Player* pPlayer, Creature* pCreature)
     {
-    case GOSSIP_ACTION_INFO_DEF+1:
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
-        pPlayer->PlayerTalkClass->SendGossipMenu(13612, pCreature->GetGUID());
-        break;
-    case GOSSIP_ACTION_INFO_DEF+2:
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
-        pPlayer->PlayerTalkClass->SendGossipMenu(13613, pCreature->GetGUID());
-        break;
-    case GOSSIP_ACTION_INFO_DEF+3:
-        pPlayer->PlayerTalkClass->SendGossipMenu(13614, pCreature->GetGUID());
-        pPlayer->AreaExploredOrEventHappens(QUEST_MISSING_SCOUTS);
-        break;
+
+        if (pPlayer->GetQuestStatus(QUEST_MISSING_SCOUTS) == QUEST_STATUS_INCOMPLETE)
+        {
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+            pPlayer->PlayerTalkClass->SendGossipMenu(13611, pCreature->GetGUID());
+        }
+
+        return true;
     }
 
-    return true;
-}
+};
+
 
 /*######
 ## npc_thorim
@@ -132,43 +148,50 @@ enum eThorim
     GOSSIP_TEXTID_THORIM3 = 13802,
     GOSSIP_TEXTID_THORIM4 = 13803
 };
-
-bool GossipHello_npc_thorim(Player* pPlayer, Creature* pCreature)
+class npc_thorim : public CreatureScript
 {
-    if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+public:
+    npc_thorim() : CreatureScript("npc_thorim") { }
 
-    if (pPlayer->GetQuestStatus(QUEST_SIBLING_RIVALRY) == QUEST_STATUS_INCOMPLETE) {
-        pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_HN, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-        pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_THORIM1, pCreature->GetGUID());
+    bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+    {
+        switch (uiAction)
+        {
+            case GOSSIP_ACTION_INFO_DEF+1:
+                pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_SN1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
+                pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_THORIM2, pCreature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF+2:
+                pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_SN2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
+                pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_THORIM3, pCreature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF+3:
+                pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_SN3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+4);
+                pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_THORIM4, pCreature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF+4:
+                pPlayer->CLOSE_GOSSIP_MENU();
+                pPlayer->CompleteQuest(QUEST_SIBLING_RIVALRY);
+                break;
+        }
         return true;
     }
-    return false;
-}
 
-bool GossipSelect_npc_thorim(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
-{
-    switch (uiAction)
+    bool GossipHello(Player* pPlayer, Creature* pCreature)
     {
-        case GOSSIP_ACTION_INFO_DEF+1:
-            pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_SN1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
-            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_THORIM2, pCreature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+2:
-            pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_SN2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
-            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_THORIM3, pCreature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+3:
-            pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_SN3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+4);
-            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_THORIM4, pCreature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+4:
-            pPlayer->CLOSE_GOSSIP_MENU();
-            pPlayer->CompleteQuest(QUEST_SIBLING_RIVALRY);
-            break;
+        if (pCreature->isQuestGiver())
+            pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+
+        if (pPlayer->GetQuestStatus(QUEST_SIBLING_RIVALRY) == QUEST_STATUS_INCOMPLETE) {
+            pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_HN, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_THORIM1, pCreature->GetGUID());
+            return true;
+        }
+        return false;
     }
-    return true;
-}
+
+};
+
 
 /*######
 ## npc_goblin_prisoner
@@ -178,28 +201,35 @@ enum eGoblinPrisoner
 {
     GO_RUSTY_CAGE = 191544
 };
-
-struct npc_goblin_prisonerAI : public ScriptedAI
+class npc_goblin_prisoner : public CreatureScript
 {
-    npc_goblin_prisonerAI(Creature* pCreature) : ScriptedAI (pCreature){}
+public:
+    npc_goblin_prisoner() : CreatureScript("npc_goblin_prisoner") { }
 
-    void Reset()
+    CreatureAI* GetAI(Creature* pCreature)
     {
-        me->SetReactState(REACT_PASSIVE);
-
-        if (GameObject* pGO = me->FindNearestGameObject(GO_RUSTY_CAGE,5.0f))
-        {
-            if (pGO->GetGoState() == GO_STATE_ACTIVE)
-                pGO->SetGoState(GO_STATE_READY);
-        }
+        return new npc_goblin_prisonerAI(pCreature);
     }
+
+    struct npc_goblin_prisonerAI : public ScriptedAI
+    {
+        npc_goblin_prisonerAI(Creature* pCreature) : ScriptedAI (pCreature){}
+
+        void Reset()
+        {
+            me->SetReactState(REACT_PASSIVE);
+
+            if (GameObject* pGO = me->FindNearestGameObject(GO_RUSTY_CAGE,5.0f))
+            {
+                if (pGO->GetGoState() == GO_STATE_ACTIVE)
+                    pGO->SetGoState(GO_STATE_READY);
+            }
+        }
+
+    };
 
 };
 
-CreatureAI* GetAI_npc_goblin_prisoner(Creature* pCreature)
-{
-    return new npc_goblin_prisonerAI(pCreature);
-}
 
 /*######
 ## npc_victorious_challenger
@@ -215,81 +245,90 @@ enum eVictoriousChallenger
     SPELL_SUNDER_ARMOR              = 11971,
     SPELL_REND_VC                   = 11977
 };
-
-struct npc_victorious_challengerAI : public ScriptedAI
+class npc_victorious_challenger : public CreatureScript
 {
-    npc_victorious_challengerAI(Creature* pCreature) : ScriptedAI(pCreature) {}
+public:
+    npc_victorious_challenger() : CreatureScript("npc_victorious_challenger") { }
 
-    uint32 SunderArmorTimer;
-    uint32 RendTimer;
-
-    void Reset()
+    bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
     {
-        me->RestoreFaction();
-
-        SunderArmorTimer = 10000;
-        RendTimer        = 15000;
-    }
-
-    void UpdateAI(const uint32 diff)
-    {
-        //Return since we have no target
-        if (!UpdateVictim())
-            return;
-
-        if (RendTimer < diff)
+        if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
         {
-            DoCast(me->getVictim(), SPELL_REND_VC, true);
-            RendTimer = 15000;
-        }else RendTimer -= diff;
+            pPlayer->CLOSE_GOSSIP_MENU();
+            pCreature->setFaction(14);
+            pCreature->AI()->AttackStart(pPlayer);
+        }
 
-        if (SunderArmorTimer < diff)
-        {
-            DoCast(me->getVictim(), SPELL_SUNDER_ARMOR, true);
-            SunderArmorTimer = 10000;
-        }else SunderArmorTimer -= diff;
-
-        DoMeleeAttackIfReady();
-    }
-
-    void KilledUnit(Unit* /*victim*/)
-    {
-        me->RestoreFaction();
-    }
-
-};
-
-bool GossipHello_npc_victorious_challenger(Player* pPlayer, Creature* pCreature)
-{
-    if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
-
-    if (pPlayer->GetQuestStatus(QUEST_TAKING_ALL_CHALLENGERS) == QUEST_STATUS_INCOMPLETE || pPlayer->GetQuestStatus(QUEST_DEFENDING_YOUR_TITLE) == QUEST_STATUS_INCOMPLETE)
-    {
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_CHALLENGER, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-        pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
         return true;
     }
 
-    return false;
-}
-
-bool GossipSelect_npc_victorious_challenger(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
-{
-    if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
+    bool GossipHello(Player* pPlayer, Creature* pCreature)
     {
-        pPlayer->CLOSE_GOSSIP_MENU();
-        pCreature->setFaction(14);
-        pCreature->AI()->AttackStart(pPlayer);
+        if (pCreature->isQuestGiver())
+            pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+
+        if (pPlayer->GetQuestStatus(QUEST_TAKING_ALL_CHALLENGERS) == QUEST_STATUS_INCOMPLETE || pPlayer->GetQuestStatus(QUEST_DEFENDING_YOUR_TITLE) == QUEST_STATUS_INCOMPLETE)
+        {
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_CHALLENGER, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+            pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
+            return true;
+        }
+
+        return false;
     }
 
-    return true;
-}
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new npc_victorious_challengerAI(pCreature);
+    }
 
-CreatureAI* GetAI_npc_victorious_challenger(Creature* pCreature)
-{
-    return new npc_victorious_challengerAI(pCreature);
-}
+    struct npc_victorious_challengerAI : public ScriptedAI
+    {
+        npc_victorious_challengerAI(Creature* pCreature) : ScriptedAI(pCreature) {}
+
+        uint32 SunderArmorTimer;
+        uint32 RendTimer;
+
+        void Reset()
+        {
+            me->RestoreFaction();
+
+            SunderArmorTimer = 10000;
+            RendTimer        = 15000;
+        }
+
+        void UpdateAI(const uint32 diff)
+        {
+            //Return since we have no target
+            if (!UpdateVictim())
+                return;
+
+            if (RendTimer < diff)
+            {
+                DoCast(me->getVictim(), SPELL_REND_VC, true);
+                RendTimer = 15000;
+            }else RendTimer -= diff;
+
+            if (SunderArmorTimer < diff)
+            {
+                DoCast(me->getVictim(), SPELL_SUNDER_ARMOR, true);
+                SunderArmorTimer = 10000;
+            }else SunderArmorTimer -= diff;
+
+            DoMeleeAttackIfReady();
+        }
+
+        void KilledUnit(Unit* /*victim*/)
+        {
+            me->RestoreFaction();
+        }
+
+    };
+
+};
+
+
+
 
 /*######
 ## npc_loklira_crone
@@ -308,44 +347,51 @@ enum eLokliraCrone
     GOSSIP_TEXTID_LOK2  = 13779,
     GOSSIP_TEXTID_LOK3  = 13780
 };
-
-bool GossipHello_npc_loklira_crone(Player* pPlayer, Creature* pCreature)
+class npc_loklira_crone : public CreatureScript
 {
-    if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+public:
+    npc_loklira_crone() : CreatureScript("npc_loklira_crone") { }
 
-    if (pPlayer->GetQuestStatus(QUEST_HYLDSMEET) == QUEST_STATUS_INCOMPLETE)
+    bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
     {
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_LOKLIRACRONE, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-        pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
+        switch (uiAction)
+        {
+            case GOSSIP_ACTION_INFO_DEF+1:
+                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_LOKLIRACRONE1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
+                pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_LOK1, pCreature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF+2:
+                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_LOKLIRACRONE2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
+                pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_LOK2, pCreature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF+3:
+                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_LOKLIRACRONE3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+4);
+                pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_LOK3, pCreature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF+4:
+                pPlayer->CLOSE_GOSSIP_MENU();
+                pPlayer->CompleteQuest(QUEST_HYLDSMEET);
+                break;
+        }
         return true;
     }
-    return false;
-}
 
-bool GossipSelect_npc_loklira_crone(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
-{
-    switch (uiAction)
+    bool GossipHello(Player* pPlayer, Creature* pCreature)
     {
-        case GOSSIP_ACTION_INFO_DEF+1:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_LOKLIRACRONE1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
-            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_LOK1, pCreature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+2:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_LOKLIRACRONE2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
-            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_LOK2, pCreature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+3:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_LOKLIRACRONE3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+4);
-            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_LOK3, pCreature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+4:
-            pPlayer->CLOSE_GOSSIP_MENU();
-            pPlayer->CompleteQuest(QUEST_HYLDSMEET);
-            break;
+        if (pCreature->isQuestGiver())
+            pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+
+        if (pPlayer->GetQuestStatus(QUEST_HYLDSMEET) == QUEST_STATUS_INCOMPLETE)
+        {
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_LOKLIRACRONE, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+            pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
+            return true;
+        }
+        return false;
     }
-    return true;
-}
+
+};
+
 
 /////////////////////
 ///npc_injured_goblin
@@ -359,85 +405,95 @@ enum eInjuredGoblin
 };
 
 #define GOSSIP_ITEM_1       "I am ready, lets get you out of here"
-
-struct npc_injured_goblinAI : public npc_escortAI
+class npc_injured_goblin : public CreatureScript
 {
-    npc_injured_goblinAI(Creature* pCreature) : npc_escortAI(pCreature) { }
+public:
+    npc_injured_goblin() : CreatureScript("npc_injured_goblin") { }
 
-    void WaypointReached(uint32 i)
+    bool QuestAccept(Player* /*pPlayer*/, Creature* pCreature, Quest const *quest)
     {
-        Player* pPlayer = GetPlayerForEscort();
-        switch (i)
+        if (quest->GetQuestId() == QUEST_BITTER_DEPARTURE)
+            DoScriptText(SAY_QUEST_ACCEPT, pCreature);
+
+        return false;
+    }
+
+    bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+    {
+        npc_escortAI* pEscortAI = CAST_AI(npc_injured_goblinAI, pCreature->AI());
+
+        if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
         {
-        case 26:
-            DoScriptText(SAY_END_WP_REACHED, me, pPlayer);
-            break;
-        case 27:
-            if (pPlayer)
-                pPlayer->GroupEventHappens(QUEST_BITTER_DEPARTURE, me);
-            break;
+            pEscortAI->Start(true, true, pPlayer->GetGUID());
+            pCreature->setFaction(113);
         }
+        return true;
     }
 
-    void EnterCombat(Unit* /*pWho*/) {}
-
-    void Reset() {}
-
-    void JustDied(Unit* /*pKiller*/)
+    bool GossipHello(Player* pPlayer, Creature* pCreature)
     {
-        Player* pPlayer = GetPlayerForEscort();
-        if (HasEscortState(STATE_ESCORT_ESCORTING) && pPlayer)
-            pPlayer->FailQuest(QUEST_BITTER_DEPARTURE);
+        if (pCreature->isQuestGiver())
+            pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+
+        if (pPlayer->GetQuestStatus(QUEST_BITTER_DEPARTURE) == QUEST_STATUS_INCOMPLETE)
+        {
+            pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+            pPlayer->PlayerTalkClass->SendGossipMenu(9999999, pCreature->GetGUID());
+        }
+        else
+            pPlayer->SEND_GOSSIP_MENU(999999, pCreature->GetGUID());
+        return true;
     }
 
-   void UpdateAI(const uint32 uiDiff)
+    CreatureAI* GetAI(Creature* pCreature)
     {
-        npc_escortAI::UpdateAI(uiDiff);
-        if (!UpdateVictim())
-            return;
-        DoMeleeAttackIfReady();
+        return new npc_injured_goblinAI(pCreature);
     }
+
+    struct npc_injured_goblinAI : public npc_escortAI
+    {
+        npc_injured_goblinAI(Creature* pCreature) : npc_escortAI(pCreature) { }
+
+        void WaypointReached(uint32 i)
+        {
+            Player* pPlayer = GetPlayerForEscort();
+            switch (i)
+            {
+            case 26:
+                DoScriptText(SAY_END_WP_REACHED, me, pPlayer);
+                break;
+            case 27:
+                if (pPlayer)
+                    pPlayer->GroupEventHappens(QUEST_BITTER_DEPARTURE, me);
+                break;
+            }
+        }
+
+        void EnterCombat(Unit* /*pWho*/) {}
+
+        void Reset() {}
+
+        void JustDied(Unit* /*pKiller*/)
+        {
+            Player* pPlayer = GetPlayerForEscort();
+            if (HasEscortState(STATE_ESCORT_ESCORTING) && pPlayer)
+                pPlayer->FailQuest(QUEST_BITTER_DEPARTURE);
+        }
+
+       void UpdateAI(const uint32 uiDiff)
+        {
+            npc_escortAI::UpdateAI(uiDiff);
+            if (!UpdateVictim())
+                return;
+            DoMeleeAttackIfReady();
+        }
+    };
+
 };
 
-CreatureAI* GetAI_npc_injured_goblin(Creature* pCreature)
-{
-    return new npc_injured_goblinAI(pCreature);
-}
 
-bool GossipHello_npc_injured_goblin(Player* pPlayer, Creature* pCreature)
-{
-    if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
 
-    if (pPlayer->GetQuestStatus(QUEST_BITTER_DEPARTURE) == QUEST_STATUS_INCOMPLETE)
-    {
-        pPlayer->ADD_GOSSIP_ITEM(0, GOSSIP_ITEM_1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-        pPlayer->PlayerTalkClass->SendGossipMenu(9999999, pCreature->GetGUID());
-    }
-    else
-        pPlayer->SEND_GOSSIP_MENU(999999, pCreature->GetGUID());
-    return true;
-}
 
-bool QuestAccept_npc_injured_goblin(Player* /*pPlayer*/, Creature* pCreature, Quest const *quest)
-{
-    if (quest->GetQuestId() == QUEST_BITTER_DEPARTURE)
-        DoScriptText(SAY_QUEST_ACCEPT, pCreature);
-
-    return false;
-}
-
-bool GossipSelect_npc_injured_goblin(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
-{
-    npc_escortAI* pEscortAI = CAST_AI(npc_injured_goblinAI, pCreature->AI());
-
-    if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
-    {
-        pEscortAI->Start(true, true, pPlayer->GetGUID());
-        pCreature->setFaction(113);
-    }
-    return true;
-}
 
 /*######
 ## npc_roxi_ramrocket
@@ -445,92 +501,55 @@ bool GossipSelect_npc_injured_goblin(Player* pPlayer, Creature* pCreature, uint3
 
 #define SPELL_MECHANO_HOG           60866
 #define SPELL_MEKGINEERS_CHOPPER    60867
-
-bool GossipHello_npc_roxi_ramrocket(Player* pPlayer, Creature* pCreature)
+class npc_roxi_ramrocket : public CreatureScript
 {
-    //Quest Menu
-    if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+public:
+    npc_roxi_ramrocket() : CreatureScript("npc_roxi_ramrocket") { }
 
-    //Trainer Menu
-    if( pCreature->isTrainer() )
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, GOSSIP_TEXT_TRAIN, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRAIN);
-
-    //Vendor Menu
-    if( pCreature->isVendor() )
-        if(pPlayer->HasSpell(SPELL_MECHANO_HOG) || pPlayer->HasSpell(SPELL_MEKGINEERS_CHOPPER))
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, GOSSIP_TEXT_BROWSE_GOODS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
-
-    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
-    return true;
-}
-
-bool GossipSelect_npc_roxi_ramrocket(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action )
-{
-    switch(action)
+    bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action )
     {
-    case GOSSIP_ACTION_TRAIN:
-        pPlayer->SEND_TRAINERLIST( pCreature->GetGUID() );
-        break;
-    case GOSSIP_ACTION_TRADE:
-        pPlayer->SEND_VENDORLIST( pCreature->GetGUID() );
-        break;
+        switch(action)
+        {
+        case GOSSIP_ACTION_TRAIN:
+            pPlayer->SEND_TRAINERLIST( pCreature->GetGUID() );
+            break;
+        case GOSSIP_ACTION_TRADE:
+            pPlayer->SEND_VENDORLIST( pCreature->GetGUID() );
+            break;
+        }
+        return true;
     }
-    return true;
-}
+
+    bool GossipHello(Player* pPlayer, Creature* pCreature)
+    {
+        //Quest Menu
+        if (pCreature->isQuestGiver())
+            pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+
+        //Trainer Menu
+        if( pCreature->isTrainer() )
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_TRAINER, GOSSIP_TEXT_TRAIN, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRAIN);
+
+        //Vendor Menu
+        if( pCreature->isVendor() )
+            if(pPlayer->HasSpell(SPELL_MECHANO_HOG) || pPlayer->HasSpell(SPELL_MEKGINEERS_CHOPPER))
+                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, GOSSIP_TEXT_BROWSE_GOODS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
+
+        pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
+        return true;
+    }
+
+};
+
 
 void AddSC_storm_peaks()
 {
-    Script* newscript;
-
-    newscript = new Script;
-    newscript->Name = "npc_agnetta_tyrsdottar";
-    newscript->GetAI = &GetAI_npc_agnetta_tyrsdottar;
-    newscript->pGossipHello = &GossipHello_npc_agnetta_tyrsdottar;
-    newscript->pGossipSelect = &GossipSelect_npc_agnetta_tyrsdottar;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_frostborn_scout";
-    newscript->pGossipHello = &GossipHello_npc_frostborn_scout;
-    newscript->pGossipSelect = &GossipSelect_npc_frostborn_scout;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_thorim";
-    newscript->pGossipHello = &GossipHello_npc_thorim;
-    newscript->pGossipSelect = &GossipSelect_npc_thorim;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_goblin_prisoner";
-    newscript->GetAI = &GetAI_npc_goblin_prisoner;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_victorious_challenger";
-    newscript->GetAI = &GetAI_npc_victorious_challenger;
-    newscript->pGossipHello = &GossipHello_npc_victorious_challenger;
-    newscript->pGossipSelect = &GossipSelect_npc_victorious_challenger;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_loklira_crone";
-    newscript->pGossipHello = &GossipHello_npc_loklira_crone;
-    newscript->pGossipSelect = &GossipSelect_npc_loklira_crone;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_injured_goblin";
-    newscript->GetAI = &GetAI_npc_injured_goblin;
-    newscript->pGossipHello = &GossipHello_npc_injured_goblin;
-    newscript->pGossipSelect = &GossipSelect_npc_injured_goblin;
-    newscript->pQuestAccept =  &QuestAccept_npc_injured_goblin;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_roxi_ramrocket";
-    newscript->pGossipHello = &GossipHello_npc_roxi_ramrocket;
-    newscript->pGossipSelect = &GossipSelect_npc_roxi_ramrocket;
-    newscript->RegisterSelf();
+    new npc_agnetta_tyrsdottar();
+    new npc_frostborn_scout();
+    new npc_thorim();
+    new npc_goblin_prisoner();
+    new npc_victorious_challenger();
+    new npc_loklira_crone();
+    new npc_injured_goblin();
+    new npc_roxi_ramrocket();
 }

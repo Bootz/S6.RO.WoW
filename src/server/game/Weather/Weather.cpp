@@ -29,9 +29,11 @@
 #include "Log.h"
 #include "ObjectMgr.h"
 #include "Util.h"
+#include "ScriptMgr.h"
 
 /// Create the Weather object
-Weather::Weather(uint32 zone, WeatherZoneChances const* weatherChances) : m_zone(zone), m_weatherChances(weatherChances)
+Weather::Weather(uint32 zone, WeatherData const* weatherChances)
+    : m_zone(zone), m_weatherChances(weatherChances)
 {
     m_timer.SetInterval(sWorld.getConfig(CONFIG_INTERVAL_CHANGEWEATHER));
     m_type = WEATHER_TYPE_FINE;
@@ -45,7 +47,8 @@ bool Weather::Update(uint32 diff)
 {
     if (m_timer.GetCurrent() >= 0)
         m_timer.Update(diff);
-    else m_timer.SetCurrent(0);
+    else
+        m_timer.SetCurrent(0);
 
     ///- If the timer has passed, ReGenerate the weather
     if (m_timer.Passed())
@@ -59,6 +62,8 @@ bool Weather::Update(uint32 diff)
                 return false;
         }
     }
+
+    sScriptMgr.OnWeatherUpdate(this, diff);
     return true;
 }
 
@@ -265,6 +270,7 @@ bool Weather::UpdateWeather()
     }
     sLog.outDetail("Change the weather of zone %u to %s.", m_zone, wthstr);
 
+    sScriptMgr.OnWeatherChange(this, state, m_grade);
     return true;
 }
 

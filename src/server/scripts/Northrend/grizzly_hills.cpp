@@ -56,68 +56,75 @@ enum eEnums
     QUEST_CHILDREN_OF_URSOC     = 12247,
     QUEST_THE_BEAR_GODS_OFFSPRING        = 12231
 };
-
-bool GossipHello_npc_orsonn_and_kodian(Player* pPlayer, Creature* pCreature)
+class npc_orsonn_and_kodian : public CreatureScript
 {
-    if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+public:
+    npc_orsonn_and_kodian() : CreatureScript("npc_orsonn_and_kodian") { }
 
-    if (pPlayer->GetQuestStatus(QUEST_CHILDREN_OF_URSOC) == QUEST_STATUS_INCOMPLETE || pPlayer->GetQuestStatus(QUEST_THE_BEAR_GODS_OFFSPRING) == QUEST_STATUS_INCOMPLETE)
+    bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
     {
-        switch(pCreature->GetEntry())
+        switch(uiAction)
         {
-            case NPC_ORSONN:
-                if (!pPlayer->GetReqKillOrCastCurrentCount(QUEST_CHILDREN_OF_URSOC, NPC_ORSONN_CREDIT) || !pPlayer->GetReqKillOrCastCurrentCount(QUEST_THE_BEAR_GODS_OFFSPRING, NPC_ORSONN_CREDIT))
-                {
-                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-                    pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_ORSONN1, pCreature->GetGUID());
-                    return true;
-                }
+            case GOSSIP_ACTION_INFO_DEF+1:
+                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+                pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_ORSONN2, pCreature->GetGUID());
                 break;
-            case NPC_KODIAN:
-                if (!pPlayer->GetReqKillOrCastCurrentCount(QUEST_CHILDREN_OF_URSOC, NPC_KODIAN_CREDIT) || !pPlayer->GetReqKillOrCastCurrentCount(QUEST_THE_BEAR_GODS_OFFSPRING, NPC_KODIAN_CREDIT))
-                {
-                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM4, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+4);
-                    pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_KODIAN1, pCreature->GetGUID());
-                    return true;
-                }
+            case GOSSIP_ACTION_INFO_DEF+2:
+                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+                pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_ORSONN3, pCreature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF+3:
+                pPlayer->CLOSE_GOSSIP_MENU();
+                pPlayer->TalkedToCreature(NPC_ORSONN_CREDIT, pCreature->GetGUID());
+                break;
+
+            case GOSSIP_ACTION_INFO_DEF+4:
+                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM5, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
+                pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_KODIAN2, pCreature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF+5:
+                pPlayer->CLOSE_GOSSIP_MENU();
+                pPlayer->TalkedToCreature(NPC_KODIAN_CREDIT, pCreature->GetGUID());
                 break;
         }
+
+        return true;
     }
 
-    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
-    return true;
-}
-
-bool GossipSelect_npc_orsonn_and_kodian(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
-{
-    switch(uiAction)
+    bool GossipHello(Player* pPlayer, Creature* pCreature)
     {
-        case GOSSIP_ACTION_INFO_DEF+1:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_ORSONN2, pCreature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+2:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_ORSONN3, pCreature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+3:
-            pPlayer->CLOSE_GOSSIP_MENU();
-            pPlayer->TalkedToCreature(NPC_ORSONN_CREDIT, pCreature->GetGUID());
-            break;
+        if (pCreature->isQuestGiver())
+            pPlayer->PrepareQuestMenu(pCreature->GetGUID());
 
-        case GOSSIP_ACTION_INFO_DEF+4:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM5, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 5);
-            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_KODIAN2, pCreature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+5:
-            pPlayer->CLOSE_GOSSIP_MENU();
-            pPlayer->TalkedToCreature(NPC_KODIAN_CREDIT, pCreature->GetGUID());
-            break;
+        if (pPlayer->GetQuestStatus(QUEST_CHILDREN_OF_URSOC) == QUEST_STATUS_INCOMPLETE || pPlayer->GetQuestStatus(QUEST_THE_BEAR_GODS_OFFSPRING) == QUEST_STATUS_INCOMPLETE)
+        {
+            switch(pCreature->GetEntry())
+            {
+                case NPC_ORSONN:
+                    if (!pPlayer->GetReqKillOrCastCurrentCount(QUEST_CHILDREN_OF_URSOC, NPC_ORSONN_CREDIT) || !pPlayer->GetReqKillOrCastCurrentCount(QUEST_THE_BEAR_GODS_OFFSPRING, NPC_ORSONN_CREDIT))
+                    {
+                        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+                        pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_ORSONN1, pCreature->GetGUID());
+                        return true;
+                    }
+                    break;
+                case NPC_KODIAN:
+                    if (!pPlayer->GetReqKillOrCastCurrentCount(QUEST_CHILDREN_OF_URSOC, NPC_KODIAN_CREDIT) || !pPlayer->GetReqKillOrCastCurrentCount(QUEST_THE_BEAR_GODS_OFFSPRING, NPC_KODIAN_CREDIT))
+                    {
+                        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM4, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+4);
+                        pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_KODIAN1, pCreature->GetGUID());
+                        return true;
+                    }
+                    break;
+            }
+        }
+
+        pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
+        return true;
     }
 
-    return true;
-}
+};
+
 
 /*######
 ## Quest 12027: Mr. Floppy's Perilous Adventure
@@ -149,221 +156,236 @@ enum eFloppy
     SAY_QUEST_COMPLETE          = -1800013  //Thank you for helping me get back to the camp. Go tell Walter that I'm safe now!
 };
 
-//emily
-struct npc_emilyAI : public npc_escortAI
+//emilyclass npc_emily : public CreatureScript
 {
-    npc_emilyAI(Creature* pCreature) : npc_escortAI(pCreature) { }
+public:
+    npc_emily() : CreatureScript("npc_emily") { }
 
-    uint32 m_uiChatTimer;
-
-    uint64 RWORGGUID;
-    uint64 MrfloppyGUID;
-
-    bool Completed;
-
-    void JustSummoned(Creature* pSummoned)
+    bool QuestAccept(Player* pPlayer, Creature* pCreature, Quest const* quest)
     {
-        if (Creature* Mrfloppy = GetClosestCreatureWithEntry(me, NPC_MRFLOPPY, 50.0f))
-            pSummoned->AI()->AttackStart(Mrfloppy);
-        else
-            pSummoned->AI()->AttackStart(me->getVictim());
-    }
-
-    void WaypointReached(uint32 i)
-    {
-        Player* pPlayer = GetPlayerForEscort();
-        if (!pPlayer)
-            return;
-        switch (i)
+        if (quest->GetQuestId() == QUEST_PERILOUS_ADVENTURE)
         {
-            case 9:
-                if (Creature *Mrfloppy = GetClosestCreatureWithEntry(me, NPC_MRFLOPPY, 100.0f))
-                    MrfloppyGUID = Mrfloppy->GetGUID();
-                break;
-            case 10:
-                if (Creature *Mrfloppy = Unit::GetCreature(*me, MrfloppyGUID))
-                {
-                    DoScriptText(SAY_WORGHAGGRO1, me);
-                    me->SummonCreature(NPC_HUNGRY_WORG,me->GetPositionX()+5,me->GetPositionY()+2,me->GetPositionZ()+1,3.229f,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,120000);
-                }
-                break;
-            case 11:
-                if (Creature *Mrfloppy = Unit::GetCreature(*me, MrfloppyGUID))
-                    Mrfloppy->GetMotionMaster()->MoveFollow(me, PET_FOLLOW_DIST, PET_FOLLOW_ANGLE);
-                break;
-            case 17:
-                if (Creature *Mrfloppy = Unit::GetCreature(*me, MrfloppyGUID))
-                    Mrfloppy->GetMotionMaster()->MovePoint(0, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ());
-                DoScriptText(SAY_WORGRAGGRO3, me);
-                if (Creature *RWORG = me->SummonCreature(NPC_RAVENOUS_WORG,me->GetPositionX()+10,me->GetPositionY()+8,me->GetPositionZ()+2,3.229f,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,120000))
-                {
-                    RWORG->setFaction(35);
-                    RWORGGUID = RWORG->GetGUID();
-                }
-                break;
-            case 18:
-                if (Creature *Mrfloppy = Unit::GetCreature(*me, MrfloppyGUID))
-                {
-                    if (Creature *RWORG = Unit::GetCreature(*me, RWORGGUID))
-                        RWORG->GetMotionMaster()->MovePoint(0, Mrfloppy->GetPositionX(), Mrfloppy->GetPositionY(), Mrfloppy->GetPositionZ());
-                    DoCast(Mrfloppy,SPELL_MRFLOPPY);
-                }
-                break;
-            case 19:
-                if (Creature *Mrfloppy = Unit::GetCreature(*me, MrfloppyGUID))
-                {
-                    if (Mrfloppy->HasAura(SPELL_MRFLOPPY, 0))
-                    {
-                        if (Creature *RWORG = Unit::GetCreature(*me, RWORGGUID))
-                            Mrfloppy->EnterVehicle(RWORG);
-                    }
-                }
-                break;
-            case 20:
-                if (Creature *RWORG = Unit::GetCreature(*me, RWORGGUID))
-                    RWORG->HandleEmoteCommand(34);
-                break;
-            case 21:
-                if (Creature *Mrfloppy = Unit::GetCreature(*me, MrfloppyGUID))
-                {
-                    if (Creature *RWORG = Unit::GetCreature(*me, RWORGGUID))
-                    {
-                        RWORG->Kill(Mrfloppy);
-                        Mrfloppy->ExitVehicle();
-                        RWORG->setFaction(14);
-                        RWORG->GetMotionMaster()->MovePoint(0, RWORG->GetPositionX()+10,RWORG->GetPositionY()+80,RWORG->GetPositionZ());
-                        DoScriptText(SAY_VICTORY2, me);
-                    }
-                }
-                break;
-            case 22:
-                if (Creature *Mrfloppy = Unit::GetCreature(*me, MrfloppyGUID))
-                {
-                    if (Mrfloppy->isDead())
-                    {
-                        if (Creature *RWORG = Unit::GetCreature(*me, RWORGGUID))
-                            RWORG->DisappearAndDie();
-                        me->GetMotionMaster()->MovePoint(0, Mrfloppy->GetPositionX(), Mrfloppy->GetPositionY(), Mrfloppy->GetPositionZ());
-                        Mrfloppy->setDeathState(ALIVE);
-                        Mrfloppy->GetMotionMaster()->MoveFollow(me, PET_FOLLOW_DIST, PET_FOLLOW_ANGLE);
-                        DoScriptText(SAY_VICTORY3, me);
-                    }
-                }
-                break;
-            case 24:
-                if (pPlayer)
-                {
-                    Completed = true;
-                    pPlayer->GroupEventHappens(QUEST_PERILOUS_ADVENTURE, me);
-                    DoScriptText(SAY_QUEST_COMPLETE, me, pPlayer);
-                }
-                me->RemoveUnitMovementFlag(MOVEMENTFLAG_WALKING);
-                break;
-            case 25:
-                DoScriptText(SAY_VICTORY4, me);
-                break;
-            case 27:
-                me->DisappearAndDie();
-                if (Creature *Mrfloppy = Unit::GetCreature(*me, MrfloppyGUID))
-                    Mrfloppy->DisappearAndDie();
-                break;
-        }
-    }
-
-    void EnterCombat(Unit* /*Who*/)
-    {
-        DoScriptText(SAY_RANDOMAGGRO, me);
-    }
-
-    void Reset()
-    {
-        m_uiChatTimer = 4000;
-        MrfloppyGUID = 0;
-        RWORGGUID = 0;
-    }
-
-    void UpdateAI(const uint32 uiDiff)
-    {
-        npc_escortAI::UpdateAI(uiDiff);
-
-        if (HasEscortState(STATE_ESCORT_ESCORTING))
-        {
-            if (m_uiChatTimer <= uiDiff)
+            DoScriptText(SAY_QUEST_ACCEPT, pCreature);
+            if (Creature* Mrfloppy = GetClosestCreatureWithEntry(pCreature, NPC_MRFLOPPY, 180.0f))
             {
-                m_uiChatTimer = 12000;
+                Mrfloppy->GetMotionMaster()->MoveFollow(pCreature, PET_FOLLOW_DIST, PET_FOLLOW_ANGLE);
             }
-            else
-                m_uiChatTimer -= uiDiff;
+
+            if (npc_escortAI* pEscortAI = CAST_AI(npc_emilyAI, (pCreature->AI())))
+                pEscortAI->Start(true, false, pPlayer->GetGUID());
         }
+        return true;
     }
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new npc_emilyAI(pCreature);
+    }
+
+    struct npc_emilyAI : public npc_escortAI
+    {
+        npc_emilyAI(Creature* pCreature) : npc_escortAI(pCreature) { }
+
+        uint32 m_uiChatTimer;
+
+        uint64 RWORGGUID;
+        uint64 MrfloppyGUID;
+
+        bool Completed;
+
+        void JustSummoned(Creature* pSummoned)
+        {
+            if (Creature* Mrfloppy = GetClosestCreatureWithEntry(me, NPC_MRFLOPPY, 50.0f))
+                pSummoned->AI()->AttackStart(Mrfloppy);
+            else
+                pSummoned->AI()->AttackStart(me->getVictim());
+        }
+
+        void WaypointReached(uint32 i)
+        {
+            Player* pPlayer = GetPlayerForEscort();
+            if (!pPlayer)
+                return;
+            switch (i)
+            {
+                case 9:
+                    if (Creature *Mrfloppy = GetClosestCreatureWithEntry(me, NPC_MRFLOPPY, 100.0f))
+                        MrfloppyGUID = Mrfloppy->GetGUID();
+                    break;
+                case 10:
+                    if (Creature *Mrfloppy = Unit::GetCreature(*me, MrfloppyGUID))
+                    {
+                        DoScriptText(SAY_WORGHAGGRO1, me);
+                        me->SummonCreature(NPC_HUNGRY_WORG,me->GetPositionX()+5,me->GetPositionY()+2,me->GetPositionZ()+1,3.229f,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,120000);
+                    }
+                    break;
+                case 11:
+                    if (Creature *Mrfloppy = Unit::GetCreature(*me, MrfloppyGUID))
+                        Mrfloppy->GetMotionMaster()->MoveFollow(me, PET_FOLLOW_DIST, PET_FOLLOW_ANGLE);
+                    break;
+                case 17:
+                    if (Creature *Mrfloppy = Unit::GetCreature(*me, MrfloppyGUID))
+                        Mrfloppy->GetMotionMaster()->MovePoint(0, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ());
+                    DoScriptText(SAY_WORGRAGGRO3, me);
+                    if (Creature *RWORG = me->SummonCreature(NPC_RAVENOUS_WORG,me->GetPositionX()+10,me->GetPositionY()+8,me->GetPositionZ()+2,3.229f,TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,120000))
+                    {
+                        RWORG->setFaction(35);
+                        RWORGGUID = RWORG->GetGUID();
+                    }
+                    break;
+                case 18:
+                    if (Creature *Mrfloppy = Unit::GetCreature(*me, MrfloppyGUID))
+                    {
+                        if (Creature *RWORG = Unit::GetCreature(*me, RWORGGUID))
+                            RWORG->GetMotionMaster()->MovePoint(0, Mrfloppy->GetPositionX(), Mrfloppy->GetPositionY(), Mrfloppy->GetPositionZ());
+                        DoCast(Mrfloppy,SPELL_MRFLOPPY);
+                    }
+                    break;
+                case 19:
+                    if (Creature *Mrfloppy = Unit::GetCreature(*me, MrfloppyGUID))
+                    {
+                        if (Mrfloppy->HasAura(SPELL_MRFLOPPY, 0))
+                        {
+                            if (Creature *RWORG = Unit::GetCreature(*me, RWORGGUID))
+                                Mrfloppy->EnterVehicle(RWORG);
+                        }
+                    }
+                    break;
+                case 20:
+                    if (Creature *RWORG = Unit::GetCreature(*me, RWORGGUID))
+                        RWORG->HandleEmoteCommand(34);
+                    break;
+                case 21:
+                    if (Creature *Mrfloppy = Unit::GetCreature(*me, MrfloppyGUID))
+                    {
+                        if (Creature *RWORG = Unit::GetCreature(*me, RWORGGUID))
+                        {
+                            RWORG->Kill(Mrfloppy);
+                            Mrfloppy->ExitVehicle();
+                            RWORG->setFaction(14);
+                            RWORG->GetMotionMaster()->MovePoint(0, RWORG->GetPositionX()+10,RWORG->GetPositionY()+80,RWORG->GetPositionZ());
+                            DoScriptText(SAY_VICTORY2, me);
+                        }
+                    }
+                    break;
+                case 22:
+                    if (Creature *Mrfloppy = Unit::GetCreature(*me, MrfloppyGUID))
+                    {
+                        if (Mrfloppy->isDead())
+                        {
+                            if (Creature *RWORG = Unit::GetCreature(*me, RWORGGUID))
+                                RWORG->DisappearAndDie();
+                            me->GetMotionMaster()->MovePoint(0, Mrfloppy->GetPositionX(), Mrfloppy->GetPositionY(), Mrfloppy->GetPositionZ());
+                            Mrfloppy->setDeathState(ALIVE);
+                            Mrfloppy->GetMotionMaster()->MoveFollow(me, PET_FOLLOW_DIST, PET_FOLLOW_ANGLE);
+                            DoScriptText(SAY_VICTORY3, me);
+                        }
+                    }
+                    break;
+                case 24:
+                    if (pPlayer)
+                    {
+                        Completed = true;
+                        pPlayer->GroupEventHappens(QUEST_PERILOUS_ADVENTURE, me);
+                        DoScriptText(SAY_QUEST_COMPLETE, me, pPlayer);
+                    }
+                    me->RemoveUnitMovementFlag(MOVEMENTFLAG_WALKING);
+                    break;
+                case 25:
+                    DoScriptText(SAY_VICTORY4, me);
+                    break;
+                case 27:
+                    me->DisappearAndDie();
+                    if (Creature *Mrfloppy = Unit::GetCreature(*me, MrfloppyGUID))
+                        Mrfloppy->DisappearAndDie();
+                    break;
+            }
+        }
+
+        void EnterCombat(Unit* /*Who*/)
+        {
+            DoScriptText(SAY_RANDOMAGGRO, me);
+        }
+
+        void Reset()
+        {
+            m_uiChatTimer = 4000;
+            MrfloppyGUID = 0;
+            RWORGGUID = 0;
+        }
+
+        void UpdateAI(const uint32 uiDiff)
+        {
+            npc_escortAI::UpdateAI(uiDiff);
+
+            if (HasEscortState(STATE_ESCORT_ESCORTING))
+            {
+                if (m_uiChatTimer <= uiDiff)
+                {
+                    m_uiChatTimer = 12000;
+                }
+                else
+                    m_uiChatTimer -= uiDiff;
+            }
+        }
+    };
+
 };
 
-bool QuestAccept_npc_emily(Player* pPlayer, Creature* pCreature, Quest const* quest)
-{
-    if (quest->GetQuestId() == QUEST_PERILOUS_ADVENTURE)
-    {
-        DoScriptText(SAY_QUEST_ACCEPT, pCreature);
-        if (Creature* Mrfloppy = GetClosestCreatureWithEntry(pCreature, NPC_MRFLOPPY, 180.0f))
-        {
-            Mrfloppy->GetMotionMaster()->MoveFollow(pCreature, PET_FOLLOW_DIST, PET_FOLLOW_ANGLE);
-        }
 
-        if (npc_escortAI* pEscortAI = CAST_AI(npc_emilyAI, (pCreature->AI())))
-            pEscortAI->Start(true, false, pPlayer->GetGUID());
-    }
-    return true;
-}
-
-CreatureAI* GetAI_npc_emily(Creature* pCreature)
-{
-    return new npc_emilyAI(pCreature);
-}
 
 //mrfloppy
-
-struct npc_mrfloppyAI : public ScriptedAI
+class npc_mrfloppy : public CreatureScript
 {
-    npc_mrfloppyAI(Creature *c) : ScriptedAI(c) {}
+public:
+    npc_mrfloppy() : CreatureScript("npc_mrfloppy") { }
 
-    uint64 EmilyGUID;
-    uint64 RWORGGUID;
-    uint64 HWORGGUID;
-
-    void Reset() {}
-
-    void EnterCombat(Unit* Who)
+    CreatureAI* GetAI(Creature* pCreature)
     {
-        if (Creature* Emily = GetClosestCreatureWithEntry(me, NPC_EMILY, 50.0f))
+        return new npc_mrfloppyAI(pCreature);
+    }
+
+    struct npc_mrfloppyAI : public ScriptedAI
+    {
+        npc_mrfloppyAI(Creature *c) : ScriptedAI(c) {}
+
+        uint64 EmilyGUID;
+        uint64 RWORGGUID;
+        uint64 HWORGGUID;
+
+        void Reset() {}
+
+        void EnterCombat(Unit* Who)
         {
-            switch(Who->GetEntry())
+            if (Creature* Emily = GetClosestCreatureWithEntry(me, NPC_EMILY, 50.0f))
             {
-                case NPC_HUNGRY_WORG:
-                    DoScriptText(SAY_WORGHAGGRO2, Emily);
-                    break;
-                case NPC_RAVENOUS_WORG:
-                    DoScriptText(SAY_WORGRAGGRO4, Emily);
-                    break;
-                default:
-                    DoScriptText(SAY_RANDOMAGGRO, Emily);
+                switch(Who->GetEntry())
+                {
+                    case NPC_HUNGRY_WORG:
+                        DoScriptText(SAY_WORGHAGGRO2, Emily);
+                        break;
+                    case NPC_RAVENOUS_WORG:
+                        DoScriptText(SAY_WORGRAGGRO4, Emily);
+                        break;
+                    default:
+                        DoScriptText(SAY_RANDOMAGGRO, Emily);
+                }
             }
         }
-    }
 
-    void EnterEvadeMode() {}
+        void EnterEvadeMode() {}
 
-    void MoveInLineOfSight(Unit * /*who*/) {}
+        void MoveInLineOfSight(Unit * /*who*/) {}
 
-    void UpdateAI(const uint32 /*diff*/)
-    {
-        if (!UpdateVictim())
-            return;
-    }
+        void UpdateAI(const uint32 /*diff*/)
+        {
+            if (!UpdateVictim())
+                return;
+        }
+    };
+
 };
 
-CreatureAI* GetAI_npc_mrfloppy(Creature* pCreature)
-{
-    return new npc_mrfloppyAI(pCreature);
-}
 
 // Outhouse Bunny
 
@@ -378,49 +400,56 @@ enum eSounds
 {
     SOUND_FEMALE        = 12671,
     SOUND_MALE          = 12670
-};
-struct npc_outhouse_bunnyAI : public ScriptedAI
+};class npc_outhouse_bunny : public CreatureScript
 {
-    npc_outhouse_bunnyAI(Creature* pCreature) : ScriptedAI(pCreature) {}
+public:
+    npc_outhouse_bunny() : CreatureScript("npc_outhouse_bunny") { }
 
-    uint8 m_counter;
-    uint8 m_gender;
-
-    void Reset()
+    CreatureAI* GetAI(Creature* pCreature)
     {
-        m_counter = 0;
-        m_gender = 0;
+        return new npc_outhouse_bunnyAI (pCreature);
     }
 
-    void SetData(uint32 uiType, uint32 uiData)
+    struct npc_outhouse_bunnyAI : public ScriptedAI
     {
-        if (uiType == 1)
-            m_gender = uiData;
-    }
+        npc_outhouse_bunnyAI(Creature* pCreature) : ScriptedAI(pCreature) {}
 
-    void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
-    {
-         if (pSpell->Id == SPELL_OUTHOUSE_GROANS)
+        uint8 m_counter;
+        uint8 m_gender;
+
+        void Reset()
         {
-            ++m_counter;
-            if (m_counter < 5)
-                DoCast(pCaster, SPELL_CAMERA_SHAKE, true);
-            else
-                m_counter = 0;
-            DoCast(me, SPELL_DUST_FIELD, true);
-            switch (m_gender)
+            m_counter = 0;
+            m_gender = 0;
+        }
+
+        void SetData(uint32 uiType, uint32 uiData)
+        {
+            if (uiType == 1)
+                m_gender = uiData;
+        }
+
+        void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
+        {
+             if (pSpell->Id == SPELL_OUTHOUSE_GROANS)
             {
-                case GENDER_FEMALE: DoPlaySoundToSet(me, SOUND_FEMALE); break;
-                case GENDER_MALE: DoPlaySoundToSet(me, SOUND_MALE); break;
+                ++m_counter;
+                if (m_counter < 5)
+                    DoCast(pCaster, SPELL_CAMERA_SHAKE, true);
+                else
+                    m_counter = 0;
+                DoCast(me, SPELL_DUST_FIELD, true);
+                switch (m_gender)
+                {
+                    case GENDER_FEMALE: DoPlaySoundToSet(me, SOUND_FEMALE); break;
+                    case GENDER_MALE: DoPlaySoundToSet(me, SOUND_MALE); break;
+                }
             }
         }
-    }
+    };
+
 };
 
-CreatureAI* GetAI_npc_outhouse_bunny(Creature* pCreature)
-{
-    return new npc_outhouse_bunnyAI (pCreature);
-}
 
 // Tallhorn Stage
 
@@ -428,37 +457,44 @@ enum etallhornstage
 {
     OBJECT_HAUNCH                   = 188665
 };
-
-struct npc_tallhorn_stagAI : public ScriptedAI
+class npc_tallhorn_stag : public CreatureScript
 {
-    npc_tallhorn_stagAI(Creature* pCreature) : ScriptedAI(pCreature) {}
+public:
+    npc_tallhorn_stag() : CreatureScript("npc_tallhorn_stag") { }
 
-    uint8 m_uiPhase;
-
-    void Reset()
+    CreatureAI* GetAI(Creature* pCreature)
     {
-        m_uiPhase = 1;
+        return new npc_tallhorn_stagAI (pCreature);
     }
 
-    void UpdateAI(const uint32 /*uiDiff*/)
+    struct npc_tallhorn_stagAI : public ScriptedAI
     {
-        if (m_uiPhase == 1)
+        npc_tallhorn_stagAI(Creature* pCreature) : ScriptedAI(pCreature) {}
+
+        uint8 m_uiPhase;
+
+        void Reset()
         {
-            if (GameObject* haunch = me->FindNearestGameObject(OBJECT_HAUNCH, 2.0f))
-            {
-                me->SetStandState(UNIT_STAND_STATE_DEAD);
-                me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
-                me->SetUInt32Value(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_DEAD);
-            }
-            m_uiPhase = 0;
+            m_uiPhase = 1;
         }
-    }
+
+        void UpdateAI(const uint32 /*uiDiff*/)
+        {
+            if (m_uiPhase == 1)
+            {
+                if (GameObject* haunch = me->FindNearestGameObject(OBJECT_HAUNCH, 2.0f))
+                {
+                    me->SetStandState(UNIT_STAND_STATE_DEAD);
+                    me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
+                    me->SetUInt32Value(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_DEAD);
+                }
+                m_uiPhase = 0;
+            }
+        }
+    };
+
 };
 
-CreatureAI* GetAI_npc_tallhorn_stag(Creature* pCreature)
-{
-    return new npc_tallhorn_stagAI (pCreature);
-}
 
 // Amberpine Woodsman
 
@@ -466,53 +502,64 @@ enum eamberpinewoodsman
 {
     TALLHORN_STAG                   = 26363
 };
-
-struct npc_amberpine_woodsmanAI : public ScriptedAI
+class npc_amberpine_woodsman : public CreatureScript
 {
-    npc_amberpine_woodsmanAI(Creature* pCreature) : ScriptedAI(pCreature) {}
+public:
+    npc_amberpine_woodsman() : CreatureScript("npc_amberpine_woodsman") { }
 
-    uint8 m_uiPhase;
-    uint32 m_uiTimer;
-
-    void Reset()
+    CreatureAI* GetAI(Creature* pCreature)
     {
-        m_uiTimer = 0;
-        m_uiPhase = 1;
+        return new npc_amberpine_woodsmanAI (pCreature);
     }
 
-    void UpdateAI(const uint32 uiDiff)
+    struct npc_amberpine_woodsmanAI : public ScriptedAI
     {
-        // call this each update tick?
-        if (Creature* stag = me->FindNearestCreature(TALLHORN_STAG, 0.2f))
+        npc_amberpine_woodsmanAI(Creature* pCreature) : ScriptedAI(pCreature) {}
+
+        uint8 m_uiPhase;
+        uint32 m_uiTimer;
+
+        void Reset()
         {
-            me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_USESTANDING);
+            m_uiTimer = 0;
+            m_uiPhase = 1;
         }
-        else
-            if (m_uiPhase)
-            {
-                if (m_uiTimer <= uiDiff)
-                {
-                    switch(m_uiPhase)
-                    {
-                        case 1:
-                            me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_LOOT);
-                            m_uiTimer = 3000;
-                            m_uiPhase = 2;
-                            break;
-                        case 2:
-                            me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_ONESHOT_ATTACK1H);
-                            m_uiTimer = 4000;
-                            m_uiPhase = 1;
-                            break;
-                    }
-                }
-                else
-                m_uiTimer -= uiDiff;
-            }
-            ScriptedAI::UpdateAI(uiDiff);
 
-        UpdateVictim();
-    }
+        void UpdateAI(const uint32 uiDiff)
+        {
+            // call this each update tick?
+            if (Creature* stag = me->FindNearestCreature(TALLHORN_STAG, 0.2f))
+            {
+                me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_USESTANDING);
+            }
+            else
+                if (m_uiPhase)
+                {
+                    if (m_uiTimer <= uiDiff)
+                    {
+                        switch(m_uiPhase)
+                        {
+                            case 1:
+                                me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_LOOT);
+                                m_uiTimer = 3000;
+                                m_uiPhase = 2;
+                                break;
+                            case 2:
+                                me->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_ONESHOT_ATTACK1H);
+                                m_uiTimer = 4000;
+                                m_uiPhase = 1;
+                                break;
+                        }
+                    }
+                    else
+                    m_uiTimer -= uiDiff;
+                }
+                ScriptedAI::UpdateAI(uiDiff);
+
+            UpdateVictim();
+        }
+    };
+
 };
 
 /*######
@@ -528,62 +575,276 @@ enum eSkirmisher
     RANDOM_SAY_2             =  -1800045,        //Whoa.. i nearly died there. Thank you, $Race!
     RANDOM_SAY_3             =  -1800046         //Thank you. $Class!
 };
-
-struct npc_wounded_skirmisherAI : public ScriptedAI
+class npc_wounded_skirmisher : public CreatureScript
 {
-    npc_wounded_skirmisherAI(Creature *c) : ScriptedAI(c) {}
+public:
+    npc_wounded_skirmisher() : CreatureScript("npc_wounded_skirmisher") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new npc_wounded_skirmisherAI(pCreature);
+    }
+
+    struct npc_wounded_skirmisherAI : public ScriptedAI
+    {
+        npc_wounded_skirmisherAI(Creature *c) : ScriptedAI(c) {}
     
-    uint64 uiPlayerGUID;
+        uint64 uiPlayerGUID;
 
-    uint32 DespawnTimer;
+        uint32 DespawnTimer;
 
-    void Reset () 
-    {
-        DespawnTimer = 5000;
-        uiPlayerGUID = 0;
-    }
-
-    void MovementInform(uint32, uint32 id)
-    {
-        if (id == 1)
-            me->ForcedDespawn(DespawnTimer);
-    }
-
-    void SpellHit(Unit *caster, const SpellEntry *spell)
-    {        
-        if (spell->Id == SPELL_RENEW_SKIRMISHER && caster->GetTypeId() == TYPEID_PLAYER
-            && caster->ToPlayer()->GetQuestStatus(12288) == QUEST_STATUS_INCOMPLETE)
-        {            
-            caster->ToPlayer()->KilledMonsterCredit(CREDIT_NPC, 0);
-            DoScriptText(RAND(RANDOM_SAY_1,RANDOM_SAY_2,RANDOM_SAY_3),caster);
-            if(me->IsStandState())            
-                me->GetMotionMaster()->MovePoint(1, me->GetPositionX()+7, me->GetPositionY()+7, me->GetPositionZ());                                                                                   
-            else
-            {
-                me->SetStandState(UNIT_STAND_STATE_STAND);
-                me->ForcedDespawn(DespawnTimer);   
-            }
-                
+        void Reset () 
+        {
+            DespawnTimer = 5000;
+            uiPlayerGUID = 0;
         }
-    }
+
+        void MovementInform(uint32, uint32 id)
+        {
+            if (id == 1)
+                me->ForcedDespawn(DespawnTimer);
+        }
+
+        void SpellHit(Unit *caster, const SpellEntry *spell)
+        {    
+            if (spell->Id == SPELL_RENEW_SKIRMISHER && caster->GetTypeId() == TYPEID_PLAYER
+                && caster->ToPlayer()->GetQuestStatus(12288) == QUEST_STATUS_INCOMPLETE)
+            {        
+                caster->ToPlayer()->KilledMonsterCredit(CREDIT_NPC, 0);
+                DoScriptText(RAND(RANDOM_SAY_1,RANDOM_SAY_2,RANDOM_SAY_3),caster);
+                if(me->IsStandState())        
+                    me->GetMotionMaster()->MovePoint(1, me->GetPositionX()+7, me->GetPositionY()+7, me->GetPositionZ());                                                                               
+                else
+                {
+                    me->SetStandState(UNIT_STAND_STATE_STAND);
+                    me->ForcedDespawn(DespawnTimer);   
+                }
+                
+            }
+        }
     
-    void UpdateAI(const uint32 /*diff*/)
-    {
-        if (!UpdateVictim())
-            return;
-        DoMeleeAttackIfReady();
-    }
+        void UpdateAI(const uint32 /*diff*/)
+        {
+            if (!UpdateVictim())
+                return;
+            DoMeleeAttackIfReady();
+        }
+    };
+
 };
 
-CreatureAI* GetAI_npc_wounded_skirmisher(Creature* pCreature)
-{
-    return new npc_wounded_skirmisherAI(pCreature);
-}
 
-CreatureAI* GetAI_npc_amberpine_woodsman(Creature* pCreature)
+
+/*######
+## Quest 13666 & 13673:  Une lame digne d'un champion!
+######*/
+
+enum eLakeFrog
 {
-    return new npc_amberpine_woodsmanAI (pCreature);
-}
+	SPELL_WARTSBGONE_LIP_BALM = 62574,
+	SPELL_FROG_LOVE = 62537,
+	SPELL_WARTS = 62581,
+	NPC_MAIDEN_OF_ASHWOOD_LAKE = 33220,
+	MAIDEN_SPAWN
+};
+
+//Script de la grenouilleclass npc_lake_frog : public CreatureScript
+{
+public:
+    npc_lake_frog() : CreatureScript("npc_lake_frog") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new npc_lake_frogAI(pCreature);
+    }
+
+    struct npc_lake_frogAI : public FollowerAI // FollowerAI:Permet au npc de suivre une cible
+    {
+        npc_lake_frogAI(Creature *c) : FollowerAI(c) {}
+
+        uint32 uiFollowTimer; //Temps de poursuite (15 sec)
+        bool following;	//Si la grenouille est en train de suivre le joueur
+    
+        void Reset () 
+        {
+    	following=false;
+    	uiFollowTimer=15000; // 15 sec
+        }
+
+        void UpdateAI(const uint32 diff)
+        {
+            if(following)
+            {
+            	if(uiFollowTimer <= diff)
+           		{
+           			SetFollowComplete();
+    				me->DisappearAndDie();		//d�pop
+    				me->Respawn(true);
+    				Reset();
+           		}
+           		else uiFollowTimer-=diff;
+           	}
+        }
+
+        void ReceiveEmote(Player* pPlayer, uint32 emote)
+        {
+    		if(following) //Si la grenouille a d�ja recu un /bisou il ne se passe rien
+    				return;
+    			
+    		if(emote==TEXTEMOTE_KISS) // Si on fait /bisou
+    		{
+    			if(!pPlayer->HasAura(SPELL_WARTSBGONE_LIP_BALM))
+    				pPlayer->AddAura(SPELL_WARTS,pPlayer);
+    			else if(roll_chance_i(10)) // 10% de chance de trouver la grenouille
+    			{
+    				pPlayer->SummonCreature(NPC_MAIDEN_OF_ASHWOOD_LAKE,me->GetPositionX(),me->GetPositionY(),me->GetPositionZ(),0,TEMPSUMMON_TIMED_DESPAWN,30000);
+    				me->DisappearAndDie();		//d�pop
+    				me->Respawn(true); //Repop 15 secondes plus tard
+    			}
+    			else
+    			{
+    		   		pPlayer->RemoveAura(SPELL_WARTSBGONE_LIP_BALM);	//On enleve le buff mis par l'objet de quete
+    		   		me->AddAura(SPELL_FROG_LOVE,me); //On ajoute l'aura a la grenouille (les coeurs)
+    				StartFollow(pPlayer, 35, NULL); //La grenouille suis le joueur
+    				following=true;
+    			}
+    		}
+        }
+    };
+
+};
+
+
+//Script de la princesse
+#define MAIDEN_DEFAULT_TEXTID 14319
+#define MAIDEN_REWARD_TEXTID 14320
+#define GOSSIP_HELLO_MAIDEN "Ravi d'avoir pu aider, madame. Il paraît que vous êtiez autrefois la gardienne d'une êpêe lêgendaire. Sauriez-vous où je pourrais la trouver ?"
+#define SPELL_SUMMON_ASHWOOD_BRAND 62554class npc_maiden_of_ashwood_lake : public CreatureScript
+{
+public:
+    npc_maiden_of_ashwood_lake() : CreatureScript("npc_maiden_of_ashwood_lake") { }
+
+    bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+    {
+    	switch(uiAction)
+    	{
+    		case GOSSIP_ACTION_INFO_DEF+1:
+    			pPlayer->CastSpell(pPlayer,SPELL_SUMMON_ASHWOOD_BRAND,true);
+    			pPlayer->SEND_GOSSIP_MENU(MAIDEN_REWARD_TEXTID, pCreature->GetGUID());
+    			break;
+    	}
+    	return true;
+    }
+
+    bool GossipHello(Player* pPlayer, Creature* pCreature)
+    {
+    	if(!pPlayer->HasItemCount(44981,1,true))
+    	{
+    		pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_HELLO_MAIDEN, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+    		pPlayer->SEND_GOSSIP_MENU(MAIDEN_DEFAULT_TEXTID, pCreature->GetGUID());
+    		pCreature->ForcedDespawn(10000);
+    		return true;
+    	}
+
+    	pPlayer->SEND_GOSSIP_MENU(MAIDEN_DEFAULT_TEXTID, pCreature->GetGUID());
+    	return true;
+    }
+
+};
+
+
+//Quete : Une arme remarquable
+//Quand on utilise l'item:
+//Pop du gameobject 194239 <<NENUFAR
+//Pop du npc 33723
+
+//pop de gob 194238
+#define NPC_TEXTID_MAIDEN_OF_DRAK_MAR_01 -1850000
+#define NPC_TEXTID_MAIDEN_OF_DRAK_MAR_02 -1850001
+#define NPC_TEXTID_MAIDEN_OF_DRAK_MAR_03 -1850002
+#define NPC_TEXTID_MAIDEN_OF_DRAK_MAR_04 -1850003
+#define MAIDEN_OF_DRAK_MAR_TIMER_00 2000
+#define MAIDEN_OF_DRAK_MAR_TIMER_01 5000
+#define MAIDEN_OF_DRAK_MAR_TIMER_02 6000
+#define MAIDEN_OF_DRAK_MAR_TIMER_03 7000
+#define MAIDEN_OF_DRAK_MAR_TIMER_04 20000
+#define MAIDEN_OF_DRAK_MAR_GOB_01 194239
+#define MAIDEN_OF_DRAK_MAR_GOB_02 194238
+//Summon la dame :X: 4602.977 Y: -1600.141 Z: 156.7834 O: 0.7504916class npc_maiden_of_drak_mar : public CreatureScript
+{
+public:
+    npc_maiden_of_drak_mar() : CreatureScript("npc_maiden_of_drak_mar") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+    	return new npc_maiden_of_drak_marAI(pCreature);
+    }
+
+    struct npc_maiden_of_drak_marAI : public ScriptedAI
+    {
+    	uint32 phase;
+    	uint32 uiPhaseTimer;
+    	uint64 firstGobGuid;
+    	uint64 secondGobGuid;
+
+    	npc_maiden_of_drak_marAI(Creature *c) : ScriptedAI(c)
+    	{
+    		phase = 0;
+    		uiPhaseTimer = MAIDEN_OF_DRAK_MAR_TIMER_00;
+    		if(GameObject* go = me->SummonGameObject(MAIDEN_OF_DRAK_MAR_GOB_01,4602.977f,-1600.141f,156.7834f,0.7504916f,0,0,0,0,0))
+    			firstGobGuid = go->GetGUID(); //Pop du n�nuphar
+    	}
+
+    	void UpdateAI(const uint32 diff)
+    	{
+    	    	if(uiPhaseTimer <= diff)
+    	    	{
+    	    		phase++;
+    				switch(phase)
+    				{
+    					case 1:
+    						DoScriptText(NPC_TEXTID_MAIDEN_OF_DRAK_MAR_01, me);
+    						uiPhaseTimer = MAIDEN_OF_DRAK_MAR_TIMER_01;
+    						break;
+    					case 2:
+    						DoScriptText(NPC_TEXTID_MAIDEN_OF_DRAK_MAR_02, me);
+    						uiPhaseTimer = MAIDEN_OF_DRAK_MAR_TIMER_02;
+    						break;
+    					case 3:
+    						DoScriptText(NPC_TEXTID_MAIDEN_OF_DRAK_MAR_03, me);
+    						uiPhaseTimer = MAIDEN_OF_DRAK_MAR_TIMER_03;
+    						break;
+    					case 4:
+    						DoScriptText(NPC_TEXTID_MAIDEN_OF_DRAK_MAR_04, me);
+    						if(GameObject* go = me->SummonGameObject(MAIDEN_OF_DRAK_MAR_GOB_02,4603.351f,-1599.288f,156.8822f,2.234018f,0,0,0,0,0))
+    							secondGobGuid = go->GetGUID(); //Pop de la lame
+    						uiPhaseTimer = MAIDEN_OF_DRAK_MAR_TIMER_04;
+    						break;
+    					case 5:
+    						if(GameObject* go = GameObject::GetGameObject(*me,firstGobGuid))
+    							go->RemoveFromWorld();// D�pop du n�nuphar
+    						if(GameObject* go = GameObject::GetGameObject(*me,secondGobGuid))
+    							go->RemoveFromWorld();// D�pop de la lame 
+    						me->ForcedDespawn();// disparition du pnj
+    						break;
+    					default:// Ne devrait jamais arriver
+    						if(GameObject* go = GameObject::GetGameObject(*me,firstGobGuid))
+    							go->RemoveFromWorld();// D�pop du n�nuphar
+    						if(GameObject* go = GameObject::GetGameObject(*me,secondGobGuid))
+    							go->RemoveFromWorld();// D�pop de la lame
+    						me->ForcedDespawn();// disparition du pnj
+    						break;
+    				}
+    	    	}
+    	    	else
+    	    	{
+    			uiPhaseTimer -= diff;
+    		}
+    	}
+    };
+
+};
+
 
 /*######
 ## Quest 13666 & 13673:  Une lame digne d'un champion!
@@ -777,6 +1038,7 @@ CreatureAI* GetAI_npc_maiden_of_drak_mar(Creature* pCreature)
 
 void AddSC_grizzly_hills()
 {
+<<<<<<< HEAD:src/server/scripts/Northrend/grizzly_hills.cpp
     Script* newscript;
 
     newscript = new Script;
@@ -832,4 +1094,16 @@ void AddSC_grizzly_hills()
     newscript->GetAI = &GetAI_npc_maiden_of_drak_mar;
     newscript->RegisterSelf();
     
+=======
+    new npc_orsonn_and_kodian();
+    new npc_emily();
+    new npc_mrfloppy();
+    new npc_outhouse_bunny();
+    new npc_tallhorn_stag();
+    new npc_amberpine_woodsman();
+    new npc_wounded_skirmisher();
+    new npc_lake_frog();
+    new npc_maiden_of_ashwood_lake();
+    new npc_maiden_of_drak_mar();
+>>>>>>> tc:src/server/scripts/Northrend/grizzly_hills.cpp
 }

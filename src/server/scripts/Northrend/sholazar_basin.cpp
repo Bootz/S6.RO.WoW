@@ -47,118 +47,128 @@ enum eRainspeaker
     FACTION_ESCORTEE_A                  = 774,
     FACTION_ESCORTEE_H                  = 775
 };
-
-struct npc_injured_rainspeaker_oracleAI : public npc_escortAI
+class npc_injured_rainspeaker_oracle : public CreatureScript
 {
-    npc_injured_rainspeaker_oracleAI(Creature* c) : npc_escortAI(c) { c_guid = c->GetGUID(); }
+public:
+    npc_injured_rainspeaker_oracle() : CreatureScript("npc_injured_rainspeaker_oracle") { }
 
-    uint64 c_guid;
-
-    void Reset()
+    bool QuestAccept(Player* /*pPlayer*/, Creature* pCreature, Quest const * /*_Quest*/)
     {
-        me->RestoreFaction();
-        // if we will have other way to assign this to only one npc remove this part
-        if (GUID_LOPART(me->GetGUID()) != 101030)
-        {
-            me->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_QUESTGIVER);
-            me->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
-        }
+        DoScriptText(SAY_QUEST_ACCEPT_IRO, pCreature);
+        return false;
     }
 
-    void WaypointReached(uint32 i)
+    bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
     {
-        Player* pPlayer = GetPlayerForEscort();
-
-        if (!pPlayer)
-            return;
-
-        switch(i)
+        if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
         {
-        case 1: SetRun(); break;
-        case 10:
-        case 11:
-        case 12:
-        case 13:
-        case 14:
-        case 15:
-        case 16:
-        case 17:
-        case 18:
-            me->RemoveUnitMovementFlag(MOVEMENTFLAG_SWIMMING);
-            me->RemoveUnitMovementFlag(MOVEMENTFLAG_JUMPING);
-            me->SetSpeed(MOVE_SWIM, 0.85f, true);
-            me->AddUnitMovementFlag(MOVEMENTFLAG_SWIMMING | MOVEMENTFLAG_LEVITATING);
-            break;
-        case 19:
-            me->SetUnitMovementFlags(MOVEMENTFLAG_JUMPING);
-            break;
-        case 28:
+            CAST_AI(npc_escortAI, (pCreature->AI()))->Start(true, false, pPlayer->GetGUID());
+            CAST_AI(npc_escortAI, (pCreature->AI()))->SetMaxPlayerDistance(35.0f);
+            pCreature->SetUnitMovementFlags(MOVEMENTFLAG_JUMPING);
+            DoScriptText(SAY_START_IRO, pCreature);
+
+            switch (pPlayer->GetTeam()){
+            case ALLIANCE:
+                pCreature->setFaction(FACTION_ESCORTEE_A);
+                break;
+            case HORDE:
+                pCreature->setFaction(FACTION_ESCORTEE_H);
+                break;
+            }
+        }
+        return true;
+    }
+
+    bool GossipHello(Player* pPlayer, Creature* pCreature)
+    {
+        if (pCreature->isQuestGiver())
+            pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+
+        if (pPlayer->GetQuestStatus(QUEST_FORTUNATE_MISUNDERSTANDINGS) == QUEST_STATUS_INCOMPLETE)
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+
+        pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
+
+        return true;
+    }
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new npc_injured_rainspeaker_oracleAI(pCreature);
+    }
+
+    struct npc_injured_rainspeaker_oracleAI : public npc_escortAI
+    {
+        npc_injured_rainspeaker_oracleAI(Creature* c) : npc_escortAI(c) { c_guid = c->GetGUID(); }
+
+        uint64 c_guid;
+
+        void Reset()
+        {
+            me->RestoreFaction();
+            // if we will have other way to assign this to only one npc remove this part
+            if (GUID_LOPART(me->GetGUID()) != 101030)
+            {
+                me->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_QUESTGIVER);
+                me->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
+            }
+        }
+
+        void WaypointReached(uint32 i)
+        {
+            Player* pPlayer = GetPlayerForEscort();
+
+            if (!pPlayer)
+                return;
+
+            switch(i)
+            {
+            case 1: SetRun(); break;
+            case 10:
+            case 11:
+            case 12:
+            case 13:
+            case 14:
+            case 15:
+            case 16:
+            case 17:
+            case 18:
+                me->RemoveUnitMovementFlag(MOVEMENTFLAG_SWIMMING);
+                me->RemoveUnitMovementFlag(MOVEMENTFLAG_JUMPING);
+                me->SetSpeed(MOVE_SWIM, 0.85f, true);
+                me->AddUnitMovementFlag(MOVEMENTFLAG_SWIMMING | MOVEMENTFLAG_LEVITATING);
+                break;
+            case 19:
+                me->SetUnitMovementFlags(MOVEMENTFLAG_JUMPING);
+                break;
+            case 28:
+                if (Player* pPlayer = GetPlayerForEscort())
+                    pPlayer->GroupEventHappens(QUEST_FORTUNATE_MISUNDERSTANDINGS, me);
+              //  me->RestoreFaction();
+                DoScriptText(SAY_END_IRO,me);
+                SetRun(false);
+                break;
+            }
+        }
+
+        void JustDied(Unit* /*killer*/)
+        {
+            if (!HasEscortState(STATE_ESCORT_ESCORTING))
+                return;
+
             if (Player* pPlayer = GetPlayerForEscort())
-                pPlayer->GroupEventHappens(QUEST_FORTUNATE_MISUNDERSTANDINGS, me);
-          //  me->RestoreFaction();
-            DoScriptText(SAY_END_IRO,me);
-            SetRun(false);
-            break;
+            {
+              if (pPlayer->GetQuestStatus(QUEST_FORTUNATE_MISUNDERSTANDINGS) != QUEST_STATUS_COMPLETE)
+                pPlayer->FailQuest(QUEST_FORTUNATE_MISUNDERSTANDINGS);
+            }
         }
-    }
+    };
 
-    void JustDied(Unit* /*killer*/)
-    {
-        if (!HasEscortState(STATE_ESCORT_ESCORTING))
-            return;
-
-        if (Player* pPlayer = GetPlayerForEscort())
-        {
-          if (pPlayer->GetQuestStatus(QUEST_FORTUNATE_MISUNDERSTANDINGS) != QUEST_STATUS_COMPLETE)
-            pPlayer->FailQuest(QUEST_FORTUNATE_MISUNDERSTANDINGS);
-        }
-    }
 };
 
-bool GossipHello_npc_injured_rainspeaker_oracle(Player* pPlayer, Creature* pCreature)
-{
-    if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
 
-    if (pPlayer->GetQuestStatus(QUEST_FORTUNATE_MISUNDERSTANDINGS) == QUEST_STATUS_INCOMPLETE)
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
-    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
 
-    return true;
-}
-
-bool GossipSelect_npc_injured_rainspeaker_oracle(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
-{
-    if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
-    {
-        CAST_AI(npc_escortAI, (pCreature->AI()))->Start(true, false, pPlayer->GetGUID());
-        CAST_AI(npc_escortAI, (pCreature->AI()))->SetMaxPlayerDistance(35.0f);
-        pCreature->SetUnitMovementFlags(MOVEMENTFLAG_JUMPING);
-        DoScriptText(SAY_START_IRO, pCreature);
-
-        switch (pPlayer->GetTeam()){
-        case ALLIANCE:
-            pCreature->setFaction(FACTION_ESCORTEE_A);
-            break;
-        case HORDE:
-            pCreature->setFaction(FACTION_ESCORTEE_H);
-            break;
-        }
-    }
-    return true;
-}
-
-bool QuestAccept_npc_injured_rainspeaker_oracle(Player* /*pPlayer*/, Creature* pCreature, Quest const * /*_Quest*/)
-{
-    DoScriptText(SAY_QUEST_ACCEPT_IRO, pCreature);
-    return false;
-}
-
-CreatureAI* GetAI_npc_injured_rainspeaker_oracle(Creature* pCreature)
-{
-    return new npc_injured_rainspeaker_oracleAI(pCreature);
-}
 
 /*######
 ## npc_vekjik
@@ -178,41 +188,48 @@ enum eVekjik
 
     QUEST_MAKING_PEACE          = 12573
 };
-
-bool GossipHello_npc_vekjik(Player* pPlayer, Creature* pCreature)
+class npc_vekjik : public CreatureScript
 {
-    if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+public:
+    npc_vekjik() : CreatureScript("npc_vekjik") { }
 
-    if (pPlayer->GetQuestStatus(QUEST_MAKING_PEACE) == QUEST_STATUS_INCOMPLETE)
+    bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
     {
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_VEKJIK_ITEM1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-        pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_VEKJIK1, pCreature->GetGUID());
+        switch(uiAction)
+        {
+            case GOSSIP_ACTION_INFO_DEF+1:
+                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_VEKJIK_ITEM2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
+                pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_VEKJIK2, pCreature->GetGUID());
+                break;
+            case GOSSIP_ACTION_INFO_DEF+2:
+                pPlayer->CLOSE_GOSSIP_MENU();
+                DoScriptText(SAY_TEXTID_VEKJIK1, pCreature, pPlayer);
+                pPlayer->AreaExploredOrEventHappens(QUEST_MAKING_PEACE);
+                pCreature->CastSpell(pPlayer, SPELL_FREANZYHEARTS_FURY, false);
+                break;
+        }
+
         return true;
     }
 
-    pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
-    return true;
-}
-
-bool GossipSelect_npc_vekjik(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
-{
-    switch(uiAction)
+    bool GossipHello(Player* pPlayer, Creature* pCreature)
     {
-        case GOSSIP_ACTION_INFO_DEF+1:
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_VEKJIK_ITEM2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
-            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_VEKJIK2, pCreature->GetGUID());
-            break;
-        case GOSSIP_ACTION_INFO_DEF+2:
-            pPlayer->CLOSE_GOSSIP_MENU();
-            DoScriptText(SAY_TEXTID_VEKJIK1, pCreature, pPlayer);
-            pPlayer->AreaExploredOrEventHappens(QUEST_MAKING_PEACE);
-            pCreature->CastSpell(pPlayer, SPELL_FREANZYHEARTS_FURY, false);
-            break;
+        if (pCreature->isQuestGiver())
+            pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+
+        if (pPlayer->GetQuestStatus(QUEST_MAKING_PEACE) == QUEST_STATUS_INCOMPLETE)
+        {
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_VEKJIK_ITEM1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_VEKJIK1, pCreature->GetGUID());
+            return true;
+        }
+
+        pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
+        return true;
     }
 
-    return true;
-}
+};
+
 
 /*######
 ## avatar_of_freya
@@ -232,71 +249,85 @@ enum eFreya
     GOSSIP_TEXTID_AVATAR2    = 13304,
     GOSSIP_TEXTID_AVATAR3    = 13305
 };
-
-bool GossipHello_npc_avatar_of_freya(Player* pPlayer, Creature* pCreature)
+class npc_avatar_of_freya : public CreatureScript
 {
-    if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+public:
+    npc_avatar_of_freya() : CreatureScript("npc_avatar_of_freya") { }
 
-    if (pPlayer->GetQuestStatus(QUEST_FREYA_PACT) == QUEST_STATUS_INCOMPLETE)
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_AOF1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-
-    pPlayer->PlayerTalkClass->SendGossipMenu(GOSSIP_TEXTID_AVATAR1, pCreature->GetGUID());
-    return true;
-}
-
-bool GossipSelect_npc_avatar_of_freya(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
-{
-    switch (uiAction)
+    bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
     {
-    case GOSSIP_ACTION_INFO_DEF+1:
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_AOF2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
-        pPlayer->PlayerTalkClass->SendGossipMenu(GOSSIP_TEXTID_AVATAR2, pCreature->GetGUID());
-        break;
-    case GOSSIP_ACTION_INFO_DEF+2:
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_AOF3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
-        pPlayer->PlayerTalkClass->SendGossipMenu(GOSSIP_TEXTID_AVATAR3, pCreature->GetGUID());
-        break;
-    case GOSSIP_ACTION_INFO_DEF+3:
-        pPlayer->CastSpell(pPlayer, SPELL_FREYA_CONVERSATION, true);
-        pPlayer->CLOSE_GOSSIP_MENU();
-        break;
+        switch (uiAction)
+        {
+        case GOSSIP_ACTION_INFO_DEF+1:
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_AOF2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
+            pPlayer->PlayerTalkClass->SendGossipMenu(GOSSIP_TEXTID_AVATAR2, pCreature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+2:
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_AOF3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
+            pPlayer->PlayerTalkClass->SendGossipMenu(GOSSIP_TEXTID_AVATAR3, pCreature->GetGUID());
+            break;
+        case GOSSIP_ACTION_INFO_DEF+3:
+            pPlayer->CastSpell(pPlayer, SPELL_FREYA_CONVERSATION, true);
+            pPlayer->CLOSE_GOSSIP_MENU();
+            break;
+        }
+        return true;
     }
-    return true;
-}
+
+    bool GossipHello(Player* pPlayer, Creature* pCreature)
+    {
+        if (pCreature->isQuestGiver())
+            pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+
+        if (pPlayer->GetQuestStatus(QUEST_FREYA_PACT) == QUEST_STATUS_INCOMPLETE)
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_AOF1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+
+        pPlayer->PlayerTalkClass->SendGossipMenu(GOSSIP_TEXTID_AVATAR1, pCreature->GetGUID());
+        return true;
+    }
+
+};
+
 
 /*######
 ## npc_geezle
 ######*/
-
-struct npc_bushwhackerAI : public ScriptedAI
+class npc_bushwhacker : public CreatureScript
 {
-    npc_bushwhackerAI(Creature* pCreature) : ScriptedAI(pCreature)
+public:
+    npc_bushwhacker() : CreatureScript("npc_bushwhacker") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
     {
-        MoveToSummoner();
+        return new npc_bushwhackerAI(pCreature);
     }
 
-    void MoveToSummoner()
+    struct npc_bushwhackerAI : public ScriptedAI
     {
-        if (me->isSummon())
-            if (Unit* pSummoner = CAST_SUM(me)->GetSummoner())
-                if (pSummoner)
-                    me->GetMotionMaster()->MovePoint(0,pSummoner->GetPositionX(),pSummoner->GetPositionY(),pSummoner->GetPositionZ());
-    }
+        npc_bushwhackerAI(Creature* pCreature) : ScriptedAI(pCreature)
+        {
+            MoveToSummoner();
+        }
 
-    void UpdateAI(const uint32 /*uiDiff*/)
-    {
-        if (!UpdateVictim())
-            return;
+        void MoveToSummoner()
+        {
+            if (me->isSummon())
+                if (Unit* pSummoner = CAST_SUM(me)->GetSummoner())
+                    if (pSummoner)
+                        me->GetMotionMaster()->MovePoint(0,pSummoner->GetPositionX(),pSummoner->GetPositionY(),pSummoner->GetPositionZ());
+        }
 
-        DoMeleeAttackIfReady();
-    }
+        void UpdateAI(const uint32 /*uiDiff*/)
+        {
+            if (!UpdateVictim())
+                return;
+
+            DoMeleeAttackIfReady();
+        }
+    };
+
 };
 
-CreatureAI* GetAI_npc_bushwhacker(Creature* pCreature)
-{
-    return new npc_bushwhackerAI(pCreature);
-}
 
 /*######
 ## npc_engineer_helice
@@ -317,133 +348,115 @@ enum eEnums
 
     QUEST_DISASTER              = 12688
 };
-
-struct npc_engineer_heliceAI : public npc_escortAI
+class npc_engineer_helice : public CreatureScript
 {
-    npc_engineer_heliceAI(Creature* pCreature) : npc_escortAI(pCreature) { }
-    
-    uint32 m_uiChatTimer;    
+public:
+    npc_engineer_helice() : CreatureScript("npc_engineer_helice") { }
 
-    void WaypointReached(uint32 i)
-    {        
-        Player* pPlayer = GetPlayerForEscort();
-        switch (i)
-        {
-            case 0:
-                DoScriptText(SAY_WP_2, me);
-                break;
-            case 1:     
-                DoScriptText(SAY_WP_3, me);
-                me->CastSpell(5918.33, 5372.91, -98.770, SPELL_EXPLODE_CRYSTAL, true);
-                me->SummonGameObject(184743, 5918.33, 5372.91, -98.770, 0, 0, 0, 0, 0, TEMPSUMMON_MANUAL_DESPAWN);     //approx 3 to 4 seconds           
-                me->HandleEmoteCommand(EMOTE_ONESHOT_LAUGH);
-                break;
-            case 2:                
-                DoScriptText(SAY_WP_4, me);
-                break;
-            case 7:
-                DoScriptText(SAY_WP_5, me);
-                break;
-            case 8:              
-                me->CastSpell(5887.37, 5379.39, -91.289, SPELL_EXPLODE_CRYSTAL, true);
-                me->SummonGameObject(184743, 5887.37, 5379.39, -91.289, 0, 0, 0, 0, 0, TEMPSUMMON_MANUAL_DESPAWN);      //approx 3 to 4 seconds 
-                me->HandleEmoteCommand(EMOTE_ONESHOT_LAUGH);
-                break;
-            case 9:                
-                DoScriptText(SAY_WP_6, me);
-                break;
-            case 13: 
-                if (pPlayer)
-                {
-                    pPlayer->GroupEventHappens(QUEST_DISASTER, me);
-                    DoScriptText(SAY_WP_7, me);
-                }
-                break;
-        }
-    }   
-
-    void Reset()
-    {        
-        m_uiChatTimer = 4000;        
-    }
-    void JustDied(Unit* /*pKiller*/)
+    bool QuestAccept(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
     {
-        Player* pPlayer = GetPlayerForEscort();
-        if (HasEscortState(STATE_ESCORT_ESCORTING))
+        if (pQuest->GetQuestId() == QUEST_DISASTER)  
         {
-            if (pPlayer)         
-                pPlayer->FailQuest(QUEST_DISASTER);            
-        }        
-    }
+            if (npc_engineer_heliceAI* pEscortAI = CAST_AI(npc_engineer_heliceAI, pCreature->AI()))
+            {        
+                pCreature->GetMotionMaster()->MoveJumpTo(0, 0.4, 0.4);
+                pCreature->setFaction(113);
 
-    void UpdateAI(const uint32 uiDiff)
-    {
-        npc_escortAI::UpdateAI(uiDiff);
-
-        if (HasEscortState(STATE_ESCORT_ESCORTING))
-        {
-            if (m_uiChatTimer <= uiDiff)
-            {                 
-                m_uiChatTimer = 12000;
+                pEscortAI->Start(false, false, pPlayer->GetGUID());
+                DoScriptText(SAY_WP_1, pCreature);
             }
-            else
-                m_uiChatTimer -= uiDiff;
-        }        
+        }
+        return true;
     }
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new npc_engineer_heliceAI(pCreature);
+    }
+
+    struct npc_engineer_heliceAI : public npc_escortAI
+    {
+        npc_engineer_heliceAI(Creature* pCreature) : npc_escortAI(pCreature) { }
+    
+        uint32 m_uiChatTimer;
+
+        void WaypointReached(uint32 i)
+        {    
+            Player* pPlayer = GetPlayerForEscort();
+            switch (i)
+            {
+                case 0:
+                    DoScriptText(SAY_WP_2, me);
+                    break;
+                case 1: 
+                    DoScriptText(SAY_WP_3, me);
+                    me->CastSpell(5918.33, 5372.91, -98.770, SPELL_EXPLODE_CRYSTAL, true);
+                    me->SummonGameObject(184743, 5918.33, 5372.91, -98.770, 0, 0, 0, 0, 0, TEMPSUMMON_MANUAL_DESPAWN);     //approx 3 to 4 seconds       
+                    me->HandleEmoteCommand(EMOTE_ONESHOT_LAUGH);
+                    break;
+                case 2:            
+                    DoScriptText(SAY_WP_4, me);
+                    break;
+                case 7:
+                    DoScriptText(SAY_WP_5, me);
+                    break;
+                case 8:          
+                    me->CastSpell(5887.37, 5379.39, -91.289, SPELL_EXPLODE_CRYSTAL, true);
+                    me->SummonGameObject(184743, 5887.37, 5379.39, -91.289, 0, 0, 0, 0, 0, TEMPSUMMON_MANUAL_DESPAWN);      //approx 3 to 4 seconds 
+                    me->HandleEmoteCommand(EMOTE_ONESHOT_LAUGH);
+                    break;
+                case 9:            
+                    DoScriptText(SAY_WP_6, me);
+                    break;
+                case 13: 
+                    if (pPlayer)
+                    {
+                        pPlayer->GroupEventHappens(QUEST_DISASTER, me);
+                        DoScriptText(SAY_WP_7, me);
+                    }
+                    break;
+            }
+        }   
+
+        void Reset()
+        {    
+            m_uiChatTimer = 4000;    
+        }
+        void JustDied(Unit* /*pKiller*/)
+        {
+            Player* pPlayer = GetPlayerForEscort();
+            if (HasEscortState(STATE_ESCORT_ESCORTING))
+            {
+                if (pPlayer)     
+                    pPlayer->FailQuest(QUEST_DISASTER);        
+            }    
+        }
+
+        void UpdateAI(const uint32 uiDiff)
+        {
+            npc_escortAI::UpdateAI(uiDiff);
+
+            if (HasEscortState(STATE_ESCORT_ESCORTING))
+            {
+                if (m_uiChatTimer <= uiDiff)
+                {             
+                    m_uiChatTimer = 12000;
+                }
+                else
+                    m_uiChatTimer -= uiDiff;
+            }    
+        }
+    };
+
 };
 
-CreatureAI* GetAI_npc_engineer_helice(Creature* pCreature)
-{
-    return new npc_engineer_heliceAI(pCreature);
-}
 
-bool QuestAccept_npc_engineer_helice(Player* pPlayer, Creature* pCreature, const Quest* pQuest)
-{
-    if (pQuest->GetQuestId() == QUEST_DISASTER)  
-    {
-        if (npc_engineer_heliceAI* pEscortAI = CAST_AI(npc_engineer_heliceAI, pCreature->AI()))
-        {            
-            pCreature->GetMotionMaster()->MoveJumpTo(0, 0.4, 0.4);
-            pCreature->setFaction(113);
-
-            pEscortAI->Start(false, false, pPlayer->GetGUID());
-            DoScriptText(SAY_WP_1, pCreature);
-        }
-    }
-    return true;
-}
 
 void AddSC_sholazar_basin()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "npc_injured_rainspeaker_oracle";
-    newscript->GetAI = &GetAI_npc_injured_rainspeaker_oracle;
-    newscript->pGossipHello = &GossipHello_npc_injured_rainspeaker_oracle;
-    newscript->pGossipSelect = &GossipSelect_npc_injured_rainspeaker_oracle;
-    newscript->pQuestAccept = &QuestAccept_npc_injured_rainspeaker_oracle;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_vekjik";
-    newscript->pGossipHello = &GossipHello_npc_vekjik;
-    newscript->pGossipSelect = &GossipSelect_npc_vekjik;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_avatar_of_freya";
-    newscript->pGossipHello = &GossipHello_npc_avatar_of_freya;
-    newscript->pGossipSelect = &GossipSelect_npc_avatar_of_freya;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "npc_bushwhacker";
-    newscript->GetAI = &GetAI_npc_bushwhacker;
-    newscript->RegisterSelf();
-     
-    newscript = new Script;
-    newscript->Name = "npc_engineer_helice";
-    newscript->GetAI = &GetAI_npc_engineer_helice; 
-    newscript->pQuestAccept = &QuestAccept_npc_engineer_helice;
-    newscript->RegisterSelf();
+    new npc_injured_rainspeaker_oracle();
+    new npc_vekjik();
+    new npc_avatar_of_freya();
+    new npc_bushwhacker();
+    new npc_engineer_helice();
 }

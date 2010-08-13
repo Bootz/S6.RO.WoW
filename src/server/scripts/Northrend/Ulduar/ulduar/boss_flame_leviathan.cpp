@@ -141,308 +141,352 @@ const Position PosColossus[2] =
 {367.031, 12.784,409.886,3.263},
 {368.768,-46.847,409.886,3.036}
 };
-
-struct boss_flame_leviathanAI : public BossAI
+class boss_flame_leviathan : public CreatureScript
 {
-    boss_flame_leviathanAI(Creature *pCreature) : BossAI(pCreature, BOSS_LEVIATHAN), vehicle(me->GetVehicleKit())
-    {
-        assert(vehicle);
-        pInstance = pCreature->GetInstanceData();
-        ColossusCount = 0;
-        me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);
-        me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true); // Death Grip jump effect
-        
-        me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_STUNNED);
-        me->SetReactState(REACT_PASSIVE);
-        
-        // Summon Ulduar Colossus
-        if (me->isAlive())
-            for(uint32 i = 0; i < 2; ++i)
-                DoSummon(MOB_COLOSSUS, PosColossus[i], 7000, TEMPSUMMON_CORPSE_TIMED_DESPAWN);
-	}
+public:
+    boss_flame_leviathan() : CreatureScript("boss_flame_leviathan") { }
 
-    ScriptedInstance* pInstance;
-    Vehicle *vehicle;
-    uint32 ColossusCount;
-
-    void Reset()
+    CreatureAI* GetAI(Creature* pCreature)
     {
-        _Reset();
+        return new boss_flame_leviathanAI (pCreature);
     }
 
-    void EnterCombat(Unit *who)
+    struct boss_flame_leviathanAI : public BossAI
     {
-        _EnterCombat();
-        DoScriptText(SAY_AGGRO, me);
-        events.ScheduleEvent(EVENT_PURSUE, 0);
-        events.ScheduleEvent(EVENT_MISSILE, 1500);
-        events.ScheduleEvent(EVENT_VENT, 20000);
-        events.ScheduleEvent(EVENT_SPEED, 2000);
-        //events.ScheduleEvent(EVENT_SUMMON, 0);
-        events.ScheduleEvent(EVENT_SHUTDOWN, 60000);
-        if (Creature *turret = CAST_CRE(vehicle->GetPassenger(7)))
-            turret->AI()->DoZoneInCombat();
-    }
-
-    void JustDied(Unit *victim)
-    {
-        DoScriptText(SAY_DEATH, me);  
-        _JustDied();
-        DespawnCreatures(VEHICLE_SIEGE, 200);
-        DespawnCreatures(VEHICLE_DEMOLISHER, 200);
-        DespawnCreatures(VEHICLE_CHOPPER, 200);
-    }
-    void SpellHit(Unit *caster, const SpellEntry *spell)
-    {
-        if(spell->Id == 62472)
-            vehicle->InstallAllAccessories();
-        else if(spell->Id == SPELL_ELECTROSHOCK)
-            me->InterruptSpell(CURRENT_CHANNELED_SPELL);
-    }
-
-    void KilledUnit(Unit* Victim)
-    {
-        if (!(rand()%5))
-            DoScriptText(SAY_SLAY, me);
-    }
-
-    void UpdateAI(const uint32 diff)
-    {
-        if (!UpdateVictim())
-            return;
-
-        events.Update(diff);
-
-        if (me->hasUnitState(UNIT_STAT_CASTING) || me->HasAura(SPELL_SYSTEMS_SHUTDOWN))
-            return;
-
-        while(uint32 eventId = events.ExecuteEvent())
+        boss_flame_leviathanAI(Creature *pCreature) : BossAI(pCreature, BOSS_LEVIATHAN), vehicle(me->GetVehicleKit())
         {
-            switch(eventId)
+            assert(vehicle);
+            pInstance = pCreature->GetInstanceData();
+            ColossusCount = 0;
+            me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);
+            me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true); // Death Grip jump effect
+        
+            me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_STUNNED);
+            me->SetReactState(REACT_PASSIVE);
+        
+            // Summon Ulduar Colossus
+            if (me->isAlive())
+                for(uint32 i = 0; i < 2; ++i)
+                    DoSummon(MOB_COLOSSUS, PosColossus[i], 7000, TEMPSUMMON_CORPSE_TIMED_DESPAWN);
+    	}
+
+        ScriptedInstance* pInstance;
+        Vehicle *vehicle;
+        uint32 ColossusCount;
+
+        void Reset()
+        {
+            _Reset();
+        }
+
+        void EnterCombat(Unit *who)
+        {
+            _EnterCombat();
+            DoScriptText(SAY_AGGRO, me);
+            events.ScheduleEvent(EVENT_PURSUE, 0);
+            events.ScheduleEvent(EVENT_MISSILE, 1500);
+            events.ScheduleEvent(EVENT_VENT, 20000);
+            events.ScheduleEvent(EVENT_SPEED, 2000);
+            //events.ScheduleEvent(EVENT_SUMMON, 0);
+            events.ScheduleEvent(EVENT_SHUTDOWN, 60000);
+            if (Creature *turret = CAST_CRE(vehicle->GetPassenger(7)))
+                turret->AI()->DoZoneInCombat();
+        }
+
+        void JustDied(Unit *victim)
+        {
+            DoScriptText(SAY_DEATH, me);  
+            _JustDied();
+            DespawnCreatures(VEHICLE_SIEGE, 200);
+            DespawnCreatures(VEHICLE_DEMOLISHER, 200);
+            DespawnCreatures(VEHICLE_CHOPPER, 200);
+        }
+        void SpellHit(Unit *caster, const SpellEntry *spell)
+        {
+            if(spell->Id == 62472)
+                vehicle->InstallAllAccessories();
+            else if(spell->Id == SPELL_ELECTROSHOCK)
+                me->InterruptSpell(CURRENT_CHANNELED_SPELL);
+        }
+
+        void KilledUnit(Unit* Victim)
+        {
+            if (!(rand()%5))
+                DoScriptText(SAY_SLAY, me);
+        }
+
+        void UpdateAI(const uint32 diff)
+        {
+            if (!UpdateVictim())
+                return;
+
+            events.Update(diff);
+
+            if (me->hasUnitState(UNIT_STAT_CASTING) || me->HasAura(SPELL_SYSTEMS_SHUTDOWN))
+                return;
+
+            while(uint32 eventId = events.ExecuteEvent())
             {
-            case 0: break;
-            case EVENT_PURSUE:
-                DoScriptText(RAND(SAY_TARGET_1, SAY_TARGET_2, SAY_TARGET_3), me);
+                switch(eventId)
                 {
-                    DoZoneInCombat();
-                    Unit* pTarget;
-                    std::vector<Unit *> target_list;
-                    std::list<HostileReference*> ThreatList = me->getThreatManager().getThreatList();
-                    for (std::list<HostileReference*>::const_iterator itr = ThreatList.begin(); itr != ThreatList.end(); ++itr)
+                case 0: break;
+                case EVENT_PURSUE:
+                    DoScriptText(RAND(SAY_TARGET_1, SAY_TARGET_2, SAY_TARGET_3), me);
                     {
-                        pTarget = Unit::GetUnit(*me, (*itr)->getUnitGuid());
+                        DoZoneInCombat();
+                        Unit* pTarget;
+                        std::vector<Unit *> target_list;
+                        std::list<HostileReference*> ThreatList = me->getThreatManager().getThreatList();
+                        for (std::list<HostileReference*>::const_iterator itr = ThreatList.begin(); itr != ThreatList.end(); ++itr)
+                        {
+                            pTarget = Unit::GetUnit(*me, (*itr)->getUnitGuid());
 
-                        if (!pTarget)
-                            continue;
+                            if (!pTarget)
+                                continue;
 
-                        if (pTarget->GetEntry() == VEHICLE_SIEGE || pTarget->GetEntry() == VEHICLE_DEMOLISHER)
-                            target_list.push_back(pTarget);
+                            if (pTarget->GetEntry() == VEHICLE_SIEGE || pTarget->GetEntry() == VEHICLE_DEMOLISHER)
+                                target_list.push_back(pTarget);
 
-                        pTarget = NULL;
+                            pTarget = NULL;
+                        }
+
+                        if (!target_list.empty())
+                            pTarget = *(target_list.begin()+rand()%target_list.size());
+                        else
+                            pTarget = me->getVictim();
+
+                        if (pTarget && pTarget->isAlive())
+                        {
+                            DoResetThreat();
+                            me->AddThreat(pTarget, 5000000.0f);
+                            me->AddAura(SPELL_PURSUED, pTarget);
+                            me->MonsterTextEmote(EMOTE_PURSUE, pTarget->GetGUID(), true);
+                       }
                     }
-
-                    if (!target_list.empty())
-                        pTarget = *(target_list.begin()+rand()%target_list.size());
-                    else
-                        pTarget = me->getVictim();
-
-                    if (pTarget && pTarget->isAlive())
-                    {
-                        DoResetThreat();
-                        me->AddThreat(pTarget, 5000000.0f);
-                        me->AddAura(SPELL_PURSUED, pTarget);
-                        me->MonsterTextEmote(EMOTE_PURSUE, pTarget->GetGUID(), true);
-                   }
+                    events.RescheduleEvent(EVENT_PURSUE, 35000);
+                    break;
+                case EVENT_MISSILE:
+                    DoCastAOE(SPELL_MISSILE_BARRAGE);
+                    events.RescheduleEvent(EVENT_MISSILE, 1500);
+                    break;
+                case EVENT_VENT:
+                    DoCastAOE(SPELL_FLAME_VENTS);
+                    events.RescheduleEvent(EVENT_VENT, 20000);
+                    break;
+                case EVENT_SPEED:
+                    DoCastAOE(SPELL_GATHERING_SPEED);
+                    events.RescheduleEvent(EVENT_SPEED, 10000);
+                    break;
+                case EVENT_SUMMON:
+                    if(summons.size() < 15) // 4seat+1turret+10lift
+                        if(Creature *lift = DoSummonFlyer(MOB_MECHANOLIFT, me, rand()%20 + 20, 50, 0))
+                            lift->GetMotionMaster()->MoveRandom(100);
+                    events.RescheduleEvent(EVENT_SUMMON, 2000);
+                    break;
+                case EVENT_SHUTDOWN:
+                    DoScriptText(RAND(SAY_OVERLOAD_1, SAY_OVERLOAD_2, SAY_OVERLOAD_3), me);
+                    me->MonsterTextEmote(EMOTE_OVERLOAD, 0, true);
+                    DoCast(SPELL_SYSTEMS_SHUTDOWN);
+                    me->RemoveAurasDueToSpell(SPELL_GATHERING_SPEED);
+                    me->MonsterTextEmote(EMOTE_REPAIR, 0, true);
+                    events.RescheduleEvent(EVENT_SHUTDOWN, 80000);
+                    break;
+                default:
+                    events.PopEvent();
+                    break;
                 }
-                events.RescheduleEvent(EVENT_PURSUE, 35000);
-                break;
-            case EVENT_MISSILE:
-                DoCastAOE(SPELL_MISSILE_BARRAGE);
-                events.RescheduleEvent(EVENT_MISSILE, 1500);
-                break;
-            case EVENT_VENT:
-                DoCastAOE(SPELL_FLAME_VENTS);
-                events.RescheduleEvent(EVENT_VENT, 20000);
-                break;
-            case EVENT_SPEED:
-                DoCastAOE(SPELL_GATHERING_SPEED);
-                events.RescheduleEvent(EVENT_SPEED, 10000);
-                break;
-            case EVENT_SUMMON:
-                if(summons.size() < 15) // 4seat+1turret+10lift
-                    if(Creature *lift = DoSummonFlyer(MOB_MECHANOLIFT, me, rand()%20 + 20, 50, 0))
-                        lift->GetMotionMaster()->MoveRandom(100);
-                events.RescheduleEvent(EVENT_SUMMON, 2000);
-                break;
-            case EVENT_SHUTDOWN:
-                DoScriptText(RAND(SAY_OVERLOAD_1, SAY_OVERLOAD_2, SAY_OVERLOAD_3), me);
-                me->MonsterTextEmote(EMOTE_OVERLOAD, 0, true);
-                DoCast(SPELL_SYSTEMS_SHUTDOWN);
-                me->RemoveAurasDueToSpell(SPELL_GATHERING_SPEED);
-                me->MonsterTextEmote(EMOTE_REPAIR, 0, true);
-                events.RescheduleEvent(EVENT_SHUTDOWN, 80000);
-                break;
-            default:
-                events.PopEvent();
-                break;
             }
-        }
         
-        if (me->IsWithinMeleeRange(me->getVictim()))
-            DoSpellAttackIfReady(SPELL_BATTERING_RAM);
-    }
+            if (me->IsWithinMeleeRange(me->getVictim()))
+                DoSpellAttackIfReady(SPELL_BATTERING_RAM);
+        }
  
-    void DoAction(const int32 action)
-    {
-        switch (action)
+        void DoAction(const int32 action)
         {
-            case INCREASE_COLOSSUS_COUNT:
-                ++ColossusCount;
-                break;
-        }
-        
-        if (ColossusCount >= 2)
-        {
-            // Event starts
-            if (pInstance)
-                pInstance->SetData(DATA_LEVIATHAN_DOOR, GO_STATE_ACTIVE_ALTERNATIVE);
-                
-            me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_STUNNED);
-            me->SetReactState(REACT_AGGRESSIVE);
-            me->SetHomePosition(318.74, -13.75, 409.803, 3.12723); // new Home Position
-            me->GetMotionMaster()->MoveTargetedHome();
-            DoZoneInCombat();
-        }
-    }
-
-    // HACK: this fixes problems in instance bind and loot.
-    void DamageTaken(Unit* pKiller, uint32 &damage)
-    {
-        if(damage >= me->GetHealth())
-        {
-            if (pKiller && pKiller->IsVehicle())
+            switch (action)
             {
-                damage = 0;
-                if (!pKiller->GetVehicleKit()->HasEmptySeat(0))
-                    pKiller->GetVehicleKit()->GetPassenger(0)->Kill(me, false);
-                else if (!pKiller->GetVehicleKit()->HasEmptySeat(1))
-                    pKiller->GetVehicleKit()->GetPassenger(1)->Kill(me, false);
+                case INCREASE_COLOSSUS_COUNT:
+                    ++ColossusCount;
+                    break;
+            }
+        
+            if (ColossusCount >= 2)
+            {
+                // Event starts
+                if (pInstance)
+                    pInstance->SetData(DATA_LEVIATHAN_DOOR, GO_STATE_ACTIVE_ALTERNATIVE);
+                
+                me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_STUNNED);
+                me->SetReactState(REACT_AGGRESSIVE);
+                me->SetHomePosition(318.74, -13.75, 409.803, 3.12723); // new Home Position
+                me->GetMotionMaster()->MoveTargetedHome();
+                DoZoneInCombat();
             }
         }
-    }
 
-    void DespawnCreatures(uint32 entry, float distance, bool discs = false)
-    {
-        std::list<Creature*> m_pCreatures;
-        GetCreatureListWithEntryInGrid(m_pCreatures, me, entry, distance);
+        // HACK: this fixes problems in instance bind and loot.
+        void DamageTaken(Unit* pKiller, uint32 &damage)
+        {
+            if(damage >= me->GetHealth())
+            {
+                if (pKiller && pKiller->IsVehicle())
+                {
+                    damage = 0;
+                    if (!pKiller->GetVehicleKit()->HasEmptySeat(0))
+                        pKiller->GetVehicleKit()->GetPassenger(0)->Kill(me, false);
+                    else if (!pKiller->GetVehicleKit()->HasEmptySeat(1))
+                        pKiller->GetVehicleKit()->GetPassenger(1)->Kill(me, false);
+                }
+            }
+        }
 
-        if (m_pCreatures.empty())
-            return;
+        void DespawnCreatures(uint32 entry, float distance, bool discs = false)
+        {
+            std::list<Creature*> m_pCreatures;
+            GetCreatureListWithEntryInGrid(m_pCreatures, me, entry, distance);
 
-        for(std::list<Creature*>::iterator iter = m_pCreatures.begin(); iter != m_pCreatures.end(); ++iter)
-            (*iter)->ForcedDespawn();
-    }
+            if (m_pCreatures.empty())
+                return;
+
+            for(std::list<Creature*>::iterator iter = m_pCreatures.begin(); iter != m_pCreatures.end(); ++iter)
+                (*iter)->ForcedDespawn();
+        }
+    };
+
 };
 
 //#define BOSS_DEBUG
-
-struct boss_flame_leviathan_seatAI : public PassiveAI
+class boss_flame_leviathan_seat : public CreatureScript
 {
-    boss_flame_leviathan_seatAI(Creature *c) : PassiveAI(c), vehicle(c->GetVehicleKit())
+public:
+    boss_flame_leviathan_seat() : CreatureScript("boss_flame_leviathan_seat") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
     {
-        assert(vehicle);
-#ifdef BOSS_DEBUG
-        me->SetReactState(REACT_AGGRESSIVE);
-#endif
+        return new boss_flame_leviathan_seatAI (pCreature);
     }
 
-    Vehicle *vehicle;
-
-#ifdef BOSS_DEBUG
-    void MoveInLineOfSight(Unit *who)
+    struct boss_flame_leviathan_seatAI : public PassiveAI
     {
-        if(who->GetTypeId() == TYPEID_PLAYER && CAST_PLR(who)->isGameMaster()
-            && !who->GetVehicle() && vehicle->GetPassenger(SEAT_TURRET))
-            who->EnterVehicle(vehicle, SEAT_PLAYER);
-    }
-#endif
-
-    void PassengerBoarded(Unit *who, int8 seatId, bool apply)
-    {
-        if(!me->GetVehicle())
-            return;
-
-        if(seatId == SEAT_PLAYER)
+        boss_flame_leviathan_seatAI(Creature *c) : PassiveAI(c), vehicle(c->GetVehicleKit())
         {
-            if(!apply)
+            assert(vehicle);
+    #ifdef BOSS_DEBUG
+            me->SetReactState(REACT_AGGRESSIVE);
+    #endif
+        }
+
+        Vehicle *vehicle;
+
+    #ifdef BOSS_DEBUG
+        void MoveInLineOfSight(Unit *who)
+        {
+            if(who->GetTypeId() == TYPEID_PLAYER && CAST_PLR(who)->isGameMaster()
+                && !who->GetVehicle() && vehicle->GetPassenger(SEAT_TURRET))
+                who->EnterVehicle(vehicle, SEAT_PLAYER);
+        }
+    #endif
+
+        void PassengerBoarded(Unit *who, int8 seatId, bool apply)
+        {
+            if(!me->GetVehicle())
                 return;
 
-            if(Creature *turret = CAST_CRE(vehicle->GetPassenger(SEAT_TURRET)))
+            if(seatId == SEAT_PLAYER)
             {
-                turret->setFaction(me->GetVehicleBase()->getFaction());
-                turret->SetUInt32Value(UNIT_FIELD_FLAGS, 0); // unselectable
-                turret->AI()->AttackStart(who);
-            }
-            if(Unit *device = vehicle->GetPassenger(SEAT_DEVICE))
-            {
-                device->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_SPELLCLICK);
-                device->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-            }
-        }
-        else if(seatId == SEAT_TURRET)
-        {
-            if(apply)
-                return;
+                if(!apply)
+                    return;
 
-            if(Unit *device = vehicle->GetPassenger(SEAT_DEVICE))
-            {
-                device->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_SPELLCLICK);
-                device->SetUInt32Value(UNIT_FIELD_FLAGS, 0); // unselectable
-            }
-        }
-    }
-};
-
-struct boss_flame_leviathan_defense_turretAI : public TurretAI
-{
-    boss_flame_leviathan_defense_turretAI(Creature *c) : TurretAI(c) {}
-
-    void DamageTaken(Unit *who, uint32 &damage)
-    {
-        if(!CanAIAttack(who))
-            damage = 0;
-    }
-
-    bool CanAIAttack(const Unit *who) const
-    {
-        if (who->GetTypeId() != TYPEID_PLAYER || !who->GetVehicle() || who->GetVehicleBase()->GetEntry() != 33114)
-            return false;
-        return true;
-    }
-};
-
-struct boss_flame_leviathan_overload_deviceAI : public PassiveAI
-{
-    boss_flame_leviathan_overload_deviceAI(Creature *c) : PassiveAI(c) {}
-
-    void DoAction(const int32 param)
-    {
-        if(param == EVENT_SPELLCLICK)
-        {
-            me->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_SPELLCLICK);
-            me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-            if(me->GetVehicle())
-            {
-                if(Unit *player = me->GetVehicle()->GetPassenger(SEAT_PLAYER))
+                if(Creature *turret = CAST_CRE(vehicle->GetPassenger(SEAT_TURRET)))
                 {
-                    player->ExitVehicle();
-                    me->GetVehicleBase()->CastSpell(player, SPELL_SMOKE_TRAIL, true);
-                    if(Unit *leviathan = me->GetVehicleBase()->GetVehicleBase())
-                        player->GetMotionMaster()->MoveKnockbackFrom(leviathan->GetPositionX(), leviathan->GetPositionY(), 30, 30);
+                    turret->setFaction(me->GetVehicleBase()->getFaction());
+                    turret->SetUInt32Value(UNIT_FIELD_FLAGS, 0); // unselectable
+                    turret->AI()->AttackStart(who);
+                }
+                if(Unit *device = vehicle->GetPassenger(SEAT_DEVICE))
+                {
+                    device->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_SPELLCLICK);
+                    device->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                }
+            }
+            else if(seatId == SEAT_TURRET)
+            {
+                if(apply)
+                    return;
+
+                if(Unit *device = vehicle->GetPassenger(SEAT_DEVICE))
+                {
+                    device->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_SPELLCLICK);
+                    device->SetUInt32Value(UNIT_FIELD_FLAGS, 0); // unselectable
                 }
             }
         }
+    };
+
+};
+class boss_flame_leviathan_defense_turret : public CreatureScript
+{
+public:
+    boss_flame_leviathan_defense_turret() : CreatureScript("boss_flame_leviathan_defense_turret") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new boss_flame_leviathan_defense_turretAI (pCreature);
     }
+
+    struct boss_flame_leviathan_defense_turretAI : public TurretAI
+    {
+        boss_flame_leviathan_defense_turretAI(Creature *c) : TurretAI(c) {}
+
+        void DamageTaken(Unit *who, uint32 &damage)
+        {
+            if(!CanAIAttack(who))
+                damage = 0;
+        }
+
+        bool CanAIAttack(const Unit *who) const
+        {
+            if (who->GetTypeId() != TYPEID_PLAYER || !who->GetVehicle() || who->GetVehicleBase()->GetEntry() != 33114)
+                return false;
+            return true;
+        }
+    };
+
+};
+class boss_flame_leviathan_overload_device : public CreatureScript
+{
+public:
+    boss_flame_leviathan_overload_device() : CreatureScript("boss_flame_leviathan_overload_device") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new boss_flame_leviathan_overload_deviceAI (pCreature);
+    }
+
+    struct boss_flame_leviathan_overload_deviceAI : public PassiveAI
+    {
+        boss_flame_leviathan_overload_deviceAI(Creature *c) : PassiveAI(c) {}
+
+        void DoAction(const int32 param)
+        {
+            if(param == EVENT_SPELLCLICK)
+            {
+                me->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_SPELLCLICK);
+                me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                if(me->GetVehicle())
+                {
+                    if(Unit *player = me->GetVehicle()->GetPassenger(SEAT_PLAYER))
+                    {
+                        player->ExitVehicle();
+                        me->GetVehicleBase()->CastSpell(player, SPELL_SMOKE_TRAIL, true);
+                        if(Unit *leviathan = me->GetVehicleBase()->GetVehicleBase())
+                            player->GetMotionMaster()->MoveKnockbackFrom(leviathan->GetPositionX(), leviathan->GetPositionY(), 30, 30);
+                    }
+                }
+            }
+        }
+    };
+
 };
 
 struct boss_flame_leviathan_safety_containerAI : public PassiveAI
@@ -465,233 +509,214 @@ struct boss_flame_leviathan_safety_containerAI : public PassiveAI
             me->GetMotionMaster()->MoveFall(409.8f, me->GetEntry());
     }
 };
-
-struct spell_pool_of_tarAI : public TriggerAI
+class spell_pool_of_tar : public CreatureScript
 {
-    spell_pool_of_tarAI(Creature *c) : TriggerAI(c)
+public:
+    spell_pool_of_tar() : CreatureScript("spell_pool_of_tar") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
     {
-        me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+        return new spell_pool_of_tarAI (pCreature);
     }
 
-    void DamageTaken(Unit *who, uint32 &damage)
+    struct spell_pool_of_tarAI : public TriggerAI
     {
-        damage = 0;
-    }
-
-    void SpellHit(Unit* caster, const SpellEntry *spell)
-    {
-        if(spell->SchoolMask & SPELL_SCHOOL_MASK_FIRE && !me->HasAura(SPELL_BLAZE))
-            me->CastSpell(me, SPELL_BLAZE, true);
-    }
-};
-
-struct keeper_norgannonAI : public ScriptedAI
-{
-    keeper_norgannonAI(Creature *c) : ScriptedAI(c), summons(me)
-    {
-        pInstance = c->GetInstanceData();
-    }
-
-    ScriptedInstance* pInstance;
-    SummonList summons;
-
-    void JustSummoned(Creature *summon)
-    {
-        summons.Summon(summon);
-    }
-    
-    void DoAction(const int32 action)
-    {
-        switch (action)
+        spell_pool_of_tarAI(Creature *c) : TriggerAI(c)
         {
-            case ACTION_VEHICLE_RESPAWN:
-                summons.DespawnAll();
-                for(uint32 i = 0; i < (RAID_MODE(2, 5)); ++i)
-                    DoSummon(VEHICLE_SIEGE, PosSiege[i], 3000, TEMPSUMMON_CORPSE_TIMED_DESPAWN);
-                for(uint32 i = 0; i < (RAID_MODE(2, 5)); ++i)
-                    DoSummon(VEHICLE_CHOPPER, PosChopper[i], 3000, TEMPSUMMON_CORPSE_TIMED_DESPAWN);
-                for(uint32 i = 0; i < (RAID_MODE(2, 5)); ++i)
-                    DoSummon(VEHICLE_DEMOLISHER, PosDemolisher[i], 3000, TEMPSUMMON_CORPSE_TIMED_DESPAWN);
+            me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+        }
+
+        void DamageTaken(Unit *who, uint32 &damage)
+        {
+            damage = 0;
+        }
+
+        void SpellHit(Unit* caster, const SpellEntry *spell)
+        {
+            if(spell->SchoolMask & SPELL_SCHOOL_MASK_FIRE && !me->HasAura(SPELL_BLAZE))
+                me->CastSpell(me, SPELL_BLAZE, true);
+        }
+    };
+
+};
+class npc_keeper_norgannon : public CreatureScript
+{
+public:
+    npc_keeper_norgannon() : CreatureScript("npc_keeper_norgannon") { }
+
+    CreatureAI* GetAI_keeper_norgannon(Creature* pCreature)
+    {
+        return new keeper_norgannonAI (pCreature);
+    }
+
+    bool GossipSelect_keeper_norgannon(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+    {
+        InstanceData *data = pPlayer->GetInstanceData();
+        ScriptedInstance* pInstance = pCreature->GetInstanceData();
+        switch(uiAction)
+        {
+            case GOSSIP_ACTION_INFO_DEF:
+                if (pPlayer)
+                    pPlayer->CLOSE_GOSSIP_MENU();
+                if (Creature* Norgannon = Unit::GetCreature(*pCreature, pInstance ? pInstance->GetData64(DATA_NORGANNON) : 0))
+                    if (Norgannon->isAlive())
+                    {
+                        Norgannon->AI()->DoAction(ACTION_VEHICLE_RESPAWN);
+                        data->SetBossState(BOSS_LEVIATHAN, SPECIAL);
+                   }
                 break;
         }
+        return true;
     }
-};
 
-bool GossipHello_keeper_norgannon(Player* pPlayer, Creature* pCreature)
-{
-    InstanceData *data = pPlayer->GetInstanceData();
-    ScriptedInstance *pInstance = (ScriptedInstance *) pCreature->GetInstanceData();
-    
-    if (pInstance && pPlayer)
-       if (data->GetBossState(BOSS_LEVIATHAN) != DONE)
-            if (data->GetBossState(BOSS_LEVIATHAN) != SPECIAL)
-            {
-                pPlayer->PrepareQuestMenu(pCreature->GetGUID());
-                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT,GOSSIP_ITEM_1,GOSSIP_SENDER_MAIN,GOSSIP_ACTION_INFO_DEF);
-                pPlayer->SEND_GOSSIP_MENU(13910, pCreature->GetGUID());
-            }
-    else pPlayer->SEND_GOSSIP_MENU(1, pCreature->GetGUID());
-
-    return true;
-}
-
-bool GossipSelect_keeper_norgannon(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-{
-    InstanceData *data = pPlayer->GetInstanceData();
-    ScriptedInstance* pInstance = pCreature->GetInstanceData();
-    switch(uiAction)
+    bool GossipHello_keeper_norgannon(Player* pPlayer, Creature* pCreature)
     {
-        case GOSSIP_ACTION_INFO_DEF:
-            if (pPlayer)
-                pPlayer->CLOSE_GOSSIP_MENU();
-            if (Creature* Norgannon = Unit::GetCreature(*pCreature, pInstance ? pInstance->GetData64(DATA_NORGANNON) : 0))
-                if (Norgannon->isAlive())
+        InstanceData *data = pPlayer->GetInstanceData();
+        ScriptedInstance *pInstance = (ScriptedInstance *) pCreature->GetInstanceData();
+    
+        if (pInstance && pPlayer)
+           if (data->GetBossState(BOSS_LEVIATHAN) != DONE)
+                if (data->GetBossState(BOSS_LEVIATHAN) != SPECIAL)
                 {
-                    Norgannon->AI()->DoAction(ACTION_VEHICLE_RESPAWN);
-                    data->SetBossState(BOSS_LEVIATHAN, SPECIAL);
-               }
-            break;
-    }
-    return true;
-}
+                    pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT,GOSSIP_ITEM_1,GOSSIP_SENDER_MAIN,GOSSIP_ACTION_INFO_DEF);
+                    pPlayer->SEND_GOSSIP_MENU(13910, pCreature->GetGUID());
+                }
+        else pPlayer->SEND_GOSSIP_MENU(1, pCreature->GetGUID());
 
-struct mob_colossusAI : public ScriptedAI
-{
-    mob_colossusAI(Creature* pCreature) : ScriptedAI(pCreature)
-    {
-        m_pInstance = me->GetInstanceData();
+        return true;
     }
 
-    ScriptedInstance* m_pInstance;
-    int32 uiGroundSlamTimer;
-
-    void Reset()
+    struct keeper_norgannonAI : public ScriptedAI
     {
-        uiGroundSlamTimer = 12000;
-    }
-    
-    void JustDied(Unit *victim)
-    {
-        if (Creature* pLeviathan = Unit::GetCreature(*me, m_pInstance->GetData64(DATA_LEVIATHAN)))
-            if (pLeviathan->AI())
-                pLeviathan->AI()->DoAction(INCREASE_COLOSSUS_COUNT);
-    }
-
-    void UpdateAI(const uint32 diff)
-    {
-        if (!UpdateVictim())
-            return;
-
-        if (uiGroundSlamTimer <= diff)
+        keeper_norgannonAI(Creature *c) : ScriptedAI(c), summons(me)
         {
-            DoCast(me->getVictim(), SPELL_GROUND_SLAM);
-            uiGroundSlamTimer = 12000;
-        } else uiGroundSlamTimer -= diff;
+            pInstance = c->GetInstanceData();
+        }
 
-        DoMeleeAttackIfReady();
-    }
+        ScriptedInstance* pInstance;
+        SummonList summons;
+
+        void JustSummoned(Creature *summon)
+        {
+            summons.Summon(summon);
+        }
+    
+        void DoAction(const int32 action)
+        {
+            switch (action)
+            {
+                case ACTION_VEHICLE_RESPAWN:
+                    summons.DespawnAll();
+                    for(uint32 i = 0; i < (RAID_MODE(2, 5)); ++i)
+                        DoSummon(VEHICLE_SIEGE, PosSiege[i], 3000, TEMPSUMMON_CORPSE_TIMED_DESPAWN);
+                    for(uint32 i = 0; i < (RAID_MODE(2, 5)); ++i)
+                        DoSummon(VEHICLE_CHOPPER, PosChopper[i], 3000, TEMPSUMMON_CORPSE_TIMED_DESPAWN);
+                    for(uint32 i = 0; i < (RAID_MODE(2, 5)); ++i)
+                        DoSummon(VEHICLE_DEMOLISHER, PosDemolisher[i], 3000, TEMPSUMMON_CORPSE_TIMED_DESPAWN);
+                    break;
+            }
+        }
+    };
+
 };
 
-bool AreaTrigger_at_RX_214_repair_o_matic_station(Player* pPlayer, const AreaTriggerEntry* pAt)
+
+class mob_colossus : public CreatureScript
 {
-    if(Creature* vehicle = pPlayer->GetVehicleCreatureBase())
+public:
+    mob_colossus() : CreatureScript("mob_colossus") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
     {
-        if (!vehicle->HasAura(SPELL_AUTO_REPAIR))
-        {
-            vehicle->SetHealth(vehicle->GetMaxHealth()); // Correct spell not works
-            pPlayer->CastSpell(vehicle, SPELL_AUTO_REPAIR, true);
-        }
+        return new mob_colossusAI(pCreature);
     }
-    return true;
-}
 
-CreatureAI* GetAI_boss_flame_leviathan(Creature* pCreature)
-{
-    return new boss_flame_leviathanAI (pCreature);
-}
+    struct mob_colossusAI : public ScriptedAI
+    {
+        mob_colossusAI(Creature* pCreature) : ScriptedAI(pCreature)
+        {
+            m_pInstance = me->GetInstanceData();
+        }
 
-CreatureAI* GetAI_boss_flame_leviathan_seat(Creature* pCreature)
-{
-    return new boss_flame_leviathan_seatAI (pCreature);
-}
+        ScriptedInstance* m_pInstance;
+        int32 uiGroundSlamTimer;
 
-CreatureAI* GetAI_boss_flame_leviathan_defense_turret(Creature* pCreature)
-{
-    return new boss_flame_leviathan_defense_turretAI (pCreature);
-}
+        void Reset()
+        {
+            uiGroundSlamTimer = 12000;
+        }
+    
+        void JustDied(Unit *victim)
+        {
+            if (Creature* pLeviathan = Unit::GetCreature(*me, m_pInstance->GetData64(DATA_LEVIATHAN)))
+                if (pLeviathan->AI())
+                    pLeviathan->AI()->DoAction(INCREASE_COLOSSUS_COUNT);
+        }
 
-CreatureAI* GetAI_boss_flame_leviathan_overload_device(Creature* pCreature)
-{
-    return new boss_flame_leviathan_overload_deviceAI (pCreature);
-}
+        void UpdateAI(const uint32 diff)
+        {
+            if (!UpdateVictim())
+                return;
 
-CreatureAI* GetAI_boss_flame_leviathan_safety_containerAI(Creature* pCreature)
-{
-    return new boss_flame_leviathan_safety_containerAI(pCreature);
-}
+            if (uiGroundSlamTimer <= diff)
+            {
+                DoCast(me->getVictim(), SPELL_GROUND_SLAM);
+                uiGroundSlamTimer = 12000;
+            } else uiGroundSlamTimer -= diff;
 
-CreatureAI* GetAI_spell_pool_of_tar(Creature* pCreature)
-{
-    return new spell_pool_of_tarAI (pCreature);
-}
+            DoMeleeAttackIfReady();
+        }
+    };
 
-CreatureAI* GetAI_keeper_norgannon(Creature* pCreature)
+};
+class at_RX_214_repair_o_matic_station : public AreaTriggerScript
 {
-    return new keeper_norgannonAI (pCreature);
-}
+public:
+    at_RX_214_repair_o_matic_station() : AreaTriggerScript("at_RX_214_repair_o_matic_station") { }
 
-CreatureAI* GetAI_mob_colossus(Creature* pCreature)
+    bool AreaTrigger(Player* pPlayer, const AreaTriggerEntry* pAt)
+    {
+        if(Creature* vehicle = pPlayer->GetVehicleCreatureBase())
+        {
+            if (!vehicle->HasAura(SPELL_AUTO_REPAIR))
+            {
+                vehicle->SetHealth(vehicle->GetMaxHealth()); // Correct spell not works
+                pPlayer->CastSpell(vehicle, SPELL_AUTO_REPAIR, true);
+            }
+        }
+        return true;
+    }
+
+};
+
+
+
+
+class boss_flame_leviathan_safety_container : public CreatureScript
 {
-    return new mob_colossusAI(pCreature);
-}
+public:
+    boss_flame_leviathan_safety_container() : CreatureScript("boss_flame_leviathan_safety_container") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new boss_flame_leviathan_safety_containerAI(pCreature);
+    }
+
+};
+
+
+
 
 void AddSC_boss_flame_leviathan()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_flame_leviathan";
-    newscript->GetAI = &GetAI_boss_flame_leviathan;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "boss_flame_leviathan_seat";
-    newscript->GetAI = &GetAI_boss_flame_leviathan_seat;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "boss_flame_leviathan_defense_turret";
-    newscript->GetAI = &GetAI_boss_flame_leviathan_defense_turret;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "boss_flame_leviathan_overload_device";
-    newscript->GetAI = &GetAI_boss_flame_leviathan_overload_device;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "boss_flame_leviathan_safety_container";
-    newscript->GetAI = &GetAI_boss_flame_leviathan_safety_containerAI;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "spell_pool_of_tar";
-    newscript->GetAI = &GetAI_spell_pool_of_tar;
-    newscript->RegisterSelf();
-   
-    newscript = new Script;
-    newscript->Name="npc_keeper_norgannon";
-    newscript->pGossipHello =  &GossipHello_keeper_norgannon;
-    newscript->pGossipSelect = &GossipSelect_keeper_norgannon;
-    newscript->GetAI = &GetAI_keeper_norgannon;
-    newscript->RegisterSelf();
-    
-    newscript = new Script;
-    newscript->Name = "mob_colossus";
-    newscript->GetAI = &GetAI_mob_colossus;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "at_RX_214_repair_o_matic_station";
-    newscript->pAreaTrigger = &AreaTrigger_at_RX_214_repair_o_matic_station;
-    newscript->RegisterSelf();
+    new boss_flame_leviathan();
+    new boss_flame_leviathan_seat();
+    new boss_flame_leviathan_defense_turret();
+    new boss_flame_leviathan_overload_device();
+    new boss_flame_leviathan_safety_container();
+    new spell_pool_of_tar();
+    new npc_keeper_norgannon();
+    new mob_colossus();
+    new at_RX_214_repair_o_matic_station();
 }

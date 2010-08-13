@@ -738,7 +738,7 @@ enum SpellEffects
     SPELL_EFFECT_NORMALIZED_WEAPON_DMG     = 121,
     SPELL_EFFECT_122                       = 122,
     SPELL_EFFECT_SEND_TAXI                 = 123,
-    SPELL_EFFECT_PLAYER_PULL               = 124,
+    SPELL_EFFECT_PULL_TOWARDS              = 124,
     SPELL_EFFECT_MODIFY_THREAT_PERCENT     = 125,
     SPELL_EFFECT_STEAL_BENEFICIAL_BUFF     = 126,
     SPELL_EFFECT_PROSPECTING               = 127,
@@ -759,7 +759,7 @@ enum SpellEffects
     SPELL_EFFECT_TRIGGER_SPELL_WITH_VALUE  = 142,
     SPELL_EFFECT_APPLY_AREA_AURA_OWNER     = 143,
     SPELL_EFFECT_KNOCK_BACK_DEST           = 144,
-    SPELL_EFFECT_145                       = 145,
+    SPELL_EFFECT_PULL_TOWARDS_DEST         = 145,
     SPELL_EFFECT_ACTIVATE_RUNE             = 146,
     SPELL_EFFECT_QUEST_FAIL                = 147,
     SPELL_EFFECT_148                       = 148,
@@ -2715,7 +2715,7 @@ enum BanReturn
 };
 
 // indexes of BattlemasterList.dbc
-enum BattleGroundTypeId
+enum BattlegroundTypeId
 {
     BATTLEGROUND_TYPE_NONE     = 0,
     BATTLEGROUND_AV            = 1,
@@ -2810,6 +2810,15 @@ enum TradeStatus
     TRADE_STATUS_TARGET_LOGOUT  = 20,
     TRADE_STATUS_TRIAL_ACCOUNT  = 21,                       // Trial accounts can not perform that action
     TRADE_STATUS_ONLY_CONJURED  = 22                        // You can only trade conjured items... (cross realm BG related).
+};
+
+enum XPColorChar
+{
+    XP_RED,
+    XP_ORANGE,
+    XP_YELLOW,
+    XP_GREEN,
+    XP_GRAY
 };
 
 #endif

@@ -10,6 +10,7 @@
 
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
   add_subdirectory(jemalloc)
+  set(JEMALLOC_LIB "jemalloc")
 endif()
 
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
@@ -22,6 +23,6 @@ add_subdirectory(g3dlite)
 add_subdirectory(sockets)
 add_subdirectory(gsoap)
 
-# temporary disable libmpq building (through CMake at least) for now
-# - needs a proper CMakeLists.txt
-#add_subdirectory(libmpq)
+if(TOOLS)
+  add_subdirectory(libmpq)
+endif()

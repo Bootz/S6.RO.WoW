@@ -49,183 +49,187 @@ enum Drakes
 
     
 };
-
-struct mob_CentrifigeConstructAI : public ScriptedAI
+class mob_centrifige_construct : public CreatureScript
 {
-    mob_CentrifigeConstructAI(Creature *c) : ScriptedAI(c)
+public:
+    mob_centrifige_construct() : CreatureScript("mob_centrifige_construct") { }
+
+    CreatureAI* GetAI_mob_CentrifigeConstruct(Creature* pCreature)
     {
-        pInstance = c->GetInstanceData();
+        return new mob_CentrifigeConstructAI (pCreature);
     }
 
-    ScriptedInstance* pInstance;
-
-
-	void DismountPlayers()
-	{
-		std::list<HostileReference*>& m_threatlist = me->getThreatManager().getThreatList();
-		std::list<HostileReference*>::const_iterator i = m_threatlist.begin();
-		for (i = m_threatlist.begin(); i!= m_threatlist.end(); ++i)
-		{
-			Unit* pUnit = Unit::GetUnit((*me), (*i)->getUnitGuid());
-			if (pUnit && (pUnit->GetTypeId() == TYPEID_PLAYER) )
-			{
-				Vehicle* v = pUnit->GetVehicle();
-				if(v)
-				{
-					pUnit->ExitVehicle();
-					v->Dismiss();
-					DoCast(pUnit,SPELL_PARACHUTE);					
-				}
-			}
-		}
-	}
-
-    void UpdateAI(const uint32 diff)
+    struct mob_CentrifigeConstructAI : public ScriptedAI
     {
-        //Return since we have no target
-        if (!UpdateVictim())
-            return;
-		DismountPlayers();
-        DoMeleeAttackIfReady();
-    }
+        mob_CentrifigeConstructAI(Creature *c) : ScriptedAI(c)
+        {
+            pInstance = c->GetInstanceData();
+        }
 
-    void JustDied(Unit* killer)
-    {
-        if (pInstance)
-            pInstance->SetData(DATA_CENTRIFUGE_CONSTRUCT_EVENT, pInstance->GetData(DATA_CENTRIFUGE_CONSTRUCT_EVENT)+1);
-    }
+        ScriptedInstance* pInstance;
+
+
+    	void DismountPlayers()
+    	{
+    		std::list<HostileReference*>& m_threatlist = me->getThreatManager().getThreatList();
+    		std::list<HostileReference*>::const_iterator i = m_threatlist.begin();
+    		for (i = m_threatlist.begin(); i!= m_threatlist.end(); ++i)
+    		{
+    			Unit* pUnit = Unit::GetUnit((*me), (*i)->getUnitGuid());
+    			if (pUnit && (pUnit->GetTypeId() == TYPEID_PLAYER) )
+    			{
+    				Vehicle* v = pUnit->GetVehicle();
+    				if(v)
+    				{
+    					pUnit->ExitVehicle();
+    					v->Dismiss();
+    					DoCast(pUnit,SPELL_PARACHUTE);					
+    				}
+    			}
+    		}
+    	}
+
+        void UpdateAI(const uint32 diff)
+        {
+            //Return since we have no target
+            if (!UpdateVictim())
+                return;
+    		DismountPlayers();
+            DoMeleeAttackIfReady();
+        }
+
+        void JustDied(Unit* killer)
+        {
+            if (pInstance)
+                pInstance->SetData(DATA_CENTRIFUGE_CONSTRUCT_EVENT, pInstance->GetData(DATA_CENTRIFUGE_CONSTRUCT_EVENT)+1);
+        }
+    };
+
 };
 
-CreatureAI* GetAI_mob_CentrifigeConstruct(Creature* pCreature)
+class npc_oculus_drake : public CreatureScript
 {
-    return new mob_CentrifigeConstructAI (pCreature);
-}
+public:
+    npc_oculus_drake() : CreatureScript("npc_oculus_drake") { }
 
-bool GossipHello_npc_oculus_drake(Player* pPlayer, Creature* pCreature)
-{
-    if (pCreature->isQuestGiver())
-        pPlayer->PrepareQuestMenu(pCreature->GetGUID());
-
-    if (pCreature->GetInstanceData()->GetData(DATA_DRAKOS_EVENT) == DONE)
+    bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
     {
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_DRAKES, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-        pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_DRAKES, pCreature->GetGUID());
+        switch(pCreature->GetEntry())
+        {
+        case NPC_VERDISA: //Verdisa
+            switch(uiAction)
+            {
+            case GOSSIP_ACTION_INFO_DEF + 1:
+                if (!HAS_ESSENCE(pPlayer))
+                {
+                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_VERDISA1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_VERDISA2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+                    pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_VERDISA1, pCreature->GetGUID());
+                }
+                else
+                {
+                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_VERDISA2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+                    pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_VERDISA2, pCreature->GetGUID());
+                }
+                break;
+            case GOSSIP_ACTION_INFO_DEF + 2:
+            {
+                ItemPosCountVec dest;
+                uint8 msg = pPlayer->CanStoreNewItem(NULL_BAG, NULL_SLOT, dest, ITEM_EMERALD_ESSENCE, 1);
+                if (msg == EQUIP_ERR_OK)
+                    pPlayer->StoreNewItem(dest, ITEM_EMERALD_ESSENCE, true);
+                pPlayer->CLOSE_GOSSIP_MENU();
+                break;
+            }
+            case GOSSIP_ACTION_INFO_DEF + 3:
+                pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_VERDISA3, pCreature->GetGUID());
+                break;
+            }
+            break;
+        case NPC_BELGARISTRASZ: //Belgaristrasz
+            switch(uiAction)
+            {
+            case GOSSIP_ACTION_INFO_DEF + 1:
+                if (!HAS_ESSENCE(pPlayer))
+                {
+                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_BELGARISTRASZ1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_BELGARISTRASZ2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+                    pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_BELGARISTRASZ1, pCreature->GetGUID());
+                }
+                else
+                {
+                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_BELGARISTRASZ2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+                    pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_BELGARISTRASZ2, pCreature->GetGUID());
+                }
+                break;
+            case GOSSIP_ACTION_INFO_DEF + 2:
+            {
+                ItemPosCountVec dest;
+                uint8 msg = pPlayer->CanStoreNewItem(NULL_BAG, NULL_SLOT, dest, ITEM_RUBY_ESSENCE, 1);
+                if (msg == EQUIP_ERR_OK)
+                    pPlayer->StoreNewItem(dest, ITEM_RUBY_ESSENCE, true);
+                pPlayer->CLOSE_GOSSIP_MENU();
+                break;
+            }
+            case GOSSIP_ACTION_INFO_DEF + 3:
+                pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_BELGARISTRASZ3, pCreature->GetGUID());
+                break;
+            }
+            break;
+        case NPC_ETERNOS: //Eternos
+            switch(uiAction)
+            {
+            case GOSSIP_ACTION_INFO_DEF + 1:
+                if (!HAS_ESSENCE(pPlayer))
+                {
+                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_ETERNOS1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_ETERNOS2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+                    pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_ETERNOS1, pCreature->GetGUID());
+                }
+                else
+                {
+                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_ETERNOS2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+                    pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_ETERNOS2, pCreature->GetGUID());
+                }
+                break;
+            case GOSSIP_ACTION_INFO_DEF + 2:
+            {
+                ItemPosCountVec dest;
+                uint8 msg = pPlayer->CanStoreNewItem(NULL_BAG, NULL_SLOT, dest, ITEM_AMBER_ESSENCE, 1);
+                if (msg == EQUIP_ERR_OK)
+                    pPlayer->StoreNewItem(dest, ITEM_AMBER_ESSENCE, true);
+                pPlayer->CLOSE_GOSSIP_MENU();
+                break;
+            }
+            case GOSSIP_ACTION_INFO_DEF + 3:
+                pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_ETERNOS3, pCreature->GetGUID());
+                break;
+            }
+            break;
+        }
+
+        return true;
     }
 
-    return true;
-}
-
-bool GossipSelect_npc_oculus_drake(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-{
-    switch(pCreature->GetEntry())
+    bool GossipHello(Player* pPlayer, Creature* pCreature)
     {
-    case NPC_VERDISA: //Verdisa
-        switch(uiAction)
+        if (pCreature->isQuestGiver())
+            pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+
+        if (pCreature->GetInstanceData()->GetData(DATA_DRAKOS_EVENT) == DONE)
         {
-        case GOSSIP_ACTION_INFO_DEF + 1:
-            if (!HAS_ESSENCE(pPlayer))
-            {
-                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_VERDISA1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_VERDISA2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-                pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_VERDISA1, pCreature->GetGUID());
-            }
-            else
-            {
-                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_VERDISA2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-                pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_VERDISA2, pCreature->GetGUID());
-            }
-            break;
-        case GOSSIP_ACTION_INFO_DEF + 2:
-        {
-            ItemPosCountVec dest;
-            uint8 msg = pPlayer->CanStoreNewItem(NULL_BAG, NULL_SLOT, dest, ITEM_EMERALD_ESSENCE, 1);
-            if (msg == EQUIP_ERR_OK)
-                pPlayer->StoreNewItem(dest, ITEM_EMERALD_ESSENCE, true);
-            pPlayer->CLOSE_GOSSIP_MENU();
-            break;
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_DRAKES, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_DRAKES, pCreature->GetGUID());
         }
-        case GOSSIP_ACTION_INFO_DEF + 3:
-            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_VERDISA3, pCreature->GetGUID());
-            break;
-        }
-        break;
-    case NPC_BELGARISTRASZ: //Belgaristrasz
-        switch(uiAction)
-        {
-        case GOSSIP_ACTION_INFO_DEF + 1:
-            if (!HAS_ESSENCE(pPlayer))
-            {
-                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_BELGARISTRASZ1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_BELGARISTRASZ2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-                pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_BELGARISTRASZ1, pCreature->GetGUID());
-            }
-            else
-            {
-                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_BELGARISTRASZ2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-                pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_BELGARISTRASZ2, pCreature->GetGUID());
-            }
-            break;
-        case GOSSIP_ACTION_INFO_DEF + 2:
-        {
-            ItemPosCountVec dest;
-            uint8 msg = pPlayer->CanStoreNewItem(NULL_BAG, NULL_SLOT, dest, ITEM_RUBY_ESSENCE, 1);
-            if (msg == EQUIP_ERR_OK)
-                pPlayer->StoreNewItem(dest, ITEM_RUBY_ESSENCE, true);
-            pPlayer->CLOSE_GOSSIP_MENU();
-            break;
-        }
-        case GOSSIP_ACTION_INFO_DEF + 3:
-            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_BELGARISTRASZ3, pCreature->GetGUID());
-            break;
-        }
-        break;
-    case NPC_ETERNOS: //Eternos
-        switch(uiAction)
-        {
-        case GOSSIP_ACTION_INFO_DEF + 1:
-            if (!HAS_ESSENCE(pPlayer))
-            {
-                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_ETERNOS1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_ETERNOS2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-                pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_ETERNOS1, pCreature->GetGUID());
-            }
-            else
-            {
-                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_ETERNOS2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
-                pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_ETERNOS2, pCreature->GetGUID());
-            }
-            break;
-        case GOSSIP_ACTION_INFO_DEF + 2:
-        {
-            ItemPosCountVec dest;
-            uint8 msg = pPlayer->CanStoreNewItem(NULL_BAG, NULL_SLOT, dest, ITEM_AMBER_ESSENCE, 1);
-            if (msg == EQUIP_ERR_OK)
-                pPlayer->StoreNewItem(dest, ITEM_AMBER_ESSENCE, true);
-            pPlayer->CLOSE_GOSSIP_MENU();
-            break;
-        }
-        case GOSSIP_ACTION_INFO_DEF + 3:
-            pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_ETERNOS3, pCreature->GetGUID());
-            break;
-        }
-        break;
+
+        return true;
     }
 
-    return true;
-}
+};
+
 
 void AddSC_oculus()
 {
-    Script *newscript;
-
-    newscript = new Script;
-    newscript->Name = "npc_oculus_drake";
-    newscript->pGossipHello = &GossipHello_npc_oculus_drake;
-    newscript->pGossipSelect = &GossipSelect_npc_oculus_drake;
-    newscript->RegisterSelf();
-
-	newscript = new Script;
-    newscript->Name = "mob_centrifige_construct";
-    newscript->GetAI = &GetAI_mob_CentrifigeConstruct;
-    newscript->RegisterSelf();
+    new npc_oculus_drake();
+    new mob_centrifige_construct();
 }

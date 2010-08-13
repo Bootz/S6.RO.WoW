@@ -238,366 +238,432 @@ enum HardmodeSpells
 /* Gorgrim Shadowcleave - 34458 */
 /* Death Knight                 */
 /********************************/
-
-struct boss_gorgrim_shadowcleaveAI : public ScriptedAI
+class boss_gorgrim_shadowcleave : public CreatureScript
 {
-    boss_gorgrim_shadowcleaveAI(Creature* pCreature) : ScriptedAI(pCreature)
-        {
-                m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        }
+public:
+    boss_gorgrim_shadowcleave() : CreatureScript("boss_gorgrim_shadowcleave") { }
 
-        ScriptedInstance* m_pInstance;
-
-    void Reset()
+    CreatureAI* GetAI(Creature* pCreature)
     {
+        return new boss_gorgrim_shadowcleaveAI(pCreature);
     }
 
-        void KilledUnit(Unit* who)
+    struct boss_gorgrim_shadowcleaveAI : public ScriptedAI
+    {
+        boss_gorgrim_shadowcleaveAI(Creature* pCreature) : ScriptedAI(pCreature)
+            {
+                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+            }
+
+            ScriptedInstance* m_pInstance;
+
+        void Reset()
         {
-                if(!m_pInstance)
-                        return;
         }
 
-        void EnterCombat(Unit* pWho)
-    {
-    }
+            void KilledUnit(Unit* who)
+            {
+                    if(!m_pInstance)
+                            return;
+            }
 
-        void JustDied(Unit* pKiller)
-    {
-                if(!m_pInstance)
-                        return;
-
-        if(!me->FindNearestCreature(34458, 200, true)
-                && !me->FindNearestCreature(34451, 200, true)
-                && !me->FindNearestCreature(34459, 200, true)
-                && !me->FindNearestCreature(34448, 200, true)
-                && !me->FindNearestCreature(34449, 200, true)
-                && !me->FindNearestCreature(34445, 200, true)
-                && !me->FindNearestCreature(34456, 200, true)
-                && !me->FindNearestCreature(34447, 200, true)
-                && !me->FindNearestCreature(34441, 200, true)
-                && !me->FindNearestCreature(34454, 200, true)
-                && !me->FindNearestCreature(34455, 200, true)
-                && !me->FindNearestCreature(34444, 200, true)
-                && !me->FindNearestCreature(34450, 200, true)
-                && !me->FindNearestCreature(34453, 200, true))
-                {
-                m_pInstance->SetData(PHASE_5, DONE);
-                }
+            void EnterCombat(Unit* pWho)
+        {
         }
 
-        void UpdateAI(const uint32 diff)
-    {
-        if (!UpdateVictim())
-            return;
+            void JustDied(Unit* pKiller)
+        {
+                    if(!m_pInstance)
+                            return;
 
-                DoMeleeAttackIfReady();
-        }
+            if(!me->FindNearestCreature(34458, 200, true)
+                    && !me->FindNearestCreature(34451, 200, true)
+                    && !me->FindNearestCreature(34459, 200, true)
+                    && !me->FindNearestCreature(34448, 200, true)
+                    && !me->FindNearestCreature(34449, 200, true)
+                    && !me->FindNearestCreature(34445, 200, true)
+                    && !me->FindNearestCreature(34456, 200, true)
+                    && !me->FindNearestCreature(34447, 200, true)
+                    && !me->FindNearestCreature(34441, 200, true)
+                    && !me->FindNearestCreature(34454, 200, true)
+                    && !me->FindNearestCreature(34455, 200, true)
+                    && !me->FindNearestCreature(34444, 200, true)
+                    && !me->FindNearestCreature(34450, 200, true)
+                    && !me->FindNearestCreature(34453, 200, true))
+                    {
+                    m_pInstance->SetData(PHASE_5, DONE);
+                    }
+            }
+
+            void UpdateAI(const uint32 diff)
+        {
+            if (!UpdateVictim())
+                return;
+
+                    DoMeleeAttackIfReady();
+            }
+    };
+
 };
 
 /****************************/
 /* Birana Stormhoof - 34451 */
 /* Druid                    */
 /****************************/
-
-struct boss_birana_stormhoofAI : public ScriptedAI
+class boss_birana_stormhoof : public CreatureScript
 {
-    boss_birana_stormhoofAI(Creature* pCreature) : ScriptedAI(pCreature)
-        {
-                m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        }
+public:
+    boss_birana_stormhoof() : CreatureScript("boss_birana_stormhoof") { }
 
-        ScriptedInstance* m_pInstance;
-
-    void Reset()
+    CreatureAI* GetAI(Creature* pCreature)
     {
+        return new boss_birana_stormhoofAI(pCreature);
     }
 
-        void KilledUnit(Unit* who)
+    struct boss_birana_stormhoofAI : public ScriptedAI
+    {
+        boss_birana_stormhoofAI(Creature* pCreature) : ScriptedAI(pCreature)
+            {
+                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+            }
+
+            ScriptedInstance* m_pInstance;
+
+        void Reset()
         {
-                if(!m_pInstance)
-                        return;
         }
 
-        void EnterCombat(Unit* pWho)
-    {
-    }
+            void KilledUnit(Unit* who)
+            {
+                    if(!m_pInstance)
+                            return;
+            }
 
-        void JustDied(Unit* pKiller)
-    {
-                if(!m_pInstance)
-                        return;
-
-        if(!me->FindNearestCreature(34458, 200, true)
-                && !me->FindNearestCreature(34451, 200, true)
-                && !me->FindNearestCreature(34459, 200, true)
-                && !me->FindNearestCreature(34448, 200, true)
-                && !me->FindNearestCreature(34449, 200, true)
-                && !me->FindNearestCreature(34445, 200, true)
-                && !me->FindNearestCreature(34456, 200, true)
-                && !me->FindNearestCreature(34447, 200, true)
-                && !me->FindNearestCreature(34441, 200, true)
-                && !me->FindNearestCreature(34454, 200, true)
-                && !me->FindNearestCreature(34455, 200, true)
-                && !me->FindNearestCreature(34444, 200, true)
-                && !me->FindNearestCreature(34450, 200, true)
-                && !me->FindNearestCreature(34453, 200, true))
-                {
-                        m_pInstance->SetData(PHASE_5, DONE);
-                }
+            void EnterCombat(Unit* pWho)
+        {
         }
 
-        void UpdateAI(const uint32 diff)
-    {
-        if (!UpdateVictim())
-            return;
+            void JustDied(Unit* pKiller)
+        {
+                    if(!m_pInstance)
+                            return;
 
-                DoMeleeAttackIfReady();
-        }
+            if(!me->FindNearestCreature(34458, 200, true)
+                    && !me->FindNearestCreature(34451, 200, true)
+                    && !me->FindNearestCreature(34459, 200, true)
+                    && !me->FindNearestCreature(34448, 200, true)
+                    && !me->FindNearestCreature(34449, 200, true)
+                    && !me->FindNearestCreature(34445, 200, true)
+                    && !me->FindNearestCreature(34456, 200, true)
+                    && !me->FindNearestCreature(34447, 200, true)
+                    && !me->FindNearestCreature(34441, 200, true)
+                    && !me->FindNearestCreature(34454, 200, true)
+                    && !me->FindNearestCreature(34455, 200, true)
+                    && !me->FindNearestCreature(34444, 200, true)
+                    && !me->FindNearestCreature(34450, 200, true)
+                    && !me->FindNearestCreature(34453, 200, true))
+                    {
+                            m_pInstance->SetData(PHASE_5, DONE);
+                    }
+            }
+
+            void UpdateAI(const uint32 diff)
+        {
+            if (!UpdateVictim())
+                return;
+
+                    DoMeleeAttackIfReady();
+            }
+    };
+
 };
 
 /*************************/
 /* Erin Misthoof - 34459 */
 /* Druid                 */
 /*************************/
-
-struct boss_erin_misthoofAI : public ScriptedAI
+class boss_erin_misthoof : public CreatureScript
 {
-    boss_erin_misthoofAI(Creature* pCreature) : ScriptedAI(pCreature)
-        {
-                m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        }
+public:
+    boss_erin_misthoof() : CreatureScript("boss_erin_misthoof") { }
 
-        ScriptedInstance* m_pInstance;
-
-    void Reset()
+    CreatureAI* GetAI(Creature* pCreature)
     {
+        return new boss_erin_misthoofAI(pCreature);
     }
 
-        void KilledUnit(Unit* who)
+    struct boss_erin_misthoofAI : public ScriptedAI
+    {
+        boss_erin_misthoofAI(Creature* pCreature) : ScriptedAI(pCreature)
+            {
+                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+            }
+
+            ScriptedInstance* m_pInstance;
+
+        void Reset()
         {
-                if(!m_pInstance)
-                        return;
         }
 
-        void EnterCombat(Unit* pWho)
-    {
-    }
+            void KilledUnit(Unit* who)
+            {
+                    if(!m_pInstance)
+                            return;
+            }
 
-        void JustDied(Unit* pKiller)
-    {
-                if(!m_pInstance)
-                        return;
-
-        if(!me->FindNearestCreature(34458, 200, true)
-                && !me->FindNearestCreature(34451, 200, true)
-                && !me->FindNearestCreature(34459, 200, true)
-                && !me->FindNearestCreature(34448, 200, true)
-                && !me->FindNearestCreature(34449, 200, true)
-                && !me->FindNearestCreature(34445, 200, true)
-                && !me->FindNearestCreature(34456, 200, true)
-                && !me->FindNearestCreature(34447, 200, true)
-                && !me->FindNearestCreature(34441, 200, true)
-                && !me->FindNearestCreature(34454, 200, true)
-                && !me->FindNearestCreature(34455, 200, true)
-                && !me->FindNearestCreature(34444, 200, true)
-                && !me->FindNearestCreature(34450, 200, true)
-                && !me->FindNearestCreature(34453, 200, true))
-                {
-                        m_pInstance->SetData(PHASE_5, DONE);
-                }
+            void EnterCombat(Unit* pWho)
+        {
         }
 
-        void UpdateAI(const uint32 diff)
-    {
-        if (!UpdateVictim())
-            return;
+            void JustDied(Unit* pKiller)
+        {
+                    if(!m_pInstance)
+                            return;
 
-                DoMeleeAttackIfReady();
-        }
+            if(!me->FindNearestCreature(34458, 200, true)
+                    && !me->FindNearestCreature(34451, 200, true)
+                    && !me->FindNearestCreature(34459, 200, true)
+                    && !me->FindNearestCreature(34448, 200, true)
+                    && !me->FindNearestCreature(34449, 200, true)
+                    && !me->FindNearestCreature(34445, 200, true)
+                    && !me->FindNearestCreature(34456, 200, true)
+                    && !me->FindNearestCreature(34447, 200, true)
+                    && !me->FindNearestCreature(34441, 200, true)
+                    && !me->FindNearestCreature(34454, 200, true)
+                    && !me->FindNearestCreature(34455, 200, true)
+                    && !me->FindNearestCreature(34444, 200, true)
+                    && !me->FindNearestCreature(34450, 200, true)
+                    && !me->FindNearestCreature(34453, 200, true))
+                    {
+                            m_pInstance->SetData(PHASE_5, DONE);
+                    }
+            }
+
+            void UpdateAI(const uint32 diff)
+        {
+            if (!UpdateVictim())
+                return;
+
+                    DoMeleeAttackIfReady();
+            }
+    };
+
 };
 
 /************************/
 /* Ruj'kah - 34448      */
 /* Hunter               */
 /************************/
-
-struct boss_rujkahAI : public ScriptedAI
+class boss_rujkah : public CreatureScript
 {
-    boss_rujkahAI(Creature* pCreature) : ScriptedAI(pCreature)
-        {
-                m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        }
+public:
+    boss_rujkah() : CreatureScript("boss_rujkah") { }
 
-        ScriptedInstance* m_pInstance;
-
-    void Reset()
+    CreatureAI* GetAI(Creature* pCreature)
     {
+        return new boss_rujkahAI(pCreature);
     }
 
-        void KilledUnit(Unit* who)
+    struct boss_rujkahAI : public ScriptedAI
+    {
+        boss_rujkahAI(Creature* pCreature) : ScriptedAI(pCreature)
+            {
+                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+            }
+
+            ScriptedInstance* m_pInstance;
+
+        void Reset()
         {
-                if(!m_pInstance)
-                        return;
         }
 
-        void EnterCombat(Unit* pWho)
-    {
-    }
+            void KilledUnit(Unit* who)
+            {
+                    if(!m_pInstance)
+                            return;
+            }
 
-        void JustDied(Unit* pKiller)
-    {
-                if(!m_pInstance)
-                        return;
-
-        if(!me->FindNearestCreature(34458, 200, true)
-                && !me->FindNearestCreature(34451, 200, true)
-                && !me->FindNearestCreature(34459, 200, true)
-                && !me->FindNearestCreature(34448, 200, true)
-                && !me->FindNearestCreature(34449, 200, true)
-                && !me->FindNearestCreature(34445, 200, true)
-                && !me->FindNearestCreature(34456, 200, true)
-                && !me->FindNearestCreature(34447, 200, true)
-                && !me->FindNearestCreature(34441, 200, true)
-                && !me->FindNearestCreature(34454, 200, true)
-                && !me->FindNearestCreature(34455, 200, true)
-                && !me->FindNearestCreature(34444, 200, true)
-                && !me->FindNearestCreature(34450, 200, true)
-                && !me->FindNearestCreature(34453, 200, true))
-                {
-                        m_pInstance->SetData(PHASE_5, DONE);
-                }
+            void EnterCombat(Unit* pWho)
+        {
         }
 
-        void UpdateAI(const uint32 diff)
-    {
-        if (!UpdateVictim())
-            return;
+            void JustDied(Unit* pKiller)
+        {
+                    if(!m_pInstance)
+                            return;
 
-                DoMeleeAttackIfReady();
-        }
+            if(!me->FindNearestCreature(34458, 200, true)
+                    && !me->FindNearestCreature(34451, 200, true)
+                    && !me->FindNearestCreature(34459, 200, true)
+                    && !me->FindNearestCreature(34448, 200, true)
+                    && !me->FindNearestCreature(34449, 200, true)
+                    && !me->FindNearestCreature(34445, 200, true)
+                    && !me->FindNearestCreature(34456, 200, true)
+                    && !me->FindNearestCreature(34447, 200, true)
+                    && !me->FindNearestCreature(34441, 200, true)
+                    && !me->FindNearestCreature(34454, 200, true)
+                    && !me->FindNearestCreature(34455, 200, true)
+                    && !me->FindNearestCreature(34444, 200, true)
+                    && !me->FindNearestCreature(34450, 200, true)
+                    && !me->FindNearestCreature(34453, 200, true))
+                    {
+                            m_pInstance->SetData(PHASE_5, DONE);
+                    }
+            }
+
+            void UpdateAI(const uint32 diff)
+        {
+            if (!UpdateVictim())
+                return;
+
+                    DoMeleeAttackIfReady();
+            }
+    };
+
 };
 
 /**********************************/
 /* Ginselle Blightslinger - 34449 */
 /* Mage                           */
 /**********************************/
-
-struct boss_ginselle_blightslingerAI : public ScriptedAI
+class boss_ginselle_blightslinger : public CreatureScript
 {
-    boss_ginselle_blightslingerAI(Creature* pCreature) : ScriptedAI(pCreature)
-        {
-                m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        }
+public:
+    boss_ginselle_blightslinger() : CreatureScript("boss_ginselle_blightslinger") { }
 
-        ScriptedInstance* m_pInstance;
-
-    void Reset()
+    CreatureAI* GetAI(Creature* pCreature)
     {
+        return new boss_ginselle_blightslingerAI(pCreature);
     }
 
-        void KilledUnit(Unit* who)
+    struct boss_ginselle_blightslingerAI : public ScriptedAI
+    {
+        boss_ginselle_blightslingerAI(Creature* pCreature) : ScriptedAI(pCreature)
+            {
+                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+            }
+
+            ScriptedInstance* m_pInstance;
+
+        void Reset()
         {
-                if(!m_pInstance)
-                        return;
         }
 
-        void EnterCombat(Unit* pWho)
-    {
-    }
+            void KilledUnit(Unit* who)
+            {
+                    if(!m_pInstance)
+                            return;
+            }
 
-        void JustDied(Unit* pKiller)
-    {
-                if(!m_pInstance)
-                        return;
-
-        if(!me->FindNearestCreature(34458, 200, true)
-                && !me->FindNearestCreature(34451, 200, true)
-                && !me->FindNearestCreature(34459, 200, true)
-                && !me->FindNearestCreature(34448, 200, true)
-                && !me->FindNearestCreature(34449, 200, true)
-                && !me->FindNearestCreature(34445, 200, true)
-                && !me->FindNearestCreature(34456, 200, true)
-                && !me->FindNearestCreature(34447, 200, true)
-                && !me->FindNearestCreature(34441, 200, true)
-                && !me->FindNearestCreature(34454, 200, true)
-                && !me->FindNearestCreature(34455, 200, true)
-                && !me->FindNearestCreature(34444, 200, true)
-                && !me->FindNearestCreature(34450, 200, true)
-                && !me->FindNearestCreature(34453, 200, true))
-                {
-                        m_pInstance->SetData(PHASE_5, DONE);
-                }
+            void EnterCombat(Unit* pWho)
+        {
         }
 
-        void UpdateAI(const uint32 diff)
-    {
-        if (!UpdateVictim())
-            return;
+            void JustDied(Unit* pKiller)
+        {
+                    if(!m_pInstance)
+                            return;
 
-                DoMeleeAttackIfReady();
-        }
+            if(!me->FindNearestCreature(34458, 200, true)
+                    && !me->FindNearestCreature(34451, 200, true)
+                    && !me->FindNearestCreature(34459, 200, true)
+                    && !me->FindNearestCreature(34448, 200, true)
+                    && !me->FindNearestCreature(34449, 200, true)
+                    && !me->FindNearestCreature(34445, 200, true)
+                    && !me->FindNearestCreature(34456, 200, true)
+                    && !me->FindNearestCreature(34447, 200, true)
+                    && !me->FindNearestCreature(34441, 200, true)
+                    && !me->FindNearestCreature(34454, 200, true)
+                    && !me->FindNearestCreature(34455, 200, true)
+                    && !me->FindNearestCreature(34444, 200, true)
+                    && !me->FindNearestCreature(34450, 200, true)
+                    && !me->FindNearestCreature(34453, 200, true))
+                    {
+                            m_pInstance->SetData(PHASE_5, DONE);
+                    }
+            }
+
+            void UpdateAI(const uint32 diff)
+        {
+            if (!UpdateVictim())
+                return;
+
+                    DoMeleeAttackIfReady();
+            }
+    };
+
 };
 
 /******************************/
 /* Liandra Suncaller - 34445  */
 /* Paladin                    */
 /******************************/
-
-struct boss_liandra_suncallerAI : public ScriptedAI
+class boss_liandra_suncaller : public CreatureScript
 {
-    boss_liandra_suncallerAI(Creature* pCreature) : ScriptedAI(pCreature)
-        {
-                m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        }
+public:
+    boss_liandra_suncaller() : CreatureScript("boss_liandra_suncaller") { }
 
-        ScriptedInstance* m_pInstance;
-
-    void Reset()
+    CreatureAI* GetAI(Creature* pCreature)
     {
+        return new boss_liandra_suncallerAI(pCreature);
     }
 
-        void KilledUnit(Unit* who)
+    struct boss_liandra_suncallerAI : public ScriptedAI
+    {
+        boss_liandra_suncallerAI(Creature* pCreature) : ScriptedAI(pCreature)
+            {
+                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+            }
+
+            ScriptedInstance* m_pInstance;
+
+        void Reset()
         {
-                if(!m_pInstance)
-                        return;
         }
 
-        void EnterCombat(Unit* pWho)
-    {
-    }
+            void KilledUnit(Unit* who)
+            {
+                    if(!m_pInstance)
+                            return;
+            }
 
-        void JustDied(Unit* pKiller)
-    {
-                if(!m_pInstance)
-                        return;
-
-        if(!me->FindNearestCreature(34458, 200, true)
-                && !me->FindNearestCreature(34451, 200, true)
-                && !me->FindNearestCreature(34459, 200, true)
-                && !me->FindNearestCreature(34448, 200, true)
-                && !me->FindNearestCreature(34449, 200, true)
-                && !me->FindNearestCreature(34445, 200, true)
-                && !me->FindNearestCreature(34456, 200, true)
-                && !me->FindNearestCreature(34447, 200, true)
-                && !me->FindNearestCreature(34441, 200, true)
-                && !me->FindNearestCreature(34454, 200, true)
-                && !me->FindNearestCreature(34455, 200, true)
-                && !me->FindNearestCreature(34444, 200, true)
-                && !me->FindNearestCreature(34450, 200, true)
-                && !me->FindNearestCreature(34453, 200, true))
-                {
-                        m_pInstance->SetData(PHASE_5, DONE);
-                }
+            void EnterCombat(Unit* pWho)
+        {
         }
 
-        void UpdateAI(const uint32 diff)
-    {
-        if (!UpdateVictim())
-            return;
+            void JustDied(Unit* pKiller)
+        {
+                    if(!m_pInstance)
+                            return;
 
-                DoMeleeAttackIfReady();
-        }
+            if(!me->FindNearestCreature(34458, 200, true)
+                    && !me->FindNearestCreature(34451, 200, true)
+                    && !me->FindNearestCreature(34459, 200, true)
+                    && !me->FindNearestCreature(34448, 200, true)
+                    && !me->FindNearestCreature(34449, 200, true)
+                    && !me->FindNearestCreature(34445, 200, true)
+                    && !me->FindNearestCreature(34456, 200, true)
+                    && !me->FindNearestCreature(34447, 200, true)
+                    && !me->FindNearestCreature(34441, 200, true)
+                    && !me->FindNearestCreature(34454, 200, true)
+                    && !me->FindNearestCreature(34455, 200, true)
+                    && !me->FindNearestCreature(34444, 200, true)
+                    && !me->FindNearestCreature(34450, 200, true)
+                    && !me->FindNearestCreature(34453, 200, true))
+                    {
+                            m_pInstance->SetData(PHASE_5, DONE);
+                    }
+            }
+
+            void UpdateAI(const uint32 diff)
+        {
+            if (!UpdateVictim())
+                return;
+
+                    DoMeleeAttackIfReady();
+            }
+    };
+
 };
 
 /********************************/
@@ -665,495 +731,527 @@ struct boss_malithas_brightbladeAI : public ScriptedAI
 /* Caiphus the Stern - 34447 */
 /* Priest                    */
 /*****************************/
-
-struct boss_caiphus_the_sternAI : public ScriptedAI
+class boss_caiphus_the_stern : public CreatureScript
 {
-    boss_caiphus_the_sternAI(Creature* pCreature) : ScriptedAI(pCreature)
-        {
-                m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        }
+public:
+    boss_caiphus_the_stern() : CreatureScript("boss_caiphus_the_stern") { }
 
-        ScriptedInstance* m_pInstance;
-
-    void Reset()
+    CreatureAI* GetAI(Creature* pCreature)
     {
+        return new boss_caiphus_the_sternAI(pCreature);
     }
 
-        void KilledUnit(Unit* who)
+    struct boss_caiphus_the_sternAI : public ScriptedAI
+    {
+        boss_caiphus_the_sternAI(Creature* pCreature) : ScriptedAI(pCreature)
+            {
+                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+            }
+
+            ScriptedInstance* m_pInstance;
+
+        void Reset()
         {
-                if(!m_pInstance)
-                        return;
         }
 
-        void EnterCombat(Unit* pWho)
-    {
-    }
+            void KilledUnit(Unit* who)
+            {
+                    if(!m_pInstance)
+                            return;
+            }
 
-        void JustDied(Unit* pKiller)
-    {
-                if(!m_pInstance)
-                        return;
-
-        if(!me->FindNearestCreature(34458, 200, true)
-                && !me->FindNearestCreature(34451, 200, true)
-                && !me->FindNearestCreature(34459, 200, true)
-                && !me->FindNearestCreature(34448, 200, true)
-                && !me->FindNearestCreature(34449, 200, true)
-                && !me->FindNearestCreature(34445, 200, true)
-                && !me->FindNearestCreature(34456, 200, true)
-                && !me->FindNearestCreature(34447, 200, true)
-                && !me->FindNearestCreature(34441, 200, true)
-                && !me->FindNearestCreature(34454, 200, true)
-                && !me->FindNearestCreature(34455, 200, true)
-                && !me->FindNearestCreature(34444, 200, true)
-                && !me->FindNearestCreature(34450, 200, true)
-                && !me->FindNearestCreature(34453, 200, true))
-                {
-                        m_pInstance->SetData(PHASE_5, DONE);
-                }
+            void EnterCombat(Unit* pWho)
+        {
         }
 
-        void UpdateAI(const uint32 diff)
-    {
-        if (!UpdateVictim())
-            return;
+            void JustDied(Unit* pKiller)
+        {
+                    if(!m_pInstance)
+                            return;
 
-                DoMeleeAttackIfReady();
-        }
+            if(!me->FindNearestCreature(34458, 200, true)
+                    && !me->FindNearestCreature(34451, 200, true)
+                    && !me->FindNearestCreature(34459, 200, true)
+                    && !me->FindNearestCreature(34448, 200, true)
+                    && !me->FindNearestCreature(34449, 200, true)
+                    && !me->FindNearestCreature(34445, 200, true)
+                    && !me->FindNearestCreature(34456, 200, true)
+                    && !me->FindNearestCreature(34447, 200, true)
+                    && !me->FindNearestCreature(34441, 200, true)
+                    && !me->FindNearestCreature(34454, 200, true)
+                    && !me->FindNearestCreature(34455, 200, true)
+                    && !me->FindNearestCreature(34444, 200, true)
+                    && !me->FindNearestCreature(34450, 200, true)
+                    && !me->FindNearestCreature(34453, 200, true))
+                    {
+                            m_pInstance->SetData(PHASE_5, DONE);
+                    }
+            }
+
+            void UpdateAI(const uint32 diff)
+        {
+            if (!UpdateVictim())
+                return;
+
+                    DoMeleeAttackIfReady();
+            }
+    };
+
 };
 
 /*********************************/
 /* Vivienne Blackwhisper - 34441 */
 /* Priest                        */
 /*********************************/
-
-struct boss_vivienne_blackwhisperAI : public ScriptedAI
+class boss_vivienne_blackwhisper : public CreatureScript
 {
-    boss_vivienne_blackwhisperAI(Creature* pCreature) : ScriptedAI(pCreature)
-        {
-                m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        }
+public:
+    boss_vivienne_blackwhisper() : CreatureScript("boss_vivienne_blackwhisper") { }
 
-        ScriptedInstance* m_pInstance;
-
-    void Reset()
+    CreatureAI* GetAI(Creature* pCreature)
     {
+        return new boss_vivienne_blackwhisperAI(pCreature);
     }
 
-        void KilledUnit(Unit* who)
+    struct boss_vivienne_blackwhisperAI : public ScriptedAI
+    {
+        boss_vivienne_blackwhisperAI(Creature* pCreature) : ScriptedAI(pCreature)
+            {
+                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+            }
+
+            ScriptedInstance* m_pInstance;
+
+        void Reset()
         {
-                if(!m_pInstance)
-                        return;
         }
 
-        void EnterCombat(Unit* pWho)
-    {
-    }
+            void KilledUnit(Unit* who)
+            {
+                    if(!m_pInstance)
+                            return;
+            }
 
-        void JustDied(Unit* pKiller)
-    {
-                if(!m_pInstance)
-                        return;
-
-        if(!me->FindNearestCreature(34458, 200, true)
-                && !me->FindNearestCreature(34451, 200, true)
-                && !me->FindNearestCreature(34459, 200, true)
-                && !me->FindNearestCreature(34448, 200, true)
-                && !me->FindNearestCreature(34449, 200, true)
-                && !me->FindNearestCreature(34445, 200, true)
-                && !me->FindNearestCreature(34456, 200, true)
-                && !me->FindNearestCreature(34447, 200, true)
-                && !me->FindNearestCreature(34441, 200, true)
-                && !me->FindNearestCreature(34454, 200, true)
-                && !me->FindNearestCreature(34455, 200, true)
-                && !me->FindNearestCreature(34444, 200, true)
-                && !me->FindNearestCreature(34450, 200, true)
-                && !me->FindNearestCreature(34453, 200, true))
-                {
-                        m_pInstance->SetData(PHASE_5, DONE);
-                }
+            void EnterCombat(Unit* pWho)
+        {
         }
 
-        void UpdateAI(const uint32 diff)
-    {
-        if (!UpdateVictim())
-            return;
+            void JustDied(Unit* pKiller)
+        {
+                    if(!m_pInstance)
+                            return;
 
-                DoMeleeAttackIfReady();
-        }
+            if(!me->FindNearestCreature(34458, 200, true)
+                    && !me->FindNearestCreature(34451, 200, true)
+                    && !me->FindNearestCreature(34459, 200, true)
+                    && !me->FindNearestCreature(34448, 200, true)
+                    && !me->FindNearestCreature(34449, 200, true)
+                    && !me->FindNearestCreature(34445, 200, true)
+                    && !me->FindNearestCreature(34456, 200, true)
+                    && !me->FindNearestCreature(34447, 200, true)
+                    && !me->FindNearestCreature(34441, 200, true)
+                    && !me->FindNearestCreature(34454, 200, true)
+                    && !me->FindNearestCreature(34455, 200, true)
+                    && !me->FindNearestCreature(34444, 200, true)
+                    && !me->FindNearestCreature(34450, 200, true)
+                    && !me->FindNearestCreature(34453, 200, true))
+                    {
+                            m_pInstance->SetData(PHASE_5, DONE);
+                    }
+            }
+
+            void UpdateAI(const uint32 diff)
+        {
+            if (!UpdateVictim())
+                return;
+
+                    DoMeleeAttackIfReady();
+            }
+    };
+
 };
 
 /************************/
 /* Maz'dinah - 34454    */
 /* Rogue                */
 /************************/
-
-struct boss_mazdinahAI : public ScriptedAI
+class boss_mazdinah : public CreatureScript
 {
-    boss_mazdinahAI(Creature* pCreature) : ScriptedAI(pCreature)
-        {
-                m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        }
+public:
+    boss_mazdinah() : CreatureScript("boss_mazdinah") { }
 
-        ScriptedInstance* m_pInstance;
-
-        void KilledUnit(Unit* who)
-        {
-                if(!m_pInstance)
-                        return;
-        }
-
-        void EnterCombat(Unit* pWho)
+    CreatureAI* GetAI(Creature* pCreature)
     {
+        return new boss_mazdinahAI(pCreature);
     }
 
-        void JustDied(Unit* pKiller)
+    struct boss_mazdinahAI : public ScriptedAI
     {
-                if(!m_pInstance)
-                        return;
+        boss_mazdinahAI(Creature* pCreature) : ScriptedAI(pCreature)
+            {
+                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+            }
 
-        if(!me->FindNearestCreature(34458, 200, true)
-                && !me->FindNearestCreature(34451, 200, true)
-                && !me->FindNearestCreature(34459, 200, true)
-                && !me->FindNearestCreature(34448, 200, true)
-                && !me->FindNearestCreature(34449, 200, true)
-                && !me->FindNearestCreature(34445, 200, true)
-                && !me->FindNearestCreature(34456, 200, true)
-                && !me->FindNearestCreature(34447, 200, true)
-                && !me->FindNearestCreature(34441, 200, true)
-                && !me->FindNearestCreature(34454, 200, true)
-                && !me->FindNearestCreature(34455, 200, true)
-                && !me->FindNearestCreature(34444, 200, true)
-                && !me->FindNearestCreature(34450, 200, true)
-                && !me->FindNearestCreature(34453, 200, true))
-                {
-                        m_pInstance->SetData(PHASE_5, DONE);
-                }
+            ScriptedInstance* m_pInstance;
+
+            void KilledUnit(Unit* who)
+            {
+                    if(!m_pInstance)
+                            return;
+            }
+
+            void EnterCombat(Unit* pWho)
+        {
         }
 
-        void UpdateAI(const uint32 diff)
-    {
-        if (!UpdateVictim())
-            return;
+            void JustDied(Unit* pKiller)
+        {
+                    if(!m_pInstance)
+                            return;
 
-                DoMeleeAttackIfReady();
-        }
+            if(!me->FindNearestCreature(34458, 200, true)
+                    && !me->FindNearestCreature(34451, 200, true)
+                    && !me->FindNearestCreature(34459, 200, true)
+                    && !me->FindNearestCreature(34448, 200, true)
+                    && !me->FindNearestCreature(34449, 200, true)
+                    && !me->FindNearestCreature(34445, 200, true)
+                    && !me->FindNearestCreature(34456, 200, true)
+                    && !me->FindNearestCreature(34447, 200, true)
+                    && !me->FindNearestCreature(34441, 200, true)
+                    && !me->FindNearestCreature(34454, 200, true)
+                    && !me->FindNearestCreature(34455, 200, true)
+                    && !me->FindNearestCreature(34444, 200, true)
+                    && !me->FindNearestCreature(34450, 200, true)
+                    && !me->FindNearestCreature(34453, 200, true))
+                    {
+                            m_pInstance->SetData(PHASE_5, DONE);
+                    }
+            }
+
+            void UpdateAI(const uint32 diff)
+        {
+            if (!UpdateVictim())
+                return;
+
+                    DoMeleeAttackIfReady();
+            }
+    };
+
 };
 
 /***************************/
 /* Broln Stouthorn - 34455 */
 /* Shaman                  */
 /***************************/
-
-struct boss_broln_stouthornAI : public ScriptedAI
+class boss_broln_stouthorn : public CreatureScript
 {
-    boss_broln_stouthornAI(Creature* pCreature) : ScriptedAI(pCreature)
-        {
-                m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        }
+public:
+    boss_broln_stouthorn() : CreatureScript("boss_broln_stouthorn") { }
 
-        ScriptedInstance* m_pInstance;
-
-        void KilledUnit(Unit* who)
-        {
-                if(!m_pInstance)
-                        return;
-        }
-
-        void EnterCombat(Unit* pWho)
+    CreatureAI* GetAI(Creature* pCreature)
     {
+        return new boss_broln_stouthornAI(pCreature);
     }
 
-        void JustDied(Unit* pKiller)
+    struct boss_broln_stouthornAI : public ScriptedAI
     {
-                if(!m_pInstance)
-                        return;
+        boss_broln_stouthornAI(Creature* pCreature) : ScriptedAI(pCreature)
+            {
+                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+            }
 
-        if(!me->FindNearestCreature(34458, 200, true)
-                && !me->FindNearestCreature(34451, 200, true)
-                && !me->FindNearestCreature(34459, 200, true)
-                && !me->FindNearestCreature(34448, 200, true)
-                && !me->FindNearestCreature(34449, 200, true)
-                && !me->FindNearestCreature(34445, 200, true)
-                && !me->FindNearestCreature(34456, 200, true)
-                && !me->FindNearestCreature(34447, 200, true)
-                && !me->FindNearestCreature(34441, 200, true)
-                && !me->FindNearestCreature(34454, 200, true)
-                && !me->FindNearestCreature(34455, 200, true)
-                && !me->FindNearestCreature(34444, 200, true)
-                && !me->FindNearestCreature(34450, 200, true)
-                && !me->FindNearestCreature(34453, 200, true))
-                {
-                        m_pInstance->SetData(PHASE_5, DONE);
-                }
+            ScriptedInstance* m_pInstance;
+
+            void KilledUnit(Unit* who)
+            {
+                    if(!m_pInstance)
+                            return;
+            }
+
+            void EnterCombat(Unit* pWho)
+        {
         }
 
-        void UpdateAI(const uint32 diff)
-    {
-        if (!UpdateVictim())
-            return;
+            void JustDied(Unit* pKiller)
+        {
+                    if(!m_pInstance)
+                            return;
 
-                DoMeleeAttackIfReady();
-        }
+            if(!me->FindNearestCreature(34458, 200, true)
+                    && !me->FindNearestCreature(34451, 200, true)
+                    && !me->FindNearestCreature(34459, 200, true)
+                    && !me->FindNearestCreature(34448, 200, true)
+                    && !me->FindNearestCreature(34449, 200, true)
+                    && !me->FindNearestCreature(34445, 200, true)
+                    && !me->FindNearestCreature(34456, 200, true)
+                    && !me->FindNearestCreature(34447, 200, true)
+                    && !me->FindNearestCreature(34441, 200, true)
+                    && !me->FindNearestCreature(34454, 200, true)
+                    && !me->FindNearestCreature(34455, 200, true)
+                    && !me->FindNearestCreature(34444, 200, true)
+                    && !me->FindNearestCreature(34450, 200, true)
+                    && !me->FindNearestCreature(34453, 200, true))
+                    {
+                            m_pInstance->SetData(PHASE_5, DONE);
+                    }
+            }
+
+            void UpdateAI(const uint32 diff)
+        {
+            if (!UpdateVictim())
+                return;
+
+                    DoMeleeAttackIfReady();
+            }
+    };
+
 };
 
 /************************/
 /* Thrakgar - 34444     */
 /* Shaman               */
 /************************/
-
-struct boss_thrakgarAI : public ScriptedAI
+class boss_thrakgar : public CreatureScript
 {
-    boss_thrakgarAI(Creature* pCreature) : ScriptedAI(pCreature)
-        {
-                m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        }
+public:
+    boss_thrakgar() : CreatureScript("boss_thrakgar") { }
 
-        ScriptedInstance* m_pInstance;
-
-    void Reset()
+    CreatureAI* GetAI(Creature* pCreature)
     {
+        return new boss_thrakgarAI(pCreature);
     }
 
-        void KilledUnit(Unit* who)
+    struct boss_thrakgarAI : public ScriptedAI
+    {
+        boss_thrakgarAI(Creature* pCreature) : ScriptedAI(pCreature)
+            {
+                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+            }
+
+            ScriptedInstance* m_pInstance;
+
+        void Reset()
         {
-                if(!m_pInstance)
-                        return;
         }
 
-        void EnterCombat(Unit* pWho)
-    {
-    }
+            void KilledUnit(Unit* who)
+            {
+                    if(!m_pInstance)
+                            return;
+            }
 
-        void JustDied(Unit* pKiller)
-    {
-                if(!m_pInstance)
-                        return;
-
-        if(!me->FindNearestCreature(34458, 200, true)
-                && !me->FindNearestCreature(34451, 200, true)
-                && !me->FindNearestCreature(34459, 200, true)
-                && !me->FindNearestCreature(34448, 200, true)
-                && !me->FindNearestCreature(34449, 200, true)
-                && !me->FindNearestCreature(34445, 200, true)
-                && !me->FindNearestCreature(34456, 200, true)
-                && !me->FindNearestCreature(34447, 200, true)
-                && !me->FindNearestCreature(34441, 200, true)
-                && !me->FindNearestCreature(34454, 200, true)
-                && !me->FindNearestCreature(34455, 200, true)
-                && !me->FindNearestCreature(34444, 200, true)
-                && !me->FindNearestCreature(34450, 200, true)
-                && !me->FindNearestCreature(34453, 200, true))
-                {
-                        m_pInstance->SetData(PHASE_5, DONE);
-                }
+            void EnterCombat(Unit* pWho)
+        {
         }
 
-        void UpdateAI(const uint32 diff)
-    {
-        if (!UpdateVictim())
-            return;
+            void JustDied(Unit* pKiller)
+        {
+                    if(!m_pInstance)
+                            return;
 
-                DoMeleeAttackIfReady();
-        }
+            if(!me->FindNearestCreature(34458, 200, true)
+                    && !me->FindNearestCreature(34451, 200, true)
+                    && !me->FindNearestCreature(34459, 200, true)
+                    && !me->FindNearestCreature(34448, 200, true)
+                    && !me->FindNearestCreature(34449, 200, true)
+                    && !me->FindNearestCreature(34445, 200, true)
+                    && !me->FindNearestCreature(34456, 200, true)
+                    && !me->FindNearestCreature(34447, 200, true)
+                    && !me->FindNearestCreature(34441, 200, true)
+                    && !me->FindNearestCreature(34454, 200, true)
+                    && !me->FindNearestCreature(34455, 200, true)
+                    && !me->FindNearestCreature(34444, 200, true)
+                    && !me->FindNearestCreature(34450, 200, true)
+                    && !me->FindNearestCreature(34453, 200, true))
+                    {
+                            m_pInstance->SetData(PHASE_5, DONE);
+                    }
+            }
+
+            void UpdateAI(const uint32 diff)
+        {
+            if (!UpdateVictim())
+                return;
+
+                    DoMeleeAttackIfReady();
+            }
+    };
+
 };
 
 /*************************/
 /* Harkzog - 34450       */
 /* Warlock               */
 /*************************/
-
-struct boss_harkzogAI : public ScriptedAI
+class boss_harkzog : public CreatureScript
 {
-    boss_harkzogAI(Creature* pCreature) : ScriptedAI(pCreature)
-        {
-                m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        }
+public:
+    boss_harkzog() : CreatureScript("boss_harkzog") { }
 
-        ScriptedInstance* m_pInstance;
-
-    void Reset()
+    CreatureAI* GetAI(Creature* pCreature)
     {
+        return new boss_harkzogAI(pCreature);
     }
 
-        void KilledUnit(Unit* who)
+    struct boss_harkzogAI : public ScriptedAI
+    {
+        boss_harkzogAI(Creature* pCreature) : ScriptedAI(pCreature)
+            {
+                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+            }
+
+            ScriptedInstance* m_pInstance;
+
+        void Reset()
         {
-                if(!m_pInstance)
-                        return;
         }
 
-        void EnterCombat(Unit* pWho)
-    {
-    }
+            void KilledUnit(Unit* who)
+            {
+                    if(!m_pInstance)
+                            return;
+            }
 
-        void JustDied(Unit* pKiller)
-    {
-                if(!m_pInstance)
-                        return;
-
-        if(!me->FindNearestCreature(34458, 200, true)
-                && !me->FindNearestCreature(34451, 200, true)
-                && !me->FindNearestCreature(34459, 200, true)
-                && !me->FindNearestCreature(34448, 200, true)
-                && !me->FindNearestCreature(34449, 200, true)
-                && !me->FindNearestCreature(34445, 200, true)
-                && !me->FindNearestCreature(34456, 200, true)
-                && !me->FindNearestCreature(34447, 200, true)
-                && !me->FindNearestCreature(34441, 200, true)
-                && !me->FindNearestCreature(34454, 200, true)
-                && !me->FindNearestCreature(34455, 200, true)
-                && !me->FindNearestCreature(34444, 200, true)
-                && !me->FindNearestCreature(34450, 200, true)
-                && !me->FindNearestCreature(34453, 200, true))
-                {
-                        m_pInstance->SetData(PHASE_5, DONE);
-                }
+            void EnterCombat(Unit* pWho)
+        {
         }
 
-        void UpdateAI(const uint32 diff)
-    {
-        if (!UpdateVictim())
-            return;
+            void JustDied(Unit* pKiller)
+        {
+                    if(!m_pInstance)
+                            return;
 
-                DoMeleeAttackIfReady();
-        }
+            if(!me->FindNearestCreature(34458, 200, true)
+                    && !me->FindNearestCreature(34451, 200, true)
+                    && !me->FindNearestCreature(34459, 200, true)
+                    && !me->FindNearestCreature(34448, 200, true)
+                    && !me->FindNearestCreature(34449, 200, true)
+                    && !me->FindNearestCreature(34445, 200, true)
+                    && !me->FindNearestCreature(34456, 200, true)
+                    && !me->FindNearestCreature(34447, 200, true)
+                    && !me->FindNearestCreature(34441, 200, true)
+                    && !me->FindNearestCreature(34454, 200, true)
+                    && !me->FindNearestCreature(34455, 200, true)
+                    && !me->FindNearestCreature(34444, 200, true)
+                    && !me->FindNearestCreature(34450, 200, true)
+                    && !me->FindNearestCreature(34453, 200, true))
+                    {
+                            m_pInstance->SetData(PHASE_5, DONE);
+                    }
+            }
+
+            void UpdateAI(const uint32 diff)
+        {
+            if (!UpdateVictim())
+                return;
+
+                    DoMeleeAttackIfReady();
+            }
+    };
+
 };
 
 /********************************/
 /* Narrhok Steelbreaker - 34453 */
 /* Warrior                      */
 /********************************/
-
-struct boss_narrhok_steelbreakerAI : public ScriptedAI
+class boss_narrhok_steelbreaker : public CreatureScript
 {
-    boss_narrhok_steelbreakerAI(Creature* pCreature) : ScriptedAI(pCreature)
-        {
-                m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        }
+public:
+    boss_narrhok_steelbreaker() : CreatureScript("boss_narrhok_steelbreaker") { }
 
-        ScriptedInstance* m_pInstance;
-
-    void Reset()
+    CreatureAI* GetAI(Creature* pCreature)
     {
+        return new boss_narrhok_steelbreakerAI(pCreature);
     }
 
-        void KilledUnit(Unit* who)
+    struct boss_narrhok_steelbreakerAI : public ScriptedAI
+    {
+        boss_narrhok_steelbreakerAI(Creature* pCreature) : ScriptedAI(pCreature)
+            {
+                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+            }
+
+            ScriptedInstance* m_pInstance;
+
+        void Reset()
         {
-                if(!m_pInstance)
-                        return;
         }
 
-        void EnterCombat(Unit* pWho)
-    {
-    }
+            void KilledUnit(Unit* who)
+            {
+                    if(!m_pInstance)
+                            return;
+            }
 
-        void JustDied(Unit* pKiller)
-    {
-                if(!m_pInstance)
-                        return;
-
-        if(!me->FindNearestCreature(34458, 200, true)
-                && !me->FindNearestCreature(34451, 200, true)
-                && !me->FindNearestCreature(34459, 200, true)
-                && !me->FindNearestCreature(34448, 200, true)
-                && !me->FindNearestCreature(34449, 200, true)
-                && !me->FindNearestCreature(34445, 200, true)
-                && !me->FindNearestCreature(34456, 200, true)
-                && !me->FindNearestCreature(34447, 200, true)
-                && !me->FindNearestCreature(34441, 200, true)
-                && !me->FindNearestCreature(34454, 200, true)
-                && !me->FindNearestCreature(34455, 200, true)
-                && !me->FindNearestCreature(34444, 200, true)
-                && !me->FindNearestCreature(34450, 200, true)
-                && !me->FindNearestCreature(34453, 200, true))
-                {
-                        m_pInstance->SetData(PHASE_5, DONE);
-                }
+            void EnterCombat(Unit* pWho)
+        {
         }
 
-        void UpdateAI(const uint32 diff)
-    {
-        if (!UpdateVictim())
-            return;
+            void JustDied(Unit* pKiller)
+        {
+                    if(!m_pInstance)
+                            return;
 
-                DoMeleeAttackIfReady();
-        }
+            if(!me->FindNearestCreature(34458, 200, true)
+                    && !me->FindNearestCreature(34451, 200, true)
+                    && !me->FindNearestCreature(34459, 200, true)
+                    && !me->FindNearestCreature(34448, 200, true)
+                    && !me->FindNearestCreature(34449, 200, true)
+                    && !me->FindNearestCreature(34445, 200, true)
+                    && !me->FindNearestCreature(34456, 200, true)
+                    && !me->FindNearestCreature(34447, 200, true)
+                    && !me->FindNearestCreature(34441, 200, true)
+                    && !me->FindNearestCreature(34454, 200, true)
+                    && !me->FindNearestCreature(34455, 200, true)
+                    && !me->FindNearestCreature(34444, 200, true)
+                    && !me->FindNearestCreature(34450, 200, true)
+                    && !me->FindNearestCreature(34453, 200, true))
+                    {
+                            m_pInstance->SetData(PHASE_5, DONE);
+                    }
+            }
+
+            void UpdateAI(const uint32 diff)
+        {
+            if (!UpdateVictim())
+                return;
+
+                    DoMeleeAttackIfReady();
+            }
+    };
+
 };
 
 /***************************************************************/
 
-CreatureAI* GetAI_boss_gorgrim_shadowcleave(Creature* pCreature)
-{
-    return new boss_gorgrim_shadowcleaveAI(pCreature);
-}
 
-CreatureAI* GetAI_boss_birana_stormhoof(Creature* pCreature)
-{
-    return new boss_birana_stormhoofAI(pCreature);
-}
 
-CreatureAI* GetAI_boss_erin_misthoof(Creature* pCreature)
-{
-    return new boss_erin_misthoofAI(pCreature);
-}
 
-CreatureAI* GetAI_boss_rujkah(Creature* pCreature)
-{
-    return new boss_rujkahAI(pCreature);
-}
 
-CreatureAI* GetAI_boss_ginselle_blightslinger(Creature* pCreature)
-{
-    return new boss_ginselle_blightslingerAI(pCreature);
-}
 
-CreatureAI* GetAI_boss_liandra_suncaller(Creature* pCreature)
+class boss_malithas_brightblader : public CreatureScript
 {
-    return new boss_liandra_suncallerAI(pCreature);
-}
+public:
+    boss_malithas_brightblader() : CreatureScript("boss_malithas_brightblader") { }
 
-CreatureAI* GetAI_boss_malithas_brightblader(Creature* pCreature)
-{
-    return new boss_malithas_brightbladeAI(pCreature);
-}
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new boss_malithas_brightbladeAI(pCreature);
+    }
 
-CreatureAI* GetAI_boss_caiphus_the_stern(Creature* pCreature)
-{
-    return new boss_caiphus_the_sternAI(pCreature);
-}
+};
 
-CreatureAI* GetAI_boss_vivienne_blackwhisper(Creature* pCreature)
-{
-    return new boss_vivienne_blackwhisperAI(pCreature);
-}
 
-CreatureAI* GetAI_boss_mazdinah(Creature* pCreature)
-{
-    return new boss_mazdinahAI(pCreature);
-}
 
-CreatureAI* GetAI_boss_broln_stouthorn(Creature* pCreature)
-{
-    return new boss_broln_stouthornAI(pCreature);
-}
 
-CreatureAI* GetAI_boss_thrakgar(Creature* pCreature)
-{
-    return new boss_thrakgarAI(pCreature);
-}
 
-CreatureAI* GetAI_boss_harkzog(Creature* pCreature)
-{
-    return new boss_harkzogAI(pCreature);
-}
 
-CreatureAI* GetAI_boss_narrhok_steelbreaker(Creature* pCreature)
-{
-    return new boss_narrhok_steelbreakerAI(pCreature);
-}
+
 
 void AddSC_boss_tc_horde_champions()
 {
+<<<<<<< HEAD:src/server/scripts/Northrend/CrusadersColiseum/TrialOfTheCrusader/horde_champions.cpp
     Script *newscript;
 
     newscript = new Script;
@@ -1226,3 +1324,20 @@ void AddSC_boss_tc_horde_champions()
         newscript->GetAI = &GetAI_boss_narrhok_steelbreaker;
     newscript->RegisterSelf();
 }
+=======
+    new boss_gorgrim_shadowcleave();
+    new boss_birana_stormhoof();
+    new boss_erin_misthoof();
+    new boss_rujkah();
+    new boss_ginselle_blightslinger();
+    new boss_liandra_suncaller();
+    new boss_malithas_brightblader();
+    new boss_caiphus_the_stern();
+    new boss_vivienne_blackwhisper();
+    new boss_mazdinah();
+    new boss_broln_stouthorn();
+    new boss_thrakgar();
+    new boss_harkzog();
+    new boss_narrhok_steelbreaker();
+}
+>>>>>>> tc:src/server/scripts/Northrend/CrusadersColiseum/TrialOfTheCrusader/horde_champions.cpp

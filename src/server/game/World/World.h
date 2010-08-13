@@ -40,7 +40,6 @@ class Object;
 class WorldPacket;
 class WorldSession;
 class Player;
-class Weather;
 struct ScriptAction;
 struct ScriptInfo;
 class SqlResultQueue;
@@ -243,9 +242,6 @@ enum WorldConfigs
     CONFIG_ARENA_SEASON_IN_PROGRESS,
     CONFIG_ARENA_START_RATING,
     CONFIG_ARENA_START_PERSONAL_RATING,
-    CONFIG_ARENA_2v2_TEAM_ENABLE,
-    CONFIG_ARENA_3v3_TEAM_ENABLE,
-    CONFIG_ARENA_5v5_TEAM_ENABLE,
     CONFIG_MAX_WHO,
     CONFIG_BG_START_MUSIC,
     CONFIG_START_ALL_SPELLS,
@@ -257,17 +253,6 @@ enum WorldConfigs
     CONFIG_PVP_TOKEN_MAP_TYPE,
     CONFIG_PVP_TOKEN_ID,
     CONFIG_PVP_TOKEN_COUNT,
-    CONFIG_OUTDOORPVP_WINTERGRASP_ENABLED,
-    CONFIG_OUTDOORPVP_WINTERGRASP_START_TIME,
-    CONFIG_OUTDOORPVP_WINTERGRASP_BATTLE_TIME,
-    CONFIG_OUTDOORPVP_WINTERGRASP_INTERVAL,
-    CONFIG_OUTDOORPVP_WINTERGRASP_CUSTOM_HONOR,
-    CONFIG_OUTDOORPVP_WINTERGRASP_WIN_BATTLE,
-    CONFIG_OUTDOORPVP_WINTERGRASP_LOSE_BATTLE,
-    CONFIG_OUTDOORPVP_WINTERGRASP_DAMAGED_TOWER,
-    CONFIG_OUTDOORPVP_WINTERGRASP_DESTROYED_TOWER,
-    CONFIG_OUTDOORPVP_WINTERGRASP_DAMAGED_BUILDING,
-    CONFIG_OUTDOORPVP_WINTERGRASP_INTACT_BUILDING,
     CONFIG_NO_RESET_TALENT_COST,
     CONFIG_SHOW_KICK_IN_WORLD,
     CONFIG_INTERVAL_LOG_UPDATE,
@@ -365,29 +350,8 @@ enum Rates
     RATE_DURABILITY_LOSS_PARRY,
     RATE_DURABILITY_LOSS_ABSORB,
     RATE_DURABILITY_LOSS_BLOCK,
-    RATE_PVP_RANK_EXTRA_HONOR,   
     RATE_MOVESPEED,
     MAX_RATES
-};
-	
-enum HonorKillPvPRank
-{
-    HKRANK00,
-    HKRANK01,
-    HKRANK02,
-    HKRANK03,
-    HKRANK04,
-    HKRANK05,
-    HKRANK06,
-    HKRANK07,
-    HKRANK08,
-    HKRANK09,
-    HKRANK10,
-    HKRANK11,
-    HKRANK12,
-    HKRANK13,
-    HKRANK14,
-    HKRANKMAX
 };
 
 /// Can be used in SMSG_AUTH_RESPONSE packet
@@ -504,7 +468,7 @@ struct CliCommandHolder
 {
     typedef void Print(void*, const char*);
     typedef void CommandFinished(void*, bool success);
-      
+
     void* m_callbackArg;
     char *m_command;
     Print* m_print;
@@ -518,7 +482,7 @@ struct CliCommandHolder
         m_command = new char[len];
         memcpy(m_command, command, len);
     }
-    
+
     ~CliCommandHolder() { delete[] m_command; }
 };
 
@@ -532,7 +496,6 @@ class World
         ~World();
 
         WorldSession* FindSession(uint32 id) const;
-        void SendWintergraspState();
         void AddSession(WorldSession *s);
         void SendRNDBroadcast();
         bool RemoveSession(uint32 id);
@@ -556,15 +519,12 @@ class World
         inline void DecreasePlayerCount() { m_PlayerCount--; }
 
         Player* FindPlayerInZone(uint32 zone);
-        Weather* FindWeather(uint32 id) const;
-        Weather* AddWeather(uint32 zone_id);
-        void RemoveWeather(uint32 zone_id);
 
         /// Deny clients?
-        bool IsClosed() { return m_isClosed; }
+        bool IsClosed() const;
 
         /// Close world
-        void SetClosed(bool val) { m_isClosed = val; }
+        void SetClosed(bool val);
 
         /// Get the active session server limit (or security level limitations)
         uint32 GetPlayerAmountLimit() const { return m_playerLimit >= 0 ? m_playerLimit : 0; }
@@ -589,9 +549,9 @@ class World
         void SetAllowMovement(bool allow) { m_allowMovement = allow; }
 
         /// Set a new Message of the Day
-        void SetMotd(const std::string& motd) { m_motd = motd; }
+        void SetMotd(const std::string& motd);
         /// Get the current Message of the Day
-        const char* GetMotd() const { return m_motd.c_str(); }
+        const char* GetMotd() const;
 
         /// Set the string for new characters (first login)
         void SetNewCharString(std::string str) { m_newCharString = str; }
@@ -636,8 +596,6 @@ class World
         void SendZoneMessage(uint32 zone, WorldPacket *packet, WorldSession *self = 0, uint32 team = 0);
         void SendZoneText(uint32 zone, const char *text, WorldSession *self = 0, uint32 team = 0);
         void SendServerMessage(ServerMessageType type, const char *text = "", Player* player = NULL);
-
-        uint32 pvp_ranks[HKRANKMAX];
 
         /// Are we in the middle of a shutdown?
         bool IsShutdowning() const { return m_ShutdownTimer > 0; }
@@ -701,18 +659,6 @@ class World
         static int32 GetVisibilityNotifyPeriodInInstances() { return m_visibility_notify_periodInInstances;  }
         static int32 GetVisibilityNotifyPeriodInBGArenas()  { return m_visibility_notify_periodInBGArenas;   }
 
-        void SetWintergrapsTimer(uint32 timer, uint32 state)
-        {
-            m_WintergrapsTimer = timer;
-            m_WintergrapsState = state;
-        }
-
-        uint32 GetWintergrapsTimer() { return m_WintergrapsTimer; }
-        uint32 GetWintergrapsState() { return m_WintergrapsState; }
-
-        uint32 m_WintergrapsTimer;
-        uint32 m_WintergrapsState;
-
         void ProcessCliCommands();
         void QueueCliCommand(CliCommandHolder* commandHolder) { cliCmdQueue.add(commandHolder); }
 
@@ -738,11 +684,11 @@ class World
 
         void UpdateAreaDependentAuras();
 
-     void ProcessStartEvent();
-     void ProcessStopEvent();
-     bool GetEventKill() { return isEventKillStart; }
+        void ProcessStartEvent();
+        void ProcessStopEvent();
+        bool GetEventKill() { return isEventKillStart; }
 
-     bool isEventKillStart;
+        bool isEventKillStart;
     protected:
         void _UpdateGameTime();
         // callback for UpdateRealmCharacters
@@ -774,8 +720,6 @@ class World
         uint32 m_updateTimeCount;
         uint32 m_currentTime;
 
-        typedef UNORDERED_MAP<uint32, Weather*> WeatherMap;
-        WeatherMap m_weathers;
         typedef UNORDERED_MAP<uint32, WorldSession*> SessionMap;
         SessionMap m_sessions;
         typedef UNORDERED_MAP<uint32, time_t> DisconnectMap;

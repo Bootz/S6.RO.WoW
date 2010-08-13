@@ -22,6 +22,7 @@
 #include "WorldPacket.h"
 #include "World.h"
 #include "ObjectMgr.h"
+#include "ScriptMgr.h"
 
 const int32 ReputationMgr::PointsInRank[MAX_REPUTATION_RANK] = {36000, 3000, 3000, 3000, 6000, 12000, 21000, 1000};
 
@@ -149,7 +150,7 @@ void ReputationMgr::SendState(FactionState const* faction) const
 
         size_t p_count = data.wpos();
         data << (uint32) count;                             // placeholder
- 
+
         data << (uint32) faction->ReputationListID;
         data << (uint32) faction->Standing;
 
@@ -251,6 +252,8 @@ void ReputationMgr::Initialize()
 
 bool ReputationMgr::SetReputation(FactionEntry const* factionEntry, int32 standing, bool incremental)
 {
+    sScriptMgr.OnPlayerReputationChange(m_player, factionEntry->ID, standing, incremental);
+
     if (SimpleFactionsList const* flist = GetFactionTeamList(factionEntry->ID))
     {
         bool res = false;
@@ -278,7 +281,7 @@ bool ReputationMgr::SetReputation(FactionEntry const* factionEntry, int32 standi
         if (res)
         {
             // then some spillover calculation here if it exist
-            if (RepSpilloverTemplate const * repTemplate = objmgr.GetRepSpilloverTemplate(factionEntry->ID))
+            if (RepSpilloverTemplate const * repTemplate = sObjectMgr.GetRepSpilloverTemplate(factionEntry->ID))
             {
                 for (uint32 i = 0; i < MAX_SPILLOVER_FACTIONS; ++i)
                 {

@@ -18,213 +18,216 @@
 #include "ruby_sanctum.h"
 
 #define MAX_ENCOUNTER 4
-
-struct instance_ruby_sanctum : public ScriptedInstance
+class instance_ruby_sanctum : public InstanceMapScript
 {
-	instance_ruby_sanctum(Map *pMap) : ScriptedInstance(pMap) {Initialize();};
+public:
+    instance_ruby_sanctum() : InstanceMapScript("instance_ruby_sanctum") { }
 
-	uint8 m_auiEncounter[MAX_ENCOUNTER];
-	std::string str_data;
+    InstanceData* GetInstanceData_InstanceMapScript(Map *pMap)
+    {
+    	return new instance_ruby_sanctum_InstanceMapScript(pMap);
+    }
 
-	uint32 m_uiXerestrasza;
-	uint32 m_uiBossCounter;
+    struct instance_ruby_sanctum_InstanceMapScript : public ScriptedInstance
+    {
+    	instance_ruby_sanctum_InstanceMapScript(Map *pMap) : ScriptedInstance(pMap) {Initialize();};
 
-	uint64 m_uiBaltharusGUID;
-	uint64 m_uiZarithrianGUID;
-	uint64 m_uiRagefireGUID;
-	uint64 m_uiHalionGUID;
-	uint64 m_uiXerestraszaGUID;
+    	uint8 m_auiEncounter[MAX_ENCOUNTER];
+    	std::string str_data;
 
-	void Initialize()
-	{
-		memset(m_auiEncounter, 0, sizeof(m_auiEncounter));
-		m_uiXerestrasza = NOT_STARTED;
-		m_uiBossCounter = 0;
+    	uint32 m_uiXerestrasza;
+    	uint32 m_uiBossCounter;
 
-		m_uiBaltharusGUID = 0;
-		m_uiZarithrianGUID = 0;
-		m_uiRagefireGUID = 0;
-		m_uiHalionGUID = 0;
-		m_uiXerestraszaGUID = 0;
-	}
+    	uint64 m_uiBaltharusGUID;
+    	uint64 m_uiZarithrianGUID;
+    	uint64 m_uiRagefireGUID;
+    	uint64 m_uiHalionGUID;
+    	uint64 m_uiXerestraszaGUID;
 
-	void OnCreatureCreate(Creature *pCreature, bool )
-	{
-		switch(pCreature->GetEntry())
-		{
-		case NPC_BALTHARUS:
-			m_uiBaltharusGUID = pCreature->GetGUID();
-			break;
-		case NPC_ZARITHRIAN:
-			m_uiZarithrianGUID = pCreature->GetGUID();
-			break;
-		case NPC_RAGEFIRE:
-			m_uiRagefireGUID = pCreature->GetGUID();
-			break;
-		case NPC_HALION:
-			m_uiHalionGUID = pCreature->GetGUID();
-			if(instance->GetDifficulty() != RAID_DIFFICULTY_10MAN_HEROIC || instance->GetDifficulty() != RAID_DIFFICULTY_25MAN_HEROIC)
-			{
-				pCreature->SetReactState(REACT_PASSIVE);
-				pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-				pCreature->SetVisibility(VISIBILITY_ON);
-			}
-			break;
-		case NPC_XERESTRASZA:
-			m_uiXerestraszaGUID = pCreature->GetGUID();
-			break;
-		}
-	}
+    	void Initialize()
+    	{
+    		memset(m_auiEncounter, 0, sizeof(m_auiEncounter));
+    		m_uiXerestrasza = NOT_STARTED;
+    		m_uiBossCounter = 0;
 
-	void SetData(uint32 uiType, uint32 uiData)
-	{
-		switch(uiType)
-		{
-		case DATA_BALTHARUS_EVENT:
-			m_auiEncounter[0] = uiData;
-			if(uiData == DONE)
-				m_uiBossCounter++;
-			if(m_uiBossCounter == 3)
-			{
-				Creature *pCreature = instance->GetCreature(GetData64(DATA_HALION));
-				pCreature->SetReactState(REACT_AGGRESSIVE);
-				pCreature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-				pCreature->SetVisibility(VISIBILITY_ON);
-			}
-			break;
-		case DATA_ZARITHRIAN_EVENT:
-			m_auiEncounter[1] = uiData;
-			if(uiData == DONE)
-				m_uiBossCounter++;
-			if(m_uiBossCounter == 3)
-			{
-				Creature *pCreature = instance->GetCreature(GetData64(DATA_HALION));
-				pCreature->SetReactState(REACT_AGGRESSIVE);
-				pCreature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-				pCreature->SetVisibility(VISIBILITY_ON);
-			}
-			break;
-		case DATA_RAGEFIRE_EVENT:
-			m_auiEncounter[2] = uiData;
-			if(uiData == DONE)
-				m_uiBossCounter++;
-			if(m_uiBossCounter == 3)
-			{
-				Creature *pCreature = instance->GetCreature(GetData64(DATA_HALION));
-				pCreature->SetReactState(REACT_AGGRESSIVE);
-				pCreature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-				pCreature->SetVisibility(VISIBILITY_ON);
-			}
-			break;
-		case DATA_HALION_EVENT:
-			m_auiEncounter[3] = uiData;
-			if(uiData == DONE)
-			{
-				switch(instance->GetDifficulty())
-				{
-				case RAID_DIFFICULTY_10MAN_NORMAL:
-					DoCompleteAchievement(4817);
-				case RAID_DIFFICULTY_10MAN_HEROIC:
-					DoCompleteAchievement(4818);
-				case RAID_DIFFICULTY_25MAN_NORMAL:
-					DoCompleteAchievement(4815);
-				case RAID_DIFFICULTY_25MAN_HEROIC:
-					DoCompleteAchievement(4816);
-				}
-			}
-		case DATA_XERESTRASZA_EVENT:
-			m_uiXerestrasza = uiData;
-		}
-	}
+    		m_uiBaltharusGUID = 0;
+    		m_uiZarithrianGUID = 0;
+    		m_uiRagefireGUID = 0;
+    		m_uiHalionGUID = 0;
+    		m_uiXerestraszaGUID = 0;
+    	}
 
-	uint32 GetData(uint32 uiType)
-	{
-		if(uiType == DATA_BALTHARUS_EVENT)
-			return m_auiEncounter[0];
-		if(uiType == DATA_ZARITHRIAN_EVENT)
-			return m_auiEncounter[1];
-		if(uiType == DATA_RAGEFIRE_EVENT)
-			return m_auiEncounter[2];
-		if(uiType == DATA_HALION_EVENT)
-			return m_auiEncounter[3];
-		if(uiType == DATA_XERESTRASZA_EVENT)
-			return m_uiXerestrasza;
-                        return 0;
-	}
+    	void OnCreatureCreate(Creature *pCreature, bool )
+    	{
+    		switch(pCreature->GetEntry())
+    		{
+    		case NPC_BALTHARUS:
+    			m_uiBaltharusGUID = pCreature->GetGUID();
+    			break;
+    		case NPC_ZARITHRIAN:
+    			m_uiZarithrianGUID = pCreature->GetGUID();
+    			break;
+    		case NPC_RAGEFIRE:
+    			m_uiRagefireGUID = pCreature->GetGUID();
+    			break;
+    		case NPC_HALION:
+    			m_uiHalionGUID = pCreature->GetGUID();
+    			if(instance->GetDifficulty() != RAID_DIFFICULTY_10MAN_HEROIC || instance->GetDifficulty() != RAID_DIFFICULTY_25MAN_HEROIC)
+    			{
+    				pCreature->SetReactState(REACT_PASSIVE);
+    				pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+    				pCreature->SetVisibility(VISIBILITY_ON);
+    			}
+    			break;
+    		case NPC_XERESTRASZA:
+    			m_uiXerestraszaGUID = pCreature->GetGUID();
+    			break;
+    		}
+    	}
 
-	uint64 GetData64(uint32 uiType)
-	{
-		if(uiType == DATA_BALTHARUS)
-			return m_uiBaltharusGUID;
-		if(uiType == DATA_ZARITHRIAN)
-			return m_uiZarithrianGUID;
-		if(uiType == DATA_RAGEFIRE)
-			return m_uiRagefireGUID;
-		if(uiType == DATA_HALION)
-			return m_uiHalionGUID;
-		if(uiType == DATA_XERESTRASZA)
-			return m_uiXerestraszaGUID;
-                        return 0;
-	}
+    	void SetData(uint32 uiType, uint32 uiData)
+    	{
+    		switch(uiType)
+    		{
+    		case DATA_BALTHARUS_EVENT:
+    			m_auiEncounter[0] = uiData;
+    			if(uiData == DONE)
+    				m_uiBossCounter++;
+    			if(m_uiBossCounter == 3)
+    			{
+    				Creature *pCreature = instance->GetCreature(GetData64(DATA_HALION));
+    				pCreature->SetReactState(REACT_AGGRESSIVE);
+    				pCreature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+    				pCreature->SetVisibility(VISIBILITY_ON);
+    			}
+    			break;
+    		case DATA_ZARITHRIAN_EVENT:
+    			m_auiEncounter[1] = uiData;
+    			if(uiData == DONE)
+    				m_uiBossCounter++;
+    			if(m_uiBossCounter == 3)
+    			{
+    				Creature *pCreature = instance->GetCreature(GetData64(DATA_HALION));
+    				pCreature->SetReactState(REACT_AGGRESSIVE);
+    				pCreature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+    				pCreature->SetVisibility(VISIBILITY_ON);
+    			}
+    			break;
+    		case DATA_RAGEFIRE_EVENT:
+    			m_auiEncounter[2] = uiData;
+    			if(uiData == DONE)
+    				m_uiBossCounter++;
+    			if(m_uiBossCounter == 3)
+    			{
+    				Creature *pCreature = instance->GetCreature(GetData64(DATA_HALION));
+    				pCreature->SetReactState(REACT_AGGRESSIVE);
+    				pCreature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+    				pCreature->SetVisibility(VISIBILITY_ON);
+    			}
+    			break;
+    		case DATA_HALION_EVENT:
+    			m_auiEncounter[3] = uiData;
+    			if(uiData == DONE)
+    			{
+    				switch(instance->GetDifficulty())
+    				{
+    				case RAID_DIFFICULTY_10MAN_NORMAL:
+    					DoCompleteAchievement(4817);
+    				case RAID_DIFFICULTY_10MAN_HEROIC:
+    					DoCompleteAchievement(4818);
+    				case RAID_DIFFICULTY_25MAN_NORMAL:
+    					DoCompleteAchievement(4815);
+    				case RAID_DIFFICULTY_25MAN_HEROIC:
+    					DoCompleteAchievement(4816);
+    				}
+    			}
+    		case DATA_XERESTRASZA_EVENT:
+    			m_uiXerestrasza = uiData;
+    		}
+    	}
 
-	std::string GetSaveData()
-	{
-		OUT_SAVE_INST_DATA;
+    	uint32 GetData(uint32 uiType)
+    	{
+    		if(uiType == DATA_BALTHARUS_EVENT)
+    			return m_auiEncounter[0];
+    		if(uiType == DATA_ZARITHRIAN_EVENT)
+    			return m_auiEncounter[1];
+    		if(uiType == DATA_RAGEFIRE_EVENT)
+    			return m_auiEncounter[2];
+    		if(uiType == DATA_HALION_EVENT)
+    			return m_auiEncounter[3];
+    		if(uiType == DATA_XERESTRASZA_EVENT)
+    			return m_uiXerestrasza;
+                            return 0;
+    	}
 
-		std::ostringstream saveStream;
-		// "C"hamber of Aspects, "R"uby Sanctum
-		saveStream << "C R " << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2] << " " << m_auiEncounter[3] << " " << m_uiXerestrasza;
+    	uint64 GetData64(uint32 uiType)
+    	{
+    		if(uiType == DATA_BALTHARUS)
+    			return m_uiBaltharusGUID;
+    		if(uiType == DATA_ZARITHRIAN)
+    			return m_uiZarithrianGUID;
+    		if(uiType == DATA_RAGEFIRE)
+    			return m_uiRagefireGUID;
+    		if(uiType == DATA_HALION)
+    			return m_uiHalionGUID;
+    		if(uiType == DATA_XERESTRASZA)
+    			return m_uiXerestraszaGUID;
+                            return 0;
+    	}
 
-		str_data = saveStream.str();
+    	std::string GetSaveData()
+    	{
+    		OUT_SAVE_INST_DATA;
 
-		OUT_SAVE_INST_DATA_COMPLETE;
-		return str_data;
-	}
+    		std::ostringstream saveStream;
+    		// "C"hamber of Aspects, "R"uby Sanctum
+    		saveStream << "C R " << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2] << " " << m_auiEncounter[3] << " " << m_uiXerestrasza;
 
-	void Load(const char* in)
-	{
-		if (!in)
-		{
-			OUT_LOAD_INST_DATA_FAIL;
-			return;
-		}
+    		str_data = saveStream.str();
 
-		OUT_LOAD_INST_DATA(in);
+    		OUT_SAVE_INST_DATA_COMPLETE;
+    		return str_data;
+    	}
 
-		char dataHead1, dataHead2;
-		uint16 data0, data1, data2, data3, data4;
+    	void Load(const char* in)
+    	{
+    		if (!in)
+    		{
+    			OUT_LOAD_INST_DATA_FAIL;
+    			return;
+    		}
 
-		std::istringstream loadStream(in);
-		loadStream >> dataHead1 >> dataHead2 >> data0 >> data1 >> data2 >> data3 >> data4;
+    		OUT_LOAD_INST_DATA(in);
 
-		if (dataHead1 == 'C' && dataHead2 == 'R')
-		{
-			m_auiEncounter[0] = data0;
-			m_auiEncounter[1] = data1;
-			m_auiEncounter[2] = data2;
-			m_auiEncounter[3] = data3;
-			m_uiXerestrasza = data4;
+    		char dataHead1, dataHead2;
+    		uint16 data0, data1, data2, data3, data4;
 
-			for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
-				if (m_auiEncounter[i] == IN_PROGRESS)
-					m_auiEncounter[i] = NOT_STARTED;
+    		std::istringstream loadStream(in);
+    		loadStream >> dataHead1 >> dataHead2 >> data0 >> data1 >> data2 >> data3 >> data4;
 
-		} else OUT_LOAD_INST_DATA_FAIL;
+    		if (dataHead1 == 'C' && dataHead2 == 'R')
+    		{
+    			m_auiEncounter[0] = data0;
+    			m_auiEncounter[1] = data1;
+    			m_auiEncounter[2] = data2;
+    			m_auiEncounter[3] = data3;
+    			m_uiXerestrasza = data4;
 
-		OUT_LOAD_INST_DATA_COMPLETE;
-	}
+    			for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
+    				if (m_auiEncounter[i] == IN_PROGRESS)
+    					m_auiEncounter[i] = NOT_STARTED;
+
+    		} else OUT_LOAD_INST_DATA_FAIL;
+
+    		OUT_LOAD_INST_DATA_COMPLETE;
+    	}
+    };
+
 };
 
-InstanceData* GetInstanceData_instance_ruby_sanctum(Map *pMap)
-{
-	return new instance_ruby_sanctum(pMap);
-}
 
 void AddSC_instance_ruby_sanctum()
 {
-	Script* newscript;
-	newscript = new Script;
-	newscript->Name = "instance_ruby_sanctum";
-	newscript->GetInstanceData = &GetInstanceData_instance_ruby_sanctum;
-	newscript->RegisterSelf();
+    new instance_ruby_sanctum();
 }

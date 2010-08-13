@@ -128,7 +128,7 @@ class GameEventMgr
         void UpdateWorldStates(uint16 event_id, bool Activate);
         void UpdateEventNPCFlags(uint16 event_id);
         void UpdateEventNPCVendor(uint16 event_id, bool activate);
-        void UpdateBattleGroundSettings();
+        void UpdateBattlegroundSettings();
         bool CheckOneGameEventConditions(uint16 event_id);
         void SaveWorldEventStateToDB(uint16 event_id);
         bool hasCreatureQuestActiveEventExcept(uint32 quest_id, uint16 event_id);
@@ -163,7 +163,7 @@ class GameEventMgr
         //GameEventGuidMap  mGameEventGameobjectGuids;
         GameEventIdMap    mGameEventPoolIds;
         GameEventDataMap  mGameEvent;
-        GameEventBitmask  mGameEventBattleGroundHolidays;
+        GameEventBitmask  mGameEventBattlegroundHolidays;
         QuestIdToEventConditionMap mQuestToEventConditions;
         GameEventNPCFlagMap mGameEventNPCFlags;
         GuidEventNpcGossipIdMap mNPCGossipIds;
@@ -174,10 +174,10 @@ class GameEventMgr
         GameEventGuidMap  mGameEventGameobjectGuids;
 };
 
-#define gameeventmgr (*ACE_Singleton<GameEventMgr, ACE_Null_Mutex>::instance())
+#define sGameEventMgr (*ACE_Singleton<GameEventMgr, ACE_Null_Mutex>::instance())
 
- bool IsHolidayActive(HolidayIds id);
- bool IsEventActive(uint16 event_id);
+bool IsHolidayActive(HolidayIds id);
+bool IsEventActive(uint16 event_id);
 
 #endif
 

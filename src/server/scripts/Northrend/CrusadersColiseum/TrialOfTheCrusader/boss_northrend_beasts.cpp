@@ -112,774 +112,813 @@ enum Creatures
 
 
 const Position CenterOfArena = {563.734558, 173.907974, 394.326874};
-
-struct boss_gormok_impalerAI : public ScriptedAI
+class boss_gormok_impaler : public CreatureScript
 {
-    boss_gormok_impalerAI(Creature *pCreature) : ScriptedAI(pCreature)
+public:
+    boss_gormok_impaler() : CreatureScript("boss_gormok_impaler") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
     {
-                m_pInstance = pCreature->GetInstanceData();
+        return new boss_gormok_impalerAI(pCreature);
     }
 
-    ScriptedInstance* m_pInstance;
-
-        uint32 m_uiImpaleTimer;
-        uint32 m_uiStaggeringStompTimer;
-        uint32 m_uiHealthAmountModifier;
-        uint32 m_uiFireBombTimer;
-        uint32 m_uiFireBombTriggerTimer;
-        uint32 m_uiMaxSnobolds;
-        uint32 m_uiSnoboldsLaunched;
-        uint32 m_uiSnoboldTimer;
-        uint32 m_uiNextEncounterTimer;
-
-        bool m_bIsNextPhase;
-
-    void Reset()
+    struct boss_gormok_impalerAI : public ScriptedAI
     {
-                me->SetSpeed(MOVE_RUN, 1.5f);
-
-                m_uiStaggeringStompTimer = urand(13*IN_MILLISECONDS,15*IN_MILLISECONDS);
-                m_uiImpaleTimer = urand(30*IN_MILLISECONDS,35*IN_MILLISECONDS);
-                m_uiFireBombTimer = urand(30*IN_MILLISECONDS,40*IN_MILLISECONDS);
-                m_uiFireBombTriggerTimer = urand(10*IN_MILLISECONDS,18*IN_MILLISECONDS);
-                m_uiMaxSnobolds = RAID_MODE(4,5,4,5);
-                m_uiSnoboldsLaunched = 0;
-                m_uiSnoboldTimer = urand(15*IN_MILLISECONDS,30*IN_MILLISECONDS);
-                m_bIsNextPhase = false;
-
-                if (getDifficulty() == RAID_DIFFICULTY_10MAN_HEROIC || getDifficulty() == RAID_DIFFICULTY_25MAN_HEROIC)
-                {
-                        m_uiNextEncounterTimer = 180*IN_MILLISECONDS;
-                }
-
-                if (m_pInstance)
-                        m_pInstance->SetData(PHASE_1, NOT_STARTED);
-    }
-
-    void EnterCombat(Unit* who)
-    {
-          if (m_pInstance)
-                  m_pInstance->SetData(PHASE_1, IN_PROGRESS);
-    }
-
-        void JustSummoned(Unit *snobold)
-    {
-        if(Unit *target = SelectUnit(SELECT_TARGET_RANDOM, 0))
+        boss_gormok_impalerAI(Creature *pCreature) : ScriptedAI(pCreature)
         {
-            snobold->AddThreat(target, 1000000.0f);
-            snobold->NearTeleportTo(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0);
+                    m_pInstance = pCreature->GetInstanceData();
         }
-    }
 
-        void JustReachedHome()
-    {
-                if (m_pInstance)
-                {
-            m_pInstance->SetData(PHASE_1, NOT_STARTED);
-                        uint32 count = m_pInstance->GetData(DATA_UPDATE_STATE_UI_COUNT);
-                        count--;
-                        m_pInstance->SetData(DATA_UPDATE_STATE_UI_COUNT, count);
-                        me->ForcedDespawn();
-                }
-    }
+        ScriptedInstance* m_pInstance;
 
-    void UpdateAI(const uint32 uiDiff)
-    {
-         if (!UpdateVictim())
-            return;
+            uint32 m_uiImpaleTimer;
+            uint32 m_uiStaggeringStompTimer;
+            uint32 m_uiHealthAmountModifier;
+            uint32 m_uiFireBombTimer;
+            uint32 m_uiFireBombTriggerTimer;
+            uint32 m_uiMaxSnobolds;
+            uint32 m_uiSnoboldsLaunched;
+            uint32 m_uiSnoboldTimer;
+            uint32 m_uiNextEncounterTimer;
 
-                if((m_uiSnoboldsLaunched < m_uiMaxSnobolds) && (m_uiSnoboldTimer < uiDiff))
+            bool m_bIsNextPhase;
+
+        void Reset()
+        {
+                    me->SetSpeed(MOVE_RUN, 1.5f);
+
+                    m_uiStaggeringStompTimer = urand(13*IN_MILLISECONDS,15*IN_MILLISECONDS);
+                    m_uiImpaleTimer = urand(30*IN_MILLISECONDS,35*IN_MILLISECONDS);
+                    m_uiFireBombTimer = urand(30*IN_MILLISECONDS,40*IN_MILLISECONDS);
+                    m_uiFireBombTriggerTimer = urand(10*IN_MILLISECONDS,18*IN_MILLISECONDS);
+                    m_uiMaxSnobolds = RAID_MODE(4,5,4,5);
+                    m_uiSnoboldsLaunched = 0;
+                    m_uiSnoboldTimer = urand(15*IN_MILLISECONDS,30*IN_MILLISECONDS);
+                    m_bIsNextPhase = false;
+
+                    if (getDifficulty() == RAID_DIFFICULTY_10MAN_HEROIC || getDifficulty() == RAID_DIFFICULTY_25MAN_HEROIC)
+                    {
+                            m_uiNextEncounterTimer = 180*IN_MILLISECONDS;
+                    }
+
+                    if (m_pInstance)
+                            m_pInstance->SetData(PHASE_1, NOT_STARTED);
+        }
+
+        void EnterCombat(Unit* who)
+        {
+              if (m_pInstance)
+                      m_pInstance->SetData(PHASE_1, IN_PROGRESS);
+        }
+
+            void JustSummoned(Unit *snobold)
         {
             if(Unit *target = SelectUnit(SELECT_TARGET_RANDOM, 0))
             {
-                if(Creature *snobold = me->SummonCreature(CREATURE_SNOWBOLD,target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0,TEMPSUMMON_DEAD_DESPAWN, 3000))
-                    snobold->AddThreat(target, 1000000.0f);
-                ++m_uiSnoboldsLaunched;
-                DoCast(me, SPELL_RISING_ANGER, true);
+                snobold->AddThreat(target, 1000000.0f);
+                snobold->NearTeleportTo(target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0);
             }
-            m_uiSnoboldTimer = 55000 + rand()%15000;
         }
-        else
-            m_uiSnoboldTimer -= uiDiff;
 
-                if (m_uiImpaleTimer <= uiDiff)
-                {
-                        DoCast(me->getVictim(), SPELL_IMPALE);
-                        m_uiImpaleTimer = urand(30*IN_MILLISECONDS,35*IN_MILLISECONDS);
-                }
-                else m_uiImpaleTimer -= uiDiff;
-
-                if (m_uiStaggeringStompTimer <= uiDiff)
-                {
-                        DoCast(me->getVictim(), SPELL_STAGGERING_STOMP);
-                        m_uiStaggeringStompTimer = urand(20*IN_MILLISECONDS,21*IN_MILLISECONDS);
-                }
-                else m_uiStaggeringStompTimer -= uiDiff;
-
-                if (m_uiFireBombTimer <= uiDiff)
-                {
-                        if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
-                        {
-                                DoCast(pTarget, SPELL_FIRE_BOMB);
-                                m_uiFireBombTimer = urand(30*IN_MILLISECONDS,50*IN_MILLISECONDS);
-                        }
-                }
-                else m_uiFireBombTimer -= uiDiff;
-
-                if (m_uiFireBombTriggerTimer <= uiDiff)
-                {
-                        for(int8 n = 0; n < 4; n++)
-                        {
-                                Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM);
-                                me->SummonCreature(CREATURE_FIREBOMB, pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 999999);
-                                m_uiFireBombTriggerTimer = urand(15*IN_MILLISECONDS,45*IN_MILLISECONDS);
-                        }
-                }
-                else m_uiFireBombTriggerTimer -= uiDiff;
-
-                if (getDifficulty() == RAID_DIFFICULTY_10MAN_HEROIC || getDifficulty() == RAID_DIFFICULTY_25MAN_HEROIC)
-                {
-                        if (m_uiNextEncounterTimer <= uiDiff && !m_bIsNextPhase)
-                        {
-                                m_pInstance->SetData(PHASE_2, IN_PROGRESS);
-                                m_bIsNextPhase = true;
-                        }
-                        else m_uiNextEncounterTimer -= uiDiff;
-                }
-
-      DoMeleeAttackIfReady();
-    }
-
-    void JustDied(Unit* pKiller)
-    {
-                if(m_pInstance)
-                m_pInstance->SetData(PHASE_1, DONE);
-                m_pInstance->SetData(PHASE_2, IN_PROGRESS);
-        }
-};
-
-CreatureAI* GetAI_boss_gormok_impaler(Creature* pCreature)
-{
-    return new boss_gormok_impalerAI(pCreature);
-}
-
-struct boss_acidmawAI : public ScriptedAI
-{
-    boss_acidmawAI(Creature* pCreature) : ScriptedAI(pCreature)
+            void JustReachedHome()
         {
-                m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        }
-
-        ScriptedInstance* m_pInstance;
-
-        uint32 m_uiPhase;
-        uint32 m_uiPhase1Timer;
-        uint32 m_uiPhase2Timer;
-        uint32 m_uiRemoveSubmergedTimer;
-        uint32 m_uiEnrageTimer;
-
-        /*** Phase 1 ***/
-        uint32 m_uiAcidSpitTimer;
-        uint32 m_uiParalyticSprayTimer;
-        uint32 m_uiSweapTimer;
-
-        /*** Phase 2 ***/
-        uint32 m_uiAcidSpewTimer;
-        uint32 m_uiParalyticBiteTimer;
-
-        bool m_bIsEnrage;
-
-    void Reset()
-    {
-                m_uiPhase = 1;
-                m_uiPhase2Timer = 50000;
-                m_uiEnrageTimer = 2000;
-
-                /*** Phase 1 ***/
-                m_uiAcidSpitTimer       = 12000; // Random
-                m_uiParalyticSprayTimer = 2000; // Tank
-                m_uiSweapTimer  = 10000;
-                m_bIsEnrage = false;
-
-                /*** Phase 2 ***/
-                m_uiAcidSpewTimer = 16000;
-                m_uiParalyticBiteTimer = 5000;
-    }
-
-        void KilledUnit(Unit* who)
-        {
-                if(!m_pInstance)
-                        return;
-        }
-
-        void JustReachedHome()
-    {
-        if (m_pInstance)
-                {
-            m_pInstance->SetData(PHASE_1, NOT_STARTED);
-                        m_pInstance->SetData(PHASE_2, NOT_STARTED);
-                }
-
-                if(m_pInstance)
-                {
-                        uint32 count = m_pInstance->GetData(DATA_UPDATE_STATE_UI_COUNT);
-                        count--;
-                        m_pInstance->SetData(DATA_UPDATE_STATE_UI_COUNT, count);
-                        me->ForcedDespawn();
-                }
-    }
-
-        void EnterCombat(Unit* pWho)
-    {
-                if (!m_pInstance)
-                        return;
-
-                if (m_pInstance->GetData(PHASE_2) == DONE)
-                    me->ForcedDespawn();
-                else
-                    m_pInstance->SetData(PHASE_2, IN_PROGRESS);
-    }
-
-        void JustDied(Unit* pKiller)
-    {
-            if (!m_pInstance)
-                        return;
-
-        if(!me->FindNearestCreature(NPC_ACIDMAW, 200, true) && !me->FindNearestCreature(NPC_DREADSCALE, 200, true))
-                {
-                        m_pInstance->SetData(PHASE_2, DONE);
-                        m_pInstance->SetData(PHASE_3, IN_PROGRESS);
-                }
+                    if (m_pInstance)
+                    {
+                m_pInstance->SetData(PHASE_1, NOT_STARTED);
+                            uint32 count = m_pInstance->GetData(DATA_UPDATE_STATE_UI_COUNT);
+                            count--;
+                            m_pInstance->SetData(DATA_UPDATE_STATE_UI_COUNT, count);
+                            me->ForcedDespawn();
+                    }
         }
 
         void UpdateAI(const uint32 uiDiff)
-    {
-        if (!UpdateVictim())
-            return;
-
-                if (m_uiEnrageTimer <= uiDiff && !m_bIsEnrage)
         {
-                        if(!me->FindNearestCreature(NPC_DREADSCALE, 300, true))
-                        {
-                                DoCast(me, SPELL_ENRAGE );
-                                m_bIsEnrage = true;
-                        }
-                        m_uiEnrageTimer = 2000;
-        }
-                else m_uiEnrageTimer -= uiDiff;
-
-                if(m_uiPhase == 1)
-                {
-                        if (!me->HasAura(SPELL_ROOT))
-                                DoCast(me, SPELL_ROOT);
-
-                        if (m_uiParalyticSprayTimer <= uiDiff)
-                        {
-                                DoCast(me->getVictim(), SPELL_PARALYTIC_SPRAY);
-                                m_uiParalyticSprayTimer = 5*IN_MILLISECONDS;
-                        }
-                        else m_uiParalyticSprayTimer -= uiDiff;
-
-                        if (m_uiAcidSpitTimer <= uiDiff)
-                        {
-                                std::list<Unit*> pTargets;
-                SelectTargetList(pTargets, 5, SELECT_TARGET_RANDOM, 80, true);
-                                for (std::list<Unit*>::const_iterator i = pTargets.begin(); i != pTargets.end(); ++i)
-                                DoCast(*i, SPELL_ACID_SPIT);
-                                m_uiAcidSpitTimer = 20*IN_MILLISECONDS;
-                        }
-                        else m_uiAcidSpitTimer -= uiDiff;
-
-                        if (m_uiSweapTimer <= uiDiff)
-                        {
-                                DoCast(me->getVictim(), SPELL_SWEAP);
-                                m_uiSweapTimer = 20*IN_MILLISECONDS;
-                        }
-                        else m_uiSweapTimer -= uiDiff;
-
-                        if (m_uiPhase2Timer <= uiDiff)
-                        {
-                                DoCast(me,      SPELL_SUBMERGE);
-                                m_uiPhase = 2;
-                                m_uiPhase2Timer = 50*IN_MILLISECONDS;
-                                m_uiPhase1Timer = 50*IN_MILLISECONDS;
-                                m_uiRemoveSubmergedTimer = 10000;
-                        }
-                        else m_uiPhase2Timer -= uiDiff;
-
-                        if (m_uiRemoveSubmergedTimer <= uiDiff)
-                        {
-                                me->CastSpell(me, 35177, false);
-                                me->RemoveAurasDueToSpell(SPELL_SUBMERGE);
-                                m_uiRemoveSubmergedTimer = 999*IN_MILLISECONDS;
-                        }
-                        else m_uiRemoveSubmergedTimer -= uiDiff;
-                }
-
-                if(m_uiPhase == 2)
-                {
-                        if (me->HasAura(SPELL_ROOT))
-                                me->RemoveAurasDueToSpell(SPELL_ROOT);
-
-                        if (m_uiRemoveSubmergedTimer <= uiDiff)
-                        {
-                                me->CastSpell(me, 35177, false);
-                                me->RemoveAurasDueToSpell(SPELL_SUBMERGE);
-                                m_uiRemoveSubmergedTimer = 999*IN_MILLISECONDS;
-                        }
-                        else m_uiRemoveSubmergedTimer -= uiDiff;
-
-                        if (m_uiAcidSpewTimer <= uiDiff)
-                        {
-                                DoCast(me->getVictim(), SPELL_ACID_SPEW);
-                                m_uiAcidSpewTimer = 20*IN_MILLISECONDS;
-                        }
-                        else m_uiAcidSpewTimer -= uiDiff;
-
-                        if (m_uiParalyticBiteTimer <= uiDiff)
-                        {
-                                DoCast(me->getVictim(), SPELL_PARALYTIC_BITE);
-                                m_uiParalyticBiteTimer = 5*IN_MILLISECONDS;
-                        }
-                        else m_uiParalyticBiteTimer -= uiDiff;
-
-                        if (m_uiPhase1Timer <= uiDiff)
-                        {
-                                DoCast(me,      SPELL_SUBMERGE);
-                                m_uiPhase = 1;
-                                m_uiPhase2Timer = 50*IN_MILLISECONDS;
-                                m_uiPhase1Timer = 50*IN_MILLISECONDS;
-                                m_uiRemoveSubmergedTimer = 10000;
-                        }
-                        else m_uiPhase1Timer -= uiDiff;
-
-                        DoMeleeAttackIfReady();
-                }
-        }
-};
-
-CreatureAI* GetAI_boss_acidmaw(Creature* pCreature)
-{
-    return new boss_acidmawAI(pCreature);
-}
-
-struct boss_dreadscaleAI : public ScriptedAI
-{
-    boss_dreadscaleAI(Creature* pCreature) : ScriptedAI(pCreature)
-        {
-                m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        }
-
-        ScriptedInstance* m_pInstance;
-
-        uint32 m_uiPhase;
-        uint32 m_uiPhase1Timer;
-        uint32 m_uiPhase2Timer;
-        uint32 m_uiEnrageTimer;
-
-        /*** Phase 1 ***/
-        uint32 m_uiBurningBiteTimer;
-        uint32 m_uiMoltenSpewTimer;
-        uint32 m_uiSubmergeTimer;
-
-        /*** Phase 2 ***/
-        uint32 m_uiFireSpitTimer;
-        uint32 m_uiBurningSprayTimer;
-        uint32 m_uiSlimePoolTimer;
-        uint32 m_uiSweapTimer;
-
-        bool m_bIsEnrage;
-
-    void Reset()
-    {
-                m_uiPhase = 1;
-                m_uiPhase2Timer = 40000;
-                m_uiEnrageTimer = 2000;
-
-                /*** Phase 1 ***/
-                m_uiBurningBiteTimer = 2000;
-                m_uiMoltenSpewTimer = 15000;
-                m_bIsEnrage = false;
-
-                /*** Phase 2 ***/
-                m_uiFireSpitTimer       = 5000;
-                m_uiBurningSprayTimer = 15000;
-                m_uiSlimePoolTimer = 0;
-                m_uiSweapTimer = 10000;
-    }
-
-        void KilledUnit(Unit* who)
-        {
-                if(!m_pInstance)
-                        return;
-        }
-
-        void JustReachedHome()
-    {
-        if (m_pInstance)
-                {
-            m_pInstance->SetData(PHASE_1, NOT_STARTED);
-                        m_pInstance->SetData(PHASE_2, NOT_STARTED);
-                }
-
-                if(m_pInstance)
-                {
-                        uint32 count = m_pInstance->GetData(DATA_UPDATE_STATE_UI_COUNT);
-                        count--;
-                        m_pInstance->SetData(DATA_UPDATE_STATE_UI_COUNT, count);
-                        me->ForcedDespawn();
-                }
-    }
-
-        void EnterCombat(Unit* pWho)
-    {
-                if (!m_pInstance)
-                        return;
-
-                if (m_pInstance->GetData(PHASE_2) == DONE)
-                    me->ForcedDespawn();
-                else
-                    m_pInstance->SetData(PHASE_2, IN_PROGRESS);
-    }
-
-        void JustDied(Unit* pKiller)
-    {
-            if (!m_pInstance)
+             if (!UpdateVictim())
                 return;
 
-        if(!me->FindNearestCreature(NPC_ACIDMAW, 200, true)&& !me->FindNearestCreature(NPC_DREADSCALE, 200, true))
-                {
-                        m_pInstance->SetData(PHASE_2, DONE);
-                        m_pInstance->SetData(PHASE_3, IN_PROGRESS);
-                }
-        }
-
-        void UpdateAI(const uint32 uiDiff)
-    {
-        if (!UpdateVictim())
-            return;
-
-                if (m_uiEnrageTimer <= uiDiff && !m_bIsEnrage)
-        {
-                        if(!me->FindNearestCreature(NPC_ACIDMAW, 300, true))
-                        {
-                                DoCast(me, SPELL_ENRAGE );
-                                m_bIsEnrage = true;
-                        }
-                        m_uiEnrageTimer = 2000;
-        }
-                else m_uiEnrageTimer -= uiDiff;
-
-                if(m_uiPhase == 1)
-                {
-                        if (me->HasAura(SPELL_ROOT))
-                                me->RemoveAurasDueToSpell(SPELL_ROOT);
-
-                        if (m_uiMoltenSpewTimer <= uiDiff)
-                        {
-                                DoCast(me->getVictim(), SPELL_MOLTEN_SPEW);
-                                m_uiMoltenSpewTimer = 20*IN_MILLISECONDS;
-                        }
-                        else m_uiMoltenSpewTimer -= uiDiff;
-
-                        if (m_uiBurningBiteTimer <= uiDiff)
-                        {
-                                DoCast(me->getVictim(), SPELL_BURNING_BITE);
-                                m_uiBurningBiteTimer = 8*IN_MILLISECONDS;
-                        }
-                        else m_uiBurningBiteTimer -= uiDiff;
-
-                        if (m_uiPhase2Timer <= uiDiff)
-                        {
-                                m_uiPhase = 2;
-                                m_uiPhase2Timer = 40*IN_MILLISECONDS;
-                                m_uiPhase1Timer = 40*IN_MILLISECONDS;
-                        }
-                        else m_uiPhase2Timer -= uiDiff;
-
-                        DoMeleeAttackIfReady();
-                }
-
-                if(m_uiPhase == 2)
-                {
-                        if (!me->HasAura(SPELL_ROOT))
-                                DoCast(me, SPELL_ROOT);
-
-                        if (m_uiBurningSprayTimer <= uiDiff)
-                        {
-                                std::list<Unit*> pTargets;
-                SelectTargetList(pTargets, 5, SELECT_TARGET_RANDOM, 80, true);
-                                for (std::list<Unit*>::const_iterator i = pTargets.begin(); i != pTargets.end(); ++i)
-                                DoCast(*i, SPELL_BURNING_SPRAY);
-                                m_uiBurningSprayTimer = 15*IN_MILLISECONDS;
-                        }
-                        else m_uiBurningSprayTimer -= uiDiff;
-
-                        if (m_uiFireSpitTimer <= uiDiff)
-                        {
-                                DoCast(me->getVictim(), SPELL_FIRE_SPIT);
-                                m_uiFireSpitTimer = 5*IN_MILLISECONDS;
-                        }
-                        else m_uiFireSpitTimer -= uiDiff;
-
-                        if (m_uiSweapTimer <= uiDiff)
-                        {
-                                DoCast(me, SPELL_SWEAP);
-                                m_uiSweapTimer = 20*IN_MILLISECONDS;
-                        }
-                        else m_uiSweapTimer -= uiDiff;
-
-                        if (m_uiPhase1Timer <= uiDiff)
-                        {
-                                m_uiPhase = 1;
-                                m_uiPhase1Timer = 40*IN_MILLISECONDS;
-                                m_uiPhase2Timer = 40*IN_MILLISECONDS;
-                        }
-                        else m_uiPhase1Timer -= uiDiff;
-                }
-        }
-};
-
-CreatureAI* GetAI_boss_dreadscale(Creature* pCreature)
-{
-    return new boss_dreadscaleAI(pCreature);
-}
-
-struct boss_icehowlAI : public ScriptedAI
-{
-    boss_icehowlAI(Creature* pCreature) : ScriptedAI(pCreature)
-        {
-                m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-        }
-
-        ScriptedInstance* m_pInstance;
-
-        /********** Phase 1  ************/
-        uint32 m_uiArticBreathTimer;
-        uint32 m_uiWhirlTimer;
-        uint32 m_uiFerociusButtTimer;
-
-        /*********** Phase 2 ************/
-        uint32 m_uiMassivCrashTimer;
-        uint32 m_uiTramplePhaseTimer;
-        uint32 Phase;
-        uint32 PhaseTimer;
-
-        bool m_bIsTrample;
-        bool m_bIsTrampleCast;
-
-    void Reset()
-    {
-                m_uiArticBreathTimer = 25*IN_MILLISECONDS;
-                m_uiWhirlTimer  = 15*IN_MILLISECONDS;
-                m_uiFerociusButtTimer = 10*IN_MILLISECONDS;
-                m_uiTramplePhaseTimer = 5*IN_MILLISECONDS;
-                Phase = 0;
-
-                me->SetSpeed(MOVE_WALK, 1.5f);
-                me->SetSpeed(MOVE_RUN, 1.5f);
-                m_bIsTrample = false;
-                m_bIsTrampleCast = false;
-    }
-
-        void KilledUnit(Unit* who)
-        {
-                if(!m_pInstance)
-                        return;
-        }
-
-        void JustReachedHome()
-    {
-        if (m_pInstance)
-                {
-            m_pInstance->SetData(PHASE_1, NOT_STARTED);
-                        m_pInstance->SetData(PHASE_2, NOT_STARTED);
-                        m_pInstance->SetData(PHASE_3, NOT_STARTED);
-                }
-
-                if(m_pInstance)
-                {
-                        uint32 count = m_pInstance->GetData(DATA_UPDATE_STATE_UI_COUNT);
-                        count--;
-                        m_pInstance->SetData(DATA_UPDATE_STATE_UI_COUNT, count);
-                        me->ForcedDespawn();
-                }
-    }
-
-        void EnterCombat(Unit* pWho)
-    {
-                if (!m_pInstance)
-                        return;
-
-                if (m_pInstance->GetData(PHASE_3) == DONE)
-                    me->ForcedDespawn();
-                else
-                    m_pInstance->SetData(PHASE_3, IN_PROGRESS);
-    }
-
-        void UpdateAI(const uint32 uiDiff)
-    {
-        if (!UpdateVictim())
-            return;
-
-                if (m_uiWhirlTimer <= uiDiff)
-                {
-                        DoCast(me->getVictim(), SPELL_WHIRL);
-                        m_uiWhirlTimer = urand (15*IN_MILLISECONDS,25*IN_MILLISECONDS);
-                }
-                else m_uiWhirlTimer -= uiDiff;
-
-                if (m_uiFerociusButtTimer <= uiDiff)
-                {
-                        DoCast(me->getVictim(), SPELL_FEROCIOUS_BUTT);
-                        m_uiFerociusButtTimer = urand (25*IN_MILLISECONDS,35*IN_MILLISECONDS);
-                }
-                else m_uiFerociusButtTimer -= uiDiff;
-
-                if (m_uiArticBreathTimer <= uiDiff)
-                {
-                        if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0))
-                        {
-                                DoCast(pTarget, SPELL_ARTIC_BREATH);
-                                m_uiArticBreathTimer = urand (20*IN_MILLISECONDS,21*IN_MILLISECONDS);
-            }
-                }
-                else m_uiArticBreathTimer -= uiDiff;
-
-                /*if (m_uiTramplePhaseTimer <= uiDiff)
-        {
-            switch(Phase)
+                    if((m_uiSnoboldsLaunched < m_uiMaxSnobolds) && (m_uiSnoboldTimer < uiDiff))
             {
-               case 0:
-                                        me->SetReactState(REACT_PASSIVE);
-                    me->GetMotionMaster()->MovePoint(0, CenterOfArena);
-                                        m_bIsTrample = false;
-                    m_uiTramplePhaseTimer = 5000;
-                    Phase = 1;
-                    break;
-                case 1:
-                    DoCastAOE(SPELL_MASSIC_CRASH);
-                    m_uiTramplePhaseTimer = 4000;
-                    Phase = 2;
-                    break;
-                case 2:
-                    DoCast(me, SPELL_DISENGAGE);
-                                        me->SetSpeed(MOVE_WALK, 5.5f);
-                                        me->SetSpeed(MOVE_RUN, 5.5f);
-                    m_uiTramplePhaseTimer = 3000;
-                    Phase = 3;
-                    break;
-                case 3:
-                                        if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0))
-                                        {
-                                                float x, y, z;
-                                                pTarget->GetPosition(x,y,z);
-                                                me->GetMotionMaster()->MovePoint(1, x,y,z);
-                                                m_bIsTrample = true;
-                                        }
-                                        m_uiTramplePhaseTimer = 3000;
-                    Phase = 3;
-                    break;
-                                case 4:
-                                        if(m_bIsTrample)
-                                        {
-                                                Map* pMap = me->GetMap();
-                                                if (pMap && pMap->IsDungeon())
-                                                {
-                                                        Map::PlayerList const &PlayerList = pMap->GetPlayers();
-                                                        for (Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
-                                                        {
-                                                                Unit* pPlayer = i->getSource();
-                                                                if (!pPlayer) continue;
-                                                                if (pPlayer->isAlive() && pPlayer->IsWithinDistInMap(me, 5.0f))
-                                                                {
-                                                                        m_bIsTrampleCast = true;
-                                                                        me->CastSpell(pPlayer, SPELL_TRAMPLE, true);
-                                                                        me->GetMotionMaster()->MovementExpired();
-                                                                        me->GetMotionMaster()->MoveChase(me->getVictim());
-                                                                }
-                                                        }
-                                                }
-                                        }
-                                        m_uiTramplePhaseTimer = 3000;
-                    Phase = 4;
-                    break;
-                                case 5:
-                                        if(!m_bIsTrampleCast)
-                                        {
-                                                m_bIsTrampleCast = false;
-                                                me->SetSpeed(MOVE_WALK, 1.5f);
-                                                me->SetSpeed(MOVE_RUN, 1.5f);
-                                                me->GetMotionMaster()->MovementExpired();
-                                                me->GetMotionMaster()->MoveChase(me->getVictim());
-                                        }
-                                        m_uiTramplePhaseTimer = 3000;
-                    Phase = 5;
-                    break;
-                default:
-                    break;
+                if(Unit *target = SelectUnit(SELECT_TARGET_RANDOM, 0))
+                {
+                    if(Creature *snobold = me->SummonCreature(CREATURE_SNOWBOLD,target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0,TEMPSUMMON_DEAD_DESPAWN, 3000))
+                        snobold->AddThreat(target, 1000000.0f);
+                    ++m_uiSnoboldsLaunched;
+                    DoCast(me, SPELL_RISING_ANGER, true);
+                }
+                m_uiSnoboldTimer = 55000 + rand()%15000;
             }
-        } else m_uiTramplePhaseTimer -= uiDiff;*/
+            else
+                m_uiSnoboldTimer -= uiDiff;
 
-                DoMeleeAttackIfReady();
+                    if (m_uiImpaleTimer <= uiDiff)
+                    {
+                            DoCast(me->getVictim(), SPELL_IMPALE);
+                            m_uiImpaleTimer = urand(30*IN_MILLISECONDS,35*IN_MILLISECONDS);
+                    }
+                    else m_uiImpaleTimer -= uiDiff;
+
+                    if (m_uiStaggeringStompTimer <= uiDiff)
+                    {
+                            DoCast(me->getVictim(), SPELL_STAGGERING_STOMP);
+                            m_uiStaggeringStompTimer = urand(20*IN_MILLISECONDS,21*IN_MILLISECONDS);
+                    }
+                    else m_uiStaggeringStompTimer -= uiDiff;
+
+                    if (m_uiFireBombTimer <= uiDiff)
+                    {
+                            if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
+                            {
+                                    DoCast(pTarget, SPELL_FIRE_BOMB);
+                                    m_uiFireBombTimer = urand(30*IN_MILLISECONDS,50*IN_MILLISECONDS);
+                            }
+                    }
+                    else m_uiFireBombTimer -= uiDiff;
+
+                    if (m_uiFireBombTriggerTimer <= uiDiff)
+                    {
+                            for(int8 n = 0; n < 4; n++)
+                            {
+                                    Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM);
+                                    me->SummonCreature(CREATURE_FIREBOMB, pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 999999);
+                                    m_uiFireBombTriggerTimer = urand(15*IN_MILLISECONDS,45*IN_MILLISECONDS);
+                            }
+                    }
+                    else m_uiFireBombTriggerTimer -= uiDiff;
+
+                    if (getDifficulty() == RAID_DIFFICULTY_10MAN_HEROIC || getDifficulty() == RAID_DIFFICULTY_25MAN_HEROIC)
+                    {
+                            if (m_uiNextEncounterTimer <= uiDiff && !m_bIsNextPhase)
+                            {
+                                    m_pInstance->SetData(PHASE_2, IN_PROGRESS);
+                                    m_bIsNextPhase = true;
+                            }
+                            else m_uiNextEncounterTimer -= uiDiff;
+                    }
+
+          DoMeleeAttackIfReady();
         }
 
         void JustDied(Unit* pKiller)
-    {
-            if (!m_pInstance)
-                return;
+        {
+                    if(m_pInstance)
+                    m_pInstance->SetData(PHASE_1, DONE);
+                    m_pInstance->SetData(PHASE_2, IN_PROGRESS);
+            }
+    };
 
-        m_pInstance->SetData(PHASE_1, DONE);
-                m_pInstance->SetData(PHASE_2, DONE);
-                m_pInstance->SetData(PHASE_3, DONE);
-        }
 };
 
-CreatureAI* GetAI_boss_icehowl(Creature* pCreature)
+class boss_acidmaw : public CreatureScript
 {
-    return new boss_icehowlAI(pCreature);
-}
+public:
+    boss_acidmaw() : CreatureScript("boss_acidmaw") { }
 
-struct mob_FireBombAI : public Scripted_NoMovementAI
-{
-    mob_FireBombAI(Creature *pCreature) : Scripted_NoMovementAI(pCreature)
+    CreatureAI* GetAI(Creature* pCreature)
     {
-        pInstance = pCreature->GetInstanceData();
+        return new boss_acidmawAI(pCreature);
     }
 
-    ScriptedInstance* pInstance;
+    struct boss_acidmawAI : public ScriptedAI
+    {
+        boss_acidmawAI(Creature* pCreature) : ScriptedAI(pCreature)
+            {
+                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+            }
 
-        uint32 m_uiDespawnTimer;
-        uint32 m_uiFireBombTimer;
+            ScriptedInstance* m_pInstance;
 
-    void Reset()
+            uint32 m_uiPhase;
+            uint32 m_uiPhase1Timer;
+            uint32 m_uiPhase2Timer;
+            uint32 m_uiRemoveSubmergedTimer;
+            uint32 m_uiEnrageTimer;
+
+            /*** Phase 1 ***/
+            uint32 m_uiAcidSpitTimer;
+            uint32 m_uiParalyticSprayTimer;
+            uint32 m_uiSweapTimer;
+
+            /*** Phase 2 ***/
+            uint32 m_uiAcidSpewTimer;
+            uint32 m_uiParalyticBiteTimer;
+
+            bool m_bIsEnrage;
+
+        void Reset()
         {
-                m_uiDespawnTimer = 65000;
-                m_uiFireBombTimer = 5000;
-                me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE);
-                me->SetReactState(REACT_PASSIVE);
-                me->SetDisplayId(MODEL_INVISIBLE);
+                    m_uiPhase = 1;
+                    m_uiPhase2Timer = 50000;
+                    m_uiEnrageTimer = 2000;
+
+                    /*** Phase 1 ***/
+                    m_uiAcidSpitTimer       = 12000; // Random
+                    m_uiParalyticSprayTimer = 2000; // Tank
+                    m_uiSweapTimer  = 10000;
+                    m_bIsEnrage = false;
+
+                    /*** Phase 2 ***/
+                    m_uiAcidSpewTimer = 16000;
+                    m_uiParalyticBiteTimer = 5000;
         }
 
-    void UpdateAI(const uint32 uiDiff)
+            void KilledUnit(Unit* who)
+            {
+                    if(!m_pInstance)
+                            return;
+            }
+
+            void JustReachedHome()
+        {
+            if (m_pInstance)
+                    {
+                m_pInstance->SetData(PHASE_1, NOT_STARTED);
+                            m_pInstance->SetData(PHASE_2, NOT_STARTED);
+                    }
+
+                    if(m_pInstance)
+                    {
+                            uint32 count = m_pInstance->GetData(DATA_UPDATE_STATE_UI_COUNT);
+                            count--;
+                            m_pInstance->SetData(DATA_UPDATE_STATE_UI_COUNT, count);
+                            me->ForcedDespawn();
+                    }
+        }
+
+            void EnterCombat(Unit* pWho)
+        {
+                    if (!m_pInstance)
+                            return;
+
+                    if (m_pInstance->GetData(PHASE_2) == DONE)
+                        me->ForcedDespawn();
+                    else
+                        m_pInstance->SetData(PHASE_2, IN_PROGRESS);
+        }
+
+            void JustDied(Unit* pKiller)
+        {
+                if (!m_pInstance)
+                            return;
+
+            if(!me->FindNearestCreature(NPC_ACIDMAW, 200, true) && !me->FindNearestCreature(NPC_DREADSCALE, 200, true))
+                    {
+                            m_pInstance->SetData(PHASE_2, DONE);
+                            m_pInstance->SetData(PHASE_3, IN_PROGRESS);
+                    }
+            }
+
+            void UpdateAI(const uint32 uiDiff)
+        {
+            if (!UpdateVictim())
+                return;
+
+                    if (m_uiEnrageTimer <= uiDiff && !m_bIsEnrage)
+            {
+                            if(!me->FindNearestCreature(NPC_DREADSCALE, 300, true))
+                            {
+                                    DoCast(me, SPELL_ENRAGE );
+                                    m_bIsEnrage = true;
+                            }
+                            m_uiEnrageTimer = 2000;
+            }
+                    else m_uiEnrageTimer -= uiDiff;
+
+                    if(m_uiPhase == 1)
+                    {
+                            if (!me->HasAura(SPELL_ROOT))
+                                    DoCast(me, SPELL_ROOT);
+
+                            if (m_uiParalyticSprayTimer <= uiDiff)
+                            {
+                                    DoCast(me->getVictim(), SPELL_PARALYTIC_SPRAY);
+                                    m_uiParalyticSprayTimer = 5*IN_MILLISECONDS;
+                            }
+                            else m_uiParalyticSprayTimer -= uiDiff;
+
+                            if (m_uiAcidSpitTimer <= uiDiff)
+                            {
+                                    std::list<Unit*> pTargets;
+                    SelectTargetList(pTargets, 5, SELECT_TARGET_RANDOM, 80, true);
+                                    for (std::list<Unit*>::const_iterator i = pTargets.begin(); i != pTargets.end(); ++i)
+                                    DoCast(*i, SPELL_ACID_SPIT);
+                                    m_uiAcidSpitTimer = 20*IN_MILLISECONDS;
+                            }
+                            else m_uiAcidSpitTimer -= uiDiff;
+
+                            if (m_uiSweapTimer <= uiDiff)
+                            {
+                                    DoCast(me->getVictim(), SPELL_SWEAP);
+                                    m_uiSweapTimer = 20*IN_MILLISECONDS;
+                            }
+                            else m_uiSweapTimer -= uiDiff;
+
+                            if (m_uiPhase2Timer <= uiDiff)
+                            {
+                                    DoCast(me,      SPELL_SUBMERGE);
+                                    m_uiPhase = 2;
+                                    m_uiPhase2Timer = 50*IN_MILLISECONDS;
+                                    m_uiPhase1Timer = 50*IN_MILLISECONDS;
+                                    m_uiRemoveSubmergedTimer = 10000;
+                            }
+                            else m_uiPhase2Timer -= uiDiff;
+
+                            if (m_uiRemoveSubmergedTimer <= uiDiff)
+                            {
+                                    me->CastSpell(me, 35177, false);
+                                    me->RemoveAurasDueToSpell(SPELL_SUBMERGE);
+                                    m_uiRemoveSubmergedTimer = 999*IN_MILLISECONDS;
+                            }
+                            else m_uiRemoveSubmergedTimer -= uiDiff;
+                    }
+
+                    if(m_uiPhase == 2)
+                    {
+                            if (me->HasAura(SPELL_ROOT))
+                                    me->RemoveAurasDueToSpell(SPELL_ROOT);
+
+                            if (m_uiRemoveSubmergedTimer <= uiDiff)
+                            {
+                                    me->CastSpell(me, 35177, false);
+                                    me->RemoveAurasDueToSpell(SPELL_SUBMERGE);
+                                    m_uiRemoveSubmergedTimer = 999*IN_MILLISECONDS;
+                            }
+                            else m_uiRemoveSubmergedTimer -= uiDiff;
+
+                            if (m_uiAcidSpewTimer <= uiDiff)
+                            {
+                                    DoCast(me->getVictim(), SPELL_ACID_SPEW);
+                                    m_uiAcidSpewTimer = 20*IN_MILLISECONDS;
+                            }
+                            else m_uiAcidSpewTimer -= uiDiff;
+
+                            if (m_uiParalyticBiteTimer <= uiDiff)
+                            {
+                                    DoCast(me->getVictim(), SPELL_PARALYTIC_BITE);
+                                    m_uiParalyticBiteTimer = 5*IN_MILLISECONDS;
+                            }
+                            else m_uiParalyticBiteTimer -= uiDiff;
+
+                            if (m_uiPhase1Timer <= uiDiff)
+                            {
+                                    DoCast(me,      SPELL_SUBMERGE);
+                                    m_uiPhase = 1;
+                                    m_uiPhase2Timer = 50*IN_MILLISECONDS;
+                                    m_uiPhase1Timer = 50*IN_MILLISECONDS;
+                                    m_uiRemoveSubmergedTimer = 10000;
+                            }
+                            else m_uiPhase1Timer -= uiDiff;
+
+                            DoMeleeAttackIfReady();
+                    }
+            }
+    };
+
+};
+
+class boss_dreadscale : public CreatureScript
+{
+public:
+    boss_dreadscale() : CreatureScript("boss_dreadscale") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
     {
-                if (m_uiFireBombTimer <= uiDiff)
-                {
-                        DoCast(me, SPELL_FIRE_BOMB_VISUAL_DAMAGE);
-                        m_uiFireBombTimer = 12000;
-                }
-                else m_uiFireBombTimer -= uiDiff;
-
-
-                if (m_uiDespawnTimer < uiDiff)
-                {
-                        me->SetVisibility(VISIBILITY_OFF);
-                        me->DealDamage(me, me->GetHealth(), NULL, DIRECT_DAMAGE,
-                        SPELL_SCHOOL_MASK_NORMAL, NULL, false);
-                        m_uiDespawnTimer = 70000;
-        }
-                else m_uiDespawnTimer -= uiDiff;
+        return new boss_dreadscaleAI(pCreature);
     }
+
+    struct boss_dreadscaleAI : public ScriptedAI
+    {
+        boss_dreadscaleAI(Creature* pCreature) : ScriptedAI(pCreature)
+            {
+                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+            }
+
+            ScriptedInstance* m_pInstance;
+
+            uint32 m_uiPhase;
+            uint32 m_uiPhase1Timer;
+            uint32 m_uiPhase2Timer;
+            uint32 m_uiEnrageTimer;
+
+            /*** Phase 1 ***/
+            uint32 m_uiBurningBiteTimer;
+            uint32 m_uiMoltenSpewTimer;
+            uint32 m_uiSubmergeTimer;
+
+            /*** Phase 2 ***/
+            uint32 m_uiFireSpitTimer;
+            uint32 m_uiBurningSprayTimer;
+            uint32 m_uiSlimePoolTimer;
+            uint32 m_uiSweapTimer;
+
+            bool m_bIsEnrage;
+
+        void Reset()
+        {
+                    m_uiPhase = 1;
+                    m_uiPhase2Timer = 40000;
+                    m_uiEnrageTimer = 2000;
+
+                    /*** Phase 1 ***/
+                    m_uiBurningBiteTimer = 2000;
+                    m_uiMoltenSpewTimer = 15000;
+                    m_bIsEnrage = false;
+
+                    /*** Phase 2 ***/
+                    m_uiFireSpitTimer       = 5000;
+                    m_uiBurningSprayTimer = 15000;
+                    m_uiSlimePoolTimer = 0;
+                    m_uiSweapTimer = 10000;
+        }
+
+            void KilledUnit(Unit* who)
+            {
+                    if(!m_pInstance)
+                            return;
+            }
+
+            void JustReachedHome()
+        {
+            if (m_pInstance)
+                    {
+                m_pInstance->SetData(PHASE_1, NOT_STARTED);
+                            m_pInstance->SetData(PHASE_2, NOT_STARTED);
+                    }
+
+                    if(m_pInstance)
+                    {
+                            uint32 count = m_pInstance->GetData(DATA_UPDATE_STATE_UI_COUNT);
+                            count--;
+                            m_pInstance->SetData(DATA_UPDATE_STATE_UI_COUNT, count);
+                            me->ForcedDespawn();
+                    }
+        }
+
+            void EnterCombat(Unit* pWho)
+        {
+                    if (!m_pInstance)
+                            return;
+
+                    if (m_pInstance->GetData(PHASE_2) == DONE)
+                        me->ForcedDespawn();
+                    else
+                        m_pInstance->SetData(PHASE_2, IN_PROGRESS);
+        }
+
+            void JustDied(Unit* pKiller)
+        {
+                if (!m_pInstance)
+                    return;
+
+            if(!me->FindNearestCreature(NPC_ACIDMAW, 200, true)&& !me->FindNearestCreature(NPC_DREADSCALE, 200, true))
+                    {
+                            m_pInstance->SetData(PHASE_2, DONE);
+                            m_pInstance->SetData(PHASE_3, IN_PROGRESS);
+                    }
+            }
+
+            void UpdateAI(const uint32 uiDiff)
+        {
+            if (!UpdateVictim())
+                return;
+
+                    if (m_uiEnrageTimer <= uiDiff && !m_bIsEnrage)
+            {
+                            if(!me->FindNearestCreature(NPC_ACIDMAW, 300, true))
+                            {
+                                    DoCast(me, SPELL_ENRAGE );
+                                    m_bIsEnrage = true;
+                            }
+                            m_uiEnrageTimer = 2000;
+            }
+                    else m_uiEnrageTimer -= uiDiff;
+
+                    if(m_uiPhase == 1)
+                    {
+                            if (me->HasAura(SPELL_ROOT))
+                                    me->RemoveAurasDueToSpell(SPELL_ROOT);
+
+                            if (m_uiMoltenSpewTimer <= uiDiff)
+                            {
+                                    DoCast(me->getVictim(), SPELL_MOLTEN_SPEW);
+                                    m_uiMoltenSpewTimer = 20*IN_MILLISECONDS;
+                            }
+                            else m_uiMoltenSpewTimer -= uiDiff;
+
+                            if (m_uiBurningBiteTimer <= uiDiff)
+                            {
+                                    DoCast(me->getVictim(), SPELL_BURNING_BITE);
+                                    m_uiBurningBiteTimer = 8*IN_MILLISECONDS;
+                            }
+                            else m_uiBurningBiteTimer -= uiDiff;
+
+                            if (m_uiPhase2Timer <= uiDiff)
+                            {
+                                    m_uiPhase = 2;
+                                    m_uiPhase2Timer = 40*IN_MILLISECONDS;
+                                    m_uiPhase1Timer = 40*IN_MILLISECONDS;
+                            }
+                            else m_uiPhase2Timer -= uiDiff;
+
+                            DoMeleeAttackIfReady();
+                    }
+
+                    if(m_uiPhase == 2)
+                    {
+                            if (!me->HasAura(SPELL_ROOT))
+                                    DoCast(me, SPELL_ROOT);
+
+                            if (m_uiBurningSprayTimer <= uiDiff)
+                            {
+                                    std::list<Unit*> pTargets;
+                    SelectTargetList(pTargets, 5, SELECT_TARGET_RANDOM, 80, true);
+                                    for (std::list<Unit*>::const_iterator i = pTargets.begin(); i != pTargets.end(); ++i)
+                                    DoCast(*i, SPELL_BURNING_SPRAY);
+                                    m_uiBurningSprayTimer = 15*IN_MILLISECONDS;
+                            }
+                            else m_uiBurningSprayTimer -= uiDiff;
+
+                            if (m_uiFireSpitTimer <= uiDiff)
+                            {
+                                    DoCast(me->getVictim(), SPELL_FIRE_SPIT);
+                                    m_uiFireSpitTimer = 5*IN_MILLISECONDS;
+                            }
+                            else m_uiFireSpitTimer -= uiDiff;
+
+                            if (m_uiSweapTimer <= uiDiff)
+                            {
+                                    DoCast(me, SPELL_SWEAP);
+                                    m_uiSweapTimer = 20*IN_MILLISECONDS;
+                            }
+                            else m_uiSweapTimer -= uiDiff;
+
+                            if (m_uiPhase1Timer <= uiDiff)
+                            {
+                                    m_uiPhase = 1;
+                                    m_uiPhase1Timer = 40*IN_MILLISECONDS;
+                                    m_uiPhase2Timer = 40*IN_MILLISECONDS;
+                            }
+                            else m_uiPhase1Timer -= uiDiff;
+                    }
+            }
+    };
+
+};
+
+class boss_icehowl : public CreatureScript
+{
+public:
+    boss_icehowl() : CreatureScript("boss_icehowl") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new boss_icehowlAI(pCreature);
+    }
+
+    struct boss_icehowlAI : public ScriptedAI
+    {
+        boss_icehowlAI(Creature* pCreature) : ScriptedAI(pCreature)
+            {
+                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+            }
+
+            ScriptedInstance* m_pInstance;
+
+            /********** Phase 1  ************/
+            uint32 m_uiArticBreathTimer;
+            uint32 m_uiWhirlTimer;
+            uint32 m_uiFerociusButtTimer;
+
+            /*********** Phase 2 ************/
+            uint32 m_uiMassivCrashTimer;
+            uint32 m_uiTramplePhaseTimer;
+            uint32 Phase;
+            uint32 PhaseTimer;
+
+            bool m_bIsTrample;
+            bool m_bIsTrampleCast;
+
+        void Reset()
+        {
+                    m_uiArticBreathTimer = 25*IN_MILLISECONDS;
+                    m_uiWhirlTimer  = 15*IN_MILLISECONDS;
+                    m_uiFerociusButtTimer = 10*IN_MILLISECONDS;
+                    m_uiTramplePhaseTimer = 5*IN_MILLISECONDS;
+                    Phase = 0;
+
+                    me->SetSpeed(MOVE_WALK, 1.5f);
+                    me->SetSpeed(MOVE_RUN, 1.5f);
+                    m_bIsTrample = false;
+                    m_bIsTrampleCast = false;
+        }
+
+            void KilledUnit(Unit* who)
+            {
+                    if(!m_pInstance)
+                            return;
+            }
+
+            void JustReachedHome()
+        {
+            if (m_pInstance)
+                    {
+                m_pInstance->SetData(PHASE_1, NOT_STARTED);
+                            m_pInstance->SetData(PHASE_2, NOT_STARTED);
+                            m_pInstance->SetData(PHASE_3, NOT_STARTED);
+                    }
+
+                    if(m_pInstance)
+                    {
+                            uint32 count = m_pInstance->GetData(DATA_UPDATE_STATE_UI_COUNT);
+                            count--;
+                            m_pInstance->SetData(DATA_UPDATE_STATE_UI_COUNT, count);
+                            me->ForcedDespawn();
+                    }
+        }
+
+            void EnterCombat(Unit* pWho)
+        {
+                    if (!m_pInstance)
+                            return;
+
+                    if (m_pInstance->GetData(PHASE_3) == DONE)
+                        me->ForcedDespawn();
+                    else
+                        m_pInstance->SetData(PHASE_3, IN_PROGRESS);
+        }
+
+            void UpdateAI(const uint32 uiDiff)
+        {
+            if (!UpdateVictim())
+                return;
+
+                    if (m_uiWhirlTimer <= uiDiff)
+                    {
+                            DoCast(me->getVictim(), SPELL_WHIRL);
+                            m_uiWhirlTimer = urand (15*IN_MILLISECONDS,25*IN_MILLISECONDS);
+                    }
+                    else m_uiWhirlTimer -= uiDiff;
+
+                    if (m_uiFerociusButtTimer <= uiDiff)
+                    {
+                            DoCast(me->getVictim(), SPELL_FEROCIOUS_BUTT);
+                            m_uiFerociusButtTimer = urand (25*IN_MILLISECONDS,35*IN_MILLISECONDS);
+                    }
+                    else m_uiFerociusButtTimer -= uiDiff;
+
+                    if (m_uiArticBreathTimer <= uiDiff)
+                    {
+                            if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0))
+                            {
+                                    DoCast(pTarget, SPELL_ARTIC_BREATH);
+                                    m_uiArticBreathTimer = urand (20*IN_MILLISECONDS,21*IN_MILLISECONDS);
+                }
+                    }
+                    else m_uiArticBreathTimer -= uiDiff;
+
+                    /*if (m_uiTramplePhaseTimer <= uiDiff)
+            {
+                switch(Phase)
+                {
+                   case 0:
+                                            me->SetReactState(REACT_PASSIVE);
+                        me->GetMotionMaster()->MovePoint(0, CenterOfArena);
+                                            m_bIsTrample = false;
+                        m_uiTramplePhaseTimer = 5000;
+                        Phase = 1;
+                        break;
+                    case 1:
+                        DoCastAOE(SPELL_MASSIC_CRASH);
+                        m_uiTramplePhaseTimer = 4000;
+                        Phase = 2;
+                        break;
+                    case 2:
+                        DoCast(me, SPELL_DISENGAGE);
+                                            me->SetSpeed(MOVE_WALK, 5.5f);
+                                            me->SetSpeed(MOVE_RUN, 5.5f);
+                        m_uiTramplePhaseTimer = 3000;
+                        Phase = 3;
+                        break;
+                    case 3:
+                                            if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0))
+                                            {
+                                                    float x, y, z;
+                                                    pTarget->GetPosition(x,y,z);
+                                                    me->GetMotionMaster()->MovePoint(1, x,y,z);
+                                                    m_bIsTrample = true;
+                                            }
+                                            m_uiTramplePhaseTimer = 3000;
+                        Phase = 3;
+                        break;
+                                    case 4:
+                                            if(m_bIsTrample)
+                                            {
+                                                    Map* pMap = me->GetMap();
+                                                    if (pMap && pMap->IsDungeon())
+                                                    {
+                                                            Map::PlayerList const &PlayerList = pMap->GetPlayers();
+                                                            for (Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
+                                                            {
+                                                                    Unit* pPlayer = i->getSource();
+                                                                    if (!pPlayer) continue;
+                                                                    if (pPlayer->isAlive() && pPlayer->IsWithinDistInMap(me, 5.0f))
+                                                                    {
+                                                                            m_bIsTrampleCast = true;
+                                                                            me->CastSpell(pPlayer, SPELL_TRAMPLE, true);
+                                                                            me->GetMotionMaster()->MovementExpired();
+                                                                            me->GetMotionMaster()->MoveChase(me->getVictim());
+                                                                    }
+                                                            }
+                                                    }
+                                            }
+                                            m_uiTramplePhaseTimer = 3000;
+                        Phase = 4;
+                        break;
+                                    case 5:
+                                            if(!m_bIsTrampleCast)
+                                            {
+                                                    m_bIsTrampleCast = false;
+                                                    me->SetSpeed(MOVE_WALK, 1.5f);
+                                                    me->SetSpeed(MOVE_RUN, 1.5f);
+                                                    me->GetMotionMaster()->MovementExpired();
+                                                    me->GetMotionMaster()->MoveChase(me->getVictim());
+                                            }
+                                            m_uiTramplePhaseTimer = 3000;
+                        Phase = 5;
+                        break;
+                    default:
+                        break;
+                }
+            } else m_uiTramplePhaseTimer -= uiDiff;*/
+
+                    DoMeleeAttackIfReady();
+            }
+
+            void JustDied(Unit* pKiller)
+        {
+                if (!m_pInstance)
+                    return;
+
+            m_pInstance->SetData(PHASE_1, DONE);
+                    m_pInstance->SetData(PHASE_2, DONE);
+                    m_pInstance->SetData(PHASE_3, DONE);
+            }
+    };
+
+};
+
+class mob_firebomb_trigger : public CreatureScript
+{
+public:
+    mob_firebomb_trigger() : CreatureScript("mob_firebomb_trigger") { }
+
+    CreatureAI* GetAI_mob_FireBomb(Creature* pCreature)
+    {
+        return new mob_FireBombAI (pCreature);
+    }
+
+    struct mob_FireBombAI : public Scripted_NoMovementAI
+    {
+        mob_FireBombAI(Creature *pCreature) : Scripted_NoMovementAI(pCreature)
+        {
+            pInstance = pCreature->GetInstanceData();
+        }
+
+        ScriptedInstance* pInstance;
+
+            uint32 m_uiDespawnTimer;
+            uint32 m_uiFireBombTimer;
+
+        void Reset()
+            {
+                    m_uiDespawnTimer = 65000;
+                    m_uiFireBombTimer = 5000;
+                    me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE);
+                    me->SetReactState(REACT_PASSIVE);
+                    me->SetDisplayId(MODEL_INVISIBLE);
+            }
+
+        void UpdateAI(const uint32 uiDiff)
+        {
+                    if (m_uiFireBombTimer <= uiDiff)
+                    {
+                            DoCast(me, SPELL_FIRE_BOMB_VISUAL_DAMAGE);
+                            m_uiFireBombTimer = 12000;
+                    }
+                    else m_uiFireBombTimer -= uiDiff;
+
+
+                    if (m_uiDespawnTimer < uiDiff)
+                    {
+                            me->SetVisibility(VISIBILITY_OFF);
+                            me->DealDamage(me, me->GetHealth(), NULL, DIRECT_DAMAGE,
+                            SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+                            m_uiDespawnTimer = 70000;
+            }
+                    else m_uiDespawnTimer -= uiDiff;
+        }
+    };
+
 };
 
 struct mob_SnowboldAI : public ScriptedAI
@@ -923,13 +962,10 @@ struct mob_SnowboldAI : public ScriptedAI
     }
 };
 
-CreatureAI* GetAI_mob_FireBomb(Creature* pCreature)
-{
-    return new mob_FireBombAI (pCreature);
-}
 
 void AddSC_boss_northrend_beasts()
 {
+<<<<<<< HEAD:src/server/scripts/Northrend/CrusadersColiseum/TrialOfTheCrusader/boss_northrend_beasts.cpp
     Script *newscript;
 
     newscript = new Script;
@@ -957,3 +993,11 @@ void AddSC_boss_northrend_beasts()
         newscript->GetAI = &GetAI_mob_FireBomb;
     newscript->RegisterSelf();
 }
+=======
+    new boss_gormok_impaler();
+    new boss_acidmaw();
+    new boss_dreadscale();
+    new boss_icehowl();
+    new mob_firebomb_trigger();
+}
+>>>>>>> tc:src/server/scripts/Northrend/CrusadersColiseum/TrialOfTheCrusader/boss_northrend_beasts.cpp

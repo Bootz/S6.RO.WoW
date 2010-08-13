@@ -8,42 +8,17 @@
 # WITHOUT ANY WARRANTY, to the extent permitted by law; without even the
 # implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-file(GLOB_RECURSE sources_Configuration Configuration/*.cpp Configuration*/.h)
-file(GLOB_RECURSE sources_Cryptography Cryptography/*.cpp Cryptography*/.h)
-file(GLOB_RECURSE sources_Database Database/*.cpp Database*/.h)
-file(GLOB_RECURSE sources_DataStores DataStores/*.cpp DataStores*/.h)
-file(GLOB_RECURSE sources_Dynamic Dynamic/*.cpp Dynamic*/.h)
-file(GLOB_RECURSE sources_Logging Logging/*.cpp Logging*/.h)
-file(GLOB_RECURSE sources_Packets Packets/*.cpp Packets*/.h)
-file(GLOB_RECURSE sources_Threading Threading/*.cpp Threading*/.h)
+file(GLOB_RECURSE sources_Configuration Configuration/*.cpp Configuration/*.h)
+file(GLOB_RECURSE sources_Cryptography Cryptography/*.cpp Cryptography/*.h)
+file(GLOB_RECURSE sources_Database Database/*.cpp Database/*.h)
+file(GLOB_RECURSE sources_DataStores DataStores/*.cpp DataStores/*.h)
+file(GLOB_RECURSE sources_Dynamic Dynamic/*.cpp Dynamic/*.h)
+file(GLOB_RECURSE sources_Logging Logging/*.cpp Logging/*.h)
+file(GLOB_RECURSE sources_Packets Packets/*.cpp Packets/*.h)
+file(GLOB_RECURSE sources_Threading Threading/*.cpp Threading/*.h)
+file(GLOB_RECURSE sources_Utilities Utilities/*.cpp Utilities/*.h)
 
 file(GLOB sources_localdir *.cpp *.h)
-
-#
-# Debugging/ contains platform specific files - create baselist
-#
-
-set(sources_Debugging
-  Debugging/Errors.h
-  Debugging/MemoryLeaks.cpp
-  Debugging/MemoryLeaks.h
-)
-
-#
-# Utilities/ contains platform specific files - create baselist
-#
-
-set(sources_Utilities
-  Utilities/ByteConverter.h
-  Utilities/EventProcessor.cpp
-  Utilities/EventProcessor.h
-  Utilities/ProgressBar.cpp
-  Utilities/ProgressBar.h
-  Utilities/SignalHandler.h
-  Utilities/Timer.h
-  Utilities/Util.cpp
-  Utilities/Util.h
-)
 
 #
 # Build shared sourcelist
@@ -54,26 +29,19 @@ set(shared_STAT_SRCS
   ${sources_Cryptography}
   ${sources_Database}
   ${sources_DataStores}
-  ${sources_Debugging}
   ${sources_Dynamic}
   ${sources_Logging}
   ${sources_Packets}
   ${sources_Threading}
   ${sources_Utilities}
   ${sources_localdir}
+  Debugging/Errors.h
 )
-
-# Windows specific files
-if(WIN32)
-  set(shared_STAT_SRCS
-    ${shared_STAT_SRCS}
-    Debugging/WheatyExceptionReport.cpp
-    Utilities/ServiceWin32.cpp
-  )
-endif()
 
 include_directories(
   ${ACE_INCLUDE_DIR}
+  ${MYSQL_INCLUDE_DIR}
+  ${OPENSSL_INCLUDE_DIR}
   ${CMAKE_BINARY_DIR}
   ${CMAKE_SOURCE_DIR}/externals/mersennetwister
   ${CMAKE_SOURCE_DIR}/externals/SFMT
@@ -92,10 +60,12 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/src/server/shared/Threading
   ${CMAKE_SOURCE_DIR}/src/server/shared/Utilities
   ${CMAKE_SOURCE_DIR}/src/server/game/Entities/Object
-  ${MYSQL_INCLUDE_DIR}
 )
 
+
 add_library(shared STATIC ${shared_STAT_SRCS})
+
+add_dependencies(shared genrev)
 
 if(WIN32)
   target_link_libraries(shared

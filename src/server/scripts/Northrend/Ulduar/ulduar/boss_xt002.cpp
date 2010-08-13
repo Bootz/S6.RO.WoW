@@ -481,339 +481,358 @@ struct boss_xt002_AI : public BossAI
         phase = 1;
     }
 };
-
-CreatureAI* GetAI_boss_xt002(Creature* pCreature)
+class boss_xt002 : public CreatureScript
 {
-    return new boss_xt002_AI(pCreature);
-}
+public:
+    boss_xt002() : CreatureScript("boss_xt002") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new boss_xt002_AI(pCreature);
+    }
+
+};
 
 /*-------------------------------------------------------
  *
  *        XT-002 HEART
  *
- *///----------------------------------------------------
-struct mob_xt002_heartAI : public ScriptedAI
+ *///----------------------------------------------------class mob_xt002_heart : public CreatureScript
 {
-    mob_xt002_heartAI(Creature* pCreature) : ScriptedAI(pCreature)
+public:
+    mob_xt002_heart() : CreatureScript("mob_xt002_heart") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
     {
-        m_pInstance = pCreature->GetInstanceData();
-        me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE | UNIT_FLAG_STUNNED);
-        me->AddUnitMovementFlag(MOVEMENTFLAG_LEVITATING);
-        me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE);
+        return new mob_xt002_heartAI(pCreature);
     }
 
-    ScriptedInstance* m_pInstance;
-    uint32 uiExposeTimer;
-    bool Exposed;
-
-    void JustDied(Unit *victim)
+    struct mob_xt002_heartAI : public ScriptedAI
     {
-        if (m_pInstance)
-            if (Creature* pXT002 = me->GetCreature(*me, m_pInstance->GetData64(DATA_XT002)))
-                if (pXT002->AI())
-                    pXT002->AI()->DoAction(ACTION_ENTER_HARD_MODE);
-
-        me->ForcedDespawn();
-    }
-    
-    void UpdateAI(const uint32 diff)
-    {
-        if (!Exposed)
+        mob_xt002_heartAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            if (uiExposeTimer <= diff)
-            {
-                DoCast(me, SPELL_EXPOSED_HEART);
-                Exposed = true;
-            }
-            else uiExposeTimer -= diff;
+            m_pInstance = pCreature->GetInstanceData();
+            me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE | UNIT_FLAG_STUNNED);
+            me->AddUnitMovementFlag(MOVEMENTFLAG_LEVITATING);
+            me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE);
         }
-    }
-    
-    void Reset()
-    {
-        uiExposeTimer = 3000;
-        Exposed = false;
-    }
 
-    void DamageTaken(Unit *pDone, uint32 &damage)
-    {
-        if (Creature* pXT002 = me->GetCreature(*me, m_pInstance->GetData64(DATA_XT002)))
+        ScriptedInstance* m_pInstance;
+        uint32 uiExposeTimer;
+        bool Exposed;
+
+        void JustDied(Unit *victim)
+        {
+            if (m_pInstance)
+                if (Creature* pXT002 = me->GetCreature(*me, m_pInstance->GetData64(DATA_XT002)))
+                    if (pXT002->AI())
+                        pXT002->AI()->DoAction(ACTION_ENTER_HARD_MODE);
+
+            me->ForcedDespawn();
+        }
+    
+        void UpdateAI(const uint32 diff)
+        {
+            if (!Exposed)
             {
-            if (pDone)
-                pDone->DealDamage(pXT002, damage);
+                if (uiExposeTimer <= diff)
+                {
+                    DoCast(me, SPELL_EXPOSED_HEART);
+                    Exposed = true;
+                }
+                else uiExposeTimer -= diff;
             }
-    }
+        }
+    
+        void Reset()
+        {
+            uiExposeTimer = 3000;
+            Exposed = false;
+        }
+
+        void DamageTaken(Unit *pDone, uint32 &damage)
+        {
+            if (Creature* pXT002 = me->GetCreature(*me, m_pInstance->GetData64(DATA_XT002)))
+                {
+                if (pDone)
+                    pDone->DealDamage(pXT002, damage);
+                }
+        }
+    };
+
 };
 
-CreatureAI* GetAI_mob_xt002_heart(Creature* pCreature)
-{
-    return new mob_xt002_heartAI(pCreature);
-}
 
 /*-------------------------------------------------------
  *
  *        XS-013 SCRAPBOT
  *
- *///----------------------------------------------------
-struct mob_scrapbotAI : public ScriptedAI
+ *///----------------------------------------------------class mob_scrapbot : public CreatureScript
 {
-    mob_scrapbotAI(Creature* pCreature) : ScriptedAI(pCreature)
+public:
+    mob_scrapbot() : CreatureScript("mob_scrapbot") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
     {
-        m_pInstance = me->GetInstanceData();
+        return new mob_scrapbotAI(pCreature);
     }
 
-    ScriptedInstance* m_pInstance;
-    bool repaired;
-
-    void Reset()
+    struct mob_scrapbotAI : public ScriptedAI
     {
-        me->SetReactState(REACT_PASSIVE);
-        repaired = false;
-
-        if (Creature* pXT002 = me->GetCreature(*me, m_pInstance->GetData64(DATA_XT002)))
-            me->AI()->AttackStart(pXT002);
-    }
-
-    void UpdateAI(const uint32 diff)
-    {
-        if (Creature* pXT002 = me->GetCreature(*me, m_pInstance->GetData64(DATA_XT002)))
+        mob_scrapbotAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            if (!repaired && me->GetDistance2d(pXT002) <= 0.5)
+            m_pInstance = me->GetInstanceData();
+        }
+
+        ScriptedInstance* m_pInstance;
+        bool repaired;
+
+        void Reset()
+        {
+            me->SetReactState(REACT_PASSIVE);
+            repaired = false;
+
+            if (Creature* pXT002 = me->GetCreature(*me, m_pInstance->GetData64(DATA_XT002)))
+                me->AI()->AttackStart(pXT002);
+        }
+
+        void UpdateAI(const uint32 diff)
+        {
+            if (Creature* pXT002 = me->GetCreature(*me, m_pInstance->GetData64(DATA_XT002)))
             {
-                me->MonsterTextEmote(EMOTE_REPAIR, 0, true);
+                if (!repaired && me->GetDistance2d(pXT002) <= 0.5)
+                {
+                    me->MonsterTextEmote(EMOTE_REPAIR, 0, true);
 
-                // Increase health with 1 percent
-                pXT002->CastSpell(me, SPELL_REPAIR, true);
-                repaired = true;
+                    // Increase health with 1 percent
+                    pXT002->CastSpell(me, SPELL_REPAIR, true);
+                    repaired = true;
 
-                // Disable Nerf Engineering Achievement
-                if (pXT002->AI())
-                    pXT002->AI()->DoAction(ACTION_DISABLE_NERF_ACHI);
+                    // Disable Nerf Engineering Achievement
+                    if (pXT002->AI())
+                        pXT002->AI()->DoAction(ACTION_DISABLE_NERF_ACHI);
 
-                // Despawns the scrapbot
-                me->ForcedDespawn(500);
+                    // Despawns the scrapbot
+                    me->ForcedDespawn(500);
+                }
             }
         }
-    }
+    };
+
 };
 
-CreatureAI* GetAI_mob_scrapbot(Creature* pCreature)
-{
-    return new mob_scrapbotAI(pCreature);
-}
 
 /*-------------------------------------------------------
  *
  *        XM-024 PUMMELLER
  *
- *///----------------------------------------------------
-struct mob_pummellerAI : public ScriptedAI
+ *///----------------------------------------------------class mob_pummeller : public CreatureScript
 {
-    mob_pummellerAI(Creature* pCreature) : ScriptedAI(pCreature)
+public:
+    mob_pummeller() : CreatureScript("mob_pummeller") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
     {
-        m_pInstance = pCreature->GetInstanceData();
+        return new mob_pummellerAI(pCreature);
     }
 
-    ScriptedInstance* m_pInstance;
-    int32 uiArcingSmashTimer;
-    int32 uiTrampleTimer;
-    int32 uiUppercutTimer;
-
-    void Reset()
+    struct mob_pummellerAI : public ScriptedAI
     {
-        uiArcingSmashTimer = TIMER_ARCING_SMASH;
-        uiTrampleTimer = TIMER_TRAMPLE;
-        uiUppercutTimer = TIMER_UPPERCUT;
-    }
-
-    void UpdateAI(const uint32 diff)
-    {
-        if (!UpdateVictim())
-            return;
-
-        if (me->IsWithinMeleeRange(me->getVictim()))
+        mob_pummellerAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            if (uiArcingSmashTimer <= diff)
-            {
-                DoCast(me->getVictim(), SPELL_ARCING_SMASH);
-                uiArcingSmashTimer = TIMER_ARCING_SMASH;
-            } else uiArcingSmashTimer -= diff;
-
-            if (uiTrampleTimer <= diff)
-            {
-                DoCast(me->getVictim(), SPELL_TRAMPLE);
-                uiTrampleTimer = TIMER_TRAMPLE;
-            } else uiTrampleTimer -= diff;
-
-            if (uiUppercutTimer <= diff)
-            {
-                DoCast(me->getVictim(), SPELL_UPPERCUT);
-                uiUppercutTimer = TIMER_UPPERCUT;
-            } else uiUppercutTimer -= diff;
+            m_pInstance = pCreature->GetInstanceData();
         }
 
-        DoMeleeAttackIfReady();
-    }
+        ScriptedInstance* m_pInstance;
+        int32 uiArcingSmashTimer;
+        int32 uiTrampleTimer;
+        int32 uiUppercutTimer;
+
+        void Reset()
+        {
+            uiArcingSmashTimer = TIMER_ARCING_SMASH;
+            uiTrampleTimer = TIMER_TRAMPLE;
+            uiUppercutTimer = TIMER_UPPERCUT;
+        }
+
+        void UpdateAI(const uint32 diff)
+        {
+            if (!UpdateVictim())
+                return;
+
+            if (me->IsWithinMeleeRange(me->getVictim()))
+            {
+                if (uiArcingSmashTimer <= diff)
+                {
+                    DoCast(me->getVictim(), SPELL_ARCING_SMASH);
+                    uiArcingSmashTimer = TIMER_ARCING_SMASH;
+                } else uiArcingSmashTimer -= diff;
+
+                if (uiTrampleTimer <= diff)
+                {
+                    DoCast(me->getVictim(), SPELL_TRAMPLE);
+                    uiTrampleTimer = TIMER_TRAMPLE;
+                } else uiTrampleTimer -= diff;
+
+                if (uiUppercutTimer <= diff)
+                {
+                    DoCast(me->getVictim(), SPELL_UPPERCUT);
+                    uiUppercutTimer = TIMER_UPPERCUT;
+                } else uiUppercutTimer -= diff;
+            }
+
+            DoMeleeAttackIfReady();
+        }
+    };
+
 };
 
-CreatureAI* GetAI_mob_pummeller(Creature* pCreature)
-{
-    return new mob_pummellerAI(pCreature);
-}
 
 /*-------------------------------------------------------
  *
  *        XE-321 BOOMBOT
  *
- *///----------------------------------------------------
-struct mob_boombotAI : public ScriptedAI
+ *///----------------------------------------------------class mob_boombot : public CreatureScript
 {
-    mob_boombotAI(Creature* pCreature) : ScriptedAI(pCreature)
+public:
+    mob_boombot() : CreatureScript("mob_boombot") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
     {
-        m_pInstance = pCreature->GetInstanceData();
+        return new mob_boombotAI(pCreature);
     }
 
-    ScriptedInstance* m_pInstance;
-    
-    void Reset()
+    struct mob_boombotAI : public ScriptedAI
     {
-        if (Creature* pXT002 = me->GetCreature(*me, m_pInstance->GetData64(DATA_XT002)))
-            me->AI()->AttackStart(pXT002);
-    }
-    
-    void UpdateAI(const uint32 diff)
-    {
-        if (Creature* pXT002 = me->GetCreature(*me, m_pInstance->GetData64(DATA_XT002)))
+        mob_boombotAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            if (me->GetDistance2d(pXT002) <= 0.5 || HealthBelowPct(50))
+            m_pInstance = pCreature->GetInstanceData();
+        }
+
+        ScriptedInstance* m_pInstance;
+    
+        void Reset()
+        {
+            if (Creature* pXT002 = me->GetCreature(*me, m_pInstance->GetData64(DATA_XT002)))
+                me->AI()->AttackStart(pXT002);
+        }
+    
+        void UpdateAI(const uint32 diff)
+        {
+            if (Creature* pXT002 = me->GetCreature(*me, m_pInstance->GetData64(DATA_XT002)))
             {
-                //Explosion
-                DoCast(me, SPELL_BOOM);
+                if (me->GetDistance2d(pXT002) <= 0.5 || HealthBelowPct(50))
+                {
+                    //Explosion
+                    DoCast(me, SPELL_BOOM);
+                }
             }
         }
-    }
+    };
+
 };
 
-CreatureAI* GetAI_mob_boombot(Creature* pCreature)
-{
-    return new mob_boombotAI(pCreature);
-}
 
 /*-------------------------------------------------------
  *
  *        VOID ZONE
  *
- *///----------------------------------------------------
-struct mob_void_zoneAI : public ScriptedAI
+ *///----------------------------------------------------class mob_void_zone : public CreatureScript
 {
-    mob_void_zoneAI(Creature* pCreature) : ScriptedAI(pCreature)
+public:
+    mob_void_zone() : CreatureScript("mob_void_zone") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
     {
-        m_pInstance = pCreature->GetInstanceData();
-        me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE | UNIT_FLAG_PACIFIED);
+        return new mob_void_zoneAI(pCreature);
     }
 
-    ScriptedInstance* m_pInstance;
-    uint32 uiVoidZoneTimer;
-
-    void Reset()
+    struct mob_void_zoneAI : public ScriptedAI
     {
-        uiVoidZoneTimer = TIMER_VOID_ZONE;
-    }
-
-    void UpdateAI(const uint32 diff)
-    {
-        if (uiVoidZoneTimer <= diff)
+        mob_void_zoneAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            DoCast(SPELL_VOID_ZONE);
+            m_pInstance = pCreature->GetInstanceData();
+            me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE | UNIT_FLAG_PACIFIED);
+        }
+
+        ScriptedInstance* m_pInstance;
+        uint32 uiVoidZoneTimer;
+
+        void Reset()
+        {
             uiVoidZoneTimer = TIMER_VOID_ZONE;
-        } else uiVoidZoneTimer -= diff;
-    }
+        }
+
+        void UpdateAI(const uint32 diff)
+        {
+            if (uiVoidZoneTimer <= diff)
+            {
+                DoCast(SPELL_VOID_ZONE);
+                uiVoidZoneTimer = TIMER_VOID_ZONE;
+            } else uiVoidZoneTimer -= diff;
+        }
+    };
+
 };
 
-CreatureAI* GetAI_mob_void_zone(Creature* pCreature)
-{
-    return new mob_void_zoneAI(pCreature);
-}
 
 /*-------------------------------------------------------
  *
  *        LIFE SPARK
  *
- *///----------------------------------------------------
-struct mob_life_sparkAI : public ScriptedAI
+ *///----------------------------------------------------class mob_life_spark : public CreatureScript
 {
-    mob_life_sparkAI(Creature* pCreature) : ScriptedAI(pCreature)
+public:
+    mob_life_spark() : CreatureScript("mob_life_spark") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
     {
-        m_pInstance = pCreature->GetInstanceData();
+        return new mob_life_sparkAI(pCreature);
     }
 
-    ScriptedInstance* m_pInstance;
-    uint32 uiShockTimer;
-
-    void Reset()
+    struct mob_life_sparkAI : public ScriptedAI
     {
-        DoCast(me, RAID_MODE(SPELL_STATIC_CHARGED_10, SPELL_STATIC_CHARGED_25));
-        uiShockTimer = 0; // first one is immediate.
-    }
-
-    void UpdateAI(const uint32 diff)
-    {
-        if (!UpdateVictim())
-            return;
-
-        if (uiShockTimer <= diff)
+        mob_life_sparkAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            if (me->IsWithinMeleeRange(me->getVictim()))
-            {
-                DoCast(me->getVictim(), SPELL_SHOCK);
-                uiShockTimer = TIMER_SHOCK;
-            }
+            m_pInstance = pCreature->GetInstanceData();
         }
-        else uiShockTimer -= diff;
-    }
+
+        ScriptedInstance* m_pInstance;
+        uint32 uiShockTimer;
+
+        void Reset()
+        {
+            DoCast(me, RAID_MODE(SPELL_STATIC_CHARGED_10, SPELL_STATIC_CHARGED_25));
+            uiShockTimer = 0; // first one is immediate.
+        }
+
+        void UpdateAI(const uint32 diff)
+        {
+            if (!UpdateVictim())
+                return;
+
+            if (uiShockTimer <= diff)
+            {
+                if (me->IsWithinMeleeRange(me->getVictim()))
+                {
+                    DoCast(me->getVictim(), SPELL_SHOCK);
+                    uiShockTimer = TIMER_SHOCK;
+                }
+            }
+            else uiShockTimer -= diff;
+        }
+    };
+
 };
 
-CreatureAI* GetAI_mob_life_spark(Creature* pCreature)
-{
-    return new mob_life_sparkAI(pCreature);
-}
 
 void AddSC_boss_xt002()
 {
-    Script *newscript;
-
-    newscript = new Script;
-    newscript->Name = "boss_xt002";
-    newscript->GetAI = &GetAI_boss_xt002;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "mob_xt002_heart";
-    newscript->GetAI = &GetAI_mob_xt002_heart;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "mob_scrapbot";
-    newscript->GetAI = &GetAI_mob_scrapbot;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "mob_pummeller";
-    newscript->GetAI = &GetAI_mob_pummeller;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "mob_boombot";
-    newscript->GetAI = &GetAI_mob_boombot;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "mob_void_zone";
-    newscript->GetAI = &GetAI_mob_void_zone;
-    newscript->RegisterSelf();
-
-    newscript = new Script;
-    newscript->Name = "mob_life_spark";
-    newscript->GetAI = &GetAI_mob_life_spark;
-    newscript->RegisterSelf();
+    new boss_xt002();
+    new mob_xt002_heart();
+    new mob_scrapbot();
+    new mob_pummeller();
+    new mob_boombot();
+    new mob_void_zone();
+    new mob_life_spark();
 }

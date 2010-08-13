@@ -47,6 +47,7 @@ class WorldSocket;
 class QueryResult;
 class LoginQueryHolder;
 class CharacterHandler;
+class SpellCastTargets;
 struct AreaTableEntry;
 
 enum AccountDataType
@@ -203,7 +204,7 @@ class WorldSession
 
         void SendAttackStop(Unit const* enemy);
 
-        void SendBattlegGroundList(uint64 guid, BattleGroundTypeId bgTypeId);
+        void SendBattlegGroundList(uint64 guid, BattlegroundTypeId bgTypeId);
 
         void SendTradeStatus(TradeStatus status);
         void SendUpdateTrade(bool trader_data = true);
@@ -211,7 +212,10 @@ class WorldSession
 
         void SendPetitionQueryOpcode(uint64 petitionguid);
 
-        //pet
+        // Spell
+        void HandleClientCastFlags(WorldPacket& recvPacket, uint8 castFlags, SpellCastTargets & targets);
+
+        // Pet
         void SendPetNameQuery(uint64 guid, uint32 petnumber);
         void SendStablePet(uint64 guid);
         void SendStableResult(uint8 guid);
@@ -266,10 +270,6 @@ class WorldSession
         void SendNotInArenaTeamPacket(uint8 type);
         void SendPetitionShowList(uint64 guid);
         void SendSaveGuildEmblem(uint32 msg);
-        // Looking For Group
-        // TRUE values set by client sending CMSG_LFG_SET_AUTOJOIN and CMSG_LFM_CLEAR_AUTOFILL before player login
-        bool LookingForGroup_auto_join;
-        bool LookingForGroup_auto_add;
 
         void BuildPartyMemberStatsChangedPacket(Player *player, WorldPacket *data);
 
@@ -669,10 +669,10 @@ class WorldSession
         void HandleTotemDestroyed(WorldPacket& recv_data);
         void HandleDismissCritter(WorldPacket& recv_data);
 
-        //BattleGround
+        //Battleground
         void HandleBattlemasterHelloOpcode(WorldPacket &recv_data);
         void HandleBattlemasterJoinOpcode(WorldPacket &recv_data);
-        void HandleBattleGroundPlayerPositionsOpcode(WorldPacket& recv_data);
+        void HandleBattlegroundPlayerPositionsOpcode(WorldPacket& recv_data);
         void HandlePVPLogDataOpcode(WorldPacket &recv_data);
         void HandleBattleFieldPortOpcode(WorldPacket &recv_data);
         void HandleBattlefieldListOpcode(WorldPacket &recv_data);
@@ -701,12 +701,21 @@ class WorldSession
         void HandleLfgJoinOpcode(WorldPacket &recv_data);
         void HandleLfgLeaveOpcode(WorldPacket & /*recv_data*/);
         void HandleLfgSetRolesOpcode(WorldPacket &recv_data);
+        void HandleLfgProposalResultOpcode(WorldPacket &recv_data);
+        void HandleLfgSetBootVoteOpcode(WorldPacket &recv_data);
+        void HandleLfgTeleportOpcode(WorldPacket &recv_data);
+        void HandleLfrSearchOpcode(WorldPacket &recv_data);
+        void HandleLfrLeaveOpcode(WorldPacket &recv_data);
+
         void SendLfgUpdatePlayer(uint8 updateType);
         void SendLfgUpdateParty(uint8 updateType);
         void SendLfgRoleChosen(uint64 guid, uint8 roles);
         void SendLfgUpdateSearch(bool update);
         void SendLfgJoinResult(uint8 checkResult, uint8 checkValue);
         void SendLfgQueueStatus(uint32 dungeon, int32 waitTime, int32 avgWaitTime, int32 waitTimeTanks, int32 waitTimeHealer, int32 waitTimeDps, uint32 queuedTime, uint8 tanks, uint8 healers, uint8 dps);
+        void SendLfgDisabled();
+        void SendLfgOfferContinue(uint32 dungeonEntry);
+        void SendLfgTeleportError(uint8 err);
 
         // Arena Team
         void HandleInspectArenaTeamsOpcode(WorldPacket& recv_data);
@@ -777,7 +786,6 @@ class WorldSession
         void HandleAlterAppearance(WorldPacket& recv_data);
         void HandleRemoveGlyph(WorldPacket& recv_data);
         void HandleCharCustomize(WorldPacket& recv_data);
-		void HandleCharFactionOrRaceChange(WorldPacket& recv_data);
         void HandleQueryInspectAchievements(WorldPacket& recv_data);
         void HandleEquipmentSetSave(WorldPacket& recv_data);
         void HandleEquipmentSetDelete(WorldPacket& recv_data);
@@ -786,15 +794,6 @@ class WorldSession
         void HandleReadyForAccountDataTimes(WorldPacket& recv_data);
         void HandleQueryQuestsCompleted(WorldPacket& recv_data);
         void HandleQuestPOIQuery(WorldPacket& recv_data);
-        void HandleOnPVPKill(Player *killed);
-        bool HandleOnPlayerChat(const char *text);
-        uint32 HandleOnGetXP(uint32 amount);
-        int32 HandleOnGetMoney(int32 amount);
-        void HandleOnAreaChange(AreaTableEntry const *pArea);
-        bool HandleOnItemClick(Item *pItem);
-        bool HandleOnItemOpen(Item *pItem);
-        bool HandleOnGoClick(GameObject *pGameObject);
-        void HandleOnCreatureKill(Creature *pCreature);
         void HandleEjectPasenger(WorldPacket &data);
         void HandleEnterPlayerVehicle(WorldPacket &data);
     private:

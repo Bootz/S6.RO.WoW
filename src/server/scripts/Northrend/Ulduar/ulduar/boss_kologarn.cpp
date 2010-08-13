@@ -102,460 +102,471 @@ uint32 GripTargetGUID;
 // Positiones
 const Position RubbleRight = {1781.814, -3.716, 448.808, 4.211};
 const Position RubbleLeft  = {1781.814, -45.07, 448.808, 2.260};
-
-struct boss_kologarnAI : public BossAI
+class boss_kologarn : public CreatureScript
 {
-    boss_kologarnAI(Creature *pCreature) : BossAI(pCreature, BOSS_KOLOGARN), vehicle(me->GetVehicleKit()),
-        left(false), right(false)
+public:
+    boss_kologarn() : CreatureScript("boss_kologarn") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
     {
-        assert(vehicle);
-        pInstance = pCreature->GetInstanceData();
-        me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-        me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_STUNNED);
-        me->SetStandState(UNIT_STAND_STATE_SUBMERGED);
-        me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);
-        me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true); // Death Grip jump effect
-        emerged = false;
+        return new boss_kologarnAI (pCreature);
     }
 
-    ScriptedInstance* pInstance;
-
-    Vehicle *vehicle;
-    bool left, right;
-    bool Gripped;
-    bool emerged;
-    
-    Creature* EyeBeam[2];
-    Creature* RightArm;
-    Creature* LeftArm;
-    
-    uint32 RubbleCount;
-
-    void AttackStart(Unit *who)
+    struct boss_kologarnAI : public BossAI
     {
-        me->Attack(who, true);
-    }
-    
-    void MoveInLineOfSight(Unit *who)
-    {
-        // Birth animation
-        if (!emerged && me->IsWithinDistInMap(who, 35.0f) && who->GetTypeId() == TYPEID_PLAYER)
+        boss_kologarnAI(Creature *pCreature) : BossAI(pCreature, BOSS_KOLOGARN), vehicle(me->GetVehicleKit()),
+            left(false), right(false)
         {
-            me->SetStandState(UNIT_STAND_STATE_STAND);
-            me->HandleEmoteCommand(EMOTE_ONESHOT_EMERGE);
-            emerged = true;
+            assert(vehicle);
+            pInstance = pCreature->GetInstanceData();
+            me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+            me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_STUNNED);
+            me->SetStandState(UNIT_STAND_STATE_SUBMERGED);
+            me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);
+            me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true); // Death Grip jump effect
+            emerged = false;
         }
-        ScriptedAI::MoveInLineOfSight(who);
-    }
 
-    void JustDied(Unit *victim)
-    {
-        // Rubble and Roll
-        if (RubbleCount >= 5)
-            pInstance->DoCompleteAchievement(ACHIEVEMENT_RUBBLE_AND_ROLL);
-        // With Open Arms
-        if (RubbleCount == 0)
-            pInstance->DoCompleteAchievement(ACHIEVEMENT_WITH_OPEN_ARMS);
+        ScriptedInstance* pInstance;
+
+        Vehicle *vehicle;
+        bool left, right;
+        bool Gripped;
+        bool emerged;
+    
+        Creature* EyeBeam[2];
+        Creature* RightArm;
+        Creature* LeftArm;
+    
+        uint32 RubbleCount;
+
+        void AttackStart(Unit *who)
+        {
+            me->Attack(who, true);
+        }
+    
+        void MoveInLineOfSight(Unit *who)
+        {
+            // Birth animation
+            if (!emerged && me->IsWithinDistInMap(who, 35.0f) && who->GetTypeId() == TYPEID_PLAYER)
+            {
+                me->SetStandState(UNIT_STAND_STATE_STAND);
+                me->HandleEmoteCommand(EMOTE_ONESHOT_EMERGE);
+                emerged = true;
+            }
+            ScriptedAI::MoveInLineOfSight(who);
+        }
+
+        void JustDied(Unit *victim)
+        {
+            // Rubble and Roll
+            if (RubbleCount >= 5)
+                pInstance->DoCompleteAchievement(ACHIEVEMENT_RUBBLE_AND_ROLL);
+            // With Open Arms
+            if (RubbleCount == 0)
+                pInstance->DoCompleteAchievement(ACHIEVEMENT_WITH_OPEN_ARMS);
                 
-        DoScriptText(SAY_DEATH, me);
-        _JustDied();
-        // Hack to disable corpse fall
-        me->GetMotionMaster()->MoveTargetedHome();
-        me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-    }
-
-    void PassengerBoarded(Unit *who, int8 seatId, bool apply)
-    {
-        if(who->GetTypeId() == TYPEID_UNIT)
-        {
-            if(who->GetEntry() == NPC_LEFT_ARM)
-                left = apply;
-            else if(who->GetEntry() == NPC_RIGHT_ARM)
-                right = apply;
-            who->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_STUNNED);
-            CAST_CRE(who)->SetReactState(REACT_AGGRESSIVE);
+            DoScriptText(SAY_DEATH, me);
+            _JustDied();
+            // Hack to disable corpse fall
+            me->GetMotionMaster()->MoveTargetedHome();
+            me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         }
-    }
 
-    void EnterCombat(Unit *who)
-    {
-        DoScriptText(SAY_AGGRO, me);
-        _EnterCombat();
-        RubbleCount = 0;
-        GripTargetGUID = NULL;
-        Gripped = false;
+        void PassengerBoarded(Unit *who, int8 seatId, bool apply)
+        {
+            if(who->GetTypeId() == TYPEID_UNIT)
+            {
+                if(who->GetEntry() == NPC_LEFT_ARM)
+                    left = apply;
+                else if(who->GetEntry() == NPC_RIGHT_ARM)
+                    right = apply;
+                who->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_STUNNED);
+                CAST_CRE(who)->SetReactState(REACT_AGGRESSIVE);
+            }
+        }
+
+        void EnterCombat(Unit *who)
+        {
+            DoScriptText(SAY_AGGRO, me);
+            _EnterCombat();
+            RubbleCount = 0;
+            GripTargetGUID = NULL;
+            Gripped = false;
         
-        if (Creature *LeftArm = CAST_CRE(me->GetVehicleKit()->GetPassenger(0)))
-            LeftArm->AI()->DoZoneInCombat();
-        if (Creature *RightArm = CAST_CRE(me->GetVehicleKit()->GetPassenger(1)))
-            RightArm->AI()->DoZoneInCombat();
+            if (Creature *LeftArm = CAST_CRE(me->GetVehicleKit()->GetPassenger(0)))
+                LeftArm->AI()->DoZoneInCombat();
+            if (Creature *RightArm = CAST_CRE(me->GetVehicleKit()->GetPassenger(1)))
+                RightArm->AI()->DoZoneInCombat();
         
-        events.ScheduleEvent(EVENT_SMASH, 5000);
-        events.ScheduleEvent(EVENT_SWEEP, 10000);
-        events.ScheduleEvent(EVENT_EYEBEAM, 10000);
-        events.ScheduleEvent(EVENT_SHOCKWAVE, 12000);
-        events.ScheduleEvent(EVENT_GRIP, 40000);
-    }
-    
-    void KilledUnit(Unit* Victim)
-    {
-        if (!(rand()%5))
-            DoScriptText(RAND(SAY_SLAY_1, SAY_SLAY_2), me);
-    }
-    
-    void Reset()
-    {
-        if (RightArm = me->GetCreature(*me, pInstance->GetData64(DATA_RIGHT_ARM)))
-        {
-            RightArm->Respawn(true);
-            RightArm->EnterVehicle(vehicle, 1);
+            events.ScheduleEvent(EVENT_SMASH, 5000);
+            events.ScheduleEvent(EVENT_SWEEP, 10000);
+            events.ScheduleEvent(EVENT_EYEBEAM, 10000);
+            events.ScheduleEvent(EVENT_SHOCKWAVE, 12000);
+            events.ScheduleEvent(EVENT_GRIP, 40000);
         }
-        if (LeftArm = me->GetCreature(*me, pInstance->GetData64(DATA_LEFT_ARM)))
-        {
-            LeftArm->Respawn(true);
-            LeftArm->EnterVehicle(vehicle, 0);
-        }
-        _Reset();
-    }
     
-    void UpdateAI(const uint32 diff)
-    {
-        if (!UpdateVictim())
-            return;
+        void KilledUnit(Unit* Victim)
+        {
+            if (!(rand()%5))
+                DoScriptText(RAND(SAY_SLAY_1, SAY_SLAY_2), me);
+        }
+    
+        void Reset()
+        {
+            if (RightArm = me->GetCreature(*me, pInstance->GetData64(DATA_RIGHT_ARM)))
+            {
+                RightArm->Respawn(true);
+                RightArm->EnterVehicle(vehicle, 1);
+            }
+            if (LeftArm = me->GetCreature(*me, pInstance->GetData64(DATA_LEFT_ARM)))
+            {
+                LeftArm->Respawn(true);
+                LeftArm->EnterVehicle(vehicle, 0);
+            }
+            _Reset();
+        }
+    
+        void UpdateAI(const uint32 diff)
+        {
+            if (!UpdateVictim())
+                return;
 
-        events.Update(diff);
+            events.Update(diff);
 
-        if (me->hasUnitState(UNIT_STAT_CASTING))
-            return;
+            if (me->hasUnitState(UNIT_STAT_CASTING))
+                return;
                         
-        if (events.GetTimer() > 15000 && !me->IsWithinMeleeRange(me->getVictim()))
-            DoCastAOE(SPELL_PETRIFY_BREATH, true);
+            if (events.GetTimer() > 15000 && !me->IsWithinMeleeRange(me->getVictim()))
+                DoCastAOE(SPELL_PETRIFY_BREATH, true);
         
-        if (!left && !right)
-            DoCast(me, SPELL_STONE_SHOUT, true);
+            if (!left && !right)
+                DoCast(me, SPELL_STONE_SHOUT, true);
 
-        switch(events.GetEvent())
-        {
-            case EVENT_NONE: break;
-            case EVENT_SMASH:
-                if (left && right)
-                    if (me->IsWithinMeleeRange(me->getVictim()))
-                        DoCastVictim(SPELL_TWO_ARM_SMASH, true);
-                else if(left || right)
-                    if (me->IsWithinMeleeRange(me->getVictim()))
-                        DoCastVictim(SPELL_ONE_ARM_SMASH, true);
-                events.RescheduleEvent(EVENT_SMASH, 15000);
-                break;
-            case EVENT_SWEEP:
-                if (left)
-                    DoCastAOE(SPELL_ARM_SWEEP, true);
-                events.RescheduleEvent(EVENT_SWEEP, 15000);
-                break;
-            case EVENT_GRIP:
-                if (right)
-                {
+            switch(events.GetEvent())
+            {
+                case EVENT_NONE: break;
+                case EVENT_SMASH:
+                    if (left && right)
+                        if (me->IsWithinMeleeRange(me->getVictim()))
+                            DoCastVictim(SPELL_TWO_ARM_SMASH, true);
+                    else if(left || right)
+                        if (me->IsWithinMeleeRange(me->getVictim()))
+                            DoCastVictim(SPELL_ONE_ARM_SMASH, true);
+                    events.RescheduleEvent(EVENT_SMASH, 15000);
+                    break;
+                case EVENT_SWEEP:
+                    if (left)
+                        DoCastAOE(SPELL_ARM_SWEEP, true);
+                    events.RescheduleEvent(EVENT_SWEEP, 15000);
+                    break;
+                case EVENT_GRIP:
+                    if (right)
+                    {
+                        if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 1, 100, true))
+                        {
+                            me->MonsterTextEmote(EMOTE_STONE, 0, true);
+                            DoScriptText(SAY_GRAB_PLAYER, me);
+                            GripTargetGUID = pTarget->GetGUID();
+                        
+                            if (pInstance)
+                                if (Creature* RightArm = me->GetCreature(*me, pInstance->GetData64(DATA_RIGHT_ARM)))
+                                    if (RightArm->AI())
+                                        RightArm->AI()->DoAction(ACTION_GRIP);
+                        }
+                    }
+                    events.RescheduleEvent(EVENT_GRIP, 40000);
+                    break;
+                case EVENT_SHOCKWAVE:
+                    if (left)
+                    {
+                        DoScriptText(SAY_SHOCKWAVE, me);
+                        DoCastAOE(SPELL_SHOCKWAVE, true);
+                        DoCastAOE(SPELL_SHOCKWAVE_VISUAL, true);
+                    }
+                    events.RescheduleEvent(EVENT_SHOCKWAVE, urand(15000, 25000));
+                    break;
+                case EVENT_EYEBEAM:
                     if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 1, 100, true))
                     {
-                        me->MonsterTextEmote(EMOTE_STONE, 0, true);
-                        DoScriptText(SAY_GRAB_PLAYER, me);
-                        GripTargetGUID = pTarget->GetGUID();
-                        
-                        if (pInstance)
-                            if (Creature* RightArm = me->GetCreature(*me, pInstance->GetData64(DATA_RIGHT_ARM)))
-                                if (RightArm->AI())
-                                    RightArm->AI()->DoAction(ACTION_GRIP);
+                        if (EyeBeam[0] = me->SummonCreature(NPC_EYEBEAM_1, pTarget->GetPositionX(), pTarget->GetPositionY() + 3, pTarget->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN, 10000))
+                        {
+                            EyeBeam[0]->CastSpell(me, SPELL_EYEBEAM_VISUAL_1, true);
+                            EyeBeam[0]->AI()->AttackStart(pTarget);
+                        }
+                        if (EyeBeam[1] = me->SummonCreature(NPC_EYEBEAM_2, pTarget->GetPositionX(), pTarget->GetPositionY() - 3, pTarget->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN, 10000))
+                        {
+                            EyeBeam[1]->CastSpell(me, SPELL_EYEBEAM_VISUAL_2, true);
+                            EyeBeam[1]->AI()->AttackStart(pTarget);
+                        }
                     }
-                }
-                events.RescheduleEvent(EVENT_GRIP, 40000);
-                break;
-            case EVENT_SHOCKWAVE:
-                if (left)
-                {
-                    DoScriptText(SAY_SHOCKWAVE, me);
-                    DoCastAOE(SPELL_SHOCKWAVE, true);
-                    DoCastAOE(SPELL_SHOCKWAVE_VISUAL, true);
-                }
-                events.RescheduleEvent(EVENT_SHOCKWAVE, urand(15000, 25000));
-                break;
-            case EVENT_EYEBEAM:
-                if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 1, 100, true))
-                {
-                    if (EyeBeam[0] = me->SummonCreature(NPC_EYEBEAM_1, pTarget->GetPositionX(), pTarget->GetPositionY() + 3, pTarget->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN, 10000))
+                    events.RescheduleEvent(EVENT_EYEBEAM, 20000);
+                    break;
+                case EVENT_RIGHT:
+                    if (RightArm = me->GetCreature(*me, pInstance->GetData64(DATA_RIGHT_ARM)))
                     {
-                        EyeBeam[0]->CastSpell(me, SPELL_EYEBEAM_VISUAL_1, true);
-                        EyeBeam[0]->AI()->AttackStart(pTarget);
+                        RightArm->Respawn(true);
+                        RightArm->EnterVehicle(vehicle, 1);
+                        DoCast(me, SPELL_ARM_RESPAWN, true);
+                        me->MonsterTextEmote(EMOTE_RIGHT, 0, true);
                     }
-                    if (EyeBeam[1] = me->SummonCreature(NPC_EYEBEAM_2, pTarget->GetPositionX(), pTarget->GetPositionY() - 3, pTarget->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN, 10000))
+                    events.CancelEvent(EVENT_RIGHT);
+                    break;
+                case EVENT_LEFT:
+                    if (LeftArm = me->GetCreature(*me, pInstance->GetData64(DATA_LEFT_ARM)))
                     {
-                        EyeBeam[1]->CastSpell(me, SPELL_EYEBEAM_VISUAL_2, true);
-                        EyeBeam[1]->AI()->AttackStart(pTarget);
+                        LeftArm->Respawn(true);
+                        LeftArm->EnterVehicle(vehicle, 0);
+                        DoCast(me, SPELL_ARM_RESPAWN, true);
+                        me->MonsterTextEmote(EMOTE_LEFT, 0, true);
                     }
-                }
-                events.RescheduleEvent(EVENT_EYEBEAM, 20000);
-                break;
-            case EVENT_RIGHT:
-                if (RightArm = me->GetCreature(*me, pInstance->GetData64(DATA_RIGHT_ARM)))
-                {
-                    RightArm->Respawn(true);
-                    RightArm->EnterVehicle(vehicle, 1);
-                    DoCast(me, SPELL_ARM_RESPAWN, true);
-                    me->MonsterTextEmote(EMOTE_RIGHT, 0, true);
-                }
-                events.CancelEvent(EVENT_RIGHT);
-                break;
-            case EVENT_LEFT:
-                if (LeftArm = me->GetCreature(*me, pInstance->GetData64(DATA_LEFT_ARM)))
-                {
-                    LeftArm->Respawn(true);
-                    LeftArm->EnterVehicle(vehicle, 0);
-                    DoCast(me, SPELL_ARM_RESPAWN, true);
-                    me->MonsterTextEmote(EMOTE_LEFT, 0, true);
-                }
-                events.CancelEvent(EVENT_LEFT);
-                break;                
-        }
-
-        DoMeleeAttackIfReady();
-    }
-    
-    void DoAction(const int32 action)
-    {
-        switch (action)
-        {
-            case ACTION_RESPAWN_RIGHT:
-                DoScriptText(SAY_RIGHT_ARM_GONE, me);
-                me->DealDamage(me, ARM_DEAD_DAMAGE); // decreases Kologarn's health by 15%
-                ++RubbleCount;
-                events.ScheduleEvent(EVENT_RIGHT, 30000);
-                break;
-            case ACTION_RESPAWN_LEFT:
-                DoScriptText(SAY_LEFT_ARM_GONE, me);
-                me->DealDamage(me, ARM_DEAD_DAMAGE); // decreases Kologarn's health by 15%
-                ++RubbleCount;
-                events.ScheduleEvent(EVENT_LEFT, 30000);
-                break;
-        }
-    }
-};
-
-CreatureAI* GetAI_boss_kologarn(Creature* pCreature)
-{
-    return new boss_kologarnAI (pCreature);
-}
-
-struct mob_focused_eyebeamAI : public ScriptedAI
-{
-    mob_focused_eyebeamAI(Creature* pCreature) : ScriptedAI(pCreature)
-    {
-        me->SetReactState(REACT_PASSIVE);
-        me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_PACIFIED);
-        DoCast(me, SPELL_EYEBEAM_IMMUNITY);
-        DoCast(me, SPELL_FOCUSED_EYEBEAM);
-        checkTimer = 1500;
-    }
-
-    uint32 checkTimer;
-
-    void UpdateAI(const uint32 diff)
-    {
-        if(checkTimer <= diff)
-        {
-            if (me->getVictim() && me->getVictim()->isAlive())
-                me->GetMotionMaster()->MovePoint(0, me->getVictim()->GetPositionX(), me->getVictim()->GetPositionY(), me->getVictim()->GetPositionZ());
-
-            checkTimer = 500;
-        }
-        else checkTimer -= diff;
-    }
-};
-
-CreatureAI* GetAI_mob_focused_eyebeam(Creature* pCreature)
-{
-    return new mob_focused_eyebeamAI(pCreature);
-}
-
-// Right Arm
-struct mob_right_armAI : public ScriptedAI
-{
-    mob_right_armAI(Creature* pCreature) : ScriptedAI(pCreature)
-    {
-        m_pInstance = me->GetInstanceData();
-        me->ApplySpellImmune(0, IMMUNITY_ID, 64708, true);
-    }
-
-    ScriptedInstance* m_pInstance;
-    
-    bool Gripped;
-    uint32 ArmDamage;
-    int32 SqueezeTimer;
-
-    void Reset()
-    {
-        Gripped = false;
-        ArmDamage = 0;
-        SqueezeTimer = 0;
-    }
-    
-    void UpdateAI(const uint32 diff)
-    {
-        if (!UpdateVictim())
-            return;
-
-        if (Gripped)
-        {
-            if (SqueezeTimer <= diff)
-            {
-                if (me->GetVehicleKit()->GetPassenger(0) && me->GetVehicleKit()->GetPassenger(0)->isAlive())
-                    me->Kill(me->GetVehicleKit()->GetPassenger(0), true);
-                Gripped = false;
+                    events.CancelEvent(EVENT_LEFT);
+                    break;            
             }
-            else SqueezeTimer -= diff;
+
+            DoMeleeAttackIfReady();
         }
-    }
     
-    void KilledUnit(Unit* Victim)
-    {
-        if (Victim)
+        void DoAction(const int32 action)
         {
-            Victim->ExitVehicle();
-            Victim->GetMotionMaster()->MoveJump(1767.80, -18.38, 448.808, 10, 10);
-        }
-    }
-    
-    void JustDied(Unit *victim)
-    {
-        for (uint8 i = 0; i < 5; ++i)
-            me->SummonCreature(NPC_RUBBLE, RubbleRight, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 3000);
-            
-        if (m_pInstance)
-            if (Creature* pKologarn = me->GetCreature(*me, m_pInstance->GetData64(DATA_KOLOGARN)))
-                if (pKologarn->AI())
-                    pKologarn->AI()->DoAction(ACTION_RESPAWN_RIGHT);
-                    
-        // Hack to disable corpse fall
-        me->GetMotionMaster()->MoveTargetedHome();
-    }
-    
-    void JustSummoned(Creature *summon)
-    {
-        summon->AI()->DoAction(0);
-        summon->AI()->DoZoneInCombat();
-    }
-    
-    void DoAction(const int32 action)
-    {
-        switch (action)
-        {
-            case ACTION_GRIP:
-                if (Unit* GripTarget = Unit::GetUnit(*me, GripTargetGUID))
-                {
-                    if (GripTarget && GripTarget->isAlive())
-                    {
-                        GripTarget->EnterVehicle(me, 0);
-                        me->AddAura(SPELL_STONE_GRIP, GripTarget);
-                        me->AddAura(SPELL_STONE_GRIP_STUN, GripTarget);
-                        ArmDamage = 0;
-                        SqueezeTimer = 16000;
-                        GripTargetGUID = NULL;
-                        Gripped = true;
-                    }
-                }
-                break;
-        }
-    }
-    
-    void DamageTaken(Unit* pKiller, uint32 &damage)
-    {
-        if (Gripped)
-        {
-            ArmDamage += damage;
-            int dmg = RAID_MODE(100000, 480000);
-            
-            if (ArmDamage > dmg || damage >= me->GetHealth())
+            switch (action)
             {
-                Unit* pGripTarget = me->GetVehicleKit()->GetPassenger(0);
-                if (pGripTarget && pGripTarget->isAlive())
-                {
-                    pGripTarget->RemoveAurasDueToSpell(SPELL_STONE_GRIP);
-                    pGripTarget->RemoveAurasDueToSpell(SPELL_STONE_GRIP_STUN);
-                    pGripTarget->ExitVehicle();
-                    pGripTarget->GetMotionMaster()->MoveJump(1767.80, -18.38, 448.808, 10, 10);
-                }
-                pGripTarget = 0;
-                Gripped = false;
+                case ACTION_RESPAWN_RIGHT:
+                    DoScriptText(SAY_RIGHT_ARM_GONE, me);
+                    me->DealDamage(me, ARM_DEAD_DAMAGE); // decreases Kologarn's health by 15%
+                    ++RubbleCount;
+                    events.ScheduleEvent(EVENT_RIGHT, 30000);
+                    break;
+                case ACTION_RESPAWN_LEFT:
+                    DoScriptText(SAY_LEFT_ARM_GONE, me);
+                    me->DealDamage(me, ARM_DEAD_DAMAGE); // decreases Kologarn's health by 15%
+                    ++RubbleCount;
+                    events.ScheduleEvent(EVENT_LEFT, 30000);
+                    break;
             }
         }
-    }
+    };
+
 };
 
-CreatureAI* GetAI_mob_right_arm(Creature* pCreature)
+class mob_focused_eyebeam : public CreatureScript
 {
-    return new mob_right_armAI(pCreature);
-}
+public:
+    mob_focused_eyebeam() : CreatureScript("mob_focused_eyebeam") { }
 
-// Left Arm
-struct mob_left_armAI : public ScriptedAI
-{
-    mob_left_armAI(Creature* pCreature) : ScriptedAI(pCreature)
+    CreatureAI* GetAI(Creature* pCreature)
     {
-        m_pInstance = me->GetInstanceData();
+        return new mob_focused_eyebeamAI(pCreature);
     }
 
-    ScriptedInstance* m_pInstance;
-
-    void UpdateAI(const uint32 diff)
+    struct mob_focused_eyebeamAI : public ScriptedAI
     {
-        if (!UpdateVictim())
-            return;
+        mob_focused_eyebeamAI(Creature* pCreature) : ScriptedAI(pCreature)
+        {
+            me->SetReactState(REACT_PASSIVE);
+            me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_PACIFIED);
+            DoCast(me, SPELL_EYEBEAM_IMMUNITY);
+            DoCast(me, SPELL_FOCUSED_EYEBEAM);
+            checkTimer = 1500;
+        }
+
+        uint32 checkTimer;
+
+        void UpdateAI(const uint32 diff)
+        {
+            if(checkTimer <= diff)
+            {
+                if (me->getVictim() && me->getVictim()->isAlive())
+                    me->GetMotionMaster()->MovePoint(0, me->getVictim()->GetPositionX(), me->getVictim()->GetPositionY(), me->getVictim()->GetPositionZ());
+
+                checkTimer = 500;
+            }
+            else checkTimer -= diff;
+        }
+    };
+
+};
+
+
+// Right Armclass mob_right_arm : public CreatureScript
+{
+public:
+    mob_right_arm() : CreatureScript("mob_right_arm") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new mob_right_armAI(pCreature);
     }
+
+    struct mob_right_armAI : public ScriptedAI
+    {
+        mob_right_armAI(Creature* pCreature) : ScriptedAI(pCreature)
+        {
+            m_pInstance = me->GetInstanceData();
+            me->ApplySpellImmune(0, IMMUNITY_ID, 64708, true);
+        }
+
+        ScriptedInstance* m_pInstance;
     
-    void JustDied(Unit *victim)
-    {
-        for (uint8 i = 0; i < 5; ++i)
-            me->SummonCreature(NPC_RUBBLE, RubbleLeft, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 3000);
+        bool Gripped;
+        uint32 ArmDamage;
+        int32 SqueezeTimer;
+
+        void Reset()
+        {
+            Gripped = false;
+            ArmDamage = 0;
+            SqueezeTimer = 0;
+        }
+    
+        void UpdateAI(const uint32 diff)
+        {
+            if (!UpdateVictim())
+                return;
+
+            if (Gripped)
+            {
+                if (SqueezeTimer <= diff)
+                {
+                    if (me->GetVehicleKit()->GetPassenger(0) && me->GetVehicleKit()->GetPassenger(0)->isAlive())
+                        me->Kill(me->GetVehicleKit()->GetPassenger(0), true);
+                    Gripped = false;
+                }
+                else SqueezeTimer -= diff;
+            }
+        }
+    
+        void KilledUnit(Unit* Victim)
+        {
+            if (Victim)
+            {
+                Victim->ExitVehicle();
+                Victim->GetMotionMaster()->MoveJump(1767.80, -18.38, 448.808, 10, 10);
+            }
+        }
+    
+        void JustDied(Unit *victim)
+        {
+            for (uint8 i = 0; i < 5; ++i)
+                me->SummonCreature(NPC_RUBBLE, RubbleRight, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 3000);
             
-        if (m_pInstance)
-            if (Creature* pKologarn = me->GetCreature(*me, m_pInstance->GetData64(DATA_KOLOGARN)))
-                if (pKologarn->AI())
-                    pKologarn->AI()->DoAction(ACTION_RESPAWN_LEFT);
+            if (m_pInstance)
+                if (Creature* pKologarn = me->GetCreature(*me, m_pInstance->GetData64(DATA_KOLOGARN)))
+                    if (pKologarn->AI())
+                        pKologarn->AI()->DoAction(ACTION_RESPAWN_RIGHT);
                     
-        // Hack to disable corpse fall
-        me->GetMotionMaster()->MoveTargetedHome();
-    }
+            // Hack to disable corpse fall
+            me->GetMotionMaster()->MoveTargetedHome();
+        }
     
-    void JustSummoned(Creature *summon)
-    {
-        summon->AI()->DoAction(0);
-        summon->AI()->DoZoneInCombat();
-    }
+        void JustSummoned(Creature *summon)
+        {
+            summon->AI()->DoAction(0);
+            summon->AI()->DoZoneInCombat();
+        }
+    
+        void DoAction(const int32 action)
+        {
+            switch (action)
+            {
+                case ACTION_GRIP:
+                    if (Unit* GripTarget = Unit::GetUnit(*me, GripTargetGUID))
+                    {
+                        if (GripTarget && GripTarget->isAlive())
+                        {
+                            GripTarget->EnterVehicle(me, 0);
+                            me->AddAura(SPELL_STONE_GRIP, GripTarget);
+                            me->AddAura(SPELL_STONE_GRIP_STUN, GripTarget);
+                            ArmDamage = 0;
+                            SqueezeTimer = 16000;
+                            GripTargetGUID = NULL;
+                            Gripped = true;
+                        }
+                    }
+                    break;
+            }
+        }
+    
+        void DamageTaken(Unit* pKiller, uint32 &damage)
+        {
+            if (Gripped)
+            {
+                ArmDamage += damage;
+                int dmg = RAID_MODE(100000, 480000);
+            
+                if (ArmDamage > dmg || damage >= me->GetHealth())
+                {
+                    Unit* pGripTarget = me->GetVehicleKit()->GetPassenger(0);
+                    if (pGripTarget && pGripTarget->isAlive())
+                    {
+                        pGripTarget->RemoveAurasDueToSpell(SPELL_STONE_GRIP);
+                        pGripTarget->RemoveAurasDueToSpell(SPELL_STONE_GRIP_STUN);
+                        pGripTarget->ExitVehicle();
+                        pGripTarget->GetMotionMaster()->MoveJump(1767.80, -18.38, 448.808, 10, 10);
+                    }
+                    pGripTarget = 0;
+                    Gripped = false;
+                }
+            }
+        }
+    };
+
 };
 
-CreatureAI* GetAI_mob_left_arm(Creature* pCreature)
+
+// Left Armclass mob_left_arm : public CreatureScript
 {
-    return new mob_left_armAI(pCreature);
-}
+public:
+    mob_left_arm() : CreatureScript("mob_left_arm") { }
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new mob_left_armAI(pCreature);
+    }
+
+    struct mob_left_armAI : public ScriptedAI
+    {
+        mob_left_armAI(Creature* pCreature) : ScriptedAI(pCreature)
+        {
+            m_pInstance = me->GetInstanceData();
+        }
+
+        ScriptedInstance* m_pInstance;
+
+        void UpdateAI(const uint32 diff)
+        {
+            if (!UpdateVictim())
+                return;
+        }
+    
+        void JustDied(Unit *victim)
+        {
+            for (uint8 i = 0; i < 5; ++i)
+                me->SummonCreature(NPC_RUBBLE, RubbleLeft, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 3000);
+            
+            if (m_pInstance)
+                if (Creature* pKologarn = me->GetCreature(*me, m_pInstance->GetData64(DATA_KOLOGARN)))
+                    if (pKologarn->AI())
+                        pKologarn->AI()->DoAction(ACTION_RESPAWN_LEFT);
+                    
+            // Hack to disable corpse fall
+            me->GetMotionMaster()->MoveTargetedHome();
+        }
+    
+        void JustSummoned(Creature *summon)
+        {
+            summon->AI()->DoAction(0);
+            summon->AI()->DoZoneInCombat();
+        }
+    };
+
+};
+
 
 void AddSC_boss_kologarn()
 {
-    Script *newscript;
-    newscript = new Script;
-    newscript->Name = "boss_kologarn";
-    newscript->GetAI = &GetAI_boss_kologarn;
-    newscript->RegisterSelf();
-    
-    newscript = new Script;
-    newscript->Name = "mob_focused_eyebeam";
-    newscript->GetAI = &GetAI_mob_focused_eyebeam;
-    newscript->RegisterSelf();
-    
-    newscript = new Script;
-    newscript->Name = "mob_right_arm";
-    newscript->GetAI = &GetAI_mob_right_arm;
-    newscript->RegisterSelf();
-    
-    newscript = new Script;
-    newscript->Name = "mob_left_arm";
-    newscript->GetAI = &GetAI_mob_left_arm;
-    newscript->RegisterSelf();
-    
+    new boss_kologarn();
+    new mob_focused_eyebeam();
+    new mob_right_arm();
+    new mob_left_arm();
 }

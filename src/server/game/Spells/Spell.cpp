@@ -44,7 +44,7 @@
 #include "SharedDefines.h"
 #include "LootMgr.h"
 #include "VMapFactory.h"
-#include "BattleGround.h"
+#include "Battleground.h"
 #include "Util.h"
 #include "TemporarySummon.h"
 #include "Vehicle.h"
@@ -53,8 +53,6 @@
 #include "ConditionMgr.h"
 #include "DisableMgr.h"
 #include "SpellScript.h"
-#include "OutdoorPvPWG.h"
-#include "OutdoorPvPMgr.h"
 
 #define SPELL_CHANNEL_UPDATE_INTERVAL (1 * IN_MILLISECONDS)
 
@@ -81,8 +79,12 @@ SpellCastTargets::SpellCastTargets() : m_elevation(0), m_speed(0)
     m_itemTargetGUID   = 0;
     m_itemTargetEntry  = 0;
 
-    m_srcPos.Relocate(0,0,0,0);
-    m_dstPos.Relocate(0,0,0,0);
+    m_srcTransGUID = 0;
+    m_srcTransOffset.Relocate(0, 0, 0, 0);
+    m_srcPos.Relocate(0, 0, 0, 0);
+    m_dstTransGUID = 0;
+    m_dstTransOffset.Relocate(0, 0, 0, 0);
+    m_dstPos.Relocate(0, 0, 0, 0);
     m_strTarget = "";
     m_targetMask = 0;
 }
@@ -104,33 +106,75 @@ void SpellCastTargets::setUnitTarget(Unit *target)
 void SpellCastTargets::setSrc(float x, float y, float z)
 {
     m_srcPos.Relocate(x, y, z);
+    m_srcTransGUID = 0;
     m_targetMask |= TARGET_FLAG_SOURCE_LOCATION;
 }
 
-void SpellCastTargets::setSrc(Position *pos)
+void SpellCastTargets::setSrc(Position &pos)
 {
-    if (pos)
+    m_srcPos.Relocate(pos);
+    m_srcTransGUID = 0;
+    m_targetMask |= TARGET_FLAG_SOURCE_LOCATION;
+}
+
+void SpellCastTargets::setSrc(WorldObject &wObj)
+{
+    uint64 guid = wObj.GetTransGUID();
+    m_srcTransGUID = guid;
+    m_srcTransOffset.Relocate(wObj.GetTransOffsetX(), wObj.GetTransOffsetY(), wObj.GetTransOffsetZ(), wObj.GetTransOffsetO());
+    m_srcPos.Relocate(wObj);
+    m_targetMask |= TARGET_FLAG_SOURCE_LOCATION;
+}
+
+void SpellCastTargets::modSrc(Position &pos)
+{
+    ASSERT(m_targetMask & TARGET_FLAG_SOURCE_LOCATION);
+
+    if (m_srcTransGUID)
     {
-        m_srcPos.Relocate(pos);
-        m_targetMask |= TARGET_FLAG_SOURCE_LOCATION;
+        Position offset;
+        m_srcPos.GetPositionOffsetTo(pos, offset);
+        m_srcTransOffset.RelocateOffset(offset);
     }
+    m_srcPos.Relocate(pos);
 }
 
 void SpellCastTargets::setDst(float x, float y, float z, float orientation, uint32 mapId)
 {
     m_dstPos.Relocate(x, y, z, orientation);
+    m_dstTransGUID = 0;
     m_targetMask |= TARGET_FLAG_DEST_LOCATION;
     if (mapId != MAPID_INVALID)
         m_dstPos.m_mapId = mapId;
 }
 
-void SpellCastTargets::setDst(Position *pos)
+void SpellCastTargets::setDst(Position &pos)
 {
-    if (pos)
+    m_dstPos.Relocate(pos);
+    m_dstTransGUID = 0;
+    m_targetMask |= TARGET_FLAG_DEST_LOCATION;
+}
+
+void SpellCastTargets::setDst(WorldObject &wObj)
+{
+    uint64 guid = wObj.GetTransGUID();
+    m_dstTransGUID = guid;
+    m_dstTransOffset.Relocate(wObj.GetTransOffsetX(), wObj.GetTransOffsetY(), wObj.GetTransOffsetZ(), wObj.GetTransOffsetO());
+    m_dstPos.Relocate(wObj);
+    m_targetMask |= TARGET_FLAG_DEST_LOCATION;
+}
+
+void SpellCastTargets::modDst(Position &pos)
+{
+    ASSERT(m_targetMask & TARGET_FLAG_DEST_LOCATION);
+
+    if (m_dstTransGUID)
     {
-        m_dstPos.Relocate(pos);
-        m_targetMask |= TARGET_FLAG_DEST_LOCATION;
+        Position offset;
+        m_dstPos.GetPositionOffsetTo(pos, offset);
+        m_dstTransOffset.RelocateOffset(offset);
     }
+    m_dstPos.Relocate(pos);
 }
 
 void SpellCastTargets::setGOTarget(GameObject *target)
@@ -186,160 +230,194 @@ void SpellCastTargets::Update(Unit* caster)
         if (m_itemTarget)
             m_itemTargetEntry = m_itemTarget->GetEntry();
     }
+    // update positions by transport move
+    if (HasSrc() && m_srcTransGUID)
+    {
+        if (WorldObject * transport = ObjectAccessor::GetWorldObject(*caster, m_srcTransGUID))
+        {
+            m_srcPos.Relocate(transport);
+            m_srcPos.RelocateOffset(m_srcTransOffset);
+        }
+    }
+    if (HasDst() && m_dstTransGUID)
+    {
+        if (WorldObject * transport = ObjectAccessor::GetWorldObject(*caster, m_dstTransGUID))
+        {
+            m_dstPos.Relocate(transport);
+            m_dstPos.RelocateOffset(m_dstTransOffset);
+        }
+    }
 }
 
-bool SpellCastTargets::read (WorldPacket * data, Unit *caster)
+void SpellCastTargets::OutDebug()
 {
-    if (data->rpos() + 4 > data->size())
-        return false;
+    if (!m_targetMask)
+        sLog.outString("TARGET_FLAG_SELF");
 
-    uint8 clientCastFlags;
-    *data >> clientCastFlags;
-    *data >> m_targetMask;
-    //sLog.outDebug("Spell read, target mask = %u", m_targetMask);
+    if (m_targetMask & TARGET_FLAG_UNIT)
+    {
+        sLog.outString("TARGET_FLAG_UNIT: " UI64FMTD, m_unitTargetGUID);
+    }
+    if (m_targetMask & TARGET_FLAG_UNK17)
+    {
+        sLog.outString("TARGET_FLAG_UNK17: " UI64FMTD, m_unitTargetGUID);
+    }
+    if (m_targetMask & TARGET_FLAG_OBJECT)
+    {
+        sLog.outString("TARGET_FLAG_OBJECT: " UI64FMTD, m_GOTargetGUID);
+    }
+    if (m_targetMask & TARGET_FLAG_CORPSE)
+    {
+        sLog.outString("TARGET_FLAG_CORPSE: " UI64FMTD, m_CorpseTargetGUID);
+    }
+    if (m_targetMask & TARGET_FLAG_PVP_CORPSE)
+    {
+        sLog.outString("TARGET_FLAG_PVP_CORPSE: " UI64FMTD, m_CorpseTargetGUID);
+    }
+    if (m_targetMask & TARGET_FLAG_ITEM)
+    {
+        sLog.outString("TARGET_FLAG_ITEM: " UI64FMTD, m_itemTargetGUID);
+    }
+    if (m_targetMask & TARGET_FLAG_TRADE_ITEM)
+    {
+        sLog.outString("TARGET_FLAG_TRADE_ITEM: " UI64FMTD, m_itemTargetGUID);
+    }
+    if (m_targetMask & TARGET_FLAG_SOURCE_LOCATION)
+    {
+        sLog.outString("TARGET_FLAG_SOURCE_LOCATION: transport guid:" UI64FMTD " trans offset: %s position: %s", m_srcTransGUID, m_srcTransOffset.ToString().c_str(), m_srcPos.ToString().c_str());
+    }
+    if (m_targetMask & TARGET_FLAG_DEST_LOCATION)
+    {
+        sLog.outString("TARGET_FLAG_DEST_LOCATION: transport guid:" UI64FMTD " trans offset: %s position: %s", m_dstTransGUID, m_dstTransOffset.ToString().c_str(), m_dstPos.ToString().c_str());
+    }
+    if (m_targetMask & TARGET_FLAG_STRING)
+    {
+        sLog.outString("TARGET_FLAG_STRING: %s", m_strTarget.c_str());
+    }
+    sLog.outString("speed: %f", m_speed);
+    sLog.outString("elevation: %f", m_elevation);
+}
+
+void SpellCastTargets::read (ByteBuffer & data, Unit * caster)
+{
+    data >> m_targetMask;
 
     if (m_targetMask == TARGET_FLAG_SELF)
-        return true;
+        return;
 
     if (m_targetMask & (TARGET_FLAG_UNIT | TARGET_FLAG_UNK17))
-    {
-        if (!data->readPackGUID(m_unitTargetGUID))
-            return false;
-    }
+        data.readPackGUID(m_unitTargetGUID);
 
-    if(m_targetMask & (TARGET_FLAG_OBJECT))
-    {
-        if (!data->readPackGUID(m_GOTargetGUID))
-            return false;
-    }
+    if (m_targetMask & (TARGET_FLAG_OBJECT))
+        data.readPackGUID(m_GOTargetGUID);
 
     if(m_targetMask & (TARGET_FLAG_ITEM | TARGET_FLAG_TRADE_ITEM))
-    {
-        if (caster->GetTypeId() != TYPEID_PLAYER)
-            return false;
-        if (!data->readPackGUID(m_itemTargetGUID))
-            return false;
-    }
+        data.readPackGUID(m_itemTargetGUID);
 
     if(m_targetMask & (TARGET_FLAG_CORPSE | TARGET_FLAG_PVP_CORPSE))
-    {
-        if (!data->readPackGUID(m_CorpseTargetGUID))
-            return false;
-    }
+        data.readPackGUID(m_CorpseTargetGUID);
 
     if (m_targetMask & TARGET_FLAG_SOURCE_LOCATION)
     {
-        uint64 relativePositionObjGUID;
-        if (!data->readPackGUID(relativePositionObjGUID))
-            return false;
-        *data >> m_srcPos.PositionXYZStream();
-        if (!m_srcPos.IsPositionValid())
-            return false;
+        data.readPackGUID(m_srcTransGUID);
+        if (m_srcTransGUID)
+            data >> m_srcTransOffset.PositionXYZStream();
+        else
+            data >> m_srcPos.PositionXYZStream();
     }
     else
-        m_srcPos.Relocate(caster);
+    {
+        m_srcTransGUID = caster->GetTransGUID();
+        if (m_srcTransGUID)
+            m_srcTransOffset.Relocate(caster->GetTransOffsetX(), caster->GetTransOffsetY(), caster->GetTransOffsetZ(), caster->GetTransOffsetO());
+        else
+            m_srcPos.Relocate(caster);
+    }
 
     if (m_targetMask & TARGET_FLAG_DEST_LOCATION)
     {
-        uint64 relativePositionObjGUID;
-        if (!data->readPackGUID(relativePositionObjGUID))
-            return false;
-        *data >> m_dstPos.PositionXYZStream();
-        if (!m_dstPos.IsPositionValid())
-            return false;
+        data.readPackGUID(m_dstTransGUID);
+        if (m_dstTransGUID)
+            data >> m_dstTransOffset.PositionXYZStream();
+        else
+            data >> m_dstPos.PositionXYZStream();
     }
     else
-        m_dstPos.Relocate(caster);
+    {
+        m_dstTransGUID = caster->GetTransGUID();
+        if (m_dstTransGUID)
+            m_dstTransOffset.Relocate(caster->GetTransOffsetX(), caster->GetTransOffsetY(), caster->GetTransOffsetZ(), caster->GetTransOffsetO());
+        else
+            m_dstPos.Relocate(caster);
+    }
 
     if(m_targetMask & TARGET_FLAG_STRING)
-    {
-        if (data->rpos() + 1 > data->size())
-            return false;
-        *data >> m_strTarget;
-    }
+        data >> m_strTarget;
 
-    // some spell cast packet including more data (for projectiles?)
-    if (clientCastFlags & 0x02)
-    {
-        // not sure about these two
-        *data >> m_elevation;
-        *data >> m_speed;
-        uint8 hasMovementInfo;
-        *data >> hasMovementInfo; // bool
-        if (hasMovementInfo)
-        {
-            data->read_skip<uint32>(); // MSG_MOVE_STOP - hardcoded in client
-            uint64 guid = 0;               // guid - unused
-            if (!data->readPackGUID(guid))
-                return false;
-
-            data->rpos(data->wpos()); // prevent spam at ignore packet
-            //MovementInfo movementInfo;
-            //ReadMovementInfo(*data, &movementInfo);
-        }
-    }
-
-    // find real units/GOs
     Update(caster);
-    return true;
 }
 
-void SpellCastTargets::write (WorldPacket * data)
+void SpellCastTargets::write (ByteBuffer & data)
 {
-    *data << uint32(m_targetMask);
-    //sLog.outDebug("Spell write, target mask = %u", m_targetMask);
+    data << uint32(m_targetMask);
 
     if (m_targetMask & (TARGET_FLAG_UNIT | TARGET_FLAG_PVP_CORPSE | TARGET_FLAG_OBJECT | TARGET_FLAG_CORPSE | TARGET_FLAG_UNK17))
     {
         if (m_targetMask & TARGET_FLAG_UNIT)
         {
             if (m_unitTarget)
-                data->append(m_unitTarget->GetPackGUID());
+                data.append(m_unitTarget->GetPackGUID());
             else
-                *data << uint8(0);
+                data << uint8(0);
         }
         else if (m_targetMask & TARGET_FLAG_OBJECT)
         {
             if(m_GOTarget)
-                data->append(m_GOTarget->GetPackGUID());
+                data.append(m_GOTarget->GetPackGUID());
             else
-                *data << uint8(0);
+                data << uint8(0);
         }
         else if (m_targetMask & ( TARGET_FLAG_CORPSE | TARGET_FLAG_PVP_CORPSE))
-            data->appendPackGUID(m_CorpseTargetGUID);
+            data.appendPackGUID(m_CorpseTargetGUID);
         else
-            *data << uint8(0);
+            data << uint8(0);
     }
 
     if (m_targetMask & ( TARGET_FLAG_ITEM | TARGET_FLAG_TRADE_ITEM))
     {
         if(m_itemTarget)
-            data->append(m_itemTarget->GetPackGUID());
+            data.append(m_itemTarget->GetPackGUID());
         else
-            *data << uint8(0);
+            data << uint8(0);
     }
 
     if (m_targetMask & TARGET_FLAG_SOURCE_LOCATION)
     {
-        *data << uint8(0); // relative position guid here - transport for example
-        *data << m_srcPos.PositionXYZStream();
+        data.appendPackGUID(m_srcTransGUID); // relative position guid here - transport for example
+        if (m_srcTransGUID)
+            data << m_srcTransOffset.PositionXYZStream();
+        else
+            data << m_srcPos.PositionXYZStream();
     }
 
     if (m_targetMask & TARGET_FLAG_DEST_LOCATION)
     {
-        *data << uint8(0); // relative position guid here - transport for example
-        *data << m_dstPos.PositionXYZStream();
+        data.appendPackGUID(m_dstTransGUID); // relative position guid here - transport for example
+        if (m_dstTransGUID)
+            data << m_dstTransOffset.PositionXYZStream();
+        else
+            data << m_dstPos.PositionXYZStream();
     }
 
     if (m_targetMask & TARGET_FLAG_STRING)
-        *data << m_strTarget;
+        data << m_strTarget;
 }
 
 Spell::Spell(Unit* Caster, SpellEntry const *info, bool triggered, uint64 originalCasterGUID, Spell** triggeringContainer, bool skipCheck)
-: m_spellInfo(spellmgr.GetSpellForDifficultyFromSpell(info, Caster)), m_spellValue(new SpellValue(m_spellInfo))
+: m_spellInfo(sSpellMgr.GetSpellForDifficultyFromSpell(info, Caster)), m_spellValue(new SpellValue(m_spellInfo))
 , m_caster(Caster)
 {
-    m_customAttr = spellmgr.GetSpellCustomAttr(m_spellInfo->Id);
+    m_customAttr = sSpellMgr.GetSpellCustomAttr(m_spellInfo->Id);
     m_skipCheck = skipCheck;
     m_selfContainer = NULL;
     m_triggeringContainer = triggeringContainer;
@@ -621,7 +699,7 @@ void Spell::SelectSpellTargets()
                 case SPELL_EFFECT_SUMMON_PLAYER:
                     if (m_caster->GetTypeId() == TYPEID_PLAYER && m_caster->ToPlayer()->GetSelection())
                     {
-                        Player* target = objmgr.GetPlayer(m_caster->ToPlayer()->GetSelection());
+                        Player* target = sObjectMgr.GetPlayer(m_caster->ToPlayer()->GetSelection());
                         if (target)
                             AddUnitTarget(target, i);
                     }
@@ -821,7 +899,7 @@ void Spell::prepareDataForTriggerSystem(AuraEffect const * /*triggeredByAura*/)
             }
             break;
         }
-        case SPELLFAMILY_WARLOCK: 
+        case SPELLFAMILY_WARLOCK:
         {
             // For Hellfire Effect / Rain of Fire - trigger as DOT
             if (m_spellInfo->SpellFamilyFlags[0] & 0x60)
@@ -901,7 +979,7 @@ void Spell::AddUnitTarget(Unit* pVictim, uint32 effIndex)
             ihit->scaleAura = false;
             if (m_auraScaleMask && ihit->effectMask == m_auraScaleMask && m_caster != pVictim)
             {
-                SpellEntry const * auraSpell = sSpellStore.LookupEntry(spellmgr.GetFirstSpellInChain(m_spellInfo->Id));
+                SpellEntry const * auraSpell = sSpellStore.LookupEntry(sSpellMgr.GetFirstSpellInChain(m_spellInfo->Id));
                 if ((pVictim->getLevel() + 10) >= auraSpell->spellLevel)
                     ihit->scaleAura = true;
             }
@@ -922,7 +1000,7 @@ void Spell::AddUnitTarget(Unit* pVictim, uint32 effIndex)
     target.scaleAura  = false;
     if (m_auraScaleMask && target.effectMask == m_auraScaleMask && m_caster != pVictim)
     {
-        SpellEntry const * auraSpell = sSpellStore.LookupEntry(spellmgr.GetFirstSpellInChain(m_spellInfo->Id));
+        SpellEntry const * auraSpell = sSpellStore.LookupEntry(sSpellMgr.GetFirstSpellInChain(m_spellInfo->Id));
         if ((pVictim->getLevel() + 10) >= auraSpell->spellLevel)
             target.scaleAura = true;
     }
@@ -1408,7 +1486,7 @@ SpellMissInfo Spell::DoSpellHitOnUnit(Unit *unit, const uint32 effectMask, bool 
         int32 basePoints[3];
         if (scaleAura)
         {
-            aurSpellInfo = spellmgr.SelectAuraRankForPlayerLevel(m_spellInfo,unitTarget->getLevel());
+            aurSpellInfo = sSpellMgr.SelectAuraRankForPlayerLevel(m_spellInfo,unitTarget->getLevel());
             ASSERT (aurSpellInfo);
             for (uint8 i = 0; i < MAX_SPELL_EFFECTS; ++i)
             {
@@ -1530,7 +1608,7 @@ void Spell::DoTriggersOnSpellHit(Unit *unit)
 
     if (m_customAttr & SPELL_ATTR_CU_LINK_HIT)
     {
-        if (const std::vector<int32> *spell_triggered = spellmgr.GetSpellLinked(m_spellInfo->Id + SPELL_LINK_HIT))
+        if (const std::vector<int32> *spell_triggered = sSpellMgr.GetSpellLinked(m_spellInfo->Id + SPELL_LINK_HIT))
             for (std::vector<int32>::const_iterator i = spell_triggered->begin(); i != spell_triggered->end(); ++i)
                 if (*i < 0)
                     unit->RemoveAurasDueToSpell(-(*i));
@@ -1742,7 +1820,7 @@ void Spell::SearchAreaTarget(std::list<Unit*> &TagUnitMap, float radius, SpellNo
 {
     if (TargetType == SPELL_TARGETS_GO)
         return;
-    
+
     Position *pos;
     switch(type)
     {
@@ -1921,7 +1999,6 @@ void Spell::SelectEffectTargets(uint32 i, uint32 cur)
                     break;
                 case TARGET_UNIT_CASTER_FISHING:
                 {
-                    //AddUnitTarget(m_caster, i);
                     float min_dis = GetSpellMinRange(m_spellInfo, true);
                     float max_dis = GetSpellMaxRange(m_spellInfo, true);
                     float dis = rand_norm() * (max_dis - min_dis) + min_dis;
@@ -2067,12 +2144,12 @@ void Spell::SelectEffectTargets(uint32 i, uint32 cur)
         {
             if (cur == TARGET_SRC_CASTER)
             {
-                m_targets.setSrc(m_caster);
+                m_targets.setSrc(*m_caster);
                 break;
             }
             else if (cur == TARGET_DST_CASTER)
             {
-                m_targets.setDst(m_caster);
+                m_targets.setDst(*m_caster);
                 break;
             }
 
@@ -2106,7 +2183,8 @@ void Spell::SelectEffectTargets(uint32 i, uint32 cur)
                 m_caster->GetFirstCollisionPosition(pos, dist, angle);
             else
                 m_caster->GetNearPosition(pos, dist, angle);
-            m_targets.setDst(&pos); // also flag
+            m_targets.setDst(*m_caster);
+            m_targets.modDst(pos);
             break;
         }
 
@@ -2121,7 +2199,7 @@ void Spell::SelectEffectTargets(uint32 i, uint32 cur)
 
             if (cur == TARGET_DST_TARGET_ENEMY || cur == TARGET_DEST_TARGET_ANY)
             {
-                m_targets.setDst(target);
+                m_targets.setDst(*target);
                 break;
             }
 
@@ -2149,7 +2227,8 @@ void Spell::SelectEffectTargets(uint32 i, uint32 cur)
 
             Position pos;
             target->GetNearPosition(pos, dist, angle);
-            m_targets.setDst(&pos);
+            m_targets.setDst(*target);
+            m_targets.modDst(pos);
             break;
         }
 
@@ -2189,7 +2268,9 @@ void Spell::SelectEffectTargets(uint32 i, uint32 cur)
                 dist *= rand_norm();
 
             // must has dst, no need to set flag
-            m_caster->MovePosition(m_targets.m_dstPos, dist, angle);
+            Position pos = m_targets.m_dstPos;
+            m_caster->MovePosition(pos, dist, angle);
+            m_targets.modDst(pos);
             break;
         }
 
@@ -2198,7 +2279,7 @@ void Spell::SelectEffectTargets(uint32 i, uint32 cur)
             switch(cur)
             {
                 case TARGET_DST_DB:
-                    if (SpellTargetPosition const* st = spellmgr.GetSpellTargetPosition(m_spellInfo->Id))
+                    if (SpellTargetPosition const* st = sSpellMgr.GetSpellTargetPosition(m_spellInfo->Id))
                     {
                         //TODO: fix this check
                         if (m_spellInfo->Effect[0] == SPELL_EFFECT_TELEPORT_UNITS
@@ -2214,7 +2295,7 @@ void Spell::SelectEffectTargets(uint32 i, uint32 cur)
                         Unit *target = NULL;
                         if (uint64 guid = m_caster->GetUInt64Value(UNIT_FIELD_TARGET))
                             target = ObjectAccessor::GetUnit(*m_caster, guid);
-                        m_targets.setDst(target ? target : m_caster);
+                        m_targets.setDst(target ? *target : *m_caster);
                     }
                     break;
                 case TARGET_DST_HOME:
@@ -2227,7 +2308,7 @@ void Spell::SelectEffectTargets(uint32 i, uint32 cur)
                     if (modOwner) modOwner->ApplySpellMod(m_spellInfo->Id, SPELLMOD_RANGE, range, this);
 
                     if (WorldObject *target = SearchNearbyTarget(range, SPELL_TARGETS_ENTRY))
-                        m_targets.setDst(target);
+                        m_targets.setDst(*target);
                     break;
                 }
             }
@@ -2255,7 +2336,7 @@ void Spell::SelectEffectTargets(uint32 i, uint32 cur)
                     if (m_originalCaster->GetCurrentSpell(CURRENT_CHANNELED_SPELL)->m_targets.HasDst())
                         m_targets = m_originalCaster->GetCurrentSpell(CURRENT_CHANNELED_SPELL)->m_targets;
                     else if (Unit* target = Unit::GetUnit(*m_caster, m_originalCaster->GetCurrentSpell(CURRENT_CHANNELED_SPELL)->m_targets.getUnitTargetGUID()))
-                        m_targets.setDst(target);
+                        m_targets.setDst(*target);
                     else
                         sLog.outError("SPELL: cannot find channel spell destination for spell ID %u", m_spellInfo->Id);
                     break;
@@ -2420,7 +2501,7 @@ void Spell::SelectEffectTargets(uint32 i, uint32 cur)
                                 switch(result->GetTypeId())
                                 {
                                     case TYPEID_UNIT:
-                                        m_targets.setDst(result);
+                                        m_targets.setDst(*result);
                                 }
                             }
                             break;
@@ -2660,7 +2741,7 @@ void Spell::SelectEffectTargets(uint32 i, uint32 cur)
                     }
                 }
             }
-            
+
             // Other special target selection goes here
             if (uint32 maxTargets = m_spellValue->MaxAffectedTargets)
             {
@@ -2776,7 +2857,7 @@ void Spell::prepare(SpellCastTargets const* targets, AuraEffect const * triggere
         }
     }
     if (!m_targets.HasSrc() && m_spellInfo->Targets & TARGET_FLAG_SOURCE_LOCATION)
-        m_targets.setSrc(m_caster);
+        m_targets.setSrc(*m_caster);
 
     if (!m_targets.HasDst() && m_spellInfo->Targets & TARGET_FLAG_DEST_LOCATION)
     {
@@ -2790,7 +2871,7 @@ void Spell::prepare(SpellCastTargets const* targets, AuraEffect const * triggere
         }
 
         if (target)
-            m_targets.setDst(target);
+            m_targets.setDst(*target);
         else
         {
             SendCastResult(SPELL_FAILED_BAD_TARGETS);
@@ -3200,7 +3281,7 @@ void Spell::cast(bool skipCheck)
 
     if (m_customAttr & SPELL_ATTR_CU_LINK_CAST)
     {
-        if (const std::vector<int32> *spell_triggered = spellmgr.GetSpellLinked(m_spellInfo->Id))
+        if (const std::vector<int32> *spell_triggered = sSpellMgr.GetSpellLinked(m_spellInfo->Id))
             for (std::vector<int32>::const_iterator i = spell_triggered->begin(); i != spell_triggered->end(); ++i)
                 if (*i < 0)
                     m_caster->RemoveAurasDueToSpell(-(*i));
@@ -3360,7 +3441,7 @@ void Spell::_handle_immediate_phase()
         if (EffectTargetType[m_spellInfo->Effect[j]] == SPELL_REQUIRE_DEST)
         {
             if (!m_targets.HasDst()) // FIXME: this will ignore dest set in effect
-                m_targets.setDst(m_caster);
+                m_targets.setDst(*m_caster);
             HandleEffects(m_originalCaster, NULL, NULL, j);
             m_effectMask |= (1<<j);
         }
@@ -3716,7 +3797,7 @@ void Spell::SendCastResult(Player* caster, SpellEntry const* spellInfo, uint8 ca
              for (int8 x=0;x < 3;x++)
                  if (spellInfo->EffectItemType[x])
                      item = spellInfo->EffectItemType[x];
-             ItemPrototype const *pProto = objmgr.GetItemPrototype(item);
+             ItemPrototype const *pProto = sObjectMgr.GetItemPrototype(item);
              if (pProto && pProto->ItemLimitCategory)
                  data << uint32(pProto->ItemLimitCategory);
              break;
@@ -3757,7 +3838,7 @@ void Spell::SendSpellStart()
     data << uint32(castFlags);                              // cast flags
     data << uint32(m_timer);                                // delay?
 
-    m_targets.write(&data);
+    m_targets.write(data);
 
     if (castFlags & CAST_FLAG_POWER_LEFT_SELF)
         data << uint32(m_caster->GetPower((Powers)m_spellInfo->powerType));
@@ -3835,7 +3916,7 @@ void Spell::SendSpellGo()
 
     WriteSpellGoTargets(&data);
 
-    m_targets.write(&data);
+    m_targets.write(data);
 
     if (castFlags & CAST_FLAG_POWER_LEFT_SELF)
         data << uint32(m_caster->GetPower((Powers)m_spellInfo->powerType));
@@ -3896,7 +3977,7 @@ void Spell::WriteAmmoToPacket(WorldPacket * data)
                 uint32 ammoID = m_caster->ToPlayer()->GetUInt32Value(PLAYER_AMMO_ID);
                 if (ammoID)
                 {
-                    ItemPrototype const *pProto = objmgr.GetItemPrototype(ammoID);
+                    ItemPrototype const *pProto = sObjectMgr.GetItemPrototype(ammoID);
                     if (pProto)
                     {
                         ammoDisplayID = pProto->DisplayInfoID;
@@ -4543,21 +4624,18 @@ void Spell::HandleThreatSpells(uint32 spellId)
     if (!m_targets.getUnitTarget()->CanHaveThreatList())
         return;
 
-    uint16 threat = spellmgr.GetSpellThreat(spellId);
+    uint16 threat = sSpellMgr.GetSpellThreat(spellId);
 
     if (!threat)
         return;
 
     m_targets.getUnitTarget()->AddThreat(m_caster, float(threat));
 
-    DEBUG_LOG("Spell %u, rank %u, added an additional %i threat", spellId, spellmgr.GetSpellRank(spellId), threat);
+    DEBUG_LOG("Spell %u, rank %u, added an additional %i threat", spellId, sSpellMgr.GetSpellRank(spellId), threat);
 }
 
 void Spell::HandleEffects(Unit *pUnitTarget,Item *pItemTarget,GameObject *pGOTarget,uint32 i)
 {
-    if (!sScriptMgr.OnSpellCast(pUnitTarget,pItemTarget,pGOTarget,i,m_spellInfo))
-        return;
-
     //effect has been handled, skip it
     if (m_effectMask & (1<<i))
         return;
@@ -4600,7 +4678,6 @@ void Spell::TriggerSpell()
 
 SpellCastResult Spell::CheckCast(bool strict)
 {
-	OutdoorPvPWG *pvpWG = (OutdoorPvPWG*)sOutdoorPvPMgr.GetOutdoorPvPToZoneId(4197);
     // check cooldowns to prevent cheating
     if (m_caster->GetTypeId() == TYPEID_PLAYER && !(m_spellInfo->Attributes & SPELL_ATTR_PASSIVE))
     {
@@ -4620,7 +4697,7 @@ SpellCastResult Spell::CheckCast(bool strict)
 
     // only allow triggered spells if at an ended battleground
     if (!m_IsTriggeredSpell && m_caster->GetTypeId() == TYPEID_PLAYER)
-        if (BattleGround * bg = m_caster->ToPlayer()->GetBattleGround())
+        if (Battleground * bg = m_caster->ToPlayer()->GetBattleground())
             if (bg->GetStatus() == STATUS_WAIT_LEAVE)
                 return SPELL_FAILED_DONT_REPORT;
 
@@ -4699,7 +4776,7 @@ SpellCastResult Spell::CheckCast(bool strict)
     if (m_caster->GetTypeId() == TYPEID_PLAYER && m_caster->ToPlayer()->isMoving())
     {
         // skip stuck spell to allow use it in falling case and apply spell limitations at movement
-        if ((!m_caster->ToPlayer()->m_movementInfo.HasMovementFlag(MOVEMENTFLAG_FALLING) || m_spellInfo->Effect[0] != SPELL_EFFECT_STUCK) &&
+        if ((!m_caster->HasUnitMovementFlag(MOVEMENTFLAG_FALLING) || m_spellInfo->Effect[0] != SPELL_EFFECT_STUCK) &&
             (IsAutoRepeat() || (m_spellInfo->AuraInterruptFlags & AURA_INTERRUPT_FLAG_NOT_SEATED) != 0))
             return SPELL_FAILED_MOVING;
     }
@@ -4725,7 +4802,7 @@ SpellCastResult Spell::CheckCast(bool strict)
         if (!m_IsTriggeredSpell && target == m_caster && m_spellInfo->AttributesEx & SPELL_ATTR_EX_CANT_TARGET_SELF)
             return SPELL_FAILED_BAD_TARGETS;
 
-        bool non_caster_target = target != m_caster && !spellmgr.IsSpellWithCasterSourceTargetsOnly(m_spellInfo);
+        bool non_caster_target = target != m_caster && !sSpellMgr.IsSpellWithCasterSourceTargetsOnly(m_spellInfo);
 
         if (non_caster_target)
         {
@@ -4882,7 +4959,7 @@ SpellCastResult Spell::CheckCast(bool strict)
 
     // Spell casted only on battleground
     if ((m_spellInfo->AttributesEx3 & SPELL_ATTR_EX3_BATTLEGROUND) &&  m_caster->GetTypeId() == TYPEID_PLAYER)
-        if (!m_caster->ToPlayer()->InBattleGround())
+        if (!m_caster->ToPlayer()->InBattleground())
             return SPELL_FAILED_ONLY_BATTLEGROUNDS;
 
     // do not allow spells to be cast in arenas
@@ -4900,7 +4977,7 @@ SpellCastResult Spell::CheckCast(bool strict)
         uint32 zone, area;
         m_caster->GetZoneAndAreaId(zone,area);
 
-        SpellCastResult locRes= spellmgr.GetSpellAllowedInLocationError(m_spellInfo,m_caster->GetMapId(),zone,area,
+        SpellCastResult locRes= sSpellMgr.GetSpellAllowedInLocationError(m_spellInfo,m_caster->GetMapId(),zone,area,
             m_caster->GetTypeId() == TYPEID_PLAYER ? m_caster->ToPlayer() : NULL);
         if (locRes != SPELL_CAST_OK)
             return locRes;
@@ -4934,8 +5011,8 @@ SpellCastResult Spell::CheckCast(bool strict)
                 m_spellInfo->EffectImplicitTargetA[j] == TARGET_DST_NEARBY_ENTRY ||
                 m_spellInfo->EffectImplicitTargetB[j] == TARGET_DST_NEARBY_ENTRY)
             {
-                SpellScriptTarget::const_iterator lower = spellmgr.GetBeginSpellScriptTarget(m_spellInfo->Id);
-                SpellScriptTarget::const_iterator upper = spellmgr.GetEndSpellScriptTarget(m_spellInfo->Id);
+                SpellScriptTarget::const_iterator lower = sSpellMgr.GetBeginSpellScriptTarget(m_spellInfo->Id);
+                SpellScriptTarget::const_iterator upper = sSpellMgr.GetEndSpellScriptTarget(m_spellInfo->Id);
                 if (lower == upper)
                     sLog.outErrorDb("Spell (ID: %u) has effect EffectImplicitTargetA/EffectImplicitTargetB = TARGET_UNIT_NEARBY_ENTRY or TARGET_DST_NEARBY_ENTRY, but does not have record in `spell_script_target`",m_spellInfo->Id);
 
@@ -5279,10 +5356,10 @@ SpellCastResult Spell::CheckCast(bool strict)
                     (!pTempItem || !pTempItem->GetProto()->LockID || !pTempItem->IsLocked()))
                     return SPELL_FAILED_BAD_TARGETS;
 
-                if (m_spellInfo->Id != 1842 || m_targets.getGOTarget() && 
+                if (m_spellInfo->Id != 1842 || m_targets.getGOTarget() &&
                     m_targets.getGOTarget()->GetGOInfo()->type != GAMEOBJECT_TYPE_TRAP)
-                    if (m_caster->ToPlayer()->InBattleGround() && // In BattleGround players can use only flags and banners
-                        !m_caster->ToPlayer()->CanUseBattleGroundObject())
+                    if (m_caster->ToPlayer()->InBattleground() && // In Battleground players can use only flags and banners
+                        !m_caster->ToPlayer()->CanUseBattlegroundObject())
                         return SPELL_FAILED_TRY_AGAIN;
 
                 // get the lock entry
@@ -5383,7 +5460,7 @@ SpellCastResult Spell::CheckCast(bool strict)
                 if (!m_caster->ToPlayer()->GetSelection())
                     return SPELL_FAILED_BAD_TARGETS;
 
-                Player* target = objmgr.GetPlayer(m_caster->ToPlayer()->GetSelection());
+                Player* target = sObjectMgr.GetPlayer(m_caster->ToPlayer()->GetSelection());
                 if (!target || m_caster->ToPlayer() == target || !target->IsInSameRaidWith(m_caster->ToPlayer()))
                     return SPELL_FAILED_BAD_TARGETS;
 
@@ -5394,7 +5471,7 @@ SpellCastResult Spell::CheckCast(bool strict)
                     InstanceTemplate const* instance = ObjectMgr::GetInstanceTemplate(pMap->GetId());
                     if (!instance)
                         return SPELL_FAILED_TARGET_NOT_IN_INSTANCE;
-                    if (!target->Satisfy(objmgr.GetAccessRequirement(pMap->GetId(), pMap->GetDifficulty()), pMap->GetId()))
+                    if (!target->Satisfy(sObjectMgr.GetAccessRequirement(pMap->GetId(), pMap->GetDifficulty()), pMap->GetId()))
                         return SPELL_FAILED_BAD_TARGETS;
                 }
                 break;
@@ -5404,7 +5481,7 @@ SpellCastResult Spell::CheckCast(bool strict)
             {
               //Do not allow to cast it before BG starts.
                 if (m_caster->GetTypeId() == TYPEID_PLAYER)
-                    if (BattleGround const *bg = m_caster->ToPlayer()->GetBattleGround())
+                    if (Battleground const *bg = m_caster->ToPlayer()->GetBattleground())
                         if (bg->GetStatus() != STATUS_IN_PROGRESS)
                             return SPELL_FAILED_TRY_AGAIN;
                 break;
@@ -5549,12 +5626,9 @@ SpellCastResult Spell::CheckCast(bool strict)
                 if (m_caster->IsInWater())
                     return SPELL_FAILED_ONLY_ABOVEWATER;
 
-                if (m_caster->GetTypeId() == TYPEID_PLAYER && m_caster->ToPlayer()->GetTransport())
-                    return SPELL_FAILED_NO_MOUNTS_ALLOWED;
-
                 // Ignore map check if spell have AreaId. AreaId already checked and this prevent special mount spells
-                bool AllowMount = !m_caster->GetMap()->IsDungeon() || m_caster->GetMap()->IsBattleGroundOrArena();
-                InstanceTemplate const *it = objmgr.GetInstanceTemplate(m_caster->GetMapId());
+                bool AllowMount = !m_caster->GetMap()->IsDungeon() || m_caster->GetMap()->IsBattlegroundOrArena();
+                InstanceTemplate const *it = sObjectMgr.GetInstanceTemplate(m_caster->GetMapId());
                 if (it)
                     AllowMount = it->allowMount;
                 if (m_caster->GetTypeId() == TYPEID_PLAYER && !AllowMount && !m_IsTriggeredSpell && !m_spellInfo->AreaGroupId)
@@ -5588,7 +5662,7 @@ SpellCastResult Spell::CheckCast(bool strict)
                 if (m_originalCaster && m_originalCaster->GetTypeId() == TYPEID_PLAYER && m_originalCaster->isAlive())
                 {
                     if (AreaTableEntry const* pArea = GetAreaEntryByAreaID(m_originalCaster->GetAreaId()))
-                        if ((pArea->flags & AREA_FLAG_NO_FLY_ZONE) || (m_originalCaster->GetZoneId() == 4197 && pvpWG->isWarTime()))
+                        if (pArea->flags & AREA_FLAG_NO_FLY_ZONE)
                             return m_IsTriggeredSpell ? SPELL_FAILED_DONT_REPORT : SPELL_FAILED_NOT_HERE;
                 }
                 break;
@@ -6118,7 +6192,7 @@ SpellCastResult Spell::CheckItems()
                     uint8 msg = p_caster->CanStoreNewItem(NULL_BAG, NULL_SLOT, dest, m_spellInfo->EffectItemType[i], 1);
                     if (msg != EQUIP_ERR_OK)
                     {
-                        ItemPrototype const *pProto = objmgr.GetItemPrototype(m_spellInfo->EffectItemType[i]);
+                        ItemPrototype const *pProto = sObjectMgr.GetItemPrototype(m_spellInfo->EffectItemType[i]);
                         // TODO: Needs review
                         if (pProto && !(pProto->ItemLimitCategory))
                         {
@@ -6303,7 +6377,7 @@ SpellCastResult Spell::CheckItems()
                             return SPELL_FAILED_NO_AMMO;
                         }
 
-                        ItemPrototype const *ammoProto = objmgr.GetItemPrototype(ammo);
+                        ItemPrototype const *ammoProto = sObjectMgr.GetItemPrototype(ammo);
                         if (!ammoProto)
                             return SPELL_FAILED_NO_AMMO;
 
@@ -6339,7 +6413,7 @@ SpellCastResult Spell::CheckItems()
             case SPELL_EFFECT_CREATE_MANA_GEM:
             {
                  uint32 item_id = m_spellInfo->EffectItemType[i];
-                 ItemPrototype const *pProto = objmgr.GetItemPrototype(item_id);
+                 ItemPrototype const *pProto = sObjectMgr.GetItemPrototype(item_id);
 
                  if (!pProto)
                      return SPELL_FAILED_ITEM_AT_MAX_CHARGES;
@@ -7174,7 +7248,9 @@ void Spell::SelectTrajTargets()
             }
         }
 
-        m_targets.setDst(x, y, z, m_caster->GetOrientation());
+        Position trajDst;
+        trajDst.Relocate(x, y, z, m_caster->GetOrientation());
+        m_targets.modDst(trajDst);
     }
 }
 

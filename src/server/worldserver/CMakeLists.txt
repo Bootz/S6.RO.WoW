@@ -12,20 +12,20 @@ file(GLOB_RECURSE sources_CommandLine CommandLine/*.cpp CommandLine/*.h)
 file(GLOB_RECURSE sources_RemoteAccess RemoteAccess/*.cpp RemoteAccess/*.h)
 file(GLOB_RECURSE sources_TCSoap TCSoap/*.cpp TCSoap/*.h)
 file(GLOB_RECURSE sources_WorldThread WorldThread/*.cpp WorldThread/*.h)
+file(GLOB sources_localdir *.cpp *.h)
 
 set(worldserver_SRCS
   ${sources_CommandLine}
   ${sources_RemoteAccess}
   ${sources_TCSoap}
   ${sources_WorldThread}
-  Main.cpp
-  Master.cpp
-  Master.h
+  ${sources_localdir}
 )
 
 if( WIN32 )
   set(worldserver_SRCS
     ${worldserver_SRCS}
+    ${sources_Debugging}
     worldserver.rc
   )
 endif()
@@ -38,7 +38,6 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/externals/gsoap
   ${CMAKE_SOURCE_DIR}/externals/sockets/include
   ${CMAKE_SOURCE_DIR}/externals/mersennetwister
-  ${CMAKE_SOURCE_DIR}/dep/include
   ${CMAKE_SOURCE_DIR}/src/server/collision
   ${CMAKE_SOURCE_DIR}/src/server/collision/Management
   ${CMAKE_SOURCE_DIR}/src/server/shared
@@ -66,8 +65,8 @@ include_directories(
   ${CMAKE_SOURCE_DIR}/src/server/game/AI/ScriptedAI
   ${CMAKE_SOURCE_DIR}/src/server/game/AuctionHouse
   ${CMAKE_SOURCE_DIR}/src/server/game/AuctionHouse/AuctionHouseBot
-  ${CMAKE_SOURCE_DIR}/src/server/game/BattleGrounds
-  ${CMAKE_SOURCE_DIR}/src/server/game/BattleGrounds/Zones
+  ${CMAKE_SOURCE_DIR}/src/server/game/Battlegrounds
+  ${CMAKE_SOURCE_DIR}/src/server/game/Battlegrounds/Zones
   ${CMAKE_SOURCE_DIR}/src/server/game/Calendar
   ${CMAKE_SOURCE_DIR}/src/server/game/Chat
   ${CMAKE_SOURCE_DIR}/src/server/game/Chat/Channels
@@ -137,10 +136,10 @@ if( NOT WIN32 )
   add_definitions(-D_TRINITY_CORE_CONFIG='"${CONF_DIR}/worldserver.conf"')
 endif()
 
-add_dependencies(worldserver revision.h)
+add_dependencies(worldserver genrev)
 
 if( UNIX )
-  set(worldserver_LINK_FLAGS "-pthread ${worldserver_LINK_FLAGS}")
+  set(worldserver_LINK_FLAGS "-pthread -lncurses ${worldserver_LINK_FLAGS}")
 endif()
 
 if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
@@ -181,19 +180,29 @@ else()
     collision
     g3dlib
     gsoap
-    jemalloc
+    ${JEMALLOC_LIB}
     ${SCRIPT_LIB}
     ${READLINE_LIBRARY}
     ${TERMCAP_LIBRARY}
     ${ACE_LIBRARY}
     ${MYSQL_LIBRARY}
     ${OPENSSL_LIBRARIES}
-    ${ZLIB_LIBRARIES} 
+    ${ZLIB_LIBRARIES}
     ${OSX_LIBS}
+  )
+endif()
+
+if( WIN32 )
+  add_custom_command(TARGET worldserver
+    POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/worldserver.conf.dist ${CMAKE_BINARY_DIR}/bin/$(ConfigurationName)/
   )
 endif()
 
 if( UNIX )
   install(TARGETS worldserver DESTINATION bin)
-  install(FILES   worldserver.conf.dist DESTINATION etc)
+  install(FILES worldserver.conf.dist DESTINATION etc)
+elseif( WIN32 )
+  install(TARGETS worldserver DESTINATION "${CMAKE_INSTALL_PREFIX}")
+  install(FILES worldserver.conf.dist DESTINATION "${CMAKE_INSTALL_PREFIX}")
 endif()

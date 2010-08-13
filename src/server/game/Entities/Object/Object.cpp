@@ -1144,6 +1144,13 @@ bool Position::HasInLine(const Unit * const target, float distance, float width)
     return abs(sin(angle)) * GetExactDist2d(target->GetPositionX(), target->GetPositionY()) < width;
 }
 
+std::string Position::ToString() const
+{
+    std::stringstream sstr;
+    sstr << "X: " << m_positionX << " Y: " << m_positionY << " Z: " << m_positionZ << " O: " << m_orientation;
+    return sstr.str();
+}
+
 ByteBuffer &operator>>(ByteBuffer& buf, Position::PositionXYZOStreamer const & streamer)
 {
     float x, y, z, o;
@@ -1173,6 +1180,39 @@ ByteBuffer & operator<<(ByteBuffer& buf, Position::PositionXYZOStreamer const & 
     streamer.m_pos->GetPosition(x, y, z, o);
     buf << x << y << z << o;
     return buf;
+}
+
+void MovementInfo::OutDebug()
+{
+    sLog.outString("MOVEMENT INFO");
+    sLog.outString("guid " UI64FMTD, guid);
+    sLog.outString("flags %u", flags);
+    sLog.outString("flags2 %u", flags2);
+    sLog.outString("time %u current time %u", flags2, ::time(NULL));
+    sLog.outString("position: `%s`", pos.ToString().c_str());
+    if (flags & MOVEMENTFLAG_ONTRANSPORT)
+    {
+        sLog.outString("TRANSPORT:");
+        sLog.outString("guid: " UI64FMTD, t_guid);
+        sLog.outString("position: `%s`", t_pos.ToString().c_str());
+        sLog.outString("seat: %i", t_seat);
+        sLog.outString("time: %u", t_time);
+        if (flags2 & MOVEMENTFLAG2_INTERPOLATED_MOVEMENT)
+            sLog.outString("time2: %u", t_time2);
+    }
+    if ((flags & (MOVEMENTFLAG_SWIMMING | MOVEMENTFLAG_FLYING)) || (flags2 & MOVEMENTFLAG2_ALWAYS_ALLOW_PITCHING))
+    {
+        sLog.outString("pitch: %f", pitch);
+    }
+    sLog.outString("fallTime: %u", fallTime);
+    if (flags & MOVEMENTFLAG_JUMPING)
+    {
+        sLog.outString("j_zspeed: %f j_sinAngle: %f j_cosAngle: %f j_xyspeed: %f", j_zspeed, j_sinAngle, j_cosAngle, j_xyspeed);
+    }
+    if (flags & MOVEMENTFLAG_SPLINE_ELEVATION)
+    {
+        sLog.outString("splineElevation: %f", splineElevation);
+    }
 }
 
 WorldObject::WorldObject()
@@ -1251,10 +1291,10 @@ void WorldObject::GetZoneAndAreaId(uint32& zoneid, uint32& areaid) const
     GetBaseMap()->GetZoneAndAreaId(zoneid, areaid, m_positionX, m_positionY, m_positionZ);
 }
 
-InstanceData* WorldObject::GetInstanceData()
+InstanceScript* WorldObject::GetInstanceScript()
 {
     Map *map = GetMap();
-    return map->IsDungeon() ? ((InstanceMap*)map)->GetInstanceData() : NULL;
+    return map->IsDungeon() ? ((InstanceMap*)map)->GetInstanceScript() : NULL;
 }
 
 float WorldObject::GetDistanceZ(const WorldObject* obj) const
@@ -1400,6 +1440,25 @@ bool WorldObject::IsInRange3d(float x, float y, float z, float minRange, float m
     return distsq < maxdist * maxdist;
 }
 
+void Position::RelocateOffset(const Position & offset) 
+{
+    m_positionX = GetPositionX() + (offset.GetPositionX() * cos(GetOrientation()) + offset.GetPositionY() * sin(GetOrientation() + M_PI));
+    m_positionY = GetPositionY() + (offset.GetPositionY() * cos(GetOrientation()) + offset.GetPositionX() * sin(GetOrientation()));
+    m_positionZ = GetPositionZ() + offset.GetPositionZ();
+    m_orientation = GetOrientation() + offset.GetOrientation();
+}
+
+void Position::GetPositionOffsetTo(const Position & endPos, Position & retOffset) const
+{
+    float dx = endPos.GetPositionX() - GetPositionX();
+    float dy = endPos.GetPositionY() - GetPositionY();
+
+    retOffset.m_positionX = dx * cos(GetOrientation()) + dy * sin(GetOrientation());
+    retOffset.m_positionY = dy * cos(GetOrientation()) - dx * sin(GetOrientation());
+    retOffset.m_positionZ = endPos.GetPositionZ() - GetPositionZ();
+    retOffset.m_orientation = endPos.GetOrientation() - GetOrientation();
+}
+
 float Position::GetAngle(const Position *obj) const
 {
     if (!obj) return 0;
@@ -1539,7 +1598,7 @@ void WorldObject::MonsterTextEmote(const char* text, uint64 TargetGuid, bool IsB
 
 void WorldObject::MonsterWhisper(const char* text, uint64 receiver, bool IsBossWhisper)
 {
-    Player *player = objmgr.GetPlayer(receiver);
+    Player *player = sObjectMgr.GetPlayer(receiver);
     if (!player || !player->GetSession())
         return;
 
@@ -1581,7 +1640,7 @@ namespace Trinity
                 : i_object(obj), i_msgtype(msgtype), i_textId(textId), i_language(language), i_targetGUID(targetGUID) {}
             void operator()(WorldPacket& data, int32 loc_idx)
             {
-                char const* text = objmgr.GetTrinityString(i_textId,loc_idx);
+                char const* text = sObjectMgr.GetTrinityString(i_textId,loc_idx);
 
                 // TODO: i_object.GetName() also must be localized?
                 i_object.BuildMonsterChat(&data,i_msgtype,text,i_language,i_object.GetNameForLocaleIdx(loc_idx),i_targetGUID);
@@ -1656,12 +1715,12 @@ void WorldObject::MonsterTextEmote(int32 textId, uint64 TargetGuid, bool IsBossE
 
 void WorldObject::MonsterWhisper(int32 textId, uint64 receiver, bool IsBossWhisper)
 {
-    Player *player = objmgr.GetPlayer(receiver);
+    Player *player = sObjectMgr.GetPlayer(receiver);
     if (!player || !player->GetSession())
         return;
 
     uint32 loc_idx = player->GetSession()->GetSessionDbLocaleIndex();
-    char const* text = objmgr.GetTrinityString(textId,loc_idx);
+    char const* text = sObjectMgr.GetTrinityString(textId,loc_idx);
 
     WorldPacket data(SMSG_MESSAGECHAT, 200);
     BuildMonsterChat(&data,IsBossWhisper ? CHAT_MSG_RAID_BOSS_WHISPER : CHAT_MSG_MONSTER_WHISPER,text,LANG_UNIVERSAL,GetNameForLocaleIdx(loc_idx),receiver);
@@ -1822,7 +1881,7 @@ TempSummon *Map::SummonCreature(uint32 entry, const Position &pos, SummonPropert
         default:    return NULL;
     }
 
-    if (!summon->Create(objmgr.GenerateLowGuid(HIGHGUID_UNIT), this, phase, entry, vehId, team, pos.GetPositionX(), pos.GetPositionY(), pos.GetPositionZ(), pos.GetOrientation()))
+    if (!summon->Create(sObjectMgr.GenerateLowGuid(HIGHGUID_UNIT), this, phase, entry, vehId, team, pos.GetPositionX(), pos.GetPositionY(), pos.GetPositionZ(), pos.GetOrientation()))
     {
         delete summon;
         return NULL;
@@ -1844,8 +1903,8 @@ void WorldObject::SetZoneScript()
     if (Map *map = FindMap())
     {
         if (map->IsDungeon())
-            m_zoneScript = (ZoneScript*)((InstanceMap*)map)->GetInstanceData();
-        else if (!map->IsBattleGroundOrArena())
+            m_zoneScript = (ZoneScript*)((InstanceMap*)map)->GetInstanceScript();
+        else if (!map->IsBattlegroundOrArena())
             m_zoneScript = sOutdoorPvPMgr.GetZoneScript(GetZoneId());
     }
 }
@@ -1905,8 +1964,8 @@ Pet* Player::SummonPet(uint32 entry, float x, float y, float z, float ang, PetTy
     }
 
     Map *map = GetMap();
-    uint32 pet_number = objmgr.GeneratePetNumber();
-    if (!pet->Create(objmgr.GenerateLowGuid(HIGHGUID_PET), map, GetPhaseMask(), entry, pet_number))
+    uint32 pet_number = sObjectMgr.GeneratePetNumber();
+    if (!pet->Create(sObjectMgr.GenerateLowGuid(HIGHGUID_PET), map, GetPhaseMask(), entry, pet_number))
     {
         sLog.outError("no such creature entry %u", entry);
         delete pet;
@@ -1978,7 +2037,7 @@ GameObject* WorldObject::SummonGameObject(uint32 entry, float x, float y, float 
     if (!IsInWorld())
         return NULL;
 
-    GameObjectInfo const* goinfo = objmgr.GetGameObjectInfo(entry);
+    GameObjectInfo const* goinfo = sObjectMgr.GetGameObjectInfo(entry);
     if (!goinfo)
     {
         sLog.outErrorDb("Gameobject template %u not found in database!", entry);
@@ -1986,7 +2045,7 @@ GameObject* WorldObject::SummonGameObject(uint32 entry, float x, float y, float 
     }
     Map *map = GetMap();
     GameObject *go = new GameObject();
-    if (!go->Create(objmgr.GenerateLowGuid(HIGHGUID_GAMEOBJECT), entry, map, GetPhaseMask(), x,y,z,ang,rotation0,rotation1,rotation2,rotation3,100,GO_STATE_READY))
+    if (!go->Create(sObjectMgr.GenerateLowGuid(HIGHGUID_GAMEOBJECT), entry, map, GetPhaseMask(), x,y,z,ang,rotation0,rotation1,rotation2,rotation3,100,GO_STATE_READY))
     {
         delete go;
         return NULL;
@@ -2472,4 +2531,11 @@ void WorldObject::BuildUpdate(UpdateDataMapType& data_map)
     cell.Visit(p, player_notifier, map, *this, map.GetVisibilityDistance());
 
     ClearUpdateMask(false);
+}
+
+uint64 WorldObject::GetTransGUID() const
+{
+    if (GetTransport())
+        return GetTransport()->GetGUID();
+    return 0;
 }

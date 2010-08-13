@@ -59,14 +59,14 @@ WorldObject* ObjectAccessor::GetWorldObject(WorldObject const& p, uint64 guid)
     switch (GUID_HIPART(guid))
     {
         case HIGHGUID_PLAYER:        return GetPlayer(p, guid);
+        case HIGHGUID_TRANSPORT:
+        case HIGHGUID_MO_TRANSPORT:
         case HIGHGUID_GAMEOBJECT:    return GetGameObject(p, guid);
         case HIGHGUID_VEHICLE:
         case HIGHGUID_UNIT:          return GetCreature(p, guid);
         case HIGHGUID_PET:           return GetPet(p, guid);
         case HIGHGUID_DYNAMICOBJECT: return GetDynamicObject(p, guid);
-        case HIGHGUID_TRANSPORT:     return NULL;
         case HIGHGUID_CORPSE:        return GetCorpse(p,guid);
-        case HIGHGUID_MO_TRANSPORT:  return NULL;
         default:                     return NULL;
     }
 }
@@ -83,6 +83,8 @@ Object* ObjectAccessor::GetObjectByTypeMask(WorldObject const& p, uint64 guid, u
             if (typemask & TYPEMASK_PLAYER)
                 return GetPlayer(p, guid);
             break;
+        case HIGHGUID_TRANSPORT:
+        case HIGHGUID_MO_TRANSPORT:
         case HIGHGUID_GAMEOBJECT:
             if (typemask & TYPEMASK_GAMEOBJECT)
                 return GetGameObject(p, guid);
@@ -100,9 +102,7 @@ Object* ObjectAccessor::GetObjectByTypeMask(WorldObject const& p, uint64 guid, u
             if (typemask & TYPEMASK_DYNAMICOBJECT)
                 return GetDynamicObject(p, guid);
             break;
-        case HIGHGUID_TRANSPORT:
         case HIGHGUID_CORPSE:
-        case HIGHGUID_MO_TRANSPORT:
             break;
     }
 
@@ -223,7 +223,7 @@ void ObjectAccessor::RemoveCorpse(Corpse* corpse)
         CellPair cell_pair = Trinity::ComputeCellPair(corpse->GetPositionX(), corpse->GetPositionY());
         uint32 cell_id = (cell_pair.y_coord * TOTAL_NUMBER_OF_CELLS_PER_MAP) + cell_pair.x_coord;
 
-        objmgr.DeleteCorpseCellData(corpse->GetMapId(), cell_id, corpse->GetOwnerGUID());
+        sObjectMgr.DeleteCorpseCellData(corpse->GetMapId(), cell_id, corpse->GetOwnerGUID());
 
         i_player2corpse.erase(iter);
     }
@@ -244,7 +244,7 @@ void ObjectAccessor::AddCorpse(Corpse* corpse)
         CellPair cell_pair = Trinity::ComputeCellPair(corpse->GetPositionX(), corpse->GetPositionY());
         uint32 cell_id = (cell_pair.y_coord * TOTAL_NUMBER_OF_CELLS_PER_MAP) + cell_pair.x_coord;
 
-        objmgr.AddCorpseCellData(corpse->GetMapId(), cell_id, corpse->GetOwnerGUID(), corpse->GetInstanceId());
+        sObjectMgr.AddCorpseCellData(corpse->GetMapId(), cell_id, corpse->GetOwnerGUID(), corpse->GetInstanceId());
     }
 }
 
@@ -306,7 +306,7 @@ Corpse* ObjectAccessor::ConvertCorpseForPlayer(uint64 player_guid, bool /*insign
     // create the bones only if the map and the grid is loaded at the corpse's location
     // ignore bones creating option in case insignia
     if (map && (insignia ||
-        (map->IsBattleGroundOrArena() ? sWorld.getConfig(CONFIG_DEATH_BONES_BG_OR_ARENA) : sWorld.getConfig(CONFIG_DEATH_BONES_WORLD))) &&
+        (map->IsBattlegroundOrArena() ? sWorld.getConfig(CONFIG_DEATH_BONES_BG_OR_ARENA) : sWorld.getConfig(CONFIG_DEATH_BONES_WORLD))) &&
         !map->IsRemovalGrid(corpse->GetPositionX(), corpse->GetPositionY()))
     {
         // Create bones, don't change Corpse
