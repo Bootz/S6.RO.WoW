@@ -1316,16 +1316,6 @@ public:
 
 };
 
-
-
-
-
-
-
-
-
-
-
 void AddSC_boss_lichking()
 {
     new boss_the_lich_king();

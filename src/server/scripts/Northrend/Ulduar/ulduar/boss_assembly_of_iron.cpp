@@ -850,13 +850,6 @@ public:
 
 };
 
-
-
-
-
-
-
-
 void AddSC_boss_assembly_of_iron()
 {
     new boss_steelbreaker();

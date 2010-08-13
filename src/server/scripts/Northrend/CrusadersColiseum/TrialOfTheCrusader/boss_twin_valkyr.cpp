@@ -607,9 +607,6 @@ public:
 
 };
 
-
-
-
 void AddSC_twin_valkyr()
 {
     new boss_fjola();

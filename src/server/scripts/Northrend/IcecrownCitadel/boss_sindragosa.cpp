@@ -760,11 +760,6 @@ public:
 
 };
 
-
-
-
-
-
 void AddSC_boss_sindragosa()
 {
     new boss_sindragosa();

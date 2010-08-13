@@ -1256,13 +1256,6 @@ public:
 
 };
 
-
-
-
-
-
-
-
 void AddSC_boss_tc_horde_champions()
 {
     new boss_gorgrim_shadowcleave();

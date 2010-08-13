@@ -714,9 +714,6 @@ public:
 
 };
 
-
-
-
 void AddSC_boss_flame_leviathan()
 {
     new boss_flame_leviathan();

@@ -633,7 +633,6 @@ public:
 
 };
 
-
 void AddSC_Raid_Anubarak()
 {
     new Boss_Raid_Anubarak();

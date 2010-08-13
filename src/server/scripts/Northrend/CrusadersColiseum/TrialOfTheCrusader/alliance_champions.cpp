@@ -1309,20 +1309,6 @@ public:
 
 };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 void AddSC_boss_tc_alliance_champions()
 {
     new boss_tyrius_duskblade();

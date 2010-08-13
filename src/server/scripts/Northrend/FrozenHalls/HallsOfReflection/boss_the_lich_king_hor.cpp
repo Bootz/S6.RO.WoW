@@ -576,10 +576,6 @@ public:
 
 };
 
-
-
-
-
 void AddSC_boss_lich_king_hr()
 {
     new boss_lich_king_hor();
