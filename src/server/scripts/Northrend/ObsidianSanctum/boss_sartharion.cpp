@@ -217,7 +217,8 @@ enum Events
 /*######
 ## Boss Sartharion
 ######*/
-class boss_sartharion : public CreatureScript
+
+class boss_sartharion : public CreatureScript
 {
 public:
     boss_sartharion() : CreatureScript("boss_sartharion") { }
@@ -680,7 +681,8 @@ enum VespText
 #define SHIELD_ON_SARTHARION                40
 #define VESPERON_PORTAL_EVENT               50
 #define ACOLYTE_DEBUFF                      60
-class npc_disciple_of_vesperon : public CreatureScript
+
+class npc_disciple_of_vesperon : public CreatureScript
 {
 public:
     npc_disciple_of_vesperon() : CreatureScript("npc_disciple_of_vesperon") { }
@@ -718,10 +720,10 @@ struct dummy_dragonAI : public ScriptedAI
 {
     dummy_dragonAI(Creature* pCreature) : ScriptedAI(pCreature)
     {       
-        pInstance = pCreature->GetInstanceData();
+        pInstance = pCreature->GetInstanceScript();
     }
 
-    ScriptedInstance* pInstance;
+    InstanceScript* pInstance;
 
     uint32 m_uiWaypointId;
     uint32 m_uiMoveNextTimer;
@@ -908,7 +910,8 @@ struct dummy_dragonAI : public ScriptedAI
 /*######
 ## Mob Tenebron
 ######*/
-class mob_tenebron : public CreatureScript
+
+class mob_tenebron : public CreatureScript
 {
 public:
     mob_tenebron() : CreatureScript("mob_tenebron") { }
@@ -922,7 +925,7 @@ public:
     {
         mob_tenebronAI(Creature* pCreature) : dummy_dragonAI(pCreature)
         {    
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
         }
 
         uint32 m_uiShadowBreathTimer;
@@ -1045,7 +1048,8 @@ public:
 /*######
 ## Mob Shadron
 ######*/
-class mob_shadron : public CreatureScript
+
+class mob_shadron : public CreatureScript
 {
 public:
     mob_shadron() : CreatureScript("mob_shadron") { }
@@ -1172,7 +1176,8 @@ public:
 /*######
 ## Mob Vesperon
 ######*/
-class mob_vesperon : public CreatureScript
+
+class mob_vesperon : public CreatureScript
 {
 public:
     mob_vesperon() : CreatureScript("mob_vesperon") { }
@@ -1273,7 +1278,8 @@ public:
 /*######
 ## Mob Acolyte of Shadron
 ######*/
-class mob_acolyte_of_shadron : public CreatureScript
+
+class mob_acolyte_of_shadron : public CreatureScript
 {
 public:
     mob_acolyte_of_shadron() : CreatureScript("mob_acolyte_of_shadron") { }
@@ -1287,10 +1293,10 @@ public:
     {
         mob_acolyte_of_shadronAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
         uint32 uiShiftEffectTimer;
         uint32 uiShieldTimer;
         bool shield;
@@ -1316,8 +1322,8 @@ public:
                 if (pInstance)
                 {
                     Creature* Shadron = pInstance->instance->GetCreature(pInstance->GetData64(DATA_SHADRON));
-                    if(Shadron)
-                        ((mob_shadronAI*)Shadron->AI())->m_bHasPortalOpen = false;            
+  //                  if(Shadron)
+  //                      ((mob_shadron*)Shadron->AI())->m_bHasPortalOpen = false;            
                 
                     Map *map = me->GetMap();
                     if (map->IsDungeon())
@@ -1389,7 +1395,8 @@ public:
 /*######
 ## Mob Acolyte of Vesperon
 ######*/
-class mob_acolyte_of_vesperon : public CreatureScript
+
+class mob_acolyte_of_vesperon : public CreatureScript
 {
 public:
     mob_acolyte_of_vesperon() : CreatureScript("mob_acolyte_of_vesperon") { }
@@ -1403,10 +1410,10 @@ public:
     {
         mob_acolyte_of_vesperonAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
 
         void Reset()
         {
@@ -1491,7 +1498,8 @@ public:
 /*######
 ## Mob Twilight Eggs
 ######*/
-class mob_twilight_eggs : public CreatureScript
+
+class mob_twilight_eggs : public CreatureScript
 {
 public:
     mob_twilight_eggs() : CreatureScript("mob_twilight_eggs") { }
@@ -1505,12 +1513,12 @@ public:
     {
         mob_twilight_eggsAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
         }
         uint32 m_uiFadeArmorTimer;
         uint32 m_uiHatchEggTimer;
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
 
         void Reset()
         {
@@ -1559,7 +1567,8 @@ public:
 
 /*######
 ## Flame Tzunami
-######*/class npc_flame_tsunami : public CreatureScript
+######*/
+class npc_flame_tsunami : public CreatureScript
 {
 public:
     npc_flame_tsunami() : CreatureScript("npc_flame_tsunami") { }
@@ -1609,7 +1618,8 @@ public:
 };
 /*######
 ## Twilight Fissure
-######*/class npc_twilight_fissure : public CreatureScript
+######*/
+class npc_twilight_fissure : public CreatureScript
 {
 public:
     npc_twilight_fissure() : CreatureScript("npc_twilight_fissure") { }
@@ -1653,7 +1663,8 @@ public:
 /*######
 ## Mob Twilight Whelps
 ######*/
-class mob_twilight_whelp : public CreatureScript
+
+class mob_twilight_whelp : public CreatureScript
 {
 public:
     mob_twilight_whelp() : CreatureScript("mob_twilight_whelp") { }

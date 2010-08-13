@@ -56,7 +56,8 @@ enum
   SAY_LICH_KING_END_DUN              = -1594504, 
   SAY_LICH_KING_WIN                  = -1594485,
 };
-class boss_lich_king_hor : public CreatureScript
+
+class boss_lich_king_hor : public CreatureScript
 {
 public:
     boss_lich_king_hor() : CreatureScript("boss_lich_king_hor") { }
@@ -70,11 +71,11 @@ public:
     {
        boss_lich_king_hrAI(Creature *pCreature) : npc_escortAI(pCreature)
        {
-            m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+            m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             Reset();
        }
 
-       ScriptedInstance* m_pInstance;
+       InstanceScript* m_pInstance;
        uint32 Step;
        uint32 StepTimer;
        bool StartEscort;
@@ -361,7 +362,8 @@ public:
     };
 
 };
-class npc_raging_gnoul : public CreatureScript
+
+class npc_raging_gnoul : public CreatureScript
 {
 public:
     npc_raging_gnoul() : CreatureScript("npc_raging_gnoul") { }
@@ -375,12 +377,12 @@ public:
     {
         npc_raging_gnoulAI(Creature *pCreature) : ScriptedAI(pCreature)
        {
-            m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+            m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             me->setActive(true);
             Reset();
        }
 
-    ScriptedInstance* m_pInstance;
+    InstanceScript* m_pInstance;
     uint32 EmergeTimer;
     bool Emerge;
     uint64 m_uiLiderGUID;
@@ -438,7 +440,8 @@ public:
     };
 
 };
-class npc_risen_witch_doctor : public CreatureScript
+
+class npc_risen_witch_doctor : public CreatureScript
 {
 public:
     npc_risen_witch_doctor() : CreatureScript("npc_risen_witch_doctor") { }
@@ -452,12 +455,12 @@ public:
     {
         npc_risen_witch_doctorAI(Creature *pCreature) : ScriptedAI(pCreature)
        {
-            m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+            m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
     		me->setActive(true);
             Reset();
        }
 
-    ScriptedInstance* m_pInstance;
+    InstanceScript* m_pInstance;
     uint32 EmergeTimer;
     bool Emerge;
     uint64 m_uiLiderGUID;
@@ -515,7 +518,8 @@ public:
     };
 
 };
-class npc_abon : public CreatureScript
+
+class npc_abon : public CreatureScript
 {
 public:
     npc_abon() : CreatureScript("npc_abon") { }
@@ -529,12 +533,12 @@ public:
     {
         npc_abonAI(Creature *pCreature) : ScriptedAI(pCreature)
        {
-            m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+            m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
     		me->setActive(true);
             Reset();
        }
 
-    ScriptedInstance* m_pInstance;
+    InstanceScript* m_pInstance;
     uint64 m_uiLiderGUID;
     bool Walk;
 

@@ -141,14 +141,15 @@ enum
 
   FACTION                            = 2076,
 };
-class npc_jaina_and_sylvana_HRintro : public CreatureScript
+
+class npc_jaina_and_sylvana_HRintro : public CreatureScript
 {
 public:
     npc_jaina_and_sylvana_HRintro() : CreatureScript("npc_jaina_and_sylvana_HRintro") { }
 
     bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
     {
-        ScriptedInstance* m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        InstanceScript* m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
 
         if (!m_pInstance) return false;
 
@@ -175,7 +176,7 @@ public:
 
     bool GossipHello(Player* pPlayer, Creature* pCreature)
     {
-        ScriptedInstance* m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        InstanceScript* m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
 
         if(pCreature->isQuestGiver())
            pPlayer->PrepareQuestMenu( pCreature->GetGUID());
@@ -205,11 +206,11 @@ public:
     {
         npc_jaina_and_sylvana_HRintroAI(Creature *pCreature) : ScriptedAI(pCreature)
        {
-            m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+            m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             Reset();
        }
 
-       ScriptedInstance* m_pInstance;
+       InstanceScript* m_pInstance;
 
        uint32 StepTimer;
        uint32 Step;
@@ -663,14 +664,15 @@ public:
 };
 
 
-class npc_jaina_and_sylvana_HRextro : public CreatureScript
+
+class npc_jaina_and_sylvana_HRextro : public CreatureScript
 {
 public:
     npc_jaina_and_sylvana_HRextro() : CreatureScript("npc_jaina_and_sylvana_HRextro") { }
 
     bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
     {
-        ScriptedInstance* m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        InstanceScript* m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
         switch (uiAction)
         {
             case GOSSIP_ACTION_INFO_DEF+1:
@@ -695,7 +697,7 @@ public:
     bool GossipHello(Player* pPlayer, Creature* pCreature)
     {
 
-        ScriptedInstance*   m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        InstanceScript*   m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
 
         if(!m_pInstance) return false;
 
@@ -720,11 +722,11 @@ public:
     {
        npc_jaina_and_sylvana_HRextroAI(Creature *pCreature) : npc_escortAI(pCreature)
        {
-            m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+            m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             Reset();
        }
 
-       ScriptedInstance* m_pInstance;
+       InstanceScript* m_pInstance;
 
        uint32 CastTimer;
        uint32 StepTimer;
@@ -1212,7 +1214,8 @@ public:
 };
 
 
-class npc_lich_king_hr : public CreatureScript
+
+class npc_lich_king_hr : public CreatureScript
 {
 public:
     npc_lich_king_hr() : CreatureScript("npc_lich_king_hr") { }
@@ -1260,7 +1263,8 @@ enum GENERAL_EVENT
    SPELL_SHIELD_THROWN          = 69222,
    SPELL_SPIKE                  = 59446   // this is not right spell!
 };
-class npc_frostworn_general : public CreatureScript
+
+class npc_frostworn_general : public CreatureScript
 {
 public:
     npc_frostworn_general() : CreatureScript("npc_frostworn_general") { }
@@ -1274,11 +1278,11 @@ public:
     {
        npc_frostworn_generalAI(Creature *pCreature) : ScriptedAI(pCreature)
        {
-            m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+            m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             Reset();
        }
 
-       ScriptedInstance* m_pInstance;
+       InstanceScript* m_pInstance;
 
        uint32 m_uiShieldTimer;
        uint32 m_uiSpikeTimer;

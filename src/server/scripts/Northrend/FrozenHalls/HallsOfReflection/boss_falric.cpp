@@ -44,7 +44,8 @@ enum
 
     SPELL_BERSERK                           = 47008
 };
-class boss_falric : public CreatureScript
+
+class boss_falric : public CreatureScript
 {
 public:
     boss_falric() : CreatureScript("boss_falric") { }
@@ -58,12 +59,12 @@ public:
     {
         boss_falricAI(Creature *pCreature) : ScriptedAI(pCreature)
        {
-            m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+            m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             Regular = pCreature->GetMap()->IsRegularDifficulty();
             Reset();
        }
 
-       ScriptedInstance* m_pInstance;
+       InstanceScript* m_pInstance;
        bool Regular;
        bool m_bIsCall;
        //FUNCTIONS
