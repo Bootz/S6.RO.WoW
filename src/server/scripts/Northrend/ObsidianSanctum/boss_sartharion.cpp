@@ -1322,8 +1322,8 @@ public:
                 if (pInstance)
                 {
                     Creature* Shadron = pInstance->instance->GetCreature(pInstance->GetData64(DATA_SHADRON));
-  //                  if(Shadron)
-  //                      ((mob_shadron*)Shadron->AI())->m_bHasPortalOpen = false;            
+                    if(Shadron)
+                        ((mob_shadron::mob_shadronAI*)Shadron->AI())->m_bHasPortalOpen = false;            
                 
                     Map *map = me->GetMap();
                     if (map->IsDungeon())
@@ -1441,7 +1441,7 @@ public:
             {
                 Creature* pVesperon = pInstance->instance->GetCreature(pInstance->GetData64(DATA_VESPERON));
                 if (pVesperon)
-                    ((mob_vesperonAI*)pVesperon->AI())->m_bHasPortalOpen = false;
+                    ((mob_vesperon::mob_vesperonAI*)pVesperon->AI())->m_bHasPortalOpen = false;
 
                 if (pVesperon && pVesperon->isAlive() && pVesperon->HasAura(SPELL_TWILIGHT_TORMENT_VESP))
                     pVesperon->RemoveAurasDueToSpell(SPELL_TWILIGHT_TORMENT_VESP);
@@ -1455,7 +1455,7 @@ public:
                 {
                     Creature* Shadron = pInstance->instance->GetCreature(pInstance->GetData64(DATA_SHADRON));
                     if(Shadron)
-                        ((mob_shadronAI*)Shadron->AI())->m_bHasPortalOpen = false;            
+                        ((mob_shadron::mob_shadronAI*)Shadron->AI())->m_bHasPortalOpen = false;            
                 
                     Map *map = me->GetMap();
                     if (map->IsDungeon())
@@ -1547,7 +1547,7 @@ public:
             {
                 Creature* Tenebron = pInstance->instance->GetCreature(pInstance->GetData64(DATA_TENEBRON));
                 if(Tenebron)
-                    (CAST_AI(mob_tenebronAI,Tenebron->AI()))->m_bHasPortalOpen = false;
+                    (CAST_AI(mob_tenebron::mob_tenebronAI,Tenebron->AI()))->m_bHasPortalOpen = false;
                 SpawnWhelps();
             }
             else

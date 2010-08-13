@@ -53,19 +53,20 @@ enum eGameObjects
     GO_Mimiron_ELEVATOR     = 194749,
     GO_Keepers_DOOR         = 194255
 };
-class instance_ulduar : public InstanceMapScript
+
+class instance_ulduar : public InstanceMapScript
 {
 public:
-    instance_ulduar() : InstanceMapScript("instance_ulduar") { }
+    instance_ulduar() : InstanceMapScript("instance_ulduar", 603) { }
 
-    InstanceData* GetInstanceData_InstanceMapScript(Map* pMap)
+    InstanceScript* GetInstanceScript (InstanceMap* pMap) const
     {
         return new instance_ulduar_InstanceMapScript(pMap);
     }
 
-    struct instance_ulduar_InstanceMapScript : public InstanceData
+    struct instance_ulduar_InstanceMapScript : public InstanceScript
     {
-        instance_ulduar_InstanceMapScript(Map* pMap) : InstanceData(pMap)
+        instance_ulduar_InstanceMapScript(Map* pMap) : InstanceScript(pMap)
         {
             SetBossNumber(MAX_BOSS_NUMBER);
             LoadDoorData(doorData);
@@ -130,7 +131,7 @@ public:
                 case GO_Mimiron_ELEVATOR: MimironElevator = add ? pGo : NULL; break;
                 case GO_Keepers_DOOR: KeepersGateGUID = pGo->GetGUID();
                 {
-                    InstanceData *data = pGo->GetInstanceData();
+                    InstanceScript *data = pGo->GetInstanceScript();
                     pGo->RemoveFlag(GAMEOBJECT_FLAGS,GO_FLAG_LOCKED);
                     if (data)
                         for (uint32 i = BOSS_MIMIRON; i < BOSS_VEZAX; ++i)
@@ -186,7 +187,7 @@ public:
                 // Keeper's Images
                 case 33241: uiFreyaImage = pCreature->GetGUID();
                 {
-                   InstanceData *data = pCreature->GetInstanceData();
+                   InstanceScript *data = pCreature->GetInstanceScript();
                     pCreature->SetVisibility(VISIBILITY_OFF);
                     if (data && data->GetBossState(BOSS_VEZAX) == DONE)
                         pCreature->SetVisibility(VISIBILITY_ON);
@@ -194,7 +195,7 @@ public:
                 return;
                 case 33242: uiThorimImage = pCreature->GetGUID();
                 {
-                    InstanceData *data = pCreature->GetInstanceData();
+                    InstanceScript *data = pCreature->GetInstanceScript();
                     pCreature->SetVisibility(VISIBILITY_OFF);
                     if (data && data->GetBossState(BOSS_VEZAX) == DONE)
                         pCreature->SetVisibility(VISIBILITY_ON);
@@ -202,7 +203,7 @@ public:
                 return;
                 case 33244: uiMimironImage = pCreature->GetGUID();
                 {
-                    InstanceData *data = pCreature->GetInstanceData();
+                    InstanceScript *data = pCreature->GetInstanceScript();
                     pCreature->SetVisibility(VISIBILITY_OFF);
                     if (data && data->GetBossState(BOSS_VEZAX) == DONE)
                         pCreature->SetVisibility(VISIBILITY_ON);
@@ -210,7 +211,7 @@ public:
                 return;
                 case 33213: uiHodirImage = pCreature->GetGUID();
                 {
-                    InstanceData *data = pCreature->GetInstanceData();
+                    InstanceScript *data = pCreature->GetInstanceScript();
                     pCreature->SetVisibility(VISIBILITY_OFF);
                     if (data && data->GetBossState(BOSS_VEZAX) == DONE)
                         pCreature->SetVisibility(VISIBILITY_ON);
@@ -362,7 +363,7 @@ public:
 
         bool SetBossState(uint32 id, EncounterState state)
         {
-            if (!InstanceData::SetBossState(id, state))
+            if (!InstanceScript::SetBossState(id, state))
                 return false;
             
             switch (id)
@@ -413,7 +414,7 @@ public:
         {
             if (GameObject* pGo = instance->GetGameObject(KeepersGateGUID))
             {
-                InstanceData *data = pGo->GetInstanceData();
+                InstanceScript *data = pGo->GetInstanceScript();
                 pGo->RemoveFlag(GAMEOBJECT_FLAGS,GO_FLAG_LOCKED);
                 if (data)
                     for (uint32 i = BOSS_MIMIRON; i < BOSS_VEZAX; ++i)
@@ -426,14 +427,15 @@ public:
 };
 
 
-// Mimiron Tramclass go_call_tram : public GameObjectScript
+// Mimiron Tram
+class go_call_tram : public GameObjectScript
 {
 public:
     go_call_tram() : GameObjectScript("go_call_tram") { }
 
     bool GOHello(Player* pPlayer, GameObject* pGo)
     {
-        ScriptedInstance* pInstance = pGo->GetInstanceData();
+        InstanceScript* pInstance = pGo->GetInstanceScript();
 
         if (!pInstance)
             return false;

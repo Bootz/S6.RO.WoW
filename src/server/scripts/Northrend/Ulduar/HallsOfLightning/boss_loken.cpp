@@ -59,7 +59,8 @@ enum eEnums
 /*######
 ## Boss Loken
 ######*/
-class boss_loken : public CreatureScript
+
+class boss_loken : public CreatureScript
 {
 public:
     boss_loken() : CreatureScript("boss_loken") { }
@@ -73,10 +74,10 @@ public:
     {
         boss_lokenAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
 
         bool m_bIsAura;
 

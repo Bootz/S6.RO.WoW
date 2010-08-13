@@ -64,7 +64,8 @@ enum eFizzcrank
 
     QUEST_THE_MECHAGNOMES       = 11708
 };
-class npc_fizzcrank_fullthrottle : public CreatureScript
+
+class npc_fizzcrank_fullthrottle : public CreatureScript
 {
 public:
     npc_fizzcrank_fullthrottle() : CreatureScript("npc_fizzcrank_fullthrottle") { }
@@ -139,7 +140,8 @@ enum eSurristrasz
 {
     SPELL_ABMER_TO_COLDARRA     = 46064
 };
-class npc_surristrasz : public CreatureScript
+
+class npc_surristrasz : public CreatureScript
 {
 public:
     npc_surristrasz() : CreatureScript("npc_surristrasz") { }
@@ -188,7 +190,8 @@ enum eTiare
 {
     SPELL_TELEPORT_COLDARRA     = 50135
 };
-class npc_tiare : public CreatureScript
+
+class npc_tiare : public CreatureScript
 {
 public:
     npc_tiare() : CreatureScript("npc_tiare") { }
@@ -224,7 +227,8 @@ enum eSinkhole
     SPELL_SUMMON_CART             = 46798,
     SPELL_SUMMON_WORM             = 46800,
 };
-class npc_sinkhole_kill_credit : public CreatureScript
+
+class npc_sinkhole_kill_credit : public CreatureScript
 {
 public:
     npc_sinkhole_kill_credit() : CreatureScript("npc_sinkhole_kill_credit") { }
@@ -335,7 +339,8 @@ public:
 /*######
 ## npc_khunok_the_behemoth
 ######*/
-class npc_khunok_the_behemoth : public CreatureScript
+
+class npc_khunok_the_behemoth : public CreatureScript
 {
 public:
     npc_khunok_the_behemoth() : CreatureScript("npc_khunok_the_behemoth") { }
@@ -383,7 +388,8 @@ enum eKeristrasza
 };
 
 #define GOSSIP_HELLO_KERI   "I am prepared to face Saragosa!"
-class npc_keristrasza : public CreatureScript
+
+class npc_keristrasza : public CreatureScript
 {
 public:
     npc_keristrasza() : CreatureScript("npc_keristrasza") { }
@@ -429,7 +435,8 @@ enum eCorastrasza
     QUEST_ACES_HIGH_DAILY                        = 13414,
     QUEST_ACES_HIGH                              = 13413
 };
-class npc_corastrasza : public CreatureScript
+
+class npc_corastrasza : public CreatureScript
 {
 public:
     npc_corastrasza() : CreatureScript("npc_corastrasza") { }
@@ -475,7 +482,8 @@ enum eIruk
     SPELL_CREATURE_TOTEM_OF_ISSLIRUK        = 46816,
     GOSSIP_TEXT_I                           = 12585
 };
-class npc_iruk : public CreatureScript
+
+class npc_iruk : public CreatureScript
 {
 public:
     npc_iruk() : CreatureScript("npc_iruk") { }
@@ -514,7 +522,8 @@ public:
 const uint32 nerubarVictims[3] =
 {
     45526, 45527, 45514
-};class mob_nerubar_victim : public CreatureScript
+};
+class mob_nerubar_victim : public CreatureScript
 {
 public:
     mob_nerubar_victim() : CreatureScript("mob_nerubar_victim") { }
@@ -560,7 +569,8 @@ enum eScourgePrisoner
 {
     GO_SCOURGE_CAGE = 187867
 };
-class npc_scourge_prisoner : public CreatureScript
+
+class npc_scourge_prisoner : public CreatureScript
 {
 public:
     npc_scourge_prisoner() : CreatureScript("npc_scourge_prisoner") { }
@@ -601,7 +611,8 @@ enum eJenny
     SPELL_CRATES_CARRIED        = 46340,
     SPELL_DROP_CRATE            = 46342
 };
-class npc_jenny : public CreatureScript
+
+class npc_jenny : public CreatureScript
 {
 public:
     npc_jenny() : CreatureScript("npc_jenny") { }
@@ -663,7 +674,8 @@ public:
 /*######
 ## npc_fezzix_geartwist
 ######*/
-class npc_fezzix_geartwist : public CreatureScript
+
+class npc_fezzix_geartwist : public CreatureScript
 {
 public:
     npc_fezzix_geartwist() : CreatureScript("npc_fezzix_geartwist") { }
@@ -740,7 +752,8 @@ const uint32 CaribouTraps[CaribouTrapsNum] =
     GO_CARIBOU_TRAP_11, GO_CARIBOU_TRAP_12, GO_CARIBOU_TRAP_13, GO_CARIBOU_TRAP_14, GO_CARIBOU_TRAP_15,
 };
 //#define SAY_NESINGWARY_1 -1571008
-class npc_nesingwary_trapper : public CreatureScript
+
+class npc_nesingwary_trapper : public CreatureScript
 {
 public:
     npc_nesingwary_trapper() : CreatureScript("npc_nesingwary_trapper") { }
@@ -879,7 +892,8 @@ enum eLurgglbr
 #define SAY_WP_1_LUR_END    -1571005
 #define SAY_WP_41_LUR_START -1571006
 #define SAY_WP_41_LUR_END   -1571007*/
-class npc_lurgglbr : public CreatureScript
+
+class npc_lurgglbr : public CreatureScript
 {
 public:
     npc_lurgglbr() : CreatureScript("npc_lurgglbr") { }
@@ -1026,7 +1040,8 @@ enum eNexusDrakeHatchling
     QUEST_DRAKE_HUNT                = 11919,
     QUEST_DRAKE_HUNT_D              = 11940
 };
-class npc_nexus_drake_hatchling : public CreatureScript
+
+class npc_nexus_drake_hatchling : public CreatureScript
 {
 public:
     npc_nexus_drake_hatchling() : CreatureScript("npc_nexus_drake_hatchling") { }
@@ -1156,7 +1171,8 @@ enum eThassarian
 };
 
 #define GOSSIP_ITEM_T   "Let's do this, Thassarian. It's now or never."
-class npc_thassarian : public CreatureScript
+
+class npc_thassarian : public CreatureScript
 {
 public:
     npc_thassarian() : CreatureScript("npc_thassarian") { }
@@ -1466,7 +1482,8 @@ public:
 /*######
 ## npc_image_lich_king
 ######*/
-class npc_image_lich_king : public CreatureScript
+
+class npc_image_lich_king : public CreatureScript
 {
 public:
     npc_image_lich_king() : CreatureScript("npc_image_lich_king") { }
@@ -1492,7 +1509,7 @@ public:
 
             if (me->isSummon())
                 if (Unit* pSummoner = CAST_SUM(me)->GetSummoner())
-                    CAST_AI(npc_thassarianAI,CAST_CRE(pSummoner)->AI())->bArthasInPosition = true;
+                    CAST_AI(npc_thassarian::npc_thassarianAI,CAST_CRE(pSummoner)->AI())->bArthasInPosition = true;
         }
     };
 
@@ -1502,7 +1519,8 @@ public:
 /*######
 ## npc_general_arlos
 ######*/
-class npc_general_arlos : public CreatureScript
+
+class npc_general_arlos : public CreatureScript
 {
 public:
     npc_general_arlos() : CreatureScript("npc_general_arlos") { }
@@ -1525,7 +1543,7 @@ public:
             me->CastSpell(me, SPELL_STUN, true);
             if (me->isSummon())
                 if (Unit* pSummoner = CAST_SUM(me)->GetSummoner())
-                    CAST_AI(npc_thassarianAI,CAST_CRE(pSummoner)->AI())->bArlosInPosition = true;
+                    CAST_AI(npc_thassarian::npc_thassarianAI,CAST_CRE(pSummoner)->AI())->bArlosInPosition = true;
         }
     };
 
@@ -1541,7 +1559,8 @@ enum eCounselorTalbot
     SPELL_DEFLECTION    = 51009,
     SPELL_SOUL_BLAST    = 50992,
 };
-class npc_counselor_talbot : public CreatureScript
+
+class npc_counselor_talbot : public CreatureScript
 {
 public:
     npc_counselor_talbot() : CreatureScript("npc_counselor_talbot") { }
@@ -1583,7 +1602,7 @@ public:
 
             if (me->isSummon())
                 if (Unit* pSummoner = CAST_SUM(me)->GetSummoner())
-                    CAST_AI(npc_thassarianAI,CAST_CRE(pSummoner)->AI())->bTalbotInPosition = true;
+                    CAST_AI(npc_thassarian::npc_thassarianAI,CAST_CRE(pSummoner)->AI())->bTalbotInPosition = true;
         }
 
         void UpdateAI(const uint32 uiDiff)
@@ -1654,7 +1673,8 @@ public:
 /*######
 ## npc_leryssa
 ######*/
-class npc_leryssa : public CreatureScript
+
+class npc_leryssa : public CreatureScript
 {
 public:
     npc_leryssa() : CreatureScript("npc_leryssa") { }
@@ -1688,14 +1708,14 @@ public:
             if (!bDone)
             {
                 if (Creature* pTalbot = me->FindNearestCreature(NPC_PRINCE_VALANAR, 50.0f, true))
-                    CAST_AI(npc_counselor_talbotAI, pTalbot->AI())->bCheck = true;
+                    CAST_AI(npc_counselor_talbot::npc_counselor_talbotAI, pTalbot->AI())->bCheck = true;
 
                 me->addUnitState(UNIT_STAT_STUNNED);
                 me->CastSpell(me, SPELL_STUN, true);
 
                 if (me->isSummon())
                     if (Unit* pSummoner = CAST_SUM(me)->GetSummoner())
-                        CAST_AI(npc_thassarianAI,CAST_CRE(pSummoner)->AI())->bLeryssaInPosition = true;
+                        CAST_AI(npc_thassarian::npc_thassarianAI,CAST_CRE(pSummoner)->AI())->bLeryssaInPosition = true;
                 bDone = true;
             }
             else
@@ -1759,7 +1779,7 @@ public:
                             if (Unit* pThassarian = CAST_SUM(me)->GetSummoner())
                             {
                                 DoScriptText(SAY_THASSARIAN_7, pThassarian);
-                                CAST_AI(npc_thassarianAI,CAST_CRE(pThassarian)->AI())->uiPhase = 16;
+                                CAST_AI(npc_thassarian::npc_thassarianAI,CAST_CRE(pThassarian)->AI())->uiPhase = 16;
                             }
                         uiPhaseTimer = 5000;
                         Phase = 0;
@@ -1790,7 +1810,8 @@ enum eBerylSorcerer
     SPELL_COSMETIC_CHAINS               = 54324,
     SPELL_COSMETIC_ENSLAVE_CHAINS_SELF  = 45631
 };
-class npc_beryl_sorcerer : public CreatureScript
+
+class npc_beryl_sorcerer : public CreatureScript
 {
 public:
     npc_beryl_sorcerer() : CreatureScript("npc_beryl_sorcerer") { }
@@ -1873,7 +1894,8 @@ enum eImprisionedBerylSorcerer
     SAY_IMPRISIONED_BERYL_6         = -1571029,
     SAY_IMPRISIONED_BERYL_7         = -1571030,
 };
-class npc_imprisoned_beryl_sorcerer : public CreatureScript
+
+class npc_imprisoned_beryl_sorcerer : public CreatureScript
 {
 public:
     npc_imprisoned_beryl_sorcerer() : CreatureScript("npc_imprisoned_beryl_sorcerer") { }
@@ -2007,7 +2029,8 @@ enum Mootoo_the_Younger_Entries
 {
     NPC_MOOTOO_THE_YOUNGER          =25504,
     QUEST_ESCAPING_THE_MIST         =11664
-};class npc_mootoo_the_younger : public CreatureScript
+};
+class npc_mootoo_the_younger : public CreatureScript
 {
 public:
     npc_mootoo_the_younger() : CreatureScript("npc_mootoo_the_younger") { }
@@ -2100,7 +2123,8 @@ enum Script_Texts_Bonker_Togglevolt
     SAY_bonker_1                    =-1700002,
     SAY_bonker_2                    =-1700003
 };
-class npc_bonker_togglevolt : public CreatureScript
+
+class npc_bonker_togglevolt : public CreatureScript
 {
 public:
     npc_bonker_togglevolt() : CreatureScript("npc_bonker_togglevolt") { }
@@ -2220,7 +2244,8 @@ const uint32 MammothTraps[MammothTrapsNum] =
     GO_MAMMOTH_TRAP_16, GO_MAMMOTH_TRAP_17, GO_MAMMOTH_TRAP_18, GO_MAMMOTH_TRAP_19, GO_MAMMOTH_TRAP_20,
     GO_MAMMOTH_TRAP_21, GO_MAMMOTH_TRAP_22
 };
-class npc_trapped_mammoth_calf : public CreatureScript
+
+class npc_trapped_mammoth_calf : public CreatureScript
 {
 public:
     npc_trapped_mammoth_calf() : CreatureScript("npc_trapped_mammoth_calf") { }
@@ -2338,7 +2363,8 @@ enum eNotSoBig
     SPELL_AURA_NOTSOBIG_3                         = 45677,
     SPELL_AURA_NOTSOBIG_4                         = 45681
 };
-class npc_magmoth_crusher : public CreatureScript
+
+class npc_magmoth_crusher : public CreatureScript
 {
 public:
     npc_magmoth_crusher() : CreatureScript("npc_magmoth_crusher") { }
@@ -2359,7 +2385,7 @@ public:
                 (me->HasAura(SPELL_AURA_NOTSOBIG_1) || me->HasAura(SPELL_AURA_NOTSOBIG_2) ||
                 me->HasAura(SPELL_AURA_NOTSOBIG_3) || me->HasAura(SPELL_AURA_NOTSOBIG_4)))
             {
-                Quest const* qInfo = objmgr.GetQuestTemplate(QUEST_YOU_RE_NOT_SO_BIG_NOW);
+                Quest const* qInfo = sObjectMgr.GetQuestTemplate(QUEST_YOU_RE_NOT_SO_BIG_NOW);
                 if (qInfo)
                     CAST_PLR(pKiller)->KilledMonsterCredit(qInfo->ReqCreatureOrGOId[0],0);
             }
@@ -2375,7 +2401,8 @@ public:
 
 #define QUEST_BURY_THOSE_COCKROACHES            11608
 #define SPELL_SEAFORIUM_DEPTH_CHARGE_EXPLOSION  45502
-class npc_seaforium_depth_charge : public CreatureScript
+
+class npc_seaforium_depth_charge : public CreatureScript
 {
 public:
     npc_seaforium_depth_charge() : CreatureScript("npc_seaforium_depth_charge") { }
@@ -2429,7 +2456,8 @@ enum eValiancekeepcannons
     GO_VALIANCE_KEEP_CANNON_1                     = 187560,
     GO_VALIANCE_KEEP_CANNON_2                     = 188692
 };
-class npc_valiance_keep_cannoneer : public CreatureScript
+
+class npc_valiance_keep_cannoneer : public CreatureScript
 {
 public:
     npc_valiance_keep_cannoneer() : CreatureScript("npc_valiance_keep_cannoneer") { }
@@ -2489,7 +2517,8 @@ enum NPCs
     NPC_WARMAGE_CALANDRA         = 27173,
     NPC_WARMAGE_WATKINS          = 27904
 };
-class npc_warmage_coldarra : public CreatureScript
+
+class npc_warmage_coldarra : public CreatureScript
 {
 public:
     npc_warmage_coldarra() : CreatureScript("npc_warmage_coldarra") { }

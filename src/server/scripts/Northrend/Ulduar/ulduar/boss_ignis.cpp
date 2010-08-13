@@ -126,13 +126,13 @@ struct boss_ignis_AI : public BossAI
 {
     boss_ignis_AI(Creature *pCreature) : BossAI(pCreature, BOSS_IGNIS), vehicle(me->GetVehicleKit())
     {
-        pInstance = pCreature->GetInstanceData();
+        pInstance = pCreature->GetInstanceScript();
         me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);
         me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true);  // Death Grip
     }
 
     Vehicle *vehicle;
-    ScriptedInstance *pInstance;
+    InstanceScript *pInstance;
     std::vector<Creature *> construct_list;
     
     uint32 SlagPotGUID;
@@ -315,7 +315,8 @@ struct boss_ignis_AI : public BossAI
         }
     }
 };
-class boss_ignis : public CreatureScript
+
+class boss_ignis : public CreatureScript
 {
 public:
     boss_ignis() : CreatureScript("boss_ignis") { }
@@ -326,7 +327,8 @@ public:
     }
 
 };
-class mob_iron_construct : public CreatureScript
+
+class mob_iron_construct : public CreatureScript
 {
 public:
     mob_iron_construct() : CreatureScript("mob_iron_construct") { }
@@ -340,12 +342,12 @@ public:
     {
         mob_iron_constructAI(Creature *c) : ScriptedAI(c)
         {
-            pInstance = c->GetInstanceData();
+            pInstance = c->GetInstanceScript();
             me->SetReactState(REACT_PASSIVE);
             me->AddAura(SPELL_FROZEN_POSITION, me);
         }
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
 
         bool Brittled;
 
@@ -411,7 +413,8 @@ public:
 
 };
 
-class mob_scorch_ground : public CreatureScript
+
+class mob_scorch_ground : public CreatureScript
 {
 public:
     mob_scorch_ground() : CreatureScript("mob_scorch_ground") { }

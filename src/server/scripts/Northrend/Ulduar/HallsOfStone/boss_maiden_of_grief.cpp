@@ -55,7 +55,8 @@ enum Achievements
 {
     ACHIEVEMENT_GOOD_GRIEF                           = 1866
 };
-class boss_maiden_of_grief : public CreatureScript
+
+class boss_maiden_of_grief : public CreatureScript
 {
 public:
     boss_maiden_of_grief() : CreatureScript("boss_maiden_of_grief") { }
@@ -69,10 +70,10 @@ public:
     {
         boss_maiden_of_griefAI(Creature *c) : ScriptedAI(c)
         {
-            pInstance = me->GetInstanceData();
+            pInstance = me->GetInstanceScript();
         }
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
 
         uint32 PartingSorrowTimer;
         uint32 StormOfGriefTimer;

@@ -53,7 +53,8 @@ enum eArete
 
     QUEST_THE_STORY_THUS_FAR    = 12807
 };
-class npc_arete : public CreatureScript
+
+class npc_arete : public CreatureScript
 {
 public:
     npc_arete() : CreatureScript("npc_arete") { }
@@ -124,7 +125,8 @@ enum eDameEnvikiKapsalis
     ACHI_CRUSADER_A   = 2817,
     ACHI_CRUSADER_H   = 2816
 };
-class npc_dame_evniki_kapsalis : public CreatureScript
+
+class npc_dame_evniki_kapsalis : public CreatureScript
 {
 public:
     npc_dame_evniki_kapsalis() : CreatureScript("npc_dame_evniki_kapsalis") { }
@@ -165,7 +167,8 @@ enum eSquireDavid
 
 #define GOSSIP_SQUIRE_ITEM_1 "I am ready to fight!"
 #define GOSSIP_SQUIRE_ITEM_2 "How do the Argent Crusader raiders fight?"
-class npc_squire_david : public CreatureScript
+
+class npc_squire_david : public CreatureScript
 {
 public:
     npc_squire_david() : CreatureScript("npc_squire_david") { }
@@ -219,7 +222,8 @@ enum eSquireDanny
 
     GOSSIP_TEXTID_SQUIRE_DANNY                         = 14407
 };
-class npc_squire_danny : public CreatureScript
+
+class npc_squire_danny : public CreatureScript
 {
 public:
     npc_squire_danny() : CreatureScript("npc_squire_danny") { }
@@ -287,7 +291,8 @@ enum eValiantText
 	NPC_FACTION_VAILIANT_TEXT_SAY_WIN_2 	= -1850011,//	On dirait que j'ai sous-estim� vos comp�tences. Bien jou�.
 	NPC_FACTION_VAILIANT_TEXT_SAY_LOOSE 	= -1850012,//	J'ai gagn�. Vous aurez sans doute plus de chance la prochaine fois.
 };
-class npc_argent_valiant : public CreatureScript
+
+class npc_argent_valiant : public CreatureScript
 {
 public:
     npc_argent_valiant() : CreatureScript("npc_argent_valiant") { }
@@ -418,7 +423,8 @@ enum eArgentChampion
 
     NPC_ARGENT_CHAMPION_CREDIT      = 33708
 };
-class npc_argent_champion : public CreatureScript
+
+class npc_argent_champion : public CreatureScript
 {
 public:
     npc_argent_champion() : CreatureScript("npc_argent_champion") { }
@@ -500,7 +506,8 @@ enum eArgentTournamentPost
     NPC_GORMOK_THE_IMPALER          = 35469,
     NPC_ICEHOWL                     = 35470
 };
-class npc_argent_tournament_post : public CreatureScript
+
+class npc_argent_tournament_post : public CreatureScript
 {
 public:
     npc_argent_tournament_post() : CreatureScript("npc_argent_tournament_post") { }
@@ -545,7 +552,8 @@ enum ealorah_and_grimmin
     NPC_PRIESTESS_ALORAH            = 36101,
     NPC_PRIEST_GRIMMIN              = 36102
 };
-class npc_alorah_and_grimmin : public CreatureScript
+
+class npc_alorah_and_grimmin : public CreatureScript
 {
 public:
     npc_alorah_and_grimmin() : CreatureScript("npc_alorah_and_grimmin") { }
@@ -605,7 +613,8 @@ enum eGuardianPavilion
     AREA_SILVER_COVENANT_PAVILION                 = 4677,
     SPELL_TRESPASSER_A                            = 63986,
 };
-class npc_guardian_pavilion : public CreatureScript
+
+class npc_guardian_pavilion : public CreatureScript
 {
 public:
     npc_guardian_pavilion() : CreatureScript("npc_guardian_pavilion") { }
@@ -657,7 +666,8 @@ const uint32 ArgentTournamentVendor[10][4] =
 	{33650,13723,7,14462}, // Gnome
 	{33657,13724,11,14461} // Draenei
 };
-class npc_vendor_argent_tournament : public CreatureScript
+
+class npc_vendor_argent_tournament : public CreatureScript
 {
 public:
     npc_vendor_argent_tournament() : CreatureScript("npc_vendor_argent_tournament") { }
@@ -688,7 +698,8 @@ public:
     }
 
 };
-class npc_quest_givers_argent_tournament : public CreatureScript
+
+class npc_quest_givers_argent_tournament : public CreatureScript
 {
 public:
     npc_quest_givers_argent_tournament() : CreatureScript("npc_quest_givers_argent_tournament") { }
@@ -700,8 +711,8 @@ public:
         if (pCreature->isQuestGiver())
     	{	
     		Object *pObject = (Object*)pCreature;
-    		QuestRelations* pObjectQR = &objmgr.mCreatureQuestRelations;
-    		QuestRelations* pObjectQIR = &objmgr.mCreatureQuestInvolvedRelations;
+    		QuestRelations* pObjectQR = &sObjectMgr.mCreatureQuestRelations;
+    		QuestRelations* pObjectQIR = &sObjectMgr.mCreatureQuestInvolvedRelations;
 
     		QuestMenu &qm = pPlayer->PlayerTalkClass->GetQuestMenu();
     		qm.ClearMenu();
@@ -724,7 +735,7 @@ public:
     		for (QuestRelations::const_iterator i = pObjectQR->lower_bound(pObject->GetEntry()); i != pObjectQR->upper_bound(pObject->GetEntry()); ++i)
     		{
     			uint32 quest_id = i->second;
-    			Quest const* pQuest = objmgr.GetQuestTemplate(quest_id);
+    			Quest const* pQuest = sObjectMgr.GetQuestTemplate(quest_id);
     			if (!pQuest) continue;
 
     			switch(quest_id)
@@ -783,7 +794,8 @@ public:
 #define SPELL_DEFEND_AURA_1 64100
 #define SPELL_ARGENT_CHARGE 68321
 #define SPELL_ARGENT_BREAK_SHIELD 62626
-#define SPELL_ARGENT_MELEE 62544 class npc_training_dummy_argent : public CreatureScript
+#define SPELL_ARGENT_MELEE 62544 
+class npc_training_dummy_argent : public CreatureScript
 {
 public:
     npc_training_dummy_argent() : CreatureScript("npc_training_dummy_argent") { }
@@ -791,7 +803,8 @@ public:
     CreatureAI* GetAI(Creature* pCreature)
     {
         return new npc_training_dummy_argentAI(pCreature);
-    }class npc_quest_givers_for_crusaders : public CreatureScript
+    }
+class npc_quest_givers_for_crusaders : public CreatureScript
 
     struct npc_training_dummy_argentAI : Scripted_NoMovementAI
     {
@@ -918,7 +931,8 @@ public:
     }
 
 };
-class npc_crusader_rhydalla : public CreatureScript
+
+class npc_crusader_rhydalla : public CreatureScript
 {
 public:
     npc_crusader_rhydalla() : CreatureScript("npc_crusader_rhydalla") { }
@@ -930,8 +944,8 @@ public:
     	if (pCreature->isQuestGiver())
     	{	
     		Object *pObject = (Object*)pCreature;
-    		QuestRelations* pObjectQR = &objmgr.mCreatureQuestRelations;
-    		QuestRelations* pObjectQIR = &objmgr.mCreatureQuestInvolvedRelations;
+    		QuestRelations* pObjectQR = &sObjectMgr.mCreatureQuestRelations;
+    		QuestRelations* pObjectQIR = &sObjectMgr.mCreatureQuestInvolvedRelations;
 
     		QuestMenu &qm = pPlayer->PlayerTalkClass->GetQuestMenu();
     		qm.ClearMenu();
@@ -951,7 +965,7 @@ public:
     		for (QuestRelations::const_iterator i = pObjectQR->lower_bound(pObject->GetEntry()); i != pObjectQR->upper_bound(pObject->GetEntry()); ++i)
     		{
     			uint32 quest_id = i->second;
-    			Quest const* pQuest = objmgr.GetQuestTemplate(quest_id);
+    			Quest const* pQuest = sObjectMgr.GetQuestTemplate(quest_id);
     			if (!pQuest) continue;
     			QuestStatus status;
     			bool allowed=false;
@@ -985,7 +999,8 @@ public:
     }
 
 };
-class npc_eadric_the_pure : public CreatureScript
+
+class npc_eadric_the_pure : public CreatureScript
 {
 public:
     npc_eadric_the_pure() : CreatureScript("npc_eadric_the_pure") { }
@@ -997,8 +1012,8 @@ public:
     	if (pCreature->isQuestGiver())
     	{	
     		Object *pObject = (Object*)pCreature;
-    		QuestRelations* pObjectQR = &objmgr.mCreatureQuestRelations;
-    		QuestRelations* pObjectQIR = &objmgr.mCreatureQuestInvolvedRelations;
+    		QuestRelations* pObjectQR = &sObjectMgr.mCreatureQuestRelations;
+    		QuestRelations* pObjectQIR = &sObjectMgr.mCreatureQuestInvolvedRelations;
 
     		QuestMenu &qm = pPlayer->PlayerTalkClass->GetQuestMenu();
     		qm.ClearMenu();
@@ -1018,7 +1033,7 @@ public:
     		for (QuestRelations::const_iterator i = pObjectQR->lower_bound(pObject->GetEntry()); i != pObjectQR->upper_bound(pObject->GetEntry()); ++i)
     		{
     			uint32 quest_id = i->second;
-    			Quest const* pQuest = objmgr.GetQuestTemplate(quest_id);
+    			Quest const* pQuest = sObjectMgr.GetQuestTemplate(quest_id);
     			if (!pQuest) continue;
     			QuestStatus status;
     			bool allowed=false;
@@ -1053,7 +1068,8 @@ public:
     }
 
 };
-class npc_justicar_mariel_trueheart : public CreatureScript
+
+class npc_justicar_mariel_trueheart : public CreatureScript
 {
 public:
     npc_justicar_mariel_trueheart() : CreatureScript("npc_justicar_mariel_trueheart") { }
@@ -1065,8 +1081,8 @@ public:
     	if (pCreature->isQuestGiver())
     	{
     		Object *pObject = (Object*)pCreature;
-    		QuestRelations* pObjectQR = &objmgr.mCreatureQuestRelations;
-    		QuestRelations* pObjectQIR = &objmgr.mCreatureQuestInvolvedRelations;
+    		QuestRelations* pObjectQR = &sObjectMgr.mCreatureQuestRelations;
+    		QuestRelations* pObjectQIR = &sObjectMgr.mCreatureQuestInvolvedRelations;
 
     		QuestMenu &qm = pPlayer->PlayerTalkClass->GetQuestMenu();
     		qm.ClearMenu();
@@ -1086,7 +1102,7 @@ public:
     		for (QuestRelations::const_iterator i = pObjectQR->lower_bound(pObject->GetEntry()); i != pObjectQR->upper_bound(pObject->GetEntry()); ++i)
     		{
     			uint32 quest_id = i->second;
-    			Quest const* pQuest = objmgr.GetQuestTemplate(quest_id);
+    			Quest const* pQuest = sObjectMgr.GetQuestTemplate(quest_id);
     			if (!pQuest) continue;
     			QuestStatus status;
     			bool allowed=false;
@@ -1120,7 +1136,8 @@ public:
     }
 
 };
-class npc_crok_scourgebane : public CreatureScript
+
+class npc_crok_scourgebane : public CreatureScript
 {
 public:
     npc_crok_scourgebane() : CreatureScript("npc_crok_scourgebane") { }
@@ -1132,8 +1149,8 @@ public:
     	if (pCreature->isQuestGiver())
     	{
     		Object *pObject = (Object*)pCreature;
-    		QuestRelations* pObjectQR = &objmgr.mCreatureQuestRelations;
-    		QuestRelations* pObjectQIR = &objmgr.mCreatureQuestInvolvedRelations;
+    		QuestRelations* pObjectQR = &sObjectMgr.mCreatureQuestRelations;
+    		QuestRelations* pObjectQIR = &sObjectMgr.mCreatureQuestInvolvedRelations;
 
     		QuestMenu &qm = pPlayer->PlayerTalkClass->GetQuestMenu();
     		qm.ClearMenu();
@@ -1153,7 +1170,7 @@ public:
     		for (QuestRelations::const_iterator i = pObjectQR->lower_bound(pObject->GetEntry()); i != pObjectQR->upper_bound(pObject->GetEntry()); ++i)
     		{
     			uint32 quest_id = i->second;
-    			Quest const* pQuest = objmgr.GetQuestTemplate(quest_id);
+    			Quest const* pQuest = sObjectMgr.GetQuestTemplate(quest_id);
     			if (!pQuest) continue;
     			QuestStatus status;
     			bool allowed=false;
@@ -1197,7 +1214,8 @@ public:
 #define JERAN_RP_TEXTID 14434
 #define GOSSIP_HELLO_JERAN_1 "Montrez-moi comment m'entraîner sur une cible de mêlée."
 #define GOSSIP_HELLO_JERAN_2 "Parlez-moi de la défense et du coup de lance."
-#define SPELL_CREDIT_JERAN 64113class npc_jeran_lockwood : public CreatureScript
+#define SPELL_CREDIT_JERAN 64113
+class npc_jeran_lockwood : public CreatureScript
 {
 public:
     npc_jeran_lockwood() : CreatureScript("npc_jeran_lockwood") { }
@@ -1244,7 +1262,8 @@ public:
 #define RUGAN_RP_TEXTID 14437
 #define GOSSIP_HELLO_RUGAN_1 "Montrez-moi comment m'entraîner sur une cible de charge."
 #define GOSSIP_HELLO_RUGAN_2 "Parlez-moi de la charge"
-#define SPELL_CREDIT_RUGAN 64114class npc_rugan_steelbelly : public CreatureScript
+#define SPELL_CREDIT_RUGAN 64114
+class npc_rugan_steelbelly : public CreatureScript
 {
 public:
     npc_rugan_steelbelly() : CreatureScript("npc_rugan_steelbelly") { }
@@ -1291,7 +1310,8 @@ public:
 #define VALIS_RP_TEXTID 14439
 #define GOSSIP_HELLO_VALIS_1 "Montrez-moi comment m'entraîner sur une cible � distance."
 #define GOSSIP_HELLO_VALIS_2 "Expliquez-moi comment utiliser le brise-bouclier."
-#define SPELL_CREDIT_VALIS 64115class npc_valis_windchaser : public CreatureScript
+#define SPELL_CREDIT_VALIS 64115
+class npc_valis_windchaser : public CreatureScript
 {
 public:
     npc_valis_windchaser() : CreatureScript("npc_valis_windchaser") { }
@@ -1381,8 +1401,8 @@ bool GossipHello_quest_givers_argent_tournament(Player* pPlayer, Creature* pCrea
     if (pCreature->isQuestGiver())
 	{	
 		Object *pObject = (Object*)pCreature;
-		QuestRelations* pObjectQR = &objmgr.mCreatureQuestRelations;
-		QuestRelations* pObjectQIR = &objmgr.mCreatureQuestInvolvedRelations;
+		QuestRelations* pObjectQR = &sObjectMgr.mCreatureQuestRelations;
+		QuestRelations* pObjectQIR = &sObjectMgr.mCreatureQuestInvolvedRelations;
 
 		QuestMenu &qm = pPlayer->PlayerTalkClass->GetQuestMenu();
 		qm.ClearMenu();
@@ -1405,7 +1425,7 @@ bool GossipHello_quest_givers_argent_tournament(Player* pPlayer, Creature* pCrea
 		for (QuestRelations::const_iterator i = pObjectQR->lower_bound(pObject->GetEntry()); i != pObjectQR->upper_bound(pObject->GetEntry()); ++i)
 		{
 			uint32 quest_id = i->second;
-			Quest const* pQuest = objmgr.GetQuestTemplate(quest_id);
+			Quest const* pQuest = sObjectMgr.GetQuestTemplate(quest_id);
 			if (!pQuest) continue;
 
 			switch(quest_id)
@@ -1592,8 +1612,8 @@ bool GossipHello_npc_crusader_rhydalla(Player* pPlayer, Creature* pCreature)
 	if (pCreature->isQuestGiver())
 	{	
 		Object *pObject = (Object*)pCreature;
-		QuestRelations* pObjectQR = &objmgr.mCreatureQuestRelations;
-		QuestRelations* pObjectQIR = &objmgr.mCreatureQuestInvolvedRelations;
+		QuestRelations* pObjectQR = &sObjectMgr.mCreatureQuestRelations;
+		QuestRelations* pObjectQIR = &sObjectMgr.mCreatureQuestInvolvedRelations;
 
 		QuestMenu &qm = pPlayer->PlayerTalkClass->GetQuestMenu();
 		qm.ClearMenu();
@@ -1613,7 +1633,7 @@ bool GossipHello_npc_crusader_rhydalla(Player* pPlayer, Creature* pCreature)
 		for (QuestRelations::const_iterator i = pObjectQR->lower_bound(pObject->GetEntry()); i != pObjectQR->upper_bound(pObject->GetEntry()); ++i)
 		{
 			uint32 quest_id = i->second;
-			Quest const* pQuest = objmgr.GetQuestTemplate(quest_id);
+			Quest const* pQuest = sObjectMgr.GetQuestTemplate(quest_id);
 			if (!pQuest) continue;
 			QuestStatus status;
 			bool allowed=false;
@@ -1653,8 +1673,8 @@ bool GossipHello_npc_eadric_the_pure(Player* pPlayer, Creature* pCreature)
 	if (pCreature->isQuestGiver())
 	{	
 		Object *pObject = (Object*)pCreature;
-		QuestRelations* pObjectQR = &objmgr.mCreatureQuestRelations;
-		QuestRelations* pObjectQIR = &objmgr.mCreatureQuestInvolvedRelations;
+		QuestRelations* pObjectQR = &sObjectMgr.mCreatureQuestRelations;
+		QuestRelations* pObjectQIR = &sObjectMgr.mCreatureQuestInvolvedRelations;
 
 		QuestMenu &qm = pPlayer->PlayerTalkClass->GetQuestMenu();
 		qm.ClearMenu();
@@ -1674,7 +1694,7 @@ bool GossipHello_npc_eadric_the_pure(Player* pPlayer, Creature* pCreature)
 		for (QuestRelations::const_iterator i = pObjectQR->lower_bound(pObject->GetEntry()); i != pObjectQR->upper_bound(pObject->GetEntry()); ++i)
 		{
 			uint32 quest_id = i->second;
-			Quest const* pQuest = objmgr.GetQuestTemplate(quest_id);
+			Quest const* pQuest = sObjectMgr.GetQuestTemplate(quest_id);
 			if (!pQuest) continue;
 			QuestStatus status;
 			bool allowed=false;
@@ -1715,8 +1735,8 @@ bool GossipHello_npc_justicar_mariel_trueheart(Player* pPlayer, Creature* pCreat
 	if (pCreature->isQuestGiver())
 	{
 		Object *pObject = (Object*)pCreature;
-		QuestRelations* pObjectQR = &objmgr.mCreatureQuestRelations;
-		QuestRelations* pObjectQIR = &objmgr.mCreatureQuestInvolvedRelations;
+		QuestRelations* pObjectQR = &sObjectMgr.mCreatureQuestRelations;
+		QuestRelations* pObjectQIR = &sObjectMgr.mCreatureQuestInvolvedRelations;
 
 		QuestMenu &qm = pPlayer->PlayerTalkClass->GetQuestMenu();
 		qm.ClearMenu();
@@ -1736,7 +1756,7 @@ bool GossipHello_npc_justicar_mariel_trueheart(Player* pPlayer, Creature* pCreat
 		for (QuestRelations::const_iterator i = pObjectQR->lower_bound(pObject->GetEntry()); i != pObjectQR->upper_bound(pObject->GetEntry()); ++i)
 		{
 			uint32 quest_id = i->second;
-			Quest const* pQuest = objmgr.GetQuestTemplate(quest_id);
+			Quest const* pQuest = sObjectMgr.GetQuestTemplate(quest_id);
 			if (!pQuest) continue;
 			QuestStatus status;
 			bool allowed=false;
@@ -1776,8 +1796,8 @@ bool GossipHello_npc_crok_scourgebane(Player* pPlayer, Creature* pCreature)
 	if (pCreature->isQuestGiver())
 	{
 		Object *pObject = (Object*)pCreature;
-		QuestRelations* pObjectQR = &objmgr.mCreatureQuestRelations;
-		QuestRelations* pObjectQIR = &objmgr.mCreatureQuestInvolvedRelations;
+		QuestRelations* pObjectQR = &sObjectMgr.mCreatureQuestRelations;
+		QuestRelations* pObjectQIR = &sObjectMgr.mCreatureQuestInvolvedRelations;
 
 		QuestMenu &qm = pPlayer->PlayerTalkClass->GetQuestMenu();
 		qm.ClearMenu();
@@ -1797,7 +1817,7 @@ bool GossipHello_npc_crok_scourgebane(Player* pPlayer, Creature* pCreature)
 		for (QuestRelations::const_iterator i = pObjectQR->lower_bound(pObject->GetEntry()); i != pObjectQR->upper_bound(pObject->GetEntry()); ++i)
 		{
 			uint32 quest_id = i->second;
-			Quest const* pQuest = objmgr.GetQuestTemplate(quest_id);
+			Quest const* pQuest = sObjectMgr.GetQuestTemplate(quest_id);
 			if (!pQuest) continue;
 			QuestStatus status;
 			bool allowed=false;

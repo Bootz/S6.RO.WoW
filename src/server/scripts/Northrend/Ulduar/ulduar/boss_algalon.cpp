@@ -80,7 +80,8 @@ enum Texts
     SAY_DEFEAT_2                 = -1620017,
     SAY_DEFEAT_3                 = -1620018
 };
-class boss_algalon : public CreatureScript
+
+class boss_algalon : public CreatureScript
 {
 public:
     boss_algalon() : CreatureScript("boss_algalon") { }
@@ -306,7 +307,8 @@ public:
     };
 
 };
-//Collapsing Starclass mob_collapsing_star : public CreatureScript
+//Collapsing Star
+class mob_collapsing_star : public CreatureScript
 {
 public:
     mob_collapsing_star() : CreatureScript("mob_collapsing_star") { }
@@ -320,11 +322,11 @@ public:
     {
         mob_collapsing_starAI(Creature *pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+            pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             Reset();
         }
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
 
         uint32 BlackHoleExplosion_Timer;
 

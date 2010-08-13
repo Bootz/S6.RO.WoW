@@ -211,7 +211,8 @@ const Position PosCharge[7] =
 #define POS_Y_ARENA  -299.12f
 
 #define IN_ARENA(who) (who->GetPositionX() < POS_X_ARENA && who->GetPositionY() > POS_Y_ARENA)
-class boss_thorim : public CreatureScript
+
+class boss_thorim : public CreatureScript
 {
 public:
     boss_thorim() : CreatureScript("boss_thorim") { }
@@ -226,13 +227,13 @@ public:
         boss_thorimAI(Creature* pCreature) : BossAI(pCreature, BOSS_THORIM)
             , phase(PHASE_NULL)
         {
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
             me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);
             me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true); // Death Grip jump effect
             FirstTime = true;
         }
     
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
         Phases phase;
         int32 PreAddsCount;
         uint8 spawnedAdds;
@@ -475,7 +476,8 @@ public:
 };
 
 
-// Pre-Phase Addsclass mob_pre_phase : public CreatureScript
+// Pre-Phase Adds
+class mob_pre_phase : public CreatureScript
 {
 public:
     mob_pre_phase() : CreatureScript("mob_pre_phase") { }
@@ -489,7 +491,7 @@ public:
     {
         mob_pre_phaseAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
             id = PreAdds(0);
             for (uint8 i = 0; i < 6; ++i)
                 if (me->GetEntry() == PRE_PHASE_ADD[i])
@@ -497,7 +499,7 @@ public:
         }
 
         PreAdds id;
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
         int32 PrimaryTimer;
         int32 SecondaryTimer;
 
@@ -546,7 +548,8 @@ public:
 };
 
 
-// Arena Phase Addsclass mob_arena_phase : public CreatureScript
+// Arena Phase Adds
+class mob_arena_phase : public CreatureScript
 {
 public:
     mob_arena_phase() : CreatureScript("mob_arena_phase") { }
@@ -560,7 +563,7 @@ public:
     {
         mob_arena_phaseAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceData();    
+            pInstance = pCreature->GetInstanceScript();    
             id = ArenaAdds(0);
             for (uint8 i = 0; i < 6; ++i)
                 if (me->GetEntry() == ARENA_PHASE_ADD[i])
@@ -570,7 +573,7 @@ public:
         }
 
         ArenaAdds id;
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
         int32 PrimaryTimer;
         int32 SecondaryTimer;
         int32 ChargeTimer;
@@ -666,7 +669,8 @@ public:
 };
 
 
-// Runic Colossus (Mini Boss)class mob_runic_colossus : public CreatureScript
+// Runic Colossus (Mini Boss)
+class mob_runic_colossus : public CreatureScript
 {
 public:
     mob_runic_colossus() : CreatureScript("mob_runic_colossus") { }
@@ -680,10 +684,10 @@ public:
     {
         mob_runic_colossusAI(Creature* pCreature) : ScriptedAI(pCreature), summons(me)
         {
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
         SummonList summons;
         
         int32 BarrierTimer;
@@ -765,7 +769,8 @@ public:
 };
 
 
-// Ancient Rune Giant (Mini Boss)class mob_rune_giant : public CreatureScript
+// Ancient Rune Giant (Mini Boss)
+class mob_rune_giant : public CreatureScript
 {
 public:
     mob_rune_giant() : CreatureScript("mob_rune_giant") { }
@@ -779,10 +784,10 @@ public:
     {
         mob_rune_giantAI(Creature* pCreature) : ScriptedAI(pCreature), summons(me)
         {
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
         SummonList summons;
         
         int32 StompTimer;
@@ -855,7 +860,8 @@ public:
 };
 
 
-// Thorim Phase Triggerclass thorim_phase_trigger : public CreatureScript
+// Thorim Phase Trigger
+class thorim_phase_trigger : public CreatureScript
 {
 public:
     thorim_phase_trigger() : CreatureScript("thorim_phase_trigger") { }
@@ -869,10 +875,10 @@ public:
     {
         thorim_phase_triggerAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
     
         void MoveInLineOfSight(Unit *who)
         {
@@ -895,7 +901,8 @@ public:
 };
 
 
-// Thorim Energy Sourceclass thorim_energy_source : public CreatureScript
+// Thorim Energy Source
+class thorim_energy_source : public CreatureScript
 {
 public:
     thorim_energy_source() : CreatureScript("thorim_energy_source") { }
@@ -909,11 +916,11 @@ public:
     {
         thorim_energy_sourceAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
             pThorim = Unit::GetCreature(*me, pInstance->GetData64(DATA_THORIM));
         }
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
         Creature* pThorim;
         int32 TransferTimer;
 
@@ -938,7 +945,8 @@ public:
 };
 
 
-// Sif (only in Hard-Mode)class npc_sif : public CreatureScript
+// Sif (only in Hard-Mode)
+class npc_sif : public CreatureScript
 {
 public:
     npc_sif() : CreatureScript("npc_sif") { }
@@ -952,10 +960,10 @@ public:
     {
         npc_sifAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
         int32 VolleyTimer;
         int32 BlizzardTimer;
         int32 NovaTimer;

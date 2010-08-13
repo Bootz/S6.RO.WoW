@@ -81,7 +81,8 @@ static Locations PipeLocations[] =
 };
 
 static Locations CenterPoint = {1295.21, 667.157, 189.691};
-class boss_sjonnir : public CreatureScript
+
+class boss_sjonnir : public CreatureScript
 {
 public:
     boss_sjonnir() : CreatureScript("boss_sjonnir") { }
@@ -95,7 +96,7 @@ public:
     {
         boss_sjonnirAI(Creature *c) : ScriptedAI(c), lSummons(me)
         {
-            pInstance = c->GetInstanceData();
+            pInstance = c->GetInstanceScript();
         }
 
         bool bIsFrenzy;
@@ -111,7 +112,7 @@ public:
 
         SummonList lSummons;
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
 
         void Reset()
         {
@@ -244,7 +245,8 @@ public:
 
 };
 
-class mob_malformed_ooze : public CreatureScript
+
+class mob_malformed_ooze : public CreatureScript
 {
 public:
     mob_malformed_ooze() : CreatureScript("mob_malformed_ooze") { }
@@ -287,7 +289,8 @@ public:
 
 };
 
-class mob_iron_sludge : public CreatureScript
+
+class mob_iron_sludge : public CreatureScript
 {
 public:
     mob_iron_sludge() : CreatureScript("mob_iron_sludge") { }
@@ -301,16 +304,16 @@ public:
     {
         mob_iron_sludgeAI(Creature *c) : ScriptedAI(c)
         {
-            pInstance = c->GetInstanceData();
+            pInstance = c->GetInstanceScript();
         }
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
 
         void JustDied(Unit* pKiller)
         {
             if (pInstance)
                 if (Creature* pSjonnir = Unit::GetCreature(*me, pInstance->GetData64(DATA_SJONNIR)))
-                    CAST_AI(boss_sjonnirAI, pSjonnir->AI())->KilledIronSludge();
+                    CAST_AI(boss_sjonnir::boss_sjonnirAI, pSjonnir->AI())->KilledIronSludge();
         }
     };
 

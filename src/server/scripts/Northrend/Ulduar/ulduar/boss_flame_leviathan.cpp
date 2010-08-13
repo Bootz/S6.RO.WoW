@@ -141,7 +141,8 @@ const Position PosColossus[2] =
 {367.031, 12.784,409.886,3.263},
 {368.768,-46.847,409.886,3.036}
 };
-class boss_flame_leviathan : public CreatureScript
+
+class boss_flame_leviathan : public CreatureScript
 {
 public:
     boss_flame_leviathan() : CreatureScript("boss_flame_leviathan") { }
@@ -156,7 +157,7 @@ public:
         boss_flame_leviathanAI(Creature *pCreature) : BossAI(pCreature, BOSS_LEVIATHAN), vehicle(me->GetVehicleKit())
         {
             assert(vehicle);
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
             ColossusCount = 0;
             me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);
             me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true); // Death Grip jump effect
@@ -170,7 +171,7 @@ public:
                     DoSummon(MOB_COLOSSUS, PosColossus[i], 7000, TEMPSUMMON_CORPSE_TIMED_DESPAWN);
     	}
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
         Vehicle *vehicle;
         uint32 ColossusCount;
 
@@ -356,7 +357,8 @@ public:
 };
 
 //#define BOSS_DEBUG
-class boss_flame_leviathan_seat : public CreatureScript
+
+class boss_flame_leviathan_seat : public CreatureScript
 {
 public:
     boss_flame_leviathan_seat() : CreatureScript("boss_flame_leviathan_seat") { }
@@ -424,7 +426,8 @@ public:
     };
 
 };
-class boss_flame_leviathan_defense_turret : public CreatureScript
+
+class boss_flame_leviathan_defense_turret : public CreatureScript
 {
 public:
     boss_flame_leviathan_defense_turret() : CreatureScript("boss_flame_leviathan_defense_turret") { }
@@ -453,7 +456,8 @@ public:
     };
 
 };
-class boss_flame_leviathan_overload_device : public CreatureScript
+
+class boss_flame_leviathan_overload_device : public CreatureScript
 {
 public:
     boss_flame_leviathan_overload_device() : CreatureScript("boss_flame_leviathan_overload_device") { }
@@ -509,7 +513,8 @@ struct boss_flame_leviathan_safety_containerAI : public PassiveAI
             me->GetMotionMaster()->MoveFall(409.8f, me->GetEntry());
     }
 };
-class spell_pool_of_tar : public CreatureScript
+
+class spell_pool_of_tar : public CreatureScript
 {
 public:
     spell_pool_of_tar() : CreatureScript("spell_pool_of_tar") { }
@@ -539,7 +544,8 @@ public:
     };
 
 };
-class npc_keeper_norgannon : public CreatureScript
+
+class npc_keeper_norgannon : public CreatureScript
 {
 public:
     npc_keeper_norgannon() : CreatureScript("npc_keeper_norgannon") { }
@@ -551,8 +557,8 @@ public:
 
     bool GossipSelect_keeper_norgannon(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
     {
-        InstanceData *data = pPlayer->GetInstanceData();
-        ScriptedInstance* pInstance = pCreature->GetInstanceData();
+        InstanceScript *data = pPlayer->GetInstanceScript();
+        InstanceScript* pInstance = pCreature->GetInstanceScript();
         switch(uiAction)
         {
             case GOSSIP_ACTION_INFO_DEF:
@@ -571,8 +577,8 @@ public:
 
     bool GossipHello_keeper_norgannon(Player* pPlayer, Creature* pCreature)
     {
-        InstanceData *data = pPlayer->GetInstanceData();
-        ScriptedInstance *pInstance = (ScriptedInstance *) pCreature->GetInstanceData();
+        InstanceScript *data = pPlayer->GetInstanceScript();
+        InstanceScript *pInstance = (InstanceScript *) pCreature->GetInstanceScript();
     
         if (pInstance && pPlayer)
            if (data->GetBossState(BOSS_LEVIATHAN) != DONE)
@@ -591,10 +597,10 @@ public:
     {
         keeper_norgannonAI(Creature *c) : ScriptedAI(c), summons(me)
         {
-            pInstance = c->GetInstanceData();
+            pInstance = c->GetInstanceScript();
         }
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
         SummonList summons;
 
         void JustSummoned(Creature *summon)
@@ -622,7 +628,8 @@ public:
 };
 
 
-class mob_colossus : public CreatureScript
+
+class mob_colossus : public CreatureScript
 {
 public:
     mob_colossus() : CreatureScript("mob_colossus") { }
@@ -636,10 +643,10 @@ public:
     {
         mob_colossusAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = me->GetInstanceData();
+            m_pInstance = me->GetInstanceScript();
         }
 
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
         int32 uiGroundSlamTimer;
 
         void Reset()
@@ -670,7 +677,8 @@ public:
     };
 
 };
-class at_RX_214_repair_o_matic_station : public AreaTriggerScript
+
+class at_RX_214_repair_o_matic_station : public AreaTriggerScript
 {
 public:
     at_RX_214_repair_o_matic_station() : AreaTriggerScript("at_RX_214_repair_o_matic_station") { }
@@ -693,7 +701,8 @@ public:
 
 
 
-class boss_flame_leviathan_safety_container : public CreatureScript
+
+class boss_flame_leviathan_safety_container : public CreatureScript
 {
 public:
     boss_flame_leviathan_safety_container() : CreatureScript("boss_flame_leviathan_safety_container") { }

@@ -85,12 +85,12 @@ struct boss_auriaya_AI : public BossAI
 {
     boss_auriaya_AI(Creature *pCreature) : BossAI(pCreature, BOSS_AURIAYA)
     {
-        pInstance = pCreature->GetInstanceData();
+        pInstance = pCreature->GetInstanceScript();
         me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);
         me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true); // Death Grip jump effect
     }
     
-    ScriptedInstance* pInstance;
+    InstanceScript* pInstance;
     
     Creature* Sentry[4];
     
@@ -212,7 +212,8 @@ struct boss_auriaya_AI : public BossAI
         }
     }
 };
-class boss_auriaya : public CreatureScript
+
+class boss_auriaya : public CreatureScript
 {
 public:
     boss_auriaya() : CreatureScript("boss_auriaya") { }
@@ -223,7 +224,8 @@ public:
     }
 
 };
-class feral_defender_trigger : public CreatureScript
+
+class feral_defender_trigger : public CreatureScript
 {
 public:
     feral_defender_trigger() : CreatureScript("feral_defender_trigger") { }
@@ -237,11 +239,11 @@ public:
     {
         feral_defender_triggerAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE | UNIT_FLAG_PACIFIED);
         }
 
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
         int32 SummomTimer;
 
         void Reset()
@@ -271,7 +273,8 @@ public:
 
 };
 
-class mob_sanctum_sentry : public CreatureScript
+
+class mob_sanctum_sentry : public CreatureScript
 {
 public:
     mob_sanctum_sentry() : CreatureScript("mob_sanctum_sentry") { }
@@ -285,10 +288,10 @@ public:
     {
         mob_sanctum_sentryAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
         int32 RipTimer;
         int32 PounceTimer;
         int32 CheckTimer;
@@ -360,7 +363,8 @@ public:
 
 };
 
-class mob_feral_defender : public CreatureScript
+
+class mob_feral_defender : public CreatureScript
 {
 public:
     mob_feral_defender() : CreatureScript("mob_feral_defender") { }
@@ -374,10 +378,10 @@ public:
     {
         mob_feral_defenderAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
         }
     
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
         int32 PounceTimer;
         int32 RushTimer;
         int32 RessTimer;
@@ -467,7 +471,8 @@ public:
 
 };
 
-class seeping_trigger : public CreatureScript
+
+class seeping_trigger : public CreatureScript
 {
 public:
     seeping_trigger() : CreatureScript("seeping_trigger") { }
@@ -482,10 +487,10 @@ public:
         seeping_triggerAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE | UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_PACIFIED);
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
         }
     
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
     
         void Reset()
         {

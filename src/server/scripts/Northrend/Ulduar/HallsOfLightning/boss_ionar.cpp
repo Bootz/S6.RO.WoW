@@ -65,7 +65,8 @@ enum Misc
 /*######
 ## Boss Ionar
 ######*/
-class boss_ionar : public CreatureScript
+
+class boss_ionar : public CreatureScript
 {
 public:
     boss_ionar() : CreatureScript("boss_ionar") { }
@@ -103,10 +104,10 @@ public:
     {
         boss_ionarAI(Creature *pCreature) : ScriptedAI(pCreature), lSparkList(pCreature)
         {
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
 
         SummonList lSparkList;
 
@@ -304,7 +305,8 @@ public:
 /*######
 ## mob_spark_of_ionar
 ######*/
-class mob_spark_of_ionar : public CreatureScript
+
+class mob_spark_of_ionar : public CreatureScript
 {
 public:
     mob_spark_of_ionar() : CreatureScript("mob_spark_of_ionar") { }
@@ -318,10 +320,10 @@ public:
     {
         mob_spark_of_ionarAI(Creature *pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
 
         uint32 uiCheckTimer;
 

@@ -80,7 +80,8 @@ enum eEnums
 /*######
 ## boss_bjarngrim
 ######*/
-class boss_bjarngrim : public CreatureScript
+
+class boss_bjarngrim : public CreatureScript
 {
 public:
     boss_bjarngrim() : CreatureScript("boss_bjarngrim") { }
@@ -94,12 +95,12 @@ public:
     {
         boss_bjarngrimAI(Creature *pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
             m_uiStance = STANCE_DEFENSIVE;
             memset(&m_auiStormforgedLieutenantGUID, 0, sizeof(m_auiStormforgedLieutenantGUID));
         }
 
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
 
         bool m_bIsChangingStance;
 
@@ -355,7 +356,8 @@ public:
 /*######
 ## mob_stormforged_lieutenant
 ######*/
-class mob_stormforged_lieutenant : public CreatureScript
+
+class mob_stormforged_lieutenant : public CreatureScript
 {
 public:
     mob_stormforged_lieutenant() : CreatureScript("mob_stormforged_lieutenant") { }
@@ -369,10 +371,10 @@ public:
     {
         mob_stormforged_lieutenantAI(Creature *pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
 
         uint32 m_uiArcWeld_Timer;
         uint32 m_uiRenewSteel_Timer;

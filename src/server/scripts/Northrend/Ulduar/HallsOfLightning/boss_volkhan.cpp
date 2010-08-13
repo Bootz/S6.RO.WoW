@@ -73,7 +73,8 @@ enum eEnums
 /*######
 ## Boss Volkhan
 ######*/
-class boss_volkhan : public CreatureScript
+
+class boss_volkhan : public CreatureScript
 {
 public:
     boss_volkhan() : CreatureScript("boss_volkhan") { }
@@ -107,10 +108,10 @@ public:
     {
         boss_volkhanAI(Creature *pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
 
         std::list<uint64> m_lGolemGUIDList;
 
@@ -336,7 +337,8 @@ public:
 /*######
 ## npc_volkhan_anvil
 ######*/
-class npc_volkhan_anvil : public CreatureScript
+
+class npc_volkhan_anvil : public CreatureScript
 {
 public:
     npc_volkhan_anvil() : CreatureScript("npc_volkhan_anvil") { }
@@ -378,7 +380,8 @@ public:
 /*######
 ## mob_molten_golem
 ######*/
-class mob_molten_golem : public CreatureScript
+
+class mob_molten_golem : public CreatureScript
 {
 public:
     mob_molten_golem() : CreatureScript("mob_molten_golem") { }
