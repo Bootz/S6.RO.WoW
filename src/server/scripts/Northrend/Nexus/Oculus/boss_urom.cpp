@@ -82,7 +82,8 @@ enum Creatures
 
 //range for adds spawn
 #define RANGE  25
-class boss_urom : public CreatureScript
+
+class boss_urom : public CreatureScript
 {
 public:
     boss_urom() : CreatureScript("boss_urom") { }
@@ -96,10 +97,10 @@ public:
     {
         boss_uromAI(Creature *c) : ScriptedAI(c)
         {
-            pInstance = c->GetInstanceData();
+            pInstance = c->GetInstanceScript();
         }
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
     	uint8 phase;
     	uint32 ui_SummonSimulation_Timer;
     	uint32 ui_FrostBomb_Timer;

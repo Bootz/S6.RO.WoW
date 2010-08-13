@@ -49,7 +49,8 @@ enum Drakes
 
     
 };
-class mob_centrifige_construct : public CreatureScript
+
+class mob_centrifige_construct : public CreatureScript
 {
 public:
     mob_centrifige_construct() : CreatureScript("mob_centrifige_construct") { }
@@ -63,10 +64,10 @@ public:
     {
         mob_CentrifigeConstructAI(Creature *c) : ScriptedAI(c)
         {
-            pInstance = c->GetInstanceData();
+            pInstance = c->GetInstanceScript();
         }
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
 
 
     	void DismountPlayers()
@@ -107,7 +108,8 @@ public:
 
 };
 
-class npc_oculus_drake : public CreatureScript
+
+class npc_oculus_drake : public CreatureScript
 {
 public:
     npc_oculus_drake() : CreatureScript("npc_oculus_drake") { }

@@ -81,7 +81,8 @@ enum adds
 {
 	PLANAR_ANOMALY				= 30879
 };
-class boss_eregos : public CreatureScript
+
+class boss_eregos : public CreatureScript
 {
 public:
     boss_eregos() : CreatureScript("boss_eregos") { }
@@ -89,16 +90,16 @@ public:
     CreatureAI* GetAI(Creature* pCreature)
     {
         return new boss_eregosAI (pCreature);
-    }class npc_planar_anomaly : public CreatureScript
+    }
 
     struct boss_eregosAI : public ScriptedAI
     {
         boss_eregosAI(Creature *c) : ScriptedAI(c), lSummons(me)
         {
-            pInstance = c->GetInstanceData();
+            pInstance = c->GetInstanceScript();
         }
 
-        ScriptedInstance* pInstance;
+    	InstanceScript* pInstance;
     	uint32 uiArcaneBarrage_Timer;
     	uint32 uiArcaneVolley_Timer;
     	uint32 uiEnragedAssault_Timer;
@@ -236,6 +237,7 @@ public:
 
 };
 
+class npc_planar_anomaly : public CreatureScript
 {
 public:
     npc_planar_anomaly() : CreatureScript("npc_planar_anomaly") { }

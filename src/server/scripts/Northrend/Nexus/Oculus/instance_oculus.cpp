@@ -36,19 +36,20 @@ static Locations BossMoveLoc[]=
 	{943.559143, 1045.573730, 359.967377, 0.365921}, // Belgar
     {944.670776, 1058.858032, 359.967377, 5.639870}  // Eternos
 };
-class instance_oculus : public InstanceMapScript
+
+class instance_oculus : public InstanceMapScript
 {
 public:
-    instance_oculus() : InstanceMapScript("instance_oculus") { }
+    instance_oculus() : InstanceMapScript("instance_oculus", 578) { }
 
-    InstanceData* GetInstanceData_InstanceMapScript(Map* pMap)
+    InstanceScript* GetInstanceScript(InstanceMap* pMap) const
     {
         return new instance_oculus_InstanceMapScript(pMap);
     }
 
-    struct instance_oculus_InstanceMapScript : public ScriptedInstance
+    struct instance_oculus_InstanceMapScript : public InstanceScript
     {
-        instance_oculus_InstanceMapScript(Map* pMap) : ScriptedInstance(pMap) {Initialize();};
+        instance_oculus_InstanceMapScript(Map* pMap) : InstanceScript(pMap) {Initialize();};
 
         uint64 uiDrakos;
         uint64 uiVaros;

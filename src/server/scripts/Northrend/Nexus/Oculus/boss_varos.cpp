@@ -45,7 +45,8 @@ enum Yells
     SAY_STRIKE_3                                  = -1578028,
     SAY_SPAWN                                     = -1578029
 };
-class boss_varos : public CreatureScript
+
+class boss_varos : public CreatureScript
 {
 public:
     boss_varos() : CreatureScript("boss_varos") { }
@@ -59,10 +60,10 @@ public:
     {
         boss_varosAI(Creature *c) : ScriptedAI(c)
         {
-            pInstance = c->GetInstanceData();
+            pInstance = c->GetInstanceScript();
         }
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
     	bool started,JiustYell;
     	uint32 uiEnergizeCore_Timer;
 
