@@ -297,11 +297,6 @@ class npc_argent_valiant : public CreatureScript
 public:
     npc_argent_valiant() : CreatureScript("npc_argent_valiant") { }
 
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_argent_valiantAI (pCreature);
-    }
-
     struct npc_argent_valiantAI : public ScriptedAI
     {
         npc_argent_valiantAI(Creature* pCreature) : ScriptedAI(pCreature)
@@ -409,6 +404,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_argent_valiantAI (pCreature);
+    }
+
 };
 
 
@@ -428,11 +428,6 @@ class npc_argent_champion : public CreatureScript
 {
 public:
     npc_argent_champion() : CreatureScript("npc_argent_champion") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_argent_championAI (pCreature);
-    }
 
     struct npc_argent_championAI : public ScriptedAI
     {
@@ -493,6 +488,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_argent_championAI (pCreature);
+    }
+
 };
 
 
@@ -511,11 +511,6 @@ class npc_argent_tournament_post : public CreatureScript
 {
 public:
     npc_argent_tournament_post() : CreatureScript("npc_argent_tournament_post") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_argent_tournament_postAI (pCreature);
-    }
 
     struct npc_argent_tournament_postAI : public ScriptedAI
     {
@@ -537,6 +532,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_argent_tournament_postAI (pCreature);
+    }
+
 };
 
 
@@ -557,11 +557,6 @@ class npc_alorah_and_grimmin : public CreatureScript
 {
 public:
     npc_alorah_and_grimmin() : CreatureScript("npc_alorah_and_grimmin") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_alorah_and_grimminAI (pCreature);
-    }
 
     struct npc_alorah_and_grimminAI : public ScriptedAI
     {
@@ -598,6 +593,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_alorah_and_grimminAI (pCreature);
+    }
+
 };
 
 
@@ -618,11 +618,6 @@ class npc_guardian_pavilion : public CreatureScript
 {
 public:
     npc_guardian_pavilion() : CreatureScript("npc_guardian_pavilion") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_guardian_pavilionAI (pCreature);
-    }
 
     struct npc_guardian_pavilionAI : public Scripted_NoMovementAI
     {
@@ -646,6 +641,11 @@ public:
 
         }
     };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_guardian_pavilionAI (pCreature);
+    }
 
 };
 
@@ -800,11 +800,6 @@ class npc_training_dummy_argent : public CreatureScript
 public:
     npc_training_dummy_argent() : CreatureScript("npc_training_dummy_argent") { }
 
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_training_dummy_argentAI(pCreature);
-    }
-
     struct npc_training_dummy_argentAI : Scripted_NoMovementAI
     {
         npc_training_dummy_argentAI(Creature *c) : Scripted_NoMovementAI(c)
@@ -912,6 +907,11 @@ public:
         }
         void MoveInLineOfSight(Unit * /*who*/){return;}
     };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_training_dummy_argentAI(pCreature);
+    }
 
 };
 

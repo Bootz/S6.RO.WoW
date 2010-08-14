@@ -56,7 +56,8 @@ enum eEnums
     QUEST_CHILDREN_OF_URSOC     = 12247,
     QUEST_THE_BEAR_GODS_OFFSPRING        = 12231
 };
-class npc_orsonn_and_kodian : public CreatureScript
+
+class npc_orsonn_and_kodian : public CreatureScript
 {
 public:
     npc_orsonn_and_kodian() : CreatureScript("npc_orsonn_and_kodian") { }
@@ -156,31 +157,11 @@ enum eFloppy
     SAY_QUEST_COMPLETE          = -1800013  //Thank you for helping me get back to the camp. Go tell Walter that I'm safe now!
 };
 
-//emilyclass npc_emily : public CreatureScript
+//emily
+class npc_emily : public CreatureScript
 {
 public:
     npc_emily() : CreatureScript("npc_emily") { }
-
-    bool QuestAccept(Player* pPlayer, Creature* pCreature, Quest const* quest)
-    {
-        if (quest->GetQuestId() == QUEST_PERILOUS_ADVENTURE)
-        {
-            DoScriptText(SAY_QUEST_ACCEPT, pCreature);
-            if (Creature* Mrfloppy = GetClosestCreatureWithEntry(pCreature, NPC_MRFLOPPY, 180.0f))
-            {
-                Mrfloppy->GetMotionMaster()->MoveFollow(pCreature, PET_FOLLOW_DIST, PET_FOLLOW_ANGLE);
-            }
-
-            if (npc_escortAI* pEscortAI = CAST_AI(npc_emilyAI, (pCreature->AI())))
-                pEscortAI->Start(true, false, pPlayer->GetGUID());
-        }
-        return true;
-    }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_emilyAI(pCreature);
-    }
 
     struct npc_emilyAI : public npc_escortAI
     {
@@ -330,20 +311,37 @@ public:
         }
     };
 
+    bool QuestAccept(Player* pPlayer, Creature* pCreature, Quest const* quest)
+    {
+        if (quest->GetQuestId() == QUEST_PERILOUS_ADVENTURE)
+        {
+            DoScriptText(SAY_QUEST_ACCEPT, pCreature);
+            if (Creature* Mrfloppy = GetClosestCreatureWithEntry(pCreature, NPC_MRFLOPPY, 180.0f))
+            {
+                Mrfloppy->GetMotionMaster()->MoveFollow(pCreature, PET_FOLLOW_DIST, PET_FOLLOW_ANGLE);
+            }
+
+            if (npc_escortAI* pEscortAI = CAST_AI(npc_emilyAI, (pCreature->AI())))
+                pEscortAI->Start(true, false, pPlayer->GetGUID());
+        }
+        return true;
+    }
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_emilyAI(pCreature);
+    }
+
 };
 
 
 
 //mrfloppy
-class npc_mrfloppy : public CreatureScript
+
+class npc_mrfloppy : public CreatureScript
 {
 public:
     npc_mrfloppy() : CreatureScript("npc_mrfloppy") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_mrfloppyAI(pCreature);
-    }
 
     struct npc_mrfloppyAI : public ScriptedAI
     {
@@ -384,6 +382,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_mrfloppyAI(pCreature);
+    }
+
 };
 
 
@@ -400,15 +403,11 @@ enum eSounds
 {
     SOUND_FEMALE        = 12671,
     SOUND_MALE          = 12670
-};class npc_outhouse_bunny : public CreatureScript
+};
+class npc_outhouse_bunny : public CreatureScript
 {
 public:
     npc_outhouse_bunny() : CreatureScript("npc_outhouse_bunny") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_outhouse_bunnyAI (pCreature);
-    }
 
     struct npc_outhouse_bunnyAI : public ScriptedAI
     {
@@ -448,6 +447,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_outhouse_bunnyAI (pCreature);
+    }
+
 };
 
 
@@ -457,15 +461,11 @@ enum etallhornstage
 {
     OBJECT_HAUNCH                   = 188665
 };
-class npc_tallhorn_stag : public CreatureScript
+
+class npc_tallhorn_stag : public CreatureScript
 {
 public:
     npc_tallhorn_stag() : CreatureScript("npc_tallhorn_stag") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_tallhorn_stagAI (pCreature);
-    }
 
     struct npc_tallhorn_stagAI : public ScriptedAI
     {
@@ -493,6 +493,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_tallhorn_stagAI (pCreature);
+    }
+
 };
 
 
@@ -502,15 +507,11 @@ enum eamberpinewoodsman
 {
     TALLHORN_STAG                   = 26363
 };
-class npc_amberpine_woodsman : public CreatureScript
+
+class npc_amberpine_woodsman : public CreatureScript
 {
 public:
     npc_amberpine_woodsman() : CreatureScript("npc_amberpine_woodsman") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_amberpine_woodsmanAI (pCreature);
-    }
 
     struct npc_amberpine_woodsmanAI : public ScriptedAI
     {
@@ -560,6 +561,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_amberpine_woodsmanAI (pCreature);
+    }
+
 };
 
 /*######
@@ -575,15 +581,11 @@ enum eSkirmisher
     RANDOM_SAY_2             =  -1800045,        //Whoa.. i nearly died there. Thank you, $Race!
     RANDOM_SAY_3             =  -1800046         //Thank you. $Class!
 };
-class npc_wounded_skirmisher : public CreatureScript
+
+class npc_wounded_skirmisher : public CreatureScript
 {
 public:
     npc_wounded_skirmisher() : CreatureScript("npc_wounded_skirmisher") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_wounded_skirmisherAI(pCreature);
-    }
 
     struct npc_wounded_skirmisherAI : public ScriptedAI
     {
@@ -631,9 +633,12 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_wounded_skirmisherAI(pCreature);
+    }
+
 };
-
-
 
 /*######
 ## Quest 13666 & 13673:  Une lame digne d'un champion!
@@ -648,15 +653,11 @@ enum eLakeFrog
 	MAIDEN_SPAWN
 };
 
-//Script de la grenouilleclass npc_lake_frog : public CreatureScript
+//Script de la grenouille
+class npc_lake_frog : public CreatureScript
 {
 public:
     npc_lake_frog() : CreatureScript("npc_lake_frog") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_lake_frogAI(pCreature);
-    }
 
     struct npc_lake_frogAI : public FollowerAI // FollowerAI:Permet au npc de suivre une cible
     {
@@ -712,6 +713,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_lake_frogAI(pCreature);
+    }
+
 };
 
 
@@ -719,7 +725,8 @@ public:
 #define MAIDEN_DEFAULT_TEXTID 14319
 #define MAIDEN_REWARD_TEXTID 14320
 #define GOSSIP_HELLO_MAIDEN "Ravi d'avoir pu aider, madame. Il paraît que vous êtiez autrefois la gardienne d'une êpêe lêgendaire. Sauriez-vous où je pourrais la trouver ?"
-#define SPELL_SUMMON_ASHWOOD_BRAND 62554class npc_maiden_of_ashwood_lake : public CreatureScript
+#define SPELL_SUMMON_ASHWOOD_BRAND 62554
+class npc_maiden_of_ashwood_lake : public CreatureScript
 {
 public:
     npc_maiden_of_ashwood_lake() : CreatureScript("npc_maiden_of_ashwood_lake") { }
@@ -770,15 +777,11 @@ public:
 #define MAIDEN_OF_DRAK_MAR_TIMER_04 20000
 #define MAIDEN_OF_DRAK_MAR_GOB_01 194239
 #define MAIDEN_OF_DRAK_MAR_GOB_02 194238
-//Summon la dame :X: 4602.977 Y: -1600.141 Z: 156.7834 O: 0.7504916class npc_maiden_of_drak_mar : public CreatureScript
+//Summon la dame :X: 4602.977 Y: -1600.141 Z: 156.7834 O: 0.7504916
+class npc_maiden_of_drak_mar : public CreatureScript
 {
 public:
     npc_maiden_of_drak_mar() : CreatureScript("npc_maiden_of_drak_mar") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-    	return new npc_maiden_of_drak_marAI(pCreature);
-    }
 
     struct npc_maiden_of_drak_marAI : public ScriptedAI
     {
@@ -842,6 +845,11 @@ public:
     		}
     	}
     };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+    	return new npc_maiden_of_drak_marAI(pCreature);
+    }
 
 };
 
