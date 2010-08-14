@@ -147,7 +147,7 @@ class npc_jaina_and_sylvana_HRintro : public CreatureScript
 public:
     npc_jaina_and_sylvana_HRintro() : CreatureScript("npc_jaina_and_sylvana_HRintro") { }
 
-    bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
     {
         InstanceScript* m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
 
@@ -174,7 +174,7 @@ public:
         return true;
     }
 
-    bool GossipHello(Player* pPlayer, Creature* pCreature)
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
     {
         InstanceScript* m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
 
@@ -670,7 +670,7 @@ class npc_jaina_and_sylvana_HRextro : public CreatureScript
 public:
     npc_jaina_and_sylvana_HRextro() : CreatureScript("npc_jaina_and_sylvana_HRextro") { }
 
-    bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
     {
         InstanceScript* m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
         switch (uiAction)
@@ -694,7 +694,7 @@ public:
         }
     }
 
-    bool GossipHello(Player* pPlayer, Creature* pCreature)
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
     {
 
         InstanceScript*   m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();

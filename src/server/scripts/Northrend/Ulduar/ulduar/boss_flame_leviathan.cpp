@@ -594,7 +594,7 @@ public:
         }
     };
 
-    bool GossipSelect_keeper_norgannon(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+    bool OnGossipSelect_keeper_norgannon(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
     {
         InstanceScript *data = pPlayer->GetInstanceScript();
         InstanceScript* pInstance = pCreature->GetInstanceScript();
@@ -614,7 +614,7 @@ public:
         return true;
     }
 
-    bool GossipHello_keeper_norgannon(Player* pPlayer, Creature* pCreature)
+    bool OnGossipHello_keeper_norgannon(Player* pPlayer, Creature* pCreature)
     {
         InstanceScript *data = pPlayer->GetInstanceScript();
         InstanceScript *pInstance = (InstanceScript *) pCreature->GetInstanceScript();

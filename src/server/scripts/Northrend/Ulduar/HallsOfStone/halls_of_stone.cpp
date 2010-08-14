@@ -710,7 +710,7 @@ public:
         }
     };
 
-    bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
     {
         if (uiAction == GOSSIP_ACTION_INFO_DEF+1 || uiAction == GOSSIP_ACTION_INFO_DEF+2)
         {
@@ -721,7 +721,7 @@ public:
         return true;
     }
 
-    bool GossipHello(Player* pPlayer, Creature* pCreature)
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
     {
         if (pCreature->isQuestGiver())
             pPlayer->PrepareQuestMenu(pCreature->GetGUID());

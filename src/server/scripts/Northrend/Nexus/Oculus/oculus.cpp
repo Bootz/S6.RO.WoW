@@ -114,7 +114,7 @@ class npc_oculus_drake : public CreatureScript
 public:
     npc_oculus_drake() : CreatureScript("npc_oculus_drake") { }
 
-    bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
     {
         switch(pCreature->GetEntry())
         {
@@ -213,7 +213,7 @@ public:
         return true;
     }
 
-    bool GossipHello(Player* pPlayer, Creature* pCreature)
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
     {
         if (pCreature->isQuestGiver())
             pPlayer->PrepareQuestMenu(pCreature->GetGUID());

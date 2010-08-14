@@ -37,7 +37,7 @@ class ulduar_teleporter : public GameObjectScript
 public:
     ulduar_teleporter() : GameObjectScript("ulduar_teleporter") { }
 
-    bool GOSelect( Player *pPlayer, GameObject *pGO, uint32 sender, uint32 action )
+    bool OnGossipSelect( Player *pPlayer, GameObject *pGO, uint32 sender, uint32 action )
     {
         if(sender != GOSSIP_SENDER_MAIN) return true;
         if(!pPlayer->getAttackers().empty()) return true;
@@ -76,7 +76,7 @@ public:
         return true;
     }
 
-    bool GoHello( Player *pPlayer, GameObject *pGO )
+    bool OnGossipHello( Player *pPlayer, GameObject *pGO )
     {
         InstanceScript *data = pPlayer->GetInstanceScript();
         InstanceScript *pInstance = (InstanceScript *) pGO->GetInstanceScript();

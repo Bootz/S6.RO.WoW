@@ -40,7 +40,8 @@ enum NPCs // All outdoor guards are within 35.0f of these NPCs
     NPC_APPLEBOUGH_A = 29547,
     NPC_SWEETBERRY_H = 29715,
 };
-class npc_mageguard_dalaran : public CreatureScript
+
+class npc_mageguard_dalaran : public CreatureScript
 {
 public:
     npc_mageguard_dalaran() : CreatureScript("npc_mageguard_dalaran") { }
@@ -121,12 +122,13 @@ enum eHiraSnowdawn
 };
 
 #define GOSSIP_TEXT_TRAIN_HIRA "I seek training to ride a steed."
-class npc_hira_snowdawn : public CreatureScript
+
+class npc_hira_snowdawn : public CreatureScript
 {
 public:
     npc_hira_snowdawn() : CreatureScript("npc_hira_snowdawn") { }
 
-    bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+    bool OnOnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
     {
         if (uiAction == GOSSIP_ACTION_TRAIN)
             pPlayer->SEND_TRAINERLIST(pCreature->GetGUID());
@@ -137,7 +139,7 @@ public:
         return true;
     }
 
-    bool GossipHello(Player* pPlayer, Creature* pCreature)
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
     {
         if (!pCreature->isVendor() || !pCreature->isTrainer())
             return false;

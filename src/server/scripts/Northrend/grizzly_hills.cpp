@@ -62,7 +62,7 @@ class npc_orsonn_and_kodian : public CreatureScript
 public:
     npc_orsonn_and_kodian() : CreatureScript("npc_orsonn_and_kodian") { }
 
-    bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
     {
         switch(uiAction)
         {
@@ -92,7 +92,7 @@ public:
         return true;
     }
 
-    bool GossipHello(Player* pPlayer, Creature* pCreature)
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
     {
         if (pCreature->isQuestGiver())
             pPlayer->PrepareQuestMenu(pCreature->GetGUID());
@@ -731,7 +731,7 @@ class npc_maiden_of_ashwood_lake : public CreatureScript
 public:
     npc_maiden_of_ashwood_lake() : CreatureScript("npc_maiden_of_ashwood_lake") { }
 
-    bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
     {
     	switch(uiAction)
     	{
@@ -743,7 +743,7 @@ public:
     	return true;
     }
 
-    bool GossipHello(Player* pPlayer, Creature* pCreature)
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
     {
     	if(!pPlayer->HasItemCount(44981,1,true))
     	{

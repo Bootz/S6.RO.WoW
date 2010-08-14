@@ -420,7 +420,7 @@ class go_firefield : public GameObjectScript
 {
 public:
 
-    bool GossipSelect(Player *pPlayer, Creature *pCreature, uint32, uint32 uiAction)
+    bool OnGossipSelect(Player *pPlayer, Creature *pCreature, uint32, uint32 uiAction)
     {
     	if(uiAction == GOSSIP_ACTION_INFO_DEF+1)
     		pCreature->GetInstanceScript()->SetData(DATA_XERESTRASZA_EVENT, IN_PROGRESS);
@@ -428,7 +428,7 @@ public:
     	return true;
     }
 
-    bool GossipHello(Player *pPlayer, Creature *pCreature)
+    bool OnGossipHello(Player *pPlayer, Creature *pCreature)
     {
     	if(pCreature->GetInstanceScript()->GetData(DATA_XERESTRASZA_EVENT) == NOT_STARTED)
     		pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Was ist hier vorgefallen?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);

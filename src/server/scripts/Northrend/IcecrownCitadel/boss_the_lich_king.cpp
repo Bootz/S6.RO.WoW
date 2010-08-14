@@ -946,7 +946,7 @@ public:
      return new npc_tirion_citadell_iccAI(pCreature);
     }
 
-    bool GossipSelect_tirion_icc(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+    bool OnGossipSelect_tirion_icc(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
     {
      if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
      {
@@ -957,7 +957,7 @@ public:
      return true;
     }
 
-    bool GossipHello_tirion_icc(Player* pPlayer, Creature* pCreature)
+    bool OnGossipHello_tirion_icc(Player* pPlayer, Creature* pCreature)
     {
      pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_START_EVENT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
      pPlayer->SEND_GOSSIP_MENU(10600, pCreature->GetGUID());

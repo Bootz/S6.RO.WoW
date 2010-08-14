@@ -47,7 +47,8 @@ enum eRainspeaker
     FACTION_ESCORTEE_A                  = 774,
     FACTION_ESCORTEE_H                  = 775
 };
-class npc_injured_rainspeaker_oracle : public CreatureScript
+
+class npc_injured_rainspeaker_oracle : public CreatureScript
 {
 public:
     npc_injured_rainspeaker_oracle() : CreatureScript("npc_injured_rainspeaker_oracle") { }
@@ -58,7 +59,7 @@ public:
         return false;
     }
 
-    bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
     {
         if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
         {
@@ -79,7 +80,7 @@ public:
         return true;
     }
 
-    bool GossipHello(Player* pPlayer, Creature* pCreature)
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
     {
         if (pCreature->isQuestGiver())
             pPlayer->PrepareQuestMenu(pCreature->GetGUID());
@@ -188,12 +189,13 @@ enum eVekjik
 
     QUEST_MAKING_PEACE          = 12573
 };
-class npc_vekjik : public CreatureScript
+
+class npc_vekjik : public CreatureScript
 {
 public:
     npc_vekjik() : CreatureScript("npc_vekjik") { }
 
-    bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
     {
         switch(uiAction)
         {
@@ -212,7 +214,7 @@ public:
         return true;
     }
 
-    bool GossipHello(Player* pPlayer, Creature* pCreature)
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
     {
         if (pCreature->isQuestGiver())
             pPlayer->PrepareQuestMenu(pCreature->GetGUID());
@@ -249,12 +251,13 @@ enum eFreya
     GOSSIP_TEXTID_AVATAR2    = 13304,
     GOSSIP_TEXTID_AVATAR3    = 13305
 };
-class npc_avatar_of_freya : public CreatureScript
+
+class npc_avatar_of_freya : public CreatureScript
 {
 public:
     npc_avatar_of_freya() : CreatureScript("npc_avatar_of_freya") { }
 
-    bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
     {
         switch (uiAction)
         {
@@ -274,7 +277,7 @@ public:
         return true;
     }
 
-    bool GossipHello(Player* pPlayer, Creature* pCreature)
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
     {
         if (pCreature->isQuestGiver())
             pPlayer->PrepareQuestMenu(pCreature->GetGUID());
@@ -292,7 +295,8 @@ public:
 /*######
 ## npc_geezle
 ######*/
-class npc_bushwhacker : public CreatureScript
+
+class npc_bushwhacker : public CreatureScript
 {
 public:
     npc_bushwhacker() : CreatureScript("npc_bushwhacker") { }
@@ -348,7 +352,8 @@ enum eEnums
 
     QUEST_DISASTER              = 12688
 };
-class npc_engineer_helice : public CreatureScript
+
+class npc_engineer_helice : public CreatureScript
 {
 public:
     npc_engineer_helice() : CreatureScript("npc_engineer_helice") { }

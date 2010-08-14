@@ -240,7 +240,7 @@ class npc_razael_and_lyana : public CreatureScript
 public:
     npc_razael_and_lyana() : CreatureScript("npc_razael_and_lyana") { }
 
-    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
+    bool OnOnGossipHello(Player* pPlayer, Creature* pCreature)
     {
         if (pCreature->isQuestGiver())
             pPlayer->PrepareQuestMenu(pCreature->GetGUID());
@@ -269,7 +269,7 @@ public:
         return true;
     }
 
-    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+    bool OnOnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
     {
         switch (uiAction)
         {
@@ -308,7 +308,7 @@ class npc_mcgoyver : public CreatureScript
 public:
     npc_mcgoyver() : CreatureScript("npc_mcgoyver") { }
 
-    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
+    bool OnOnGossipHello(Player* pPlayer, Creature* pCreature)
     {
         if (pPlayer->GetQuestStatus(QUEST_WE_CAN_REBUILD_IT) == QUEST_STATUS_INCOMPLETE)
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_MG_I, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
@@ -317,7 +317,7 @@ public:
         return true;
     }
 
-    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+    bool OnOnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
     {
         switch(uiAction)
         {

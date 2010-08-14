@@ -30,12 +30,13 @@ enum eAgnetta
     QUEST_ITS_THAT_YOUR_GOBLIN      = 12969,
     FACTION_HOSTILE_AT1             = 45
 };
-class npc_agnetta_tyrsdottar : public CreatureScript
+
+class npc_agnetta_tyrsdottar : public CreatureScript
 {
 public:
     npc_agnetta_tyrsdottar() : CreatureScript("npc_agnetta_tyrsdottar") { }
 
-    bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
     {
         if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
         {
@@ -48,7 +49,7 @@ public:
         return true;
     }
 
-    bool GossipHello(Player* pPlayer, Creature* pCreature)
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
     {
         if (pPlayer->GetQuestStatus(QUEST_ITS_THAT_YOUR_GOBLIN) == QUEST_STATUS_INCOMPLETE)
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_AGNETTA, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
@@ -89,12 +90,13 @@ enum eFrostbornScout
 {
     QUEST_MISSING_SCOUTS  =  12864
 };
-class npc_frostborn_scout : public CreatureScript
+
+class npc_frostborn_scout : public CreatureScript
 {
 public:
     npc_frostborn_scout() : CreatureScript("npc_frostborn_scout") { }
 
-    bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
     {
         switch (uiAction)
         {
@@ -115,7 +117,7 @@ public:
         return true;
     }
 
-    bool GossipHello(Player* pPlayer, Creature* pCreature)
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
     {
 
         if (pPlayer->GetQuestStatus(QUEST_MISSING_SCOUTS) == QUEST_STATUS_INCOMPLETE)
@@ -148,12 +150,13 @@ enum eThorim
     GOSSIP_TEXTID_THORIM3 = 13802,
     GOSSIP_TEXTID_THORIM4 = 13803
 };
-class npc_thorim : public CreatureScript
+
+class npc_thorim : public CreatureScript
 {
 public:
     npc_thorim() : CreatureScript("npc_thorim") { }
 
-    bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
     {
         switch (uiAction)
         {
@@ -177,7 +180,7 @@ public:
         return true;
     }
 
-    bool GossipHello(Player* pPlayer, Creature* pCreature)
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
     {
         if (pCreature->isQuestGiver())
             pPlayer->PrepareQuestMenu(pCreature->GetGUID());
@@ -201,7 +204,8 @@ enum eGoblinPrisoner
 {
     GO_RUSTY_CAGE = 191544
 };
-class npc_goblin_prisoner : public CreatureScript
+
+class npc_goblin_prisoner : public CreatureScript
 {
 public:
     npc_goblin_prisoner() : CreatureScript("npc_goblin_prisoner") { }
@@ -245,12 +249,13 @@ enum eVictoriousChallenger
     SPELL_SUNDER_ARMOR              = 11971,
     SPELL_REND_VC                   = 11977
 };
-class npc_victorious_challenger : public CreatureScript
+
+class npc_victorious_challenger : public CreatureScript
 {
 public:
     npc_victorious_challenger() : CreatureScript("npc_victorious_challenger") { }
 
-    bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
     {
         if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
         {
@@ -262,7 +267,7 @@ public:
         return true;
     }
 
-    bool GossipHello(Player* pPlayer, Creature* pCreature)
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
     {
         if (pCreature->isQuestGiver())
             pPlayer->PrepareQuestMenu(pCreature->GetGUID());
@@ -347,12 +352,13 @@ enum eLokliraCrone
     GOSSIP_TEXTID_LOK2  = 13779,
     GOSSIP_TEXTID_LOK3  = 13780
 };
-class npc_loklira_crone : public CreatureScript
+
+class npc_loklira_crone : public CreatureScript
 {
 public:
     npc_loklira_crone() : CreatureScript("npc_loklira_crone") { }
 
-    bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
     {
         switch (uiAction)
         {
@@ -376,7 +382,7 @@ public:
         return true;
     }
 
-    bool GossipHello(Player* pPlayer, Creature* pCreature)
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
     {
         if (pCreature->isQuestGiver())
             pPlayer->PrepareQuestMenu(pCreature->GetGUID());
@@ -405,7 +411,8 @@ enum eInjuredGoblin
 };
 
 #define GOSSIP_ITEM_1       "I am ready, lets get you out of here"
-class npc_injured_goblin : public CreatureScript
+
+class npc_injured_goblin : public CreatureScript
 {
 public:
     npc_injured_goblin() : CreatureScript("npc_injured_goblin") { }
@@ -418,7 +425,7 @@ public:
         return false;
     }
 
-    bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
     {
         npc_escortAI* pEscortAI = CAST_AI(npc_injured_goblinAI, pCreature->AI());
 
@@ -430,7 +437,7 @@ public:
         return true;
     }
 
-    bool GossipHello(Player* pPlayer, Creature* pCreature)
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
     {
         if (pCreature->isQuestGiver())
             pPlayer->PrepareQuestMenu(pCreature->GetGUID());
@@ -501,12 +508,13 @@ public:
 
 #define SPELL_MECHANO_HOG           60866
 #define SPELL_MEKGINEERS_CHOPPER    60867
-class npc_roxi_ramrocket : public CreatureScript
+
+class npc_roxi_ramrocket : public CreatureScript
 {
 public:
     npc_roxi_ramrocket() : CreatureScript("npc_roxi_ramrocket") { }
 
-    bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action )
+    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action )
     {
         switch(action)
         {
@@ -520,7 +528,7 @@ public:
         return true;
     }
 
-    bool GossipHello(Player* pPlayer, Creature* pCreature)
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
     {
         //Quest Menu
         if (pCreature->isQuestGiver())

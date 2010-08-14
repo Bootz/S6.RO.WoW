@@ -540,7 +540,7 @@ struct npc_expedition_commanderAI : public ScriptedAI
     }
 };
 
-    bool GossipSelect_commander_ulduar(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+    bool OnGossipSelect_commander_ulduar(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
     {
         switch(uiAction)
         {

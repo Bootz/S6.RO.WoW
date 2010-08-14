@@ -258,7 +258,7 @@ public:
         return new npc_tcrus_announcerAI(pCreature);
     }
 
-    bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
     {
             InstanceScript* pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             if(!pInstance)
@@ -279,7 +279,7 @@ public:
         return true;
     }
 
-    bool GossipHello(Player* pPlayer, Creature* pCreature)
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
     {
         InstanceScript* pInstance = (InstanceScript*)pCreature->GetInstanceScript();
 

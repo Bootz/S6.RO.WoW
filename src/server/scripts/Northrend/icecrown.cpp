@@ -59,7 +59,7 @@ class npc_arete : public CreatureScript
 public:
     npc_arete() : CreatureScript("npc_arete") { }
 
-    bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+    bool OnOnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
     {
         switch(uiAction)
         {
@@ -96,7 +96,7 @@ public:
         return true;
     }
 
-    bool GossipHello(Player* pPlayer, Creature* pCreature)
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
     {
         if (pCreature->isQuestGiver())
             pPlayer->PrepareQuestMenu(pCreature->GetGUID());
@@ -131,14 +131,14 @@ class npc_dame_evniki_kapsalis : public CreatureScript
 public:
     npc_dame_evniki_kapsalis() : CreatureScript("npc_dame_evniki_kapsalis") { }
 
-    bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+    bool OnOnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
     {
         if (uiAction == GOSSIP_ACTION_TRADE)
             pPlayer->SEND_VENDORLIST(pCreature->GetGUID());
         return true;
     }
 
-    bool GossipHello(Player* pPlayer, Creature* pCreature)
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
     {
         const AchievementEntry * achiCrusader = GetAchievementStore()->LookupEntry(pPlayer->GetTeam() == TEAM_HORDE ? ACHI_CRUSADER_H : ACHI_CRUSADER_A);
         if (pPlayer->HasTitle(TITLE_CRUSADER) || pPlayer->GetAchievementMgr().HasAchieved(achiCrusader))
@@ -173,7 +173,7 @@ class npc_squire_david : public CreatureScript
 public:
     npc_squire_david() : CreatureScript("npc_squire_david") { }
 
-    bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+    bool OnOnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
     {
         if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
         {
@@ -185,7 +185,7 @@ public:
         return true;
     }
 
-    bool GossipHello(Player* pPlayer, Creature* pCreature)
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
     {
         if (pPlayer->GetQuestStatus(QUEST_THE_ASPIRANT_S_CHALLENGE_H) == QUEST_STATUS_INCOMPLETE ||
             pPlayer->GetQuestStatus(QUEST_THE_ASPIRANT_S_CHALLENGE_A) == QUEST_STATUS_INCOMPLETE)//We need more info about it.
@@ -228,7 +228,7 @@ class npc_squire_danny : public CreatureScript
 public:
     npc_squire_danny() : CreatureScript("npc_squire_danny") { }
 
-    bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+    bool OnOnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
     {
         if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
         {
@@ -240,7 +240,7 @@ public:
         return true;
     }
 
-    bool GossipHello(Player* pPlayer, Creature* pCreature)
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
     {
         if (pPlayer->GetQuestStatus(QUEST_THE_VALIANT_S_CHALLENGE_HORDE_UNDERCITY) == QUEST_STATUS_INCOMPLETE
             || pPlayer->GetQuestStatus(QUEST_THE_VALIANT_S_CHALLENGE_HORDE_SENJIN) == QUEST_STATUS_INCOMPLETE
@@ -672,7 +672,7 @@ class npc_vendor_argent_tournament : public CreatureScript
 public:
     npc_vendor_argent_tournament() : CreatureScript("npc_vendor_argent_tournament") { }
 
-    bool GossipHello(Player* pPlayer, Creature* pCreature)
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
     {
     	bool npcCheck = false;
     	bool questCheck = false;
@@ -704,7 +704,7 @@ class npc_quest_givers_argent_tournament : public CreatureScript
 public:
     npc_quest_givers_argent_tournament() : CreatureScript("npc_quest_givers_argent_tournament") { }
 
-    bool GossipHello_quest_givers_argent_tournament(Player* pPlayer, Creature* pCreature)
+    bool OnGossipHello_quest_givers_argent_tournament(Player* pPlayer, Creature* pCreature)
     {
     	uint64 const guid = pCreature->GetGUID();
 
@@ -920,7 +920,7 @@ class npc_quest_givers_for_crusaders : public CreatureScript
 public:
     npc_quest_givers_for_crusaders() : CreatureScript("npc_quest_givers_for_crusaders") { }
 
-    bool GossipHello(Player* pPlayer, Creature* pCreature)
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
     {
     	if (pPlayer->HasTitle(TITLE_CRUSADER))
     		if (pCreature->isQuestGiver())
@@ -937,7 +937,7 @@ class npc_crusader_rhydalla : public CreatureScript
 public:
     npc_crusader_rhydalla() : CreatureScript("npc_crusader_rhydalla") { }
 
-    bool GossipHello(Player* pPlayer, Creature* pCreature)
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
     {
     	uint64 const guid = pCreature->GetGUID();
 
@@ -1005,7 +1005,7 @@ class npc_eadric_the_pure : public CreatureScript
 public:
     npc_eadric_the_pure() : CreatureScript("npc_eadric_the_pure") { }
 
-    bool GossipHello(Player* pPlayer, Creature* pCreature)
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
     {
     	uint64 const guid = pCreature->GetGUID();
 
@@ -1074,7 +1074,7 @@ class npc_justicar_mariel_trueheart : public CreatureScript
 public:
     npc_justicar_mariel_trueheart() : CreatureScript("npc_justicar_mariel_trueheart") { }
 
-    bool GossipHello(Player* pPlayer, Creature* pCreature)
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
     {
     	uint64 const guid = pCreature->GetGUID();
 
@@ -1142,7 +1142,7 @@ class npc_crok_scourgebane : public CreatureScript
 public:
     npc_crok_scourgebane() : CreatureScript("npc_crok_scourgebane") { }
 
-    bool GossipHello(Player* pPlayer, Creature* pCreature)
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
     {
     	uint64 const guid = pCreature->GetGUID();
 
@@ -1220,7 +1220,7 @@ class npc_jeran_lockwood : public CreatureScript
 public:
     npc_jeran_lockwood() : CreatureScript("npc_jeran_lockwood") { }
 
-    bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+    bool OnOnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
     {
     	switch(uiAction)
     	{
@@ -1236,7 +1236,7 @@ public:
     	return true;
     }
 
-    bool GossipHello(Player* pPlayer, Creature* pCreature)
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
     {
     	if((pPlayer->GetQuestStatus(13828) == QUEST_STATUS_INCOMPLETE) || (pPlayer->GetQuestStatus(13829) == QUEST_STATUS_INCOMPLETE))
     	{
@@ -1268,7 +1268,7 @@ class npc_rugan_steelbelly : public CreatureScript
 public:
     npc_rugan_steelbelly() : CreatureScript("npc_rugan_steelbelly") { }
 
-    bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+    bool OnOnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
     {
     	switch(uiAction)
     	{
@@ -1284,7 +1284,7 @@ public:
     	return true;
     }
 
-    bool GossipHello(Player* pPlayer, Creature* pCreature)
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
     {
     	if((pPlayer->GetQuestStatus(13837) == QUEST_STATUS_INCOMPLETE) || (pPlayer->GetQuestStatus(13839) == QUEST_STATUS_INCOMPLETE))
     	{
@@ -1316,7 +1316,7 @@ class npc_valis_windchaser : public CreatureScript
 public:
     npc_valis_windchaser() : CreatureScript("npc_valis_windchaser") { }
 
-    bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+    bool OnOnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
     {
     	switch (uiAction)
     	{
@@ -1333,7 +1333,7 @@ public:
     	return true;
     }
 
-    bool GossipHello(Player* pPlayer, Creature* pCreature)
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
     {
     	//Si il a la quete
     	if((pPlayer->GetQuestStatus(13835) == QUEST_STATUS_INCOMPLETE) || 

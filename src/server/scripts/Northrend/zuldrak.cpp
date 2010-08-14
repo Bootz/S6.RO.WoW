@@ -31,7 +31,8 @@ enum eDrakuruShackles
 
     NPC_RAGECLAW               = 29686
 };
-class npc_drakuru_shackles : public CreatureScript
+
+class npc_drakuru_shackles : public CreatureScript
 {
 public:
     npc_drakuru_shackles() : CreatureScript("npc_drakuru_shackles") { }
@@ -117,7 +118,8 @@ const char * SAY_RAGECLAW_2 =      "ARRRROOOOGGGGAAAA!";
 const char * SAY_RAGECLAW_3 =      "No more mister nice wolvar!";
 
 #define SAY_RAGECLAW RAND(SAY_RAGECLAW_1,SAY_RAGECLAW_2,SAY_RAGECLAW_3)
-class npc_captured_rageclaw : public CreatureScript
+
+class npc_captured_rageclaw : public CreatureScript
 {
 public:
     npc_captured_rageclaw() : CreatureScript("npc_captured_rageclaw") { }
@@ -196,12 +198,13 @@ enum eGymer
     QUEST_STORM_KING_VENGEANCE    = 12919,
     SPELL_GYMER                   = 55568
 };
-class npc_gymer : public CreatureScript
+
+class npc_gymer : public CreatureScript
 {
 public:
     npc_gymer() : CreatureScript("npc_gymer") { }
 
-    bool GossipSelect(Player* pPlayer, Creature* /*pCreature*/, uint32 /*uiSender*/, uint32 uiAction)
+    bool OnGossipSelect(Player* pPlayer, Creature* /*pCreature*/, uint32 /*uiSender*/, uint32 uiAction)
     {
         if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
         {
@@ -212,7 +215,7 @@ public:
         return true;
     }
 
-    bool GossipHello(Player* pPlayer, Creature* pCreature)
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
     {
         if (pCreature->isQuestGiver())
             pPlayer->PrepareQuestMenu(pCreature->GetGUID());
@@ -320,7 +323,8 @@ const Position AddSpawnPosition[] =
     {5828.899, -2960.15479, 312.751648, 3.53}, // caster location
 };
 
-class npc_gurgthock : public CreatureScript
+
+class npc_gurgthock : public CreatureScript
 {
 public:
     npc_gurgthock() : CreatureScript("npc_gurgthock") { }
@@ -572,7 +576,8 @@ enum eOrinokoTuskbreaker
 
     SAY_CALL_FOR_HELP       = -1571032
 };
-class npc_orinoko_tuskbreaker : public CreatureScript
+
+class npc_orinoko_tuskbreaker : public CreatureScript
 {
 public:
     npc_orinoko_tuskbreaker() : CreatureScript("npc_orinoko_tuskbreaker") { }
@@ -710,7 +715,8 @@ enum eKorrakBloodrager
     SPELL_UPPERCUT = 30471,
     SPELL_ENRAGE   = 42745
 };
-class npc_korrak_bloodrager : public CreatureScript
+
+class npc_korrak_bloodrager : public CreatureScript
 {
 public:
     npc_korrak_bloodrager() : CreatureScript("npc_korrak_bloodrager") { }
@@ -808,7 +814,8 @@ enum eYggdras
     SPELL_CORRODE_FLESH     = 57076,
     SPELL_JORMUNGAR_SPAWN   = 55859
 };
-class npc_yggdras : public CreatureScript
+
+class npc_yggdras : public CreatureScript
 {
 public:
     npc_yggdras() : CreatureScript("npc_yggdras") { }
@@ -904,7 +911,8 @@ enum eStinkbeard
 /*####
 ## npc_stinkbeard
 ####*/
-class npc_stinkbeard : public CreatureScript
+
+class npc_stinkbeard : public CreatureScript
 {
 public:
     npc_stinkbeard() : CreatureScript("npc_stinkbeard") { }
@@ -1029,7 +1037,8 @@ public:
 /*####
 ## npc_elemental_lord
 ####*/
-class npc_elemental_lord : public CreatureScript
+
+class npc_elemental_lord : public CreatureScript
 {
 public:
     npc_elemental_lord() : CreatureScript("npc_elemental_lord") { }
@@ -1177,7 +1186,8 @@ public:
 /*####
 ## npc_fiend_elemental
 ####*/
-class npc_fiend_elemental : public CreatureScript
+
+class npc_fiend_elemental : public CreatureScript
 {
 public:
     npc_fiend_elemental() : CreatureScript("npc_fiend_elemental") { }
@@ -1241,7 +1251,8 @@ public:
 /*####
 ## npc_released_offspring_harkoa
 ####*/
-class npc_released_offspring_harkoa : public CreatureScript
+
+class npc_released_offspring_harkoa : public CreatureScript
 {
 public:
     npc_released_offspring_harkoa() : CreatureScript("npc_released_offspring_harkoa") { }
@@ -1291,12 +1302,13 @@ enum eCrusade_recruit
 };
 
 #define GOSSIP_ITEM_1 "Get out there and make those Scourge wish they were never reborn!"
-class npc_crusade_recruit : public CreatureScript
+
+class npc_crusade_recruit : public CreatureScript
 {
 public:
     npc_crusade_recruit() : CreatureScript("npc_crusade_recruit") { }
 
-    bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
     {
         if (uiAction == GOSSIP_ACTION_INFO_DEF +1)
         {
@@ -1310,7 +1322,7 @@ public:
         return true;
     }
 
-    bool GossipHello(Player* pPlayer, Creature* pCreature)
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
     {
         if (pPlayer->GetQuestStatus(QUEST_TROLL_PATROL_INTESTINAL_FORTITUDE) == QUEST_STATUS_INCOMPLETE)
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
@@ -1397,7 +1409,8 @@ enum eScourgeEnclosure
     QUEST_OUR_ONLY_HOPE                           = 12916,
     NPC_GYMER_DUMMY                               = 29928   //from quest template
 };
-class go_scourge_enclosure : public GameObjectScript
+
+class go_scourge_enclosure : public GameObjectScript
 {
 public:
     go_scourge_enclosure() : GameObjectScript("go_scourge_enclosure") { }
