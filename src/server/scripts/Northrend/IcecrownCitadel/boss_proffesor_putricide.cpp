@@ -773,11 +773,11 @@ public:
 
 void AddSC_boss_professor_putricide()
 {
-    new boss_professor_putricide();
-    new npc_volatile_ooze();
-    new npc_choke_bomb();
-    new npc_puddle_ooze();
-    new npc_malleable_goo();
-    new npc_abomination();
-    new npc_gas_cloud();
+    new boss_professor_putricide;
+    new npc_volatile_ooze;
+    new npc_choke_bomb;
+    new npc_puddle_ooze;
+    new npc_malleable_goo;
+    new npc_abomination;
+    new npc_gas_cloud;
 }

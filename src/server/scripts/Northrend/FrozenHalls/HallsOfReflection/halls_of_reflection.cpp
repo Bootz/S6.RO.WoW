@@ -1352,8 +1352,8 @@ public:
 
 void AddSC_halls_of_reflection()
 {
-    new npc_jaina_and_sylvana_HRintro();
-    new npc_jaina_and_sylvana_HRextro();
-    new npc_lich_king_hr();
-    new npc_frostworn_general();
+    new npc_jaina_and_sylvana_HRintro;
+    new npc_jaina_and_sylvana_HRextro;
+    new npc_lich_king_hr;
+    new npc_frostworn_general;
 }

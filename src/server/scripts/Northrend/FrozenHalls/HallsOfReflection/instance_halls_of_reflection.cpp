@@ -333,5 +333,5 @@ public:
 
 void AddSC_instance_halls_of_reflection()
 {
-    new instance_halls_of_reflection();
+    new instance_halls_of_reflection;
 }

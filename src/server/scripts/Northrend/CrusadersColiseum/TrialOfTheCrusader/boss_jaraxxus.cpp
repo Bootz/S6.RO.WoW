@@ -486,9 +486,9 @@ public:
 
 void AddSC_boss_lord_jaraxxus()
 {
-    new Boss_Jaraxxus();
-    new Mob_FireTrigger();
-    new Mob_Vulcan();
-    new Mob_Netherportal();
-    new Mob_MistressOfPain();
+    new Boss_Jaraxxus;
+    new Mob_FireTrigger;
+    new Mob_Vulcan;
+    new Mob_Netherportal;
+    new Mob_MistressOfPain;
 }

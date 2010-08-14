@@ -656,10 +656,10 @@ public:
 
 void AddSC_boss_rotface()
 {
-    new boss_rotface();
-    new npc_ooze_big();
-    new npc_ooze_little();
-    new npc_sticky_ooze();
-    new npc_flood_ooze();
-    new npc_precious();
+    new boss_rotface;
+    new npc_ooze_big;
+    new npc_ooze_little;
+    new npc_sticky_ooze;
+    new npc_flood_ooze;
+    new npc_precious;
 }

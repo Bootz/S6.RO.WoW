@@ -288,5 +288,5 @@ public:
 
 void AddSC_boss_marwyn()
 {
-    new boss_marwyn();
+    new boss_marwyn;
 }

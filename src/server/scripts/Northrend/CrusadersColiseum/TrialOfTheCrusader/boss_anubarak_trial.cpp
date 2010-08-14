@@ -635,10 +635,10 @@ public:
 
 void AddSC_Raid_Anubarak()
 {
-    new Boss_Raid_Anubarak();
-    new Mob_NerubianTrigger();
-    new mob_swarm_scarab();
-    new nerubian_burrower();
-    new frost_sphere();
-    new creature_impale();
+    new Boss_Raid_Anubarak;
+    new Mob_NerubianTrigger;
+    new mob_swarm_scarab;
+    new nerubian_burrower;
+    new frost_sphere;
+    new creature_impale;
 }

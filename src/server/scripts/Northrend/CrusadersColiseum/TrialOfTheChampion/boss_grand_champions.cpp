@@ -1014,10 +1014,10 @@ public:
 
 void AddSC_boss_grand_champions()
 {
-    new generic_vehicleAI_toc5();
-    new boss_warrior_toc5();
-    new boss_mage_toc5();
-    new boss_shaman_toc5();
-    new boss_hunter_toc5();
-    new boss_rouge_toc5();
+    new generic_vehicleAI_toc5;
+    new boss_warrior_toc5;
+    new boss_mage_toc5;
+    new boss_shaman_toc5;
+    new boss_hunter_toc5;
+    new boss_rouge_toc5;
 }

@@ -442,7 +442,7 @@ public:
 
 void AddSC_boss_marrowgar()
 {
-    new boss_lord_marrowgar();
-    new npc_cold_flame();
-    new npc_bone_spike();
+    new boss_lord_marrowgar;
+    new npc_cold_flame;
+    new npc_bone_spike;
 }

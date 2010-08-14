@@ -400,6 +400,6 @@ public:
 
 void AddSC_boss_festergut()
 {
-    new boss_festergut();
-    new npc_stinky();
+    new boss_festergut;
+    new npc_stinky;
 }

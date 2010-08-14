@@ -519,6 +519,6 @@ public:
 
 void AddSC_boss_deahtwisper()
 {
-    new boss_lady_deathwisper();
-    new npc_shade();
+    new boss_lady_deathwisper;
+    new npc_shade;
 }

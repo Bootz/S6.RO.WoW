@@ -414,5 +414,5 @@ public:
 
 void AddSC_instance_trial_of_the_crussader()
 {
-    new instance_trial_of_the_crussader();
+    new instance_trial_of_the_crussader;
 }

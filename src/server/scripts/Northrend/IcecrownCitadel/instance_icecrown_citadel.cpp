@@ -798,5 +798,5 @@ public:
 
 void AddSC_instance_icecrown_citadel()
 {
-    new instance_icecrown_citadel();
+    new instance_icecrown_citadel;
 }

@@ -991,10 +991,10 @@ public:
 
 void AddSC_trial_of_the_crussader()
 {
-    new npc_tcrus_announcer();
-    new npc_tcrus_tirion();
-    new npc_tcrus_fizzlebang();
-    new npc_Garrosh();
-    new npc_LichKing();
-    new npc_KingVyrn();
+    new npc_tcrus_announcer;
+    new npc_tcrus_tirion;
+    new npc_tcrus_fizzlebang;
+    new npc_Garrosh;
+    new npc_LichKing;
+    new npc_KingVyrn;
 }

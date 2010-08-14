@@ -1469,14 +1469,14 @@ public:
 };
 void AddSC_boss_lichking()
 {
-    new boss_the_lich_king();
-    new npc_tirion_icc();
-    new npc_ice_puls_icc();
-    new npc_valkyr_icc();
-    new npc_ghoul_icc();
-    new npc_defile_icc();
-    new npc_raging_spirit_icc();
-    new npc_shambling_horror();
-    new npc_terenas_menethil();
-    new npc_spirit_warden();
+    new boss_the_lich_king;
+    new npc_tirion_icc;
+    new npc_ice_puls_icc;
+    new npc_valkyr_icc;
+    new npc_ghoul_icc;
+    new npc_defile_icc;
+    new npc_raging_spirit_icc;
+    new npc_shambling_horror;
+    new npc_terenas_menethil;
+    new npc_spirit_warden;
 }

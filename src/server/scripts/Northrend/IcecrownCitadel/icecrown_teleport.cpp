@@ -159,5 +159,5 @@ public:
 
 void AddSC_icecrown_teleporter()
 {
-    new icecrown_teleporter();
+    new icecrown_teleporter;
 }

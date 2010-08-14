@@ -1309,18 +1309,18 @@ public:
 
 void AddSC_boss_tc_alliance_champions()
 {
-    new boss_tyrius_duskblade();
-    new boss_kavina_grovesong();
-    new boss_melador_valestrider();
-    new boss_alyssia_moonstalker();
-    new boss_noozle_whizzlestick();
-    new boss_velanaa();
-    new boss_baelnor_lightbearer();
-    new boss_anthar_forgemender();
-    new boss_brienna_nightfell();
-    new boss_irieth_shadowstepe();
-    new boss_shaabad();
-    new boss_saamul();
-    new boss_serissa_grimdabbler();
-    new boss_shocuul();
+    new boss_tyrius_duskblade;
+    new boss_kavina_grovesong;
+    new boss_melador_valestrider;
+    new boss_alyssia_moonstalker;
+    new boss_noozle_whizzlestick;
+    new boss_velanaa;
+    new boss_baelnor_lightbearer;
+    new boss_anthar_forgemender;
+    new boss_brienna_nightfell;
+    new boss_irieth_shadowstepe;
+    new boss_shaabad;
+    new boss_saamul;
+    new boss_serissa_grimdabbler;
+    new boss_shocuul;
 }

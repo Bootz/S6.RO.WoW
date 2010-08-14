@@ -761,9 +761,9 @@ public:
 
 void AddSC_boss_sindragosa()
 {
-    new boss_sindragosa();
-    new npc_spinestalker();
-    new npc_rimefang();
-    new npc_ice_tomb();
-    new npc_frost_bomb();
+    new boss_sindragosa;
+    new npc_spinestalker;
+    new npc_rimefang;
+    new npc_ice_tomb;
+    new npc_frost_bomb;
 }

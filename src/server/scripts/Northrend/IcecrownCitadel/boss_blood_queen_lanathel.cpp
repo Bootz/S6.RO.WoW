@@ -336,6 +336,6 @@ struct npc_swarming_shadowsAI : public Scripted_NoMovementAI
 
 void AddSC_boss_blood_queen_lana_thel()
 {
-    new boss_blood_queen_lanathel();
-    new npc_swarming_shadows();
+    new boss_blood_queen_lanathel;
+    new npc_swarming_shadows;
 }

@@ -609,9 +609,9 @@ public:
 
 void AddSC_twin_valkyr()
 {
-    new boss_fjola();
-    new boss_eydis();
-    new mob_valkyr_orb();
-    new cr_dark_essence();
-    new cr_light_essence();
+    new boss_fjola;
+    new boss_eydis;
+    new mob_valkyr_orb;
+    new cr_dark_essence;
+    new cr_light_essence;
 }

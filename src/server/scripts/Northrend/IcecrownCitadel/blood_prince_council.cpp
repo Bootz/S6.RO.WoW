@@ -842,13 +842,13 @@ public:
 
 void AddSC_boss_blood_council()
 {
-    new boss_blood_council();
-    new boss_blood_elf_keleset_icc();
-    new boss_blood_elf_taldaram_icc();
-    new lanathel_intro();
-    new npc_nucleus_icc();
-    new npc_fireball_icc();
-    new npc_bomb_icc();
-    new npc_vortex_icc();
-    new npc_empfireball_icc();
+    new boss_blood_council;
+    new boss_blood_elf_keleset_icc;
+    new boss_blood_elf_taldaram_icc;
+    new lanathel_intro;
+    new npc_nucleus_icc;
+    new npc_fireball_icc;
+    new npc_bomb_icc;
+    new npc_vortex_icc;
+    new npc_empfireball_icc;
 }

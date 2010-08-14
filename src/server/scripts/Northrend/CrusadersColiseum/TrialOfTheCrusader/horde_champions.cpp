@@ -1247,18 +1247,18 @@ public:
 
 void AddSC_boss_tc_horde_champions()
 {
-    new boss_gorgrim_shadowcleave();
-    new boss_birana_stormhoof();
-    new boss_erin_misthoof();
-    new boss_rujkah();
-    new boss_ginselle_blightslinger();
-    new boss_liandra_suncaller();
-    new boss_malithas_brightblader();
-    new boss_caiphus_the_stern();
-    new boss_vivienne_blackwhisper();
-    new boss_mazdinah();
-    new boss_broln_stouthorn();
-    new boss_thrakgar();
-    new boss_harkzog();
-    new boss_narrhok_steelbreaker();
+    new boss_gorgrim_shadowcleave;
+    new boss_birana_stormhoof;
+    new boss_erin_misthoof;
+    new boss_rujkah;
+    new boss_ginselle_blightslinger;
+    new boss_liandra_suncaller;
+    new boss_malithas_brightblader;
+    new boss_caiphus_the_stern;
+    new boss_vivienne_blackwhisper;
+    new boss_mazdinah;
+    new boss_broln_stouthorn;
+    new boss_thrakgar;
+    new boss_harkzog;
+    new boss_narrhok_steelbreaker;
 }

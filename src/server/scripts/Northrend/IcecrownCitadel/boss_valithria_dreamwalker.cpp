@@ -924,15 +924,15 @@ public:
 
 void AddSC_boss_valithria()
 {
-    new boss_valithria();
-    new npc_skellmage_icc();
-    new npc_fireskell_icc();
-    new npc_dreamportal_icc();
-    new npc_suppressor_icc();
-    new npc_manavoid_icc();
-    new npc_glutabomination_icc();
-    new npc_blistzombie_icc();
-    new npc_dreamcloud_icc();
-    new npc_sister_svalna();
-    new npc_impaling_spear();
+    new boss_valithria;
+    new npc_skellmage_icc;
+    new npc_fireskell_icc;
+    new npc_dreamportal_icc;
+    new npc_suppressor_icc;
+    new npc_manavoid_icc;
+    new npc_glutabomination_icc;
+    new npc_blistzombie_icc;
+    new npc_dreamcloud_icc;
+    new npc_sister_svalna;
+    new npc_impaling_spear;
 }

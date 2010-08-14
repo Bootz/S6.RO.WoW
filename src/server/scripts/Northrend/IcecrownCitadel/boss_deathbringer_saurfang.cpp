@@ -363,6 +363,6 @@ public:
 
 void AddSC_boss_saurfang()
 {
-    new boss_saurfang();
-    new npc_bloodbeast();
+    new boss_saurfang;
+    new npc_bloodbeast;
 }
