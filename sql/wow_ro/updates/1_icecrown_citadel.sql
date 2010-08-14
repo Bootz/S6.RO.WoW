@@ -1474,3 +1474,6 @@ INSERT INTO `creature` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equ
 (5565952, 36824, 631, 1, 64, 0, 0, 482.812, -2523.32, 1249.87, 6.24047, 300, 0, 0, 252000, 59910, 0, 0);
 
 UPDATE `creature_template` SET `mechanic_immune_mask` = 634339327 WHERE `entry` = 36855;
+REPLACE INTO spell_linked_spell VALUES (-72372, 73655, 0, 'LichKing: Frostmourn effect add for tele into blade!');
+REPLACE INTO spell_linked_spell VALUES (-74326, 73655, 0, 'LichKing: Frostmourn effect add for tele into blade( H )!');
+REPLACE INTO spell_linked_spell VALUES (-74086, 68090, 0, 'Soul Rip damage!');
