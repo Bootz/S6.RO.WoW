@@ -121,6 +121,81 @@ void LFGMgr::Update(uint32 diff)
             RemoveProposal(itRemove, LFG_UPDATETYPE_PROPOSAL_FAILED);
     }
 
+    // Remove obsolete kicks
+    LfgPlayerBootMap::iterator itBoot;
+    LfgPlayerBoot *pBoot;
+    for (LfgPlayerBootMap::iterator it = m_Boots.begin(); it != m_Boots.end();)
+    {
+        itBoot = it++;
+        pBoot = itBoot->second;
+        if (pBoot->cancelTime < currTime)
+        {
+            Group *grp = sObjectMgr.GetGroupByGUID(itBoot->first);
+            pBoot->inProgress = false;
+            for (LfgAnswerMap::const_iterator itVotes = pBoot->votes.begin(); itVotes != pBoot->votes.end(); ++itVotes)
+                if (Player *plrg = sObjectMgr.GetPlayer(itVotes->first))
+                    if (plrg->GetGUIDLow() != pBoot->victimLowGuid)
+                        SendLfgBootPlayer(plrg, pBoot);
+            if (grp)
+                grp->SetLfgKickActive(false);
+            delete pBoot;
+            m_Boots.erase(itBoot);
+        }
+    }
+
+    // Consistency Clean Begin - Added to try to find a bug that leaves data inconsistent
+    LfgQueueInfoMap::iterator itQueue;
+    LfgGuidList::iterator itGuidListRemove;
+    LfgGuidList eraseList;
+
+    for (LfgQueueInfoMap::iterator it = m_QueueInfoMap.begin(); it != m_QueueInfoMap.end();)
+    {
+        itQueue = it++;
+        if (!itQueue->second)
+        {
+            sLog.outError("LFGMgr::Update: removing " UI64FMTD " from QueueInfoMap, data is null", itQueue->first);
+            m_QueueInfoMap.erase(itQueue);
+        }
+    }
+    
+    for (LfgGuidList::iterator it = m_newToQueue.begin(); it != m_newToQueue.end();)
+    {
+        itGuidListRemove = it++;
+        if (m_QueueInfoMap.find(*itGuidListRemove) == m_QueueInfoMap.end())
+        {
+            eraseList.push_back(*itGuidListRemove);
+            m_newToQueue.erase(itGuidListRemove);
+            sLog.outError("LFGMgr::Update: removing " UI64FMTD " from newToQueue, no queue info with that guid", *itGuidListRemove);
+        }
+    }
+
+    for (LfgGuidList::iterator it = m_currentQueue.begin(); it != m_currentQueue.end();)
+    {
+        itGuidListRemove = it++;
+        if (m_QueueInfoMap.find(*itGuidListRemove) == m_QueueInfoMap.end())
+        {
+            eraseList.push_back(*itGuidListRemove);
+            m_newToQueue.erase(itGuidListRemove);
+            sLog.outError("LFGMgr::Update: removing " UI64FMTD " from currentQueue, no queue info with that guid", *itGuidListRemove);
+        }
+    }
+
+    for (LfgGuidList::iterator it = eraseList.begin(); it != eraseList.end(); ++it)
+    {
+        if (IS_GROUP(*it))
+        {
+            if (Group *grp = sObjectMgr.GetGroupByGUID(GUID_LOPART(*it)))
+                for (GroupReference *itr = grp->GetFirstMember(); itr != NULL; itr = itr->next())
+                    if (Player *plr = itr->getSource())
+                        plr->GetSession()->SendLfgUpdateParty(LFG_UPDATETYPE_REMOVED_FROM_QUEUE);
+        }
+        else
+            if (Player *plr = sObjectMgr.GetPlayer(*it))
+                plr->GetSession()->SendLfgUpdatePlayer(LFG_UPDATETYPE_REMOVED_FROM_QUEUE);
+    }
+    // Consistency clean End
+
+
     // Check if a proposal can be formed with the new groups being added
     LfgProposalList proposals;
     LfgGuidList firstNew;
@@ -277,7 +352,8 @@ void LFGMgr::Join(Player *plr)
 
     LfgJoinResult result = LFG_JOIN_OK;
     // Previous checks before joining
-    if (m_QueueInfoMap[guid])
+    LfgQueueInfoMap::iterator itQueue = m_QueueInfoMap.find(guid);
+    if (itQueue != m_QueueInfoMap.end())
     {
         result = LFG_JOIN_INTERNAL_ERROR;
         if (grp)
@@ -494,16 +570,17 @@ void LFGMgr::FindNewGroups(LfgGuidList &check, LfgGuidList all, LfgProposalList 
     uint8 numLfgGroups = 0;
     uint32 groupLowGuid = 0;
     LfgQueueInfoMap pqInfoMap;
-
+    LfgQueueInfoMap::iterator itQueue;
     for (LfgGuidList::const_iterator it = check.begin(); it != check.end(); ++it)
     {
-        if (!m_QueueInfoMap[*it])
+        itQueue = m_QueueInfoMap.find(*it);
+        if (itQueue == m_QueueInfoMap.end())
         {
             sLog.outError("LFGMgr::FindNewGroups: " UI64FMTD " is not queued but listed as queued!", *it);
             return;
         }
-        pqInfoMap[*it] = m_QueueInfoMap[*it];
-        numPlayers += m_QueueInfoMap[*it]->roles.size();
+        pqInfoMap[*it] = itQueue->second;
+        numPlayers += itQueue->second->roles.size();
 
         if (IS_GROUP(*it))
         {
@@ -1052,7 +1129,7 @@ void LFGMgr::RemoveProposal(LfgProposalMap::iterator itProposal, LfgUpdateType t
     pProposal->state = LFG_PROPOSAL_FAILED;
 
     // Mark all people that didn't answered as no accept
-    if (LFG_UPDATETYPE_PROPOSAL_FAILED)
+    if (type == LFG_UPDATETYPE_PROPOSAL_FAILED)
         for (LfgProposalPlayerMap::const_iterator it = pProposal->players.begin(); it != pProposal->players.end(); ++it)
             if (it->second->accept < 1)
                 it->second->accept = 0;
@@ -1066,19 +1143,26 @@ void LFGMgr::RemoveProposal(LfgProposalMap::iterator itProposal, LfgUpdateType t
         guid = plr->GetGroup() ? plr->GetGroup()->GetGUID(): plr->GetGUID();
 
         SendUpdateProposal(plr, itProposal->first, pProposal);
-        if (!it->second->accept)                            // Remove player/player group from queues
+        // Remove members that didn't accept
+        itQueue = m_QueueInfoMap.find(guid);
+        if (!it->second->accept)
         {
             updateType = type;
             plr->GetLfgDungeons()->clear();
             plr->SetLfgRoles(ROLE_NONE);
-            itQueue = m_QueueInfoMap.find(guid);
+            
             if (itQueue != m_QueueInfoMap.end())
                 m_QueueInfoMap.erase(itQueue);
         }
         else                                                // Readd to queue
         {
-            m_newToQueue.push_back(guid);
-            updateType = LFG_UPDATETYPE_ADDED_TO_QUEUE;
+            if (itQueue == m_QueueInfoMap.end())            // Can't readd! misssing queue info!
+                updateType = LFG_UPDATETYPE_REMOVED_FROM_QUEUE;
+            else
+            {
+                m_newToQueue.push_back(guid);
+                updateType = LFG_UPDATETYPE_ADDED_TO_QUEUE;
+            }
         }
 
         if (plr->GetGroup())
