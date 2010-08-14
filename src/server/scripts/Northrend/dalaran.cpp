@@ -128,7 +128,7 @@ class npc_hira_snowdawn : public CreatureScript
 public:
     npc_hira_snowdawn() : CreatureScript("npc_hira_snowdawn") { }
 
-    bool OnOnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
     {
         if (uiAction == GOSSIP_ACTION_TRAIN)
             pPlayer->SEND_TRAINERLIST(pCreature->GetGUID());
