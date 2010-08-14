@@ -737,7 +737,7 @@ public:
                                     break;
 
                                     case 20:
-                                            me->SummonGameObject(184006, 559.257996,90.266197,395.122986,4.709139, 0, 0, 0, 0, 150);
+                                            me->SummonGameObject(184006, 563.296753,147.057114,394.149200,4.709139, 0, 0, 0, 0, 150);
                                             pInstance->SetData(PHASE_SPECHIAL, 21);
                                             pInstance->SetData(SPECHIAL_TIMER, 16000);
                                     break;
