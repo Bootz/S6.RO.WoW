@@ -34,6 +34,9 @@ using namespace Trinity;
 void
 VisibleNotifier::SendToSelf()
 {
+    void
+VisibleNotifier::SendToSelf()
+{
     // at this moment i_clientGUIDs have guids that not iterate at grid level checks
     // but exist one case when this possible and object not out of range: transports
     if (Transport* transport = i_player.GetTransport())
@@ -53,7 +56,15 @@ VisibleNotifier::SendToSelf()
     for (Player::ClientGUIDs::const_iterator it = vis_guids.begin();it != vis_guids.end(); ++it)
     {
         i_player.m_clientGUIDs.erase(*it);
-        i_data.AddOutOfRangeGUID(*it);
+        
+        if(i_player.GetZoneId() == 4812 && i_player.GetAreaId() == 4859)
+        {
+            //We're on the frozen throne, we need extra range!
+        }
+        else
+        {
+            i_data.AddOutOfRangeGUID(*it);
+        }
 
         if (IS_PLAYER_GUID(*it))
         {
@@ -73,7 +84,6 @@ VisibleNotifier::SendToSelf()
     for (std::set<Unit*>::const_iterator it = i_visibleNow.begin(); it != i_visibleNow.end(); ++it)
         i_player.SendInitialVisiblePackets(*it);
 }
-
 void
 VisibleChangesNotifier::Visit(PlayerMapType &m)
 {
