@@ -65,11 +65,6 @@ class boss_loken : public CreatureScript
 public:
     boss_loken() : CreatureScript("boss_loken") { }
 
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_lokenAI(pCreature);
-    }
-
     struct boss_lokenAI : public ScriptedAI
     {
         boss_lokenAI(Creature* pCreature) : ScriptedAI(pCreature)
@@ -234,6 +229,11 @@ public:
             DoMeleeAttackIfReady();
         }
     };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_lokenAI(pCreature);
+    }
 
 };
 

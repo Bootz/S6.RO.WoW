@@ -102,11 +102,6 @@ class boss_general_vezax : public CreatureScript
 public:
     boss_general_vezax() : CreatureScript("boss_general_vezax") { }
 
-    CreatureAI* GetAI(Creature *pCreature)
-    {
-        return new boss_general_vezaxAI(pCreature);
-    }
-
     struct boss_general_vezaxAI : public BossAI
     {
         boss_general_vezaxAI(Creature *pCreature) : BossAI(pCreature, BOSS_VEZAX)
@@ -267,6 +262,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature *pCreature) const
+    {
+        return new boss_general_vezaxAI(pCreature);
+    }
+
 };
  
 
@@ -275,11 +275,6 @@ class mob_saronite_vapors : public CreatureScript
 {
 public:
     mob_saronite_vapors() : CreatureScript("mob_saronite_vapors") { }
-
-    CreatureAI* GetAI(Creature *pCreature)
-    {
-        return new mob_saronite_vaporsAI(pCreature);
-    }
 
     struct mob_saronite_vaporsAI : public ScriptedAI
     {
@@ -311,6 +306,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature *pCreature) const
+    {
+        return new mob_saronite_vaporsAI(pCreature);
+    }
+
 };
  
 
@@ -318,11 +318,6 @@ class mob_saronite_animus : public CreatureScript
 {
 public:
     mob_saronite_animus() : CreatureScript("mob_saronite_animus") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_saronite_animusAI(pCreature);
-    }
 
     struct mob_saronite_animusAI : public ScriptedAI
     {
@@ -366,6 +361,11 @@ public:
             DoMeleeAttackIfReady();
         }
     };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_saronite_animusAI(pCreature);
+    }
 
 };
 

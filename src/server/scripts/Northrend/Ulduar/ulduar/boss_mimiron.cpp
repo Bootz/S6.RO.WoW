@@ -197,11 +197,6 @@ class boss_mimiron : public CreatureScript
 public:
     boss_mimiron() : CreatureScript("boss_mimiron") { }
 
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_mimironAI(pCreature);
-    }
-
     struct boss_mimironAI : public BossAI
     {
         boss_mimironAI(Creature *pCreature) : BossAI(pCreature, BOSS_MIMIRON)
@@ -680,6 +675,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_mimironAI(pCreature);
+    }
+
 };
 
 
@@ -687,11 +687,6 @@ class boss_leviathan_mk : public CreatureScript
 {
 public:
     boss_leviathan_mk() : CreatureScript("boss_leviathan_mk") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_leviathan_mkAI(pCreature);
-    }
 
     struct boss_leviathan_mkAI : public BossAI
     {
@@ -866,6 +861,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_leviathan_mkAI(pCreature);
+    }
+
 };
 
 
@@ -873,11 +873,6 @@ class boss_leviathan_mk_turret : public CreatureScript
 {
 public:
     boss_leviathan_mk_turret() : CreatureScript("boss_leviathan_mk_turret") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_leviathan_mk_turretAI(pCreature);
-    }
 
     struct boss_leviathan_mk_turretAI : public ScriptedAI
     {
@@ -919,6 +914,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_leviathan_mk_turretAI(pCreature);
+    }
+
 };
 
 
@@ -926,11 +926,6 @@ class mob_proximity_mine : public CreatureScript
 {
 public:
     mob_proximity_mine() : CreatureScript("mob_proximity_mine") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_proximity_mineAI(pCreature);
-    }
 
     struct mob_proximity_mineAI : public ScriptedAI
     {
@@ -970,6 +965,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_proximity_mineAI(pCreature);
+    }
+
 };
 
 
@@ -977,11 +977,6 @@ class boss_vx_001 : public CreatureScript
 {
 public:
     boss_vx_001() : CreatureScript("boss_vx_001") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_vx_001AI(pCreature);
-    }
 
     struct boss_vx_001AI : public BossAI
     {
@@ -1169,6 +1164,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_vx_001AI(pCreature);
+    }
+
 };
 
 
@@ -1176,11 +1176,6 @@ class rocket_strike : public CreatureScript
 {
 public:
     rocket_strike() : CreatureScript("rocket_strike") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new rocket_strikeAI(pCreature);
-    }
 
     struct rocket_strikeAI : public ScriptedAI
     {
@@ -1192,6 +1187,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new rocket_strikeAI(pCreature);
+    }
+
 };
 
 
@@ -1199,11 +1199,6 @@ class boss_aerial_unit : public CreatureScript
 {
 public:
     boss_aerial_unit() : CreatureScript("boss_aerial_unit") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_aerial_unitAI(pCreature);
-    }
 
     struct boss_aerial_unitAI : public BossAI
     {
@@ -1428,6 +1423,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_aerial_unitAI(pCreature);
+    }
+
 };
 
 
@@ -1435,11 +1435,6 @@ class magnetic_core : public CreatureScript
 {
 public:
     magnetic_core() : CreatureScript("magnetic_core") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new magnetic_coreAI(pCreature);
-    }
 
     struct magnetic_coreAI : public ScriptedAI
     {
@@ -1457,6 +1452,11 @@ public:
         InstanceScript *pInstance;
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new magnetic_coreAI(pCreature);
+    }
+
 };
 
 
@@ -1464,11 +1464,6 @@ class mob_boom_bot : public CreatureScript
 {
 public:
     mob_boom_bot() : CreatureScript("mob_boom_bot") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_boom_botAI(pCreature);
-    }
 
     struct mob_boom_botAI : public ScriptedAI
     {
@@ -1487,6 +1482,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_boom_botAI(pCreature);
+    }
+
 };
 
 
@@ -1494,11 +1494,6 @@ class mob_junk_bot : public CreatureScript
 {
 public:
     mob_junk_bot() : CreatureScript("mob_junk_bot") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_junk_botAI(pCreature);
-    }
 
     struct mob_junk_botAI : public ScriptedAI
     {
@@ -1509,6 +1504,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_junk_botAI(pCreature);
+    }
+
 };
 
 
@@ -1516,11 +1516,6 @@ class mob_assault_bot : public CreatureScript
 {
 public:
     mob_assault_bot() : CreatureScript("mob_assault_bot") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_assault_botAI(pCreature);
-    }
 
     struct mob_assault_botAI : public ScriptedAI
     {
@@ -1557,6 +1552,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_assault_botAI(pCreature);
+    }
+
 };
 
 
@@ -1564,11 +1564,6 @@ class mob_emergency_bot : public CreatureScript
 {
 public:
     mob_emergency_bot() : CreatureScript("mob_emergency_bot") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_emergency_botAI(pCreature);
-    }
 
     struct mob_emergency_botAI : public ScriptedAI
     {
@@ -1596,6 +1591,11 @@ public:
             else uiSprayTimer -= diff;
         }
     };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_emergency_botAI(pCreature);
+    }
 
 };
 
@@ -1627,11 +1627,6 @@ class mob_mimiron_flame : public CreatureScript
 public:
     mob_mimiron_flame() : CreatureScript("mob_mimiron_flame") { }
 
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_mimiron_flameAI(pCreature);
-    }
-
     struct mob_mimiron_flameAI : public ScriptedAI
     {
         mob_mimiron_flameAI(Creature* pCreature) : ScriptedAI(pCreature)
@@ -1642,6 +1637,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_mimiron_flameAI(pCreature);
+    }
+
 };
 
 
@@ -1649,11 +1649,6 @@ class mob_frost_bomb : public CreatureScript
 {
 public:
     mob_frost_bomb() : CreatureScript("mob_frost_bomb") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_frost_bombAI(pCreature);
-    }
 
     struct mob_frost_bombAI : public ScriptedAI
     {
@@ -1683,6 +1678,11 @@ public:
             else uiFrostTimer -= diff;
         }
     };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_frost_bombAI(pCreature);
+    }
 
 };
 

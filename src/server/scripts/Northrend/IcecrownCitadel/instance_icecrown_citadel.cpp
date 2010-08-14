@@ -28,11 +28,6 @@ class instance_icecrown_citadel : public InstanceMapScript
 public:
     instance_icecrown_citadel() : InstanceMapScript("instance_icecrown_citadel", 631) { }
 
-    InstanceScript* GetInstanceScript (InstanceMap* pMap) const
-    {
-        return new instance_icecrown_citadel_InstanceMapScript(pMap);
-    }
-
     struct instance_icecrown_citadel_InstanceMapScript : public InstanceScript
     {
         instance_icecrown_citadel_InstanceMapScript(Map* pMap) : InstanceScript(pMap)
@@ -792,6 +787,11 @@ public:
             OUT_LOAD_INST_DATA_COMPLETE;
         }
     };
+
+    InstanceScript* GetInstanceScript (InstanceMap* pMap) const
+    {
+        return new instance_icecrown_citadel_InstanceMapScript(pMap);
+    }
 
 };
 

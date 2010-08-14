@@ -59,11 +59,6 @@ class instance_ulduar : public InstanceMapScript
 public:
     instance_ulduar() : InstanceMapScript("instance_ulduar", 603) { }
 
-    InstanceScript* GetInstanceScript (InstanceMap* pMap) const
-    {
-        return new instance_ulduar_InstanceMapScript(pMap);
-    }
-
     struct instance_ulduar_InstanceMapScript : public InstanceScript
     {
         instance_ulduar_InstanceMapScript(Map* pMap) : InstanceScript(pMap)
@@ -423,6 +418,11 @@ public:
             }
         }
     };
+
+    InstanceScript* GetInstanceScript (InstanceMap* pMap) const
+    {
+        return new instance_ulduar_InstanceMapScript(pMap);
+    }
 
 };
 

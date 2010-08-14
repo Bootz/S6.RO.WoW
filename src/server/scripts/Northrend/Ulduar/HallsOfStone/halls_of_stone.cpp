@@ -137,11 +137,6 @@ class mob_tribuna_controller : public CreatureScript
 public:
     mob_tribuna_controller() : CreatureScript("mob_tribuna_controller") { }
 
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_tribuna_controllerAI(pCreature);
-    }
-
     struct mob_tribuna_controllerAI : public ScriptedAI
     {
         mob_tribuna_controllerAI(Creature *c) : ScriptedAI(c)
@@ -263,39 +258,17 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_tribuna_controllerAI(pCreature);
+    }
+
 };
 
 class npc_brann_hos : public CreatureScript
 {
 public:
     npc_brann_hos() : CreatureScript("npc_brann_hos") { }
-
-    bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-    {
-        if (uiAction == GOSSIP_ACTION_INFO_DEF+1 || uiAction == GOSSIP_ACTION_INFO_DEF+2)
-        {
-            pPlayer->CLOSE_GOSSIP_MENU();
-            CAST_AI(npc_brann_hosAI, pCreature->AI())->StartWP();
-        }
-
-        return true;
-    }
-
-    bool GossipHello(Player* pPlayer, Creature* pCreature)
-    {
-        if (pCreature->isQuestGiver())
-            pPlayer->PrepareQuestMenu(pCreature->GetGUID());
-
-        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_START, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-        pPlayer->SEND_GOSSIP_MENU(TEXT_ID_START, pCreature->GetGUID());
-
-        return true;
-    }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_brann_hosAI(pCreature);
-    }
 
     struct npc_brann_hosAI : public npc_escortAI
     {
@@ -737,11 +710,34 @@ public:
         }
     };
 
+    bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+    {
+        if (uiAction == GOSSIP_ACTION_INFO_DEF+1 || uiAction == GOSSIP_ACTION_INFO_DEF+2)
+        {
+            pPlayer->CLOSE_GOSSIP_MENU();
+            CAST_AI(npc_brann_hosAI, pCreature->AI())->StartWP();
+        }
+
+        return true;
+    }
+
+    bool GossipHello(Player* pPlayer, Creature* pCreature)
+    {
+        if (pCreature->isQuestGiver())
+            pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+
+        pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_START, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+        pPlayer->SEND_GOSSIP_MENU(TEXT_ID_START, pCreature->GetGUID());
+
+        return true;
+    }
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_brann_hosAI(pCreature);
+    }
+
 };
-
-
-
-
 
 void AddSC_halls_of_stone()
 {

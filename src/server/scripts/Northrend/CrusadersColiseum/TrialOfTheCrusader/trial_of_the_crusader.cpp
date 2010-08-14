@@ -253,7 +253,7 @@ public:
         }
     };
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new npc_tcrus_announcerAI(pCreature);
     }
@@ -597,7 +597,7 @@ public:
         }
     };
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new npc_tcrus_tirionAI(pCreature);
     }
@@ -661,7 +661,7 @@ public:
         }
     };
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new npc_GarroshAI(pCreature);
     }
@@ -808,7 +808,7 @@ public:
         }
     };
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new npc_tcrus_fizzlebangAI(pCreature);
     }
@@ -883,7 +883,7 @@ public:
         }
     };
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new npc_KingVyrnAI(pCreature);
     }
@@ -981,7 +981,7 @@ public:
         }
     };
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new npc_LichKingAI(pCreature);
     }

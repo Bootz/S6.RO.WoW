@@ -42,11 +42,6 @@ class instance_oculus : public InstanceMapScript
 public:
     instance_oculus() : InstanceMapScript("instance_oculus", 578) { }
 
-    InstanceScript* GetInstanceScript(InstanceMap* pMap) const
-    {
-        return new instance_oculus_InstanceMapScript(pMap);
-    }
-
     struct instance_oculus_InstanceMapScript : public InstanceScript
     {
         instance_oculus_InstanceMapScript(Map* pMap) : InstanceScript(pMap) {Initialize();};
@@ -279,6 +274,12 @@ public:
             OUT_LOAD_INST_DATA_COMPLETE;
         }
     };
+
+    InstanceScript* GetInstanceScript(InstanceMap* pMap) const
+    {
+        return new instance_oculus_InstanceMapScript(pMap);
+    }
+
 
 };
 

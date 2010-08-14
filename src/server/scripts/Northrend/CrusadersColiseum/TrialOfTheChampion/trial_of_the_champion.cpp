@@ -738,7 +738,7 @@ public:
         }
     };
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new npc_announcer_toc5AI(pCreature);
     }

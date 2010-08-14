@@ -97,11 +97,6 @@ class boss_blood_council : public CreatureScript
 public:
     boss_blood_council() : CreatureScript("boss_blood_council") { }
 
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_blood_councilAI (pCreature);
-    }
-
     struct boss_blood_councilAI : public ScriptedAI
     {
         boss_blood_councilAI(Creature *c) : ScriptedAI(c)
@@ -289,6 +284,11 @@ public:
 
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_blood_councilAI (pCreature);
+    }
+
 };
 ////////////////////////////////////////////
 //Keleseth
@@ -297,11 +297,6 @@ class boss_blood_elf_keleset_icc : public CreatureScript
 {
 public:
     boss_blood_elf_keleset_icc() : CreatureScript("boss_blood_elf_keleset_icc") { }
-
-    CreatureAI* GetAI_boss_Keleseth_Icc(Creature* pCreature)
-    {
-        return new boss_Keleseth_IccAI (pCreature);
-    }
 
     struct boss_Keleseth_IccAI : public ScriptedAI
     {
@@ -406,6 +401,11 @@ public:
 
     };
 
+    CreatureAI* GetAI_boss_Keleseth_Icc(Creature* pCreature) const
+    {
+        return new boss_Keleseth_IccAI (pCreature);
+    }
+
 };
 
 ///////////////////////////////////////
@@ -416,11 +416,6 @@ class boss_blood_elf_taldaram_icc : public CreatureScript
 {
 public:
     boss_blood_elf_taldaram_icc() : CreatureScript("boss_blood_elf_taldaram_icc") { }
-
-    CreatureAI* GetAI_boss_Taldaram_Icc(Creature* pCreature)
-    {
-        return new boss_Taldaram_IccAI (pCreature);
-    }
 
     struct boss_Taldaram_IccAI : public ScriptedAI
     {
@@ -527,6 +522,11 @@ public:
 
     };
 
+    CreatureAI* GetAI_boss_Taldaram_Icc(Creature* pCreature) const
+    {
+        return new boss_Taldaram_IccAI (pCreature);
+    }
+
 };
 
 ///////////////////////////////////////
@@ -537,11 +537,6 @@ class npc_nucleus_icc : public CreatureScript
 {
 public:
     npc_nucleus_icc() : CreatureScript("npc_nucleus_icc") { }
-
-    CreatureAI* GetAI_npc_Nucleus(Creature* pCreature)
-    {
-        return new npc_NucleusAI (pCreature);
-    }
 
     struct npc_NucleusAI : public ScriptedAI
     {
@@ -575,6 +570,11 @@ public:
 
     };
 
+    CreatureAI* GetAI_npc_Nucleus(Creature* pCreature) const
+    {
+        return new npc_NucleusAI (pCreature);
+    }
+
 };
 
 /////////////////////////////////////////////////
@@ -585,11 +585,6 @@ class npc_fireball_icc : public CreatureScript
 {
 public:
     npc_fireball_icc() : CreatureScript("npc_fireball_icc") { }
-
-    CreatureAI* GetAI_npc_Fireball(Creature* pCreature)
-    {
-        return new npc_FireballAI (pCreature);
-    }
 
      struct npc_FireballAI : public ScriptedAI
     {
@@ -631,6 +626,12 @@ public:
          }
 
      };
+
+    CreatureAI* GetAI_npc_Fireball(Creature* pCreature) const
+    {
+        return new npc_FireballAI (pCreature);
+    }
+
 };
      /////////////////////////////////////////////////
     //Empowered Fireball
@@ -640,11 +641,6 @@ class npc_empfireball_icc : public CreatureScript
     {
     public:
         npc_empfireball_icc() : CreatureScript("npc_empfireball_icc") { }
-
-        CreatureAI* GetAI_npc_EmpFireball(Creature* pCreature)
-        {
-            return new npc_EmpFireballAI (pCreature);
-        }
 
          struct npc_EmpFireballAI : public ScriptedAI
         {
@@ -697,7 +693,14 @@ class npc_empfireball_icc : public CreatureScript
              }
 
          };
+
+        CreatureAI* GetAI_npc_EmpFireball(Creature* pCreature) const
+        {
+            return new npc_EmpFireballAI (pCreature);
+        }
+
 };
+
         /////////////////////////////////////////////////
         //Kinetic Bomb
         /////////////////////////////////////////////////
@@ -707,11 +710,6 @@ class npc_bomb_icc : public CreatureScript
     {
     public:
         npc_bomb_icc() : CreatureScript("npc_bomb_icc") { }
-
-        CreatureAI* GetAI_npc_Bomb(Creature* pCreature)
-        {
-            return new npc_BombAI (pCreature);
-        }
 
             struct npc_BombAI : public ScriptedAI
             {
@@ -757,6 +755,11 @@ class npc_bomb_icc : public CreatureScript
 
     };
 
+        CreatureAI* GetAI_npc_Bomb(Creature* pCreature) const
+        {
+            return new npc_BombAI (pCreature);
+        }
+
 };
 
 ////////////////////////////////////////
@@ -767,11 +770,6 @@ class npc_vortex_icc : public CreatureScript
 {
 public:
     npc_vortex_icc() : CreatureScript("npc_vortex_icc") { }
-
-    CreatureAI* GetAI_npc_Vortex_icc(Creature* pCreature)
-    {
-        return new npc_Vortex_iccAI (pCreature);
-    }
 
     struct npc_Vortex_iccAI : public ScriptedAI
     {
@@ -803,17 +801,17 @@ public:
 
     };
 
+    CreatureAI* GetAI_npc_Vortex_icc(Creature* pCreature) const
+    {
+        return new npc_Vortex_iccAI (pCreature);
+    }
+
 };
 
 class lanathel_intro : public CreatureScript
 {
 public:
     lanathel_intro() : CreatureScript("lanathel_intro") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new lanathel_introAI (pCreature);
-    }
 
     struct lanathel_introAI : public ScriptedAI
     {
@@ -834,6 +832,11 @@ public:
         {
         }
     };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new lanathel_introAI (pCreature);
+    }
 
 };
 

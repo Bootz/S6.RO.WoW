@@ -259,7 +259,7 @@ public:
         }
     };
 
-    CreatureAI* GetAI_boss_Jaraxxus(Creature* pCreature)
+    CreatureAI* GetAI_boss_Jaraxxus(Creature* pCreature) const
     {
         return new boss_JaraxxusAI (pCreature);
     }
@@ -295,7 +295,7 @@ public:
         }
     };
 
-    CreatureAI* GetAI_mob_FireTrigger(Creature* pCreature)
+    CreatureAI* GetAI_mob_FireTrigger(Creature* pCreature) const
     {
         return new mob_FireTriggerAI (pCreature);
     }
@@ -345,7 +345,7 @@ public:
         }
     };
 
-    CreatureAI* GetAI_mob_Vulcan(Creature* pCreature)
+    CreatureAI* GetAI_mob_Vulcan(Creature* pCreature) const
     {
         return new mob_VulcanAI (pCreature);
     }
@@ -412,7 +412,7 @@ public:
         }
     };
 
-    CreatureAI* GetAI_mob_Netherportal(Creature* pCreature)
+    CreatureAI* GetAI_mob_Netherportal(Creature* pCreature) const
     {
         return new mob_NetherportalAI (pCreature);
 
@@ -476,7 +476,7 @@ public:
         }
     };
 
-    CreatureAI* GetAI_mob_mistressofpain(Creature* pCreature)
+    CreatureAI* GetAI_mob_mistressofpain(Creature* pCreature) const
     {
         return new mob_mistressofpainAI (pCreature);
     }

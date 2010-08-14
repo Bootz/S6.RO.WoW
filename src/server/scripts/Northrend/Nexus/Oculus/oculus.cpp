@@ -55,11 +55,6 @@ class mob_centrifige_construct : public CreatureScript
 public:
     mob_centrifige_construct() : CreatureScript("mob_centrifige_construct") { }
 
-    CreatureAI* GetAI_mob_CentrifigeConstruct(Creature* pCreature)
-    {
-        return new mob_CentrifigeConstructAI (pCreature);
-    }
-
     struct mob_CentrifigeConstructAI : public ScriptedAI
     {
         mob_CentrifigeConstructAI(Creature *c) : ScriptedAI(c)
@@ -105,6 +100,11 @@ public:
                 pInstance->SetData(DATA_CENTRIFUGE_CONSTRUCT_EVENT, pInstance->GetData(DATA_CENTRIFUGE_CONSTRUCT_EVENT)+1);
         }
     };
+
+    CreatureAI* GetAI_mob_CentrifigeConstruct(Creature* pCreature) const
+    {
+        return new mob_CentrifigeConstructAI (pCreature);
+    }
 
 };
 

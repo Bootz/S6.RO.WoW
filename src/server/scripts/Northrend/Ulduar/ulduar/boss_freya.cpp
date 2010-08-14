@@ -208,11 +208,6 @@ class boss_freya : public CreatureScript
 public:
     boss_freya() : CreatureScript("boss_freya") { }
 
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_freyaAI(pCreature);
-    }
-
     struct boss_freyaAI : public BossAI
     {
         boss_freyaAI(Creature* pCreature) : BossAI(pCreature, BOSS_FREYA)
@@ -542,22 +537,17 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_freyaAI(pCreature);
+    }
+
 };
-
-
-/*===============================================================================================
-===============================================================================================*/
-
 
 class boss_elder_brightleaf : public CreatureScript
 {
 public:
     boss_elder_brightleaf() : CreatureScript("boss_elder_brightleaf") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_elder_brightleafAI(pCreature);
-    }
 
     struct boss_elder_brightleafAI : public ScriptedAI
     {
@@ -642,6 +632,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_elder_brightleafAI(pCreature);
+    }
+
 };
 
 
@@ -649,11 +644,6 @@ class creature_sun_beam : public CreatureScript
 {
 public:
     creature_sun_beam() : CreatureScript("creature_sun_beam") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new creature_sun_beamAI(pCreature);
-    }
 
     struct creature_sun_beamAI : public Scripted_NoMovementAI
     {
@@ -667,6 +657,11 @@ public:
        InstanceScript* m_pInstance;
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new creature_sun_beamAI(pCreature);
+    }
+
 };
 
 
@@ -674,11 +669,6 @@ class creature_unstable_sun_beam : public CreatureScript
 {
 public:
     creature_unstable_sun_beam() : CreatureScript("creature_unstable_sun_beam") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new creature_unstable_sun_beamAI(pCreature);
-    }
 
     struct creature_unstable_sun_beamAI : public Scripted_NoMovementAI
     {
@@ -691,6 +681,11 @@ public:
        InstanceScript* m_pInstance;
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new creature_unstable_sun_beamAI(pCreature);
+    }
+
 };
 
 
@@ -698,11 +693,6 @@ class boss_elder_ironbranch : public CreatureScript
 {
 public:
     boss_elder_ironbranch() : CreatureScript("boss_elder_ironbranch") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_elder_ironbranchAI(pCreature);
-    }
 
     struct boss_elder_ironbranchAI : public ScriptedAI
     {
@@ -773,6 +763,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_elder_ironbranchAI(pCreature);
+    }
+
 };
 
 
@@ -780,11 +775,6 @@ class creature_iron_roots : public CreatureScript
 {
 public:
     creature_iron_roots() : CreatureScript("creature_iron_roots") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new creature_iron_rootsAI(pCreature);
-    }
 
     struct creature_iron_rootsAI : public Scripted_NoMovementAI
     {
@@ -804,6 +794,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new creature_iron_rootsAI(pCreature);
+    }
+
 };
 
 
@@ -811,11 +806,6 @@ class boss_elder_stonebark : public CreatureScript
 {
 public:
     boss_elder_stonebark() : CreatureScript("boss_elder_stonebark") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_elder_stonebarkAI(pCreature);
-    }
 
     struct boss_elder_stonebarkAI : public ScriptedAI
     {
@@ -882,6 +872,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_elder_stonebarkAI(pCreature);
+    }
+
 };
 
 
@@ -889,11 +884,6 @@ class creature_eonars_gift : public CreatureScript
 {
 public:
     creature_eonars_gift() : CreatureScript("creature_eonars_gift") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new creature_eonars_giftAI(pCreature);
-    }
 
     struct creature_eonars_giftAI : public Scripted_NoMovementAI
     {
@@ -933,6 +923,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new creature_eonars_giftAI(pCreature);
+    }
+
 };
 
 
@@ -940,11 +935,6 @@ class creature_nature_bomb : public CreatureScript
 {
 public:
     creature_nature_bomb() : CreatureScript("creature_nature_bomb") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new creature_nature_bombAI(pCreature);
-    }
 
     struct creature_nature_bombAI : public Scripted_NoMovementAI
     {
@@ -975,6 +965,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new creature_nature_bombAI(pCreature);
+    }
+
 };
 
 
@@ -982,11 +977,6 @@ class creature_detonating_lasher : public CreatureScript
 {
 public:
     creature_detonating_lasher() : CreatureScript("creature_detonating_lasher") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new creature_detonating_lasherAI(pCreature);
-    }
 
     struct creature_detonating_lasherAI : public ScriptedAI
     {
@@ -1038,6 +1028,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new creature_detonating_lasherAI(pCreature);
+    }
+
 };
 
 
@@ -1045,11 +1040,6 @@ class creature_ancient_conservator : public CreatureScript
 {
 public:
     creature_ancient_conservator() : CreatureScript("creature_ancient_conservator") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new creature_ancient_conservatorAI(pCreature);
-    }
 
     struct creature_ancient_conservatorAI : public ScriptedAI
     {
@@ -1122,6 +1112,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new creature_ancient_conservatorAI(pCreature);
+    }
+
 };
 
 
@@ -1129,11 +1124,6 @@ class creature_healthy_spore : public CreatureScript
 {
 public:
     creature_healthy_spore() : CreatureScript("creature_healthy_spore") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new creature_healthy_sporeAI(pCreature);
-    }
 
     struct creature_healthy_sporeAI : public Scripted_NoMovementAI
     {
@@ -1148,18 +1138,17 @@ public:
        InstanceScript* m_pInstance;
     };
 
-};
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new creature_healthy_sporeAI(pCreature);
+    }
 
+};
 
 class creature_storm_lasher : public CreatureScript
 {
 public:
     creature_storm_lasher() : CreatureScript("creature_storm_lasher") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new creature_storm_lasherAI(pCreature);
-    }
 
     struct creature_storm_lasherAI : public ScriptedAI
     {
@@ -1209,6 +1198,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new creature_storm_lasherAI(pCreature);
+    }
+
 };
 
 
@@ -1216,11 +1210,6 @@ class creature_snaplasher : public CreatureScript
 {
 public:
     creature_snaplasher() : CreatureScript("creature_snaplasher") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new creature_snaplasherAI(pCreature);
-    }
 
     struct creature_snaplasherAI : public ScriptedAI
     {
@@ -1248,6 +1237,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new creature_snaplasherAI(pCreature);
+    }
+
 };
 
 
@@ -1255,11 +1249,6 @@ class creature_ancient_water_spirit : public CreatureScript
 {
 public:
     creature_ancient_water_spirit() : CreatureScript("creature_ancient_water_spirit") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new creature_ancient_water_spiritAI(pCreature);
-    }
 
     struct creature_ancient_water_spiritAI : public ScriptedAI
     {
@@ -1298,9 +1287,12 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new creature_ancient_water_spiritAI(pCreature);
+    }
+
 };
-
-
 
 void AddSC_boss_freya()
 {

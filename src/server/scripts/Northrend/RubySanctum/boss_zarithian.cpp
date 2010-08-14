@@ -43,11 +43,6 @@ class boss_zarithrian : public CreatureScript
 public:
     boss_zarithrian() : CreatureScript("boss_zarithrian") { }
 
-    CreatureAI* GetAI(Creature *pCreature)
-    {
-    	return new boss_zarithrianAI(pCreature);
-    }
-
     struct boss_zarithrianAI : public ScriptedAI
     {
     	boss_zarithrianAI(Creature *pCreature) : ScriptedAI(pCreature)
@@ -154,6 +149,11 @@ public:
     	}
     };
 
+    CreatureAI* GetAI(Creature *pCreature) const
+    {
+    	return new boss_zarithrianAI(pCreature);
+    }
+
 };
 
 
@@ -161,11 +161,6 @@ class npc_onyx_flamecaller : public CreatureScript
 {
 public:
     npc_onyx_flamecaller() : CreatureScript("npc_onyx_flamecaller") { }
-
-    CreatureAI* GetAI(Creature *pCreature)
-    {
-    	return new npc_onyx_flamecallerAI(pCreature);
-    }
 
     struct npc_onyx_flamecallerAI : public ScriptedAI
     {
@@ -214,6 +209,11 @@ public:
     		DoMeleeAttackIfReady();
     	}
     };
+
+    CreatureAI* GetAI(Creature *pCreature) const
+    {
+    	return new npc_onyx_flamecallerAI(pCreature);
+    }
 
 };
 

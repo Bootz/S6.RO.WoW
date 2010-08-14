@@ -122,6 +122,12 @@ const Position Pos[20] =
 {543.256,224.831,360.891,0}
 };
 
+
+class boss_ignis : public CreatureScript
+{
+public:
+    boss_ignis() : CreatureScript("boss_ignis") { }
+
 struct boss_ignis_AI : public BossAI
 {
     boss_ignis_AI(Creature *pCreature) : BossAI(pCreature, BOSS_IGNIS), vehicle(me->GetVehicleKit())
@@ -315,13 +321,7 @@ struct boss_ignis_AI : public BossAI
         }
     }
 };
-
-class boss_ignis : public CreatureScript
-{
-public:
-    boss_ignis() : CreatureScript("boss_ignis") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new boss_ignis_AI (pCreature);
     }
@@ -332,11 +332,6 @@ class mob_iron_construct : public CreatureScript
 {
 public:
     mob_iron_construct() : CreatureScript("mob_iron_construct") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_iron_constructAI (pCreature);
-    }
 
     struct mob_iron_constructAI : public ScriptedAI
     {
@@ -411,6 +406,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_iron_constructAI (pCreature);
+    }
+
 };
 
 
@@ -418,11 +418,6 @@ class mob_scorch_ground : public CreatureScript
 {
 public:
     mob_scorch_ground() : CreatureScript("mob_scorch_ground") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_scorch_groundAI(pCreature);
-    }
 
     struct mob_scorch_groundAI : public ScriptedAI
     {
@@ -437,8 +432,12 @@ public:
         }
     };
 
-};
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_scorch_groundAI(pCreature);
+    }
 
+};
 
 void AddSC_boss_ignis()
 {

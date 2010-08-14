@@ -88,11 +88,6 @@ class boss_lady_deathwisper : public CreatureScript
 public:
     boss_lady_deathwisper() : CreatureScript("boss_lady_deathwisper") { }
 
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_lady_deathwisperAI(pCreature);
-    }
-
     struct boss_lady_deathwisperAI : public ScriptedAI
     {
         boss_lady_deathwisperAI(Creature *pCreature) : ScriptedAI(pCreature)
@@ -448,17 +443,17 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_lady_deathwisperAI(pCreature);
+    }
+
 };
 
 class npc_shade : public CreatureScript
 {
 public:
     npc_shade() : CreatureScript("npc_shade") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_shadeAI(pCreature);
-    }
 
     struct npc_shadeAI : public ScriptedAI //Dont work
     {
@@ -512,6 +507,11 @@ public:
             DoMeleeAttackIfReady();
         }
     };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_shadeAI(pCreature);
+    }
 
 };
 

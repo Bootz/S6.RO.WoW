@@ -248,7 +248,7 @@ public:
             }
     };
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new boss_tyrius_duskbladeAI(pCreature);
     }
@@ -329,7 +329,7 @@ public:
             }
     };
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new boss_kavina_grovesongAI(pCreature);
     }
@@ -409,7 +409,7 @@ public:
             }
     };
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new boss_melador_valestriderAI(pCreature);
     }
@@ -490,7 +490,7 @@ public:
             }
     };
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new boss_alyssia_moonstalkerAI(pCreature);
     }
@@ -571,7 +571,7 @@ public:
             }
     };
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new boss_noozle_whizzlestickAI(pCreature);
     }
@@ -652,7 +652,7 @@ public:
             }
     };
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new boss_velanaaAI(pCreature);
     }
@@ -733,7 +733,7 @@ public:
             }
     };
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new boss_baelnor_lightbearerAI(pCreature);
     }
@@ -814,7 +814,7 @@ public:
             }
     };
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new boss_anthar_forgemenderAI(pCreature);
     }
@@ -895,7 +895,7 @@ public:
             }
     };
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new boss_brienna_nightfellAI(pCreature);
     }
@@ -976,7 +976,7 @@ public:
             }
     };
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new boss_irieth_shadowstepeAI(pCreature);
     }
@@ -1057,7 +1057,7 @@ public:
             }
     };
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new boss_shaabadAI(pCreature);
     }
@@ -1138,7 +1138,7 @@ public:
             }
     };
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new boss_saamulAI(pCreature);
     }
@@ -1219,7 +1219,7 @@ public:
             }
     };
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new boss_serissa_grimdabblerAI(pCreature);
     }
@@ -1300,7 +1300,7 @@ public:
             }
     };
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new boss_shocuulAI(pCreature);
     }

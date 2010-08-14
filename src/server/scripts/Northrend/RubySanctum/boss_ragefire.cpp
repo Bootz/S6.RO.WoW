@@ -42,11 +42,6 @@ class boss_ragefire : public CreatureScript
 public:
     boss_ragefire() : CreatureScript("boss_ragefire") { }
 
-    CreatureAI* GetAI(Creature *pCreature)
-    {
-    	return new boss_ragefireAI(pCreature);
-    }
-
     struct boss_ragefireAI : public ScriptedAI
     {
     	boss_ragefireAI(Creature *pCreature) : ScriptedAI(pCreature)
@@ -218,6 +213,11 @@ public:
     		DoScriptText(SAY_DEATH, me);
     	}
     };
+
+    CreatureAI* GetAI(Creature *pCreature) const
+    {
+    	return new boss_ragefireAI(pCreature);
+    }
 
 };
 

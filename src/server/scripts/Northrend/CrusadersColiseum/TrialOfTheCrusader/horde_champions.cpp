@@ -300,7 +300,7 @@ public:
             }
     };
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new boss_gorgrim_shadowcleaveAI(pCreature);
     }
@@ -373,7 +373,7 @@ public:
             }
     };
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new boss_birana_stormhoofAI(pCreature);
     }
@@ -446,7 +446,7 @@ public:
             }
     };
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new boss_erin_misthoofAI(pCreature);
     }
@@ -519,7 +519,7 @@ public:
             }
     };
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new boss_rujkahAI(pCreature);
     }
@@ -592,7 +592,7 @@ public:
             }
     };
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new boss_ginselle_blightslingerAI(pCreature);
     }
@@ -664,7 +664,7 @@ public:
                     DoMeleeAttackIfReady();
             }
     };
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new boss_liandra_suncallerAI(pCreature);
     }
@@ -737,7 +737,7 @@ struct boss_malithas_brightbladeAI : public ScriptedAI
         }
 };
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new boss_malithas_brightbladeAI(pCreature);
     }
@@ -809,7 +809,7 @@ public:
             }
     };
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new boss_caiphus_the_sternAI(pCreature);
     }
@@ -882,7 +882,7 @@ public:
             }
     };
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new boss_vivienne_blackwhisperAI(pCreature);
     }
@@ -951,7 +951,7 @@ public:
             }
     };
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new boss_mazdinahAI(pCreature);
     }
@@ -1020,7 +1020,7 @@ public:
             }
     };
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new boss_broln_stouthornAI(pCreature);
     }
@@ -1093,7 +1093,7 @@ public:
             }
     };
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new boss_thrakgarAI(pCreature);
     }
@@ -1166,7 +1166,7 @@ public:
             }
     };
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new boss_harkzogAI(pCreature);
     }
@@ -1239,7 +1239,7 @@ public:
             }
     };
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new boss_narrhok_steelbreakerAI(pCreature);
     }

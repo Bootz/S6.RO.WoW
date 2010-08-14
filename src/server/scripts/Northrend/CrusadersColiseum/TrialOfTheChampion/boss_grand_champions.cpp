@@ -287,7 +287,7 @@ public:
         }
     };
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new generic_vehicleAI_toc5AI(pCreature);
     }

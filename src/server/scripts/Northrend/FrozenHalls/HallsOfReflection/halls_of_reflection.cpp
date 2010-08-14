@@ -656,7 +656,7 @@ public:
          }
     };
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new npc_jaina_and_sylvana_HRintroAI(pCreature);
     }
@@ -1205,7 +1205,7 @@ public:
           return;
        }
     };
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new npc_jaina_and_sylvana_HRextroAI(pCreature);
     }
@@ -1243,7 +1243,7 @@ public:
         }
     };
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new npc_lich_king_hrAI(pCreature);
     }
@@ -1343,7 +1343,7 @@ public:
             DoMeleeAttackIfReady();
        }
     };
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new npc_frostworn_generalAI(pCreature);
     }

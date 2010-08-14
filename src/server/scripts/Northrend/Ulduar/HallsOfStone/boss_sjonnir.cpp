@@ -23,9 +23,6 @@ SDComment:
 SDCategory:
 Script Data End */
 
-/*** SQL START ***
-update creature_template set scriptname = 'boss_sjonnir' where entry = '';
-*** SQL END ***/
 #include "ScriptPCH.h"
 #include "halls_of_stone.h"
 
@@ -86,11 +83,6 @@ class boss_sjonnir : public CreatureScript
 {
 public:
     boss_sjonnir() : CreatureScript("boss_sjonnir") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_sjonnirAI (pCreature);
-    }
 
     struct boss_sjonnirAI : public ScriptedAI
     {
@@ -243,6 +235,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_sjonnirAI (pCreature);
+    }
+
 };
 
 
@@ -250,11 +247,6 @@ class mob_malformed_ooze : public CreatureScript
 {
 public:
     mob_malformed_ooze() : CreatureScript("mob_malformed_ooze") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_malformed_oozeAI(pCreature);
-    }
 
     struct mob_malformed_oozeAI : public ScriptedAI
     {
@@ -287,6 +279,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_malformed_oozeAI(pCreature);
+    }
+
 };
 
 
@@ -294,11 +291,6 @@ class mob_iron_sludge : public CreatureScript
 {
 public:
     mob_iron_sludge() : CreatureScript("mob_iron_sludge") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_iron_sludgeAI(pCreature);
-    }
 
     struct mob_iron_sludgeAI : public ScriptedAI
     {
@@ -316,6 +308,11 @@ public:
                     CAST_AI(boss_sjonnir::boss_sjonnirAI, pSjonnir->AI())->KilledIronSludge();
         }
     };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_iron_sludgeAI(pCreature);
+    }
 
 };
 

@@ -263,7 +263,7 @@ public:
             }
     };
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new boss_gormok_impalerAI(pCreature);
     }
@@ -471,7 +471,7 @@ public:
             }
     };
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new boss_acidmawAI(pCreature);
     }
@@ -661,7 +661,7 @@ public:
             }
     };
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new boss_dreadscaleAI(pCreature);
     }
@@ -864,7 +864,7 @@ public:
             }
     };
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new boss_icehowlAI(pCreature);
     }
@@ -919,7 +919,7 @@ public:
         }
     };
 
-    CreatureAI* GetAI_mob_FireBomb(Creature* pCreature)
+    CreatureAI* GetAI_mob_FireBomb(Creature* pCreature) const
     {
         return new mob_FireBombAI (pCreature);
     }
@@ -967,7 +967,7 @@ struct mob_SnowboldAI : public ScriptedAI
     }
 };
 
-    CreatureAI* GetAI_mob_Snowbold(Creature* pCreature)
+    CreatureAI* GetAI_mob_Snowbold(Creature* pCreature) const
     {
         return new mob_SnowboldAI (pCreature);
     }

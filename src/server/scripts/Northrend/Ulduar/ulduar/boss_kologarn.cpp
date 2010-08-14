@@ -108,11 +108,6 @@ class boss_kologarn : public CreatureScript
 public:
     boss_kologarn() : CreatureScript("boss_kologarn") { }
 
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_kologarnAI (pCreature);
-    }
-
     struct boss_kologarnAI : public BossAI
     {
         boss_kologarnAI(Creature *pCreature) : BossAI(pCreature, BOSS_KOLOGARN), vehicle(me->GetVehicleKit()),
@@ -348,6 +343,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_kologarnAI (pCreature);
+    }
+
 };
 
 
@@ -355,11 +355,6 @@ class mob_focused_eyebeam : public CreatureScript
 {
 public:
     mob_focused_eyebeam() : CreatureScript("mob_focused_eyebeam") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_focused_eyebeamAI(pCreature);
-    }
 
     struct mob_focused_eyebeamAI : public ScriptedAI
     {
@@ -387,6 +382,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_focused_eyebeamAI(pCreature);
+    }
+
 };
 
 
@@ -395,11 +395,6 @@ class mob_right_arm : public CreatureScript
 {
 public:
     mob_right_arm() : CreatureScript("mob_right_arm") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_right_armAI(pCreature);
-    }
 
     struct mob_right_armAI : public ScriptedAI
     {
@@ -514,6 +509,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_right_armAI(pCreature);
+    }
+
 };
 
 
@@ -522,11 +522,6 @@ class mob_left_arm : public CreatureScript
 {
 public:
     mob_left_arm() : CreatureScript("mob_left_arm") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_left_armAI(pCreature);
-    }
 
     struct mob_left_armAI : public ScriptedAI
     {
@@ -563,6 +558,11 @@ public:
             summon->AI()->DoZoneInCombat();
         }
     };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_left_armAI(pCreature);
+    }
 
 };
 

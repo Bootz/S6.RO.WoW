@@ -70,11 +70,6 @@ class boss_festergut : public CreatureScript
 public:
     boss_festergut() : CreatureScript("boss_festergut") { }
 
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_festergutAI(pCreature);
-    }
-
     struct boss_festergutAI : public ScriptedAI
     {
         boss_festergutAI(Creature *pCreature) : ScriptedAI(pCreature)
@@ -322,17 +317,17 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_festergutAI(pCreature);
+    }
+
 };
 
 class npc_stinky : public CreatureScript
 {
 public:
     npc_stinky() : CreatureScript("npc_stinky") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_stinkyAI(pCreature);
-    }
 
     struct npc_stinkyAI : public ScriptedAI
     {
@@ -393,6 +388,11 @@ public:
             me->PlayDirectSound(16907);
         }
     };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_stinkyAI(pCreature);
+    }
 
 };
 

@@ -122,11 +122,6 @@ class boss_professor_putricide : public CreatureScript
 public:
     boss_professor_putricide() : CreatureScript("boss_professor_putricide") { }
 
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_professor_putricideAI(pCreature);
-    }
-
     struct boss_professor_putricideAI : public ScriptedAI
     {
         boss_professor_putricideAI(Creature *pCreature) : ScriptedAI(pCreature)
@@ -359,17 +354,17 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_professor_putricideAI(pCreature);
+    }
+
 };
 
 class npc_volatile_ooze : public CreatureScript
 {
 public:
     npc_volatile_ooze() : CreatureScript("npc_volatile_ooze") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_volatile_oozeAI(pCreature);
-    }
 
     struct npc_volatile_oozeAI : public ScriptedAI
     {
@@ -437,16 +432,18 @@ public:
             } else OozeExplosionTimer -= diff;
         }
     };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_volatile_oozeAI(pCreature);
+    }
+
 };
+
 class npc_gas_cloud : public CreatureScript
 {
 public:
     npc_gas_cloud() : CreatureScript("npc_gas_cloud") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_gas_cloudAI(pCreature);
-    }
 
     struct npc_gas_cloudAI : public ScriptedAI
     {
@@ -540,16 +537,17 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_gas_cloudAI(pCreature);
+    }
+
 };
+
 class npc_choke_bomb : public CreatureScript
 {
 public:
     npc_choke_bomb() : CreatureScript("npc_choke_bomb") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_choke_bombAI(pCreature);
-    }
 
     struct npc_choke_bombAI : public ScriptedAI
     {
@@ -584,16 +582,18 @@ public:
             } m_uiExplodeDespawn -= uiDiff;
         }
     };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_choke_bombAI(pCreature);
+    }
+
 };
+
 class npc_puddle_ooze : public CreatureScript
 {
 public:
     npc_puddle_ooze() : CreatureScript("npc_puddle_ooze") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_puddle_oozeAI(pCreature);
-    }
 
     struct npc_puddle_oozeAI : public ScriptedAI
     {
@@ -645,17 +645,18 @@ public:
 
         }
     };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_puddle_oozeAI(pCreature);
+    }
+
 };
 class npc_abomination : public CreatureScript
 
 {
 public:
     npc_abomination() : CreatureScript("npc_abomination") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_abominationAI(pCreature);
-    }
 
     struct npc_abominationAI : public ScriptedAI
     {
@@ -714,16 +715,18 @@ public:
     		}
         }
     };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_abominationAI(pCreature);
+    }
+
 };
+
 class npc_malleable_goo : public CreatureScript
 {
 public:
     npc_malleable_goo() : CreatureScript("npc_malleable_goo") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_malleable_gooAI(pCreature);
-    }
 
     struct npc_malleable_gooAI : public ScriptedAI
     {
@@ -761,8 +764,12 @@ public:
         }
     };
 
-};
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_malleable_gooAI(pCreature);
+    }
 
+};
 
 void AddSC_boss_professor_putricide()
 {

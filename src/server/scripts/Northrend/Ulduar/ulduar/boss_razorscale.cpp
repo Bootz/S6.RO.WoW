@@ -159,11 +159,6 @@ class boss_razorscale : public CreatureScript
 public:
     boss_razorscale() : CreatureScript("boss_razorscale") { }
 
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_razorscaleAI (pCreature);
-    }
-
     struct boss_razorscaleAI : public BossAI
     {
         boss_razorscaleAI(Creature *pCreature) : BossAI(pCreature, BOSS_RAZORSCALE)
@@ -422,11 +417,17 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_razorscaleAI (pCreature);
+    }
+
 };
 
-
-/*====================================================================================
-====================================================================================*/
+class npc_expedition_commander_ulduar : public CreatureScript
+{
+public:
+    npc_expedition_commander_ulduar() : CreatureScript("npc_expedition_commander_ulduar") { }
 
 struct npc_expedition_commanderAI : public ScriptedAI
 {
@@ -539,12 +540,6 @@ struct npc_expedition_commanderAI : public ScriptedAI
     }
 };
 
-
-class npc_expedition_commander_ulduar : public CreatureScript
-{
-public:
-    npc_expedition_commander_ulduar() : CreatureScript("npc_expedition_commander_ulduar") { }
-
     bool GossipSelect_commander_ulduar(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
     {
         switch(uiAction)
@@ -572,24 +567,17 @@ public:
         return true;
     }
 
-    CreatureAI* GetAI_commander_ulduar(Creature* pCreature)
+    CreatureAI* GetAI_commander_ulduar(Creature* pCreature) const
     {
         return new npc_expedition_commanderAI(pCreature);
     }
 
 };
 
-
-
 class mob_devouring_flame : public CreatureScript
 {
 public:
     mob_devouring_flame() : CreatureScript("mob_devouring_flame") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_devouring_flameAI(pCreature);
-    }
 
     struct mob_devouring_flameAI : public ScriptedAI
     {
@@ -604,19 +592,17 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_devouring_flameAI(pCreature);
+    }
+
 };
-
-
 
 class mob_darkrune_watcher : public CreatureScript
 {
 public:
     mob_darkrune_watcher() : CreatureScript("mob_darkrune_watcher") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_darkrune_watcherAI(pCreature);
-    }
 
     struct mob_darkrune_watcherAI : public ScriptedAI
     {
@@ -656,19 +642,17 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_darkrune_watcherAI(pCreature);
+    }
+
 };
-
-
 
 class mob_darkrune_guardian : public CreatureScript
 {
 public:
     mob_darkrune_guardian() : CreatureScript("mob_darkrune_guardian") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_darkrune_guardianAI(pCreature);
-    }
 
     struct mob_darkrune_guardianAI : public ScriptedAI
     {
@@ -700,19 +684,17 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_darkrune_guardianAI(pCreature);
+    }
+
 };
-
-
 
 class mob_darkrune_sentinel : public CreatureScript
 {
 public:
     mob_darkrune_sentinel() : CreatureScript("mob_darkrune_sentinel") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_darkrune_sentinelAI(pCreature);
-    }
 
     struct mob_darkrune_sentinelAI : public ScriptedAI
     {
@@ -760,19 +742,17 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_darkrune_sentinelAI(pCreature);
+    }
+
 };
-
-
 
 class mole_machine_trigger : public CreatureScript
 {
 public:
     mole_machine_trigger() : CreatureScript("mole_machine_trigger") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mole_machine_triggerAI(pCreature);
-    }
 
     struct mole_machine_triggerAI : public ScriptedAI
     {
@@ -828,6 +808,11 @@ public:
             summon->AI()->DoZoneInCombat();
         }
     };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mole_machine_triggerAI(pCreature);
+    }
 
 };
 

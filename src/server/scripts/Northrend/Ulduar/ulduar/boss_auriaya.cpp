@@ -81,6 +81,11 @@ enum Actions
     ACTION_NINE_LIVES                           = 1,
 };
 
+class boss_auriaya : public CreatureScript
+{
+public:
+    boss_auriaya() : CreatureScript("boss_auriaya") { }
+
 struct boss_auriaya_AI : public BossAI
 {
     boss_auriaya_AI(Creature *pCreature) : BossAI(pCreature, BOSS_AURIAYA)
@@ -212,13 +217,7 @@ struct boss_auriaya_AI : public BossAI
         }
     }
 };
-
-class boss_auriaya : public CreatureScript
-{
-public:
-    boss_auriaya() : CreatureScript("boss_auriaya") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new boss_auriaya_AI (pCreature);
     }
@@ -229,11 +228,6 @@ class feral_defender_trigger : public CreatureScript
 {
 public:
     feral_defender_trigger() : CreatureScript("feral_defender_trigger") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new feral_defender_triggerAI(pCreature);
-    }
 
     struct feral_defender_triggerAI : public ScriptedAI
     {
@@ -271,6 +265,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new feral_defender_triggerAI(pCreature);
+    }
+
 };
 
 
@@ -278,11 +277,6 @@ class mob_sanctum_sentry : public CreatureScript
 {
 public:
     mob_sanctum_sentry() : CreatureScript("mob_sanctum_sentry") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_sanctum_sentryAI(pCreature);
-    }
 
     struct mob_sanctum_sentryAI : public ScriptedAI
     {
@@ -361,6 +355,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_sanctum_sentryAI(pCreature);
+    }
+
 };
 
 
@@ -368,11 +367,6 @@ class mob_feral_defender : public CreatureScript
 {
 public:
     mob_feral_defender() : CreatureScript("mob_feral_defender") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_feral_defenderAI(pCreature);
-    }
 
     struct mob_feral_defenderAI : public ScriptedAI
     {
@@ -469,6 +463,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_feral_defenderAI(pCreature);
+    }
+
 };
 
 
@@ -476,11 +475,6 @@ class seeping_trigger : public CreatureScript
 {
 public:
     seeping_trigger() : CreatureScript("seeping_trigger") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new seeping_triggerAI(pCreature);
-    }
 
     struct seeping_triggerAI : public ScriptedAI
     {
@@ -504,6 +498,11 @@ public:
                 me->ForcedDespawn();
         }
     };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new seeping_triggerAI(pCreature);
+    }
 
 };
 

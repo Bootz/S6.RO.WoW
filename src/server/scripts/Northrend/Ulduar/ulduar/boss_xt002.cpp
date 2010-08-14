@@ -142,6 +142,12 @@ enum Yells
  *        XT-002 DECONSTRUCTOR
  *
  *///----------------------------------------------------
+
+class boss_xt002 : public CreatureScript
+{
+public:
+    boss_xt002() : CreatureScript("boss_xt002") { }
+
 struct boss_xt002_AI : public BossAI
 {
     boss_xt002_AI(Creature *pCreature) : BossAI(pCreature, BOSS_XT002), vehicle(me->GetVehicleKit())
@@ -479,12 +485,7 @@ struct boss_xt002_AI : public BossAI
     }
 };
 
-class boss_xt002 : public CreatureScript
-{
-public:
-    boss_xt002() : CreatureScript("boss_xt002") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new boss_xt002_AI(pCreature);
     }
@@ -500,11 +501,6 @@ class mob_xt002_heart : public CreatureScript
 {
 public:
     mob_xt002_heart() : CreatureScript("mob_xt002_heart") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_xt002_heartAI(pCreature);
-    }
 
     struct mob_xt002_heartAI : public ScriptedAI
     {
@@ -574,6 +570,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_xt002_heartAI(pCreature);
+    }
+
 };
 
 
@@ -586,11 +587,6 @@ class mob_scrapbot : public CreatureScript
 {
 public:
     mob_scrapbot() : CreatureScript("mob_scrapbot") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_scrapbotAI(pCreature);
-    }
 
     struct mob_scrapbotAI : public ScriptedAI
     {
@@ -634,6 +630,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_scrapbotAI(pCreature);
+    }
+
 };
 
 
@@ -646,11 +647,6 @@ class mob_pummeller : public CreatureScript
 {
 public:
     mob_pummeller() : CreatureScript("mob_pummeller") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_pummellerAI(pCreature);
-    }
 
     struct mob_pummellerAI : public ScriptedAI
     {
@@ -701,6 +697,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_pummellerAI(pCreature);
+    }
+
 };
 
 
@@ -713,11 +714,6 @@ class mob_boombot : public CreatureScript
 {
 public:
     mob_boombot() : CreatureScript("mob_boombot") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_boombotAI(pCreature);
-    }
 
     struct mob_boombotAI : public ScriptedAI
     {
@@ -747,6 +743,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_boombotAI(pCreature);
+    }
+
 };
 
 
@@ -759,11 +760,6 @@ class mob_void_zone : public CreatureScript
 {
 public:
     mob_void_zone() : CreatureScript("mob_void_zone") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_void_zoneAI(pCreature);
-    }
 
     struct mob_void_zoneAI : public ScriptedAI
     {
@@ -791,6 +787,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_void_zoneAI(pCreature);
+    }
+
 };
 
 
@@ -803,11 +804,6 @@ class mob_life_spark : public CreatureScript
 {
 public:
     mob_life_spark() : CreatureScript("mob_life_spark") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_life_sparkAI(pCreature);
-    }
 
     struct mob_life_sparkAI : public ScriptedAI
     {
@@ -841,6 +837,11 @@ public:
             else uiShockTimer -= diff;
         }
     };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_life_sparkAI(pCreature);
+    }
 
 };
 

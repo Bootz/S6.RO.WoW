@@ -24,11 +24,6 @@ class instance_ruby_sanctum : public InstanceMapScript
 public:
     instance_ruby_sanctum() : InstanceMapScript("instance_ruby_sanctum", 724) { }
 
-    InstanceScript* GetInstanceScript (InstanceMap *pMap) const
-    {
-    	return new instance_ruby_sanctum_InstanceMapScript(pMap);
-    }
-
     struct instance_ruby_sanctum_InstanceMapScript : public InstanceScript
     {
     	instance_ruby_sanctum_InstanceMapScript(Map *pMap) : InstanceScript(pMap) {Initialize();};
@@ -224,6 +219,11 @@ public:
     		OUT_LOAD_INST_DATA_COMPLETE;
     	}
     };
+
+    InstanceScript* GetInstanceScript (InstanceMap *pMap) const
+    {
+    	return new instance_ruby_sanctum_InstanceMapScript(pMap);
+    }
 
 };
 

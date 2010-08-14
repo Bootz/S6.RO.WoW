@@ -106,11 +106,6 @@ class boss_rotface : public CreatureScript
 public:
     boss_rotface() : CreatureScript("boss_rotface") { }
 
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_rotfaceAI(pCreature);
-    }
-
     struct boss_rotfaceAI : public ScriptedAI
     {
         boss_rotfaceAI(Creature *pCreature) : ScriptedAI(pCreature), summons(me)
@@ -372,17 +367,17 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_rotfaceAI(pCreature);
+    }
+
 };
 
 class npc_ooze_big : public CreatureScript
 {
 public:
     npc_ooze_big() : CreatureScript("npc_ooze_big") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_ooze_bigAI(pCreature);
-    }
 
     struct npc_ooze_bigAI : public ScriptedAI
     {
@@ -437,17 +432,17 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_ooze_bigAI(pCreature);
+    }
+
 };
 
 class npc_ooze_little : public CreatureScript
 {
 public:
     npc_ooze_little() : CreatureScript("npc_ooze_little") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_ooze_littleAI(pCreature);
-    }
 
     struct npc_ooze_littleAI : public ScriptedAI
     {
@@ -495,16 +490,18 @@ public:
             DoMeleeAttackIfReady();
         }
     };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_ooze_littleAI(pCreature);
+    }
+
 };
+
 class npc_sticky_ooze : public CreatureScript
 {
 public:
     npc_sticky_ooze() : CreatureScript("npc_sticky_ooze") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_sticky_oozeAI(pCreature);
-    }
 
     struct npc_sticky_oozeAI : public ScriptedAI
     {
@@ -530,17 +527,19 @@ public:
 
         }
     };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_sticky_oozeAI(pCreature);
+    }
+
 };
+
 class npc_flood_ooze : public CreatureScript
 
 {
 public:
     npc_flood_ooze() : CreatureScript("npc_flood_ooze") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_flood_oozeAI(pCreature);
-    }
 
     struct npc_flood_oozeAI : public ScriptedAI
     {
@@ -575,17 +574,17 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_flood_oozeAI(pCreature);
+    }
+
 };
 
 class npc_precious : public CreatureScript
 {
 public:
     npc_precious() : CreatureScript("npc_precious") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_preciousAI(pCreature);
-    }
 
     struct npc_preciousAI : public ScriptedAI
     {
@@ -647,6 +646,11 @@ public:
             me->PlayDirectSound(16993);
         }
     };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_preciousAI(pCreature);
+    }
 
 };
 

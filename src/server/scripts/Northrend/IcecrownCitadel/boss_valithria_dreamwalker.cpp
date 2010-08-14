@@ -108,11 +108,6 @@ class boss_valithria : public CreatureScript
 public:
     boss_valithria() : CreatureScript("boss_valithria") { }
 
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_valithriaAI (pCreature);
-    }
-
     struct boss_valithriaAI : public ScriptedAI
     {
         boss_valithriaAI(Creature* pCreature) : ScriptedAI(pCreature), summons(me)
@@ -333,17 +328,17 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_valithriaAI (pCreature);
+    }
+
 };
 
 class npc_dreamportal_icc : public CreatureScript
 {
 public:
     npc_dreamportal_icc() : CreatureScript("npc_dreamportal_icc") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_dreamportal_iccAI (pCreature);
-    }
 
     struct npc_dreamportal_iccAI : public ScriptedAI
     {
@@ -395,17 +390,17 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_dreamportal_iccAI (pCreature);
+    }
+
 };
 
 class npc_skellmage_icc : public CreatureScript
 {
 public:
     npc_skellmage_icc() : CreatureScript("npc_skellmage_icc") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_skellmage_iccAI (pCreature);
-    }
 
     struct npc_skellmage_iccAI : public ScriptedAI
     {
@@ -471,17 +466,17 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_skellmage_iccAI (pCreature);
+    }
+
 };
 
 class npc_fireskell_icc : public CreatureScript
 {
 public:
     npc_fireskell_icc() : CreatureScript("npc_fireskell_icc") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_fireskell_iccAI (pCreature);
-    }
 
     struct npc_fireskell_iccAI : public ScriptedAI
     {
@@ -527,17 +522,18 @@ public:
             DoScriptText(SAY_PDEATH, pValithria);
         }
     };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_fireskell_iccAI (pCreature);
+    }
+
 };
 
 class npc_suppressor_icc : public CreatureScript
 {
 public:
     npc_suppressor_icc() : CreatureScript("npc_suppressor_icc") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_suppressor_iccAI (pCreature);
-    }
 
     struct npc_suppressor_iccAI : public ScriptedAI
     {
@@ -570,17 +566,17 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_suppressor_iccAI (pCreature);
+    }
+
 };
 
 class npc_manavoid_icc : public CreatureScript
 {
 public:
     npc_manavoid_icc() : CreatureScript("npc_manavoid_icc") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_manavoid_iccAI (pCreature);
-    }
 
     struct npc_manavoid_iccAI : public ScriptedAI
     {
@@ -602,17 +598,18 @@ public:
             DoStartNoMovement(me->getVictim());
         }
     };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_manavoid_iccAI (pCreature);
+    }
+
 };
 
 class npc_glutabomination_icc : public CreatureScript
 {
 public:
     npc_glutabomination_icc() : CreatureScript("npc_glutabomination_icc") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_glutabomination_iccAI (pCreature);
-    }
 
     struct npc_glutabomination_iccAI : public ScriptedAI
     {
@@ -659,17 +656,18 @@ public:
         }
 
     };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_glutabomination_iccAI (pCreature);
+    }
+
 };
 
 class npc_blistzombie_icc : public CreatureScript
 {
 public:
     npc_blistzombie_icc() : CreatureScript("npc_blistzombie_icc") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_blistzombie_iccAI (pCreature);
-    }
 
     struct npc_blistzombie_iccAI : public ScriptedAI
     {
@@ -716,17 +714,17 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_blistzombie_iccAI (pCreature);
+    }
+
 };
 
 class npc_impaling_spear : public CreatureScript
 {
 public:
     npc_impaling_spear() : CreatureScript("npc_impaling_spear") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_impaling_spearAI (pCreature);
-    }
 
     struct npc_impaling_spearAI : public Scripted_NoMovementAI
     {
@@ -765,17 +763,17 @@ public:
     	}
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_impaling_spearAI (pCreature);
+    }
+
 };
 
 class npc_sister_svalna : public CreatureScript
 {
 public:
     npc_sister_svalna() : CreatureScript("npc_sister_svalna") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_sister_svalnaAI (pCreature);
-    }
 
     struct npc_sister_svalnaAI : public ScriptedAI
     {
@@ -855,17 +853,17 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_sister_svalnaAI (pCreature);
+    }
+
 };
 
 class npc_dreamcloud_icc : public CreatureScript
 {
 public:
     npc_dreamcloud_icc() : CreatureScript("npc_dreamcloud_icc") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_dreamcloud_iccAI (pCreature);
-    }
 
     struct npc_dreamcloud_iccAI : public ScriptedAI
     {
@@ -916,6 +914,11 @@ public:
             } else m_uiDelayTimer -= diff;
     	}
     };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_dreamcloud_iccAI (pCreature);
+    }
 
 };
 

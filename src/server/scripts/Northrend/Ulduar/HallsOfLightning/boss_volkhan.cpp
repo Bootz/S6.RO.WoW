@@ -79,31 +79,6 @@ class boss_volkhan : public CreatureScript
 public:
     boss_volkhan() : CreatureScript("boss_volkhan") { }
 
-    bool EffectDummyCreature(Unit* pCaster, uint32 uiSpellId, uint32 uiEffIndex, Creature* pCreatureTarget)
-    {
-        //always check spellid and effectindex
-        if (uiSpellId == SPELL_TEMPER_DUMMY && uiEffIndex == 0)
-        {
-            if (pCaster->GetEntry() != NPC_VOLKHAN_ANVIL || pCreatureTarget->GetEntry() != NPC_VOLKHAN)
-                return true;
-
-            for (uint8 i = 0; i < MAX_GOLEM; ++i)
-            {
-                pCreatureTarget->CastSpell(pCaster, SPELL_SUMMON_MOLTEN_GOLEM, true);
-            }
-
-            //always return true when we are handling this spell and effect
-            return true;
-        }
-
-        return false;
-    }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_volkhanAI(pCreature);
-    }
-
     struct boss_volkhanAI : public ScriptedAI
     {
         boss_volkhanAI(Creature *pCreature) : ScriptedAI(pCreature)
@@ -330,6 +305,31 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_volkhanAI(pCreature);
+    }
+
+    bool EffectDummyCreature(Unit* pCaster, uint32 uiSpellId, uint32 uiEffIndex, Creature* pCreatureTarget)
+    {
+        //always check spellid and effectindex
+        if (uiSpellId == SPELL_TEMPER_DUMMY && uiEffIndex == 0)
+        {
+            if (pCaster->GetEntry() != NPC_VOLKHAN_ANVIL || pCreatureTarget->GetEntry() != NPC_VOLKHAN)
+                return true;
+
+            for (uint8 i = 0; i < MAX_GOLEM; ++i)
+            {
+                pCreatureTarget->CastSpell(pCaster, SPELL_SUMMON_MOLTEN_GOLEM, true);
+            }
+
+            //always return true when we are handling this spell and effect
+            return true;
+        }
+
+        return false;
+    }
+
 };
 
 
@@ -385,11 +385,6 @@ class mob_molten_golem : public CreatureScript
 {
 public:
     mob_molten_golem() : CreatureScript("mob_molten_golem") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_molten_golemAI(pCreature);
-    }
 
     struct mob_molten_golemAI : public ScriptedAI
     {
@@ -478,6 +473,11 @@ public:
             DoMeleeAttackIfReady();
         }
     };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_molten_golemAI(pCreature);
+    }
 
 };
 

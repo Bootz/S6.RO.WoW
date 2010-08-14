@@ -105,11 +105,6 @@ class npc_ice_tomb : public CreatureScript
 public:
     npc_ice_tomb() : CreatureScript("npc_ice_tomb") { }
 
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_ice_tombAI(pCreature);
-    }
-
     struct npc_ice_tombAI : public Scripted_NoMovementAI
     {
         npc_ice_tombAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
@@ -184,17 +179,17 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_ice_tombAI(pCreature);
+    }
+
 };
 
 class boss_sindragosa : public CreatureScript
 {
 public:
     boss_sindragosa() : CreatureScript("boss_sindragosa") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_sindragosaAI(pCreature);
-    }
 
     struct boss_sindragosaAI : public ScriptedAI
     {
@@ -552,17 +547,17 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_sindragosaAI(pCreature);
+    }
+
 };
 
 class npc_frost_bomb : public CreatureScript
 {
 public:
     npc_frost_bomb() : CreatureScript("npc_frost_bomb") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_frost_bombAI(pCreature);
-    }
 
     struct npc_frost_bombAI : public ScriptedAI
     {
@@ -634,17 +629,17 @@ public:
 
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_frost_bombAI(pCreature);
+    }
+
 };
 
 class npc_rimefang : public CreatureScript
 {
 public:
     npc_rimefang() : CreatureScript("npc_rimefang") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_rimefangAI(pCreature);
-    }
 
     struct npc_rimefangAI : public ScriptedAI
     {
@@ -695,17 +690,17 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_rimefangAI(pCreature);
+    }
+
 };
 
 class npc_spinestalker : public CreatureScript
 {
 public:
     npc_spinestalker() : CreatureScript("npc_spinestalker") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_spinestalkerAI(pCreature);
-    }
 
     struct npc_spinestalkerAI : public ScriptedAI
     {
@@ -758,6 +753,10 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_spinestalkerAI(pCreature);
+    }
 };
 
 void AddSC_boss_sindragosa()

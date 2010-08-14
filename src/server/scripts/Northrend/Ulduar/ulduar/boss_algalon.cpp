@@ -86,11 +86,6 @@ class boss_algalon : public CreatureScript
 public:
     boss_algalon() : CreatureScript("boss_algalon") { }
 
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_algalonAI(pCreature);
-    }
-
     struct boss_algalonAI : public BossAI
     {
         boss_algalonAI(Creature *c) : BossAI(c, BOSS_ALGALON){}
@@ -306,17 +301,18 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_algalonAI(pCreature);
+    }
+
 };
+
 //Collapsing Star
 class mob_collapsing_star : public CreatureScript
 {
 public:
     mob_collapsing_star() : CreatureScript("mob_collapsing_star") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_collapsing_starAI(pCreature);
-    }
 
     struct mob_collapsing_starAI : public ScriptedAI
     {
@@ -347,6 +343,11 @@ public:
             }else BlackHoleExplosion_Timer -= diff;
         }
     };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_collapsing_starAI(pCreature);
+    }
 
 };
 

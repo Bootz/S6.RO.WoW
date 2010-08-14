@@ -31,11 +31,6 @@ class instance_eye_of_eternity : public InstanceMapScript
 public:
     instance_eye_of_eternity() : InstanceMapScript("instance_eye_of_eternity", 616) { }
 
-    InstanceScript* GetInstanceScript (InstanceMap* pMap) const
-    {
-        return new instance_eye_of_eternity_InstanceMapScript(pMap);
-    }
-
     struct instance_eye_of_eternity_InstanceMapScript : public InstanceScript
     {
         instance_eye_of_eternity_InstanceMapScript(Map* pMap) : InstanceScript(pMap) {Initialize();}
@@ -241,6 +236,11 @@ public:
             }
         }
     };
+
+    InstanceScript* GetInstanceScript (InstanceMap* pMap) const
+    {
+        return new instance_eye_of_eternity_InstanceMapScript(pMap);
+    }
 
 };
  

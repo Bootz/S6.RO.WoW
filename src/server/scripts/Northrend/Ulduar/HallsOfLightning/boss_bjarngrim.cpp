@@ -86,11 +86,6 @@ class boss_bjarngrim : public CreatureScript
 public:
     boss_bjarngrim() : CreatureScript("boss_bjarngrim") { }
 
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_bjarngrimAI(pCreature);
-    }
-
     struct boss_bjarngrimAI : public ScriptedAI
     {
         boss_bjarngrimAI(Creature *pCreature) : ScriptedAI(pCreature)
@@ -351,6 +346,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_bjarngrimAI(pCreature);
+    }
+
 };
 
 /*######
@@ -361,11 +361,6 @@ class mob_stormforged_lieutenant : public CreatureScript
 {
 public:
     mob_stormforged_lieutenant() : CreatureScript("mob_stormforged_lieutenant") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_stormforged_lieutenantAI(pCreature);
-    }
 
     struct mob_stormforged_lieutenantAI : public ScriptedAI
     {
@@ -430,9 +425,12 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_stormforged_lieutenantAI(pCreature);
+    }
+
 };
-
-
 
 void AddSC_boss_bjarngrim()
 {

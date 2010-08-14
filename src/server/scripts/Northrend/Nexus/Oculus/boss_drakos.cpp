@@ -57,11 +57,6 @@ class boss_drakos : public CreatureScript
 public:
     boss_drakos() : CreatureScript("boss_drakos") { }
 
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_drakosAI (pCreature);
-    }
-
     struct boss_drakosAI : public ScriptedAI
     {
         boss_drakosAI(Creature* pCreature) : ScriptedAI(pCreature), lSummons(me)
@@ -170,6 +165,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_drakosAI (pCreature);
+    }
+
 };
 
 
@@ -177,11 +177,6 @@ class npc_unstable_sphere : public CreatureScript
 {
 public:
     npc_unstable_sphere() : CreatureScript("npc_unstable_sphere") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_unstable_sphereAI (pCreature);
-    }
 
     struct npc_unstable_sphereAI : public ScriptedAI
     {
@@ -215,6 +210,11 @@ public:
             else uiDeathTimer -= uiDiff;
         }
     };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_unstable_sphereAI (pCreature);
+    }
 
 };
 

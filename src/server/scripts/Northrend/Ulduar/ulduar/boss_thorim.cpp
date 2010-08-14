@@ -217,11 +217,6 @@ class boss_thorim : public CreatureScript
 public:
     boss_thorim() : CreatureScript("boss_thorim") { }
 
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_thorimAI(pCreature);
-    }
-
     struct boss_thorimAI : public BossAI
     {
         boss_thorimAI(Creature* pCreature) : BossAI(pCreature, BOSS_THORIM)
@@ -473,6 +468,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_thorimAI(pCreature);
+    }
+
 };
 
 
@@ -481,11 +481,6 @@ class mob_pre_phase : public CreatureScript
 {
 public:
     mob_pre_phase() : CreatureScript("mob_pre_phase") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_pre_phaseAI(pCreature);
-    }
 
     struct mob_pre_phaseAI : public ScriptedAI
     {
@@ -545,6 +540,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_pre_phaseAI(pCreature);
+    }
+
 };
 
 
@@ -553,11 +553,6 @@ class mob_arena_phase : public CreatureScript
 {
 public:
     mob_arena_phase() : CreatureScript("mob_arena_phase") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_arena_phaseAI(pCreature);
-    }
 
     struct mob_arena_phaseAI : public ScriptedAI
     {
@@ -666,6 +661,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_arena_phaseAI(pCreature);
+    }
+
 };
 
 
@@ -674,11 +674,6 @@ class mob_runic_colossus : public CreatureScript
 {
 public:
     mob_runic_colossus() : CreatureScript("mob_runic_colossus") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_runic_colossusAI(pCreature);
-    }
 
     struct mob_runic_colossusAI : public ScriptedAI
     {
@@ -766,6 +761,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_runic_colossusAI(pCreature);
+    }
+
 };
 
 
@@ -774,11 +774,6 @@ class mob_rune_giant : public CreatureScript
 {
 public:
     mob_rune_giant() : CreatureScript("mob_rune_giant") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_rune_giantAI(pCreature);
-    }
 
     struct mob_rune_giantAI : public ScriptedAI
     {
@@ -857,6 +852,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_rune_giantAI(pCreature);
+    }
+
 };
 
 
@@ -865,11 +865,6 @@ class thorim_phase_trigger : public CreatureScript
 {
 public:
     thorim_phase_trigger() : CreatureScript("thorim_phase_trigger") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new thorim_phase_triggerAI(pCreature);
-    }
 
     struct thorim_phase_triggerAI : public Scripted_NoMovementAI
     {
@@ -898,6 +893,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new thorim_phase_triggerAI(pCreature);
+    }
+
 };
 
 
@@ -906,11 +906,6 @@ class thorim_energy_source : public CreatureScript
 {
 public:
     thorim_energy_source() : CreatureScript("thorim_energy_source") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new thorim_energy_sourceAI(pCreature);
-    }
 
     struct thorim_energy_sourceAI : public Scripted_NoMovementAI
     {
@@ -942,19 +937,19 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new thorim_energy_sourceAI(pCreature);
+    }
+
 };
 
 
-// Sif (only in Hard-Mode)
+// Sif (only in Heroic Mode)
 class npc_sif : public CreatureScript
 {
 public:
     npc_sif() : CreatureScript("npc_sif") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_sifAI(pCreature);
-    }
 
     struct npc_sifAI : public ScriptedAI
     {
@@ -1013,8 +1008,12 @@ public:
         }
     };
 
-};
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_sifAI(pCreature);
+    }
 
+};
 
 void AddSC_boss_thorim()
 {

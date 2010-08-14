@@ -87,11 +87,6 @@ class boss_eregos : public CreatureScript
 public:
     boss_eregos() : CreatureScript("boss_eregos") { }
 
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_eregosAI (pCreature);
-    }
-
     struct boss_eregosAI : public ScriptedAI
     {
         boss_eregosAI(Creature *c) : ScriptedAI(c), lSummons(me)
@@ -235,17 +230,17 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_eregosAI (pCreature);
+    }
+
 };
 
 class npc_planar_anomaly : public CreatureScript
 {
 public:
     npc_planar_anomaly() : CreatureScript("npc_planar_anomaly") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_planar_anomalyAI (pCreature);
-    }
 
     struct npc_planar_anomalyAI : public ScriptedAI
     {
@@ -274,6 +269,11 @@ public:
             else uiDeathTimer -= uiDiff;
         }
     };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_planar_anomalyAI (pCreature);
+    }
 
 };
 

@@ -147,11 +147,6 @@ class boss_flame_leviathan : public CreatureScript
 public:
     boss_flame_leviathan() : CreatureScript("boss_flame_leviathan") { }
 
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_flame_leviathanAI (pCreature);
-    }
-
     struct boss_flame_leviathanAI : public BossAI
     {
         boss_flame_leviathanAI(Creature *pCreature) : BossAI(pCreature, BOSS_LEVIATHAN), vehicle(me->GetVehicleKit())
@@ -354,6 +349,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_flame_leviathanAI (pCreature);
+    }
+
 };
 
 //#define BOSS_DEBUG
@@ -362,11 +362,6 @@ class boss_flame_leviathan_seat : public CreatureScript
 {
 public:
     boss_flame_leviathan_seat() : CreatureScript("boss_flame_leviathan_seat") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_flame_leviathan_seatAI (pCreature);
-    }
 
     struct boss_flame_leviathan_seatAI : public PassiveAI
     {
@@ -425,17 +420,17 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_flame_leviathan_seatAI (pCreature);
+    }
+
 };
 
 class boss_flame_leviathan_defense_turret : public CreatureScript
 {
 public:
     boss_flame_leviathan_defense_turret() : CreatureScript("boss_flame_leviathan_defense_turret") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_flame_leviathan_defense_turretAI (pCreature);
-    }
 
     struct boss_flame_leviathan_defense_turretAI : public TurretAI
     {
@@ -455,17 +450,17 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_flame_leviathan_defense_turretAI (pCreature);
+    }
+
 };
 
 class boss_flame_leviathan_overload_device : public CreatureScript
 {
 public:
     boss_flame_leviathan_overload_device() : CreatureScript("boss_flame_leviathan_overload_device") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_flame_leviathan_overload_deviceAI (pCreature);
-    }
 
     struct boss_flame_leviathan_overload_deviceAI : public PassiveAI
     {
@@ -491,7 +486,18 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_flame_leviathan_overload_deviceAI (pCreature);
+    }
+
 };
+
+
+class boss_flame_leviathan_safety_container : public CreatureScript
+{
+public:
+    boss_flame_leviathan_safety_container() : CreatureScript("boss_flame_leviathan_safety_container") { }
 
 struct boss_flame_leviathan_safety_containerAI : public PassiveAI
 {
@@ -514,15 +520,16 @@ struct boss_flame_leviathan_safety_containerAI : public PassiveAI
     }
 };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_flame_leviathan_safety_containerAI(pCreature);
+    }
+};
+
 class spell_pool_of_tar : public CreatureScript
 {
 public:
     spell_pool_of_tar() : CreatureScript("spell_pool_of_tar") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new spell_pool_of_tarAI (pCreature);
-    }
 
     struct spell_pool_of_tarAI : public TriggerAI
     {
@@ -543,6 +550,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new spell_pool_of_tarAI (pCreature);
+    }
+
 };
 
 class npc_keeper_norgannon : public CreatureScript
@@ -550,10 +562,37 @@ class npc_keeper_norgannon : public CreatureScript
 public:
     npc_keeper_norgannon() : CreatureScript("npc_keeper_norgannon") { }
 
-    CreatureAI* GetAI_keeper_norgannon(Creature* pCreature)
+    struct keeper_norgannonAI : public ScriptedAI
     {
-        return new keeper_norgannonAI (pCreature);
-    }
+        keeper_norgannonAI(Creature *c) : ScriptedAI(c), summons(me)
+        {
+            pInstance = c->GetInstanceScript();
+        }
+
+        InstanceScript* pInstance;
+        SummonList summons;
+
+        void JustSummoned(Creature *summon)
+        {
+            summons.Summon(summon);
+        }
+    
+        void DoAction(const int32 action)
+        {
+            switch (action)
+            {
+                case ACTION_VEHICLE_RESPAWN:
+                    summons.DespawnAll();
+                    for(uint32 i = 0; i < (RAID_MODE(2, 5)); ++i)
+                        DoSummon(VEHICLE_SIEGE, PosSiege[i], 3000, TEMPSUMMON_CORPSE_TIMED_DESPAWN);
+                    for(uint32 i = 0; i < (RAID_MODE(2, 5)); ++i)
+                        DoSummon(VEHICLE_CHOPPER, PosChopper[i], 3000, TEMPSUMMON_CORPSE_TIMED_DESPAWN);
+                    for(uint32 i = 0; i < (RAID_MODE(2, 5)); ++i)
+                        DoSummon(VEHICLE_DEMOLISHER, PosDemolisher[i], 3000, TEMPSUMMON_CORPSE_TIMED_DESPAWN);
+                    break;
+            }
+        }
+    };
 
     bool GossipSelect_keeper_norgannon(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
     {
@@ -592,38 +631,10 @@ public:
 
         return true;
     }
-
-    struct keeper_norgannonAI : public ScriptedAI
+    CreatureAI* GetAI_keeper_norgannon(Creature* pCreature) const
     {
-        keeper_norgannonAI(Creature *c) : ScriptedAI(c), summons(me)
-        {
-            pInstance = c->GetInstanceScript();
-        }
-
-        InstanceScript* pInstance;
-        SummonList summons;
-
-        void JustSummoned(Creature *summon)
-        {
-            summons.Summon(summon);
-        }
-    
-        void DoAction(const int32 action)
-        {
-            switch (action)
-            {
-                case ACTION_VEHICLE_RESPAWN:
-                    summons.DespawnAll();
-                    for(uint32 i = 0; i < (RAID_MODE(2, 5)); ++i)
-                        DoSummon(VEHICLE_SIEGE, PosSiege[i], 3000, TEMPSUMMON_CORPSE_TIMED_DESPAWN);
-                    for(uint32 i = 0; i < (RAID_MODE(2, 5)); ++i)
-                        DoSummon(VEHICLE_CHOPPER, PosChopper[i], 3000, TEMPSUMMON_CORPSE_TIMED_DESPAWN);
-                    for(uint32 i = 0; i < (RAID_MODE(2, 5)); ++i)
-                        DoSummon(VEHICLE_DEMOLISHER, PosDemolisher[i], 3000, TEMPSUMMON_CORPSE_TIMED_DESPAWN);
-                    break;
-            }
-        }
-    };
+        return new keeper_norgannonAI (pCreature);
+    }
 
 };
 
@@ -633,11 +644,6 @@ class mob_colossus : public CreatureScript
 {
 public:
     mob_colossus() : CreatureScript("mob_colossus") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_colossusAI(pCreature);
-    }
 
     struct mob_colossusAI : public ScriptedAI
     {
@@ -676,6 +682,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_colossusAI(pCreature);
+    }
+
 };
 
 class at_RX_214_repair_o_matic_station : public AreaTriggerScript
@@ -698,21 +709,6 @@ public:
 
 };
 
-
-
-
-
-class boss_flame_leviathan_safety_container : public CreatureScript
-{
-public:
-    boss_flame_leviathan_safety_container() : CreatureScript("boss_flame_leviathan_safety_container") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_flame_leviathan_safety_containerAI(pCreature);
-    }
-
-};
 
 void AddSC_boss_flame_leviathan()
 {

@@ -71,11 +71,6 @@ class npc_bone_spike : public CreatureScript
 public:
     npc_bone_spike() : CreatureScript("npc_bone_spike") { }
 
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_bone_spikeAI(pCreature);
-    }
-
     struct npc_bone_spikeAI : public Scripted_NoMovementAI
     {
         npc_bone_spikeAI(Creature *pCreature) : Scripted_NoMovementAI(pCreature)
@@ -127,17 +122,17 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_bone_spikeAI(pCreature);
+    }
+
 };
 
 class boss_lord_marrowgar : public CreatureScript
 {
 public:
     boss_lord_marrowgar() : CreatureScript("boss_lord_marrowgar") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_lord_marrowgarAI(pCreature);
-    }
 
     struct boss_lord_marrowgarAI : public ScriptedAI
     {
@@ -390,17 +385,17 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_lord_marrowgarAI(pCreature);
+    }
+
 };
 
 class npc_cold_flame : public CreatureScript
 {
 public:
     npc_cold_flame() : CreatureScript("npc_cold_flame") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_cold_flameAI(pCreature);
-    }
 
     struct npc_cold_flameAI : public ScriptedAI
     {
@@ -438,10 +433,12 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_cold_flameAI(pCreature);
+    }
+
 };
-
-
-
 
 void AddSC_boss_marrowgar()
 {

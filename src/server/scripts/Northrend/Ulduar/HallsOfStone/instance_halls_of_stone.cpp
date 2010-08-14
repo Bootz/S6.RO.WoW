@@ -32,11 +32,6 @@ class instance_halls_of_stone : public InstanceMapScript
 public:
     instance_halls_of_stone() : InstanceMapScript("instance_halls_of_stone", 599) { }
 
-    InstanceScript* GetInstanceScript (InstanceMap* pMap) const
-    {
-        return new instance_halls_of_stone_InstanceMapScript(pMap);
-    }
-
     struct instance_halls_of_stone_InstanceMapScript : public InstanceScript
     {
         instance_halls_of_stone_InstanceMapScript(Map* pMap) : InstanceScript(pMap) {Initialize();};
@@ -265,6 +260,11 @@ public:
             OUT_LOAD_INST_DATA_COMPLETE;
         }
     };
+
+    InstanceScript* GetInstanceScript (InstanceMap* pMap) const
+    {
+        return new instance_halls_of_stone_InstanceMapScript(pMap);
+    }
 
 };
 

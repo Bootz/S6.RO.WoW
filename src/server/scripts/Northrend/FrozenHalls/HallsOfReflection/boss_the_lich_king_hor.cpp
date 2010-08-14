@@ -356,17 +356,16 @@ public:
         }
     };
 
+    CreatureAI* GetAI_boss_lich_king_hr(Creature* pCreature) const
+    {
+        return new boss_lich_king_hrAI(pCreature);
+    }
 };
 
 class npc_raging_gnoul : public CreatureScript
 {
 public:
     npc_raging_gnoul() : CreatureScript("npc_raging_gnoul") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_raging_gnoulAI(pCreature);
-    }
 
     struct npc_raging_gnoulAI : public ScriptedAI
     {
@@ -434,17 +433,17 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new npc_raging_gnoulAI(pCreature);
+    }
+
 };
 
 class npc_risen_witch_doctor : public CreatureScript
 {
 public:
     npc_risen_witch_doctor() : CreatureScript("npc_risen_witch_doctor") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_risen_witch_doctorAI(pCreature);
-    }
 
     struct npc_risen_witch_doctorAI : public ScriptedAI
     {
@@ -512,17 +511,17 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new npc_risen_witch_doctorAI(pCreature);
+    }
+
 };
 
 class npc_abon : public CreatureScript
 {
 public:
     npc_abon() : CreatureScript("npc_abon") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_abonAI(pCreature);
-    }
 
     struct npc_abonAI : public ScriptedAI
     {
@@ -569,11 +568,10 @@ public:
         }
     };
 
-    CreatureAI* GetAI_boss_lich_king_hr(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature)
     {
-        return new boss_lich_king_hrAI(pCreature);
+        return new npc_abonAI(pCreature);
     }
-
 };
 
 void AddSC_boss_lich_king_hr()

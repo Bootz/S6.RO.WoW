@@ -23,9 +23,6 @@ SDComment:
 SDCategory:
 Script Data End */
 
-/*** SQL START ***
-update creature_template set scriptname = 'boss_krystallus' where entry = '';
-*** SQL END ***/
 #include "ScriptPCH.h"
 #include "halls_of_stone.h"
 
@@ -53,11 +50,6 @@ class boss_krystallus : public CreatureScript
 {
 public:
     boss_krystallus() : CreatureScript("boss_krystallus") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_krystallusAI (pCreature);
-    }
 
     struct boss_krystallusAI : public ScriptedAI
     {
@@ -158,6 +150,11 @@ public:
             DoScriptText(SAY_KILL, me);
         }
     };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_krystallusAI (pCreature);
+    }
 
 };
 

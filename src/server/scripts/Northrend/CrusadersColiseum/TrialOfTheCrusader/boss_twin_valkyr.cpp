@@ -290,7 +290,7 @@ public:
         }
     };
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new boss_fjolaAI(pCreature);
     }
@@ -460,7 +460,7 @@ public:
         }
     };
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new boss_eydisAI(pCreature);
     }
@@ -530,7 +530,7 @@ public:
         }
     };
 
-    CreatureAI* GetAI(Creature *pCreature)
+    CreatureAI* GetAI(Creature *pCreature) const
     {
         return new mob_valkyr_orbAI(pCreature);
     }
@@ -565,7 +565,7 @@ public:
 
     };
 
-    CreatureAI* GetAI(Creature *pCreature)
+    CreatureAI* GetAI(Creature *pCreature) const
     {
         return new cr_dark_essenceAI(pCreature);
     }
@@ -600,7 +600,7 @@ public:
 
     };
 
-    CreatureAI* GetAI(Creature *pCreature)
+    CreatureAI* GetAI(Creature *pCreature) const
     {
         return new cr_light_essenceAI(pCreature);
     }

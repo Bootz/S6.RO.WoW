@@ -97,11 +97,6 @@ class boss_halion : public CreatureScript
 public:
     boss_halion() : CreatureScript("boss_halion") { }
 
-    CreatureAI* GetAI(Creature *pCreature)
-    {
-            return new boss_halionAI(pCreature);
-    }
-
     struct boss_halionAI : public ScriptedAI
     {
             boss_halionAI(Creature *pCreature) : ScriptedAI(pCreature)
@@ -308,6 +303,11 @@ public:
     		}
     };
 
+    CreatureAI* GetAI(Creature *pCreature) const
+    {
+            return new boss_halionAI(pCreature);
+    }
+
 };
 
 
@@ -315,11 +315,6 @@ class boss_twilight_halion : public CreatureScript
 {
 public:
     boss_twilight_halion() : CreatureScript("boss_twilight_halion") { }
-
-    CreatureAI* GetAI(Creature *pCreature)
-    {
-            return new boss_twilight_halionAI(pCreature);
-    }
 
     struct boss_twilight_halionAI : public ScriptedAI
     {
@@ -564,6 +559,11 @@ public:
     		}
     };
 
+    CreatureAI* GetAI(Creature *pCreature) const
+    {
+            return new boss_twilight_halionAI(pCreature);
+    }
+
 };
 
 
@@ -571,11 +571,6 @@ class npc_meteor_strike : public CreatureScript
 {
 public:
     npc_meteor_strike() : CreatureScript("npc_meteor_strike") { }
-
-    CreatureAI* GetAI(Creature *pCreature)
-    {
-            return new npc_meteor_strikeAI(pCreature);
-    }
 
     struct npc_meteor_strikeAI : public ScriptedAI
     {
@@ -623,6 +618,11 @@ public:
             }
     };
 
+    CreatureAI* GetAI(Creature *pCreature) const
+    {
+            return new npc_meteor_strikeAI(pCreature);
+    }
+
 };
 
 
@@ -630,11 +630,6 @@ class npc_meteor_flame : public CreatureScript
 {
 public:
     npc_meteor_flame() : CreatureScript("npc_meteor_flame") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_meteor_flameAI(pCreature);
-    }
 
     struct npc_meteor_flameAI : public ScriptedAI
     {
@@ -672,6 +667,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_meteor_flameAI(pCreature);
+    }
+
 };
 
 
@@ -679,11 +679,6 @@ class npc_combustion : public CreatureScript
 {
 public:
     npc_combustion() : CreatureScript("npc_combustion") { }
-
-    CreatureAI* GetAI(Creature *pCreature)
-    {
-            return new npc_combustionAI(pCreature);
-    }
 
     struct npc_combustionAI : public ScriptedAI
     {
@@ -726,6 +721,11 @@ public:
             }
     };
 
+    CreatureAI* GetAI(Creature *pCreature) const
+    {
+            return new npc_combustionAI(pCreature);
+    }
+
 };
 
 
@@ -733,11 +733,6 @@ class npc_consumption : public CreatureScript
 {
 public:
     npc_consumption() : CreatureScript("npc_consumption") { }
-
-    CreatureAI* GetAI(Creature *pCreature)
-    {
-            return new npc_consumptionAI(pCreature);
-    }
 
     struct npc_consumptionAI : public ScriptedAI
     {
@@ -779,6 +774,11 @@ public:
                 DoMeleeAttackIfReady();
             }
     };
+
+    CreatureAI* GetAI(Creature *pCreature) const
+    {
+            return new npc_consumptionAI(pCreature);
+    }
 
 };
 

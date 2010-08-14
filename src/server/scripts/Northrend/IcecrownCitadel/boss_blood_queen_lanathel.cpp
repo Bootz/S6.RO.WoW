@@ -70,6 +70,11 @@ enum Achievments
 const Position Phase2Position = { 4595.640137, 2769.195557, 400.137054};
 const Position FlyPosition = { 4595.904785, 2769.315918, 421.838623};
 
+class boss_blood_queen_lanathel : public CreatureScript
+{
+public:
+    boss_blood_queen_lanathel() : CreatureScript("boss_blood_queen_lanathel") { }
+
 struct boss_blood_queen_lanathelAI : public ScriptedAI
 {
     boss_blood_queen_lanathelAI(Creature *pCreature) : ScriptedAI(pCreature)
@@ -281,6 +286,17 @@ struct boss_blood_queen_lanathelAI : public ScriptedAI
     }
 };
 
+    CreatureAI* GetAIboss_blood_queen_lanathelAI(Creature* pCreature) const
+    {
+        return new boss_blood_queen_lanathelAI (pCreature);
+    }
+};
+
+class npc_swarming_shadows : public CreatureScript
+{
+public:
+    npc_swarming_shadows() : CreatureScript("npc_swarming_shadows") { }
+
 struct npc_swarming_shadowsAI : public Scripted_NoMovementAI
 {
     npc_swarming_shadowsAI(Creature *pCreature) : Scripted_NoMovementAI(pCreature)
@@ -311,24 +327,7 @@ struct npc_swarming_shadowsAI : public Scripted_NoMovementAI
     }
 };
 
-class boss_blood_queen_lanathel : public CreatureScript
-{
-public:
-    boss_blood_queen_lanathel() : CreatureScript("boss_blood_queen_lanathel") { }
-
-    CreatureAI* GetAIboss_blood_queen_lanathelAI(Creature* pCreature)
-    {
-        return new boss_blood_queen_lanathelAI (pCreature);
-    }
-
-};
-
-class npc_swarming_shadows : public CreatureScript
-{
-public:
-    npc_swarming_shadows() : CreatureScript("npc_swarming_shadows") { }
-
-    CreatureAI* GetAInpc_swarming_shadowsAI(Creature* pCreature)
+    CreatureAI* GetAInpc_swarming_shadowsAI(Creature* pCreature) const
     {
         return new npc_swarming_shadowsAI (pCreature);
     }

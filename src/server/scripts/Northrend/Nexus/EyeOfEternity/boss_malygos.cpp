@@ -251,11 +251,6 @@ class boss_malygos : public CreatureScript
 public:
     boss_malygos() : CreatureScript("boss_malygos") { }
 
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_malygosAI(pCreature);
-    }
-
     struct boss_malygosAI : public ScriptedAI
     {
         boss_malygosAI(Creature* pCreature) : ScriptedAI(pCreature)
@@ -1329,6 +1324,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_malygosAI(pCreature);
+    }
+
 };
 /*######
 ## mob_power_spark
@@ -1337,11 +1337,6 @@ class mob_power_spark : public CreatureScript
 {
 public:
     mob_power_spark() : CreatureScript("mob_power_spark") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_power_sparkAI(pCreature);
-    }
 
     struct mob_power_sparkAI : public ScriptedAI
     {
@@ -1474,6 +1469,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_power_sparkAI(pCreature);
+    }
+
 };
 /*######
 ## mob_scion_of_eternity
@@ -1483,11 +1483,6 @@ class mob_scion_of_eternity : public CreatureScript
 {
 public:
     mob_scion_of_eternity() : CreatureScript("mob_scion_of_eternity") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_scion_of_eternityAI(pCreature);
-    } 
 
     struct mob_scion_of_eternityAI : public ScriptedAI
     {
@@ -1574,6 +1569,11 @@ public:
         }
     }; 
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_scion_of_eternityAI(pCreature);
+    } 
+
 };
 /*######
 ## npc_arcane_overload
@@ -1583,11 +1583,6 @@ class npc_arcane_overload : public CreatureScript
 {
 public:
     npc_arcane_overload() : CreatureScript("npc_arcane_overload") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_arcane_overloadAI(pCreature);
-    } 
 
     struct npc_arcane_overloadAI : public ScriptedAI
     {
@@ -1668,6 +1663,11 @@ public:
         }  
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_arcane_overloadAI(pCreature);
+    } 
+
 };
 
 /*######
@@ -1678,11 +1678,6 @@ class mob_nexus_lord : public CreatureScript
 {
 public:
     mob_nexus_lord() : CreatureScript("mob_nexus_lord") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_nexus_lordAI(pCreature);
-    } 
 
     struct mob_nexus_lordAI : public ScriptedAI
     {
@@ -1744,6 +1739,11 @@ public:
         }  
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_nexus_lordAI(pCreature);
+    } 
+
 };
 
 class go_malygos_iris : public GameObjectScript
@@ -1751,7 +1751,7 @@ class go_malygos_iris : public GameObjectScript
 public:
     go_malygos_iris() : GameObjectScript("go_malygos_iris") { }
 
-    bool GOHello(Player *pPlayer, GameObject* pGO)
+    bool OnGossipHello(Player *pPlayer, GameObject* pGO)
     {
            sLog.outError("Clique");
            if (Creature *malygos = pGO->FindNearestCreature(NPC_MALYGOS, 300.0f, true))

@@ -355,7 +355,7 @@ struct Boss_Raid_AnubarakAI : public ScriptedAI
         DoScriptText(SAY_DEATH, me);
     }
 };
-    CreatureAI* GetAI_Raid_Anubarak(Creature* pCreature)
+    CreatureAI* GetAI_Raid_Anubarak(Creature* pCreature) const
     {
         return new Boss_Raid_AnubarakAI (pCreature);
     }
@@ -403,7 +403,7 @@ public:
 
     };
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new mob_swarm_scarabAI (pCreature);
     }
@@ -435,7 +435,7 @@ public:
         }
     };
 
-    CreatureAI* GetAI_mob_NerubianTrigger(Creature* pCreature)
+    CreatureAI* GetAI_mob_NerubianTrigger(Creature* pCreature) const
     {
         return new mob_NerubianTriggerAI (pCreature);
     }
@@ -496,7 +496,7 @@ public:
 
     };
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new nerubian_burrowerAI (pCreature);
     }
@@ -550,7 +550,7 @@ public:
 
     };
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new frost_sphereAI (pCreature);
     }
@@ -626,7 +626,7 @@ public:
 
     };
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new creature_impaleAI (pCreature);
     }

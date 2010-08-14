@@ -120,9 +120,9 @@ SPELL_SHOCKWAVE = 72149,
 SPELL_ENRAGE = 72143,
 SPELL_FRENZY = 28747,
 SPELL_DARK_HUNGER = 69383,
-SPELL_DESTROY_SOUL = 69397;
-SPELL_SOUL_RIP = 74086;
-SPELL_HEAL = 67290,// Feel free to remove this thing - not blizzlike but adds to the overall fun of the encounter - for Terenas to only have one spell and hit like a girl seemed retarded.
+SPELL_DESTROY_SOUL = 69397,
+SPELL_SOUL_RIP = 74086,
+SPELL_HEAL = 67290,       // Feel free to remove this thing - not blizzlike but adds to the overall fun of the encounter - for Terenas to only have one spell and hit like a girl seemed retarded.
 };
 enum DefileDamage
 {
@@ -173,11 +173,6 @@ class boss_the_lich_king : public CreatureScript
 {
 public:
     boss_the_lich_king() : CreatureScript("boss_the_lich_king") { }
-
-    CreatureAI* GetAI_boss_lich_king(Creature* pCreature)
-    {
-     return new boss_lich_kingAI(pCreature);
-    }
 
     struct boss_lich_kingAI : public ScriptedAI
     {
@@ -817,35 +812,17 @@ public:
      }
     };
 
+    CreatureAI* GetAI_boss_lich_king(Creature* pCreature) const
+    {
+     return new boss_lich_kingAI(pCreature);
+    }
+
 };
 
 class npc_tirion_icc : public CreatureScript
 {
 public:
     npc_tirion_icc() : CreatureScript("npc_tirion_icc") { }
-
-    CreatureAI* GetAI_npc_tirion_citadell_icc(Creature* pCreature)
-    {
-     return new npc_tirion_citadell_iccAI(pCreature);
-    }
-
-    bool GossipSelect_tirion_icc(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-    {
-     if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
-     {
-     pCreature->RemoveFlag(UNIT_NPC_FLAGS,UNIT_NPC_FLAG_GOSSIP);
-     pPlayer->CLOSE_GOSSIP_MENU();
-     ((npc_tirion_citadell_iccAI*)pCreature->AI())->StartEvent();
-     }
-     return true;
-    }
-
-    bool GossipHello_tirion_icc(Player* pPlayer, Creature* pCreature)
-    {
-     pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_START_EVENT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-     pPlayer->SEND_GOSSIP_MENU(10600, pCreature->GetGUID());
-     return true;
-    }
 
     struct npc_tirion_citadell_iccAI : public ScriptedAI
     {
@@ -964,17 +941,34 @@ public:
      }
     };
 
+    CreatureAI* GetAI_npc_tirion_citadell_icc(Creature* pCreature) const
+    {
+     return new npc_tirion_citadell_iccAI(pCreature);
+    }
+
+    bool GossipSelect_tirion_icc(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+    {
+     if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
+     {
+     pCreature->RemoveFlag(UNIT_NPC_FLAGS,UNIT_NPC_FLAG_GOSSIP);
+     pPlayer->CLOSE_GOSSIP_MENU();
+     ((npc_tirion_citadell_iccAI*)pCreature->AI())->StartEvent();
+     }
+     return true;
+    }
+
+    bool GossipHello_tirion_icc(Player* pPlayer, Creature* pCreature)
+    {
+     pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_START_EVENT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+     pPlayer->SEND_GOSSIP_MENU(10600, pCreature->GetGUID());
+     return true;
+    }
 };
 
 class npc_ice_puls_icc : public CreatureScript
 {
 public:
     npc_ice_puls_icc() : CreatureScript("npc_ice_puls_icc") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-     return new npc_ice_puls_iccAI(pCreature);
-    }
 
     struct npc_ice_puls_iccAI : public ScriptedAI
     {
@@ -1021,17 +1015,17 @@ public:
      }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+     return new npc_ice_puls_iccAI(pCreature);
+    }
+
 };
 
 class npc_valkyr_icc : public CreatureScript
 {
 public:
     npc_valkyr_icc() : CreatureScript("npc_valkyr_icc") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-     return new npc_valkyr_iccAI(pCreature);
-    }
 
     struct npc_valkyr_iccAI : public ScriptedAI
     {
@@ -1101,17 +1095,17 @@ public:
      }
     };
 
+    CreatureAI *GetAI(Creature* pCreature) const
+    {
+     return new npc_valkyr_iccAI(pCreature);
+    }
+
 };
 
 class npc_ghoul_icc : public CreatureScript
 {
 public:
     npc_ghoul_icc() : CreatureScript("npc_ghoul_icc") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-     return new npc_ghoul_iccAI(pCreature);
-    }
 
     struct npc_ghoul_iccAI : public ScriptedAI
     {
@@ -1159,17 +1153,17 @@ public:
      }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+     return new npc_ghoul_iccAI(pCreature);
+    }
+
 };
 
 class npc_defile_icc : public CreatureScript
 {
 public:
     npc_defile_icc() : CreatureScript("npc_defile_icc") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-     return new npc_defile_iccAI (pCreature);
-    }
 
     struct npc_defile_iccAI : public Scripted_NoMovementAI
     {
@@ -1241,17 +1235,17 @@ public:
      }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+     return new npc_defile_iccAI (pCreature);
+    }
+
 };
 
 class npc_raging_spirit_icc : public CreatureScript
 {
 public:
     npc_raging_spirit_icc() : CreatureScript("npc_raging_spirit_icc") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-     return new npc_raging_spirit_iccAI (pCreature);
-    }
 
     struct npc_raging_spirit_iccAI : public ScriptedAI
     {
@@ -1276,17 +1270,17 @@ public:
      }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+     return new npc_raging_spirit_iccAI (pCreature);
+    }
+
 };
 
 class npc_shambling_horror : public CreatureScript
 {
 public:
     npc_shambling_horror() : CreatureScript("npc_shambling_horror") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-     return new npc_shambling_horrorAI (pCreature);
-    }
 
     struct npc_shambling_horrorAI : public ScriptedAI
     {
@@ -1338,16 +1332,17 @@ public:
      }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+     return new npc_shambling_horrorAI (pCreature);
+    }
+
 };
+
 class npc_terenas_menethil : public CreatureScript
 {
 public:
     npc_terenas_menethil() : CreatureScript("npc_terenas_menethil") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-     return new npc_terenas_menethilAI (pCreature);
-    }
 
     struct npc_terenas_menethilAI : public ScriptedAI
     {
@@ -1405,16 +1400,17 @@ public:
      }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+     return new npc_terenas_menethilAI (pCreature);
+    }
+
 };
+
 class npc_spirit_warden : public CreatureScript
 {
 public:
     npc_spirit_warden() : CreatureScript("npc_spirit_warden") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-     return new npc_spirit_wardenAI (pCreature);
-    }
 
     struct npc_spirit_wardenAI : public ScriptedAI
     {
@@ -1466,6 +1462,11 @@ public:
      }
 };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+     return new npc_spirit_wardenAI (pCreature);
+    }
+};
 void AddSC_boss_lichking()
 {
     new boss_the_lich_king();

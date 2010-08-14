@@ -122,6 +122,12 @@ enum Yells
 #define EMOTE_FREEZE      "Hodir begins to cast Flash Freeze!"
 #define EMOTE_BLOWS       "Hodir gains Frozen Blows!"
 
+
+class boss_hodir : public CreatureScript
+{
+public:
+    boss_hodir() : CreatureScript("boss_hodir") { }
+
 struct boss_hodir_AI : public BossAI
 {
     boss_hodir_AI(Creature *pCreature) : BossAI(pCreature, BOSS_HODIR)
@@ -355,29 +361,17 @@ struct boss_hodir_AI : public BossAI
         }
     }
 };
-
-class boss_hodir : public CreatureScript
-{
-public:
-    boss_hodir() : CreatureScript("boss_hodir") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new boss_hodir_AI (pCreature);
     }
 
 };
 
-
 class mob_icicle : public CreatureScript
 {
 public:
     mob_icicle() : CreatureScript("mob_icicle") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_icicleAI(pCreature);
-    }
 
     struct mob_icicleAI : public ScriptedAI
     {
@@ -405,6 +399,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_icicleAI(pCreature);
+    }
+
 };
 
 
@@ -412,11 +411,6 @@ class mob_icicle_snowdrift : public CreatureScript
 {
 public:
     mob_icicle_snowdrift() : CreatureScript("mob_icicle_snowdrift") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_icicle_snowdriftAI(pCreature);
-    }
 
     struct mob_icicle_snowdriftAI : public ScriptedAI
     {
@@ -444,6 +438,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_icicle_snowdriftAI(pCreature);
+    }
+
 };
 
 
@@ -451,11 +450,6 @@ class mob_hodir_priest : public CreatureScript
 {
 public:
     mob_hodir_priest() : CreatureScript("mob_hodir_priest") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_hodir_priestAI(pCreature);
-    }
 
     struct mob_hodir_priestAI : public ScriptedAI
     {
@@ -497,6 +491,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_hodir_priestAI(pCreature);
+    }
+
 };
 
 
@@ -504,11 +503,6 @@ class mob_hodir_shaman : public CreatureScript
 {
 public:
     mob_hodir_shaman() : CreatureScript("mob_hodir_shaman") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_hodir_shamanAI(pCreature);
-    }
 
     struct mob_hodir_shamanAI : public ScriptedAI
     {
@@ -547,6 +541,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_hodir_shamanAI(pCreature);
+    }
+
 };
 
 
@@ -554,11 +553,6 @@ class mob_hodir_druid : public CreatureScript
 {
 public:
     mob_hodir_druid() : CreatureScript("mob_hodir_druid") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_hodir_druidAI(pCreature);
-    }
 
     struct mob_hodir_druidAI : public ScriptedAI
     {
@@ -597,6 +591,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_hodir_druidAI(pCreature);
+    }
+
 };
 
 
@@ -604,11 +603,6 @@ class mob_hodir_mage : public CreatureScript
 {
 public:
     mob_hodir_mage() : CreatureScript("mob_hodir_mage") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_hodir_mageAI(pCreature);
-    }
 
     struct mob_hodir_mageAI : public ScriptedAI
     {
@@ -647,6 +641,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_hodir_mageAI(pCreature);
+    }
+
 };
 
 
@@ -654,11 +653,6 @@ class toasty_fire : public CreatureScript
 {
 public:
     toasty_fire() : CreatureScript("toasty_fire") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new toasty_fireAI(pCreature);
-    }
 
     struct toasty_fireAI : public ScriptedAI
     {
@@ -673,9 +667,12 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new toasty_fireAI(pCreature);
+    }
+
 };
-
-
 
 void AddSC_boss_hodir()
 {

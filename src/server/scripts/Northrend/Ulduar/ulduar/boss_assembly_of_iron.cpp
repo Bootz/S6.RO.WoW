@@ -202,11 +202,6 @@ class boss_steelbreaker : public CreatureScript
 public:
     boss_steelbreaker() : CreatureScript("boss_steelbreaker") { }
 
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_steelbreakerAI (pCreature);
-    }
-
     struct boss_steelbreakerAI : public ScriptedAI
     {
         boss_steelbreakerAI(Creature *c) : ScriptedAI(c)
@@ -344,17 +339,17 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_steelbreakerAI (pCreature);
+    }
+
 };
 
 class boss_runemaster_molgeim : public CreatureScript
 {
 public:
     boss_runemaster_molgeim() : CreatureScript("boss_runemaster_molgeim") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_runemaster_molgeimAI (pCreature);
-    }
 
     struct boss_runemaster_molgeimAI : public ScriptedAI
     {
@@ -518,17 +513,17 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_runemaster_molgeimAI (pCreature);
+    }
+
 };
 
 class boss_stormcaller_brundir : public CreatureScript
 {
 public:
     boss_stormcaller_brundir() : CreatureScript("boss_stormcaller_brundir") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_stormcaller_brundirAI (pCreature);
-    }
 
     struct boss_stormcaller_brundirAI : public ScriptedAI
     {
@@ -736,6 +731,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_stormcaller_brundirAI (pCreature);
+    }
+
 };
 
 /***************
@@ -746,11 +746,6 @@ class mob_lightning_elemental : public CreatureScript
 {
 public:
     mob_lightning_elemental() : CreatureScript("mob_lightning_elemental") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_lightning_elementalAI (pCreature);
-    }
 
     struct mob_lightning_elementalAI : public ScriptedAI {
         mob_lightning_elementalAI(Creature *c) : ScriptedAI(c) {}
@@ -775,6 +770,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_lightning_elementalAI (pCreature);
+    }
+
 };
 /***************
 *  mob_rune_of_summoning
@@ -783,11 +783,6 @@ class mob_rune_of_summoning : public CreatureScript
 {
 public:
     mob_rune_of_summoning() : CreatureScript("mob_rune_of_summoning") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_rune_of_summoningAI (pCreature);
-    }
 
     struct mob_rune_of_summoningAI : public ScriptedAI
     {
@@ -818,6 +813,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_rune_of_summoningAI (pCreature);
+    }
+
 };
 
 /***************
@@ -827,11 +827,6 @@ class mob_rune_of_power : public CreatureScript
 {
 public:
     mob_rune_of_power() : CreatureScript("mob_rune_of_power") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_rune_of_powerAI (pCreature);
-    }
 
     struct mob_rune_of_powerAI : public ScriptedAI
     {
@@ -847,6 +842,11 @@ public:
             me->ForcedDespawn(35000);
         }
     };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_rune_of_powerAI (pCreature);
+    }
 
 };
 

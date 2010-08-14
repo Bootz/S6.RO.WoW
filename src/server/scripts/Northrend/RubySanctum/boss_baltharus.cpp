@@ -56,11 +56,6 @@ class boss_baltharus : public CreatureScript
 public:
     boss_baltharus() : CreatureScript("boss_baltharus") { }
 
-    CreatureAI* GetAI(Creature *pCreature)
-    {
-    	return new boss_baltharusAI(pCreature);
-    }
-
     struct boss_baltharusAI : public ScriptedAI
     {
     	boss_baltharusAI(Creature* pCreature) : ScriptedAI(pCreature)
@@ -237,6 +232,11 @@ public:
     	}
     };
 
+    CreatureAI* GetAI(Creature *pCreature) const
+    {
+    	return new boss_baltharusAI(pCreature);
+    }
+
 };
 
 
@@ -244,11 +244,6 @@ class boss_baltharus_clone : public CreatureScript
 {
 public:
     boss_baltharus_clone() : CreatureScript("boss_baltharus_clone") { }
-
-    CreatureAI* GetAI(Creature *pCreature)
-    {
-    	return new boss_baltharus_cloneAI(pCreature);
-    }
 
     struct boss_baltharus_cloneAI : public ScriptedAI
     {
@@ -298,6 +293,11 @@ public:
     	}
     };
 
+    CreatureAI* GetAI(Creature *pCreature) const
+    {
+    	return new boss_baltharus_cloneAI(pCreature);
+    }
+
 };
 
 
@@ -305,27 +305,6 @@ class npc_xerestrasza : public CreatureScript
 {
 public:
     npc_xerestrasza() : CreatureScript("npc_xerestrasza") { }
-
-    CreatureAI* GetAI(Creature *pCreature)
-    {
-    	return new npc_xerestraszaAI(pCreature);
-    }
-
-    bool GossipSelect(Player *pPlayer, Creature *pCreature, uint32, uint32 uiAction)
-    {
-    	if(uiAction == GOSSIP_ACTION_INFO_DEF+1)
-    		pCreature->GetInstanceScript()->SetData(DATA_XERESTRASZA_EVENT, IN_PROGRESS);
-    	pPlayer->PlayerTalkClass->CloseGossip();
-    	return true;
-    }
-
-    bool GossipHello(Player *pPlayer, Creature *pCreature)
-    {
-    	if(pCreature->GetInstanceScript()->GetData(DATA_XERESTRASZA_EVENT) == NOT_STARTED)
-    		pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Was ist hier vorgefallen?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-    	pPlayer->PlayerTalkClass->SendGossipMenu(1, pCreature->GetGUID());
-    	return true;
-    }
 
     struct npc_xerestraszaAI : public ScriptedAI
     {
@@ -427,6 +406,11 @@ public:
     	}
     };
 
+    CreatureAI* GetAI(Creature *pCreature) const
+    {
+    	return new npc_xerestraszaAI(pCreature);
+    }
+
 };
 
 
@@ -435,6 +419,23 @@ public:
 class go_firefield : public GameObjectScript
 {
 public:
+
+    bool GossipSelect(Player *pPlayer, Creature *pCreature, uint32, uint32 uiAction)
+    {
+    	if(uiAction == GOSSIP_ACTION_INFO_DEF+1)
+    		pCreature->GetInstanceScript()->SetData(DATA_XERESTRASZA_EVENT, IN_PROGRESS);
+    	pPlayer->PlayerTalkClass->CloseGossip();
+    	return true;
+    }
+
+    bool GossipHello(Player *pPlayer, Creature *pCreature)
+    {
+    	if(pCreature->GetInstanceScript()->GetData(DATA_XERESTRASZA_EVENT) == NOT_STARTED)
+    		pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Was ist hier vorgefallen?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+    	pPlayer->PlayerTalkClass->SendGossipMenu(1, pCreature->GetGUID());
+    	return true;
+    }
+
     go_firefield() : GameObjectScript("go_firefield") { }
 
     bool GOHello(Player *pPlayer, GameObject *pGO)

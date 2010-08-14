@@ -87,11 +87,6 @@ class boss_saurfang : public CreatureScript
 public:
     boss_saurfang() : CreatureScript("boss_saurfang") { }
 
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_saurfangAI(pCreature);
-    }
-
     struct boss_saurfangAI : public ScriptedAI
     {
         boss_saurfangAI(Creature* pCreature) : ScriptedAI(pCreature)
@@ -280,17 +275,17 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_saurfangAI(pCreature);
+    }
+
 };
 
 class npc_bloodbeast : public CreatureScript
 {
 public:
     npc_bloodbeast() : CreatureScript("npc_bloodbeast") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_bloodbeastAI(pCreature);
-    }
 
     struct npc_bloodbeastAI : public ScriptedAI
     {
@@ -356,6 +351,11 @@ public:
             DoMeleeAttackIfReady();
         }
     };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_bloodbeastAI(pCreature);
+    }
 
 };
 

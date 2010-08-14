@@ -12,11 +12,6 @@ class instance_obsidian_sanctum : public InstanceMapScript
 public:
     instance_obsidian_sanctum() : InstanceMapScript("instance_obsidian_sanctum", 615) { }
 
-    InstanceScript* GetInstanceScript (InstanceMap* pMap) const
-    {
-        return new instance_obsidian_sanctum_InstanceMapScript(pMap);
-    }
-
     struct instance_obsidian_sanctum_InstanceMapScript : public InstanceScript
     {
         instance_obsidian_sanctum_InstanceMapScript(Map* pMap) : InstanceScript(pMap) {Initialize();};
@@ -120,6 +115,11 @@ public:
                 m_bVesperonKilled = true;
         }
     };
+
+    InstanceScript* GetInstanceScript (InstanceMap* pMap) const
+    {
+        return new instance_obsidian_sanctum_InstanceMapScript(pMap);
+    }
 
 };
 

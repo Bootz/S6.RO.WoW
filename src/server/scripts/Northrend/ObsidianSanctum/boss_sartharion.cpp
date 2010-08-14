@@ -223,11 +223,6 @@ class boss_sartharion : public CreatureScript
 public:
     boss_sartharion() : CreatureScript("boss_sartharion") { }
 
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_sartharionAI(pCreature);
-    }
-
     struct boss_sartharionAI : public BossAI
     {
         boss_sartharionAI(Creature* pCreature) : BossAI(pCreature, TYPE_SARTHARION_EVENT){}
@@ -638,6 +633,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_sartharionAI(pCreature);
+    }
+
 };
 
 
@@ -686,11 +686,6 @@ class npc_disciple_of_vesperon : public CreatureScript
 {
 public:
     npc_disciple_of_vesperon() : CreatureScript("npc_disciple_of_vesperon") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_disciple_of_vesperonAI(pCreature);
-    }
 
     struct npc_disciple_of_vesperonAI : public TriggerAI
     {
@@ -907,6 +902,12 @@ struct dummy_dragonAI : public ScriptedAI
     }
 };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_disciple_of_vesperonAI(pCreature);
+    }
+};
+
 /*######
 ## Mob Tenebron
 ######*/
@@ -915,11 +916,6 @@ class mob_tenebron : public CreatureScript
 {
 public:
     mob_tenebron() : CreatureScript("mob_tenebron") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_tenebronAI(pCreature);
-    }
 
     struct mob_tenebronAI : public dummy_dragonAI
     {
@@ -1042,6 +1038,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_tenebronAI(pCreature);
+    }
+
 };
 
 
@@ -1053,11 +1054,6 @@ class mob_shadron : public CreatureScript
 {
 public:
     mob_shadron() : CreatureScript("mob_shadron") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_shadronAI(pCreature);
-    }
 
     struct mob_shadronAI : public dummy_dragonAI
     {
@@ -1170,6 +1166,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_shadronAI(pCreature);
+    }
+
 };
 
 
@@ -1181,11 +1182,6 @@ class mob_vesperon : public CreatureScript
 {
 public:
     mob_vesperon() : CreatureScript("mob_vesperon") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_vesperonAI(pCreature);
-    }
 
     struct mob_vesperonAI : public dummy_dragonAI
     {
@@ -1272,6 +1268,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_vesperonAI(pCreature);
+    }
+
 };
 
 
@@ -1283,11 +1284,6 @@ class mob_acolyte_of_shadron : public CreatureScript
 {
 public:
     mob_acolyte_of_shadron() : CreatureScript("mob_acolyte_of_shadron") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_acolyte_of_shadronAI(pCreature);
-    }
 
     struct mob_acolyte_of_shadronAI : public ScriptedAI
     {
@@ -1389,6 +1385,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_acolyte_of_shadronAI(pCreature);
+    }
+
 };
 
 
@@ -1400,11 +1401,6 @@ class mob_acolyte_of_vesperon : public CreatureScript
 {
 public:
     mob_acolyte_of_vesperon() : CreatureScript("mob_acolyte_of_vesperon") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_acolyte_of_vesperonAI(pCreature);
-    }
 
     struct mob_acolyte_of_vesperonAI : public ScriptedAI
     {
@@ -1492,6 +1488,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_acolyte_of_vesperonAI(pCreature);
+    }
+
 };
 
 
@@ -1503,11 +1504,6 @@ class mob_twilight_eggs : public CreatureScript
 {
 public:
     mob_twilight_eggs() : CreatureScript("mob_twilight_eggs") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_twilight_eggsAI(pCreature);
-    }
 
     struct mob_twilight_eggsAI : public Scripted_NoMovementAI
     {
@@ -1562,6 +1558,11 @@ public:
         void MoveInLineOfSight(Unit* pWho) {}
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_twilight_eggsAI(pCreature);
+    }
+
 };
 
 
@@ -1572,11 +1573,6 @@ class npc_flame_tsunami : public CreatureScript
 {
 public:
     npc_flame_tsunami() : CreatureScript("npc_flame_tsunami") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_flame_tsunamiAI(pCreature);
-    }
 
     struct npc_flame_tsunamiAI : public ScriptedAI
     {
@@ -1615,6 +1611,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_flame_tsunamiAI(pCreature);
+    }
+
 };
 /*######
 ## Twilight Fissure
@@ -1623,11 +1624,6 @@ class npc_twilight_fissure : public CreatureScript
 {
 public:
     npc_twilight_fissure() : CreatureScript("npc_twilight_fissure") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_twilight_fissureAI(pCreature);
-    }
 
     struct npc_twilight_fissureAI : public Scripted_NoMovementAI
     {
@@ -1655,6 +1651,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_twilight_fissureAI(pCreature);
+    }
+
 };
 
 
@@ -1668,11 +1669,6 @@ class mob_twilight_whelp : public CreatureScript
 {
 public:
     mob_twilight_whelp() : CreatureScript("mob_twilight_whelp") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_twilight_whelpAI(pCreature);
-    }
 
     struct mob_twilight_whelpAI : public ScriptedAI
     {
@@ -1709,6 +1705,11 @@ public:
             DoMeleeAttackIfReady();
         }
     };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_twilight_whelpAI(pCreature);
+    }
 
 };
 
