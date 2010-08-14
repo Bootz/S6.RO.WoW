@@ -252,7 +252,7 @@ class npc_announcer_toc5 : public CreatureScript
 public:
     npc_announcer_toc5() : CreatureScript("npc_announcer_toc5") { }
 
-    bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
     {
         if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
         {
@@ -263,7 +263,7 @@ public:
         return true;
     }
 
-    bool GossipHello(Player* pPlayer, Creature* pCreature)
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
     {
         InstanceScript* pInstance = pCreature->GetInstanceScript();
 

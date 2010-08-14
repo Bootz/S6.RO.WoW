@@ -1457,10 +1457,10 @@ public:
 				 DoCast(pTarget, SPELL_SOUL_RIP);
 				 SoulRipTimer = 35000;
 			 }else SoulRipTimer -= uiDiff;
-		 }
 
-//     DoMeleeAttackIfReady();
-     };
+			 DoMeleeAttackIfReady();
+     }
+};
 
     CreatureAI* GetAI(Creature* pCreature) const
     {
