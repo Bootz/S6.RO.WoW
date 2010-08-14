@@ -433,7 +433,7 @@ public:
         }
     };
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new npc_raging_gnoulAI(pCreature);
     }
@@ -511,7 +511,7 @@ public:
         }
     };
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new npc_risen_witch_doctorAI(pCreature);
     }
@@ -568,7 +568,7 @@ public:
         }
     };
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new npc_abonAI(pCreature);
     }
