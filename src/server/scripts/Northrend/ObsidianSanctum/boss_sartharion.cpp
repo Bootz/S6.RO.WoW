@@ -708,6 +708,10 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_disciple_of_vesperonAI(pCreature);
+    }
 };
 
 //to control each dragons common abilities
@@ -899,12 +903,6 @@ struct dummy_dragonAI : public ScriptedAI
             else
                 m_uiMoveNextTimer -= uiDiff;
         }
-    }
-};
-
-    CreatureAI* GetAI(Creature* pCreature) const
-    {
-        return new npc_disciple_of_vesperonAI(pCreature);
     }
 };
 

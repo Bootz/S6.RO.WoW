@@ -967,12 +967,6 @@ struct mob_SnowboldAI : public ScriptedAI
     }
 };
 
-    CreatureAI* GetAI_mob_Snowbold(Creature* pCreature) const
-    {
-        return new mob_SnowboldAI (pCreature);
-    }
-};
-
 void AddSC_boss_northrend_beasts()
 {
     new boss_gormok_impaler();
@@ -980,5 +974,4 @@ void AddSC_boss_northrend_beasts()
     new boss_dreadscale();
     new boss_icehowl();
     new mob_firebomb_trigger();
-    new mob_Snowbold();
 }

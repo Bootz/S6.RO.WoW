@@ -1391,7 +1391,7 @@ public:
                 if (Player* i_pl = i->getSource())
                     if (i_pl->isAlive())
 					{
-						i_pl->RemoveAura(SPELL_HARVEST2)
+						i_pl->RemoveAura(SPELL_HARVEST2);
                         i_pl->TeleportTo(pLichKing->GetMapId(), pLichKing->GetPositionX(),pLichKing->GetPositionY(),pLichKing->GetPositionZ(), 0, TELE_TO_NOT_LEAVE_COMBAT);
 					}
 		 }
@@ -1439,28 +1439,28 @@ public:
 		 }
 
 
-		 void UpdateAI
+		 void UpdateAI (const uint32 uiDiff)
 		 {
 			 if (!UpdateVictim())
 				 return;
 
 			 if (DestroySoulTimer <= uiDiff && !pMenethil->isAlive())
 			 {
-				 Unit*pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
+				 Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
 				 DoCast(pTarget, SPELL_DESTROY_SOUL);
 				 DestroySoulTimer = 2000;
 			 }else DestroySoulTimer -= uiDiff;
 
 			 if (SoulRipTimer <= uiDiff)
 			 {
+				 Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
 				 DoCast(pTarget, SPELL_SOUL_RIP);
 				 SoulRipTimer = 35000;
 			 }else SoulRipTimer -= uiDiff;
 		 }
 
-     DoMeleeAttackIfReady();
-     }
-};
+//     DoMeleeAttackIfReady();
+     };
 
     CreatureAI* GetAI(Creature* pCreature) const
     {
