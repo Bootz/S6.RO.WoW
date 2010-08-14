@@ -244,11 +244,6 @@ class boss_gorgrim_shadowcleave : public CreatureScript
 public:
     boss_gorgrim_shadowcleave() : CreatureScript("boss_gorgrim_shadowcleave") { }
 
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_gorgrim_shadowcleaveAI(pCreature);
-    }
-
     struct boss_gorgrim_shadowcleaveAI : public ScriptedAI
     {
         boss_gorgrim_shadowcleaveAI(Creature* pCreature) : ScriptedAI(pCreature)
@@ -305,6 +300,11 @@ public:
             }
     };
 
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new boss_gorgrim_shadowcleaveAI(pCreature);
+    }
+
 };
 
 /****************************/
@@ -316,11 +316,6 @@ class boss_birana_stormhoof : public CreatureScript
 {
 public:
     boss_birana_stormhoof() : CreatureScript("boss_birana_stormhoof") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_birana_stormhoofAI(pCreature);
-    }
 
     struct boss_birana_stormhoofAI : public ScriptedAI
     {
@@ -378,6 +373,11 @@ public:
             }
     };
 
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new boss_birana_stormhoofAI(pCreature);
+    }
+
 };
 
 /*************************/
@@ -389,11 +389,6 @@ class boss_erin_misthoof : public CreatureScript
 {
 public:
     boss_erin_misthoof() : CreatureScript("boss_erin_misthoof") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_erin_misthoofAI(pCreature);
-    }
 
     struct boss_erin_misthoofAI : public ScriptedAI
     {
@@ -451,6 +446,11 @@ public:
             }
     };
 
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new boss_erin_misthoofAI(pCreature);
+    }
+
 };
 
 /************************/
@@ -462,11 +462,6 @@ class boss_rujkah : public CreatureScript
 {
 public:
     boss_rujkah() : CreatureScript("boss_rujkah") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_rujkahAI(pCreature);
-    }
 
     struct boss_rujkahAI : public ScriptedAI
     {
@@ -524,6 +519,11 @@ public:
             }
     };
 
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new boss_rujkahAI(pCreature);
+    }
+
 };
 
 /**********************************/
@@ -535,11 +535,6 @@ class boss_ginselle_blightslinger : public CreatureScript
 {
 public:
     boss_ginselle_blightslinger() : CreatureScript("boss_ginselle_blightslinger") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_ginselle_blightslingerAI(pCreature);
-    }
 
     struct boss_ginselle_blightslingerAI : public ScriptedAI
     {
@@ -597,6 +592,11 @@ public:
             }
     };
 
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new boss_ginselle_blightslingerAI(pCreature);
+    }
+
 };
 
 /******************************/
@@ -608,11 +608,6 @@ class boss_liandra_suncaller : public CreatureScript
 {
 public:
     boss_liandra_suncaller() : CreatureScript("boss_liandra_suncaller") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_liandra_suncallerAI(pCreature);
-    }
 
     struct boss_liandra_suncallerAI : public ScriptedAI
     {
@@ -669,13 +664,22 @@ public:
                     DoMeleeAttackIfReady();
             }
     };
-
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new boss_liandra_suncallerAI(pCreature);
+    }
 };
 
 /********************************/
 /* Malithas Brightblade - 34456 */
 /* Paladin                      */
 /********************************/
+
+
+class boss_malithas_brightblader : public CreatureScript
+{
+public:
+    boss_malithas_brightblader() : CreatureScript("boss_malithas_brightblader") { }
 
 struct boss_malithas_brightbladeAI : public ScriptedAI
 {
@@ -733,6 +737,12 @@ struct boss_malithas_brightbladeAI : public ScriptedAI
         }
 };
 
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new boss_malithas_brightbladeAI(pCreature);
+    }
+
+};
 /*****************************/
 /* Caiphus the Stern - 34447 */
 /* Priest                    */
@@ -742,11 +752,6 @@ class boss_caiphus_the_stern : public CreatureScript
 {
 public:
     boss_caiphus_the_stern() : CreatureScript("boss_caiphus_the_stern") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_caiphus_the_sternAI(pCreature);
-    }
 
     struct boss_caiphus_the_sternAI : public ScriptedAI
     {
@@ -804,6 +809,11 @@ public:
             }
     };
 
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new boss_caiphus_the_sternAI(pCreature);
+    }
+
 };
 
 /*********************************/
@@ -815,11 +825,6 @@ class boss_vivienne_blackwhisper : public CreatureScript
 {
 public:
     boss_vivienne_blackwhisper() : CreatureScript("boss_vivienne_blackwhisper") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_vivienne_blackwhisperAI(pCreature);
-    }
 
     struct boss_vivienne_blackwhisperAI : public ScriptedAI
     {
@@ -877,6 +882,11 @@ public:
             }
     };
 
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new boss_vivienne_blackwhisperAI(pCreature);
+    }
+
 };
 
 /************************/
@@ -888,11 +898,6 @@ class boss_mazdinah : public CreatureScript
 {
 public:
     boss_mazdinah() : CreatureScript("boss_mazdinah") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_mazdinahAI(pCreature);
-    }
 
     struct boss_mazdinahAI : public ScriptedAI
     {
@@ -946,6 +951,11 @@ public:
             }
     };
 
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new boss_mazdinahAI(pCreature);
+    }
+
 };
 
 /***************************/
@@ -957,11 +967,6 @@ class boss_broln_stouthorn : public CreatureScript
 {
 public:
     boss_broln_stouthorn() : CreatureScript("boss_broln_stouthorn") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_broln_stouthornAI(pCreature);
-    }
 
     struct boss_broln_stouthornAI : public ScriptedAI
     {
@@ -1015,6 +1020,11 @@ public:
             }
     };
 
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new boss_broln_stouthornAI(pCreature);
+    }
+
 };
 
 /************************/
@@ -1026,11 +1036,6 @@ class boss_thrakgar : public CreatureScript
 {
 public:
     boss_thrakgar() : CreatureScript("boss_thrakgar") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_thrakgarAI(pCreature);
-    }
 
     struct boss_thrakgarAI : public ScriptedAI
     {
@@ -1088,6 +1093,11 @@ public:
             }
     };
 
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new boss_thrakgarAI(pCreature);
+    }
+
 };
 
 /*************************/
@@ -1099,11 +1109,6 @@ class boss_harkzog : public CreatureScript
 {
 public:
     boss_harkzog() : CreatureScript("boss_harkzog") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_harkzogAI(pCreature);
-    }
 
     struct boss_harkzogAI : public ScriptedAI
     {
@@ -1161,6 +1166,11 @@ public:
             }
     };
 
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new boss_harkzogAI(pCreature);
+    }
+
 };
 
 /********************************/
@@ -1172,11 +1182,6 @@ class boss_narrhok_steelbreaker : public CreatureScript
 {
 public:
     boss_narrhok_steelbreaker() : CreatureScript("boss_narrhok_steelbreaker") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_narrhok_steelbreakerAI(pCreature);
-    }
 
     struct boss_narrhok_steelbreakerAI : public ScriptedAI
     {
@@ -1234,26 +1239,10 @@ public:
             }
     };
 
-};
-
-/***************************************************************/
-
-
-
-
-
-
-
-class boss_malithas_brightblader : public CreatureScript
-{
-public:
-    boss_malithas_brightblader() : CreatureScript("boss_malithas_brightblader") { }
-
     CreatureAI* GetAI(Creature* pCreature)
     {
-        return new boss_malithas_brightbladeAI(pCreature);
+        return new boss_narrhok_steelbreakerAI(pCreature);
     }
-
 };
 
 void AddSC_boss_tc_horde_champions()

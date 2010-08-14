@@ -102,6 +102,11 @@ Creature* pImpale;
 
 uint32 MarkTimer;
 
+class Boss_Raid_Anubarak : public CreatureScript
+{
+public:
+    Boss_Raid_Anubarak() : CreatureScript("Boss_Raid_Anubarak") { }
+
 struct Boss_Raid_AnubarakAI : public ScriptedAI
 {
     Boss_Raid_AnubarakAI(Creature *pCreature) : ScriptedAI(pCreature)
@@ -350,16 +355,11 @@ struct Boss_Raid_AnubarakAI : public ScriptedAI
         DoScriptText(SAY_DEATH, me);
     }
 };
-
-class Boss_Raid_Anubarak : public CreatureScript
-{
-public:
-    Boss_Raid_Anubarak() : CreatureScript("Boss_Raid_Anubarak") { }
-
     CreatureAI* GetAI_Raid_Anubarak(Creature* pCreature)
     {
         return new Boss_Raid_AnubarakAI (pCreature);
     }
+
 
 };
 
@@ -367,11 +367,6 @@ class mob_swarm_scarab : public CreatureScript
 {
 public:
     mob_swarm_scarab() : CreatureScript("mob_swarm_scarab") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_swarm_scarabAI (pCreature);
-    }
 
     struct mob_swarm_scarabAI : public ScriptedAI
     {
@@ -408,6 +403,11 @@ public:
 
     };
 
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new mob_swarm_scarabAI (pCreature);
+    }
+
 };
 
 
@@ -415,11 +415,6 @@ class Mob_NerubianTrigger : public CreatureScript
 {
 public:
     Mob_NerubianTrigger() : CreatureScript("Mob_NerubianTrigger") { }
-
-    CreatureAI* GetAI_mob_NerubianTrigger(Creature* pCreature)
-    {
-        return new mob_NerubianTriggerAI (pCreature);
-    }
 
     struct mob_NerubianTriggerAI : public Scripted_NoMovementAI
     {
@@ -440,6 +435,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI_mob_NerubianTrigger(Creature* pCreature)
+    {
+        return new mob_NerubianTriggerAI (pCreature);
+    }
+
 };
 
 
@@ -447,11 +447,6 @@ class nerubian_burrower : public CreatureScript
 {
 public:
     nerubian_burrower() : CreatureScript("nerubian_burrower") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new nerubian_burrowerAI (pCreature);
-    }
 
     struct nerubian_burrowerAI : public ScriptedAI
     {
@@ -501,6 +496,11 @@ public:
 
     };
 
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new nerubian_burrowerAI (pCreature);
+    }
+
 };
 
 
@@ -508,11 +508,6 @@ class frost_sphere : public CreatureScript
 {
 public:
     frost_sphere() : CreatureScript("frost_sphere") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new frost_sphereAI (pCreature);
-    }
 
     struct frost_sphereAI : public ScriptedAI
     {
@@ -555,6 +550,11 @@ public:
 
     };
 
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new frost_sphereAI (pCreature);
+    }
+
 };
 
 
@@ -562,11 +562,6 @@ class creature_impale : public CreatureScript
 {
 public:
     creature_impale() : CreatureScript("creature_impale") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new creature_impaleAI (pCreature);
-    }
 
     struct creature_impaleAI : public ScriptedAI
     {
@@ -630,6 +625,11 @@ public:
         }
 
     };
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new creature_impaleAI (pCreature);
+    }
 
 };
 

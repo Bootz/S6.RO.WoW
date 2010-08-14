@@ -23,7 +23,7 @@ enum Says
 {
         SAY_AGGRO                       =       -1600218,
         SAY_FLESH                       =       -1600219,
-        SAY_SUMMON_SISTER       =       -1600220,
+        SAY_SUMMON_SISTER               =       -1600220,
         SAY_INFERNO                     =       -1600221,
         SAY_KILL_1                      =       -1600222,
         SAY_KILL_2                      =       -1600223,
@@ -91,11 +91,6 @@ class Boss_Jaraxxus : public CreatureScript
 {
 public:
     Boss_Jaraxxus() : CreatureScript("Boss_Jaraxxus") { }
-
-    CreatureAI* GetAI_boss_Jaraxxus(Creature* pCreature)
-    {
-        return new boss_JaraxxusAI (pCreature);
-    }
 
     struct boss_JaraxxusAI : public ScriptedAI
     {
@@ -264,6 +259,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI_boss_Jaraxxus(Creature* pCreature)
+    {
+        return new boss_JaraxxusAI (pCreature);
+    }
+
 };
 
 
@@ -271,11 +271,6 @@ class Mob_FireTrigger : public CreatureScript
 {
 public:
     Mob_FireTrigger() : CreatureScript("Mob_FireTrigger") { }
-
-    CreatureAI* GetAI_mob_FireTrigger(Creature* pCreature)
-    {
-        return new mob_FireTriggerAI (pCreature);
-    }
 
     struct mob_FireTriggerAI : public Scripted_NoMovementAI
     {
@@ -300,6 +295,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI_mob_FireTrigger(Creature* pCreature)
+    {
+        return new mob_FireTriggerAI (pCreature);
+    }
+
 };
 
 
@@ -307,11 +307,6 @@ class Mob_Vulcan : public CreatureScript
 {
 public:
     Mob_Vulcan() : CreatureScript("Mob_Vulcan") { }
-
-    CreatureAI* GetAI_mob_Vulcan(Creature* pCreature)
-    {
-        return new mob_VulcanAI (pCreature);
-    }
 
     struct mob_VulcanAI : public Scripted_NoMovementAI
     {
@@ -350,6 +345,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI_mob_Vulcan(Creature* pCreature)
+    {
+        return new mob_VulcanAI (pCreature);
+    }
+
 };
 
 
@@ -357,12 +357,6 @@ class Mob_Netherportal : public CreatureScript
 {
 public:
     Mob_Netherportal() : CreatureScript("Mob_Netherportal") { }
-
-    CreatureAI* GetAI_mob_Netherportal(Creature* pCreature)
-    {
-        return new mob_NetherportalAI (pCreature);
-
-    }
 
     struct mob_NetherportalAI : public Scripted_NoMovementAI
     {
@@ -418,6 +412,12 @@ public:
         }
     };
 
+    CreatureAI* GetAI_mob_Netherportal(Creature* pCreature)
+    {
+        return new mob_NetherportalAI (pCreature);
+
+    }
+
 };
 
 
@@ -425,11 +425,6 @@ class Mob_MistressOfPain : public CreatureScript
 {
 public:
     Mob_MistressOfPain() : CreatureScript("Mob_MistressOfPain") { }
-
-    CreatureAI* GetAI_mob_mistressofpain(Creature* pCreature)
-    {
-        return new mob_mistressofpainAI (pCreature);
-    }
 
     struct mob_mistressofpainAI : public ScriptedAI
     {
@@ -480,6 +475,11 @@ public:
             DoMeleeAttackIfReady();
         }
     };
+
+    CreatureAI* GetAI_mob_mistressofpain(Creature* pCreature)
+    {
+        return new mob_mistressofpainAI (pCreature);
+    }
 
 };
 

@@ -22,11 +22,6 @@ class instance_trial_of_the_crussader : public InstanceMapScript
 public:
     instance_trial_of_the_crussader() : InstanceMapScript("instance_trial_of_the_crussader", 649) { }
 
-    InstanceScript* GetInstanceScript (InstanceMap* pMap) const
-    {
-        return new instance_trial_of_the_crussader_InstanceMapScript(pMap);
-    }
-
     struct instance_trial_of_the_crussader_InstanceMapScript : public InstanceScript
     {
         instance_trial_of_the_crussader_InstanceMapScript(Map* pMap) : InstanceScript(pMap), m_uiFloorGO(NULL), CacheFactionChampions(NULL)
@@ -408,6 +403,11 @@ public:
             OUT_LOAD_INST_DATA_COMPLETE;
         }
     };
+
+    InstanceScript* GetInstanceScript (InstanceMap* pMap) const
+    {
+        return new instance_trial_of_the_crussader_InstanceMapScript(pMap);
+    }
 
 };
 

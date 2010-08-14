@@ -137,11 +137,6 @@ class boss_fjola : public CreatureScript
 public:
     boss_fjola() : CreatureScript("boss_fjola") { }
 
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_fjolaAI(pCreature);
-    }
-
     struct boss_fjolaAI : public ScriptedAI
     {
         boss_fjolaAI(Creature* pCreature) : ScriptedAI(pCreature)
@@ -295,6 +290,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new boss_fjolaAI(pCreature);
+    }
+
 };
 
 
@@ -306,11 +306,6 @@ class boss_eydis : public CreatureScript
 {
 public:
     boss_eydis() : CreatureScript("boss_eydis") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_eydisAI(pCreature);
-    }
 
     struct boss_eydisAI : public ScriptedAI
     {
@@ -465,6 +460,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new boss_eydisAI(pCreature);
+    }
+
 };
 
 
@@ -473,11 +473,6 @@ class mob_valkyr_orb : public CreatureScript
 {
 public:
     mob_valkyr_orb() : CreatureScript("mob_valkyr_orb") { }
-
-    CreatureAI* GetAI(Creature *pCreature)
-    {
-        return new mob_valkyr_orbAI(pCreature);
-    }
 
     struct mob_valkyr_orbAI : public ScriptedAI
     {
@@ -535,17 +530,17 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature *pCreature)
+    {
+        return new mob_valkyr_orbAI(pCreature);
+    }
+
 };
 
 class cr_dark_essence : public CreatureScript
 {
 public:
     cr_dark_essence() : CreatureScript("cr_dark_essence") { }
-
-    CreatureAI* GetAI(Creature *pCreature)
-    {
-        return new cr_dark_essenceAI(pCreature);
-    }
 
     struct cr_dark_essenceAI : public ScriptedAI
     {
@@ -570,17 +565,17 @@ public:
 
     };
 
+    CreatureAI* GetAI(Creature *pCreature)
+    {
+        return new cr_dark_essenceAI(pCreature);
+    }
+
 };
 
 class cr_light_essence : public CreatureScript
 {
 public:
     cr_light_essence() : CreatureScript("cr_light_essence") { }
-
-    CreatureAI* GetAI(Creature *pCreature)
-    {
-        return new cr_light_essenceAI(pCreature);
-    }
 
     struct cr_light_essenceAI : public ScriptedAI
     {
@@ -604,6 +599,11 @@ public:
         }
 
     };
+
+    CreatureAI* GetAI(Creature *pCreature)
+    {
+        return new cr_light_essenceAI(pCreature);
+    }
 
 };
 

@@ -118,11 +118,6 @@ class boss_gormok_impaler : public CreatureScript
 public:
     boss_gormok_impaler() : CreatureScript("boss_gormok_impaler") { }
 
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_gormok_impalerAI(pCreature);
-    }
-
     struct boss_gormok_impalerAI : public ScriptedAI
     {
         boss_gormok_impalerAI(Creature *pCreature) : ScriptedAI(pCreature)
@@ -268,6 +263,11 @@ public:
             }
     };
 
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new boss_gormok_impalerAI(pCreature);
+    }
+
 };
 
 
@@ -275,11 +275,6 @@ class boss_acidmaw : public CreatureScript
 {
 public:
     boss_acidmaw() : CreatureScript("boss_acidmaw") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_acidmawAI(pCreature);
-    }
 
     struct boss_acidmawAI : public ScriptedAI
     {
@@ -476,6 +471,11 @@ public:
             }
     };
 
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new boss_acidmawAI(pCreature);
+    }
+
 };
 
 
@@ -483,11 +483,6 @@ class boss_dreadscale : public CreatureScript
 {
 public:
     boss_dreadscale() : CreatureScript("boss_dreadscale") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_dreadscaleAI(pCreature);
-    }
 
     struct boss_dreadscaleAI : public ScriptedAI
     {
@@ -666,6 +661,11 @@ public:
             }
     };
 
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new boss_dreadscaleAI(pCreature);
+    }
+
 };
 
 
@@ -673,11 +673,6 @@ class boss_icehowl : public CreatureScript
 {
 public:
     boss_icehowl() : CreatureScript("boss_icehowl") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_icehowlAI(pCreature);
-    }
 
     struct boss_icehowlAI : public ScriptedAI
     {
@@ -869,6 +864,11 @@ public:
             }
     };
 
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new boss_icehowlAI(pCreature);
+    }
+
 };
 
 
@@ -876,11 +876,6 @@ class mob_firebomb_trigger : public CreatureScript
 {
 public:
     mob_firebomb_trigger() : CreatureScript("mob_firebomb_trigger") { }
-
-    CreatureAI* GetAI_mob_FireBomb(Creature* pCreature)
-    {
-        return new mob_FireBombAI (pCreature);
-    }
 
     struct mob_FireBombAI : public Scripted_NoMovementAI
     {
@@ -923,6 +918,11 @@ public:
                     else m_uiDespawnTimer -= uiDiff;
         }
     };
+
+    CreatureAI* GetAI_mob_FireBomb(Creature* pCreature)
+    {
+        return new mob_FireBombAI (pCreature);
+    }
 
 };
 
@@ -967,6 +967,11 @@ struct mob_SnowboldAI : public ScriptedAI
     }
 };
 
+    CreatureAI* GetAI_mob_Snowbold(Creature* pCreature)
+    {
+        return new mob_SnowboldAI (pCreature);
+    }
+};
 
 void AddSC_boss_northrend_beasts()
 {
@@ -975,4 +980,5 @@ void AddSC_boss_northrend_beasts()
     new boss_dreadscale();
     new boss_icehowl();
     new mob_firebomb_trigger();
+    new mob_Snowbold();
 }
