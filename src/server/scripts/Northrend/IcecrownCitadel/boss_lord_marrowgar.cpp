@@ -331,6 +331,8 @@ public:
             {
                 if (m_uiBoneStormChanelTimer <= uiDiff)
                 {
+                    me->SetSpeed(MOVE_WALK, 0.4f, true);
+                    me->SetSpeed(MOVE_RUN, 0.6f, true);
                     DoCast(SPELL_BONE_STORM_CHANNEL);
                     DoScriptText(SAY_BONE_STORM, me);
                     m_uiBoneStormChanelTimer = 45000;
@@ -350,18 +352,9 @@ public:
     		{
     			Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
     			me->GetMotionMaster()->MovePoint(0, pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ());
-    			m_uiMove = 7500;
+    			m_uiMove = 9500;
     		}
     	    } else m_uiMove -= uiDiff;
-
-                if (m_uiColdFlameTimer <= uiDiff)
-                    {
-                        me->SummonCreature(CREATURE_COLD_FLAME, me->GetPositionX()+15, me->GetPositionY()+15, me->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN, 8000);
-                        me->SummonCreature(CREATURE_COLD_FLAME, me->GetPositionX()-15, me->GetPositionY()-15, me->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN, 8000);
-                        me->SummonCreature(CREATURE_COLD_FLAME, me->GetPositionX()+15, me->GetPositionY()-15, me->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN, 8000);
-                        me->SummonCreature(CREATURE_COLD_FLAME, me->GetPositionX()-15, me->GetPositionY()+15, me->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN, 8000);
-                        m_uiColdFlameTimer = 15000;
-                    } else m_uiColdFlameTimer -= uiDiff;
 
             }
 
@@ -413,7 +406,7 @@ public:
             me->GetMotionMaster()->MovePoint(0, x, y, z);
     DoCast(me,RAID_MODE(SPELL_COLD_FLAME_10_NORMAL,SPELL_COLD_FLAME_25_NORMAL,SPELL_COLD_FLAME_10_HEROIC,SPELL_COLD_FLAME_25_HEROIC));
             me->SetReactState(REACT_PASSIVE);
-            me->SetSpeed(MOVE_WALK, 1.0f, true);
+            me->SetSpeed(MOVE_WALK, 0.7f, true);
             m_uiColdDespawn    = 9000;
             m_uiColdFlameTimer = 1000;
         }
