@@ -86,11 +86,6 @@ class boss_eadric : public CreatureScript
 public:
     boss_eadric() : CreatureScript("boss_eadric") { }
 
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_eadricAI(pCreature);
-    }
-
     struct boss_eadricAI : public ScriptedAI
     {
         boss_eadricAI(Creature* pCreature) : ScriptedAI(pCreature)
@@ -194,6 +189,10 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new boss_eadricAI(pCreature);
+    }
 };
 
 
@@ -201,11 +200,6 @@ class boss_paletress : public CreatureScript
 {
 public:
     boss_paletress() : CreatureScript("boss_paletress") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_paletressAI(pCreature);
-    }
 
     struct boss_paletressAI : public ScriptedAI
     {
@@ -420,6 +414,10 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new boss_paletressAI(pCreature);
+    }
 };
 
 
@@ -427,11 +425,6 @@ class npc_memory : public CreatureScript
 {
 public:
     npc_memory() : CreatureScript("npc_memory") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_memoryAI(pCreature);
-    }
 
     struct npc_memoryAI : public ScriptedAI
     {
@@ -495,6 +488,10 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new npc_memoryAI(pCreature);
+    }
 };
 
 
@@ -503,11 +500,6 @@ class npc_argent_soldier : public CreatureScript
 {
 public:
     npc_argent_soldier() : CreatureScript("npc_argent_soldier") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_argent_soldierAI(pCreature);
-    }
 
     struct npc_argent_soldierAI : public npc_escortAI
     {
@@ -756,6 +748,10 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new npc_argent_soldierAI(pCreature);
+    }
 };
 
 

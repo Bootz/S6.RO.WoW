@@ -151,11 +151,6 @@ class generic_vehicleAI_toc5 : public CreatureScript
 public:
     generic_vehicleAI_toc5() : CreatureScript("generic_vehicleAI_toc5") { }
 
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new generic_vehicleAI_toc5AI(pCreature);
-    }
-
     struct generic_vehicleAI_toc5AI : public npc_escortAI
     {
         generic_vehicleAI_toc5AI(Creature* pCreature) : npc_escortAI(pCreature)
@@ -292,6 +287,10 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new generic_vehicleAI_toc5AI(pCreature);
+    }
 };
 
 
@@ -300,11 +299,6 @@ class boss_warrior_toc5 : public CreatureScript
 {
 public:
     boss_warrior_toc5() : CreatureScript("boss_warrior_toc5") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_warrior_toc5AI(pCreature);
-    }
 
     struct boss_warrior_toc5AI : public ScriptedAI
     {
@@ -431,6 +425,10 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new boss_warrior_toc5AI(pCreature);
+    }
 };
 
 
@@ -439,11 +437,6 @@ class boss_mage_toc5 : public CreatureScript
 {
 public:
     boss_mage_toc5() : CreatureScript("boss_mage_toc5") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_mage_toc5AI(pCreature);
-    }
 
     struct boss_mage_toc5AI : public ScriptedAI
     {
@@ -566,6 +559,10 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new boss_mage_toc5AI(pCreature);
+    }
 };
 
 
@@ -574,11 +571,6 @@ class boss_shaman_toc5 : public CreatureScript
 {
 public:
     boss_shaman_toc5() : CreatureScript("boss_shaman_toc5") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_shaman_toc5AI(pCreature);
-    }
 
     struct boss_shaman_toc5AI : public ScriptedAI
     {
@@ -716,6 +708,10 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new boss_shaman_toc5AI(pCreature);
+    }
 };
 
 
@@ -724,11 +720,6 @@ class boss_hunter_toc5 : public CreatureScript
 {
 public:
     boss_hunter_toc5() : CreatureScript("boss_hunter_toc5") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_hunter_toc5AI(pCreature);
-    }
 
     struct boss_hunter_toc5AI : public ScriptedAI
     {
@@ -890,6 +881,10 @@ public:
  
     };
 
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new boss_hunter_toc5AI(pCreature);
+    }
 };
 
 
@@ -898,11 +893,6 @@ class boss_rouge_toc5 : public CreatureScript
 {
 public:
     boss_rouge_toc5() : CreatureScript("boss_rouge_toc5") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_rouge_toc5AI(pCreature);
-    }
 
     struct boss_rouge_toc5AI : public ScriptedAI
     {
@@ -1013,6 +1003,11 @@ public:
     		
         }
     };
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new boss_rouge_toc5AI(pCreature);
+    }
 
 };
 

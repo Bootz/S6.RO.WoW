@@ -62,11 +62,6 @@ class boss_lich_king_hor : public CreatureScript
 public:
     boss_lich_king_hor() : CreatureScript("boss_lich_king_hor") { }
 
-    CreatureAI* GetAI_boss_lich_king_hr(Creature* pCreature)
-    {
-        return new boss_lich_king_hrAI(pCreature);
-    }
-
     struct boss_lich_king_hrAI : public npc_escortAI
     {
        boss_lich_king_hrAI(Creature *pCreature) : npc_escortAI(pCreature)
@@ -573,6 +568,11 @@ public:
 
         }
     };
+
+    CreatureAI* GetAI_boss_lich_king_hr(Creature* pCreature)
+    {
+        return new boss_lich_king_hrAI(pCreature);
+    }
 
 };
 

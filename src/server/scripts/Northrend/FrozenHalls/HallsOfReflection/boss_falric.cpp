@@ -50,11 +50,6 @@ class boss_falric : public CreatureScript
 public:
     boss_falric() : CreatureScript("boss_falric") { }
 
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_falricAI(pCreature);
-    }
-
     struct boss_falricAI : public ScriptedAI
     {
         boss_falricAI(Creature *pCreature) : ScriptedAI(pCreature)
@@ -259,7 +254,10 @@ public:
             return;
         }
     };
-
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new boss_falricAI(pCreature);
+    }
 };
 
 

@@ -41,11 +41,6 @@ class instance_trial_of_the_champion : public InstanceMapScript
 public:
     instance_trial_of_the_champion() : InstanceMapScript("instance_trial_of_the_champion", 650) { }
 
-    InstanceScript* GetInstanceScript(InstanceMap* pMap) const
-    {
-        return new instance_trial_of_the_champion_InstanceMapScript(pMap);
-    }
-
     struct instance_trial_of_the_champion_InstanceMapScript : public InstanceScript
     {
         instance_trial_of_the_champion_InstanceMapScript(Map* pMap) : InstanceScript(pMap) {Initialize();}
@@ -507,6 +502,11 @@ public:
         OUT_LOAD_INST_DATA_COMPLETE;
     }
 	};
+
+    InstanceScript* GetInstanceScript(InstanceMap* pMap) const
+    {
+        return new instance_trial_of_the_champion_InstanceMapScript(pMap);
+    }
 };
 
 

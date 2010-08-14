@@ -52,11 +52,6 @@ class boss_marwyn : public CreatureScript
 public:
     boss_marwyn() : CreatureScript("boss_marwyn") { }
 
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_marwynAI(pCreature);
-    }
-
     struct boss_marwynAI : public ScriptedAI
     {
        boss_marwynAI(Creature *pCreature) : ScriptedAI(pCreature)
@@ -283,6 +278,10 @@ public:
             return;
         }
     };
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new boss_marwynAI(pCreature);
+    }
 
 };
 

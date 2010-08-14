@@ -197,11 +197,6 @@ public:
         return true;
     }
 
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_jaina_and_sylvana_HRintroAI(pCreature);
-    }
-
     struct npc_jaina_and_sylvana_HRintroAI : public ScriptedAI
     {
         npc_jaina_and_sylvana_HRintroAI(Creature *pCreature) : ScriptedAI(pCreature)
@@ -661,6 +656,11 @@ public:
          }
     };
 
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new npc_jaina_and_sylvana_HRintroAI(pCreature);
+    }
+
 };
 
 
@@ -711,11 +711,6 @@ public:
         pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
 
         return true;
-    }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_jaina_and_sylvana_HRextroAI(pCreature);
     }
 
     struct npc_jaina_and_sylvana_HRextroAI : public npc_escortAI
@@ -1210,7 +1205,10 @@ public:
           return;
        }
     };
-
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new npc_jaina_and_sylvana_HRextroAI(pCreature);
+    }
 };
 
 
@@ -1219,11 +1217,6 @@ class npc_lich_king_hr : public CreatureScript
 {
 public:
     npc_lich_king_hr() : CreatureScript("npc_lich_king_hr") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_lich_king_hrAI(pCreature);
-    }
 
     struct npc_lich_king_hrAI : public ScriptedAI
     {
@@ -1250,6 +1243,10 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new npc_lich_king_hrAI(pCreature);
+    }
 };
 
 
@@ -1268,11 +1265,6 @@ class npc_frostworn_general : public CreatureScript
 {
 public:
     npc_frostworn_general() : CreatureScript("npc_frostworn_general") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_frostworn_generalAI(pCreature);
-    }
 
     struct npc_frostworn_generalAI : public ScriptedAI
     {
@@ -1351,7 +1343,10 @@ public:
             DoMeleeAttackIfReady();
        }
     };
-
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new npc_frostworn_generalAI(pCreature);
+    }
 };
 
 

@@ -81,11 +81,6 @@ class npc_anstart : public CreatureScript
 public:
     npc_anstart() : CreatureScript("npc_anstart") { }
 
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_anstartAI (pCreature);
-    }
-
     struct npc_anstartAI : public ScriptedAI
     {
         npc_anstartAI(Creature *c) : ScriptedAI(c)
@@ -246,6 +241,10 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new npc_anstartAI (pCreature);
+    }
 };
 
 class npc_announcer_toc5 : public CreatureScript
@@ -288,11 +287,6 @@ public:
         pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
 
         return true;
-    }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_announcer_toc5AI(pCreature);
     }
 
     struct npc_announcer_toc5AI : public ScriptedAI
@@ -743,6 +737,11 @@ public:
             }
         }
     };
+
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new npc_announcer_toc5AI(pCreature);
+    }
 
 };
 

@@ -32,11 +32,6 @@ class instance_halls_of_reflection : public InstanceMapScript
 public:
     instance_halls_of_reflection() : InstanceMapScript("instance_halls_of_reflection", 668) { }
 
-    InstanceScript* GetInstanceScript (InstanceMap* pMap) const
-    {
-        return new instance_halls_of_reflection_InstanceMapScript(pMap);
-    }
-
     struct instance_halls_of_reflection_InstanceMapScript : public InstanceScript
     {
         instance_halls_of_reflection_InstanceMapScript(Map* pMap) : InstanceScript(pMap) 
@@ -329,6 +324,10 @@ public:
 
     };
 
+    InstanceScript* GetInstanceScript (InstanceMap* pMap) const
+    {
+        return new instance_halls_of_reflection_InstanceMapScript(pMap);
+    }
 };
 
 
