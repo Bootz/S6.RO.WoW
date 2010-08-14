@@ -341,9 +341,10 @@ public:
 
                 if (m_uiSaberSlashTimer <= uiDiff)
                 {
-                    Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
-                    DoCast(pTarget, RAID_MODE(SPELL_SABER_SLASH_10_NORMAL,SPELL_SABER_SLASH_25_NORMAL,SPELL_SABER_SLASH_10_HEROIC,SPELL_SABER_SLASH_10_HEROIC));
-                    m_uiSaberSlashTimer = 6000;
+                    Unit* pTarget = SelectUnit(SELECT_TARGET_TOPAGGRO, 0);
+                    me->CastCustomSpell(RAID_MODE(SPELL_SABER_SLASH_10_NORMAL,SPELL_SABER_SLASH_25_NORMAL,SPELL_SABER_SLASH_10_HEROIC,SPELL_SABER_SLASH_10_HEROIC)) , SPELLVALUE_RADIUS_MOD, 20);
+DoCast(pTarget, RAID_MODE(SPELL_SABER_SLASH_10_NORMAL,SPELL_SABER_SLASH_25_NORMAL,SPELL_SABER_SLASH_10_HEROIC,SPELL_SABER_SLASH_10_HEROIC));
+                    m_uiSaberSlashTimer = 9000;
                 } else m_uiSaberSlashTimer -= uiDiff;
 
                 if (me->HasAura(SPELL_BONE_STORM_CHANNEL))
@@ -407,7 +408,7 @@ public:
     DoCast(me,RAID_MODE(SPELL_COLD_FLAME_10_NORMAL,SPELL_COLD_FLAME_25_NORMAL,SPELL_COLD_FLAME_10_HEROIC,SPELL_COLD_FLAME_25_HEROIC));
             me->SetReactState(REACT_PASSIVE);
             me->SetSpeed(MOVE_WALK, 0.7f, true);
-            m_uiColdDespawn    = 9000;
+            m_uiColdDespawn    = RAID_MODE(4000,9000,4000,9000);
             m_uiColdFlameTimer = 1000;
         }
         void UpdateAI(const uint32 uiDiff)
