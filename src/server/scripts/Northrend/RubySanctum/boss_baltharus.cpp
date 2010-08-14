@@ -449,8 +449,8 @@ public:
 
 void AddSC_boss_baltharus()
 {
-    new boss_baltharus();
-    new boss_baltharus_clone();
-    new npc_xerestrasza();
-    new go_firefield();
+    new boss_baltharus;
+    new boss_baltharus_clone;
+    new npc_xerestrasza;
+    new go_firefield;
 }

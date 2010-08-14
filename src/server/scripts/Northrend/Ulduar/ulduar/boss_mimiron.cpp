@@ -1689,19 +1689,19 @@ public:
 
 void AddSC_boss_mimiron()
 {
-    new boss_mimiron();
-    new boss_leviathan_mk();
-    new boss_leviathan_mk_turret();
-    new mob_proximity_mine();
-    new boss_vx_001();
-    new rocket_strike();
-    new boss_aerial_unit();
-    new magnetic_core();
-    new mob_boom_bot();
-    new mob_junk_bot();
-    new mob_assault_bot();
-    new mob_emergency_bot();
-    new not_push_button();
-    new mob_mimiron_flame();
-    new mob_frost_bomb();
+    new boss_mimiron;
+    new boss_leviathan_mk;
+    new boss_leviathan_mk_turret;
+    new mob_proximity_mine;
+    new boss_vx_001;
+    new rocket_strike;
+    new boss_aerial_unit;
+    new magnetic_core;
+    new mob_boom_bot;
+    new mob_junk_bot;
+    new mob_assault_bot;
+    new mob_emergency_bot;
+    new not_push_button;
+    new mob_mimiron_flame;
+    new mob_frost_bomb;
 }

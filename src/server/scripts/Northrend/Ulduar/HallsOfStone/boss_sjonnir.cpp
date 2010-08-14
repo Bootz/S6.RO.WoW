@@ -319,7 +319,7 @@ public:
 
 void AddSC_boss_sjonnir()
 {
-    new boss_sjonnir();
-    new mob_malformed_ooze();
-    new mob_iron_sludge();
+    new boss_sjonnir;
+    new mob_malformed_ooze;
+    new mob_iron_sludge;
 }

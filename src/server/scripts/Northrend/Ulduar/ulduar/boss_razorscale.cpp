@@ -819,11 +819,11 @@ public:
 
 void AddSC_boss_razorscale()
 {
-    new npc_expedition_commander_ulduar();
-    new boss_razorscale();
-    new mob_devouring_flame();
-    new mob_darkrune_watcher();
-    new mob_darkrune_guardian();
-    new mob_darkrune_sentinel();
-    new mole_machine_trigger();
+    new npc_expedition_commander_ulduar;
+    new boss_razorscale;
+    new mob_devouring_flame;
+    new mob_darkrune_watcher;
+    new mob_darkrune_guardian;
+    new mob_darkrune_sentinel;
+    new mole_machine_trigger;
 }

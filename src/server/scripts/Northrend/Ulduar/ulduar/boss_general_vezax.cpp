@@ -372,7 +372,7 @@ public:
     
 void AddSC_boss_general_vezax()
 {
-    new boss_general_vezax();
-    new mob_saronite_vapors();
-    new mob_saronite_animus();
+    new boss_general_vezax;
+    new mob_saronite_vapors;
+    new mob_saronite_animus;
 }

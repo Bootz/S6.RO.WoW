@@ -1017,12 +1017,12 @@ public:
 
 void AddSC_boss_thorim()
 {
-    new boss_thorim();
-    new mob_pre_phase();
-    new mob_arena_phase();
-    new mob_runic_colossus();
-    new mob_rune_giant();
-    new thorim_phase_trigger();
-    new thorim_energy_source();
-    new npc_sif();
+    new boss_thorim;
+    new mob_pre_phase;
+    new mob_arena_phase;
+    new mob_runic_colossus;
+    new mob_rune_giant;
+    new thorim_phase_trigger;
+    new thorim_energy_source;
+    new npc_sif;
 }

@@ -230,5 +230,5 @@ public:
 
 void AddSC_instance_ruby_sanctum()
 {
-    new instance_ruby_sanctum();
+    new instance_ruby_sanctum;
 }

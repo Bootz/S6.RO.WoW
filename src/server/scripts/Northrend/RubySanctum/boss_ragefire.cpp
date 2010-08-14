@@ -224,5 +224,5 @@ public:
 
 void AddSC_boss_ragefire()
 {
-    new boss_ragefire();
+    new boss_ragefire;
 }

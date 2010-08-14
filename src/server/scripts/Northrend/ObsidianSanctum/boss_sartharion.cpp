@@ -1714,15 +1714,15 @@ public:
 
 void AddSC_boss_sartharion()
 {
-    new boss_sartharion();
-    new npc_disciple_of_vesperon();
-    new mob_vesperon();
-    new mob_shadron();
-    new mob_tenebron();
-    new mob_acolyte_of_shadron();
-    new mob_acolyte_of_vesperon();
-    new mob_twilight_eggs();
-    new npc_flame_tsunami();
-    new npc_twilight_fissure();
-    new mob_twilight_whelp();
+    new boss_sartharion;
+    new npc_disciple_of_vesperon;
+    new mob_vesperon;
+    new mob_shadron;
+    new mob_tenebron;
+    new mob_acolyte_of_shadron;
+    new mob_acolyte_of_vesperon;
+    new mob_twilight_eggs;
+    new npc_flame_tsunami;
+    new npc_twilight_fissure;
+    new mob_twilight_whelp;
 }

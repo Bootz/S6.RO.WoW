@@ -280,6 +280,6 @@ public:
 
 void AddSC_boss_eregos()
 {
-    new boss_eregos();
-    new npc_planar_anomaly();
+    new boss_eregos;
+    new npc_planar_anomaly;
 }

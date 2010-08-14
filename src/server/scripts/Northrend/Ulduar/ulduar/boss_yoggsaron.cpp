@@ -412,10 +412,10 @@ public:
 
 void AddSC_boss_yogg_saron()
 {
-    new npc_keeper_image();
-    new npc_ys_freya();
-    new npc_ys_thorim();
-    new npc_ys_mimiron();
-    new npc_ys_hodir();
-    new npc_sanity_well();
+    new npc_keeper_image;
+    new npc_ys_freya;
+    new npc_ys_thorim;
+    new npc_ys_mimiron;
+    new npc_ys_hodir;
+    new npc_sanity_well;
 }

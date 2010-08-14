@@ -848,11 +848,11 @@ public:
 
 void AddSC_boss_xt002()
 {
-    new boss_xt002();
-    new mob_xt002_heart();
-    new mob_scrapbot();
-    new mob_pummeller();
-    new mob_boombot();
-    new mob_void_zone();
-    new mob_life_spark();
+    new boss_xt002;
+    new mob_xt002_heart;
+    new mob_scrapbot;
+    new mob_pummeller;
+    new mob_boombot;
+    new mob_void_zone;
+    new mob_life_spark;
 }

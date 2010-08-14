@@ -355,6 +355,6 @@ public:
 
 void AddSC_boss_Algalon()
 {
-    new boss_algalon();
-    new mob_collapsing_star();
+    new boss_algalon;
+    new mob_collapsing_star;
 }

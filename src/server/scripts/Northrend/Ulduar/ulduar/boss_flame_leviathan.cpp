@@ -712,13 +712,13 @@ public:
 
 void AddSC_boss_flame_leviathan()
 {
-    new boss_flame_leviathan();
-    new boss_flame_leviathan_seat();
-    new boss_flame_leviathan_defense_turret();
-    new boss_flame_leviathan_overload_device();
-    new boss_flame_leviathan_safety_container();
-    new spell_pool_of_tar();
-    new npc_keeper_norgannon();
-    new mob_colossus();
-    new at_RX_214_repair_o_matic_station();
+    new boss_flame_leviathan;
+    new boss_flame_leviathan_seat;
+    new boss_flame_leviathan_defense_turret;
+    new boss_flame_leviathan_overload_device;
+    new boss_flame_leviathan_safety_container;
+    new spell_pool_of_tar;
+    new npc_keeper_norgannon;
+    new mob_colossus;
+    new at_RX_214_repair_o_matic_station;
 }

@@ -509,9 +509,9 @@ public:
 
 void AddSC_boss_auriaya()
 {
-    new boss_auriaya();
-    new feral_defender_trigger();
-    new mob_sanctum_sentry();
-    new mob_feral_defender();
-    new seeping_trigger();
+    new boss_auriaya;
+    new feral_defender_trigger;
+    new mob_sanctum_sentry;
+    new mob_feral_defender;
+    new seeping_trigger;
 }

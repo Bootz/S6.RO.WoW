@@ -852,10 +852,10 @@ public:
 
 void AddSC_boss_assembly_of_iron()
 {
-    new boss_steelbreaker();
-    new boss_runemaster_molgeim();
-    new boss_stormcaller_brundir();
-    new mob_lightning_elemental();
-    new mob_rune_of_summoning();
-    new mob_rune_of_power();
+    new boss_steelbreaker;
+    new boss_runemaster_molgeim;
+    new boss_stormcaller_brundir;
+    new mob_lightning_elemental;
+    new mob_rune_of_summoning;
+    new mob_rune_of_power;
 }

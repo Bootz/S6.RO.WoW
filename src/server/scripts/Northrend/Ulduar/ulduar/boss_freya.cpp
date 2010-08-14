@@ -1296,19 +1296,19 @@ public:
 
 void AddSC_boss_freya()
 {
-    new boss_freya();
-    new boss_elder_brightleaf();
-    new creature_unstable_sun_beam();
-    new creature_sun_beam();
-    new boss_elder_ironbranch();
-    new creature_iron_roots();
-    new boss_elder_stonebark();
-    new creature_eonars_gift();
-    new creature_nature_bomb();
-    new creature_detonating_lasher();
-    new creature_ancient_conservator();
-    new creature_healthy_spore();
-    new creature_storm_lasher();
-    new creature_snaplasher();
-    new creature_ancient_water_spirit();
+    new boss_freya;
+    new boss_elder_brightleaf;
+    new creature_unstable_sun_beam;
+    new creature_sun_beam;
+    new boss_elder_ironbranch;
+    new creature_iron_roots;
+    new boss_elder_stonebark;
+    new creature_eonars_gift;
+    new creature_nature_bomb;
+    new creature_detonating_lasher;
+    new creature_ancient_conservator;
+    new creature_healthy_spore;
+    new creature_storm_lasher;
+    new creature_snaplasher;
+    new creature_ancient_water_spirit;
 }

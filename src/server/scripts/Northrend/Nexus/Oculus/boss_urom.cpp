@@ -389,5 +389,5 @@ public:
 
 void AddSC_boss_urom()
 {
-    new boss_urom();
+    new boss_urom;
 }

@@ -785,10 +785,10 @@ public:
 
 void AddSC_boss_halion()
 {
-    new boss_halion();
-    new boss_twilight_halion();
-    new npc_meteor_strike();
-    new npc_combustion();
-    new npc_consumption();
-    new npc_meteor_flame();
+    new boss_halion;
+    new boss_twilight_halion;
+    new npc_meteor_strike;
+    new npc_combustion;
+    new npc_consumption;
+    new npc_meteor_flame;
 }

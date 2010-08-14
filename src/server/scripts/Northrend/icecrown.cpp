@@ -1353,24 +1353,24 @@ public:
 
 void AddSC_icecrown()
 {
-    new npc_arete();
-    new npc_dame_evniki_kapsalis();
-    new npc_squire_david();
-    new npc_squire_danny();
-    new npc_argent_valiant();
-    new npc_argent_champion();
-    new npc_argent_tournament_post();
-    new npc_alorah_and_grimmin();
-    new npc_guardian_pavilion();
-    new npc_vendor_argent_tournament();
-    new npc_quest_givers_argent_tournament();
-    new npc_training_dummy_argent();
-    new npc_quest_givers_for_crusaders();
-    new npc_justicar_mariel_trueheart();
-    new npc_crusader_rhydalla();
-    new npc_eadric_the_pure();
-    new npc_crok_scourgebane();
-    new npc_valis_windchaser();
-    new npc_rugan_steelbelly();
-    new npc_jeran_lockwood();
+    new npc_arete;
+    new npc_dame_evniki_kapsalis;
+    new npc_squire_david;
+    new npc_squire_danny;
+    new npc_argent_valiant;
+    new npc_argent_champion;
+    new npc_argent_tournament_post;
+    new npc_alorah_and_grimmin;
+    new npc_guardian_pavilion;
+    new npc_vendor_argent_tournament;
+    new npc_quest_givers_argent_tournament;
+    new npc_training_dummy_argent;
+    new npc_quest_givers_for_crusaders;
+    new npc_justicar_mariel_trueheart;
+    new npc_crusader_rhydalla;
+    new npc_eadric_the_pure;
+    new npc_crok_scourgebane;
+    new npc_valis_windchaser;
+    new npc_rugan_steelbelly;
+    new npc_jeran_lockwood;
 }

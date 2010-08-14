@@ -1772,10 +1772,10 @@ public:
 
 void AddSC_boss_malygos()
 {
-    new boss_malygos();
-    new mob_power_spark();
-    new mob_scion_of_eternity();
-    new mob_nexus_lord();
-    new npc_arcane_overload();
-    new go_malygos_iris();
+    new boss_malygos;
+    new mob_power_spark;
+    new mob_scion_of_eternity;
+    new mob_nexus_lord;
+    new npc_arcane_overload;
+    new go_malygos_iris;
 }

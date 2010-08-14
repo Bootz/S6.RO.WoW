@@ -434,6 +434,6 @@ public:
 
 void AddSC_boss_bjarngrim()
 {
-    new boss_bjarngrim();
-    new mob_stormforged_lieutenant();
+    new boss_bjarngrim;
+    new mob_stormforged_lieutenant;
 }

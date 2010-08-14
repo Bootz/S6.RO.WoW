@@ -159,6 +159,6 @@ public:
 
 void AddSC_dalaran()
 {
-    new npc_mageguard_dalaran();
-    new npc_hira_snowdawn();
+    new npc_mageguard_dalaran;
+    new npc_hira_snowdawn;
 }

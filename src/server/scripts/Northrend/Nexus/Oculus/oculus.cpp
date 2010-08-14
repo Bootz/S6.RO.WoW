@@ -233,5 +233,5 @@ public:
 void AddSC_oculus()
 {
     new npc_oculus_drake();
-    new mob_centrifige_construct();
+    new mob_centrifige_construct;
 }

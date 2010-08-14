@@ -676,12 +676,12 @@ public:
 
 void AddSC_boss_hodir()
 {
-    new boss_hodir();
-    new mob_icicle();
-    new mob_icicle_snowdrift();
-    new mob_hodir_priest();
-    new mob_hodir_shaman();
-    new mob_hodir_druid();
-    new mob_hodir_mage();
-    new toasty_fire();
+    new boss_hodir;
+    new mob_icicle;
+    new mob_icicle_snowdrift;
+    new mob_hodir_priest;
+    new mob_hodir_shaman;
+    new mob_hodir_druid;
+    new mob_hodir_mage;
+    new toasty_fire;
 }

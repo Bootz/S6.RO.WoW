@@ -220,6 +220,6 @@ public:
 
 void AddSC_boss_zarithrian()
 {
-    new boss_zarithrian();
-    new npc_onyx_flamecaller();
+    new boss_zarithrian;
+    new npc_onyx_flamecaller;
 }

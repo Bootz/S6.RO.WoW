@@ -484,7 +484,7 @@ public:
 
 void AddSC_boss_volkhan()
 {
-    new boss_volkhan();
-    new npc_volkhan_anvil();
-    new mob_molten_golem();
+    new boss_volkhan;
+    new npc_volkhan_anvil;
+    new mob_molten_golem;
 }

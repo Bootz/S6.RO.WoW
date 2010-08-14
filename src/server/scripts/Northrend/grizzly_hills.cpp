@@ -856,14 +856,14 @@ public:
 
 void AddSC_grizzly_hills()
 {
-    new npc_orsonn_and_kodian();
-    new npc_emily();
-    new npc_mrfloppy();
-    new npc_outhouse_bunny();
-    new npc_tallhorn_stag();
-    new npc_amberpine_woodsman();
-    new npc_wounded_skirmisher();
-    new npc_lake_frog();
-    new npc_maiden_of_ashwood_lake();
-    new npc_maiden_of_drak_mar();
+    new npc_orsonn_and_kodian;
+    new npc_emily;
+    new npc_mrfloppy;
+    new npc_outhouse_bunny;
+    new npc_tallhorn_stag;
+    new npc_amberpine_woodsman;
+    new npc_wounded_skirmisher;
+    new npc_lake_frog;
+    new npc_maiden_of_ashwood_lake;
+    new npc_maiden_of_drak_mar;
 }

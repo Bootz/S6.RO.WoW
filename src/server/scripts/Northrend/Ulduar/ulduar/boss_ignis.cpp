@@ -441,7 +441,7 @@ public:
 
 void AddSC_boss_ignis()
 {
-    new boss_ignis();
-    new mob_iron_construct();
-    new mob_scorch_ground();
+    new boss_ignis;
+    new mob_iron_construct;
+    new mob_scorch_ground;
 }

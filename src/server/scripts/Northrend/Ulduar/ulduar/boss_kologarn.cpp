@@ -569,8 +569,8 @@ public:
 
 void AddSC_boss_kologarn()
 {
-    new boss_kologarn();
-    new mob_focused_eyebeam();
-    new mob_right_arm();
-    new mob_left_arm();
+    new boss_kologarn;
+    new mob_focused_eyebeam;
+    new mob_right_arm;
+    new mob_left_arm;
 }

@@ -156,5 +156,5 @@ public:
 
 void AddSC_boss_varos()
 {
-    new boss_varos();
+    new boss_varos;
 }

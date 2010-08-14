@@ -114,5 +114,5 @@ public:
 
 void AddSC_ulduar_teleporter()
 {
-    new ulduar_teleporter();
+    new ulduar_teleporter;
 }
