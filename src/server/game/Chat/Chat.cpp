@@ -1410,7 +1410,7 @@ valid examples:
 
                     if (!linkedQuest)
                     {
-#ifdef MANOGS_DEBUG
+#ifdef TRINITY_DEBUG
                         sLog.outBasic("ChatHandler::isValidChatMessage Questtemplate %u not found", questid);
 #endif
                         return false;
@@ -1628,7 +1628,7 @@ valid examples:
 
                             if (!ql)
                             {
-#ifdef MANOGS_DEBUG
+#ifdef TRINITY_DEBUG
                                 sLog.outBasic("ChatHandler::isValidChatMessage default questname didn't match and there is no locale");
 #endif
                                 return false;
@@ -1645,7 +1645,7 @@ valid examples:
                             }
                             if (!foundName)
                             {
-#ifdef MANOGS_DEBUG
+#ifdef TRINITY_DEBUG
                                 sLog.outBasic("ChatHandler::isValidChatMessage no quest locale title matched")
 #endif
                                 return false;
