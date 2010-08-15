@@ -633,8 +633,10 @@ public:
             for(int i=0; i < max_lords;i++)
             {
                 if(Creature *pLord = me->SummonCreature(NPC_NEXUS_LORD, me->getVictim()->GetPositionX()-5+rand()%10, me->getVictim()->GetPositionY()-5+rand()%10, me->getVictim()->GetPositionZ(), 0, TEMPSUMMON_CORPSE_DESPAWN, 0))
+                    {
                     pLord->AI()->AttackStart(me->getVictim());
                     pLord->SetInCombatWithZone();
+                    }
             }
             //Scions of eternity
             int max_scions = m_uiIs10Man ? SCION_OF_ETERNITY_COUNT : SCION_OF_ETERNITY_COUNT_H;
