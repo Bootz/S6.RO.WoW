@@ -563,6 +563,9 @@ void LoadDBCStores(const std::string& dataPath)
     LoadDBC(availableDbcLocales,bar,bad_dbc_files,sTotemCategoryStore,       dbcPath,"TotemCategory.dbc");
     LoadDBC(availableDbcLocales,bar,bad_dbc_files,sVehicleStore,             dbcPath,"Vehicle.dbc");
     LoadDBC(availableDbcLocales,bar,bad_dbc_files,sVehicleSeatStore,         dbcPath,"VehicleSeat.dbc");
+    //fix for vehicle 591's seat (Mutated Abomination) 
+    VehicleSeatEntry const* entrySeat = sVehicleSeatStore.LookupEntry(id);
+        if(entrySeat && entrySeat->m_ID == 6966) ((VehicleSeatEntry*)entrySeat)->m_flags = 1645217807;
     LoadDBC(availableDbcLocales,bar,bad_dbc_files,sWMOAreaTableStore,        dbcPath,"WMOAreaTable.dbc");
     for(uint32 i = 0; i < sWMOAreaTableStore.GetNumRows(); ++i)
     {
