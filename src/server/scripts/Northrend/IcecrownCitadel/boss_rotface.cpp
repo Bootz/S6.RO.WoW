@@ -41,6 +41,7 @@ enum Creatures
     CREATURE_OOZE_BIG             = 36899,
     CREATURE_LITTLE_OOZE          = 36897,
     CREATURE_PROFFESOR_PUTRICIDE  = 36678,
+    CREATURE_PLAGUE_ZOMBIE        = 38104,
 };
 enum Summons
 {
@@ -633,6 +634,12 @@ public:
             if (m_uiAwakenPlaguedZomiesTimer<= diff)
             {
                 DoCast(me, SPELL_AWAKEN_PLAGUED_ZOMBIES);
+                // Needs correction, the zombies are summoned each time he howls, spawning in a circle around Precious
+                me->SummonCreature(CREATURE_PLAGUE_ZOMBIE, me->GetPositionX(), me->GetPositionY()+5, me->GetPositionZ(), 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 10000);
+                me->SummonCreature(CREATURE_PLAGUE_ZOMBIE, me->GetPositionX(), me->GetPositionY()+5, me->GetPositionZ(), 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 10000);
+                me->SummonCreature(CREATURE_PLAGUE_ZOMBIE, me->GetPositionX(), me->GetPositionY()+5, me->GetPositionZ(), 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 10000);
+                me->SummonCreature(CREATURE_PLAGUE_ZOMBIE, me->GetPositionX(), me->GetPositionY()+5, me->GetPositionZ(), 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 10000);
+                me->SummonCreature(CREATURE_PLAGUE_ZOMBIE, me->GetPositionX(), me->GetPositionY()+5, me->GetPositionZ(), 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 10000);
                 m_uiAwakenPlaguedZomiesTimer = 12000;
             } else m_uiAwakenPlaguedZomiesTimer -= diff;
 
