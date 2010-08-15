@@ -80,7 +80,7 @@ enum eEnums
 	SAY_START_7                             = -1999954,
 	SAY_START_6                             = -1999951
 };
-class boss_eadric : public CreatureScript
+class boss_eadric : public CreatureScript
 {
 public:
     boss_eadric() : CreatureScript("boss_eadric") { }
@@ -94,13 +94,13 @@ public:
     {
         boss_eadricAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceScript();
+            pInstance = pCreature->GetInstanceData();
             pCreature->SetReactState(REACT_PASSIVE);
             pCreature->SetFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_NON_ATTACKABLE);
     		pCreature->SetFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_NOT_SELECTABLE);
         }
 
-        InstanceScript* pInstance;
+        ScriptedInstance* pInstance;
     		
         uint32 uiVenganceTimer;
         uint32 uiRadianceTimer;
@@ -195,7 +195,7 @@ public:
 
 };
 
-class boss_paletress : public CreatureScript
+class boss_paletress : public CreatureScript
 {
 public:
     boss_paletress() : CreatureScript("boss_paletress") { }
@@ -209,7 +209,7 @@ public:
     {
         boss_paletressAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceScript();
+            pInstance = pCreature->GetInstanceData();
 
             MemoryGUID = 0;
             pCreature->SetReactState(REACT_PASSIVE);
@@ -218,7 +218,7 @@ public:
             pCreature->RestoreFaction();
         }
 
-        InstanceScript* pInstance;
+        ScriptedInstance* pInstance;
 
         Creature* pMemory;
         uint64 MemoryGUID;
@@ -420,7 +420,7 @@ public:
 
 };
 
-class npc_memory : public CreatureScript
+class npc_memory : public CreatureScript
 {
 public:
     npc_memory() : CreatureScript("npc_memory") { }
@@ -495,8 +495,7 @@ public:
 };
 
 
-// THIS AI NEEDS MORE IMPROVEMENTS
-class npc_argent_soldier : public CreatureScript
+// THIS AI NEEDS MORE IMPROVEMENTSclass npc_argent_soldier : public CreatureScript
 {
 public:
     npc_argent_soldier() : CreatureScript("npc_argent_soldier") { }
@@ -510,7 +509,7 @@ public:
     {
         npc_argent_soldierAI(Creature* pCreature) : npc_escortAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceScript();
+            pInstance = pCreature->GetInstanceData();
             me->SetReactState(REACT_DEFENSIVE);
             me->SetFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_NON_ATTACKABLE);
             me->SetFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_NOT_SELECTABLE);
@@ -521,7 +520,7 @@ public:
             uiWaypoint = 0;
         }
     		
-        InstanceScript* pInstance;
+        ScriptedInstance* pInstance;
 
         uint8 uiWaypoint;
     	

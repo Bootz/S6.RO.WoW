@@ -25,19 +25,19 @@
 #define EXIT_Z 6987
 #define EXIT_Y 152
  
-class instance_eye_of_eternity : public InstanceMapScript
+ class instance_eye_of_eternity : public InstanceMapScript
 {
 public:
-    instance_eye_of_eternity() : InstanceMapScript("instance_eye_of_eternity", 616) { }
+    instance_eye_of_eternity() : InstanceMapScript("instance_eye_of_eternity") { }
 
-    InstanceScript* GetInstanceScript(InstanceMap* pMap) const
+    InstanceData* GetInstanceData_InstanceMapScript(Map* pMap)
     {
         return new instance_eye_of_eternity_InstanceMapScript(pMap);
     }
 
-    struct instance_eye_of_eternity_InstanceMapScript : public InstanceScript
+    struct instance_eye_of_eternity_InstanceMapScript : public ScriptedInstance
     {
-        instance_eye_of_eternity_InstanceMapScript(Map* pMap) : InstanceScript(pMap) {Initialize();};
+        instance_eye_of_eternity_InstanceMapScript(Map* pMap) : ScriptedInstance(pMap) {Initialize();}
  
         std::string strInstData;
         uint32 m_auiEncounter[MAX_ENCOUNTER];

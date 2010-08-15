@@ -101,7 +101,7 @@ enum Misc
 {
     ACHIEV_WORSE                                  = 3804
 };
-class boss_black_knight : public CreatureScript
+class boss_black_knight : public CreatureScript
 {
 public:
     boss_black_knight() : CreatureScript("boss_black_knight") { }
@@ -115,10 +115,10 @@ public:
     {
         boss_black_knightAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceScript();
+            pInstance = pCreature->GetInstanceData();
         }
 
-        InstanceScript* pInstance;
+        ScriptedInstance* pInstance;
         std::list<uint64> SummonList;
 
         bool bEventInProgress;
@@ -415,7 +415,7 @@ public:
 
 };
 
-class npc_risen_ghoul : public CreatureScript
+class npc_risen_ghoul : public CreatureScript
 {
 public:
     npc_risen_ghoul() : CreatureScript("npc_risen_ghoul") { }
@@ -457,7 +457,7 @@ public:
 
 };
 
-class npc_black_knight_skeletal_gryphon : public CreatureScript
+class npc_black_knight_skeletal_gryphon : public CreatureScript
 {
 public:
     npc_black_knight_skeletal_gryphon() : CreatureScript("npc_black_knight_skeletal_gryphon") { }
@@ -472,10 +472,10 @@ public:
         npc_black_knight_skeletal_gryphonAI(Creature* pCreature) : npc_escortAI(pCreature)
         {
             Start(false,true,0,NULL);
-    		pInstance = pCreature->GetInstanceScript();
+    		pInstance = pCreature->GetInstanceData();
         }
     	
-    	InstanceScript* pInstance;
+    	ScriptedInstance* pInstance;
 
         void WaypointReached(uint32 uiPointId)
         {
@@ -542,7 +542,7 @@ public:
 
 };
 
-class npc_gr : public CreatureScript
+class npc_gr : public CreatureScript
 {
 public:
     npc_gr() : CreatureScript("npc_gr") { }
@@ -557,10 +557,10 @@ public:
         npc_grAI(Creature* pCreature) : npc_escortAI(pCreature)
         {
             Start(false,true,0,NULL);
-    		pInstance = pCreature->GetInstanceScript();
+    		pInstance = pCreature->GetInstanceData();
         }
     	
-    	InstanceScript* pInstance;
+    	ScriptedInstance* pInstance;
 
         void WaypointReached(uint32 uiPointId)
         {

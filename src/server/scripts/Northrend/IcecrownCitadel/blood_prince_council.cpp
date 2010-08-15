@@ -91,7 +91,7 @@ Creature* pBombTarget;
 
 /////////////////////////////////////////////////////
 
-class boss_blood_council : public CreatureScript
+class boss_blood_council : public CreatureScript
 {
 public:
     boss_blood_council() : CreatureScript("boss_blood_council") { }
@@ -105,11 +105,11 @@ public:
     {
         boss_blood_councilAI(Creature *c) : ScriptedAI(c)
         {
-            pInstance = c->GetInstanceScript();
+            pInstance = c->GetInstanceData();
             pValanar = me;
         }
 
-        InstanceScript* pInstance;
+        ScriptedInstance* pInstance;
 
         uint32 PhaseIntro;
         uint32 PhaseIntroTimer;
@@ -291,8 +291,7 @@ public:
 };
 ////////////////////////////////////////////
 //Keleseth
-////////////////////////////////////////////
-class boss_blood_elf_keleset_icc : public CreatureScript
+////////////////////////////////////////////class boss_blood_elf_keleset_icc : public CreatureScript
 {
 public:
     boss_blood_elf_keleset_icc() : CreatureScript("boss_blood_elf_keleset_icc") { }
@@ -306,11 +305,11 @@ public:
     {
         boss_Keleseth_IccAI(Creature *c) : ScriptedAI(c)
         {
-            pInstance = c->GetInstanceScript();
+            pInstance = c->GetInstanceData();
             pKeleseth = me;
         }
 
-        InstanceScript* pInstance;
+        ScriptedInstance* pInstance;
 
         uint32 NucleusTimer;
         uint32 ShadowLance;
@@ -410,7 +409,7 @@ public:
 ///////////////////////////////////////
 //Taldaram
 ///////////////////////////////////////
-class boss_blood_elf_taldaram_icc : public CreatureScript
+class boss_blood_elf_taldaram_icc : public CreatureScript
 {
 public:
     boss_blood_elf_taldaram_icc() : CreatureScript("boss_blood_elf_taldaram_icc") { }
@@ -424,11 +423,11 @@ public:
     {
         boss_Taldaram_IccAI(Creature *c) : ScriptedAI(c)
         {
-            pInstance = c->GetInstanceScript();
+            pInstance = c->GetInstanceData();
             pTaldaram = me;
         }
 
-        InstanceScript* pInstance;
+        ScriptedInstance* pInstance;
 
         uint32 FireballTimer;
         uint32 EmpoweredFireballTimer;
@@ -530,7 +529,7 @@ public:
 ///////////////////////////////////////
 //Mob Nucleus
 ///////////////////////////////////////
-class npc_nucleus_icc : public CreatureScript
+class npc_nucleus_icc : public CreatureScript
 {
 public:
     npc_nucleus_icc() : CreatureScript("npc_nucleus_icc") { }
@@ -577,7 +576,7 @@ public:
 /////////////////////////////////////////////////
 //Fireball
 /////////////////////////////////////////////////
-class npc_fireball_icc : public CreatureScript
+class npc_fireball_icc : public CreatureScript
 {
 public:
     npc_fireball_icc() : CreatureScript("npc_fireball_icc") { }
@@ -627,12 +626,11 @@ public:
          }
 
      };
-};
 
      /////////////////////////////////////////////////
     //Empowered Fireball
     /////////////////////////////////////////////////
-    class npc_empfireball_icc : public CreatureScript
+    class npc_empfireball_icc : public CreatureScript
     {
     public:
         npc_empfireball_icc() : CreatureScript("npc_empfireball_icc") { }
@@ -693,13 +691,12 @@ public:
              }
 
          };
-	};
 
         /////////////////////////////////////////////////
         //Kinetic Bomb
         /////////////////////////////////////////////////
 
-    class npc_bomb_icc : public CreatureScript
+    class npc_bomb_icc : public CreatureScript
     {
     public:
         npc_bomb_icc() : CreatureScript("npc_bomb_icc") { }
@@ -758,10 +755,14 @@ public:
 
         };
 
+    };
+
+};
+
 ////////////////////////////////////////
 //Vortex
 ////////////////////////////////////////
-class npc_vortex_icc : public CreatureScript
+class npc_vortex_icc : public CreatureScript
 {
 public:
     npc_vortex_icc() : CreatureScript("npc_vortex_icc") { }
@@ -802,7 +803,7 @@ public:
     };
 
 };
-class lanathel_intro : public CreatureScript
+class lanathel_intro : public CreatureScript
 {
 public:
     lanathel_intro() : CreatureScript("lanathel_intro") { }
@@ -816,10 +817,10 @@ public:
     {
         lanathel_introAI(Creature *c) : ScriptedAI(c)
         {
-            pInstance = c->GetInstanceScript();
+            pInstance = c->GetInstanceData();
             pLanathel = me;
         }
-        InstanceScript* pInstance;
+        ScriptedInstance* pInstance;
 
         void Reset()
         {
@@ -834,6 +835,13 @@ public:
 
 };
 ////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
 
 
 void AddSC_boss_blood_council()

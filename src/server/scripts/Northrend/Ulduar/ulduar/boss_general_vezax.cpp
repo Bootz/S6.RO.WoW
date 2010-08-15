@@ -96,7 +96,7 @@ const Position VaporPos[6] =
 {1817.15, 95.380, 342.378, 0}
 };
 
-class boss_general_vezax : public CreatureScript
+class boss_general_vezax : public CreatureScript
 {
 public:
     boss_general_vezax() : CreatureScript("boss_general_vezax") { }
@@ -110,12 +110,12 @@ public:
     {
         boss_general_vezaxAI(Creature *pCreature) : BossAI(pCreature, BOSS_VEZAX)
         {
-            pInstance = pCreature->GetInstanceScript();
+            pInstance = pCreature->GetInstanceData();
             me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);
             me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true); // Death Grip jump effect
         }
  
-        InstanceScript *pInstance;
+        ScriptedInstance *pInstance;
     
         int32 VaporsCount;
         bool HardMode, Dodged;
@@ -269,7 +269,7 @@ public:
 };
  
 
-class mob_saronite_vapors : public CreatureScript
+class mob_saronite_vapors : public CreatureScript
 {
 public:
     mob_saronite_vapors() : CreatureScript("mob_saronite_vapors") { }
@@ -283,13 +283,13 @@ public:
     {
         mob_saronite_vaporsAI(Creature *pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceScript();
+            pInstance = pCreature->GetInstanceData();
             me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);
             me->SetReactState(REACT_PASSIVE);
             me->GetMotionMaster()->MoveRandom(30.0f);
         }
     
-        InstanceScript *pInstance;
+        ScriptedInstance *pInstance;
  
         void DamageTaken(Unit *who, uint32 &damage)
         {
@@ -311,7 +311,7 @@ public:
 
 };
  
-class mob_saronite_animus : public CreatureScript
+class mob_saronite_animus : public CreatureScript
 {
 public:
     mob_saronite_animus() : CreatureScript("mob_saronite_animus") { }
@@ -325,12 +325,12 @@ public:
     {
         mob_saronite_animusAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceScript();
+            pInstance = pCreature->GetInstanceData();
             me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);
             me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true); // Death Grip jump effect
         }
     
-        InstanceScript* pInstance;
+        ScriptedInstance* pInstance;
 
         uint32 ProfoundDarknessTimer;
     

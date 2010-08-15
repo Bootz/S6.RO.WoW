@@ -202,7 +202,7 @@ enum Actions
 };
 
 Unit* pRootTarget;
-class boss_freya : public CreatureScript
+class boss_freya : public CreatureScript
 {
 public:
     boss_freya() : CreatureScript("boss_freya") { }
@@ -216,12 +216,12 @@ public:
     {
         boss_freyaAI(Creature* pCreature) : BossAI(pCreature, BOSS_FREYA)
         {
-            pInstance = pCreature->GetInstanceScript();
+            pInstance = pCreature->GetInstanceData();
             me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);
             me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true); // Death Grip jump effect
         }
     
-        InstanceScript* pInstance;
+        ScriptedInstance* pInstance;
 
         uint8 spawnOrder[3];
         uint8 spawnedAdds;
@@ -551,7 +551,7 @@ public:
 /*===============================================================================================
 ===============================================================================================*/
 
-class boss_elder_brightleaf : public CreatureScript
+class boss_elder_brightleaf : public CreatureScript
 {
 public:
     boss_elder_brightleaf() : CreatureScript("boss_elder_brightleaf") { }
@@ -565,10 +565,10 @@ public:
     {
         boss_elder_brightleafAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceScript();
+            m_pInstance = pCreature->GetInstanceData();
         }
     
-        InstanceScript* m_pInstance;
+        ScriptedInstance* m_pInstance;
         int32 uiUnstableSunbeamTimer;
         int32 uiSolarFlareTimer;
         int32 uiUnstableEnergyTimer;
@@ -646,7 +646,7 @@ public:
 
 };
 
-class creature_sun_beam : public CreatureScript
+class creature_sun_beam : public CreatureScript
 {
 public:
     creature_sun_beam() : CreatureScript("creature_sun_beam") { }
@@ -660,17 +660,17 @@ public:
     {
         creature_sun_beamAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceScript();
+            m_pInstance = pCreature->GetInstanceData();
             DoCast(RAID_MODE(RAID_10_SPELL_FREYA_UNSTABLE_ENERGY, RAID_25_SPELL_FREYA_UNSTABLE_ENERGY));
             DoCast(SPELL_UNSTABLE_SUN_BEAM_VISUAL);
         }
 
-        InstanceScript* m_pInstance;
+        ScriptedInstance* m_pInstance;
     };
 
 };
 
-class creature_unstable_sun_beam : public CreatureScript
+class creature_unstable_sun_beam : public CreatureScript
 {
 public:
     creature_unstable_sun_beam() : CreatureScript("creature_unstable_sun_beam") { }
@@ -684,16 +684,16 @@ public:
     {
         creature_unstable_sun_beamAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceScript();
+            m_pInstance = pCreature->GetInstanceData();
             DoCast(SPELL_UNSTABLE_SUN_BEAM);
         }
 
-        InstanceScript* m_pInstance;
+        ScriptedInstance* m_pInstance;
     };
 
 };
 
-class boss_elder_ironbranch : public CreatureScript
+class boss_elder_ironbranch : public CreatureScript
 {
 public:
     boss_elder_ironbranch() : CreatureScript("boss_elder_ironbranch") { }
@@ -707,11 +707,11 @@ public:
     {
         boss_elder_ironbranchAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceScript();
+            m_pInstance = pCreature->GetInstanceData();
             Reset();
         }
 
-        InstanceScript* m_pInstance;
+        ScriptedInstance* m_pInstance;
         int32 uiImpaleTimer;
         int32 uiThornSwarmTimer;
         int32 uiIronRootTimer;
@@ -774,7 +774,7 @@ public:
 
 };
 
-class creature_iron_roots : public CreatureScript
+class creature_iron_roots : public CreatureScript
 {
 public:
     creature_iron_roots() : CreatureScript("creature_iron_roots") { }
@@ -788,11 +788,11 @@ public:
     {
         creature_iron_rootsAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceScript();
+            m_pInstance = pCreature->GetInstanceData();
             pPlayer = pRootTarget;
         }
 
-        InstanceScript* m_pInstance;
+        ScriptedInstance* m_pInstance;
         Unit* pPlayer;
 
         void JustDied(Unit* victim)
@@ -804,7 +804,7 @@ public:
 
 };
 
-class boss_elder_stonebark : public CreatureScript
+class boss_elder_stonebark : public CreatureScript
 {
 public:
     boss_elder_stonebark() : CreatureScript("boss_elder_stonebark") { }
@@ -818,10 +818,10 @@ public:
     {
         boss_elder_stonebarkAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceScript();
+            m_pInstance = pCreature->GetInstanceData();
         }
 
-        InstanceScript* m_pInstance;
+        ScriptedInstance* m_pInstance;
         int32 uiGroundTremorTimer;
         int32 uiFistsOfStoneTimer;
         int32 uiPetrifiedBarkTimer;
@@ -881,7 +881,7 @@ public:
 
 };
 
-class creature_eonars_gift : public CreatureScript
+class creature_eonars_gift : public CreatureScript
 {
 public:
     creature_eonars_gift() : CreatureScript("creature_eonars_gift") { }
@@ -895,7 +895,7 @@ public:
     {
         creature_eonars_giftAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceScript();
+            m_pInstance = pCreature->GetInstanceData();
             uiLifebindersGiftTimer = 12000;
             fScale = 0.2;
             me->SetFloatValue(OBJECT_FIELD_SCALE_X, fScale);
@@ -904,7 +904,7 @@ public:
             DoCast(me, SPELL_EONAR_VISUAL, true);
         }
 
-        InstanceScript* m_pInstance;
+        ScriptedInstance* m_pInstance;
         int32 uiLifebindersGiftTimer;
         float fScale;
         int32 uiScaleTimer;
@@ -931,7 +931,7 @@ public:
 
 };
 
-class creature_nature_bomb : public CreatureScript
+class creature_nature_bomb : public CreatureScript
 {
 public:
     creature_nature_bomb() : CreatureScript("creature_nature_bomb") { }
@@ -945,7 +945,7 @@ public:
     {
         creature_nature_bombAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceScript();
+            m_pInstance = pCreature->GetInstanceData();
             uiExplosionTimer = 10000;
             float x = me->GetPositionX();
             float y = me->GetPositionY();
@@ -953,7 +953,7 @@ public:
             pGo = me->SummonGameObject(OBJECT_NATURE_BOMB, x, y, z, 0, 0, 0, 0, 0, 0);
         }
 
-        InstanceScript* m_pInstance;
+        ScriptedInstance* m_pInstance;
         int32 uiExplosionTimer;
         GameObject* pGo;
 
@@ -972,7 +972,7 @@ public:
 
 };
 
-class creature_detonating_lasher : public CreatureScript
+class creature_detonating_lasher : public CreatureScript
 {
 public:
     creature_detonating_lasher() : CreatureScript("creature_detonating_lasher") { }
@@ -986,10 +986,10 @@ public:
     {
         creature_detonating_lasherAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceScript();
+            m_pInstance = pCreature->GetInstanceData();
         }
 
-        InstanceScript* m_pInstance;
+        ScriptedInstance* m_pInstance;
         int32 uiFlameLashTimer;
         int32 uiSwitchTargetTimer;
 
@@ -1034,7 +1034,7 @@ public:
 
 };
 
-class creature_ancient_conservator : public CreatureScript
+class creature_ancient_conservator : public CreatureScript
 {
 public:
     creature_ancient_conservator() : CreatureScript("creature_ancient_conservator") { }
@@ -1048,10 +1048,10 @@ public:
     {
         creature_ancient_conservatorAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceScript();
+            m_pInstance = pCreature->GetInstanceData();
         }
 
-        InstanceScript* m_pInstance;
+        ScriptedInstance* m_pInstance;
         int32 uiNaturesFuryTimer;
         int32 uiSpawnHealthySporeTimer;
         uint8 healthySporesSpawned;
@@ -1117,7 +1117,7 @@ public:
 
 };
 
-class creature_healthy_spore : public CreatureScript
+class creature_healthy_spore : public CreatureScript
 {
 public:
     creature_healthy_spore() : CreatureScript("creature_healthy_spore") { }
@@ -1131,18 +1131,18 @@ public:
     {
         creature_healthy_sporeAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceScript();
+            m_pInstance = pCreature->GetInstanceData();
             DoCast(me, SPELL_HEALTHY_SPORE_VISUAL);
             DoCast(me, SPELL_POTENT_PHEROMONES);
             DoCast(me, SPELL_GROW);
         }
 
-        InstanceScript* m_pInstance;
+        ScriptedInstance* m_pInstance;
     };
 
 };
 
-class creature_storm_lasher : public CreatureScript
+class creature_storm_lasher : public CreatureScript
 {
 public:
     creature_storm_lasher() : CreatureScript("creature_storm_lasher") { }
@@ -1156,10 +1156,10 @@ public:
     {
         creature_storm_lasherAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceScript();
+            m_pInstance = pCreature->GetInstanceData();
         }
 
-        InstanceScript* m_pInstance;
+        ScriptedInstance* m_pInstance;
         int32 uiLightningLashTimer;
         int32 uiStormboltTimer;
 
@@ -1202,7 +1202,7 @@ public:
 
 };
 
-class creature_snaplasher : public CreatureScript
+class creature_snaplasher : public CreatureScript
 {
 public:
     creature_snaplasher() : CreatureScript("creature_snaplasher") { }
@@ -1216,11 +1216,11 @@ public:
     {
         creature_snaplasherAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceScript();
+            m_pInstance = pCreature->GetInstanceData();
     //        DoCast(me, 62664);
         }
 
-        InstanceScript* m_pInstance;
+        ScriptedInstance* m_pInstance;
         uint32 health;
 
         void JustDied(Unit* victim)
@@ -1240,7 +1240,7 @@ public:
 
 };
 
-class creature_ancient_water_spirit : public CreatureScript
+class creature_ancient_water_spirit : public CreatureScript
 {
 public:
     creature_ancient_water_spirit() : CreatureScript("creature_ancient_water_spirit") { }
@@ -1254,10 +1254,10 @@ public:
     {
         creature_ancient_water_spiritAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceScript();
+            m_pInstance = pCreature->GetInstanceData();
         }
 
-        InstanceScript* m_pInstance;
+        ScriptedInstance* m_pInstance;
         int32 uiTidalWaveTimer;
 
         void Reset()

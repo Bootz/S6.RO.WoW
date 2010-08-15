@@ -131,7 +131,7 @@ Creature* pFjola;
 /**********************************************************
 Fjola Lightbane
 **********************************************************/
-class boss_fjola : public CreatureScript
+class boss_fjola : public CreatureScript
 {
 public:
     boss_fjola() : CreatureScript("boss_fjola") { }
@@ -145,11 +145,11 @@ public:
     {
         boss_fjolaAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = (InstanceScript *) pCreature->GetInstanceScript();
+            m_pInstance = (ScriptedInstance *) pCreature->GetInstanceData();
                     me->AddUnitMovementFlag(MOVEMENTFLAG_LEVITATING);
         }
 
-        InstanceScript* m_pInstance;
+        ScriptedInstance* m_pInstance;
         uint64 mDarkbaneGUID;
         uint32 OrbTimer;
         uint32 SpikeTimer;
@@ -300,7 +300,7 @@ public:
 /*######
 ## boss_eydis
 ######*/
-class boss_eydis : public CreatureScript
+class boss_eydis : public CreatureScript
 {
 public:
     boss_eydis() : CreatureScript("boss_eydis") { }
@@ -314,11 +314,11 @@ public:
     {
         boss_eydisAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = (InstanceScript *) pCreature->GetInstanceScript();
+            m_pInstance = (ScriptedInstance *) pCreature->GetInstanceData();
                     me->AddUnitMovementFlag(MOVEMENTFLAG_LEVITATING);
         }
 
-        InstanceScript *m_pInstance;
+        ScriptedInstance *m_pInstance;
 
         uint64 mLightbaneGUID;
         uint32 OrbTimer;
@@ -466,8 +466,7 @@ public:
 };
 
 
-// Concentrated Light/Darkness
-class mob_valkyr_orb : public CreatureScript
+// Concentrated Light/Darknessclass mob_valkyr_orb : public CreatureScript
 {
 public:
     mob_valkyr_orb() : CreatureScript("mob_valkyr_orb") { }
@@ -534,7 +533,7 @@ public:
     };
 
 };
-class cr_dark_essence : public CreatureScript
+class cr_dark_essence : public CreatureScript
 {
 public:
     cr_dark_essence() : CreatureScript("cr_dark_essence") { }
@@ -548,10 +547,10 @@ public:
     {
         cr_dark_essenceAI(Creature* pCreature) : ScriptedAI (pCreature)
         {
-            m_pInstance = pCreature->GetInstanceScript();
+            m_pInstance = pCreature->GetInstanceData();
         }
 
-        InstanceScript* m_pInstance;
+        ScriptedInstance* m_pInstance;
 
         void UpdateAI(const uint32 uiDiff)
         {
@@ -568,7 +567,7 @@ public:
     };
 
 };
-class cr_light_essence : public CreatureScript
+class cr_light_essence : public CreatureScript
 {
 public:
     cr_light_essence() : CreatureScript("cr_light_essence") { }
@@ -582,10 +581,10 @@ public:
     {
         cr_light_essenceAI(Creature* pCreature) : ScriptedAI (pCreature)
         {
-            m_pInstance = pCreature->GetInstanceScript();
+            m_pInstance = pCreature->GetInstanceData();
         }
 
-        InstanceScript* m_pInstance;
+        ScriptedInstance* m_pInstance;
 
         void UpdateAI(const uint32 uiDiff)
         {

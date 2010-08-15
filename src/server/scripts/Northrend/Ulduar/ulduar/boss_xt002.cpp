@@ -147,12 +147,12 @@ struct boss_xt002_AI : public BossAI
     boss_xt002_AI(Creature *pCreature) : BossAI(pCreature, BOSS_XT002), vehicle(me->GetVehicleKit())
     {
         assert(vehicle);
-        pInstance = pCreature->GetInstanceScript();
+        pInstance = pCreature->GetInstanceData();
         me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);
         me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true); // Death Grip jump effect
     }
 
-    InstanceScript *pInstance;
+    ScriptedInstance *pInstance;
     Vehicle *vehicle;
     
     uint32 EncounterTime;
@@ -481,7 +481,7 @@ struct boss_xt002_AI : public BossAI
         phase = 1;
     }
 };
-class boss_xt002 : public CreatureScript
+class boss_xt002 : public CreatureScript
 {
 public:
     boss_xt002() : CreatureScript("boss_xt002") { }
@@ -497,8 +497,7 @@ public:
  *
  *        XT-002 HEART
  *
- *///----------------------------------------------------
-class mob_xt002_heart : public CreatureScript
+ *///----------------------------------------------------class mob_xt002_heart : public CreatureScript
 {
 public:
     mob_xt002_heart() : CreatureScript("mob_xt002_heart") { }
@@ -512,13 +511,13 @@ public:
     {
         mob_xt002_heartAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceScript();
+            m_pInstance = pCreature->GetInstanceData();
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE | UNIT_FLAG_STUNNED);
             me->AddUnitMovementFlag(MOVEMENTFLAG_LEVITATING);
             me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE);
         }
 
-        InstanceScript* m_pInstance;
+        ScriptedInstance* m_pInstance;
         uint32 uiExposeTimer;
         bool Exposed;
 
@@ -568,8 +567,7 @@ public:
  *
  *        XS-013 SCRAPBOT
  *
- *///----------------------------------------------------
-class mob_scrapbot : public CreatureScript
+ *///----------------------------------------------------class mob_scrapbot : public CreatureScript
 {
 public:
     mob_scrapbot() : CreatureScript("mob_scrapbot") { }
@@ -583,10 +581,10 @@ public:
     {
         mob_scrapbotAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = me->GetInstanceScript();
+            m_pInstance = me->GetInstanceData();
         }
 
-        InstanceScript* m_pInstance;
+        ScriptedInstance* m_pInstance;
         bool repaired;
 
         void Reset()
@@ -628,8 +626,7 @@ public:
  *
  *        XM-024 PUMMELLER
  *
- *///----------------------------------------------------
-class mob_pummeller : public CreatureScript
+ *///----------------------------------------------------class mob_pummeller : public CreatureScript
 {
 public:
     mob_pummeller() : CreatureScript("mob_pummeller") { }
@@ -643,10 +640,10 @@ public:
     {
         mob_pummellerAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceScript();
+            m_pInstance = pCreature->GetInstanceData();
         }
 
-        InstanceScript* m_pInstance;
+        ScriptedInstance* m_pInstance;
         int32 uiArcingSmashTimer;
         int32 uiTrampleTimer;
         int32 uiUppercutTimer;
@@ -695,8 +692,7 @@ public:
  *
  *        XE-321 BOOMBOT
  *
- *///----------------------------------------------------
-class mob_boombot : public CreatureScript
+ *///----------------------------------------------------class mob_boombot : public CreatureScript
 {
 public:
     mob_boombot() : CreatureScript("mob_boombot") { }
@@ -710,10 +706,10 @@ public:
     {
         mob_boombotAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceScript();
+            m_pInstance = pCreature->GetInstanceData();
         }
 
-        InstanceScript* m_pInstance;
+        ScriptedInstance* m_pInstance;
     
         void Reset()
         {
@@ -741,8 +737,7 @@ public:
  *
  *        VOID ZONE
  *
- *///----------------------------------------------------
-class mob_void_zone : public CreatureScript
+ *///----------------------------------------------------class mob_void_zone : public CreatureScript
 {
 public:
     mob_void_zone() : CreatureScript("mob_void_zone") { }
@@ -756,11 +751,11 @@ public:
     {
         mob_void_zoneAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceScript();
+            m_pInstance = pCreature->GetInstanceData();
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE | UNIT_FLAG_PACIFIED);
         }
 
-        InstanceScript* m_pInstance;
+        ScriptedInstance* m_pInstance;
         uint32 uiVoidZoneTimer;
 
         void Reset()
@@ -785,8 +780,7 @@ public:
  *
  *        LIFE SPARK
  *
- *///----------------------------------------------------
-class mob_life_spark : public CreatureScript
+ *///----------------------------------------------------class mob_life_spark : public CreatureScript
 {
 public:
     mob_life_spark() : CreatureScript("mob_life_spark") { }
@@ -800,10 +794,10 @@ public:
     {
         mob_life_sparkAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceScript();
+            m_pInstance = pCreature->GetInstanceData();
         }
 
-        InstanceScript* m_pInstance;
+        ScriptedInstance* m_pInstance;
         uint32 uiShockTimer;
 
         void Reset()

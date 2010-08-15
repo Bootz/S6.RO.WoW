@@ -86,7 +86,7 @@ enum NPC
         NPC_NETHER_PORTAL                = 34825,
         NPC_MISTRESS_OF_PAIN     = 34826,
 };
-class Boss_Jaraxxus : public CreatureScript
+class Boss_Jaraxxus : public CreatureScript
 {
 public:
     Boss_Jaraxxus() : CreatureScript("Boss_Jaraxxus") { }
@@ -100,10 +100,10 @@ public:
     {
         boss_JaraxxusAI(Creature *pCreature) : ScriptedAI(pCreature), summons(me)
         {
-                    m_pInstance = pCreature->GetInstanceScript();
+                    m_pInstance = pCreature->GetInstanceData();
         }
 
-        InstanceScript* m_pInstance;
+        ScriptedInstance* m_pInstance;
 
             uint32 uiIncinerateFleshTimer;
             uint32 uiFelFireballTimer;
@@ -136,7 +136,7 @@ public:
 
                      summons.DespawnAll();
 
-                     m_pInstance = (InstanceScript*)me->GetInstanceScript();
+                     m_pInstance = (ScriptedInstance*)me->GetInstanceData();
         }
 
         void EnterCombat(Unit* who)
@@ -265,7 +265,7 @@ public:
 
 };
 
-class Mob_FireTrigger : public CreatureScript
+class Mob_FireTrigger : public CreatureScript
 {
 public:
     Mob_FireTrigger() : CreatureScript("Mob_FireTrigger") { }
@@ -279,10 +279,10 @@ public:
     {
         mob_FireTriggerAI(Creature *pCreature) : Scripted_NoMovementAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceScript();
+            m_pInstance = pCreature->GetInstanceData();
         }
 
-        InstanceScript* m_pInstance;
+        ScriptedInstance* m_pInstance;
 
         void Reset()
         {
@@ -300,7 +300,7 @@ public:
 
 };
 
-class Mob_Vulcan : public CreatureScript
+class Mob_Vulcan : public CreatureScript
 {
 public:
     Mob_Vulcan() : CreatureScript("Mob_Vulcan") { }
@@ -314,10 +314,10 @@ public:
     {
         mob_VulcanAI(Creature *pCreature) : Scripted_NoMovementAI(pCreature), summons(me)
         {
-            m_pInstance = pCreature->GetInstanceScript();
+            m_pInstance = pCreature->GetInstanceData();
         }
 
-        InstanceScript* m_pInstance;
+        ScriptedInstance* m_pInstance;
 
             SummonList summons;
 
@@ -349,7 +349,7 @@ public:
 
 };
 
-class Mob_Netherportal : public CreatureScript
+class Mob_Netherportal : public CreatureScript
 {
 public:
     Mob_Netherportal() : CreatureScript("Mob_Netherportal") { }
@@ -364,10 +364,10 @@ public:
     {
         mob_NetherportalAI(Creature *pCreature) : Scripted_NoMovementAI(pCreature), summons(me)
         {
-            m_pInstance = pCreature->GetInstanceScript();
+            m_pInstance = pCreature->GetInstanceData();
         }
 
-        InstanceScript* m_pInstance;
+        ScriptedInstance* m_pInstance;
 
             uint32 uiNetherPortalEffectTimer;
             uint32 uiSpellNetherPortal;
@@ -416,7 +416,7 @@ public:
 
 };
 
-class Mob_MistressOfPain : public CreatureScript
+class Mob_MistressOfPain : public CreatureScript
 {
 public:
     Mob_MistressOfPain() : CreatureScript("Mob_MistressOfPain") { }
@@ -430,10 +430,10 @@ public:
     {
         mob_mistressofpainAI(Creature *pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceScript();
+            m_pInstance = pCreature->GetInstanceData();
         }
 
-        InstanceScript* m_pInstance;
+        ScriptedInstance* m_pInstance;
 
             uint32 uiShivanSlashTimer;
             uint32 uiSpinningPainSpikeTimer;

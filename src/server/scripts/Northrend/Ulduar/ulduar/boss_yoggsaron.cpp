@@ -129,7 +129,7 @@ const Position SanityWellPos[10] =
 /*------------------------------------------------------*
  *                  Images of Keepers                   *
  *------------------------------------------------------*/
-class npc_keeper_image : public CreatureScript
+class npc_keeper_image : public CreatureScript
 {
 public:
     npc_keeper_image() : CreatureScript("npc_keeper_image") { }
@@ -141,8 +141,8 @@ public:
 
     bool GossipSelect_keeper_image(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
     {
-        InstanceScript *data = pPlayer->GetInstanceScript();  //no sure this is correct, if so whats the point of it?
-        InstanceScript* pInstance = pCreature->GetInstanceScript();
+        InstanceData *data = pPlayer->GetInstanceData();
+        ScriptedInstance* pInstance = pCreature->GetInstanceData();
     
         if (pPlayer)
             pPlayer->CLOSE_GOSSIP_MENU();
@@ -179,8 +179,8 @@ public:
 
     bool GossipHello_keeper_image(Player* pPlayer, Creature* pCreature)
     {
-        InstanceScript *data = pPlayer->GetInstanceScript(); //again?
-        InstanceScript *pInstance = (InstanceScript *) pCreature->GetInstanceScript();
+        InstanceData *data = pPlayer->GetInstanceData();
+        ScriptedInstance *pInstance = (ScriptedInstance *) pCreature->GetInstanceData();
     
         if (pInstance && pPlayer)
         {
@@ -198,10 +198,10 @@ public:
     {
         keeper_imageAI(Creature *c) : ScriptedAI(c)
         {
-            pInstance = c->GetInstanceScript();
+            pInstance = c->GetInstanceData();
         }
 
-        InstanceScript* pInstance;
+        ScriptedInstance* pInstance;
     };
 
 };
@@ -209,7 +209,7 @@ public:
 
 
 
-class npc_ys_freya : public CreatureScript
+class npc_ys_freya : public CreatureScript
 {
 public:
     npc_ys_freya() : CreatureScript("npc_ys_freya") { }
@@ -223,12 +223,12 @@ public:
     {
         npc_ys_freyaAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceScript();
+            pInstance = pCreature->GetInstanceData();
             me->SetReactState(REACT_PASSIVE);
             me->SetVisibility(VISIBILITY_OFF);
         }
 
-        InstanceScript* pInstance;
+        ScriptedInstance* pInstance;
         int32 WellTimer;
 
         void Reset()
@@ -258,7 +258,7 @@ public:
 
 };
 
-class npc_sanity_well : public CreatureScript
+class npc_sanity_well : public CreatureScript
 {
 public:
     npc_sanity_well() : CreatureScript("npc_sanity_well") { }
@@ -272,17 +272,17 @@ public:
     {
         npc_sanity_wellAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceScript();
+            pInstance = pCreature->GetInstanceData();
             DoCast(me, SPELL_SANITY_WELL_VISUAL);
             DoCast(me, SPELL_SANITY_WELL);
         }
 
-        InstanceScript* pInstance;
+        ScriptedInstance* pInstance;
     };
 
 };
 
-class npc_ys_thorim : public CreatureScript
+class npc_ys_thorim : public CreatureScript
 {
 public:
     npc_ys_thorim() : CreatureScript("npc_ys_thorim") { }
@@ -296,12 +296,12 @@ public:
     {
         npc_ys_thorimAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceScript();
+            pInstance = pCreature->GetInstanceData();
             me->SetReactState(REACT_PASSIVE);
             me->SetVisibility(VISIBILITY_OFF);
         }
 
-        InstanceScript* pInstance;
+        ScriptedInstance* pInstance;
 
         void Reset(){}
     
@@ -322,7 +322,7 @@ public:
 
 };
 
-class npc_ys_mimiron : public CreatureScript
+class npc_ys_mimiron : public CreatureScript
 {
 public:
     npc_ys_mimiron() : CreatureScript("npc_ys_mimiron") { }
@@ -336,12 +336,12 @@ public:
     {
         npc_ys_mimironAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceScript();
+            pInstance = pCreature->GetInstanceData();
             me->SetReactState(REACT_PASSIVE);
             me->SetVisibility(VISIBILITY_OFF);
         }
 
-        InstanceScript* pInstance;
+        ScriptedInstance* pInstance;
         int32 DestabilizeTimer;
 
         void Reset()
@@ -371,7 +371,7 @@ public:
 
 };
 
-class npc_ys_hodir : public CreatureScript
+class npc_ys_hodir : public CreatureScript
 {
 public:
     npc_ys_hodir() : CreatureScript("npc_ys_hodir") { }
@@ -385,12 +385,12 @@ public:
     {
         npc_ys_hodirAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceScript();
+            pInstance = pCreature->GetInstanceData();
             me->SetReactState(REACT_PASSIVE);
             me->SetVisibility(VISIBILITY_OFF);
         }
 
-        InstanceScript* pInstance;
+        ScriptedInstance* pInstance;
 
         void Reset(){}
     

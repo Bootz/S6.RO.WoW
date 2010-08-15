@@ -76,14 +76,14 @@ static float ChampSpawnLocs[2][10][4] =
         {522.65f, 130.43f, 394.67f, 0.18f}, {521.40f, 136.07f, 394.67f, 0.18f}
     }
 };
-class npc_tcrus_announcer : public CreatureScript
+class npc_tcrus_announcer : public CreatureScript
 {
 public:
     npc_tcrus_announcer() : CreatureScript("npc_tcrus_announcer") { }
 
     bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
     {
-            InstanceScript* pInstance = (InstanceScript*)pCreature->GetInstanceScript();
+            InstanceData* pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
             if(!pInstance)
                     return false;
 
@@ -96,7 +96,7 @@ public:
         if (uiAction == GOSSIP_ACTION_INFO_DEF+2)
         {
             pPlayer->CLOSE_GOSSIP_MENU();
-                    CAST_AI(npc_tcrus_announcer::npc_tcrus_announcerAI, pCreature->AI())->StartEvent();
+                    CAST_AI(npc_tcrus_announcerAI, pCreature->AI())->StartEvent();
         }
 
         return true;
@@ -104,7 +104,7 @@ public:
 
     bool GossipHello(Player* pPlayer, Creature* pCreature)
     {
-        InstanceScript* pInstance = (InstanceScript*)pCreature->GetInstanceScript();
+        InstanceData* pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
 
             bool inProgress = false;
         for(uint8 i = 0; i < 7; ++i)
@@ -137,10 +137,10 @@ public:
     {
         npc_tcrus_announcerAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = (InstanceScript*)me->GetInstanceScript();
+            pInstance = (ScriptedInstance*)me->GetInstanceData();
         }
 
-        InstanceScript* pInstance;
+        InstanceData* pInstance;
 
             Creature* Fjola;
             Creature* Eydis;
@@ -232,7 +232,7 @@ public:
 
         void StartEvent()
         {
-                    pInstance = (InstanceScript*)me->GetInstanceScript();
+                    pInstance = (ScriptedInstance*)me->GetInstanceData();
 
             if(pInstance && pInstance->GetData(PHASE_1) == NOT_STARTED
                             && pInstance->GetData(PHASE_2) == NOT_STARTED
@@ -308,7 +308,7 @@ public:
 
 
 
-class npc_tcrus_tirion : public CreatureScript
+class npc_tcrus_tirion : public CreatureScript
 {
 public:
     npc_tcrus_tirion() : CreatureScript("npc_tcrus_tirion") { }
@@ -322,10 +322,10 @@ public:
     {
         npc_tcrus_tirionAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = (InstanceScript*)me->GetInstanceScript();
+            pInstance = (ScriptedInstance*)me->GetInstanceData();
         }
 
-        InstanceScript* pInstance;
+        InstanceData* pInstance;
             uint32 UpdateTimer;
 
             Creature* Fizzle;
@@ -413,7 +413,7 @@ public:
                                             if(pInstance->GetData(PHASE_1)==0)
                                             {
                                                     Creature* cre = Unit::GetCreature(*me, pInstance->GetData64(NPC_ANONSER));
-                                                    CAST_AI(npc_tcrus_announcer::npc_tcrus_announcerAI, cre->AI())->StartEvent();
+                                                    CAST_AI(npc_tcrus_announcerAI, cre->AI())->StartEvent();
                                                     Gormok->SetReactState(REACT_AGGRESSIVE);
                                                     Gormok->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
                                                     pInstance->SetData(PHASE_SPECHIAL, 8);
@@ -605,7 +605,7 @@ public:
 
 };
 
-class npc_Garrosh : public CreatureScript
+class npc_Garrosh : public CreatureScript
 {
 public:
     npc_Garrosh() : CreatureScript("npc_Garrosh") { }
@@ -619,10 +619,10 @@ public:
     {
         npc_GarroshAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = (InstanceScript*)me->GetInstanceScript();
+            pInstance = (ScriptedInstance*)me->GetInstanceData();
         }
 
-        InstanceScript* pInstance;
+        InstanceData* pInstance;
             uint32 UpdateTimer;
 
         void Reset()
@@ -668,7 +668,7 @@ public:
 
 };
 
-class npc_tcrus_fizzlebang : public CreatureScript
+class npc_tcrus_fizzlebang : public CreatureScript
 {
 public:
     npc_tcrus_fizzlebang() : CreatureScript("npc_tcrus_fizzlebang") { }
@@ -682,10 +682,10 @@ public:
     {
         npc_tcrus_fizzlebangAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = (InstanceScript*)me->GetInstanceScript();
+            pInstance = (ScriptedInstance*)me->GetInstanceData();
         }
 
-        InstanceScript* pInstance;
+        InstanceData* pInstance;
             uint32 UpdateTimer;
 
             Creature* Jaraxxus;
@@ -814,7 +814,7 @@ public:
 
 };
 
-class npc_KingVyrn : public CreatureScript
+class npc_KingVyrn : public CreatureScript
 {
 public:
     npc_KingVyrn() : CreatureScript("npc_KingVyrn") { }
@@ -828,10 +828,10 @@ public:
     {
         npc_KingVyrnAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = (InstanceScript*)me->GetInstanceScript();
+            pInstance = (ScriptedInstance*)me->GetInstanceData();
         }
 
-        InstanceScript* pInstance;
+        InstanceData* pInstance;
             uint32 UpdateTimer;
 
 
@@ -888,7 +888,7 @@ public:
 
 };
 
-class npc_LichKing : public CreatureScript
+class npc_LichKing : public CreatureScript
 {
 public:
     npc_LichKing() : CreatureScript("npc_LichKing") { }
@@ -902,10 +902,10 @@ public:
     {
         npc_LichKingAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = (InstanceScript*)me->GetInstanceScript();
+            pInstance = (ScriptedInstance*)me->GetInstanceData();
         }
 
-        InstanceScript* pInstance;
+        InstanceData* pInstance;
             uint32 UpdateTimer;
 
             Creature* Jaraxxus;

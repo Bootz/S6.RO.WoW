@@ -116,7 +116,7 @@ Creature* pPuddle;
 #define UR2_Y 3213.893
 
 #define EMOTE_UNSTABLE_EXPERIMENT "Professor Putricide begins unstable experiment!"
-class boss_professor_putricide : public CreatureScript
+class boss_professor_putricide : public CreatureScript
 {
 public:
     boss_professor_putricide() : CreatureScript("boss_professor_putricide") { }
@@ -130,10 +130,10 @@ public:
     {
         boss_professor_putricideAI(Creature *pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceScript();
+            m_pInstance = pCreature->GetInstanceData();
         }
 
-        InstanceScript* m_pInstance;
+        ScriptedInstance* m_pInstance;
 
         uint32 m_uiPhase;
         uint32 m_uiUnstableExperimentTimer;
@@ -359,7 +359,7 @@ public:
     };
 
 };
-class npc_volatile_ooze : public CreatureScript
+class npc_volatile_ooze : public CreatureScript
 {
 public:
     npc_volatile_ooze() : CreatureScript("npc_volatile_ooze") { }
@@ -434,11 +434,9 @@ public:
                   }
             } else OozeExplosionTimer -= diff;
         }
-    };
+    };class npc_gas_cloud : public CreatureScript
 
 };
-
-class npc_gas_cloud : public CreatureScript
 {
 public:
     npc_gas_cloud() : CreatureScript("npc_gas_cloud") { }
@@ -540,8 +538,7 @@ public:
         }
     };
 
-};
-class npc_choke_bomb : public CreatureScript
+};class npc_choke_bomb : public CreatureScript
 {
 public:
     npc_choke_bomb() : CreatureScript("npc_choke_bomb") { }
@@ -555,9 +552,9 @@ public:
     {
         npc_choke_bombAI(Creature *pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceScript();
+            m_pInstance = pCreature->GetInstanceData();
         }
-        InstanceScript* m_pInstance;
+        ScriptedInstance* m_pInstance;
         uint32 m_uiChokeTimer;
         uint32 m_uiExplodeDespawn;
         void Reset()
@@ -583,10 +580,9 @@ public:
                 me->ForcedDespawn();
             } m_uiExplodeDespawn -= uiDiff;
         }
-    };
+    };class npc_puddle_ooze : public CreatureScript
 
 };
-class npc_puddle_ooze : public CreatureScript
 {
 public:
     npc_puddle_ooze() : CreatureScript("npc_puddle_ooze") { }
@@ -600,10 +596,10 @@ public:
     {
         npc_puddle_oozeAI(Creature *pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceScript();
+            m_pInstance = pCreature->GetInstanceData();
             pPuddle = me;
         }
-        InstanceScript* m_pInstance;
+        ScriptedInstance* m_pInstance;
         uint32 m_uiPuddleOozeTimer;
     	uint32 GrowStack;
     	uint32 CheckStack;
@@ -645,10 +641,9 @@ public:
             } else CheckTimer -= uiDiff;
 
         }
-    };
+    };class npc_abomination : public CreatureScript
 
 };
-class npc_abomination : public CreatureScript
 {
 public:
     npc_abomination() : CreatureScript("npc_abomination") { }
@@ -662,12 +657,12 @@ public:
     {
         npc_abominationAI(Creature *pCreature) : ScriptedAI(pCreature), vehicle(me->GetVehicleKit())
         {
-            m_pInstance = pCreature->GetInstanceScript();
+            m_pInstance = pCreature->GetInstanceData();
             pAbomination = me;
             assert(vehicle);
             me->SetPower(POWER_ENERGY, 10);
         }
-        InstanceScript* m_pInstance;
+        ScriptedInstance* m_pInstance;
 
         uint32 m_uiGrabTimer;
         uint32 CheckTimer;
@@ -716,8 +711,7 @@ public:
         }
     };
 
-};
-class npc_malleable_goo : public CreatureScript
+};class npc_malleable_goo : public CreatureScript
 {
 public:
     npc_malleable_goo() : CreatureScript("npc_malleable_goo") { }
@@ -731,9 +725,9 @@ public:
     {
         npc_malleable_gooAI(Creature *pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceScript();
+            m_pInstance = pCreature->GetInstanceData();
         }
-        InstanceScript* m_pInstance;
+        ScriptedInstance* m_pInstance;
         uint32 m_uiMalleableTimer;
         uint32 m_uiDespawnTimer;
         void Reset()

@@ -153,7 +153,7 @@ enum Events
     EVENT_FUSE,
     EVENT_SUMMON
 };
-class boss_razorscale : public CreatureScript
+class boss_razorscale : public CreatureScript
 {
 public:
     boss_razorscale() : CreatureScript("boss_razorscale") { }
@@ -172,12 +172,12 @@ public:
             me->ApplySpellImmune(0, IMMUNITY_ID, RAID_MODE(SPELL_BATTLE_SHOUT_10, SPELL_BATTLE_SHOUT_25), true);
             me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);
             me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true);  // Death Grip
-            pInstance = pCreature->GetInstanceScript();
+            pInstance = pCreature->GetInstanceData();
             pMap = me->GetMap();
         }
 
         Phases phase;
-        InstanceScript* pInstance;
+        ScriptedInstance* pInstance;
         Map* pMap;
     
         uint32 EnrageTimer;
@@ -431,11 +431,11 @@ struct npc_expedition_commanderAI : public ScriptedAI
 {
     npc_expedition_commanderAI(Creature* pCreature) : ScriptedAI(pCreature), summons(me)
     {
-        pInstance = pCreature->GetInstanceScript();
+        pInstance = pCreature->GetInstanceData();
         greet = false;
     }
     
-    InstanceScript* pInstance;
+    ScriptedInstance* pInstance;
     SummonList summons;
 
     bool greet;
@@ -538,7 +538,7 @@ struct npc_expedition_commanderAI : public ScriptedAI
     }
 };
 
-class npc_expedition_commander_ulduar : public CreatureScript
+class npc_expedition_commander_ulduar : public CreatureScript
 {
 public:
     npc_expedition_commander_ulduar() : CreatureScript("npc_expedition_commander_ulduar") { }
@@ -558,8 +558,8 @@ public:
 
     bool Expedition_commander_ulduar(Player* pPlayer, Creature* pCreature)
     {
-        InstanceScript *data = pPlayer->GetInstanceScript();
-        InstanceScript *pInstance = (InstanceScript *) pCreature->GetInstanceScript();
+        InstanceData *data = pPlayer->GetInstanceData();
+        ScriptedInstance *pInstance = (ScriptedInstance *) pCreature->GetInstanceData();
     
         if (pInstance && pPlayer && data->GetBossState(BOSS_RAZORSCALE) == NOT_STARTED)
         {
@@ -578,7 +578,7 @@ public:
 };
 
 
-class mob_devouring_flame : public CreatureScript
+class mob_devouring_flame : public CreatureScript
 {
 public:
     mob_devouring_flame() : CreatureScript("mob_devouring_flame") { }
@@ -604,7 +604,7 @@ public:
 };
 
 
-class mob_darkrune_watcher : public CreatureScript
+class mob_darkrune_watcher : public CreatureScript
 {
 public:
     mob_darkrune_watcher() : CreatureScript("mob_darkrune_watcher") { }
@@ -618,10 +618,10 @@ public:
     {
         mob_darkrune_watcherAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceScript();
+            m_pInstance = pCreature->GetInstanceData();
         }
 
-        InstanceScript* m_pInstance;
+        ScriptedInstance* m_pInstance;
         int32 ChainTimer;
         int32 LightTimer;
 
@@ -655,7 +655,7 @@ public:
 };
 
 
-class mob_darkrune_guardian : public CreatureScript
+class mob_darkrune_guardian : public CreatureScript
 {
 public:
     mob_darkrune_guardian() : CreatureScript("mob_darkrune_guardian") { }
@@ -669,10 +669,10 @@ public:
     {
         mob_darkrune_guardianAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceScript();
+            m_pInstance = pCreature->GetInstanceData();
         }
 
-        InstanceScript* m_pInstance;
+        ScriptedInstance* m_pInstance;
         int32 StormTimer;
 
         void Reset()
@@ -698,7 +698,7 @@ public:
 };
 
 
-class mob_darkrune_sentinel : public CreatureScript
+class mob_darkrune_sentinel : public CreatureScript
 {
 public:
     mob_darkrune_sentinel() : CreatureScript("mob_darkrune_sentinel") { }
@@ -712,10 +712,10 @@ public:
     {
         mob_darkrune_sentinelAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceScript();
+            m_pInstance = pCreature->GetInstanceData();
         }
 
-        InstanceScript* m_pInstance;
+        ScriptedInstance* m_pInstance;
         int32 HeroicTimer;
         int32 WhirlTimer;
         int32 ShoutTimer;
@@ -757,7 +757,7 @@ public:
 };
 
 
-class mole_machine_trigger : public CreatureScript
+class mole_machine_trigger : public CreatureScript
 {
 public:
     mole_machine_trigger() : CreatureScript("mole_machine_trigger") { }
@@ -771,12 +771,12 @@ public:
     {
         mole_machine_triggerAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceScript();
+            m_pInstance = pCreature->GetInstanceData();
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE | UNIT_FLAG_PACIFIED);
             me->SetVisibility(VISIBILITY_OFF);
         }
 
-        InstanceScript* m_pInstance;
+        ScriptedInstance* m_pInstance;
         GameObject* MoleMachine;
         int32 SummomTimer;
 

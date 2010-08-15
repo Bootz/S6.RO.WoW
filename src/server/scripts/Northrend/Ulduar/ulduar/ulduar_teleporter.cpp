@@ -31,10 +31,10 @@ enum Locations
     SPARK_IMAGINATION                           = 207,
     DESCENT_MADNESS                             = 208
 };
-class ulduar_teleporter : public GameObjectScript
+class ulduar_teleporter : public UnknownScript
 {
 public:
-    ulduar_teleporter() : GameObjectScript("ulduar_teleporter") { }
+    ulduar_teleporter() : UnknownScript("ulduar_teleporter") { }
 
     bool GOSelect( Player *pPlayer, GameObject *pGO, uint32 sender, uint32 action )
     {
@@ -77,8 +77,8 @@ public:
 
     bool GoHello( Player *pPlayer, GameObject *pGO )
     {
-        InstanceScript *data = pPlayer->GetInstanceScript();
-        InstanceScript *pInstance = (InstanceScript *) pGO->GetInstanceScript();
+        InstanceData *data = pPlayer->GetInstanceData();
+        ScriptedInstance *pInstance = (ScriptedInstance *) pGO->GetInstanceData();
         if(!pInstance | !data) return true;
 
         pPlayer->ADD_GOSSIP_ITEM(0, "Expedition Base Camp", GOSSIP_SENDER_MAIN, BASE_CAMP);
