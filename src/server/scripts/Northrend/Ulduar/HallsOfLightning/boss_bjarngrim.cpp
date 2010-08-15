@@ -80,26 +80,22 @@ enum eEnums
 /*######
 ## boss_bjarngrim
 ######*/
-class boss_bjarngrim : public CreatureScript
+
+class boss_bjarngrim : public CreatureScript
 {
 public:
     boss_bjarngrim() : CreatureScript("boss_bjarngrim") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_bjarngrimAI(pCreature);
-    }
 
     struct boss_bjarngrimAI : public ScriptedAI
     {
         boss_bjarngrimAI(Creature *pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
             m_uiStance = STANCE_DEFENSIVE;
             memset(&m_auiStormforgedLieutenantGUID, 0, sizeof(m_auiStormforgedLieutenantGUID));
         }
 
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
 
         bool m_bIsChangingStance;
 
@@ -350,29 +346,30 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_bjarngrimAI(pCreature);
+    }
+
 };
 
 /*######
 ## mob_stormforged_lieutenant
 ######*/
-class mob_stormforged_lieutenant : public CreatureScript
+
+class mob_stormforged_lieutenant : public CreatureScript
 {
 public:
     mob_stormforged_lieutenant() : CreatureScript("mob_stormforged_lieutenant") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_stormforged_lieutenantAI(pCreature);
-    }
 
     struct mob_stormforged_lieutenantAI : public ScriptedAI
     {
         mob_stormforged_lieutenantAI(Creature *pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
 
         uint32 m_uiArcWeld_Timer;
         uint32 m_uiRenewSteel_Timer;
@@ -428,12 +425,15 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_stormforged_lieutenantAI(pCreature);
+    }
+
 };
-
-
 
 void AddSC_boss_bjarngrim()
 {
-    new boss_bjarngrim();
-    new mob_stormforged_lieutenant();
+    new boss_bjarngrim;
+    new mob_stormforged_lieutenant;
 }

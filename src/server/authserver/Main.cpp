@@ -22,13 +22,14 @@
 /// @{
 /// \file
 
+#include "revision.h"
+
 #include "Common.h"
 #include "Database/DatabaseEnv.h"
 #include "Database/PreparedStatements.h"
 
 #include "Configuration/Config.h"
 #include "Log.h"
-#include "SystemConfig.h"
 #include "revision_sql.h"
 #include "Util.h"
 #include "SignalHandler.h"
@@ -220,7 +221,7 @@ extern int main(int argc, char **argv)
     ///- Launch the listening network socket
     RealmAcceptor acceptor;
 
-    uint16 rmport = sConfig.GetIntDefault("RealmServerPort", DEFAULT_REALMSERVER_PORT);
+    uint16 rmport = sConfig.GetIntDefault("RealmServerPort", 3724);
     std::string bind_ip = sConfig.GetStringDefault("BindIP", "0.0.0.0");
 
     ACE_INET_Addr bind_addr(rmport, bind_ip.c_str());

@@ -1132,20 +1132,20 @@ public:
 
 void AddSC_pit_of_saron()
 {
-    new mob_ymirjar_wrathbringer();
-    new mob_ymirjar_skycaller();
-    new mob_ymirjar_flamebearer();
-    new mob_ymirjar_deathbringer();
-    new mob_wrathbone_laborer();
-    new mob_wrathbone_coldwraith();
-    new mob_stonespine_gargoyle();
-    new mob_plagueborn_horror();
-    new mob_iceborn_protodrake();
-    new mob_hungering_ghoul();
-    new mob_fallen_warrior();
-    new mob_deathwhisper_torturer();
-    new mob_deathwhisper_shadowcaster();
-    new mob_deathwhisper_necrolyte();
-    new mob_wrathbone_sorcerer();
-    new mob_geist_ambusher();
+    new mob_ymirjar_wrathbringer;
+    new mob_ymirjar_skycaller;
+    new mob_ymirjar_flamebearer;
+    new mob_ymirjar_deathbringer;
+    new mob_wrathbone_laborer;
+    new mob_wrathbone_coldwraith;
+    new mob_stonespine_gargoyle;
+    new mob_plagueborn_horror;
+    new mob_iceborn_protodrake;
+    new mob_hungering_ghoul;
+    new mob_fallen_warrior;
+    new mob_deathwhisper_torturer;
+    new mob_deathwhisper_shadowcaster;
+    new mob_deathwhisper_necrolyte;
+    new mob_wrathbone_sorcerer;
+    new mob_geist_ambusher;
 }

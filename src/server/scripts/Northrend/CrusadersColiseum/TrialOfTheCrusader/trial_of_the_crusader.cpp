@@ -76,71 +76,20 @@ static float ChampSpawnLocs[2][10][4] =
         {522.65f, 130.43f, 394.67f, 0.18f}, {521.40f, 136.07f, 394.67f, 0.18f}
     }
 };
-class npc_tcrus_announcer : public CreatureScript
+
+class npc_tcrus_announcer : public CreatureScript
 {
 public:
     npc_tcrus_announcer() : CreatureScript("npc_tcrus_announcer") { }
-
-    bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-    {
-            InstanceData* pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-            if(!pInstance)
-                    return false;
-
-        if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
-        {
-            pPlayer->CLOSE_GOSSIP_MENU();
-                    pInstance->SetData(PHASE_SPECHIAL, 1);
-        }
-
-        if (uiAction == GOSSIP_ACTION_INFO_DEF+2)
-        {
-            pPlayer->CLOSE_GOSSIP_MENU();
-                    CAST_AI(npc_tcrus_announcerAI, pCreature->AI())->StartEvent();
-        }
-
-        return true;
-    }
-
-    bool GossipHello(Player* pPlayer, Creature* pCreature)
-    {
-        InstanceData* pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
-
-            bool inProgress = false;
-        for(uint8 i = 0; i < 7; ++i)
-        {
-                    if (pInstance && pInstance->GetData(i) == IN_PROGRESS)
-                            inProgress = true;
-        }
-
-        if(pInstance && pInstance->GetData(PHASE_1) == NOT_STARTED
-                    && pInstance->GetData(PHASE_2) == NOT_STARTED
-                    && pInstance->GetData(PHASE_3) == NOT_STARTED
-                    && pInstance->GetData(PHASE_4) == NOT_STARTED
-                    && pInstance->GetData(PHASE_5) == NOT_STARTED
-                    && pInstance->GetData(PHASE_6) == NOT_STARTED
-                    && pInstance->GetData(PHASE_7) == NOT_STARTED && !inProgress)
-                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_START_EVENT1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-        else if(!inProgress)
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_START_EVENT2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
-
-        pPlayer->SEND_GOSSIP_MENU(pCreature->GetEntry(), pCreature->GetGUID());
-        return true;
-    }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_tcrus_announcerAI(pCreature);
-    }
 
     struct npc_tcrus_announcerAI : public ScriptedAI
     {
         npc_tcrus_announcerAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = (ScriptedInstance*)me->GetInstanceData();
+            pInstance = (InstanceScript*)me->GetInstanceScript();
         }
 
-        InstanceData* pInstance;
+        InstanceScript* pInstance;
 
             Creature* Fjola;
             Creature* Eydis;
@@ -232,7 +181,7 @@ public:
 
         void StartEvent()
         {
-                    pInstance = (ScriptedInstance*)me->GetInstanceData();
+                    pInstance = (InstanceScript*)me->GetInstanceScript();
 
             if(pInstance && pInstance->GetData(PHASE_1) == NOT_STARTED
                             && pInstance->GetData(PHASE_2) == NOT_STARTED
@@ -304,28 +253,73 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_tcrus_announcerAI(pCreature);
+    }
+
+    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+    {
+            InstanceScript* pInstance = (InstanceScript*)pCreature->GetInstanceScript();
+            if(!pInstance)
+                    return false;
+
+        if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
+        {
+            pPlayer->CLOSE_GOSSIP_MENU();
+                    pInstance->SetData(PHASE_SPECHIAL, 1);
+        }
+
+        if (uiAction == GOSSIP_ACTION_INFO_DEF+2)
+        {
+            pPlayer->CLOSE_GOSSIP_MENU();
+                    CAST_AI(npc_tcrus_announcer::npc_tcrus_announcerAI, pCreature->AI())->StartEvent();
+        }
+
+        return true;
+    }
+
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
+    {
+        InstanceScript* pInstance = (InstanceScript*)pCreature->GetInstanceScript();
+
+            bool inProgress = false;
+        for(uint8 i = 0; i < 7; ++i)
+        {
+                    if (pInstance && pInstance->GetData(i) == IN_PROGRESS)
+                            inProgress = true;
+        }
+
+        if(pInstance && pInstance->GetData(PHASE_1) == NOT_STARTED
+                    && pInstance->GetData(PHASE_2) == NOT_STARTED
+                    && pInstance->GetData(PHASE_3) == NOT_STARTED
+                    && pInstance->GetData(PHASE_4) == NOT_STARTED
+                    && pInstance->GetData(PHASE_5) == NOT_STARTED
+                    && pInstance->GetData(PHASE_6) == NOT_STARTED
+                    && pInstance->GetData(PHASE_7) == NOT_STARTED && !inProgress)
+                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_START_EVENT1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+        else if(!inProgress)
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_START_EVENT2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
+
+        pPlayer->SEND_GOSSIP_MENU(pCreature->GetEntry(), pCreature->GetGUID());
+        return true;
+    }
 };
 
 
-
-class npc_tcrus_tirion : public CreatureScript
+class npc_tcrus_tirion : public CreatureScript
 {
 public:
     npc_tcrus_tirion() : CreatureScript("npc_tcrus_tirion") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_tcrus_tirionAI(pCreature);
-    }
 
     struct npc_tcrus_tirionAI : public ScriptedAI
     {
         npc_tcrus_tirionAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = (ScriptedInstance*)me->GetInstanceData();
+            pInstance = (InstanceScript*)me->GetInstanceScript();
         }
 
-        InstanceData* pInstance;
+        InstanceScript* pInstance;
             uint32 UpdateTimer;
 
             Creature* Fizzle;
@@ -413,7 +407,7 @@ public:
                                             if(pInstance->GetData(PHASE_1)==0)
                                             {
                                                     Creature* cre = Unit::GetCreature(*me, pInstance->GetData64(NPC_ANONSER));
-                                                    CAST_AI(npc_tcrus_announcerAI, cre->AI())->StartEvent();
+                                                    CAST_AI(npc_tcrus_announcer::npc_tcrus_announcerAI, cre->AI())->StartEvent();
                                                     Gormok->SetReactState(REACT_AGGRESSIVE);
                                                     Gormok->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
                                                     pInstance->SetData(PHASE_SPECHIAL, 8);
@@ -603,26 +597,27 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_tcrus_tirionAI(pCreature);
+    }
+
 };
 
-class npc_Garrosh : public CreatureScript
+
+class npc_Garrosh : public CreatureScript
 {
 public:
     npc_Garrosh() : CreatureScript("npc_Garrosh") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_GarroshAI(pCreature);
-    }
 
     struct npc_GarroshAI : public ScriptedAI
     {
         npc_GarroshAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = (ScriptedInstance*)me->GetInstanceData();
+            pInstance = (InstanceScript*)me->GetInstanceScript();
         }
 
-        InstanceData* pInstance;
+        InstanceScript* pInstance;
             uint32 UpdateTimer;
 
         void Reset()
@@ -666,26 +661,27 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_GarroshAI(pCreature);
+    }
+
 };
 
-class npc_tcrus_fizzlebang : public CreatureScript
+
+class npc_tcrus_fizzlebang : public CreatureScript
 {
 public:
     npc_tcrus_fizzlebang() : CreatureScript("npc_tcrus_fizzlebang") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_tcrus_fizzlebangAI(pCreature);
-    }
 
     struct npc_tcrus_fizzlebangAI : public ScriptedAI
     {
         npc_tcrus_fizzlebangAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = (ScriptedInstance*)me->GetInstanceData();
+            pInstance = (InstanceScript*)me->GetInstanceScript();
         }
 
-        InstanceData* pInstance;
+        InstanceScript* pInstance;
             uint32 UpdateTimer;
 
             Creature* Jaraxxus;
@@ -812,26 +808,27 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_tcrus_fizzlebangAI(pCreature);
+    }
+
 };
 
-class npc_KingVyrn : public CreatureScript
+
+class npc_KingVyrn : public CreatureScript
 {
 public:
     npc_KingVyrn() : CreatureScript("npc_KingVyrn") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_KingVyrnAI(pCreature);
-    }
 
     struct npc_KingVyrnAI : public ScriptedAI
     {
         npc_KingVyrnAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = (ScriptedInstance*)me->GetInstanceData();
+            pInstance = (InstanceScript*)me->GetInstanceScript();
         }
 
-        InstanceData* pInstance;
+        InstanceScript* pInstance;
             uint32 UpdateTimer;
 
 
@@ -886,26 +883,27 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_KingVyrnAI(pCreature);
+    }
+
 };
 
-class npc_LichKing : public CreatureScript
+
+class npc_LichKing : public CreatureScript
 {
 public:
     npc_LichKing() : CreatureScript("npc_LichKing") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_LichKingAI(pCreature);
-    }
 
     struct npc_LichKingAI : public ScriptedAI
     {
         npc_LichKingAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = (ScriptedInstance*)me->GetInstanceData();
+            pInstance = (InstanceScript*)me->GetInstanceScript();
         }
 
-        InstanceData* pInstance;
+        InstanceScript* pInstance;
             uint32 UpdateTimer;
 
             Creature* Jaraxxus;
@@ -983,15 +981,20 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_LichKingAI(pCreature);
+    }
+
 };
 
 
 void AddSC_trial_of_the_crussader()
 {
-    new npc_tcrus_announcer();
-    new npc_tcrus_tirion();
-    new npc_tcrus_fizzlebang();
-    new npc_Garrosh();
-    new npc_LichKing();
-    new npc_KingVyrn();
+    new npc_tcrus_announcer;
+    new npc_tcrus_tirion;
+    new npc_tcrus_fizzlebang;
+    new npc_Garrosh;
+    new npc_LichKing;
+    new npc_KingVyrn;
 }

@@ -36,24 +36,20 @@ enum eSpells
 	SPELL_CONFLAGRATION_DMG = 74456,
 	SPELL_FLAME_BEACON = 74453
 };
-class boss_ragefire : public CreatureScript
+
+class boss_ragefire : public CreatureScript
 {
 public:
     boss_ragefire() : CreatureScript("boss_ragefire") { }
-
-    CreatureAI* GetAI(Creature *pCreature)
-    {
-    	return new boss_ragefireAI(pCreature);
-    }
 
     struct boss_ragefireAI : public ScriptedAI
     {
     	boss_ragefireAI(Creature *pCreature) : ScriptedAI(pCreature)
     	{
-    		pInstance = me->GetInstanceData();
+    		pInstance = me->GetInstanceScript();
     	}
 
-    	InstanceData* pInstance;
+    	InstanceScript* pInstance;
 
     	uint32 uiFlameBreathTimer;
     	uint32 uiEnrageTimer;
@@ -218,10 +214,15 @@ public:
     	}
     };
 
+    CreatureAI* GetAI(Creature *pCreature) const
+    {
+    	return new boss_ragefireAI(pCreature);
+    }
+
 };
 
 
 void AddSC_boss_ragefire()
 {
-    new boss_ragefire();
+    new boss_ragefire;
 }

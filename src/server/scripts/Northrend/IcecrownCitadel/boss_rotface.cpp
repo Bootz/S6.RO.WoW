@@ -100,23 +100,19 @@ Creature* pLittleooze;
 #define EMOTE_BIG_OOZE "Big Ooze can barely maintain its form!"
 #define EMOTE_SLIME_SPRAY "Rotface begins to cast Slime Spray!"
 #define EMOTE_DECIMATE "Precious cries out with a loud, baying howl!"
-class boss_rotface : public CreatureScript
+
+class boss_rotface : public CreatureScript
 {
 public:
     boss_rotface() : CreatureScript("boss_rotface") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_rotfaceAI(pCreature);
-    }
 
     struct boss_rotfaceAI : public ScriptedAI
     {
         boss_rotfaceAI(Creature *pCreature) : ScriptedAI(pCreature), summons(me)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
         }
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
         SummonList summons;
 
         uint32 m_uiFloodTimer;
@@ -371,26 +367,27 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_rotfaceAI(pCreature);
+    }
+
 };
-class npc_ooze_big : public CreatureScript
+
+class npc_ooze_big : public CreatureScript
 {
 public:
     npc_ooze_big() : CreatureScript("npc_ooze_big") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_ooze_bigAI(pCreature);
-    }
 
     struct npc_ooze_bigAI : public ScriptedAI
     {
         npc_ooze_bigAI(Creature *pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
                     pBigooze = me;
         }
 
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
 
         uint32 m_uiStickyOozeTimer;
         uint32 m_uiUnstableOozeTimer;
@@ -435,25 +432,26 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_ooze_bigAI(pCreature);
+    }
+
 };
-class npc_ooze_little : public CreatureScript
+
+class npc_ooze_little : public CreatureScript
 {
 public:
     npc_ooze_little() : CreatureScript("npc_ooze_little") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_ooze_littleAI(pCreature);
-    }
 
     struct npc_ooze_littleAI : public ScriptedAI
     {
         npc_ooze_littleAI(Creature *pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
 
         uint32 m_uiStickyOozeTimer;
             uint32 m_uiBigOozeTimer;
@@ -491,25 +489,27 @@ public:
 
             DoMeleeAttackIfReady();
         }
-    };class npc_sticky_ooze : public CreatureScript
+    };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_ooze_littleAI(pCreature);
+    }
 
 };
+
+class npc_sticky_ooze : public CreatureScript
 {
 public:
     npc_sticky_ooze() : CreatureScript("npc_sticky_ooze") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_sticky_oozeAI(pCreature);
-    }
 
     struct npc_sticky_oozeAI : public ScriptedAI
     {
         npc_sticky_oozeAI(Creature *pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
         }
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
         uint32 m_uiStickyOozeTimer;
         void Reset()
         {
@@ -526,25 +526,28 @@ public:
             } else m_uiStickyOozeTimer -= uiDiff;
 
         }
-    };class npc_flood_ooze : public CreatureScript
+    };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_sticky_oozeAI(pCreature);
+    }
 
 };
+
+class npc_flood_ooze : public CreatureScript
+
 {
 public:
     npc_flood_ooze() : CreatureScript("npc_flood_ooze") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_flood_oozeAI(pCreature);
-    }
 
     struct npc_flood_oozeAI : public ScriptedAI
     {
         npc_flood_oozeAI(Creature *pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
         }
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
         uint32 m_uiFloodOozeTimer;
         uint32 m_uiFloodOoze2Timer;
         void Reset()
@@ -571,24 +574,25 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_flood_oozeAI(pCreature);
+    }
+
 };
-class npc_precious : public CreatureScript
+
+class npc_precious : public CreatureScript
 {
 public:
     npc_precious() : CreatureScript("npc_precious") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_preciousAI(pCreature);
-    }
 
     struct npc_preciousAI : public ScriptedAI
     {
         npc_preciousAI(Creature *pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
         }
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
         uint32 m_uiMortalWoundTimer;
         uint32 m_uiDecimateTimer;
         uint32 m_uiAwakenPlaguedZomiesTimer;
@@ -643,18 +647,19 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_preciousAI(pCreature);
+    }
+
 };
-
-
-
-
 
 void AddSC_boss_rotface()
 {
-    new boss_rotface();
-    new npc_ooze_big();
-    new npc_ooze_little();
-    new npc_sticky_ooze();
-    new npc_flood_ooze();
-    new npc_precious();
+    new boss_rotface;
+    new npc_ooze_big;
+    new npc_ooze_little;
+    new npc_sticky_ooze;
+    new npc_flood_ooze;
+    new npc_precious;
 }

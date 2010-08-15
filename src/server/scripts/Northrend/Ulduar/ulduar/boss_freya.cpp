@@ -202,26 +202,22 @@ enum Actions
 };
 
 Unit* pRootTarget;
-class boss_freya : public CreatureScript
+
+class boss_freya : public CreatureScript
 {
 public:
     boss_freya() : CreatureScript("boss_freya") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_freyaAI(pCreature);
-    }
 
     struct boss_freyaAI : public BossAI
     {
         boss_freyaAI(Creature* pCreature) : BossAI(pCreature, BOSS_FREYA)
         {
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
             me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);
             me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true); // Death Grip jump effect
         }
     
-        ScriptedInstance* pInstance;
+       InstanceScript* pInstance;
 
         uint8 spawnOrder[3];
         uint8 spawnedAdds;
@@ -272,29 +268,25 @@ public:
             }
         
             // Hard mode chest
-            // Summon spells not works correctly, chest respawn is infinite
-            Position pos;
-            me->GetRandomNearPosition(pos, 10);
+            uint32 chest;
 
             switch (EldersCount)
             {
                 case 0:
-                    //DoCast(RAID_MODE(RAID_10_0_SPELL_FREYA_CHEST, RAID_25_0_SPELL_FREYA_CHEST));
-                    me->SummonGameObject(RAID_MODE(194324, 194328), pos.m_positionX, pos.m_positionY, pos.m_positionZ, 0, 0, 0, 1, 0, 0);
+                    chest = RAID_MODE(194324, 194328);
                     break;
                 case 1:
-                    //DoCast(RAID_MODE(RAID_10_1_SPELL_FREYA_CHEST, RAID_25_1_SPELL_FREYA_CHEST));
-                    me->SummonGameObject(RAID_MODE(194325, 194329), pos.m_positionX, pos.m_positionY, pos.m_positionZ, 0, 0, 0, 1, 0, 0);
+                    chest = RAID_MODE(194325, 194329);
                     break;
                 case 2:
-                    //DoCast(RAID_MODE(RAID_10_2_SPELL_FREYA_CHEST, RAID_25_2_SPELL_FREYA_CHEST));
-                    me->SummonGameObject(RAID_MODE(194326, 194330), pos.m_positionX, pos.m_positionY, pos.m_positionZ, 0, 0, 0, 1, 0, 0);
+                    chest = RAID_MODE(194326, 194330);
                     break;
                 case 3:
-                    //DoCast(RAID_MODE(RAID_10_3_SPELL_FREYA_CHEST, RAID_25_3_SPELL_FREYA_CHEST));
-                    me->SummonGameObject(RAID_MODE(194327, 194331), pos.m_positionX, pos.m_positionY, pos.m_positionZ, 0, 0, 0, 1, 0, 0);
+                    chest = RAID_MODE(194327, 194331);
                     break;
             }
+        // Summon spells not work correctly, chest respawn is infinite
+        me->SummonGameObject(chest,(me->GetPositionX()+15*cos(me->GetOrientation())),(me->GetPositionY()+15*sin(me->GetOrientation())),me->GetPositionZ(),me->GetOrientation(),0,0,1,0,0);
         }
 
         void EnterCombat(Unit* pWho)
@@ -545,30 +537,26 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_freyaAI(pCreature);
+    }
+
 };
 
-
-/*===============================================================================================
-===============================================================================================*/
-
-class boss_elder_brightleaf : public CreatureScript
+class boss_elder_brightleaf : public CreatureScript
 {
 public:
     boss_elder_brightleaf() : CreatureScript("boss_elder_brightleaf") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_elder_brightleafAI(pCreature);
-    }
 
     struct boss_elder_brightleafAI : public ScriptedAI
     {
         boss_elder_brightleafAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
         }
     
-        ScriptedInstance* m_pInstance;
+       InstanceScript* m_pInstance;
         int32 uiUnstableSunbeamTimer;
         int32 uiSolarFlareTimer;
         int32 uiUnstableEnergyTimer;
@@ -644,74 +632,77 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_elder_brightleafAI(pCreature);
+    }
+
 };
 
-class creature_sun_beam : public CreatureScript
+
+class creature_sun_beam : public CreatureScript
 {
 public:
     creature_sun_beam() : CreatureScript("creature_sun_beam") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new creature_sun_beamAI(pCreature);
-    }
 
     struct creature_sun_beamAI : public Scripted_NoMovementAI
     {
         creature_sun_beamAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
             DoCast(RAID_MODE(RAID_10_SPELL_FREYA_UNSTABLE_ENERGY, RAID_25_SPELL_FREYA_UNSTABLE_ENERGY));
             DoCast(SPELL_UNSTABLE_SUN_BEAM_VISUAL);
         }
 
-        ScriptedInstance* m_pInstance;
+       InstanceScript* m_pInstance;
     };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new creature_sun_beamAI(pCreature);
+    }
 
 };
 
-class creature_unstable_sun_beam : public CreatureScript
+
+class creature_unstable_sun_beam : public CreatureScript
 {
 public:
     creature_unstable_sun_beam() : CreatureScript("creature_unstable_sun_beam") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new creature_unstable_sun_beamAI(pCreature);
-    }
 
     struct creature_unstable_sun_beamAI : public Scripted_NoMovementAI
     {
         creature_unstable_sun_beamAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
             DoCast(SPELL_UNSTABLE_SUN_BEAM);
         }
 
-        ScriptedInstance* m_pInstance;
+       InstanceScript* m_pInstance;
     };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new creature_unstable_sun_beamAI(pCreature);
+    }
 
 };
 
-class boss_elder_ironbranch : public CreatureScript
+
+class boss_elder_ironbranch : public CreatureScript
 {
 public:
     boss_elder_ironbranch() : CreatureScript("boss_elder_ironbranch") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_elder_ironbranchAI(pCreature);
-    }
 
     struct boss_elder_ironbranchAI : public ScriptedAI
     {
         boss_elder_ironbranchAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
             Reset();
         }
 
-        ScriptedInstance* m_pInstance;
+       InstanceScript* m_pInstance;
         int32 uiImpaleTimer;
         int32 uiThornSwarmTimer;
         int32 uiIronRootTimer;
@@ -772,27 +763,28 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_elder_ironbranchAI(pCreature);
+    }
+
 };
 
-class creature_iron_roots : public CreatureScript
+
+class creature_iron_roots : public CreatureScript
 {
 public:
     creature_iron_roots() : CreatureScript("creature_iron_roots") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new creature_iron_rootsAI(pCreature);
-    }
 
     struct creature_iron_rootsAI : public Scripted_NoMovementAI
     {
         creature_iron_rootsAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
             pPlayer = pRootTarget;
         }
 
-        ScriptedInstance* m_pInstance;
+       InstanceScript* m_pInstance;
         Unit* pPlayer;
 
         void JustDied(Unit* victim)
@@ -802,26 +794,27 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new creature_iron_rootsAI(pCreature);
+    }
+
 };
 
-class boss_elder_stonebark : public CreatureScript
+
+class boss_elder_stonebark : public CreatureScript
 {
 public:
     boss_elder_stonebark() : CreatureScript("boss_elder_stonebark") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_elder_stonebarkAI(pCreature);
-    }
 
     struct boss_elder_stonebarkAI : public ScriptedAI
     {
         boss_elder_stonebarkAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* m_pInstance;
+       InstanceScript* m_pInstance;
         int32 uiGroundTremorTimer;
         int32 uiFistsOfStoneTimer;
         int32 uiPetrifiedBarkTimer;
@@ -879,23 +872,24 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_elder_stonebarkAI(pCreature);
+    }
+
 };
 
-class creature_eonars_gift : public CreatureScript
+
+class creature_eonars_gift : public CreatureScript
 {
 public:
     creature_eonars_gift() : CreatureScript("creature_eonars_gift") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new creature_eonars_giftAI(pCreature);
-    }
 
     struct creature_eonars_giftAI : public Scripted_NoMovementAI
     {
         creature_eonars_giftAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
             uiLifebindersGiftTimer = 12000;
             fScale = 0.2;
             me->SetFloatValue(OBJECT_FIELD_SCALE_X, fScale);
@@ -904,7 +898,7 @@ public:
             DoCast(me, SPELL_EONAR_VISUAL, true);
         }
 
-        ScriptedInstance* m_pInstance;
+       InstanceScript* m_pInstance;
         int32 uiLifebindersGiftTimer;
         float fScale;
         int32 uiScaleTimer;
@@ -929,23 +923,24 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new creature_eonars_giftAI(pCreature);
+    }
+
 };
 
-class creature_nature_bomb : public CreatureScript
+
+class creature_nature_bomb : public CreatureScript
 {
 public:
     creature_nature_bomb() : CreatureScript("creature_nature_bomb") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new creature_nature_bombAI(pCreature);
-    }
 
     struct creature_nature_bombAI : public Scripted_NoMovementAI
     {
         creature_nature_bombAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
             uiExplosionTimer = 10000;
             float x = me->GetPositionX();
             float y = me->GetPositionY();
@@ -953,7 +948,7 @@ public:
             pGo = me->SummonGameObject(OBJECT_NATURE_BOMB, x, y, z, 0, 0, 0, 0, 0, 0);
         }
 
-        ScriptedInstance* m_pInstance;
+       InstanceScript* m_pInstance;
         int32 uiExplosionTimer;
         GameObject* pGo;
 
@@ -970,26 +965,27 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new creature_nature_bombAI(pCreature);
+    }
+
 };
 
-class creature_detonating_lasher : public CreatureScript
+
+class creature_detonating_lasher : public CreatureScript
 {
 public:
     creature_detonating_lasher() : CreatureScript("creature_detonating_lasher") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new creature_detonating_lasherAI(pCreature);
-    }
 
     struct creature_detonating_lasherAI : public ScriptedAI
     {
         creature_detonating_lasherAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* m_pInstance;
+       InstanceScript* m_pInstance;
         int32 uiFlameLashTimer;
         int32 uiSwitchTargetTimer;
 
@@ -1032,26 +1028,27 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new creature_detonating_lasherAI(pCreature);
+    }
+
 };
 
-class creature_ancient_conservator : public CreatureScript
+
+class creature_ancient_conservator : public CreatureScript
 {
 public:
     creature_ancient_conservator() : CreatureScript("creature_ancient_conservator") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new creature_ancient_conservatorAI(pCreature);
-    }
 
     struct creature_ancient_conservatorAI : public ScriptedAI
     {
         creature_ancient_conservatorAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* m_pInstance;
+       InstanceScript* m_pInstance;
         int32 uiNaturesFuryTimer;
         int32 uiSpawnHealthySporeTimer;
         uint8 healthySporesSpawned;
@@ -1115,51 +1112,52 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new creature_ancient_conservatorAI(pCreature);
+    }
+
 };
 
-class creature_healthy_spore : public CreatureScript
+
+class creature_healthy_spore : public CreatureScript
 {
 public:
     creature_healthy_spore() : CreatureScript("creature_healthy_spore") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new creature_healthy_sporeAI(pCreature);
-    }
 
     struct creature_healthy_sporeAI : public Scripted_NoMovementAI
     {
         creature_healthy_sporeAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
             DoCast(me, SPELL_HEALTHY_SPORE_VISUAL);
             DoCast(me, SPELL_POTENT_PHEROMONES);
             DoCast(me, SPELL_GROW);
         }
 
-        ScriptedInstance* m_pInstance;
+       InstanceScript* m_pInstance;
     };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new creature_healthy_sporeAI(pCreature);
+    }
 
 };
 
-class creature_storm_lasher : public CreatureScript
+class creature_storm_lasher : public CreatureScript
 {
 public:
     creature_storm_lasher() : CreatureScript("creature_storm_lasher") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new creature_storm_lasherAI(pCreature);
-    }
 
     struct creature_storm_lasherAI : public ScriptedAI
     {
         creature_storm_lasherAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* m_pInstance;
+       InstanceScript* m_pInstance;
         int32 uiLightningLashTimer;
         int32 uiStormboltTimer;
 
@@ -1200,27 +1198,28 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new creature_storm_lasherAI(pCreature);
+    }
+
 };
 
-class creature_snaplasher : public CreatureScript
+
+class creature_snaplasher : public CreatureScript
 {
 public:
     creature_snaplasher() : CreatureScript("creature_snaplasher") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new creature_snaplasherAI(pCreature);
-    }
 
     struct creature_snaplasherAI : public ScriptedAI
     {
         creature_snaplasherAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
     //        DoCast(me, 62664);
         }
 
-        ScriptedInstance* m_pInstance;
+       InstanceScript* m_pInstance;
         uint32 health;
 
         void JustDied(Unit* victim)
@@ -1238,26 +1237,27 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new creature_snaplasherAI(pCreature);
+    }
+
 };
 
-class creature_ancient_water_spirit : public CreatureScript
+
+class creature_ancient_water_spirit : public CreatureScript
 {
 public:
     creature_ancient_water_spirit() : CreatureScript("creature_ancient_water_spirit") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new creature_ancient_water_spiritAI(pCreature);
-    }
 
     struct creature_ancient_water_spiritAI : public ScriptedAI
     {
         creature_ancient_water_spiritAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* m_pInstance;
+       InstanceScript* m_pInstance;
         int32 uiTidalWaveTimer;
 
         void Reset()
@@ -1287,25 +1287,28 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new creature_ancient_water_spiritAI(pCreature);
+    }
+
 };
-
-
 
 void AddSC_boss_freya()
 {
-    new boss_freya();
-    new boss_elder_brightleaf();
-    new creature_unstable_sun_beam();
-    new creature_sun_beam();
-    new boss_elder_ironbranch();
-    new creature_iron_roots();
-    new boss_elder_stonebark();
-    new creature_eonars_gift();
-    new creature_nature_bomb();
-    new creature_detonating_lasher();
-    new creature_ancient_conservator();
-    new creature_healthy_spore();
-    new creature_storm_lasher();
-    new creature_snaplasher();
-    new creature_ancient_water_spirit();
+    new boss_freya;
+    new boss_elder_brightleaf;
+    new creature_unstable_sun_beam;
+    new creature_sun_beam;
+    new boss_elder_ironbranch;
+    new creature_iron_roots;
+    new boss_elder_stonebark;
+    new creature_eonars_gift;
+    new creature_nature_bomb;
+    new creature_detonating_lasher;
+    new creature_ancient_conservator;
+    new creature_healthy_spore;
+    new creature_storm_lasher;
+    new creature_snaplasher;
+    new creature_ancient_water_spirit;
 }

@@ -73,44 +73,20 @@ enum eEnums
 /*######
 ## Boss Volkhan
 ######*/
-class boss_volkhan : public CreatureScript
+
+class boss_volkhan : public CreatureScript
 {
 public:
     boss_volkhan() : CreatureScript("boss_volkhan") { }
-
-    bool EffectDummyCreature(Unit* pCaster, uint32 uiSpellId, uint32 uiEffIndex, Creature* pCreatureTarget)
-    {
-        //always check spellid and effectindex
-        if (uiSpellId == SPELL_TEMPER_DUMMY && uiEffIndex == 0)
-        {
-            if (pCaster->GetEntry() != NPC_VOLKHAN_ANVIL || pCreatureTarget->GetEntry() != NPC_VOLKHAN)
-                return true;
-
-            for (uint8 i = 0; i < MAX_GOLEM; ++i)
-            {
-                pCreatureTarget->CastSpell(pCaster, SPELL_SUMMON_MOLTEN_GOLEM, true);
-            }
-
-            //always return true when we are handling this spell and effect
-            return true;
-        }
-
-        return false;
-    }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_volkhanAI(pCreature);
-    }
 
     struct boss_volkhanAI : public ScriptedAI
     {
         boss_volkhanAI(Creature *pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
 
         std::list<uint64> m_lGolemGUIDList;
 
@@ -329,6 +305,31 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_volkhanAI(pCreature);
+    }
+
+    bool EffectDummyCreature(Unit* pCaster, uint32 uiSpellId, uint32 uiEffIndex, Creature* pCreatureTarget)
+    {
+        //always check spellid and effectindex
+        if (uiSpellId == SPELL_TEMPER_DUMMY && uiEffIndex == 0)
+        {
+            if (pCaster->GetEntry() != NPC_VOLKHAN_ANVIL || pCreatureTarget->GetEntry() != NPC_VOLKHAN)
+                return true;
+
+            for (uint8 i = 0; i < MAX_GOLEM; ++i)
+            {
+                pCreatureTarget->CastSpell(pCaster, SPELL_SUMMON_MOLTEN_GOLEM, true);
+            }
+
+            //always return true when we are handling this spell and effect
+            return true;
+        }
+
+        return false;
+    }
+
 };
 
 
@@ -336,7 +337,8 @@ public:
 /*######
 ## npc_volkhan_anvil
 ######*/
-class npc_volkhan_anvil : public CreatureScript
+
+class npc_volkhan_anvil : public CreatureScript
 {
 public:
     npc_volkhan_anvil() : CreatureScript("npc_volkhan_anvil") { }
@@ -378,15 +380,11 @@ public:
 /*######
 ## mob_molten_golem
 ######*/
-class mob_molten_golem : public CreatureScript
+
+class mob_molten_golem : public CreatureScript
 {
 public:
     mob_molten_golem() : CreatureScript("mob_molten_golem") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_molten_golemAI(pCreature);
-    }
 
     struct mob_molten_golemAI : public ScriptedAI
     {
@@ -476,12 +474,17 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_molten_golemAI(pCreature);
+    }
+
 };
 
 
 void AddSC_boss_volkhan()
 {
-    new boss_volkhan();
-    new npc_volkhan_anvil();
-    new mob_molten_golem();
+    new boss_volkhan;
+    new npc_volkhan_anvil;
+    new mob_molten_golem;
 }

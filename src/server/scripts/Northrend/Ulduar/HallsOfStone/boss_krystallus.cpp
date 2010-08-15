@@ -23,9 +23,6 @@ SDComment:
 SDCategory:
 Script Data End */
 
-/*** SQL START ***
-update creature_template set scriptname = 'boss_krystallus' where entry = '';
-*** SQL END ***/
 #include "ScriptPCH.h"
 #include "halls_of_stone.h"
 
@@ -48,21 +45,17 @@ enum Yells
     SAY_DEATH                                   = -1599009,
     SAY_SHATTER                                 = -1599010
 };
-class boss_krystallus : public CreatureScript
+
+class boss_krystallus : public CreatureScript
 {
 public:
     boss_krystallus() : CreatureScript("boss_krystallus") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_krystallusAI (pCreature);
-    }
 
     struct boss_krystallusAI : public ScriptedAI
     {
         boss_krystallusAI(Creature *c) : ScriptedAI(c)
         {
-            pInstance = c->GetInstanceData();
+            pInstance = c->GetInstanceScript();
         }
 
         uint32 uiBoulderTossTimer;
@@ -73,7 +66,7 @@ public:
 
         bool bIsSlam;
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
 
         void Reset()
         {
@@ -158,10 +151,15 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_krystallusAI (pCreature);
+    }
+
 };
 
 
 void AddSC_boss_krystallus()
 {
-    new boss_krystallus();
+    new boss_krystallus;
 }

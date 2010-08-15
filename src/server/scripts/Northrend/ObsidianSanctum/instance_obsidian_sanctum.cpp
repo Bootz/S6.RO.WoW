@@ -6,19 +6,15 @@
 /* Obsidian Sanctum encounters:
 0 - Sartharion
 */
-class instance_obsidian_sanctum : public InstanceMapScript
+
+class instance_obsidian_sanctum : public InstanceMapScript
 {
 public:
-    instance_obsidian_sanctum() : InstanceMapScript("instance_obsidian_sanctum") { }
+    instance_obsidian_sanctum() : InstanceMapScript("instance_obsidian_sanctum", 615) { }
 
-    InstanceData* GetInstanceData_InstanceMapScript(Map* pMap)
+    struct instance_obsidian_sanctum_InstanceMapScript : public InstanceScript
     {
-        return new instance_obsidian_sanctum_InstanceMapScript(pMap);
-    }
-
-    struct instance_obsidian_sanctum_InstanceMapScript : public ScriptedInstance
-    {
-        instance_obsidian_sanctum_InstanceMapScript(Map* pMap) : ScriptedInstance(pMap) {Initialize();};
+        instance_obsidian_sanctum_InstanceMapScript(Map* pMap) : InstanceScript(pMap) {Initialize();};
 
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         uint64 m_uiSartharionGUID;
@@ -120,10 +116,15 @@ public:
         }
     };
 
+    InstanceScript* GetInstanceScript (InstanceMap* pMap) const
+    {
+        return new instance_obsidian_sanctum_InstanceMapScript(pMap);
+    }
+
 };
 
 
 void AddSC_instance_obsidian_sanctum()
 {
-    new instance_obsidian_sanctum();
+    new instance_obsidian_sanctum;
 }

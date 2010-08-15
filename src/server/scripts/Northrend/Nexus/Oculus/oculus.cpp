@@ -55,11 +55,6 @@ class mob_centrifige_construct : public CreatureScript
 public:
     mob_centrifige_construct() : CreatureScript("mob_centrifige_construct") { }
 
-    CreatureAI* GetAI_mob_CentrifigeConstruct(Creature* pCreature)
-    {
-        return new mob_CentrifigeConstructAI (pCreature);
-    }
-
     struct mob_CentrifigeConstructAI : public ScriptedAI
     {
         mob_CentrifigeConstructAI(Creature *c) : ScriptedAI(c)
@@ -106,6 +101,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI_mob_CentrifigeConstruct(Creature* pCreature) const
+    {
+        return new mob_CentrifigeConstructAI (pCreature);
+    }
+
 };
 
 
@@ -114,7 +114,7 @@ class npc_oculus_drake : public CreatureScript
 public:
     npc_oculus_drake() : CreatureScript("npc_oculus_drake") { }
 
-    bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
     {
         switch(pCreature->GetEntry())
         {
@@ -213,12 +213,12 @@ public:
         return true;
     }
 
-    bool GossipHello(Player* pPlayer, Creature* pCreature)
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
     {
         if (pCreature->isQuestGiver())
             pPlayer->PrepareQuestMenu(pCreature->GetGUID());
 
-        if (pCreature->GetInstanceData()->GetData(DATA_DRAKOS_EVENT) == DONE)
+        if (pCreature->GetInstanceScript()->GetData(DATA_DRAKOS_EVENT) == DONE)
         {
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_DRAKES, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
             pPlayer->SEND_GOSSIP_MENU(GOSSIP_TEXTID_DRAKES, pCreature->GetGUID());
@@ -233,5 +233,5 @@ public:
 void AddSC_oculus()
 {
     new npc_oculus_drake();
-    new mob_centrifige_construct();
+    new mob_centrifige_construct;
 }

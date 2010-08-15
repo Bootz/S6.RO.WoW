@@ -177,25 +177,21 @@ enum HardmodeSpells
 /* Tyrius Duskblade - 34461     */
 /* Death Knight                 */
 /********************************/
-class boss_tyrius_duskblade : public CreatureScript
+
+class boss_tyrius_duskblade : public CreatureScript
 {
 public:
     boss_tyrius_duskblade() : CreatureScript("boss_tyrius_duskblade") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_tyrius_duskbladeAI(pCreature);
-    }
 
     struct boss_tyrius_duskbladeAI : public ScriptedAI
     {
         boss_tyrius_duskbladeAI(Creature* pCreature) : ScriptedAI(pCreature)
             {
                     Reset();
-                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+                    m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             }
 
-            ScriptedInstance* m_pInstance;
+            InstanceScript* m_pInstance;
         bool m_bIsRegularMode;
 
         void Reset()
@@ -252,31 +248,31 @@ public:
             }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_tyrius_duskbladeAI(pCreature);
+    }
 };
 
 /********************************/
 /* Kavina Grovesong - 34460     */
 /* Druid                        */
 /********************************/
-class boss_kavina_grovesong : public CreatureScript
+
+class boss_kavina_grovesong : public CreatureScript
 {
 public:
     boss_kavina_grovesong() : CreatureScript("boss_kavina_grovesong") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_kavina_grovesongAI(pCreature);
-    }
 
     struct boss_kavina_grovesongAI : public ScriptedAI
     {
         boss_kavina_grovesongAI(Creature* pCreature) : ScriptedAI(pCreature)
             {
                     Reset();
-                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+                    m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             }
 
-            ScriptedInstance* m_pInstance;
+            InstanceScript* m_pInstance;
         bool m_bIsRegularMode;
 
         void Reset()
@@ -333,30 +329,30 @@ public:
             }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_kavina_grovesongAI(pCreature);
+    }
 };
 /********************************/
 /* Melador Valestrider - 34469  */
 /* Druid                        */
 /********************************/
-class boss_melador_valestrider : public CreatureScript
+
+class boss_melador_valestrider : public CreatureScript
 {
 public:
     boss_melador_valestrider() : CreatureScript("boss_melador_valestrider") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_melador_valestriderAI(pCreature);
-    }
 
     struct boss_melador_valestriderAI : public ScriptedAI
     {
         boss_melador_valestriderAI(Creature* pCreature) : ScriptedAI(pCreature)
             {
                     Reset();
-                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+                    m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             }
 
-            ScriptedInstance* m_pInstance;
+            InstanceScript* m_pInstance;
         bool m_bIsRegularMode;
 
         void Reset()
@@ -413,30 +409,31 @@ public:
             }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_melador_valestriderAI(pCreature);
+    }
+
 };
 /********************************/
 /* Alyssia Moonstalker - 34467  */
 /* Hunter                       */
 /********************************/
-class boss_alyssia_moonstalker : public CreatureScript
+
+class boss_alyssia_moonstalker : public CreatureScript
 {
 public:
     boss_alyssia_moonstalker() : CreatureScript("boss_alyssia_moonstalker") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_alyssia_moonstalkerAI(pCreature);
-    }
 
     struct boss_alyssia_moonstalkerAI : public ScriptedAI
     {
         boss_alyssia_moonstalkerAI(Creature* pCreature) : ScriptedAI(pCreature)
             {
                     Reset();
-                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+                    m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             }
 
-            ScriptedInstance* m_pInstance;
+            InstanceScript* m_pInstance;
         bool m_bIsRegularMode;
 
         void Reset()
@@ -493,30 +490,31 @@ public:
             }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_alyssia_moonstalkerAI(pCreature);
+    }
+
 };
 /********************************/
 /* Noozle Whizzlestick - 34468  */
 /* Mage                         */
 /********************************/
-class boss_noozle_whizzlestick : public CreatureScript
+
+class boss_noozle_whizzlestick : public CreatureScript
 {
 public:
     boss_noozle_whizzlestick() : CreatureScript("boss_noozle_whizzlestick") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_noozle_whizzlestickAI(pCreature);
-    }
 
     struct boss_noozle_whizzlestickAI : public ScriptedAI
     {
         boss_noozle_whizzlestickAI(Creature* pCreature) : ScriptedAI(pCreature)
             {
                     Reset();
-                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+                    m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             }
 
-            ScriptedInstance* m_pInstance;
+            InstanceScript* m_pInstance;
         bool m_bIsRegularMode;
 
         void Reset()
@@ -572,31 +570,32 @@ public:
                     DoMeleeAttackIfReady();
             }
     };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_noozle_whizzlestickAI(pCreature);
+    }
 
 };
 /********************************/
 /* Velanaa - 34465              */
 /* Paladin                      */
 /********************************/
-class boss_velanaa : public CreatureScript
+
+class boss_velanaa : public CreatureScript
 {
 public:
     boss_velanaa() : CreatureScript("boss_velanaa") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_velanaaAI(pCreature);
-    }
 
     struct boss_velanaaAI : public ScriptedAI
     {
         boss_velanaaAI(Creature* pCreature) : ScriptedAI(pCreature)
             {
                     Reset();
-                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+                    m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             }
 
-            ScriptedInstance* m_pInstance;
+            InstanceScript* m_pInstance;
         bool m_bIsRegularMode;
 
         void Reset()
@@ -652,31 +651,32 @@ public:
                     DoMeleeAttackIfReady();
             }
     };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_velanaaAI(pCreature);
+    }
 
 };
 /********************************/
 /* Baelnor Lightbearer - 34471  */
 /* Paladin                      */
 /********************************/
-class boss_baelnor_lightbearer : public CreatureScript
+
+class boss_baelnor_lightbearer : public CreatureScript
 {
 public:
     boss_baelnor_lightbearer() : CreatureScript("boss_baelnor_lightbearer") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_baelnor_lightbearerAI(pCreature);
-    }
 
     struct boss_baelnor_lightbearerAI : public ScriptedAI
     {
         boss_baelnor_lightbearerAI(Creature* pCreature) : ScriptedAI(pCreature)
             {
                     Reset();
-                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+                    m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             }
 
-            ScriptedInstance* m_pInstance;
+            InstanceScript* m_pInstance;
         bool m_bIsRegularMode;
 
         void Reset()
@@ -732,31 +732,32 @@ public:
                     DoMeleeAttackIfReady();
             }
     };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_baelnor_lightbearerAI(pCreature);
+    }
 
 };
 /********************************/
 /* Anthar Forgemender - 34466   */
 /* Priest                       */
 /********************************/
-class boss_anthar_forgemender : public CreatureScript
+
+class boss_anthar_forgemender : public CreatureScript
 {
 public:
     boss_anthar_forgemender() : CreatureScript("boss_anthar_forgemender") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_anthar_forgemenderAI(pCreature);
-    }
 
     struct boss_anthar_forgemenderAI : public ScriptedAI
     {
         boss_anthar_forgemenderAI(Creature* pCreature) : ScriptedAI(pCreature)
             {
                     Reset();
-                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+                    m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             }
 
-            ScriptedInstance* m_pInstance;
+            InstanceScript* m_pInstance;
         bool m_bIsRegularMode;
 
         void Reset()
@@ -812,31 +813,32 @@ public:
                     DoMeleeAttackIfReady();
             }
     };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_anthar_forgemenderAI(pCreature);
+    }
 
 };
 /********************************/
 /* Brienna Nightfell - 34473    */
 /* Priest                       */
 /********************************/
-class boss_brienna_nightfell : public CreatureScript
+
+class boss_brienna_nightfell : public CreatureScript
 {
 public:
     boss_brienna_nightfell() : CreatureScript("boss_brienna_nightfell") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_brienna_nightfellAI(pCreature);
-    }
 
     struct boss_brienna_nightfellAI : public ScriptedAI
     {
         boss_brienna_nightfellAI(Creature* pCreature) : ScriptedAI(pCreature)
             {
                     Reset();
-                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+                    m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             }
 
-            ScriptedInstance* m_pInstance;
+            InstanceScript* m_pInstance;
         bool m_bIsRegularMode;
 
         void Reset()
@@ -892,31 +894,32 @@ public:
                     DoMeleeAttackIfReady();
             }
     };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_brienna_nightfellAI(pCreature);
+    }
 
 };
 /********************************/
 /* Irieth Shadowstep - 34472    */
 /* Rogue                        */
 /********************************/
-class boss_irieth_shadowstepe : public CreatureScript
+
+class boss_irieth_shadowstepe : public CreatureScript
 {
 public:
     boss_irieth_shadowstepe() : CreatureScript("boss_irieth_shadowstepe") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_irieth_shadowstepeAI(pCreature);
-    }
 
     struct boss_irieth_shadowstepeAI : public ScriptedAI
     {
         boss_irieth_shadowstepeAI(Creature* pCreature) : ScriptedAI(pCreature)
             {
                     Reset();
-                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+                    m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             }
 
-            ScriptedInstance* m_pInstance;
+            InstanceScript* m_pInstance;
         bool m_bIsRegularMode;
 
         void Reset()
@@ -972,31 +975,32 @@ public:
                     DoMeleeAttackIfReady();
             }
     };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_irieth_shadowstepeAI(pCreature);
+    }
 
 };
 /********************************/
 /* Shaabad - 34463              */
 /* Shaman                       */
 /********************************/
-class boss_shaabad : public CreatureScript
+
+class boss_shaabad : public CreatureScript
 {
 public:
     boss_shaabad() : CreatureScript("boss_shaabad") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_shaabadAI(pCreature);
-    }
 
     struct boss_shaabadAI : public ScriptedAI
     {
         boss_shaabadAI(Creature* pCreature) : ScriptedAI(pCreature)
             {
                     Reset();
-                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+                    m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             }
 
-            ScriptedInstance* m_pInstance;
+            InstanceScript* m_pInstance;
         bool m_bIsRegularMode;
 
         void Reset()
@@ -1052,31 +1056,32 @@ public:
                     DoMeleeAttackIfReady();
             }
     };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_shaabadAI(pCreature);
+    }
 
 };
 /********************************/
 /* Saamul - 34470               */
 /* Shaman                       */
 /********************************/
-class boss_saamul : public CreatureScript
+
+class boss_saamul : public CreatureScript
 {
 public:
     boss_saamul() : CreatureScript("boss_saamul") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_saamulAI(pCreature);
-    }
 
     struct boss_saamulAI : public ScriptedAI
     {
         boss_saamulAI(Creature* pCreature) : ScriptedAI(pCreature)
             {
                     Reset();
-                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+                    m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             }
 
-            ScriptedInstance* m_pInstance;
+            InstanceScript* m_pInstance;
         bool m_bIsRegularMode;
 
         void Reset()
@@ -1132,31 +1137,32 @@ public:
                     DoMeleeAttackIfReady();
             }
     };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_saamulAI(pCreature);
+    }
 
 };
 /********************************/
 /* Serissa Grimdabbler - 34474  */
 /* Warlock                      */
 /********************************/
-class boss_serissa_grimdabbler : public CreatureScript
+
+class boss_serissa_grimdabbler : public CreatureScript
 {
 public:
     boss_serissa_grimdabbler() : CreatureScript("boss_serissa_grimdabbler") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_serissa_grimdabblerAI(pCreature);
-    }
 
     struct boss_serissa_grimdabblerAI : public ScriptedAI
     {
         boss_serissa_grimdabblerAI(Creature* pCreature) : ScriptedAI(pCreature)
             {
                     Reset();
-                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+                    m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             }
 
-            ScriptedInstance* m_pInstance;
+            InstanceScript* m_pInstance;
         bool m_bIsRegularMode;
 
         void Reset()
@@ -1212,31 +1218,32 @@ public:
                     DoMeleeAttackIfReady();
             }
     };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_serissa_grimdabblerAI(pCreature);
+    }
 
 };
 /********************************/
 /* Shocuul - 34475              */
 /* Warrior                      */
 /********************************/
-class boss_shocuul : public CreatureScript
+
+class boss_shocuul : public CreatureScript
 {
 public:
     boss_shocuul() : CreatureScript("boss_shocuul") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_shocuulAI(pCreature);
-    }
 
     struct boss_shocuulAI : public ScriptedAI
     {
         boss_shocuulAI(Creature* pCreature) : ScriptedAI(pCreature)
             {
                     Reset();
-                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+                    m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             }
 
-            ScriptedInstance* m_pInstance;
+            InstanceScript* m_pInstance;
         bool m_bIsRegularMode;
 
         void Reset()
@@ -1293,36 +1300,27 @@ public:
             }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_shocuulAI(pCreature);
+    }
+
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 void AddSC_boss_tc_alliance_champions()
 {
-    new boss_tyrius_duskblade();
-    new boss_kavina_grovesong();
-    new boss_melador_valestrider();
-    new boss_alyssia_moonstalker();
-    new boss_noozle_whizzlestick();
-    new boss_velanaa();
-    new boss_baelnor_lightbearer();
-    new boss_anthar_forgemender();
-    new boss_brienna_nightfell();
-    new boss_irieth_shadowstepe();
-    new boss_shaabad();
-    new boss_saamul();
-    new boss_serissa_grimdabbler();
-    new boss_shocuul();
+    new boss_tyrius_duskblade;
+    new boss_kavina_grovesong;
+    new boss_melador_valestrider;
+    new boss_alyssia_moonstalker;
+    new boss_noozle_whizzlestick;
+    new boss_velanaa;
+    new boss_baelnor_lightbearer;
+    new boss_anthar_forgemender;
+    new boss_brienna_nightfell;
+    new boss_irieth_shadowstepe;
+    new boss_shaabad;
+    new boss_saamul;
+    new boss_serissa_grimdabbler;
+    new boss_shocuul;
 }

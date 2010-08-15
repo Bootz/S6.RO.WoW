@@ -64,12 +64,13 @@ enum eFizzcrank
 
     QUEST_THE_MECHAGNOMES       = 11708
 };
-class npc_fizzcrank_fullthrottle : public CreatureScript
+
+class npc_fizzcrank_fullthrottle : public CreatureScript
 {
 public:
     npc_fizzcrank_fullthrottle() : CreatureScript("npc_fizzcrank_fullthrottle") { }
 
-    bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
     {
         switch(uiAction)
         {
@@ -113,7 +114,7 @@ public:
         return true;
     }
 
-    bool GossipHello(Player* pPlayer, Creature* pCreature)
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
     {
         if (pCreature->isQuestGiver())
             pPlayer->PrepareQuestMenu(pCreature->GetGUID());
@@ -139,12 +140,13 @@ enum eSurristrasz
 {
     SPELL_ABMER_TO_COLDARRA     = 46064
 };
-class npc_surristrasz : public CreatureScript
+
+class npc_surristrasz : public CreatureScript
 {
 public:
     npc_surristrasz() : CreatureScript("npc_surristrasz") { }
 
-    bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
     {
         if (uiAction == GOSSIP_OPTION_GOSSIP)
         {
@@ -160,7 +162,7 @@ public:
         return true;
     }
 
-    bool GossipHello(Player* pPlayer, Creature* pCreature)
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
     {
         if (pCreature->isQuestGiver())
             pPlayer->PrepareQuestMenu(pCreature->GetGUID());
@@ -188,12 +190,13 @@ enum eTiare
 {
     SPELL_TELEPORT_COLDARRA     = 50135
 };
-class npc_tiare : public CreatureScript
+
+class npc_tiare : public CreatureScript
 {
 public:
     npc_tiare() : CreatureScript("npc_tiare") { }
 
-    bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
     {
         if (uiAction == GOSSIP_OPTION_GOSSIP)
         {
@@ -203,7 +206,7 @@ public:
         return true;
     }
 
-    bool GossipHello(Player* pPlayer, Creature* pCreature)
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
     {
         pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_TELEPORT, GOSSIP_SENDER_MAIN, GOSSIP_OPTION_GOSSIP);
         pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
@@ -224,15 +227,11 @@ enum eSinkhole
     SPELL_SUMMON_CART             = 46798,
     SPELL_SUMMON_WORM             = 46800,
 };
-class npc_sinkhole_kill_credit : public CreatureScript
+
+class npc_sinkhole_kill_credit : public CreatureScript
 {
 public:
     npc_sinkhole_kill_credit() : CreatureScript("npc_sinkhole_kill_credit") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_sinkhole_kill_creditAI(pCreature);
-    }
 
     struct npc_sinkhole_kill_creditAI : public ScriptedAI
     {
@@ -329,21 +328,22 @@ public:
 
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_sinkhole_kill_creditAI(pCreature);
+    }
+
 };
 
 
 /*######
 ## npc_khunok_the_behemoth
 ######*/
-class npc_khunok_the_behemoth : public CreatureScript
+
+class npc_khunok_the_behemoth : public CreatureScript
 {
 public:
     npc_khunok_the_behemoth() : CreatureScript("npc_khunok_the_behemoth") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_khunok_the_behemothAI(pCreature);
-    }
 
     struct npc_khunok_the_behemothAI : public ScriptedAI
     {
@@ -370,6 +370,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_khunok_the_behemothAI(pCreature);
+    }
+
 };
 
 
@@ -383,12 +388,13 @@ enum eKeristrasza
 };
 
 #define GOSSIP_HELLO_KERI   "I am prepared to face Saragosa!"
-class npc_keristrasza : public CreatureScript
+
+class npc_keristrasza : public CreatureScript
 {
 public:
     npc_keristrasza() : CreatureScript("npc_keristrasza") { }
 
-    bool GossipSelect(Player* pPlayer, Creature* /*pCreature*/, uint32 /*uiSender*/, uint32 uiAction)
+    bool OnGossipSelect(Player* pPlayer, Creature* /*pCreature*/, uint32 /*uiSender*/, uint32 uiAction)
     {
         if (uiAction == GOSSIP_ACTION_INFO_DEF + 1)
         {
@@ -399,7 +405,7 @@ public:
         return true;
     }
 
-    bool GossipHello(Player* pPlayer, Creature* pCreature)
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
     {
         if (pCreature->isQuestGiver())
             pPlayer->PrepareQuestMenu(pCreature->GetGUID());
@@ -429,12 +435,13 @@ enum eCorastrasza
     QUEST_ACES_HIGH_DAILY                        = 13414,
     QUEST_ACES_HIGH                              = 13413
 };
-class npc_corastrasza : public CreatureScript
+
+class npc_corastrasza : public CreatureScript
 {
 public:
     npc_corastrasza() : CreatureScript("npc_corastrasza") { }
 
-    bool GossipSelect(Player* pPlayer, Creature* /*pCreature*/, uint32 /*uiSender*/, uint32 uiAction)
+    bool OnGossipSelect(Player* pPlayer, Creature* /*pCreature*/, uint32 /*uiSender*/, uint32 uiAction)
     {
         if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
         {
@@ -448,7 +455,7 @@ public:
         return true;
     }
 
-    bool GossipHello(Player* pPlayer, Creature* pCreature)
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
     {
         if (pCreature->isQuestGiver())
             pPlayer->PrepareQuestMenu(pCreature->GetGUID());
@@ -475,12 +482,13 @@ enum eIruk
     SPELL_CREATURE_TOTEM_OF_ISSLIRUK        = 46816,
     GOSSIP_TEXT_I                           = 12585
 };
-class npc_iruk : public CreatureScript
+
+class npc_iruk : public CreatureScript
 {
 public:
     npc_iruk() : CreatureScript("npc_iruk") { }
 
-    bool GossipSelect(Player* pPlayer, Creature* /*pCreature*/, uint32 /*uiSender*/, uint32 uiAction)
+    bool OnGossipSelect(Player* pPlayer, Creature* /*pCreature*/, uint32 /*uiSender*/, uint32 uiAction)
     {
         switch (uiAction)
         {
@@ -493,7 +501,7 @@ public:
         return true;
     }
 
-    bool GossipHello(Player* pPlayer, Creature* pCreature)
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
     {
 
         if (pPlayer->GetQuestStatus(QUEST_SPIRITS_WATCH_OVER_US) == QUEST_STATUS_INCOMPLETE)
@@ -514,15 +522,11 @@ public:
 const uint32 nerubarVictims[3] =
 {
     45526, 45527, 45514
-};class mob_nerubar_victim : public CreatureScript
+};
+class mob_nerubar_victim : public CreatureScript
 {
 public:
     mob_nerubar_victim() : CreatureScript("mob_nerubar_victim") { }
-
-    CreatureAI* GetAI(Creature *pCreature)
-    {
-        return new mob_nerubar_victimAI (pCreature);
-    }
 
     struct mob_nerubar_victimAI : public ScriptedAI
     {
@@ -551,6 +555,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature *pCreature) const
+    {
+        return new mob_nerubar_victimAI (pCreature);
+    }
+
 };
 /*######
 ## npc_scourge_prisoner
@@ -560,15 +569,11 @@ enum eScourgePrisoner
 {
     GO_SCOURGE_CAGE = 187867
 };
-class npc_scourge_prisoner : public CreatureScript
+
+class npc_scourge_prisoner : public CreatureScript
 {
 public:
     npc_scourge_prisoner() : CreatureScript("npc_scourge_prisoner") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_scourge_prisonerAI(pCreature);
-    }
 
     struct npc_scourge_prisonerAI : public ScriptedAI
     {
@@ -584,6 +589,11 @@ public:
         }
 
     };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_scourge_prisonerAI(pCreature);
+    }
 
 };
 
@@ -601,15 +611,11 @@ enum eJenny
     SPELL_CRATES_CARRIED        = 46340,
     SPELL_DROP_CRATE            = 46342
 };
-class npc_jenny : public CreatureScript
+
+class npc_jenny : public CreatureScript
 {
 public:
     npc_jenny() : CreatureScript("npc_jenny") { }
-
-    CreatureAI* GetAI(Creature *pCreature)
-    {
-        return new npc_jennyAI (pCreature);
-    }
 
     struct npc_jennyAI : public ScriptedAI
     {
@@ -657,21 +663,22 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature *pCreature) const
+    {
+        return new npc_jennyAI (pCreature);
+    }
+
 };
 
 
 /*######
 ## npc_fezzix_geartwist
 ######*/
-class npc_fezzix_geartwist : public CreatureScript
+
+class npc_fezzix_geartwist : public CreatureScript
 {
 public:
     npc_fezzix_geartwist() : CreatureScript("npc_fezzix_geartwist") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_fezzix_geartwistAI(pCreature);
-    }
 
     struct npc_fezzix_geartwistAI : public ScriptedAI
     {
@@ -701,6 +708,11 @@ public:
             }
         }
     };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_fezzix_geartwistAI(pCreature);
+    }
 
 };
 
@@ -740,15 +752,11 @@ const uint32 CaribouTraps[CaribouTrapsNum] =
     GO_CARIBOU_TRAP_11, GO_CARIBOU_TRAP_12, GO_CARIBOU_TRAP_13, GO_CARIBOU_TRAP_14, GO_CARIBOU_TRAP_15,
 };
 //#define SAY_NESINGWARY_1 -1571008
-class npc_nesingwary_trapper : public CreatureScript
+
+class npc_nesingwary_trapper : public CreatureScript
 {
 public:
     npc_nesingwary_trapper() : CreatureScript("npc_nesingwary_trapper") { }
-
-    CreatureAI* GetAI(Creature *pCreature)
-    {
-        return new npc_nesingwary_trapperAI (pCreature);
-    }
 
     struct npc_nesingwary_trapperAI : public ScriptedAI
     {
@@ -858,6 +866,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature *pCreature) const
+    {
+        return new npc_nesingwary_trapperAI (pCreature);
+    }
+
 };
 
 
@@ -879,45 +892,11 @@ enum eLurgglbr
 #define SAY_WP_1_LUR_END    -1571005
 #define SAY_WP_41_LUR_START -1571006
 #define SAY_WP_41_LUR_END   -1571007*/
-class npc_lurgglbr : public CreatureScript
+
+class npc_lurgglbr : public CreatureScript
 {
 public:
     npc_lurgglbr() : CreatureScript("npc_lurgglbr") { }
-
-    bool QuestAccept(Player* pPlayer, Creature* pCreature, Quest const *pQuest)
-    {
-        if (pQuest->GetQuestId() == QUEST_ESCAPE_WINTERFIN_CAVERNS)
-        {
-            if (GameObject* pGo = pCreature->FindNearestGameObject(GO_CAGE, 5.0f))
-            {
-                pGo->SetRespawnTime(0);
-                pGo->SetGoType(GAMEOBJECT_TYPE_BUTTON);
-                pGo->UseDoorOrButton(20);
-            }
-
-            if (npc_escortAI* pEscortAI = CAST_AI(npc_lurgglbrAI, pCreature->AI()))
-                pEscortAI->Start(true, false, pPlayer->GetGUID());
-
-            switch (pPlayer->GetTeam())
-            {
-                case ALLIANCE:
-                    pCreature->setFaction(FACTION_ESCORTEE_A);
-                    break;
-                default:
-                case HORDE:
-                    pCreature->setFaction(FACTION_ESCORTEE_H);
-                    break;
-            }
-
-            return true;
-        }
-        return false;
-    }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_lurgglbrAI(pCreature);
-    }
 
     struct npc_lurgglbrAI : public npc_escortAI
     {
@@ -1005,10 +984,42 @@ public:
                 return;
         }
     };
+    bool QuestAccept(Player* pPlayer, Creature* pCreature, Quest const *pQuest)
+    {
+        if (pQuest->GetQuestId() == QUEST_ESCAPE_WINTERFIN_CAVERNS)
+        {
+            if (GameObject* pGo = pCreature->FindNearestGameObject(GO_CAGE, 5.0f))
+            {
+                pGo->SetRespawnTime(0);
+                pGo->SetGoType(GAMEOBJECT_TYPE_BUTTON);
+                pGo->UseDoorOrButton(20);
+            }
+
+            if (npc_escortAI* pEscortAI = CAST_AI(npc_lurgglbrAI, pCreature->AI()))
+                pEscortAI->Start(true, false, pPlayer->GetGUID());
+
+            switch (pPlayer->GetTeam())
+            {
+                case ALLIANCE:
+                    pCreature->setFaction(FACTION_ESCORTEE_A);
+                    break;
+                default:
+                case HORDE:
+                    pCreature->setFaction(FACTION_ESCORTEE_H);
+                    break;
+            }
+
+            return true;
+        }
+        return false;
+    }
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_lurgglbrAI(pCreature);
+    }
 
 };
-
-
 
 /*######
 ## npc_nexus_drake_hatchling
@@ -1026,15 +1037,11 @@ enum eNexusDrakeHatchling
     QUEST_DRAKE_HUNT                = 11919,
     QUEST_DRAKE_HUNT_D              = 11940
 };
-class npc_nexus_drake_hatchling : public CreatureScript
+
+class npc_nexus_drake_hatchling : public CreatureScript
 {
 public:
     npc_nexus_drake_hatchling() : CreatureScript("npc_nexus_drake_hatchling") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_nexus_drake_hatchlingAI(pCreature);
-    }
 
     struct npc_nexus_drake_hatchlingAI : public FollowerAI //The spell who makes the npc follow the player is missing, also we can use FollowerAI!
     {
@@ -1112,6 +1119,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_nexus_drake_hatchlingAI(pCreature);
+    }
+
 };
 
 
@@ -1156,40 +1168,11 @@ enum eThassarian
 };
 
 #define GOSSIP_ITEM_T   "Let's do this, Thassarian. It's now or never."
-class npc_thassarian : public CreatureScript
+
+class npc_thassarian : public CreatureScript
 {
 public:
     npc_thassarian() : CreatureScript("npc_thassarian") { }
-
-    bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
-    {
-        switch (uiAction)
-        {
-            case GOSSIP_ACTION_INFO_DEF+1:
-                CAST_AI(npc_escortAI, (pCreature->AI()))->Start(true, false, pPlayer->GetGUID());
-                CAST_AI(npc_escortAI, (pCreature->AI()))->SetMaxPlayerDistance(200.0f);
-                break;
-        }
-        return true;
-    }
-
-    bool GossipHello(Player* pPlayer, Creature* pCreature)
-    {
-        if (pCreature->isQuestGiver())
-            pPlayer->PrepareQuestMenu(pCreature->GetGUID());
-
-        if (pPlayer->GetQuestStatus(QUEST_LAST_RITES) == QUEST_STATUS_INCOMPLETE && pCreature->GetAreaId() == 4125)
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_T, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-
-        pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
-
-        return true;
-    }
-
-    CreatureAI* GetAI(Creature *pCreature)
-    {
-        return new npc_thassarianAI (pCreature);
-    }
 
     struct npc_thassarianAI : public npc_escortAI
     {
@@ -1458,23 +1441,46 @@ public:
         }
     };
 
+    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+    {
+        switch (uiAction)
+        {
+            case GOSSIP_ACTION_INFO_DEF+1:
+                CAST_AI(npc_escortAI, (pCreature->AI()))->Start(true, false, pPlayer->GetGUID());
+                CAST_AI(npc_escortAI, (pCreature->AI()))->SetMaxPlayerDistance(200.0f);
+                break;
+        }
+        return true;
+    }
+
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
+    {
+        if (pCreature->isQuestGiver())
+            pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+
+        if (pPlayer->GetQuestStatus(QUEST_LAST_RITES) == QUEST_STATUS_INCOMPLETE && pCreature->GetAreaId() == 4125)
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_T, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+
+        pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
+
+        return true;
+    }
+
+    CreatureAI* GetAI(Creature *pCreature) const
+    {
+        return new npc_thassarianAI (pCreature);
+    }
+
 };
-
-
-
 
 /*######
 ## npc_image_lich_king
 ######*/
-class npc_image_lich_king : public CreatureScript
+
+class npc_image_lich_king : public CreatureScript
 {
 public:
     npc_image_lich_king() : CreatureScript("npc_image_lich_king") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_image_lich_kingAI (pCreature);
-    }
 
     struct npc_image_lich_kingAI : public ScriptedAI
     {
@@ -1492,9 +1498,14 @@ public:
 
             if (me->isSummon())
                 if (Unit* pSummoner = CAST_SUM(me)->GetSummoner())
-                    CAST_AI(npc_thassarianAI,CAST_CRE(pSummoner)->AI())->bArthasInPosition = true;
+                    CAST_AI(npc_thassarian::npc_thassarianAI,CAST_CRE(pSummoner)->AI())->bArthasInPosition = true;
         }
     };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_image_lich_kingAI (pCreature);
+    }
 
 };
 
@@ -1502,15 +1513,11 @@ public:
 /*######
 ## npc_general_arlos
 ######*/
-class npc_general_arlos : public CreatureScript
+
+class npc_general_arlos : public CreatureScript
 {
 public:
     npc_general_arlos() : CreatureScript("npc_general_arlos") { }
-
-    CreatureAI* GetAI(Creature *pCreature)
-    {
-        return new npc_general_arlosAI(pCreature);
-    }
 
     struct npc_general_arlosAI : public ScriptedAI
     {
@@ -1525,9 +1532,14 @@ public:
             me->CastSpell(me, SPELL_STUN, true);
             if (me->isSummon())
                 if (Unit* pSummoner = CAST_SUM(me)->GetSummoner())
-                    CAST_AI(npc_thassarianAI,CAST_CRE(pSummoner)->AI())->bArlosInPosition = true;
+                    CAST_AI(npc_thassarian::npc_thassarianAI,CAST_CRE(pSummoner)->AI())->bArlosInPosition = true;
         }
     };
+
+    CreatureAI* GetAI(Creature *pCreature) const
+    {
+        return new npc_general_arlosAI(pCreature);
+    }
 
 };
 
@@ -1541,15 +1553,11 @@ enum eCounselorTalbot
     SPELL_DEFLECTION    = 51009,
     SPELL_SOUL_BLAST    = 50992,
 };
-class npc_counselor_talbot : public CreatureScript
+
+class npc_counselor_talbot : public CreatureScript
 {
 public:
     npc_counselor_talbot() : CreatureScript("npc_counselor_talbot") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_counselor_talbotAI (pCreature);
-    }
 
     struct npc_counselor_talbotAI : public ScriptedAI
     {
@@ -1583,7 +1591,7 @@ public:
 
             if (me->isSummon())
                 if (Unit* pSummoner = CAST_SUM(me)->GetSummoner())
-                    CAST_AI(npc_thassarianAI,CAST_CRE(pSummoner)->AI())->bTalbotInPosition = true;
+                    CAST_AI(npc_thassarian::npc_thassarianAI,CAST_CRE(pSummoner)->AI())->bTalbotInPosition = true;
         }
 
         void UpdateAI(const uint32 uiDiff)
@@ -1648,21 +1656,22 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_counselor_talbotAI (pCreature);
+    }
+
 };
 
 
 /*######
 ## npc_leryssa
 ######*/
-class npc_leryssa : public CreatureScript
+
+class npc_leryssa : public CreatureScript
 {
 public:
     npc_leryssa() : CreatureScript("npc_leryssa") { }
-
-    CreatureAI* GetAI(Creature *pCreature)
-    {
-        return new npc_leryssaAI (pCreature);
-    }
 
     struct npc_leryssaAI : public ScriptedAI
     {
@@ -1688,14 +1697,14 @@ public:
             if (!bDone)
             {
                 if (Creature* pTalbot = me->FindNearestCreature(NPC_PRINCE_VALANAR, 50.0f, true))
-                    CAST_AI(npc_counselor_talbotAI, pTalbot->AI())->bCheck = true;
+                    CAST_AI(npc_counselor_talbot::npc_counselor_talbotAI, pTalbot->AI())->bCheck = true;
 
                 me->addUnitState(UNIT_STAT_STUNNED);
                 me->CastSpell(me, SPELL_STUN, true);
 
                 if (me->isSummon())
                     if (Unit* pSummoner = CAST_SUM(me)->GetSummoner())
-                        CAST_AI(npc_thassarianAI,CAST_CRE(pSummoner)->AI())->bLeryssaInPosition = true;
+                        CAST_AI(npc_thassarian::npc_thassarianAI,CAST_CRE(pSummoner)->AI())->bLeryssaInPosition = true;
                 bDone = true;
             }
             else
@@ -1759,7 +1768,7 @@ public:
                             if (Unit* pThassarian = CAST_SUM(me)->GetSummoner())
                             {
                                 DoScriptText(SAY_THASSARIAN_7, pThassarian);
-                                CAST_AI(npc_thassarianAI,CAST_CRE(pThassarian)->AI())->uiPhase = 16;
+                                CAST_AI(npc_thassarian::npc_thassarianAI,CAST_CRE(pThassarian)->AI())->uiPhase = 16;
                             }
                         uiPhaseTimer = 5000;
                         Phase = 0;
@@ -1773,6 +1782,11 @@ public:
             DoMeleeAttackIfReady();
         }
     };
+
+    CreatureAI* GetAI(Creature *pCreature) const
+    {
+        return new npc_leryssaAI (pCreature);
+    }
 
 };
 
@@ -1790,15 +1804,11 @@ enum eBerylSorcerer
     SPELL_COSMETIC_CHAINS               = 54324,
     SPELL_COSMETIC_ENSLAVE_CHAINS_SELF  = 45631
 };
-class npc_beryl_sorcerer : public CreatureScript
+
+class npc_beryl_sorcerer : public CreatureScript
 {
 public:
     npc_beryl_sorcerer() : CreatureScript("npc_beryl_sorcerer") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_beryl_sorcererAI(pCreature);
-    }
 
     struct npc_beryl_sorcererAI : public FollowerAI
     {
@@ -1852,6 +1862,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_beryl_sorcererAI(pCreature);
+    }
+
 };
 
 
@@ -1873,15 +1888,11 @@ enum eImprisionedBerylSorcerer
     SAY_IMPRISIONED_BERYL_6         = -1571029,
     SAY_IMPRISIONED_BERYL_7         = -1571030,
 };
-class npc_imprisoned_beryl_sorcerer : public CreatureScript
+
+class npc_imprisoned_beryl_sorcerer : public CreatureScript
 {
 public:
     npc_imprisoned_beryl_sorcerer() : CreatureScript("npc_imprisoned_beryl_sorcerer") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_imprisoned_beryl_sorcererAI(pCreature);
-    }
 
     struct npc_imprisoned_beryl_sorcererAI : public ScriptedAI
     {
@@ -1989,6 +2000,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_imprisoned_beryl_sorcererAI(pCreature);
+    }
+
 };
 
 
@@ -2007,34 +2023,11 @@ enum Mootoo_the_Younger_Entries
 {
     NPC_MOOTOO_THE_YOUNGER          =25504,
     QUEST_ESCAPING_THE_MIST         =11664
-};class npc_mootoo_the_younger : public CreatureScript
+};
+class npc_mootoo_the_younger : public CreatureScript
 {
 public:
     npc_mootoo_the_younger() : CreatureScript("npc_mootoo_the_younger") { }
-
-    bool QuestAccept(Player* pPlayer, Creature* pCreature, Quest const* quest)
-    {
-        if (quest->GetQuestId() == QUEST_ESCAPING_THE_MIST)
-        {
-            switch (pPlayer->GetTeam())
-            {
-            case ALLIANCE:
-                pCreature->setFaction(FACTION_ESCORTEE_A);
-                break;
-            case HORDE:
-                pCreature->setFaction(FACTION_ESCORTEE_H);
-                break;
-            }
-            DoScriptText(SAY_1, pCreature);
-            CAST_AI(npc_escortAI, (pCreature->AI()))->Start(true, false, pPlayer->GetGUID());
-        }
-        return true;
-    }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_mootoo_the_youngerAI(pCreature);
-    }
 
     struct npc_mootoo_the_youngerAI : public npc_escortAI
     {
@@ -2083,6 +2076,29 @@ public:
             }
         }
     };
+    bool QuestAccept(Player* pPlayer, Creature* pCreature, Quest const* quest)
+    {
+        if (quest->GetQuestId() == QUEST_ESCAPING_THE_MIST)
+        {
+            switch (pPlayer->GetTeam())
+            {
+            case ALLIANCE:
+                pCreature->setFaction(FACTION_ESCORTEE_A);
+                break;
+            case HORDE:
+                pCreature->setFaction(FACTION_ESCORTEE_H);
+                break;
+            }
+            DoScriptText(SAY_1, pCreature);
+            CAST_AI(npc_escortAI, (pCreature->AI()))->Start(true, false, pPlayer->GetGUID());
+        }
+        return true;
+    }
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_mootoo_the_youngerAI(pCreature);
+    }
 
 };
 
@@ -2100,34 +2116,11 @@ enum Script_Texts_Bonker_Togglevolt
     SAY_bonker_1                    =-1700002,
     SAY_bonker_2                    =-1700003
 };
-class npc_bonker_togglevolt : public CreatureScript
+
+class npc_bonker_togglevolt : public CreatureScript
 {
 public:
     npc_bonker_togglevolt() : CreatureScript("npc_bonker_togglevolt") { }
-
-    bool QuestAccept(Player* pPlayer, Creature* pCreature, Quest const* quest)
-    {
-        if (quest->GetQuestId() == QUEST_GET_ME_OUTA_HERE)
-        {
-            switch (pPlayer->GetTeam())
-            {
-            case ALLIANCE:
-                    pCreature->setFaction(FACTION_ESCORTEE_A);
-                    break;
-            case HORDE:
-                    pCreature->setFaction(FACTION_ESCORTEE_H);
-                    break;
-            }
-            DoScriptText(SAY_bonker_2, pCreature, pPlayer);
-            CAST_AI(npc_escortAI, (pCreature->AI()))->Start(true, true, pPlayer->GetGUID());
-        }
-        return true;
-    }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_bonker_togglevoltAI(pCreature);
-    }
 
     struct npc_bonker_togglevoltAI : public npc_escortAI
     {
@@ -2177,8 +2170,31 @@ public:
         }
     };
 
-};
+    bool QuestAccept(Player* pPlayer, Creature* pCreature, Quest const* quest)
+    {
+        if (quest->GetQuestId() == QUEST_GET_ME_OUTA_HERE)
+        {
+            switch (pPlayer->GetTeam())
+            {
+            case ALLIANCE:
+                    pCreature->setFaction(FACTION_ESCORTEE_A);
+                    break;
+            case HORDE:
+                    pCreature->setFaction(FACTION_ESCORTEE_H);
+                    break;
+            }
+            DoScriptText(SAY_bonker_2, pCreature, pPlayer);
+            CAST_AI(npc_escortAI, (pCreature->AI()))->Start(true, true, pPlayer->GetGUID());
+        }
+        return true;
+    }
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_bonker_togglevoltAI(pCreature);
+    }
+
+};
 
 /*######
 ## Help Those That Cannot Help Themselves, Quest 11876
@@ -2220,15 +2236,11 @@ const uint32 MammothTraps[MammothTrapsNum] =
     GO_MAMMOTH_TRAP_16, GO_MAMMOTH_TRAP_17, GO_MAMMOTH_TRAP_18, GO_MAMMOTH_TRAP_19, GO_MAMMOTH_TRAP_20,
     GO_MAMMOTH_TRAP_21, GO_MAMMOTH_TRAP_22
 };
-class npc_trapped_mammoth_calf : public CreatureScript
+
+class npc_trapped_mammoth_calf : public CreatureScript
 {
 public:
     npc_trapped_mammoth_calf() : CreatureScript("npc_trapped_mammoth_calf") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_trapped_mammoth_calfAI(pCreature);
-    }
 
     struct npc_trapped_mammoth_calfAI : public ScriptedAI
     {
@@ -2323,6 +2335,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_trapped_mammoth_calfAI(pCreature);
+    }
+
 };
 
 
@@ -2338,15 +2355,11 @@ enum eNotSoBig
     SPELL_AURA_NOTSOBIG_3                         = 45677,
     SPELL_AURA_NOTSOBIG_4                         = 45681
 };
-class npc_magmoth_crusher : public CreatureScript
+
+class npc_magmoth_crusher : public CreatureScript
 {
 public:
     npc_magmoth_crusher() : CreatureScript("npc_magmoth_crusher") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_magmoth_crusherAI(pCreature);
-    }
 
     struct npc_magmoth_crusherAI : public ScriptedAI
     {
@@ -2359,12 +2372,17 @@ public:
                 (me->HasAura(SPELL_AURA_NOTSOBIG_1) || me->HasAura(SPELL_AURA_NOTSOBIG_2) ||
                 me->HasAura(SPELL_AURA_NOTSOBIG_3) || me->HasAura(SPELL_AURA_NOTSOBIG_4)))
             {
-                Quest const* qInfo = objmgr.GetQuestTemplate(QUEST_YOU_RE_NOT_SO_BIG_NOW);
+                Quest const* qInfo = sObjectMgr.GetQuestTemplate(QUEST_YOU_RE_NOT_SO_BIG_NOW);
                 if (qInfo)
                     CAST_PLR(pKiller)->KilledMonsterCredit(qInfo->ReqCreatureOrGOId[0],0);
             }
         }
     };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_magmoth_crusherAI(pCreature);
+    }
 
 };
 
@@ -2375,15 +2393,11 @@ public:
 
 #define QUEST_BURY_THOSE_COCKROACHES            11608
 #define SPELL_SEAFORIUM_DEPTH_CHARGE_EXPLOSION  45502
-class npc_seaforium_depth_charge : public CreatureScript
+
+class npc_seaforium_depth_charge : public CreatureScript
 {
 public:
     npc_seaforium_depth_charge() : CreatureScript("npc_seaforium_depth_charge") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_seaforium_depth_chargeAI(pCreature);
-    }
 
     struct npc_seaforium_depth_chargeAI : public ScriptedAI
     {
@@ -2417,6 +2431,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_seaforium_depth_chargeAI(pCreature);
+    }
+
 };
 
 
@@ -2429,15 +2448,11 @@ enum eValiancekeepcannons
     GO_VALIANCE_KEEP_CANNON_1                     = 187560,
     GO_VALIANCE_KEEP_CANNON_2                     = 188692
 };
-class npc_valiance_keep_cannoneer : public CreatureScript
+
+class npc_valiance_keep_cannoneer : public CreatureScript
 {
 public:
     npc_valiance_keep_cannoneer() : CreatureScript("npc_valiance_keep_cannoneer") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_valiance_keep_cannoneerAI(pCreature);
-    }
 
     struct npc_valiance_keep_cannoneerAI : public ScriptedAI
     {
@@ -2470,6 +2485,11 @@ public:
 
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_valiance_keep_cannoneerAI(pCreature);
+    }
+
 };
 
 
@@ -2489,15 +2509,11 @@ enum NPCs
     NPC_WARMAGE_CALANDRA         = 27173,
     NPC_WARMAGE_WATKINS          = 27904
 };
-class npc_warmage_coldarra : public CreatureScript
+
+class npc_warmage_coldarra : public CreatureScript
 {
 public:
     npc_warmage_coldarra() : CreatureScript("npc_warmage_coldarra") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_warmage_coldarraAI(pCreature);
-    }
 
     struct npc_warmage_coldarraAI : public Scripted_NoMovementAI
     {
@@ -2576,38 +2592,43 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_warmage_coldarraAI(pCreature);
+    }
+
 };
 
 
 void AddSC_borean_tundra()
 {
-    new npc_fizzcrank_fullthrottle();
-    new npc_surristrasz();
-    new npc_tiare();
-    new npc_sinkhole_kill_credit();
-    new npc_khunok_the_behemoth();
-    new npc_keristrasza();
-    new npc_corastrasza();
-    new npc_iruk();
-    new mob_nerubar_victim();
-    new npc_scourge_prisoner();
-    new npc_jenny();
-    new npc_fezzix_geartwist();
-    new npc_nesingwary_trapper();
-    new npc_lurgglbr();
-    new npc_nexus_drake_hatchling();
-    new npc_thassarian();
-    new npc_image_lich_king();
-    new npc_counselor_talbot();
-    new npc_leryssa();
-    new npc_general_arlos();
-    new npc_beryl_sorcerer();
-    new npc_imprisoned_beryl_sorcerer();
-    new npc_mootoo_the_younger();
-    new npc_bonker_togglevolt();
-    new npc_trapped_mammoth_calf();
-    new npc_magmoth_crusher();
-    new npc_seaforium_depth_charge();
-    new npc_valiance_keep_cannoneer();
-    new npc_warmage_coldarra();
+    new npc_fizzcrank_fullthrottle;
+    new npc_surristrasz;
+    new npc_tiare;
+    new npc_sinkhole_kill_credit;
+    new npc_khunok_the_behemoth;
+    new npc_keristrasza;
+    new npc_corastrasza;
+    new npc_iruk;
+    new mob_nerubar_victim;
+    new npc_scourge_prisoner;
+    new npc_jenny;
+    new npc_fezzix_geartwist;
+    new npc_nesingwary_trapper;
+    new npc_lurgglbr;
+    new npc_nexus_drake_hatchling;
+    new npc_thassarian;
+    new npc_image_lich_king;
+    new npc_counselor_talbot;
+    new npc_leryssa;
+    new npc_general_arlos;
+    new npc_beryl_sorcerer;
+    new npc_imprisoned_beryl_sorcerer;
+    new npc_mootoo_the_younger;
+    new npc_bonker_togglevolt;
+    new npc_trapped_mammoth_calf;
+    new npc_magmoth_crusher;
+    new npc_seaforium_depth_charge;
+    new npc_valiance_keep_cannoneer;
+    new npc_warmage_coldarra;
 }

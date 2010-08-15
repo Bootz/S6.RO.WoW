@@ -1646,8 +1646,15 @@ bool Player::BuildEnumData(QueryResult_AutoPtr result, WorldPacket * p_data)
         char_flags |= CHARACTER_FLAG_DECLINED;
 
     *p_data << uint32(char_flags);                          // character flags
-    // character customize flags
-    *p_data << uint32(atLoginFlags & AT_LOGIN_CUSTOMIZE ? CHAR_CUSTOMIZE_FLAG_CUSTOMIZE : CHAR_CUSTOMIZE_FLAG_NONE);
+    // character customize/faction/race change flags
+    if(atLoginFlags & AT_LOGIN_CUSTOMIZE)
+		*p_data << uint32(CHAR_CUSTOMIZE_FLAG_CUSTOMIZE);
+	else if(atLoginFlags & AT_LOGIN_CHANGE_FACTION)
+		*p_data << uint32(CHAR_CUSTOMIZE_FLAG_FACTION);
+	else if(atLoginFlags & AT_LOGIN_CHANGE_RACE)
+		*p_data << uint32(CHAR_CUSTOMIZE_FLAG_RACE);
+	else
+		*p_data << uint32(CHAR_CUSTOMIZE_FLAG_NONE);
     // First login
     *p_data << uint8(atLoginFlags & AT_LOGIN_FIRST ? 1 : 0);
 
@@ -22029,11 +22036,37 @@ PartyResult Player::CanUninviteFromGroup() const
     if (!grp)
         return ERR_NOT_IN_GROUP;
 
-    if (!grp->IsLeader(GetGUID()) && !grp->IsAssistant(GetGUID()))
-        return ERR_NOT_LEADER;
+    if (grp->isLFGGroup())
+    {
+        if (grp->GetLfgKicks() == GROUP_MAX_LFG_KICKS)
+            return ERR_PARTY_LFG_BOOT_LIMIT;
 
-    if (InBattleground())
-        return ERR_INVITE_RESTRICTED;
+        if (grp->isLfgKickActive())
+            return ERR_PARTY_LFG_BOOT_IN_PROGRESS;
+
+        if (grp->GetMembersCount() <= GROUP_LFG_KICK_VOTES_NEEDED)
+            return ERR_PARTY_LFG_BOOT_TOO_FEW_PLAYERS;
+
+        if (grp->isLfgDungeonComplete())
+            return ERR_PARTY_LFG_BOOT_DUNGEON_COMPLETE;
+
+        if (grp->isRollLootActive())
+            return ERR_PARTY_LFG_BOOT_LOOT_ROLLS;
+
+        /* Missing support for these types
+            return ERR_PARTY_LFG_BOOT_IN_COMBAT; // also have a cooldown (some secs after combat finish
+            return ERR_PARTY_LFG_BOOT_COOLDOWN_S;
+            return ERR_PARTY_LFG_BOOT_NOT_ELIGIBLE_S;
+        */
+    }
+    else
+    {
+        if (!grp->IsLeader(GetGUID()) && !grp->IsAssistant(GetGUID()))
+            return ERR_NOT_LEADER;
+
+        if (InBattleground())
+            return ERR_INVITE_RESTRICTED;
+    }
 
     return ERR_PARTY_RESULT_OK;
 }
@@ -22814,7 +22847,7 @@ void Player::HandleFall(MovementInfo const& movementInfo)
         {
             uint32 damage = (uint32)(damageperc * GetMaxHealth()*sWorld.getRate(RATE_DAMAGE_FALL));
 
-            float height = movementInfo.t_pos.m_positionZ;
+            float height = movementInfo.pos.m_positionZ;
             UpdateGroundPositionZ(movementInfo.pos.m_positionX,movementInfo.pos.m_positionY,height);
 
             if (damage > 0)

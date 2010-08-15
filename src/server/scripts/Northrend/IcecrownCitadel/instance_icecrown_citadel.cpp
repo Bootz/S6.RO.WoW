@@ -22,19 +22,15 @@
 #include "icecrown_citadel.h"
 
 #define MAX_ENCOUNTER     12
-class instance_icecrown_citadel : public InstanceMapScript
+
+class instance_icecrown_citadel : public InstanceMapScript
 {
 public:
-    instance_icecrown_citadel() : InstanceMapScript("instance_icecrown_citadel") { }
+    instance_icecrown_citadel() : InstanceMapScript("instance_icecrown_citadel", 631) { }
 
-    InstanceData* GetInstanceData_InstanceMapScript(Map* pMap)
+    struct instance_icecrown_citadel_InstanceMapScript : public InstanceScript
     {
-        return new instance_icecrown_citadel_InstanceMapScript(pMap);
-    }
-
-    struct instance_icecrown_citadel_InstanceMapScript : public ScriptedInstance
-    {
-        instance_icecrown_citadel_InstanceMapScript(Map* pMap) : ScriptedInstance(pMap)
+        instance_icecrown_citadel_InstanceMapScript(Map* pMap) : InstanceScript(pMap)
         {
             Initialize();
         };
@@ -792,10 +788,15 @@ public:
         }
     };
 
+    InstanceScript* GetInstanceScript (InstanceMap* pMap) const
+    {
+        return new instance_icecrown_citadel_InstanceMapScript(pMap);
+    }
+
 };
 
 
 void AddSC_instance_icecrown_citadel()
 {
-    new instance_icecrown_citadel();
+    new instance_icecrown_citadel;
 }

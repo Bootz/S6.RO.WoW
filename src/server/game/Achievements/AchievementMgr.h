@@ -243,6 +243,7 @@ class AchievementMgr
 
         void Reset();
         static void DeleteFromDB(uint32 lowguid);
+        void DeleteAchievementFromDB(uint32 lowguid, uint32 achi_id);
         void LoadFromDB(QueryResult_AutoPtr achievementResult, QueryResult_AutoPtr criteriaResult);
         void SaveToDB();
         void ResetAchievementCriteria(AchievementCriteriaTypes type, uint32 miscvalue1 = 0, uint32 miscvalue2 = 0, bool evenIfCriteriaComplete = false);
@@ -263,6 +264,7 @@ class AchievementMgr
         void SendCriteriaUpdate(AchievementCriteriaEntry const* entry, CriteriaProgress const* progress, uint32 timeElapsed, bool timedCompleted);
         CriteriaProgress* GetCriteriaProgress(AchievementCriteriaEntry const* entry);
         void SetCriteriaProgress(AchievementCriteriaEntry const* entry, uint32 changeValue, ProgressType ptype = PROGRESS_SET);
+        void RemoveCriteriaProgress(AchievementCriteriaEntry const* entry);
         void CompletedCriteriaFor(AchievementEntry const* achievement);
         bool IsCompletedCriteria(AchievementCriteriaEntry const* criteria, AchievementEntry const* achievement);
         bool IsCompletedAchievement(AchievementEntry const* entry);

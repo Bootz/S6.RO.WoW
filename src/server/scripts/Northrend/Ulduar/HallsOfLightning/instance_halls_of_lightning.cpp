@@ -32,19 +32,15 @@ EndScriptData */
 2 - Ionar
 3 - Loken
 */
-class instance_halls_of_lightning : public InstanceMapScript
+
+class instance_halls_of_lightning : public InstanceMapScript
 {
 public:
-    instance_halls_of_lightning() : InstanceMapScript("instance_halls_of_lightning") { }
+    instance_halls_of_lightning() : InstanceMapScript("instance_halls_of_lightning", 602) { }
 
-    InstanceData* GetInstanceData_InstanceMapScript(Map* pMap)
+    struct instance_halls_of_lightning_InstanceMapScript : public InstanceScript
     {
-        return new instance_halls_of_lightning_InstanceMapScript(pMap);
-    }
-
-    struct instance_halls_of_lightning_InstanceMapScript : public ScriptedInstance
-    {
-        instance_halls_of_lightning_InstanceMapScript(Map* pMap) : ScriptedInstance(pMap) {Initialize();};
+        instance_halls_of_lightning_InstanceMapScript(Map* pMap) : InstanceScript(pMap) {Initialize();};
 
         uint32 m_auiEncounter[MAX_ENCOUNTER];
 
@@ -244,10 +240,15 @@ public:
         }
     };
 
+    InstanceScript* GetInstanceScript (InstanceMap* pMap) const
+    {
+        return new instance_halls_of_lightning_InstanceMapScript(pMap);
+    }
+
 };
 
 
 void AddSC_instance_halls_of_lightning()
 {
-    new instance_halls_of_lightning();
+    new instance_halls_of_lightning;
 }

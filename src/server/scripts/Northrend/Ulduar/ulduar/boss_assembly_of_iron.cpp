@@ -132,7 +132,7 @@ enum Yells
     SAY_BRUNDIR_BERSERK                         = -1603047,
 };
 
-bool IsEncounterComplete(ScriptedInstance* pInstance, Creature* me)
+bool IsEncounterComplete(InstanceScript* pInstance, Creature* me)
 {
    if (!pInstance || !me)
         return false;
@@ -157,7 +157,7 @@ bool IsEncounterComplete(ScriptedInstance* pInstance, Creature* me)
 }
 
 // Avoid killing bosses one to one
-void CallBosses(ScriptedInstance *pInstance, uint32 caller, Unit *who) {
+void CallBosses(InstanceScript *pInstance, uint32 caller, Unit *who) {
     
     // Respawn if dead
     if(Creature* Steelbreaker = Unit::GetCreature(*who, pInstance ? pInstance->GetData64(DATA_STEELBREAKER) : 0))
@@ -196,21 +196,17 @@ void CallBosses(ScriptedInstance *pInstance, uint32 caller, Unit *who) {
         }
     }
 }
-class boss_steelbreaker : public CreatureScript
+
+class boss_steelbreaker : public CreatureScript
 {
 public:
     boss_steelbreaker() : CreatureScript("boss_steelbreaker") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_steelbreakerAI (pCreature);
-    }
 
     struct boss_steelbreakerAI : public ScriptedAI
     {
         boss_steelbreakerAI(Creature *c) : ScriptedAI(c)
         {
-            pInstance = c->GetInstanceData();
+            pInstance = c->GetInstanceScript();
             me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);
             me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true); // Death Grip jump effect
         }
@@ -241,7 +237,7 @@ public:
         }
 
         EventMap events;
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
         uint32 phase;
 
         void EnterCombat(Unit *who)
@@ -343,22 +339,23 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_steelbreakerAI (pCreature);
+    }
+
 };
-class boss_runemaster_molgeim : public CreatureScript
+
+class boss_runemaster_molgeim : public CreatureScript
 {
 public:
     boss_runemaster_molgeim() : CreatureScript("boss_runemaster_molgeim") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_runemaster_molgeimAI (pCreature);
-    }
 
     struct boss_runemaster_molgeimAI : public ScriptedAI
     {
         boss_runemaster_molgeimAI(Creature *c) : ScriptedAI(c)
         {
-            pInstance = c->GetInstanceData();
+            pInstance = c->GetInstanceScript();
             me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);
             me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true); // Death Grip jump effect
         }
@@ -387,7 +384,7 @@ public:
                 }
         }
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
         EventMap events;
         uint32 phase;
 
@@ -516,22 +513,23 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_runemaster_molgeimAI (pCreature);
+    }
+
 };
-class boss_stormcaller_brundir : public CreatureScript
+
+class boss_stormcaller_brundir : public CreatureScript
 {
 public:
     boss_stormcaller_brundir() : CreatureScript("boss_stormcaller_brundir") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_stormcaller_brundirAI (pCreature);
-    }
 
     struct boss_stormcaller_brundirAI : public ScriptedAI
     {
         boss_stormcaller_brundirAI(Creature *c) : ScriptedAI(c)
         {
-            pInstance = c->GetInstanceData();
+            pInstance = c->GetInstanceScript();
             me->SetReactState(REACT_PASSIVE);
             me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);
             me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true); // Death Grip jump effect
@@ -563,7 +561,7 @@ public:
         }
 
         EventMap events;
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
         uint32 phase;
         uint32 Position;
 
@@ -733,20 +731,21 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_stormcaller_brundirAI (pCreature);
+    }
+
 };
 
 /***************
 *  mob_lightning_elemental
 *****************/
-class mob_lightning_elemental : public CreatureScript
+
+class mob_lightning_elemental : public CreatureScript
 {
 public:
     mob_lightning_elemental() : CreatureScript("mob_lightning_elemental") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_lightning_elementalAI (pCreature);
-    }
 
     struct mob_lightning_elementalAI : public ScriptedAI {
         mob_lightning_elementalAI(Creature *c) : ScriptedAI(c) {}
@@ -771,18 +770,19 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_lightning_elementalAI (pCreature);
+    }
+
 };
 /***************
 *  mob_rune_of_summoning
-*****************/class mob_rune_of_summoning : public CreatureScript
+*****************/
+class mob_rune_of_summoning : public CreatureScript
 {
 public:
     mob_rune_of_summoning() : CreatureScript("mob_rune_of_summoning") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_rune_of_summoningAI (pCreature);
-    }
 
     struct mob_rune_of_summoningAI : public ScriptedAI
     {
@@ -813,19 +813,20 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_rune_of_summoningAI (pCreature);
+    }
+
 };
 
 /***************
 *  mob_rune_of_power
-*****************/class mob_rune_of_power : public CreatureScript
+*****************/
+class mob_rune_of_power : public CreatureScript
 {
 public:
     mob_rune_of_power() : CreatureScript("mob_rune_of_power") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_rune_of_powerAI (pCreature);
-    }
 
     struct mob_rune_of_powerAI : public ScriptedAI
     {
@@ -842,21 +843,19 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_rune_of_powerAI (pCreature);
+    }
+
 };
-
-
-
-
-
-
-
 
 void AddSC_boss_assembly_of_iron()
 {
-    new boss_steelbreaker();
-    new boss_runemaster_molgeim();
-    new boss_stormcaller_brundir();
-    new mob_lightning_elemental();
-    new mob_rune_of_summoning();
-    new mob_rune_of_power();
+    new boss_steelbreaker;
+    new boss_runemaster_molgeim;
+    new boss_stormcaller_brundir;
+    new mob_lightning_elemental;
+    new mob_rune_of_summoning;
+    new mob_rune_of_power;
 }

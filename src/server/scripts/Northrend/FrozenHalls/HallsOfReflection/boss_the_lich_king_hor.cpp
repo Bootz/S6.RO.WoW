@@ -56,25 +56,21 @@ enum
   SAY_LICH_KING_END_DUN              = -1594504, 
   SAY_LICH_KING_WIN                  = -1594485,
 };
-class boss_lich_king_hor : public CreatureScript
+
+class boss_lich_king_hor : public CreatureScript
 {
 public:
     boss_lich_king_hor() : CreatureScript("boss_lich_king_hor") { }
-
-    CreatureAI* GetAI_boss_lich_king_hr(Creature* pCreature)
-    {
-        return new boss_lich_king_hrAI(pCreature);
-    }
 
     struct boss_lich_king_hrAI : public npc_escortAI
     {
        boss_lich_king_hrAI(Creature *pCreature) : npc_escortAI(pCreature)
        {
-            m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+            m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             Reset();
        }
 
-       ScriptedInstance* m_pInstance;
+       InstanceScript* m_pInstance;
        uint32 Step;
        uint32 StepTimer;
        bool StartEscort;
@@ -360,27 +356,27 @@ public:
         }
     };
 
+    CreatureAI* GetAI_boss_lich_king_hr(Creature* pCreature) const
+    {
+        return new boss_lich_king_hrAI(pCreature);
+    }
 };
-class npc_raging_gnoul : public CreatureScript
+
+class npc_raging_gnoul : public CreatureScript
 {
 public:
     npc_raging_gnoul() : CreatureScript("npc_raging_gnoul") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_raging_gnoulAI(pCreature);
-    }
 
     struct npc_raging_gnoulAI : public ScriptedAI
     {
         npc_raging_gnoulAI(Creature *pCreature) : ScriptedAI(pCreature)
        {
-            m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+            m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             me->setActive(true);
             Reset();
        }
 
-    ScriptedInstance* m_pInstance;
+    InstanceScript* m_pInstance;
     uint32 EmergeTimer;
     bool Emerge;
     uint64 m_uiLiderGUID;
@@ -437,27 +433,28 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_raging_gnoulAI(pCreature);
+    }
+
 };
-class npc_risen_witch_doctor : public CreatureScript
+
+class npc_risen_witch_doctor : public CreatureScript
 {
 public:
     npc_risen_witch_doctor() : CreatureScript("npc_risen_witch_doctor") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_risen_witch_doctorAI(pCreature);
-    }
 
     struct npc_risen_witch_doctorAI : public ScriptedAI
     {
         npc_risen_witch_doctorAI(Creature *pCreature) : ScriptedAI(pCreature)
        {
-            m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+            m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
     		me->setActive(true);
             Reset();
        }
 
-    ScriptedInstance* m_pInstance;
+    InstanceScript* m_pInstance;
     uint32 EmergeTimer;
     bool Emerge;
     uint64 m_uiLiderGUID;
@@ -514,27 +511,28 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_risen_witch_doctorAI(pCreature);
+    }
+
 };
-class npc_abon : public CreatureScript
+
+class npc_abon : public CreatureScript
 {
 public:
     npc_abon() : CreatureScript("npc_abon") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_abonAI(pCreature);
-    }
 
     struct npc_abonAI : public ScriptedAI
     {
         npc_abonAI(Creature *pCreature) : ScriptedAI(pCreature)
        {
-            m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+            m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
     		me->setActive(true);
             Reset();
        }
 
-    ScriptedInstance* m_pInstance;
+    InstanceScript* m_pInstance;
     uint64 m_uiLiderGUID;
     bool Walk;
 
@@ -570,16 +568,16 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_abonAI(pCreature);
+    }
 };
-
-
-
-
 
 void AddSC_boss_lich_king_hr()
 {
-    new boss_lich_king_hor();
-    new npc_raging_gnoul();
-    new npc_risen_witch_doctor();
-    new npc_abon();
+    new boss_lich_king_hor;
+    new npc_raging_gnoul;
+    new npc_risen_witch_doctor;
+    new npc_abon;
 }

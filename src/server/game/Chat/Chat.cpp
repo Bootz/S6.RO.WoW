@@ -133,6 +133,8 @@ ChatCommand * ChatHandler::getCommandTable()
     {
         { "customize",      SEC_GAMEMASTER,     true,  &ChatHandler::HandleCharacterCustomizeCommand,  "", NULL },
         { "deleted",        SEC_GAMEMASTER,     true,  NULL,                                           "", characterDeletedCommandTable},
+        { "changefaction",  SEC_GAMEMASTER,     true,  &ChatHandler::HandleCharacterChangeFactionCommand,  "", NULL },
+        { "changerace",     SEC_GAMEMASTER,     true,  &ChatHandler::HandleCharacterChangeRaceCommand,    "", NULL },
         { "erase",          SEC_CONSOLE,        true,  &ChatHandler::HandleCharacterEraseCommand,      "", NULL },
         { "level",          SEC_ADMINISTRATOR,  true,  &ChatHandler::HandleCharacterLevelCommand,      "", NULL },
         { "rename",         SEC_GAMEMASTER,     true,  &ChatHandler::HandleCharacterRenameCommand,     "", NULL },
@@ -327,6 +329,7 @@ ChatCommand * ChatHandler::getCommandTable()
 
     static ChatCommand lookupCommandTable[] =
     {
+        { "achievement",    SEC_MODERATOR,      true,  &ChatHandler::HandleLookupAchievementCommand,   "", NULL },
         { "area",           SEC_MODERATOR,      true,  &ChatHandler::HandleLookupAreaCommand,          "", NULL },
         { "creature",       SEC_ADMINISTRATOR,  true,  &ChatHandler::HandleLookupCreatureCommand,      "", NULL },
         { "event",          SEC_GAMEMASTER,     true,  &ChatHandler::HandleLookupEventCommand,         "", NULL },
@@ -636,6 +639,13 @@ ChatCommand * ChatHandler::getCommandTable()
         { NULL,             0,                  false, NULL,                                           "", NULL }
     };
 
+    static ChatCommand AchievementsCommandTable[] =
+    {
+        { "add",            SEC_GAMEMASTER,     false, &ChatHandler::HandleAchievementsAddCommand,     "", NULL },
+        { "remove",         SEC_GAMEMASTER,     false, &ChatHandler::HandleAchievementsRemoveCommand,  "", NULL },
+        { NULL,             0,                  false, NULL,                                           "", NULL }
+    };
+
     static ChatCommand unbanCommandTable[] =
     {
         { "account",        SEC_ADMINISTRATOR,  true,  &ChatHandler::HandleUnBanAccountCommand,      "", NULL },
@@ -696,6 +706,7 @@ ChatCommand * ChatHandler::getCommandTable()
         { "reset",          SEC_ADMINISTRATOR,  true,  NULL,                                           "", resetCommandTable    },
         { "instance",       SEC_ADMINISTRATOR,  true,  NULL,                                           "", instanceCommandTable },
         { "server",         SEC_ADMINISTRATOR,  true,  NULL,                                           "", serverCommandTable   },
+        { "achievement",    SEC_ADMINISTRATOR,  true,  NULL,                                           "", AchievementsCommandTable },
 
         { "channel",        SEC_ADMINISTRATOR, true, NULL,                                             "", channelCommandTable  },
 
@@ -1399,7 +1410,7 @@ valid examples:
 
                     if (!linkedQuest)
                     {
-#ifdef MANOGS_DEBUG
+#ifdef TRINITY_DEBUG
                         sLog.outBasic("ChatHandler::isValidChatMessage Questtemplate %u not found", questid);
 #endif
                         return false;
@@ -1617,7 +1628,7 @@ valid examples:
 
                             if (!ql)
                             {
-#ifdef MANOGS_DEBUG
+#ifdef TRINITY_DEBUG
                                 sLog.outBasic("ChatHandler::isValidChatMessage default questname didn't match and there is no locale");
 #endif
                                 return false;
@@ -1634,8 +1645,8 @@ valid examples:
                             }
                             if (!foundName)
                             {
-#ifdef MANOGS_DEBUG
-                                sLog.outBasic("ChatHandler::isValidChatMessage no quest locale title matched")
+#ifdef TRINITY_DEBUG
+                                sLog.outBasic("ChatHandler::isValidChatMessage no quest locale title matched");
 #endif
                                 return false;
                             }

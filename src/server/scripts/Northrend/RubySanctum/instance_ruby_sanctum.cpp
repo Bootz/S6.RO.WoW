@@ -18,19 +18,15 @@
 #include "ruby_sanctum.h"
 
 #define MAX_ENCOUNTER 4
-class instance_ruby_sanctum : public InstanceMapScript
+
+class instance_ruby_sanctum : public InstanceMapScript
 {
 public:
-    instance_ruby_sanctum() : InstanceMapScript("instance_ruby_sanctum") { }
+    instance_ruby_sanctum() : InstanceMapScript("instance_ruby_sanctum", 724) { }
 
-    InstanceData* GetInstanceData_InstanceMapScript(Map *pMap)
+    struct instance_ruby_sanctum_InstanceMapScript : public InstanceScript
     {
-    	return new instance_ruby_sanctum_InstanceMapScript(pMap);
-    }
-
-    struct instance_ruby_sanctum_InstanceMapScript : public ScriptedInstance
-    {
-    	instance_ruby_sanctum_InstanceMapScript(Map *pMap) : ScriptedInstance(pMap) {Initialize();};
+    	instance_ruby_sanctum_InstanceMapScript(Map *pMap) : InstanceScript(pMap) {Initialize();};
 
     	uint8 m_auiEncounter[MAX_ENCOUNTER];
     	std::string str_data;
@@ -224,10 +220,15 @@ public:
     	}
     };
 
+    InstanceScript* GetInstanceScript (InstanceMap *pMap) const
+    {
+    	return new instance_ruby_sanctum_InstanceMapScript(pMap);
+    }
+
 };
 
 
 void AddSC_instance_ruby_sanctum()
 {
-    new instance_ruby_sanctum();
+    new instance_ruby_sanctum;
 }

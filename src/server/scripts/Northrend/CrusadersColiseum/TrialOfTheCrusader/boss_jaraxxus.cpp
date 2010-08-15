@@ -23,7 +23,7 @@ enum Says
 {
         SAY_AGGRO                       =       -1600218,
         SAY_FLESH                       =       -1600219,
-        SAY_SUMMON_SISTER       =       -1600220,
+        SAY_SUMMON_SISTER               =       -1600220,
         SAY_INFERNO                     =       -1600221,
         SAY_KILL_1                      =       -1600222,
         SAY_KILL_2                      =       -1600223,
@@ -86,24 +86,20 @@ enum NPC
         NPC_NETHER_PORTAL                = 34825,
         NPC_MISTRESS_OF_PAIN     = 34826,
 };
-class Boss_Jaraxxus : public CreatureScript
+
+class Boss_Jaraxxus : public CreatureScript
 {
 public:
     Boss_Jaraxxus() : CreatureScript("Boss_Jaraxxus") { }
-
-    CreatureAI* GetAI_boss_Jaraxxus(Creature* pCreature)
-    {
-        return new boss_JaraxxusAI (pCreature);
-    }
 
     struct boss_JaraxxusAI : public ScriptedAI
     {
         boss_JaraxxusAI(Creature *pCreature) : ScriptedAI(pCreature), summons(me)
         {
-                    m_pInstance = pCreature->GetInstanceData();
+                    m_pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
 
             uint32 uiIncinerateFleshTimer;
             uint32 uiFelFireballTimer;
@@ -136,7 +132,7 @@ public:
 
                      summons.DespawnAll();
 
-                     m_pInstance = (ScriptedInstance*)me->GetInstanceData();
+                     m_pInstance = (InstanceScript*)me->GetInstanceScript();
         }
 
         void EnterCombat(Unit* who)
@@ -263,26 +259,27 @@ public:
         }
     };
 
+    CreatureAI* GetAI_boss_Jaraxxus(Creature* pCreature) const
+    {
+        return new boss_JaraxxusAI (pCreature);
+    }
+
 };
 
-class Mob_FireTrigger : public CreatureScript
+
+class Mob_FireTrigger : public CreatureScript
 {
 public:
     Mob_FireTrigger() : CreatureScript("Mob_FireTrigger") { }
-
-    CreatureAI* GetAI_mob_FireTrigger(Creature* pCreature)
-    {
-        return new mob_FireTriggerAI (pCreature);
-    }
 
     struct mob_FireTriggerAI : public Scripted_NoMovementAI
     {
         mob_FireTriggerAI(Creature *pCreature) : Scripted_NoMovementAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
 
         void Reset()
         {
@@ -298,26 +295,27 @@ public:
         }
     };
 
+    CreatureAI* GetAI_mob_FireTrigger(Creature* pCreature) const
+    {
+        return new mob_FireTriggerAI (pCreature);
+    }
+
 };
 
-class Mob_Vulcan : public CreatureScript
+
+class Mob_Vulcan : public CreatureScript
 {
 public:
     Mob_Vulcan() : CreatureScript("Mob_Vulcan") { }
-
-    CreatureAI* GetAI_mob_Vulcan(Creature* pCreature)
-    {
-        return new mob_VulcanAI (pCreature);
-    }
 
     struct mob_VulcanAI : public Scripted_NoMovementAI
     {
         mob_VulcanAI(Creature *pCreature) : Scripted_NoMovementAI(pCreature), summons(me)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
 
             SummonList summons;
 
@@ -347,27 +345,27 @@ public:
         }
     };
 
+    CreatureAI* GetAI_mob_Vulcan(Creature* pCreature) const
+    {
+        return new mob_VulcanAI (pCreature);
+    }
+
 };
 
-class Mob_Netherportal : public CreatureScript
+
+class Mob_Netherportal : public CreatureScript
 {
 public:
     Mob_Netherportal() : CreatureScript("Mob_Netherportal") { }
-
-    CreatureAI* GetAI_mob_Netherportal(Creature* pCreature)
-    {
-        return new mob_NetherportalAI (pCreature);
-
-    }
 
     struct mob_NetherportalAI : public Scripted_NoMovementAI
     {
         mob_NetherportalAI(Creature *pCreature) : Scripted_NoMovementAI(pCreature), summons(me)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
 
             uint32 uiNetherPortalEffectTimer;
             uint32 uiSpellNetherPortal;
@@ -414,26 +412,28 @@ public:
         }
     };
 
+    CreatureAI* GetAI_mob_Netherportal(Creature* pCreature) const
+    {
+        return new mob_NetherportalAI (pCreature);
+
+    }
+
 };
 
-class Mob_MistressOfPain : public CreatureScript
+
+class Mob_MistressOfPain : public CreatureScript
 {
 public:
     Mob_MistressOfPain() : CreatureScript("Mob_MistressOfPain") { }
-
-    CreatureAI* GetAI_mob_mistressofpain(Creature* pCreature)
-    {
-        return new mob_mistressofpainAI (pCreature);
-    }
 
     struct mob_mistressofpainAI : public ScriptedAI
     {
         mob_mistressofpainAI(Creature *pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
 
             uint32 uiShivanSlashTimer;
             uint32 uiSpinningPainSpikeTimer;
@@ -476,14 +476,19 @@ public:
         }
     };
 
+    CreatureAI* GetAI_mob_mistressofpain(Creature* pCreature) const
+    {
+        return new mob_mistressofpainAI (pCreature);
+    }
+
 };
 
 
 void AddSC_boss_lord_jaraxxus()
 {
-    new Boss_Jaraxxus();
-    new Mob_FireTrigger();
-    new Mob_Vulcan();
-    new Mob_Netherportal();
-    new Mob_MistressOfPain();
+    new Boss_Jaraxxus;
+    new Mob_FireTrigger;
+    new Mob_Vulcan;
+    new Mob_Netherportal;
+    new Mob_MistressOfPain;
 }

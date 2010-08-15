@@ -82,24 +82,20 @@ enum Yells
     SAY_DEATH              =    -1665916,
     SAY_DOMINATE_MIND      =    -1665914,
 };
-class boss_lady_deathwisper : public CreatureScript
+
+class boss_lady_deathwisper : public CreatureScript
 {
 public:
     boss_lady_deathwisper() : CreatureScript("boss_lady_deathwisper") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_lady_deathwisperAI(pCreature);
-    }
 
     struct boss_lady_deathwisperAI : public ScriptedAI
     {
         boss_lady_deathwisperAI(Creature *pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
 
         uint32 m_uiPhase;
         uint32 m_uiDominateMindTimer;
@@ -447,25 +443,26 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_lady_deathwisperAI(pCreature);
+    }
+
 };
-class npc_shade : public CreatureScript
+
+class npc_shade : public CreatureScript
 {
 public:
     npc_shade() : CreatureScript("npc_shade") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_shadeAI(pCreature);
-    }
 
     struct npc_shadeAI : public ScriptedAI //Dont work
     {
         npc_shadeAI(Creature *pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
 
             uint32 m_uiShade1Timer;
 
@@ -511,12 +508,17 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_shadeAI(pCreature);
+    }
+
 };
 
 
 
 void AddSC_boss_deahtwisper()
 {
-    new boss_lady_deathwisper();
-    new npc_shade();
+    new boss_lady_deathwisper;
+    new npc_shade;
 }

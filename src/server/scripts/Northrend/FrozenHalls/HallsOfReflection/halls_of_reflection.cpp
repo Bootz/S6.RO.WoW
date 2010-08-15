@@ -141,14 +141,15 @@ enum
 
   FACTION                            = 2076,
 };
-class npc_jaina_and_sylvana_HRintro : public CreatureScript
+
+class npc_jaina_and_sylvana_HRintro : public CreatureScript
 {
 public:
     npc_jaina_and_sylvana_HRintro() : CreatureScript("npc_jaina_and_sylvana_HRintro") { }
 
-    bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
     {
-        ScriptedInstance* m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        InstanceScript* m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
 
         if (!m_pInstance) return false;
 
@@ -173,9 +174,9 @@ public:
         return true;
     }
 
-    bool GossipHello(Player* pPlayer, Creature* pCreature)
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
     {
-        ScriptedInstance* m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        InstanceScript* m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
 
         if(pCreature->isQuestGiver())
            pPlayer->PrepareQuestMenu( pCreature->GetGUID());
@@ -196,20 +197,15 @@ public:
         return true;
     }
 
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_jaina_and_sylvana_HRintroAI(pCreature);
-    }
-
     struct npc_jaina_and_sylvana_HRintroAI : public ScriptedAI
     {
         npc_jaina_and_sylvana_HRintroAI(Creature *pCreature) : ScriptedAI(pCreature)
        {
-            m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+            m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             Reset();
        }
 
-       ScriptedInstance* m_pInstance;
+       InstanceScript* m_pInstance;
 
        uint32 StepTimer;
        uint32 Step;
@@ -660,17 +656,23 @@ public:
          }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_jaina_and_sylvana_HRintroAI(pCreature);
+    }
+
 };
 
 
-class npc_jaina_and_sylvana_HRextro : public CreatureScript
+
+class npc_jaina_and_sylvana_HRextro : public CreatureScript
 {
 public:
     npc_jaina_and_sylvana_HRextro() : CreatureScript("npc_jaina_and_sylvana_HRextro") { }
 
-    bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
     {
-        ScriptedInstance* m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        InstanceScript* m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
         switch (uiAction)
         {
             case GOSSIP_ACTION_INFO_DEF+1:
@@ -692,10 +694,10 @@ public:
         }
     }
 
-    bool GossipHello(Player* pPlayer, Creature* pCreature)
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
     {
 
-        ScriptedInstance*   m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+        InstanceScript*   m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
 
         if(!m_pInstance) return false;
 
@@ -711,20 +713,15 @@ public:
         return true;
     }
 
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_jaina_and_sylvana_HRextroAI(pCreature);
-    }
-
     struct npc_jaina_and_sylvana_HRextroAI : public npc_escortAI
     {
        npc_jaina_and_sylvana_HRextroAI(Creature *pCreature) : npc_escortAI(pCreature)
        {
-            m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+            m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             Reset();
        }
 
-       ScriptedInstance* m_pInstance;
+       InstanceScript* m_pInstance;
 
        uint32 CastTimer;
        uint32 StepTimer;
@@ -1208,19 +1205,18 @@ public:
           return;
        }
     };
-
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_jaina_and_sylvana_HRextroAI(pCreature);
+    }
 };
 
 
-class npc_lich_king_hr : public CreatureScript
+
+class npc_lich_king_hr : public CreatureScript
 {
 public:
     npc_lich_king_hr() : CreatureScript("npc_lich_king_hr") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_lich_king_hrAI(pCreature);
-    }
 
     struct npc_lich_king_hrAI : public ScriptedAI
     {
@@ -1247,6 +1243,10 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_lich_king_hrAI(pCreature);
+    }
 };
 
 
@@ -1260,25 +1260,21 @@ enum GENERAL_EVENT
    SPELL_SHIELD_THROWN          = 69222,
    SPELL_SPIKE                  = 59446   // this is not right spell!
 };
-class npc_frostworn_general : public CreatureScript
+
+class npc_frostworn_general : public CreatureScript
 {
 public:
     npc_frostworn_general() : CreatureScript("npc_frostworn_general") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_frostworn_generalAI(pCreature);
-    }
 
     struct npc_frostworn_generalAI : public ScriptedAI
     {
        npc_frostworn_generalAI(Creature *pCreature) : ScriptedAI(pCreature)
        {
-            m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+            m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             Reset();
        }
 
-       ScriptedInstance* m_pInstance;
+       InstanceScript* m_pInstance;
 
        uint32 m_uiShieldTimer;
        uint32 m_uiSpikeTimer;
@@ -1347,14 +1343,17 @@ public:
             DoMeleeAttackIfReady();
        }
     };
-
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_frostworn_generalAI(pCreature);
+    }
 };
 
 
 void AddSC_halls_of_reflection()
 {
-    new npc_jaina_and_sylvana_HRintro();
-    new npc_jaina_and_sylvana_HRextro();
-    new npc_lich_king_hr();
-    new npc_frostworn_general();
+    new npc_jaina_and_sylvana_HRintro;
+    new npc_jaina_and_sylvana_HRextro;
+    new npc_lich_king_hr;
+    new npc_frostworn_general;
 }

@@ -57,6 +57,10 @@ LFGMgr::~LFGMgr()
         delete it->second;
     m_Proposals.clear();
 
+    for (LfgPlayerBootMap::iterator it = m_Boots.begin(); it != m_Boots.end(); ++it)
+        delete it->second;
+    m_Boots.clear();
+
     for (LfgRoleCheckMap::iterator it = m_RoleChecks.begin(); it != m_RoleChecks.end(); ++it)
         delete it->second;
     m_RoleChecks.clear();
@@ -69,9 +73,104 @@ LFGMgr::~LFGMgr()
     m_newToQueue.clear();
 }
 
+
+// Temporal add to try to find bugs that leaves data inconsistent
+void LFGMgr::Cleaner()
+{
+    LfgQueueInfoMap::iterator itQueue;
+    LfgGuidList::iterator itGuidListRemove;
+    LfgGuidList eraseList;
+
+    for (LfgQueueInfoMap::iterator it = m_QueueInfoMap.begin(); it != m_QueueInfoMap.end();)
+    {
+        itQueue = it++;
+        // Remove empty queues
+        if (!itQueue->second)
+        {
+            sLog.outError("LFGMgr::Cleaner: removing " UI64FMTD " from QueueInfoMap, data is null", itQueue->first);
+            m_QueueInfoMap.erase(itQueue);
+        }
+        // Remove queue with empty players
+        else if(!itQueue->second->roles.size())
+        {
+            sLog.outError("LFGMgr::Cleaner: removing " UI64FMTD " from QueueInfoMap, no players in queue!", itQueue->first);
+            m_QueueInfoMap.erase(itQueue);
+        }
+    }
+   
+    // Remove from NewToQueue those guids that do not exist in queueMap
+    for (LfgGuidList::iterator it = m_newToQueue.begin(); it != m_newToQueue.end();)
+    {
+        itGuidListRemove = it++;
+        if (m_QueueInfoMap.find(*itGuidListRemove) == m_QueueInfoMap.end())
+        {
+            eraseList.push_back(*itGuidListRemove);
+            m_newToQueue.erase(itGuidListRemove);
+            sLog.outError("LFGMgr::Cleaner: removing " UI64FMTD " from newToQueue, no queue info with that guid", *itGuidListRemove);
+        }
+    }
+
+    // Remove from currentQueue those guids that do not exist in queueMap
+    for (LfgGuidList::iterator it = m_currentQueue.begin(); it != m_currentQueue.end();)
+    {
+        itGuidListRemove = it++;
+        if (m_QueueInfoMap.find(*itGuidListRemove) == m_QueueInfoMap.end())
+        {
+            eraseList.push_back(*itGuidListRemove);
+            m_newToQueue.erase(itGuidListRemove);
+            sLog.outError("LFGMgr::Cleaner: removing " UI64FMTD " from currentQueue, no queue info with that guid", *itGuidListRemove);
+        }
+    }
+
+    for (LfgGuidList::iterator it = eraseList.begin(); it != eraseList.end(); ++it)
+    {
+        if (IS_GROUP(*it))
+        {
+            if (Group *grp = sObjectMgr.GetGroupByGUID(GUID_LOPART(*it)))
+                for (GroupReference *itr = grp->GetFirstMember(); itr != NULL; itr = itr->next())
+                    if (Player *plr = itr->getSource())
+                        plr->GetSession()->SendLfgUpdateParty(LFG_UPDATETYPE_REMOVED_FROM_QUEUE);
+        }
+        else
+            if (Player *plr = sObjectMgr.GetPlayer(*it))
+                plr->GetSession()->SendLfgUpdatePlayer(LFG_UPDATETYPE_REMOVED_FROM_QUEUE);
+    }
+}
+
+// Temporal added to perform consistency check before adding
+void LFGMgr::AddGuidToNewQueue(uint64 guid)
+{
+    // Consistency check
+    LfgGuidList::const_iterator it;
+    for (it = m_newToQueue.begin(); it != m_newToQueue.end(); ++it)
+    {
+        if (*it == guid)
+        {
+            sLog.outError("LFGMgr::AddToQueue: " UI64FMTD " being added to queue and it was already added. ignoring", guid);
+            break;
+        }
+    }
+    if (it == m_newToQueue.end())
+    {
+        LfgGuidList::iterator itRemove;
+        for (LfgGuidList::iterator it = m_currentQueue.begin(); it != m_currentQueue.end() && *it != guid;)
+        {
+            itRemove = it++;
+            if (*itRemove == guid)
+            {
+                sLog.outError("LFGMgr::AddToQueue: " UI64FMTD " being added to queue and already in current queue (removing to readd)", guid);
+                m_currentQueue.erase(itRemove);
+                break;
+            }
+        }
+        // Add to queue
+        m_newToQueue.push_back(guid);
+    }
+}
+
 void LFGMgr::Update(uint32 diff)
 {
-    if (!m_update)
+    if (!m_update || !sWorld.getConfig(CONFIG_DUNGEON_FINDER_ENABLE))
         return;
 
     m_update = false;
@@ -116,6 +215,31 @@ void LFGMgr::Update(uint32 diff)
         if (itRemove->second->cancelTime < currTime)
             RemoveProposal(itRemove, LFG_UPDATETYPE_PROPOSAL_FAILED);
     }
+
+    // Remove obsolete kicks
+    LfgPlayerBootMap::iterator itBoot;
+    LfgPlayerBoot *pBoot;
+    for (LfgPlayerBootMap::iterator it = m_Boots.begin(); it != m_Boots.end();)
+    {
+        itBoot = it++;
+        pBoot = itBoot->second;
+        if (pBoot->cancelTime < currTime)
+        {
+            Group *grp = sObjectMgr.GetGroupByGUID(itBoot->first);
+            pBoot->inProgress = false;
+            for (LfgAnswerMap::const_iterator itVotes = pBoot->votes.begin(); itVotes != pBoot->votes.end(); ++itVotes)
+                if (Player *plrg = sObjectMgr.GetPlayer(itVotes->first))
+                    if (plrg->GetGUIDLow() != pBoot->victimLowGuid)
+                        SendLfgBootPlayer(plrg, pBoot);
+            if (grp)
+                grp->SetLfgKickActive(false);
+            delete pBoot;
+            m_Boots.erase(itBoot);
+        }
+    }
+
+    // Consistency cleaner
+    Cleaner();
 
     // Check if a proposal can be formed with the new groups being added
     LfgProposalList proposals;
@@ -273,7 +397,8 @@ void LFGMgr::Join(Player *plr)
 
     LfgJoinResult result = LFG_JOIN_OK;
     // Previous checks before joining
-    if (m_QueueInfoMap[guid])
+    LfgQueueInfoMap::iterator itQueue = m_QueueInfoMap.find(guid);
+    if (itQueue != m_QueueInfoMap.end())
     {
         result = LFG_JOIN_INTERNAL_ERROR;
         if (grp)
@@ -456,7 +581,7 @@ void LFGMgr::AddToQueue(uint64 guid, LfgRolesMap *roles, LfgDungeonSet *dungeons
         pqInfo->dungeons.insert(*it);
 
     m_QueueInfoMap[guid] = pqInfo;
-    m_newToQueue.push_back(guid);
+    AddGuidToNewQueue(guid);
 }
 
 /// <summary>
@@ -490,16 +615,17 @@ void LFGMgr::FindNewGroups(LfgGuidList &check, LfgGuidList all, LfgProposalList 
     uint8 numLfgGroups = 0;
     uint32 groupLowGuid = 0;
     LfgQueueInfoMap pqInfoMap;
-
+    LfgQueueInfoMap::iterator itQueue;
     for (LfgGuidList::const_iterator it = check.begin(); it != check.end(); ++it)
     {
-        if (!m_QueueInfoMap[*it])
+        itQueue = m_QueueInfoMap.find(*it);
+        if (itQueue == m_QueueInfoMap.end())
         {
             sLog.outError("LFGMgr::FindNewGroups: " UI64FMTD " is not queued but listed as queued!", *it);
             return;
         }
-        pqInfoMap[*it] = m_QueueInfoMap[*it];
-        numPlayers += m_QueueInfoMap[*it]->roles.size();
+        pqInfoMap[*it] = itQueue->second;
+        numPlayers += itQueue->second->roles.size();
 
         if (IS_GROUP(*it))
         {
@@ -523,7 +649,7 @@ void LFGMgr::FindNewGroups(LfgGuidList &check, LfgGuidList all, LfgProposalList 
 
     if (numPlayers < MAXGROUPSIZE)
     {
-        while (!all.empty())
+        while (!all.empty() && check.size() < MAXGROUPSIZE)
         {
             check.push_back(all.front());
             all.pop_front();
@@ -1048,7 +1174,7 @@ void LFGMgr::RemoveProposal(LfgProposalMap::iterator itProposal, LfgUpdateType t
     pProposal->state = LFG_PROPOSAL_FAILED;
 
     // Mark all people that didn't answered as no accept
-    if (LFG_UPDATETYPE_PROPOSAL_FAILED)
+    if (type == LFG_UPDATETYPE_PROPOSAL_FAILED)
         for (LfgProposalPlayerMap::const_iterator it = pProposal->players.begin(); it != pProposal->players.end(); ++it)
             if (it->second->accept < 1)
                 it->second->accept = 0;
@@ -1062,19 +1188,26 @@ void LFGMgr::RemoveProposal(LfgProposalMap::iterator itProposal, LfgUpdateType t
         guid = plr->GetGroup() ? plr->GetGroup()->GetGUID(): plr->GetGUID();
 
         SendUpdateProposal(plr, itProposal->first, pProposal);
-        if (!it->second->accept)                            // Remove player/player group from queues
+        // Remove members that didn't accept
+        itQueue = m_QueueInfoMap.find(guid);
+        if (!it->second->accept)
         {
             updateType = type;
             plr->GetLfgDungeons()->clear();
             plr->SetLfgRoles(ROLE_NONE);
-            itQueue = m_QueueInfoMap.find(guid);
+            
             if (itQueue != m_QueueInfoMap.end())
                 m_QueueInfoMap.erase(itQueue);
         }
         else                                                // Readd to queue
         {
-            m_newToQueue.push_back(guid);
-            updateType = LFG_UPDATETYPE_ADDED_TO_QUEUE;
+            if (itQueue == m_QueueInfoMap.end())            // Can't readd! misssing queue info!
+                updateType = LFG_UPDATETYPE_REMOVED_FROM_QUEUE;
+            else
+            {
+                AddGuidToNewQueue(guid);
+                updateType = LFG_UPDATETYPE_ADDED_TO_QUEUE;
+            }
         }
 
         if (plr->GetGroup())
@@ -1090,6 +1223,115 @@ void LFGMgr::RemoveProposal(LfgProposalMap::iterator itProposal, LfgUpdateType t
     pProposal->queues.clear();
     delete pProposal;
     m_Proposals.erase(itProposal);
+}
+
+/// <summary>
+/// Initialize a boot kick vote
+/// </summary>
+/// <param name="Group *">Group</param>
+/// <param name="uint32">Player low guid who inits the vote kick</param>
+/// <param name="uint32">Player low guid to be kicked </param>
+/// <param name="std::string">kick reason</param>
+void LFGMgr::InitBoot(Group *grp, uint32 iLowGuid, uint32 vLowguid, std::string reason)
+{
+    if (!grp)
+        return;
+
+    LfgPlayerBoot *pBoot = new LfgPlayerBoot();
+    pBoot->inProgress = true;
+    pBoot->cancelTime = time_t(time(NULL)) + LFG_TIME_BOOT;
+    pBoot->reason = reason;
+    pBoot->victimLowGuid = vLowguid;
+    pBoot->votedNeeded = GROUP_LFG_KICK_VOTES_NEEDED;
+    PlayerSet players;
+
+    uint32 pLowGuid = 0;
+    for (GroupReference *itr = grp->GetFirstMember(); itr != NULL; itr = itr->next())
+    {
+        if (Player *plrg = itr->getSource())
+        {
+            pLowGuid = plrg->GetGUIDLow();
+            if (pLowGuid == vLowguid)
+                pBoot->votes[pLowGuid] = 0;                 // Victim auto vote NO
+            else if (pLowGuid == iLowGuid)
+                pBoot->votes[pLowGuid] = 1;                 // Kicker auto vote YES
+            else
+            {
+                pBoot->votes[pLowGuid] = -1;                // Other members need to vote
+                players.insert(plrg);
+            }
+        }
+    }
+
+    for (PlayerSet::const_iterator it = players.begin(); it != players.end(); ++it)
+        SendLfgBootPlayer(*it, pBoot);
+
+    grp->SetLfgKickActive(true);
+    m_Boots[grp->GetLowGUID()] = pBoot;
+}
+
+/// <summary>
+/// Update Boot info with player answer
+/// </summary>
+/// <param name="Player *">Player guid</param>
+/// <param name="uint8">Player answer</param>
+void LFGMgr::UpdateBoot(Player *plr, uint8 accept)
+{
+    Group *grp = plr ? plr->GetGroup() : NULL;
+    if (!grp)
+        return;
+
+    uint32 bootId = grp->GetLowGUID();
+    uint32 lowGuid = plr->GetGUIDLow();
+
+    LfgPlayerBootMap::iterator itBoot = m_Boots.find(bootId);
+    if (itBoot == m_Boots.end())
+        return;
+
+    LfgPlayerBoot *pBoot = itBoot->second;
+    if (!pBoot)
+        return;
+
+    if (pBoot->votes[lowGuid] != -1)                           // Cheat check: Player can't vote twice
+        return;
+
+    pBoot->votes[lowGuid] = accept;
+
+    uint8 votesNum = 0;
+    uint8 agreeNum = 0;
+    for (LfgAnswerMap::const_iterator itVotes = pBoot->votes.begin(); itVotes != pBoot->votes.end(); ++itVotes)
+    {
+        if (itVotes->second != -1)
+        {
+            ++votesNum;
+            if (itVotes->second == 1)
+                ++agreeNum;
+        }
+    }
+
+    if (agreeNum == pBoot->votedNeeded ||                   // Vote passed
+        votesNum == pBoot->votes.size() ||                  // All voted but not passed
+        (pBoot->votes.size() - votesNum + agreeNum) < pBoot->votedNeeded) // Vote didnt passed
+    {
+        // Send update info to all players
+        pBoot->inProgress = false;
+        for (LfgAnswerMap::const_iterator itVotes = pBoot->votes.begin(); itVotes != pBoot->votes.end(); ++itVotes)
+            if (Player *plrg = sObjectMgr.GetPlayer(itVotes->first))
+                if (plrg->GetGUIDLow() != pBoot->victimLowGuid)
+                    SendLfgBootPlayer(plrg, pBoot);
+
+        if (agreeNum == pBoot->votedNeeded)                 // Vote passed - Kick player
+        {
+            Player::RemoveFromGroup(grp, MAKE_NEW_GUID(pBoot->victimLowGuid, 0, HIGHGUID_PLAYER));
+            if (Player *victim = sObjectMgr.GetPlayer(pBoot->victimLowGuid))
+                victim->TeleportToBGEntryPoint();
+            OfferContinue(grp);
+            grp->SetLfgKicks(grp->GetLfgKicks() + 1);
+        }
+        grp->SetLfgKickActive(false);
+        delete pBoot;
+        m_Boots.erase(itBoot);
+    }
 }
 
 /// <summary>
@@ -1303,6 +1545,42 @@ void LFGMgr::SendLfgPartyInfo(Player *plr)
         BuildPartyLockDungeonBlock(data, lockMap);
         plr->GetSession()->SendPacket(&data);
     }
+}
+
+/// <summary>
+/// Build and Send LFG boot player info
+/// </summary>
+/// <param name="Player *">Player</param>
+/// <param name="LfgPlayerBoot *">Boot info</param>
+void LFGMgr::SendLfgBootPlayer(Player *plr, LfgPlayerBoot *pBoot)
+{
+    sLog.outDebug("SMSG_LFG_BOOT_PLAYER");
+
+    int8 playerVote = pBoot->votes[plr->GetGUIDLow()];
+    uint8 votesNum = 0;
+    uint8 agreeNum = 0;
+    uint32 secsleft = uint8((pBoot->cancelTime - time(NULL)) / 1000);
+    for (LfgAnswerMap::const_iterator it = pBoot->votes.begin(); it != pBoot->votes.end(); ++it)
+    {
+        if (it->second != -1)
+        {
+            ++votesNum;
+            if (it->second == 1)
+                ++agreeNum;
+        }
+    }
+
+    WorldPacket data(SMSG_LFG_BOOT_PLAYER, 1 + 1 + 1 + 8 + 4 + 4 + 4 + 4 + pBoot->reason.length());
+    data << uint8(pBoot->inProgress);                       // Vote in progress
+    data << uint8(playerVote != -1);                        // Did Vote
+    data << uint8(playerVote == 1);                         // Agree
+    data << uint64(MAKE_NEW_GUID(pBoot->victimLowGuid, 0, HIGHGUID_PLAYER)); // Victim GUID
+    data << uint32(votesNum);                               // Total Votes
+    data << uint32(agreeNum);                               // Agree Count
+    data << uint32(secsleft);                               // Time Left
+    data << uint32(pBoot->votedNeeded);                     // Needed Votes
+    data << pBoot->reason.c_str();                          // Kick reason
+    plr->GetSession()->SendPacket(&data);
 }
 
 /// <summary>

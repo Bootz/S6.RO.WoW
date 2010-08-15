@@ -96,26 +96,22 @@ const Position VaporPos[6] =
 {1817.15, 95.380, 342.378, 0}
 };
 
-class boss_general_vezax : public CreatureScript
+
+class boss_general_vezax : public CreatureScript
 {
 public:
     boss_general_vezax() : CreatureScript("boss_general_vezax") { }
-
-    CreatureAI* GetAI(Creature *pCreature)
-    {
-        return new boss_general_vezaxAI(pCreature);
-    }
 
     struct boss_general_vezaxAI : public BossAI
     {
         boss_general_vezaxAI(Creature *pCreature) : BossAI(pCreature, BOSS_VEZAX)
         {
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
             me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);
             me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true); // Death Grip jump effect
         }
  
-        ScriptedInstance *pInstance;
+        InstanceScript *pInstance;
     
         int32 VaporsCount;
         bool HardMode, Dodged;
@@ -266,30 +262,31 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature *pCreature) const
+    {
+        return new boss_general_vezaxAI(pCreature);
+    }
+
 };
  
 
-class mob_saronite_vapors : public CreatureScript
+
+class mob_saronite_vapors : public CreatureScript
 {
 public:
     mob_saronite_vapors() : CreatureScript("mob_saronite_vapors") { }
-
-    CreatureAI* GetAI(Creature *pCreature)
-    {
-        return new mob_saronite_vaporsAI(pCreature);
-    }
 
     struct mob_saronite_vaporsAI : public ScriptedAI
     {
         mob_saronite_vaporsAI(Creature *pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
             me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);
             me->SetReactState(REACT_PASSIVE);
             me->GetMotionMaster()->MoveRandom(30.0f);
         }
     
-        ScriptedInstance *pInstance;
+        InstanceScript *pInstance;
  
         void DamageTaken(Unit *who, uint32 &damage)
         {
@@ -309,28 +306,29 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature *pCreature) const
+    {
+        return new mob_saronite_vaporsAI(pCreature);
+    }
+
 };
  
-class mob_saronite_animus : public CreatureScript
+
+class mob_saronite_animus : public CreatureScript
 {
 public:
     mob_saronite_animus() : CreatureScript("mob_saronite_animus") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_saronite_animusAI(pCreature);
-    }
 
     struct mob_saronite_animusAI : public ScriptedAI
     {
         mob_saronite_animusAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
             me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);
             me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true); // Death Grip jump effect
         }
     
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
 
         uint32 ProfoundDarknessTimer;
     
@@ -364,12 +362,17 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_saronite_animusAI(pCreature);
+    }
+
 };
 
     
 void AddSC_boss_general_vezax()
 {
-    new boss_general_vezax();
-    new mob_saronite_vapors();
-    new mob_saronite_animus();
+    new boss_general_vezax;
+    new mob_saronite_vapors;
+    new mob_saronite_animus;
 }

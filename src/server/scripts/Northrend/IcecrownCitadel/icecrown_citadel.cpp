@@ -65,6 +65,12 @@ enum Spells
     SPELL_VAMPIRICMIGHT               = 70674,
 };
 
+
+class npc_nerubar_brood_keeper : public CreatureScript
+{
+public:
+    npc_nerubar_brood_keeper() : CreatureScript("npc_nerubar_brood_keeper") { }
+
 struct  npc_nerubar_brood_keeperAI: public ScriptedAI
 {
     npc_nerubar_brood_keeperAI(Creature *c) : ScriptedAI(c)
@@ -115,6 +121,18 @@ struct  npc_nerubar_brood_keeperAI: public ScriptedAI
     }
 };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_nerubar_brood_keeperAI (pCreature);
+    }
+};
+
+
+class npc_the_damned : public CreatureScript
+{
+public:
+    npc_the_damned() : CreatureScript("npc_the_damned") { }
+
 struct  npc_the_damnedAI: public ScriptedAI
 {
     npc_the_damnedAI(Creature *c) : ScriptedAI(c)
@@ -152,6 +170,18 @@ struct  npc_the_damnedAI: public ScriptedAI
     }
 };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_the_damnedAI (pCreature);
+    }
+
+};
+
+class npc_servant_of_the_throne : public CreatureScript
+{
+public:
+    npc_servant_of_the_throne() : CreatureScript("npc_servant_of_the_throne") { }
+
 struct  npc_servant_of_the_throneAI: public ScriptedAI
 {
     npc_servant_of_the_throneAI(Creature *c) : ScriptedAI(c)
@@ -184,6 +214,18 @@ struct  npc_servant_of_the_throneAI: public ScriptedAI
     }
 };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_servant_of_the_throneAI (pCreature);
+    }
+};
+
+
+class npc_ancient_skeletal_soldier : public CreatureScript
+{
+public:
+    npc_ancient_skeletal_soldier() : CreatureScript("npc_ancient_skeletal_soldier") { }
+
 struct  npc_ancient_skeletal_soldierAI: public ScriptedAI
 {
     npc_ancient_skeletal_soldierAI(Creature *c) : ScriptedAI(c)
@@ -215,6 +257,18 @@ struct  npc_ancient_skeletal_soldierAI: public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_ancient_skeletal_soldierAI (pCreature);
+    }
+
+};
+
+class npc_death_bound_ward : public CreatureScript
+{
+public:
+    npc_death_bound_ward() : CreatureScript("npc_death_bound_ward") { }
 
 struct  npc_death_bound_wardAI: public ScriptedAI
 {
@@ -253,6 +307,18 @@ struct  npc_death_bound_wardAI: public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_death_bound_wardAI (pCreature);
+    }
+
+};
+
+class npc_death_speaker_attedant : public CreatureScript
+{
+public:
+    npc_death_speaker_attedant() : CreatureScript("npc_death_speaker_attedant") { }
 
 struct  npc_death_speaker_attedantAI: public ScriptedAI
 {
@@ -294,6 +360,19 @@ struct  npc_death_speaker_attedantAI: public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_death_speaker_attedantAI (pCreature);
+    }
+
+};
+
+
+class npc_death_speaker_disciple : public CreatureScript
+{
+public:
+    npc_death_speaker_disciple() : CreatureScript("npc_death_speaker_disciple") { }
 
 struct  npc_death_speaker_discipleAI: public ScriptedAI
 {
@@ -353,6 +432,18 @@ struct  npc_death_speaker_discipleAI: public ScriptedAI
     }
 };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_death_speaker_discipleAI (pCreature);
+    }
+
+};
+
+class npc_death_speaker_high_priest : public CreatureScript
+{
+public:
+    npc_death_speaker_high_priest() : CreatureScript("npc_death_speaker_high_priest") { }
+
 struct  npc_death_speaker_high_priestAI: public ScriptedAI
 {
     npc_death_speaker_high_priestAI(Creature *c) : ScriptedAI(c)
@@ -386,6 +477,18 @@ struct  npc_death_speaker_high_priestAI: public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_death_speaker_high_priestAI (pCreature);
+    }
+
+};
+
+class npc_death_speaker_servant : public CreatureScript
+{
+public:
+    npc_death_speaker_servant() : CreatureScript("npc_death_speaker_servant") { }
 
 struct  npc_death_speaker_servantAI: public ScriptedAI
 {
@@ -438,6 +541,18 @@ struct  npc_death_speaker_servantAI: public ScriptedAI
     }
 };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_death_speaker_servantAI (pCreature);
+    }
+
+};
+
+class npc_death_speaker_zealot : public CreatureScript
+{
+public:
+    npc_death_speaker_zealot() : CreatureScript("npc_death_speaker_zealot") { }
+
 struct  npc_death_speaker_zealotAI: public ScriptedAI
 {
     npc_death_speaker_zealotAI(Creature *c) : ScriptedAI(c)
@@ -469,6 +584,18 @@ struct  npc_death_speaker_zealotAI: public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_death_speaker_zealotAI (pCreature);
+    }
+
+};
+
+class npc_cult_adherent : public CreatureScript
+{
+public:
+    npc_cult_adherent() : CreatureScript("npc_cult_adherent") { }
 
 struct  npc_cult_adherentAI: public ScriptedAI
 {
@@ -548,6 +675,18 @@ struct  npc_cult_adherentAI: public ScriptedAI
     }
 };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_cult_adherentAI (pCreature);
+    }
+
+};
+
+class npc_cult_fanatic : public CreatureScript
+{
+public:
+    npc_cult_fanatic() : CreatureScript("npc_cult_fanatic") { }
+
 struct  npc_cult_fanaticAI: public ScriptedAI
 {
     npc_cult_fanaticAI(Creature *c) : ScriptedAI(c)
@@ -609,133 +748,8 @@ struct  npc_cult_fanaticAI: public ScriptedAI
         DoMeleeAttackIfReady();
     }
 };
-class npc_nerubar_brood_keeper : public CreatureScript
-{
-public:
-    npc_nerubar_brood_keeper() : CreatureScript("npc_nerubar_brood_keeper") { }
 
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_nerubar_brood_keeperAI (pCreature);
-    }
-
-};
-class npc_the_damned : public CreatureScript
-{
-public:
-    npc_the_damned() : CreatureScript("npc_the_damned") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_the_damnedAI (pCreature);
-    }
-
-};
-class npc_servant_of_the_throne : public CreatureScript
-{
-public:
-    npc_servant_of_the_throne() : CreatureScript("npc_servant_of_the_throne") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_servant_of_the_throneAI (pCreature);
-    }
-
-};
-class npc_ancient_skeletal_soldier : public CreatureScript
-{
-public:
-    npc_ancient_skeletal_soldier() : CreatureScript("npc_ancient_skeletal_soldier") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_ancient_skeletal_soldierAI (pCreature);
-    }
-
-};
-class npc_death_bound_ward : public CreatureScript
-{
-public:
-    npc_death_bound_ward() : CreatureScript("npc_death_bound_ward") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_death_bound_wardAI (pCreature);
-    }
-
-};
-class npc_death_speaker_attedant : public CreatureScript
-{
-public:
-    npc_death_speaker_attedant() : CreatureScript("npc_death_speaker_attedant") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_death_speaker_attedantAI (pCreature);
-    }
-
-};
-class npc_death_speaker_disciple : public CreatureScript
-{
-public:
-    npc_death_speaker_disciple() : CreatureScript("npc_death_speaker_disciple") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_death_speaker_discipleAI (pCreature);
-    }
-
-};
-class npc_death_speaker_high_priest : public CreatureScript
-{
-public:
-    npc_death_speaker_high_priest() : CreatureScript("npc_death_speaker_high_priest") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_death_speaker_high_priestAI (pCreature);
-    }
-
-};
-class npc_death_speaker_servant : public CreatureScript
-{
-public:
-    npc_death_speaker_servant() : CreatureScript("npc_death_speaker_servant") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_death_speaker_servantAI (pCreature);
-    }
-
-};
-class npc_death_speaker_zealot : public CreatureScript
-{
-public:
-    npc_death_speaker_zealot() : CreatureScript("npc_death_speaker_zealot") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_death_speaker_zealotAI (pCreature);
-    }
-
-};
-class npc_cult_adherent : public CreatureScript
-{
-public:
-    npc_cult_adherent() : CreatureScript("npc_cult_adherent") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_cult_adherentAI (pCreature);
-    }
-
-};
-class npc_cult_fanatic : public CreatureScript
-{
-public:
-    npc_cult_fanatic() : CreatureScript("npc_cult_fanatic") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new npc_cult_fanaticAI (pCreature);
     }
@@ -744,16 +758,16 @@ public:
 
 void AddSC_icecrown_citadel_trash()
 {
-    new npc_nerubar_brood_keeper();
-    new npc_the_damned();
-    new npc_servant_of_the_throne();
-    new npc_ancient_skeletal_soldier();
-    new npc_death_bound_ward();
-    new npc_death_speaker_attedant();
-    new npc_death_speaker_disciple();
-    new npc_death_speaker_high_priest();
-    new npc_death_speaker_servant();
-    new npc_death_speaker_zealot();
-    new npc_cult_adherent();
-    new npc_cult_fanatic();
+    new npc_nerubar_brood_keeper;
+    new npc_the_damned;
+    new npc_servant_of_the_throne;
+    new npc_ancient_skeletal_soldier;
+    new npc_death_bound_ward;
+    new npc_death_speaker_attedant;
+    new npc_death_speaker_disciple;
+    new npc_death_speaker_high_priest;
+    new npc_death_speaker_servant;
+    new npc_death_speaker_zealot;
+    new npc_cult_adherent;
+    new npc_cult_fanatic;
 }

@@ -112,24 +112,20 @@ enum Creatures
 
 
 const Position CenterOfArena = {563.734558, 173.907974, 394.326874};
-class boss_gormok_impaler : public CreatureScript
+
+class boss_gormok_impaler : public CreatureScript
 {
 public:
     boss_gormok_impaler() : CreatureScript("boss_gormok_impaler") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_gormok_impalerAI(pCreature);
-    }
 
     struct boss_gormok_impalerAI : public ScriptedAI
     {
         boss_gormok_impalerAI(Creature *pCreature) : ScriptedAI(pCreature)
         {
-                    m_pInstance = pCreature->GetInstanceData();
+                    m_pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
 
             uint32 m_uiImpaleTimer;
             uint32 m_uiStaggeringStompTimer;
@@ -267,26 +263,27 @@ public:
             }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_gormok_impalerAI(pCreature);
+    }
+
 };
 
-class boss_acidmaw : public CreatureScript
+
+class boss_acidmaw : public CreatureScript
 {
 public:
     boss_acidmaw() : CreatureScript("boss_acidmaw") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_acidmawAI(pCreature);
-    }
 
     struct boss_acidmawAI : public ScriptedAI
     {
         boss_acidmawAI(Creature* pCreature) : ScriptedAI(pCreature)
             {
-                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+                    m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             }
 
-            ScriptedInstance* m_pInstance;
+            InstanceScript* m_pInstance;
 
             uint32 m_uiPhase;
             uint32 m_uiPhase1Timer;
@@ -474,26 +471,27 @@ public:
             }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_acidmawAI(pCreature);
+    }
+
 };
 
-class boss_dreadscale : public CreatureScript
+
+class boss_dreadscale : public CreatureScript
 {
 public:
     boss_dreadscale() : CreatureScript("boss_dreadscale") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_dreadscaleAI(pCreature);
-    }
 
     struct boss_dreadscaleAI : public ScriptedAI
     {
         boss_dreadscaleAI(Creature* pCreature) : ScriptedAI(pCreature)
             {
-                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+                    m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             }
 
-            ScriptedInstance* m_pInstance;
+            InstanceScript* m_pInstance;
 
             uint32 m_uiPhase;
             uint32 m_uiPhase1Timer;
@@ -663,26 +661,27 @@ public:
             }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_dreadscaleAI(pCreature);
+    }
+
 };
 
-class boss_icehowl : public CreatureScript
+
+class boss_icehowl : public CreatureScript
 {
 public:
     boss_icehowl() : CreatureScript("boss_icehowl") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_icehowlAI(pCreature);
-    }
 
     struct boss_icehowlAI : public ScriptedAI
     {
         boss_icehowlAI(Creature* pCreature) : ScriptedAI(pCreature)
             {
-                    m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+                    m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             }
 
-            ScriptedInstance* m_pInstance;
+            InstanceScript* m_pInstance;
 
             /********** Phase 1  ************/
             uint32 m_uiArticBreathTimer;
@@ -865,26 +864,27 @@ public:
             }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_icehowlAI(pCreature);
+    }
+
 };
 
-class mob_firebomb_trigger : public CreatureScript
+
+class mob_firebomb_trigger : public CreatureScript
 {
 public:
     mob_firebomb_trigger() : CreatureScript("mob_firebomb_trigger") { }
-
-    CreatureAI* GetAI_mob_FireBomb(Creature* pCreature)
-    {
-        return new mob_FireBombAI (pCreature);
-    }
 
     struct mob_FireBombAI : public Scripted_NoMovementAI
     {
         mob_FireBombAI(Creature *pCreature) : Scripted_NoMovementAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
 
             uint32 m_uiDespawnTimer;
             uint32 m_uiFireBombTimer;
@@ -919,16 +919,21 @@ public:
         }
     };
 
+    CreatureAI* GetAI_mob_FireBomb(Creature* pCreature) const
+    {
+        return new mob_FireBombAI (pCreature);
+    }
+
 };
 
 struct mob_SnowboldAI : public ScriptedAI
 {
     mob_SnowboldAI(Creature *pCreature) : ScriptedAI(pCreature)
     {
-        m_pInstance = pCreature->GetInstanceData();
+        m_pInstance = pCreature->GetInstanceScript();
     }
 
-    ScriptedInstance* m_pInstance;
+    InstanceScript* m_pInstance;
 
         uint32 m_uiBatterTimer;
         uint32 m_uiHeadCrackTimer;
@@ -962,12 +967,11 @@ struct mob_SnowboldAI : public ScriptedAI
     }
 };
 
-
 void AddSC_boss_northrend_beasts()
 {
-    new boss_gormok_impaler();
-    new boss_acidmaw();
-    new boss_dreadscale();
-    new boss_icehowl();
-    new mob_firebomb_trigger();
+    new boss_gormok_impaler;
+    new boss_acidmaw;
+    new boss_dreadscale;
+    new boss_icehowl;
+    new mob_firebomb_trigger;
 }

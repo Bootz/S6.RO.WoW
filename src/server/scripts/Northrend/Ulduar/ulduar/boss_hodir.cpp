@@ -122,16 +122,22 @@ enum Yells
 #define EMOTE_FREEZE      "Hodir begins to cast Flash Freeze!"
 #define EMOTE_BLOWS       "Hodir gains Frozen Blows!"
 
+
+class boss_hodir : public CreatureScript
+{
+public:
+    boss_hodir() : CreatureScript("boss_hodir") { }
+
 struct boss_hodir_AI : public BossAI
 {
     boss_hodir_AI(Creature *pCreature) : BossAI(pCreature, BOSS_HODIR)
     {
-        pInstance = pCreature->GetInstanceData();
+        pInstance = pCreature->GetInstanceScript();
         me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);
         me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true); // Death Grip jump effect
     }
     
-    ScriptedInstance* pInstance;
+    InstanceScript* pInstance;
     
     Creature* Helper[8];
     uint32 uiCheckIntenseColdTimer;
@@ -355,27 +361,17 @@ struct boss_hodir_AI : public BossAI
         }
     }
 };
-class boss_hodir : public CreatureScript
-{
-public:
-    boss_hodir() : CreatureScript("boss_hodir") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new boss_hodir_AI (pCreature);
     }
 
 };
 
-class mob_icicle : public CreatureScript
+class mob_icicle : public CreatureScript
 {
 public:
     mob_icicle() : CreatureScript("mob_icicle") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_icicleAI(pCreature);
-    }
 
     struct mob_icicleAI : public ScriptedAI
     {
@@ -403,17 +399,18 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_icicleAI(pCreature);
+    }
+
 };
 
-class mob_icicle_snowdrift : public CreatureScript
+
+class mob_icicle_snowdrift : public CreatureScript
 {
 public:
     mob_icicle_snowdrift() : CreatureScript("mob_icicle_snowdrift") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_icicle_snowdriftAI(pCreature);
-    }
 
     struct mob_icicle_snowdriftAI : public ScriptedAI
     {
@@ -441,27 +438,28 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_icicle_snowdriftAI(pCreature);
+    }
+
 };
 
-class mob_hodir_priest : public CreatureScript
+
+class mob_hodir_priest : public CreatureScript
 {
 public:
     mob_hodir_priest() : CreatureScript("mob_hodir_priest") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_hodir_priestAI(pCreature);
-    }
 
     struct mob_hodir_priestAI : public ScriptedAI
     {
         mob_hodir_priestAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
             me->ApplySpellImmune(0, IMMUNITY_ID, RAID_MODE(64392, 64679), true);
         }
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
         int32 HealTimer;
 
         void Reset()
@@ -493,27 +491,28 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_hodir_priestAI(pCreature);
+    }
+
 };
 
-class mob_hodir_shaman : public CreatureScript
+
+class mob_hodir_shaman : public CreatureScript
 {
 public:
     mob_hodir_shaman() : CreatureScript("mob_hodir_shaman") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_hodir_shamanAI(pCreature);
-    }
 
     struct mob_hodir_shamanAI : public ScriptedAI
     {
         mob_hodir_shamanAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
             me->ApplySpellImmune(0, IMMUNITY_ID, RAID_MODE(64392, 64679), true);
         }
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
         int32 StormTimer;
 
         void Reset()
@@ -542,27 +541,28 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_hodir_shamanAI(pCreature);
+    }
+
 };
 
-class mob_hodir_druid : public CreatureScript
+
+class mob_hodir_druid : public CreatureScript
 {
 public:
     mob_hodir_druid() : CreatureScript("mob_hodir_druid") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_hodir_druidAI(pCreature);
-    }
 
     struct mob_hodir_druidAI : public ScriptedAI
     {
         mob_hodir_druidAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
             me->ApplySpellImmune(0, IMMUNITY_ID, RAID_MODE(64392, 64679), true);
         }
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
         int32 StarlightTimer;
 
         void Reset()
@@ -591,27 +591,28 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_hodir_druidAI(pCreature);
+    }
+
 };
 
-class mob_hodir_mage : public CreatureScript
+
+class mob_hodir_mage : public CreatureScript
 {
 public:
     mob_hodir_mage() : CreatureScript("mob_hodir_mage") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_hodir_mageAI(pCreature);
-    }
 
     struct mob_hodir_mageAI : public ScriptedAI
     {
         mob_hodir_mageAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
             me->ApplySpellImmune(0, IMMUNITY_ID, RAID_MODE(64392, 64679), true);
         }
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
         int32 FireTimer;
 
         void Reset()
@@ -640,17 +641,18 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_hodir_mageAI(pCreature);
+    }
+
 };
 
-class toasty_fire : public CreatureScript
+
+class toasty_fire : public CreatureScript
 {
 public:
     toasty_fire() : CreatureScript("toasty_fire") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new toasty_fireAI(pCreature);
-    }
 
     struct toasty_fireAI : public ScriptedAI
     {
@@ -665,18 +667,21 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new toasty_fireAI(pCreature);
+    }
+
 };
-
-
 
 void AddSC_boss_hodir()
 {
-    new boss_hodir();
-    new mob_icicle();
-    new mob_icicle_snowdrift();
-    new mob_hodir_priest();
-    new mob_hodir_shaman();
-    new mob_hodir_druid();
-    new mob_hodir_mage();
-    new toasty_fire();
+    new boss_hodir;
+    new mob_icicle;
+    new mob_icicle_snowdrift;
+    new mob_hodir_priest;
+    new mob_hodir_shaman;
+    new mob_hodir_druid;
+    new mob_hodir_mage;
+    new toasty_fire;
 }

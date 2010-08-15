@@ -153,15 +153,11 @@ enum Events
     EVENT_FUSE,
     EVENT_SUMMON
 };
-class boss_razorscale : public CreatureScript
+
+class boss_razorscale : public CreatureScript
 {
 public:
     boss_razorscale() : CreatureScript("boss_razorscale") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_razorscaleAI (pCreature);
-    }
 
     struct boss_razorscaleAI : public BossAI
     {
@@ -172,12 +168,12 @@ public:
             me->ApplySpellImmune(0, IMMUNITY_ID, RAID_MODE(SPELL_BATTLE_SHOUT_10, SPELL_BATTLE_SHOUT_25), true);
             me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);
             me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true);  // Death Grip
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
             pMap = me->GetMap();
         }
 
         Phases phase;
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
         Map* pMap;
     
         uint32 EnrageTimer;
@@ -421,21 +417,27 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_razorscaleAI (pCreature);
+    }
+
 };
 
-
-/*====================================================================================
-====================================================================================*/
+class npc_expedition_commander_ulduar : public CreatureScript
+{
+public:
+    npc_expedition_commander_ulduar() : CreatureScript("npc_expedition_commander_ulduar") { }
 
 struct npc_expedition_commanderAI : public ScriptedAI
 {
     npc_expedition_commanderAI(Creature* pCreature) : ScriptedAI(pCreature), summons(me)
     {
-        pInstance = pCreature->GetInstanceData();
+        pInstance = pCreature->GetInstanceScript();
         greet = false;
     }
     
-    ScriptedInstance* pInstance;
+    InstanceScript* pInstance;
     SummonList summons;
 
     bool greet;
@@ -538,12 +540,7 @@ struct npc_expedition_commanderAI : public ScriptedAI
     }
 };
 
-class npc_expedition_commander_ulduar : public CreatureScript
-{
-public:
-    npc_expedition_commander_ulduar() : CreatureScript("npc_expedition_commander_ulduar") { }
-
-    bool GossipSelect_commander_ulduar(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+    bool OnGossipSelect_commander_ulduar(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
     {
         switch(uiAction)
         {
@@ -558,8 +555,8 @@ public:
 
     bool Expedition_commander_ulduar(Player* pPlayer, Creature* pCreature)
     {
-        InstanceData *data = pPlayer->GetInstanceData();
-        ScriptedInstance *pInstance = (ScriptedInstance *) pCreature->GetInstanceData();
+        InstanceScript *data = pPlayer->GetInstanceScript();
+        InstanceScript *pInstance = (InstanceScript *) pCreature->GetInstanceScript();
     
         if (pInstance && pPlayer && data->GetBossState(BOSS_RAZORSCALE) == NOT_STARTED)
         {
@@ -570,23 +567,17 @@ public:
         return true;
     }
 
-    CreatureAI* GetAI_commander_ulduar(Creature* pCreature)
+    CreatureAI* GetAI_commander_ulduar(Creature* pCreature) const
     {
         return new npc_expedition_commanderAI(pCreature);
     }
 
 };
 
-
-class mob_devouring_flame : public CreatureScript
+class mob_devouring_flame : public CreatureScript
 {
 public:
     mob_devouring_flame() : CreatureScript("mob_devouring_flame") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_devouring_flameAI(pCreature);
-    }
 
     struct mob_devouring_flameAI : public ScriptedAI
     {
@@ -601,27 +592,26 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_devouring_flameAI(pCreature);
+    }
+
 };
 
-
-class mob_darkrune_watcher : public CreatureScript
+class mob_darkrune_watcher : public CreatureScript
 {
 public:
     mob_darkrune_watcher() : CreatureScript("mob_darkrune_watcher") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_darkrune_watcherAI(pCreature);
-    }
 
     struct mob_darkrune_watcherAI : public ScriptedAI
     {
         mob_darkrune_watcherAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
         int32 ChainTimer;
         int32 LightTimer;
 
@@ -652,27 +642,26 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_darkrune_watcherAI(pCreature);
+    }
+
 };
 
-
-class mob_darkrune_guardian : public CreatureScript
+class mob_darkrune_guardian : public CreatureScript
 {
 public:
     mob_darkrune_guardian() : CreatureScript("mob_darkrune_guardian") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_darkrune_guardianAI(pCreature);
-    }
 
     struct mob_darkrune_guardianAI : public ScriptedAI
     {
         mob_darkrune_guardianAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
         int32 StormTimer;
 
         void Reset()
@@ -695,27 +684,26 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_darkrune_guardianAI(pCreature);
+    }
+
 };
 
-
-class mob_darkrune_sentinel : public CreatureScript
+class mob_darkrune_sentinel : public CreatureScript
 {
 public:
     mob_darkrune_sentinel() : CreatureScript("mob_darkrune_sentinel") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_darkrune_sentinelAI(pCreature);
-    }
 
     struct mob_darkrune_sentinelAI : public ScriptedAI
     {
         mob_darkrune_sentinelAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
         int32 HeroicTimer;
         int32 WhirlTimer;
         int32 ShoutTimer;
@@ -754,29 +742,28 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_darkrune_sentinelAI(pCreature);
+    }
+
 };
 
-
-class mole_machine_trigger : public CreatureScript
+class mole_machine_trigger : public CreatureScript
 {
 public:
     mole_machine_trigger() : CreatureScript("mole_machine_trigger") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mole_machine_triggerAI(pCreature);
-    }
 
     struct mole_machine_triggerAI : public ScriptedAI
     {
         mole_machine_triggerAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE | UNIT_FLAG_PACIFIED);
             me->SetVisibility(VISIBILITY_OFF);
         }
 
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
         GameObject* MoleMachine;
         int32 SummomTimer;
 
@@ -822,16 +809,21 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mole_machine_triggerAI(pCreature);
+    }
+
 };
 
 
 void AddSC_boss_razorscale()
 {
-    new npc_expedition_commander_ulduar();
-    new boss_razorscale();
-    new mob_devouring_flame();
-    new mob_darkrune_watcher();
-    new mob_darkrune_guardian();
-    new mob_darkrune_sentinel();
-    new mole_machine_trigger();
+    new npc_expedition_commander_ulduar;
+    new boss_razorscale;
+    new mob_devouring_flame;
+    new mob_darkrune_watcher;
+    new mob_darkrune_guardian;
+    new mob_darkrune_sentinel;
+    new mole_machine_trigger;
 }

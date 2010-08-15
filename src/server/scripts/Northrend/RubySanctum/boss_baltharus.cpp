@@ -50,24 +50,20 @@ enum eBaltharusSpells
 	SPELL_RESPELLING_WAVE = 74509,
 	SPELL_SUMMON_CLONE = 74511
 };
-class boss_baltharus : public CreatureScript
+
+class boss_baltharus : public CreatureScript
 {
 public:
     boss_baltharus() : CreatureScript("boss_baltharus") { }
-
-    CreatureAI* GetAI(Creature *pCreature)
-    {
-    	return new boss_baltharusAI(pCreature);
-    }
 
     struct boss_baltharusAI : public ScriptedAI
     {
     	boss_baltharusAI(Creature* pCreature) : ScriptedAI(pCreature)
     	{
-    		pInstance = me->GetInstanceData();
+    		pInstance = me->GetInstanceScript();
     	}
 
-    	InstanceData* pInstance;
+    	InstanceScript* pInstance;
 
     	uint32 uiBladeTempestTimer;
     	uint32 uiCleaveTimer;
@@ -236,26 +232,27 @@ public:
     	}
     };
 
+    CreatureAI* GetAI(Creature *pCreature) const
+    {
+    	return new boss_baltharusAI(pCreature);
+    }
+
 };
 
-class boss_baltharus_clone : public CreatureScript
+
+class boss_baltharus_clone : public CreatureScript
 {
 public:
     boss_baltharus_clone() : CreatureScript("boss_baltharus_clone") { }
-
-    CreatureAI* GetAI(Creature *pCreature)
-    {
-    	return new boss_baltharus_cloneAI(pCreature);
-    }
 
     struct boss_baltharus_cloneAI : public ScriptedAI
     {
     	boss_baltharus_cloneAI(Creature* pCreature) : ScriptedAI(pCreature)
     	{
-    		pInstance = me->GetInstanceData();
+    		pInstance = me->GetInstanceScript();
     	}
 
-    	InstanceData* pInstance;
+    	InstanceScript* pInstance;
 
     	uint32 uiBladeTempestTimer;
     	uint32 uiCleaveTimer;
@@ -296,42 +293,27 @@ public:
     	}
     };
 
+    CreatureAI* GetAI(Creature *pCreature) const
+    {
+    	return new boss_baltharus_cloneAI(pCreature);
+    }
+
 };
 
-class npc_xerestrasza : public CreatureScript
+
+class npc_xerestrasza : public CreatureScript
 {
 public:
     npc_xerestrasza() : CreatureScript("npc_xerestrasza") { }
-
-    CreatureAI* GetAI(Creature *pCreature)
-    {
-    	return new npc_xerestraszaAI(pCreature);
-    }
-
-    bool GossipSelect(Player *pPlayer, Creature *pCreature, uint32, uint32 uiAction)
-    {
-    	if(uiAction == GOSSIP_ACTION_INFO_DEF+1)
-    		pCreature->GetInstanceData()->SetData(DATA_XERESTRASZA_EVENT, IN_PROGRESS);
-    	pPlayer->PlayerTalkClass->CloseGossip();
-    	return true;
-    }
-
-    bool GossipHello(Player *pPlayer, Creature *pCreature)
-    {
-    	if(pCreature->GetInstanceData()->GetData(DATA_XERESTRASZA_EVENT) == NOT_STARTED)
-    		pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Was ist hier vorgefallen?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-    	pPlayer->PlayerTalkClass->SendGossipMenu(1, pCreature->GetGUID());
-    	return true;
-    }
 
     struct npc_xerestraszaAI : public ScriptedAI
     {
     	npc_xerestraszaAI(Creature *pCreature) : ScriptedAI(pCreature)
     	{
-    		pInstance = me->GetInstanceData();
+    		pInstance = me->GetInstanceScript();
     	}
 
-    	InstanceData* pInstance;
+    	InstanceScript* pInstance;
     	uint32 Timer;
     	uint32 Counter;
 
@@ -424,19 +406,42 @@ public:
     	}
     };
 
+    CreatureAI* GetAI(Creature *pCreature) const
+    {
+    	return new npc_xerestraszaAI(pCreature);
+    }
+
 };
 
 
 
-class go_firefield : public GameObjectScript
+
+class go_firefield : public GameObjectScript
 {
 public:
+
+    bool OnGossipSelect(Player *pPlayer, Creature *pCreature, uint32, uint32 uiAction)
+    {
+    	if(uiAction == GOSSIP_ACTION_INFO_DEF+1)
+    		pCreature->GetInstanceScript()->SetData(DATA_XERESTRASZA_EVENT, IN_PROGRESS);
+    	pPlayer->PlayerTalkClass->CloseGossip();
+    	return true;
+    }
+
+    bool OnGossipHello(Player *pPlayer, Creature *pCreature)
+    {
+    	if(pCreature->GetInstanceScript()->GetData(DATA_XERESTRASZA_EVENT) == NOT_STARTED)
+    		pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Was ist hier vorgefallen?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+    	pPlayer->PlayerTalkClass->SendGossipMenu(1, pCreature->GetGUID());
+    	return true;
+    }
+
     go_firefield() : GameObjectScript("go_firefield") { }
 
     bool GOHello(Player *pPlayer, GameObject *pGO)
     {
     	pGO->SetGoState(GO_STATE_ACTIVE);
-    	pGO->GetInstanceData()->SetData(DATA_XERESTRASZA_EVENT, NOT_STARTED);
+    	pGO->GetInstanceScript()->SetData(DATA_XERESTRASZA_EVENT, NOT_STARTED);
     	return true;
     }
 
@@ -444,8 +449,8 @@ public:
 
 void AddSC_boss_baltharus()
 {
-    new boss_baltharus();
-    new boss_baltharus_clone();
-    new npc_xerestrasza();
-    new go_firefield();
+    new boss_baltharus;
+    new boss_baltharus_clone;
+    new npc_xerestrasza;
+    new go_firefield;
 }

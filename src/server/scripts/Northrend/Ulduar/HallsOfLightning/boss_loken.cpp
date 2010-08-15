@@ -59,24 +59,20 @@ enum eEnums
 /*######
 ## Boss Loken
 ######*/
-class boss_loken : public CreatureScript
+
+class boss_loken : public CreatureScript
 {
 public:
     boss_loken() : CreatureScript("boss_loken") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_lokenAI(pCreature);
-    }
 
     struct boss_lokenAI : public ScriptedAI
     {
         boss_lokenAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
 
         bool m_bIsAura;
 
@@ -234,10 +230,15 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_lokenAI(pCreature);
+    }
+
 };
 
 
 void AddSC_boss_loken()
 {
-    new boss_loken();
+    new boss_loken;
 }

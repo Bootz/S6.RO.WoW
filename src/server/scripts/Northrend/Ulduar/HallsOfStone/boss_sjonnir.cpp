@@ -23,9 +23,6 @@ SDComment:
 SDCategory:
 Script Data End */
 
-/*** SQL START ***
-update creature_template set scriptname = 'boss_sjonnir' where entry = '';
-*** SQL END ***/
 #include "ScriptPCH.h"
 #include "halls_of_stone.h"
 
@@ -81,21 +78,17 @@ static Locations PipeLocations[] =
 };
 
 static Locations CenterPoint = {1295.21, 667.157, 189.691};
-class boss_sjonnir : public CreatureScript
+
+class boss_sjonnir : public CreatureScript
 {
 public:
     boss_sjonnir() : CreatureScript("boss_sjonnir") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_sjonnirAI (pCreature);
-    }
 
     struct boss_sjonnirAI : public ScriptedAI
     {
         boss_sjonnirAI(Creature *c) : ScriptedAI(c), lSummons(me)
         {
-            pInstance = c->GetInstanceData();
+            pInstance = c->GetInstanceScript();
         }
 
         bool bIsFrenzy;
@@ -111,7 +104,7 @@ public:
 
         SummonList lSummons;
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
 
         void Reset()
         {
@@ -242,17 +235,18 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_sjonnirAI (pCreature);
+    }
+
 };
 
-class mob_malformed_ooze : public CreatureScript
+
+class mob_malformed_ooze : public CreatureScript
 {
 public:
     mob_malformed_ooze() : CreatureScript("mob_malformed_ooze") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_malformed_oozeAI(pCreature);
-    }
 
     struct mob_malformed_oozeAI : public ScriptedAI
     {
@@ -285,41 +279,47 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_malformed_oozeAI(pCreature);
+    }
+
 };
 
-class mob_iron_sludge : public CreatureScript
+
+class mob_iron_sludge : public CreatureScript
 {
 public:
     mob_iron_sludge() : CreatureScript("mob_iron_sludge") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_iron_sludgeAI(pCreature);
-    }
 
     struct mob_iron_sludgeAI : public ScriptedAI
     {
         mob_iron_sludgeAI(Creature *c) : ScriptedAI(c)
         {
-            pInstance = c->GetInstanceData();
+            pInstance = c->GetInstanceScript();
         }
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
 
         void JustDied(Unit* pKiller)
         {
             if (pInstance)
                 if (Creature* pSjonnir = Unit::GetCreature(*me, pInstance->GetData64(DATA_SJONNIR)))
-                    CAST_AI(boss_sjonnirAI, pSjonnir->AI())->KilledIronSludge();
+                    CAST_AI(boss_sjonnir::boss_sjonnirAI, pSjonnir->AI())->KilledIronSludge();
         }
     };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_iron_sludgeAI(pCreature);
+    }
 
 };
 
 
 void AddSC_boss_sjonnir()
 {
-    new boss_sjonnir();
-    new mob_malformed_ooze();
-    new mob_iron_sludge();
+    new boss_sjonnir;
+    new mob_malformed_ooze;
+    new mob_iron_sludge;
 }

@@ -329,6 +329,14 @@ void AddSC_boss_black_knight();
 void AddSC_boss_grand_champions();
 void AddSC_instance_trial_of_the_champion();
 void AddSC_trial_of_the_champion();
+void AddSC_boss_tc_alliance_champions();      //Trial of the Crussader
+void AddSC_Raid_Anubarak();
+void AddSC_boss_lord_jaraxxus();
+void AddSC_boss_northrend_beasts();
+void AddSC_twin_valkyr();
+void AddSC_boss_tc_horde_champions();
+void AddSC_instance_trial_of_the_crussader();
+void AddSC_trial_of_the_crussader();
 void AddSC_boss_anubrekhan();            //Naxxramas
 void AddSC_boss_maexxna();
 void AddSC_boss_patchwerk();
@@ -351,11 +359,20 @@ void AddSC_boss_ormorok();
 void AddSC_boss_keristrasza();
 void AddSC_instance_nexus();
 void AddSC_boss_drakos();                //The Nexus The Oculus
+void AddSC_boss_eregos();
+void AddSC_boss_varos();
 void AddSC_boss_urom();
 void AddSC_instance_oculus();
 void AddSC_oculus();
+void AddSC_boss_malygos();                //The Nexus Eye of Eternity
+void AddSC_instance_eye_of_eternity();
 void AddSC_boss_sartharion();            //Obsidian Sanctum
 void AddSC_instance_obsidian_sanctum();
+void AddSC_boss_baltharus();            //Ruby Sanctum
+void AddSC_boss_halion();
+void AddSC_boss_ragefire();
+void AddSC_boss_zarithrian();
+void AddSC_instance_ruby_sanctum();
 void AddSC_boss_bjarngrim();             //Ulduar Halls of Lightning
 void AddSC_boss_loken();
 void AddSC_boss_ionar();
@@ -366,15 +383,22 @@ void AddSC_boss_krystallus();
 void AddSC_boss_sjonnir();
 void AddSC_instance_halls_of_stone();
 void AddSC_halls_of_stone();
-void AddSC_boss_auriaya();               //Ulduar Ulduar
-void AddSC_boss_flame_leviathan();
-void AddSC_boss_ignis();
-void AddSC_boss_razorscale();
-void AddSC_boss_xt002();
-void AddSC_boss_kologarn();
+void AddSC_boss_Algalon();               //Ulduar Ulduar
 void AddSC_boss_assembly_of_iron();
-void AddSC_ulduar_teleporter();
+void AddSC_boss_auriaya();
+void AddSC_boss_flame_leviathan();
+void AddSC_boss_freya();
+void AddSC_boss_general_vezax();
+void AddSC_boss_hodir();
+void AddSC_boss_ignis();
+void AddSC_boss_kologarn();
+void AddSC_boss_mimiron();
+void AddSC_boss_razorscale();
+void AddSC_boss_thorim();
+void AddSC_boss_xt002();
+void AddSC_boss_yogg_saron();
 void AddSC_instance_ulduar();
+void AddSC_ulduar_teleporter();
 void AddSC_boss_keleseth();              //Utgarde Keep
 void AddSC_boss_skarvald_dalronn();
 void AddSC_boss_ingvar_the_plunderer();
@@ -417,6 +441,21 @@ void AddSC_instance_halls_of_reflection();   // Halls of Reflection
 void AddSC_halls_of_reflection();
 void AddSC_boss_falric();
 void AddSC_boss_marwyn();
+void AddSC_boss_lich_king_hr();
+void AddSC_boss_blood_council();   // Icecrown Citadel
+void AddSC_boss_blood_queen_lana_thel();
+void AddSC_boss_saurfang();
+void AddSC_boss_festergut();
+void AddSC_boss_deahtwisper();
+void AddSC_boss_marrowgar();
+void AddSC_boss_professor_putricide();
+void AddSC_boss_rotface();
+void AddSC_boss_sindragosa();
+void AddSC_boss_lichking();
+void AddSC_boss_valithria();
+void AddSC_icecrown_citadel_trash();
+void AddSC_icecrown_teleporter();
+void AddSC_instance_icecrown_citadel();
 
 void AddSC_dalaran();
 void AddSC_borean_tundra();
@@ -985,6 +1024,14 @@ void AddNorthrendScripts()
     AddSC_boss_grand_champions();
     AddSC_instance_trial_of_the_champion();
     AddSC_trial_of_the_champion();
+    AddSC_boss_tc_alliance_champions();      //Trial of the Crussader
+    AddSC_Raid_Anubarak();
+    AddSC_boss_lord_jaraxxus();
+    AddSC_boss_northrend_beasts();
+    AddSC_twin_valkyr();
+    AddSC_boss_tc_horde_champions();
+    AddSC_instance_trial_of_the_crussader();
+    AddSC_trial_of_the_crussader();
     AddSC_boss_krik_thir();             //Azjol-Nerub Azjol-Nerub
     AddSC_boss_hadronox();
     AddSC_boss_anub_arak();
@@ -1011,11 +1058,20 @@ void AddNorthrendScripts()
     AddSC_boss_keristrasza();
     AddSC_instance_nexus();
     AddSC_boss_drakos();                //The Nexus The Oculus
+    AddSC_boss_eregos();
+    AddSC_boss_varos();
     AddSC_boss_urom();
     AddSC_instance_oculus();
     AddSC_oculus();
+    AddSC_boss_malygos();                //The Nexus Eye of Eternity
+    AddSC_instance_eye_of_eternity();
     AddSC_boss_sartharion();            //Obsidian Sanctum
     AddSC_instance_obsidian_sanctum();
+    AddSC_boss_baltharus();            //Ruby Sanctum
+    AddSC_boss_halion();
+    AddSC_boss_ragefire();
+    AddSC_boss_zarithrian();
+    AddSC_instance_ruby_sanctum();
     AddSC_boss_bjarngrim();             //Ulduar Halls of Lightning
     AddSC_boss_loken();
     AddSC_boss_ionar();
@@ -1026,15 +1082,22 @@ void AddNorthrendScripts()
     AddSC_boss_sjonnir();
     AddSC_instance_halls_of_stone();
     AddSC_halls_of_stone();
-    AddSC_boss_auriaya();               //Ulduar Ulduar
-    AddSC_boss_flame_leviathan();
-    AddSC_boss_ignis();
-    AddSC_boss_razorscale();
-    AddSC_boss_xt002();
+    AddSC_boss_Algalon();               //Ulduar Ulduar
     AddSC_boss_assembly_of_iron();
+    AddSC_boss_auriaya();
+    AddSC_boss_flame_leviathan();
+    AddSC_boss_freya();
+    AddSC_boss_general_vezax();
+    AddSC_boss_hodir();
+    AddSC_boss_ignis();
     AddSC_boss_kologarn();
-    AddSC_ulduar_teleporter();
+    AddSC_boss_mimiron();
+    AddSC_boss_razorscale();
+    AddSC_boss_thorim();
+    AddSC_boss_xt002();
+    AddSC_boss_yogg_saron();
     AddSC_instance_ulduar();
+    AddSC_ulduar_teleporter();
     AddSC_boss_keleseth();              //Utgarde Keep
     AddSC_boss_skarvald_dalronn();
     AddSC_boss_ingvar_the_plunderer();
@@ -1077,6 +1140,21 @@ void AddNorthrendScripts()
     AddSC_halls_of_reflection();
     AddSC_boss_falric();
     AddSC_boss_marwyn();
+    AddSC_boss_lich_king_hr();
+    AddSC_boss_blood_council();   // Icecrown Citadel
+    AddSC_boss_blood_queen_lana_thel();
+    AddSC_boss_saurfang();
+    AddSC_boss_festergut();
+    AddSC_boss_deahtwisper();
+    AddSC_boss_marrowgar();
+    AddSC_boss_professor_putricide();
+    AddSC_boss_rotface();
+    AddSC_boss_sindragosa();
+    AddSC_boss_lichking();
+    AddSC_boss_valithria();
+    AddSC_icecrown_citadel_trash();
+    AddSC_icecrown_teleporter();
+    AddSC_instance_icecrown_citadel();
 
     AddSC_dalaran();
     AddSC_borean_tundra();

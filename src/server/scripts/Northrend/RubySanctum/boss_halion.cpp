@@ -91,25 +91,21 @@ enum GameObjects
 Creature* pHalion;
 Creature* pHalionTwilight;
 uint8 Phase;
-class boss_halion : public CreatureScript
+
+class boss_halion : public CreatureScript
 {
 public:
     boss_halion() : CreatureScript("boss_halion") { }
-
-    CreatureAI* GetAI(Creature *pCreature)
-    {
-            return new boss_halionAI(pCreature);
-    }
 
     struct boss_halionAI : public ScriptedAI
     {
             boss_halionAI(Creature *pCreature) : ScriptedAI(pCreature)
             {
-                pInstance = me->GetInstanceData();
+                pInstance = me->GetInstanceScript();
     			pHalion = me;
             }
 
-            InstanceData* pInstance;
+            InstanceScript* pInstance;
 
             uint32 m_uiFieryCombustionTimer;
             uint32 m_uiMeteorStrikeTimer;
@@ -307,27 +303,28 @@ public:
     		}
     };
 
-};
-
-class boss_twilight_halion : public CreatureScript
-{
-public:
-    boss_twilight_halion() : CreatureScript("boss_twilight_halion") { }
-
-    CreatureAI* GetAI(Creature *pCreature)
+    CreatureAI* GetAI(Creature *pCreature) const
     {
             return new boss_halionAI(pCreature);
     }
+
+};
+
+
+class boss_twilight_halion : public CreatureScript
+{
+public:
+    boss_twilight_halion() : CreatureScript("boss_twilight_halion") { }
 
     struct boss_twilight_halionAI : public ScriptedAI
     {
             boss_twilight_halionAI(Creature *pCreature) : ScriptedAI(pCreature)
             {
-                pInstance = me->GetInstanceData();
+                pInstance = me->GetInstanceScript();
     			pHalionTwilight = me;
             }
 
-            InstanceData* pInstance;
+            InstanceScript* pInstance;
     		
     		uint32 m_uiSoulConsumptionTimer;
             uint32 m_uiDarkBreathTimer;
@@ -454,8 +451,8 @@ public:
     				uint32 multiple = 0;
     				if (pHalion)
     				{
-    					CAST_AI(boss_halionAI, pHalion->AI())->UpdateDps();
-    					uint32 pHalion_dps = CAST_AI(boss_halionAI, pHalion->AI())->dps_last;
+    					CAST_AI(boss_halion::boss_halionAI, pHalion->AI())->UpdateDps();
+    					uint32 pHalion_dps = CAST_AI(boss_halion::boss_halionAI, pHalion->AI())->dps_last;
     					uint32 dpstotal = pHalion_dps + dps_last;
     					float dpspercent = pHalion_dps / dpstotal * 100;
     					if ( dpspercent<5 ) 
@@ -562,26 +559,27 @@ public:
     		}
     };
 
+    CreatureAI* GetAI(Creature *pCreature) const
+    {
+            return new boss_twilight_halionAI(pCreature);
+    }
+
 };
 
-class npc_meteor_strike : public CreatureScript
+
+class npc_meteor_strike : public CreatureScript
 {
 public:
     npc_meteor_strike() : CreatureScript("npc_meteor_strike") { }
-
-    CreatureAI* GetAI(Creature *pCreature)
-    {
-            return new npc_meteor_strikeAI(pCreature);
-    }
 
     struct npc_meteor_strikeAI : public ScriptedAI
     {
             npc_meteor_strikeAI(Creature *pCreature) : ScriptedAI(pCreature)
             {
-                pInstance = me->GetInstanceData();
+                pInstance = me->GetInstanceScript();
             }
 
-            InstanceData* pInstance;
+            InstanceScript* pInstance;
     		uint32 BlastTimer;
 
     		void Reset()
@@ -620,25 +618,26 @@ public:
             }
     };
 
+    CreatureAI* GetAI(Creature *pCreature) const
+    {
+            return new npc_meteor_strikeAI(pCreature);
+    }
+
 };
 
-class npc_meteor_flame : public CreatureScript
+
+class npc_meteor_flame : public CreatureScript
 {
 public:
     npc_meteor_flame() : CreatureScript("npc_meteor_flame") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_meteor_flameAI(pCreature);
-    }
 
     struct npc_meteor_flameAI : public ScriptedAI
     {
         npc_meteor_flameAI(Creature *pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
         }
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
         uint32 m_uiColdFlameTimer;
         uint32 m_uiColdDespawn;
         void Reset()
@@ -668,26 +667,27 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_meteor_flameAI(pCreature);
+    }
+
 };
 
-class npc_combustion : public CreatureScript
+
+class npc_combustion : public CreatureScript
 {
 public:
     npc_combustion() : CreatureScript("npc_combustion") { }
-
-    CreatureAI* GetAI(Creature *pCreature)
-    {
-            return new npc_combustionAI(pCreature);
-    }
 
     struct npc_combustionAI : public ScriptedAI
     {
             npc_combustionAI(Creature *pCreature) : ScriptedAI(pCreature)
             {
-                pInstance = me->GetInstanceData();
+                pInstance = me->GetInstanceScript();
             }
 
-            InstanceData* pInstance;
+            InstanceScript* pInstance;
     		
     		uint32 Duration;
 
@@ -721,26 +721,27 @@ public:
             }
     };
 
+    CreatureAI* GetAI(Creature *pCreature) const
+    {
+            return new npc_combustionAI(pCreature);
+    }
+
 };
 
-class npc_consumption : public CreatureScript
+
+class npc_consumption : public CreatureScript
 {
 public:
     npc_consumption() : CreatureScript("npc_consumption") { }
-
-    CreatureAI* GetAI(Creature *pCreature)
-    {
-            return new npc_consumptionAI(pCreature);
-    }
 
     struct npc_consumptionAI : public ScriptedAI
     {
             npc_consumptionAI(Creature *pCreature) : ScriptedAI(pCreature)
             {
-                pInstance = me->GetInstanceData();
+                pInstance = me->GetInstanceScript();
             }
 
-            InstanceData* pInstance;
+            InstanceScript* pInstance;
     		
     		uint32 Duration;
 
@@ -774,15 +775,20 @@ public:
             }
     };
 
+    CreatureAI* GetAI(Creature *pCreature) const
+    {
+            return new npc_consumptionAI(pCreature);
+    }
+
 };
 
 
 void AddSC_boss_halion()
 {
-    new boss_halion();
-    new boss_twilight_halion();
-    new npc_meteor_strike();
-    new npc_combustion();
-    new npc_consumption();
-    new npc_meteor_flame();
+    new boss_halion;
+    new boss_twilight_halion;
+    new npc_meteor_strike;
+    new npc_combustion;
+    new npc_consumption;
+    new npc_meteor_flame;
 }

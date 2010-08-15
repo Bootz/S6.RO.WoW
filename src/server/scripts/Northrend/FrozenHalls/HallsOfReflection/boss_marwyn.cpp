@@ -46,26 +46,22 @@ enum
 
     SPELL_BERSERK                           = 47008,
 };
-class boss_marwyn : public CreatureScript
+
+class boss_marwyn : public CreatureScript
 {
 public:
     boss_marwyn() : CreatureScript("boss_marwyn") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_marwynAI(pCreature);
-    }
 
     struct boss_marwynAI : public ScriptedAI
     {
        boss_marwynAI(Creature *pCreature) : ScriptedAI(pCreature)
        {
-            m_pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+            m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             Regular = pCreature->GetMap()->IsRegularDifficulty();
             Reset();
        }
 
-       ScriptedInstance* m_pInstance;
+       InstanceScript* m_pInstance;
        bool Regular;
        bool m_bIsCall;
    
@@ -282,11 +278,15 @@ public:
             return;
         }
     };
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_marwynAI(pCreature);
+    }
 
 };
 
 
 void AddSC_boss_marwyn()
 {
-    new boss_marwyn();
+    new boss_marwyn;
 }

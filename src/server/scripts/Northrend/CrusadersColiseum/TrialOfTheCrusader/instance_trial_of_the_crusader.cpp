@@ -16,19 +16,15 @@
 
 #include "ScriptPCH.h"
 #include "trial_of_the_crusader.h"
-class instance_trial_of_the_crussader : public InstanceMapScript
+
+class instance_trial_of_the_crussader : public InstanceMapScript
 {
 public:
-    instance_trial_of_the_crussader() : InstanceMapScript("instance_trial_of_the_crussader") { }
+    instance_trial_of_the_crussader() : InstanceMapScript("instance_trial_of_the_crussader", 649) { }
 
-    InstanceData* GetInstanceData_InstanceMapScript(Map* pMap)
+    struct instance_trial_of_the_crussader_InstanceMapScript : public InstanceScript
     {
-        return new instance_trial_of_the_crussader_InstanceMapScript(pMap);
-    }
-
-    struct instance_trial_of_the_crussader_InstanceMapScript : public ScriptedInstance
-    {
-        instance_trial_of_the_crussader_InstanceMapScript(Map* pMap) : ScriptedInstance(pMap), m_uiFloorGO(NULL), CacheFactionChampions(NULL)
+        instance_trial_of_the_crussader_InstanceMapScript(Map* pMap) : InstanceScript(pMap), m_uiFloorGO(NULL), CacheFactionChampions(NULL)
             {
                     Initialize();
             }
@@ -408,10 +404,15 @@ public:
         }
     };
 
+    InstanceScript* GetInstanceScript (InstanceMap* pMap) const
+    {
+        return new instance_trial_of_the_crussader_InstanceMapScript(pMap);
+    }
+
 };
 
 
 void AddSC_instance_trial_of_the_crussader()
 {
-    new instance_trial_of_the_crussader();
+    new instance_trial_of_the_crussader;
 }

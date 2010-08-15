@@ -75,22 +75,18 @@ enum Creatures
 	CREATURE_ANNOUNCER                    = 35004
 };	
 
-class npc_anstart : public CreatureScript
+
+class npc_anstart : public CreatureScript
 {
 public:
     npc_anstart() : CreatureScript("npc_anstart") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_anstartAI (pCreature);
-    }
 
     struct npc_anstartAI : public ScriptedAI
     {
         npc_anstartAI(Creature *c) : ScriptedAI(c)
     	
         {
-            pInstance = c->GetInstanceData();
+            pInstance = c->GetInstanceScript();
     		
     	me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE|UNIT_FLAG_NOT_SELECTABLE);
 
@@ -108,7 +104,7 @@ public:
         Creature* pLady;	
         Creature* pHighlord;	
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
     	
 
     	
@@ -245,13 +241,18 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new npc_anstartAI (pCreature);
+    }
 };
-class npc_announcer_toc5 : public CreatureScript
+
+class npc_announcer_toc5 : public CreatureScript
 {
 public:
     npc_announcer_toc5() : CreatureScript("npc_announcer_toc5") { }
 
-    bool GossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
     {
         if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
         {
@@ -262,9 +263,9 @@ public:
         return true;
     }
 
-    bool GossipHello(Player* pPlayer, Creature* pCreature)
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
     {
-        ScriptedInstance* pInstance = pCreature->GetInstanceData();
+        InstanceScript* pInstance = pCreature->GetInstanceScript();
 
         if (pInstance &&
             pInstance->GetData(BOSS_GRAND_CHAMPIONS) == DONE &&
@@ -288,16 +289,11 @@ public:
         return true;
     }
 
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_announcer_toc5AI(pCreature);
-    }
-
     struct npc_announcer_toc5AI : public ScriptedAI
     {
         npc_announcer_toc5AI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
 
             uiSummonTimes = 0;
             uiPosition = 0;
@@ -327,7 +323,7 @@ public:
             SetArgentChampion();
         }
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
 
         uint8 uiSummonTimes;
         uint8 uiPosition;
@@ -742,14 +738,15 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_announcer_toc5AI(pCreature);
+    }
+
 };
-
-
-
-
 
 void AddSC_trial_of_the_champion()
 {
-    new npc_anstart();
-    new npc_announcer_toc5();
+    new npc_anstart;
+    new npc_announcer_toc5;
 }

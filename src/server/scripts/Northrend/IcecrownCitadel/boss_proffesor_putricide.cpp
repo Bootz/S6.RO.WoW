@@ -116,24 +116,20 @@ Creature* pPuddle;
 #define UR2_Y 3213.893
 
 #define EMOTE_UNSTABLE_EXPERIMENT "Professor Putricide begins unstable experiment!"
-class boss_professor_putricide : public CreatureScript
+
+class boss_professor_putricide : public CreatureScript
 {
 public:
     boss_professor_putricide() : CreatureScript("boss_professor_putricide") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_professor_putricideAI(pCreature);
-    }
 
     struct boss_professor_putricideAI : public ScriptedAI
     {
         boss_professor_putricideAI(Creature *pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
 
         uint32 m_uiPhase;
         uint32 m_uiUnstableExperimentTimer;
@@ -358,16 +354,17 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_professor_putricideAI(pCreature);
+    }
+
 };
-class npc_volatile_ooze : public CreatureScript
+
+class npc_volatile_ooze : public CreatureScript
 {
 public:
     npc_volatile_ooze() : CreatureScript("npc_volatile_ooze") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_volatile_oozeAI(pCreature);
-    }
 
     struct npc_volatile_oozeAI : public ScriptedAI
     {
@@ -434,17 +431,19 @@ public:
                   }
             } else OozeExplosionTimer -= diff;
         }
-    };class npc_gas_cloud : public CreatureScript
+    };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_volatile_oozeAI(pCreature);
+    }
 
 };
+
+class npc_gas_cloud : public CreatureScript
 {
 public:
     npc_gas_cloud() : CreatureScript("npc_gas_cloud") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_gas_cloudAI(pCreature);
-    }
 
     struct npc_gas_cloudAI : public ScriptedAI
     {
@@ -538,23 +537,25 @@ public:
         }
     };
 
-};class npc_choke_bomb : public CreatureScript
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_gas_cloudAI(pCreature);
+    }
+
+};
+
+class npc_choke_bomb : public CreatureScript
 {
 public:
     npc_choke_bomb() : CreatureScript("npc_choke_bomb") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_choke_bombAI(pCreature);
-    }
 
     struct npc_choke_bombAI : public ScriptedAI
     {
         npc_choke_bombAI(Creature *pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
         }
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
         uint32 m_uiChokeTimer;
         uint32 m_uiExplodeDespawn;
         void Reset()
@@ -580,26 +581,28 @@ public:
                 me->ForcedDespawn();
             } m_uiExplodeDespawn -= uiDiff;
         }
-    };class npc_puddle_ooze : public CreatureScript
+    };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_choke_bombAI(pCreature);
+    }
 
 };
+
+class npc_puddle_ooze : public CreatureScript
 {
 public:
     npc_puddle_ooze() : CreatureScript("npc_puddle_ooze") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_puddle_oozeAI(pCreature);
-    }
 
     struct npc_puddle_oozeAI : public ScriptedAI
     {
         npc_puddle_oozeAI(Creature *pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
             pPuddle = me;
         }
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
         uint32 m_uiPuddleOozeTimer;
     	uint32 GrowStack;
     	uint32 CheckStack;
@@ -641,28 +644,30 @@ public:
             } else CheckTimer -= uiDiff;
 
         }
-    };class npc_abomination : public CreatureScript
+    };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_puddle_oozeAI(pCreature);
+    }
 
 };
+class npc_abomination : public CreatureScript
+
 {
 public:
     npc_abomination() : CreatureScript("npc_abomination") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_abominationAI(pCreature);
-    }
 
     struct npc_abominationAI : public ScriptedAI
     {
         npc_abominationAI(Creature *pCreature) : ScriptedAI(pCreature), vehicle(me->GetVehicleKit())
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
             pAbomination = me;
             assert(vehicle);
             me->SetPower(POWER_ENERGY, 10);
         }
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
 
         uint32 m_uiGrabTimer;
         uint32 CheckTimer;
@@ -711,23 +716,25 @@ public:
         }
     };
 
-};class npc_malleable_goo : public CreatureScript
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_abominationAI(pCreature);
+    }
+
+};
+
+class npc_malleable_goo : public CreatureScript
 {
 public:
     npc_malleable_goo() : CreatureScript("npc_malleable_goo") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_malleable_gooAI(pCreature);
-    }
 
     struct npc_malleable_gooAI : public ScriptedAI
     {
         npc_malleable_gooAI(Creature *pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
         }
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
         uint32 m_uiMalleableTimer;
         uint32 m_uiDespawnTimer;
         void Reset()
@@ -757,16 +764,20 @@ public:
         }
     };
 
-};
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_malleable_gooAI(pCreature);
+    }
 
+};
 
 void AddSC_boss_professor_putricide()
 {
-    new boss_professor_putricide();
-    new npc_volatile_ooze();
-    new npc_choke_bomb();
-    new npc_puddle_ooze();
-    new npc_malleable_goo();
-    new npc_abomination();
-    new npc_gas_cloud();
+    new boss_professor_putricide;
+    new npc_volatile_ooze;
+    new npc_choke_bomb;
+    new npc_puddle_ooze;
+    new npc_malleable_goo;
+    new npc_abomination;
+    new npc_gas_cloud;
 }

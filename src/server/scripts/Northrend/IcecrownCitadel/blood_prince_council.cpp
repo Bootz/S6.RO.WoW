@@ -91,25 +91,21 @@ Creature* pBombTarget;
 
 /////////////////////////////////////////////////////
 
-class boss_blood_council : public CreatureScript
+
+class boss_blood_council : public CreatureScript
 {
 public:
     boss_blood_council() : CreatureScript("boss_blood_council") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_blood_councilAI (pCreature);
-    }
 
     struct boss_blood_councilAI : public ScriptedAI
     {
         boss_blood_councilAI(Creature *c) : ScriptedAI(c)
         {
-            pInstance = c->GetInstanceData();
+            pInstance = c->GetInstanceScript();
             pValanar = me;
         }
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
 
         uint32 PhaseIntro;
         uint32 PhaseIntroTimer;
@@ -288,28 +284,29 @@ public:
 
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_blood_councilAI (pCreature);
+    }
+
 };
 ////////////////////////////////////////////
 //Keleseth
-////////////////////////////////////////////class boss_blood_elf_keleset_icc : public CreatureScript
+////////////////////////////////////////////
+class boss_blood_elf_keleset_icc : public CreatureScript
 {
 public:
     boss_blood_elf_keleset_icc() : CreatureScript("boss_blood_elf_keleset_icc") { }
-
-    CreatureAI* GetAI_boss_Keleseth_Icc(Creature* pCreature)
-    {
-        return new boss_Keleseth_IccAI (pCreature);
-    }
 
     struct boss_Keleseth_IccAI : public ScriptedAI
     {
         boss_Keleseth_IccAI(Creature *c) : ScriptedAI(c)
         {
-            pInstance = c->GetInstanceData();
+            pInstance = c->GetInstanceScript();
             pKeleseth = me;
         }
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
 
         uint32 NucleusTimer;
         uint32 ShadowLance;
@@ -404,30 +401,31 @@ public:
 
     };
 
+    CreatureAI* GetAI_boss_Keleseth_Icc(Creature* pCreature) const
+    {
+        return new boss_Keleseth_IccAI (pCreature);
+    }
+
 };
 
 ///////////////////////////////////////
 //Taldaram
 ///////////////////////////////////////
-class boss_blood_elf_taldaram_icc : public CreatureScript
+
+class boss_blood_elf_taldaram_icc : public CreatureScript
 {
 public:
     boss_blood_elf_taldaram_icc() : CreatureScript("boss_blood_elf_taldaram_icc") { }
-
-    CreatureAI* GetAI_boss_Taldaram_Icc(Creature* pCreature)
-    {
-        return new boss_Taldaram_IccAI (pCreature);
-    }
 
     struct boss_Taldaram_IccAI : public ScriptedAI
     {
         boss_Taldaram_IccAI(Creature *c) : ScriptedAI(c)
         {
-            pInstance = c->GetInstanceData();
+            pInstance = c->GetInstanceScript();
             pTaldaram = me;
         }
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
 
         uint32 FireballTimer;
         uint32 EmpoweredFireballTimer;
@@ -524,20 +522,21 @@ public:
 
     };
 
+    CreatureAI* GetAI_boss_Taldaram_Icc(Creature* pCreature) const
+    {
+        return new boss_Taldaram_IccAI (pCreature);
+    }
+
 };
 
 ///////////////////////////////////////
 //Mob Nucleus
 ///////////////////////////////////////
-class npc_nucleus_icc : public CreatureScript
+
+class npc_nucleus_icc : public CreatureScript
 {
 public:
     npc_nucleus_icc() : CreatureScript("npc_nucleus_icc") { }
-
-    CreatureAI* GetAI_npc_Nucleus(Creature* pCreature)
-    {
-        return new npc_NucleusAI (pCreature);
-    }
 
     struct npc_NucleusAI : public ScriptedAI
     {
@@ -571,20 +570,21 @@ public:
 
     };
 
+    CreatureAI* GetAI_npc_Nucleus(Creature* pCreature) const
+    {
+        return new npc_NucleusAI (pCreature);
+    }
+
 };
 
 /////////////////////////////////////////////////
 //Fireball
 /////////////////////////////////////////////////
-class npc_fireball_icc : public CreatureScript
+
+class npc_fireball_icc : public CreatureScript
 {
 public:
     npc_fireball_icc() : CreatureScript("npc_fireball_icc") { }
-
-    CreatureAI* GetAI_npc_Fireball(Creature* pCreature)
-    {
-        return new npc_FireballAI (pCreature);
-    }
 
      struct npc_FireballAI : public ScriptedAI
     {
@@ -627,18 +627,20 @@ public:
 
      };
 
+    CreatureAI* GetAI_npc_Fireball(Creature* pCreature) const
+    {
+        return new npc_FireballAI (pCreature);
+    }
+
+};
      /////////////////////////////////////////////////
     //Empowered Fireball
     /////////////////////////////////////////////////
-    class npc_empfireball_icc : public CreatureScript
+    
+class npc_empfireball_icc : public CreatureScript
     {
     public:
         npc_empfireball_icc() : CreatureScript("npc_empfireball_icc") { }
-
-        CreatureAI* GetAI_npc_EmpFireball(Creature* pCreature)
-        {
-            return new npc_EmpFireballAI (pCreature);
-        }
 
          struct npc_EmpFireballAI : public ScriptedAI
         {
@@ -692,28 +694,28 @@ public:
 
          };
 
+        CreatureAI* GetAI_npc_EmpFireball(Creature* pCreature) const
+        {
+            return new npc_EmpFireballAI (pCreature);
+        }
+
+};
+
         /////////////////////////////////////////////////
         //Kinetic Bomb
         /////////////////////////////////////////////////
 
-    class npc_bomb_icc : public CreatureScript
+    
+class npc_bomb_icc : public CreatureScript
     {
     public:
         npc_bomb_icc() : CreatureScript("npc_bomb_icc") { }
-
-        CreatureAI* GetAI_npc_Bomb(Creature* pCreature)
-        {
-            return new npc_BombAI (pCreature);
-        }
 
             struct npc_BombAI : public ScriptedAI
             {
                 npc_BombAI(Creature *c) : ScriptedAI(c){}
 
                 uint32 CheckTimer;
-
-
-
 
                    void InitializeAI()
                 {
@@ -751,26 +753,23 @@ public:
 
                 }
 
-            };
-
-        };
-
     };
+
+        CreatureAI* GetAI_npc_Bomb(Creature* pCreature) const
+        {
+            return new npc_BombAI (pCreature);
+        }
 
 };
 
 ////////////////////////////////////////
 //Vortex
 ////////////////////////////////////////
-class npc_vortex_icc : public CreatureScript
+
+class npc_vortex_icc : public CreatureScript
 {
 public:
     npc_vortex_icc() : CreatureScript("npc_vortex_icc") { }
-
-    CreatureAI* GetAI_npc_Vortex_icc(Creature* pCreature)
-    {
-        return new npc_Vortex_iccAI (pCreature);
-    }
 
     struct npc_Vortex_iccAI : public ScriptedAI
     {
@@ -802,25 +801,26 @@ public:
 
     };
 
+    CreatureAI* GetAI_npc_Vortex_icc(Creature* pCreature) const
+    {
+        return new npc_Vortex_iccAI (pCreature);
+    }
+
 };
-class lanathel_intro : public CreatureScript
+
+class lanathel_intro : public CreatureScript
 {
 public:
     lanathel_intro() : CreatureScript("lanathel_intro") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new lanathel_introAI (pCreature);
-    }
 
     struct lanathel_introAI : public ScriptedAI
     {
         lanathel_introAI(Creature *c) : ScriptedAI(c)
         {
-            pInstance = c->GetInstanceData();
+            pInstance = c->GetInstanceScript();
             pLanathel = me;
         }
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
 
         void Reset()
         {
@@ -833,26 +833,22 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new lanathel_introAI (pCreature);
+    }
+
 };
-////////////////////////////////////////////////////////////
-
-
-
-
-
-
-
-
 
 void AddSC_boss_blood_council()
 {
-    new boss_blood_council();
-    new boss_blood_elf_keleset_icc();
-    new boss_blood_elf_taldaram_icc();
-    new lanathel_intro();
-    new npc_nucleus_icc();
-    new npc_fireball_icc();
-    new npc_bomb_icc();
-    new npc_vortex_icc();
-    new npc_empfireball_icc();
+    new boss_blood_council;
+    new boss_blood_elf_keleset_icc;
+    new boss_blood_elf_taldaram_icc;
+    new lanathel_intro;
+    new npc_nucleus_icc;
+    new npc_fireball_icc;
+    new npc_bomb_icc;
+    new npc_vortex_icc;
+    new npc_empfireball_icc;
 }

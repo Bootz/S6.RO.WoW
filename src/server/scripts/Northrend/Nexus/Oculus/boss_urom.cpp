@@ -88,11 +88,6 @@ class boss_urom : public CreatureScript
 public:
     boss_urom() : CreatureScript("boss_urom") { }
 
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_uromAI (pCreature);
-    }
-
     struct boss_uromAI : public ScriptedAI
     {
         boss_uromAI(Creature *c) : ScriptedAI(c)
@@ -384,10 +379,15 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_uromAI (pCreature);
+    }
+
 };
 
 
 void AddSC_boss_urom()
 {
-    new boss_urom();
+    new boss_urom;
 }

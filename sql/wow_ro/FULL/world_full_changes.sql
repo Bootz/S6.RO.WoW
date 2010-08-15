@@ -50,9 +50,6 @@ UPDATE quest_template SET ReqSourceId2 = 0, ReqSourceCount2 = 0 WHERE ReqSourceI
 UPDATE item_template SET maxcount = 1 WHERE entry = 45005;
 UPDATE creature_template SET  ScriptName = 'npc_argent_valiant' WHERE entry = 33448;
 
-ALTER TABLE `battleground_template`
-ADD COLUMN `honor_mod`  FLOAT NOT NULL DEFAULT 1 AFTER `Weight`;
-
 -- script boreal tundra
 -- Fizzcrank Fullthrottle
 UPDATE creature_template SET  ScriptName = 'npc_fizzcrank_fullthrottle' WHERE entry = 25590;
@@ -149,29 +146,6 @@ INSERT INTO script_texts (npc_entry, entry, content_default, sound, type, langua
 (32295, -1616032, 'And so ends the Nexus War.', 14407, 1, 0, 0, 'Alexstrasza OUTRO 2'),
 (32295, -1616033, 'This resolution pains me deeply, but the destruction, the monumental loss of life had to end. Regardless of Malygos\' recent transgressions, I will mourn his loss. He was once a guardian, a protector. This day, one of the world\'s mightiest has fallen.', 14408, 1, 0, 0, 'Alexstrasza OUTRO 3'),
 (32295, -1616034, 'The red dragonflight will take on the burden of mending the devastation wrought on Azeroth. Return home to your people and rest. Tomorrow will bring you new challenges, and you must be ready to face them. Life...goes on.', 14409, 1, 0, 0, 'Alexstrasza OUTRO 4');
-
-#Fix Spell Heart of the Wild
-DELETE FROM `spell_linked_spell` WHERE `spell_trigger` in ('-5487', '-9634', '-768');
-INSERT INTO `spell_linked_spell` VALUES
-(-5487,-24899,0, 'Heart of the Wild removed if not in Bear Form'),
-(-9634,-24899,0, 'Heart of the Wild removed if not in Dire Bear Form'),
-(-768,-24900,0, 'Heart of the Wild removed if not in Cat Form');
-
-DELETE FROM `spell_dbc` WHERE `id` in ('24899', '24900');
-INSERT INTO spell_dbc VALUES
-(24899, 0, 0, 400, 1024, 0, 0, 2097152, 0, 144, 0, 0, 1, 0, 0, 101, 0, 0, 0, 0, 21, 1, 0, -1,
-0, 0, 6, 0, 0, 1, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 137, 0,
-0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-0, 0, 0, 0, 0, 0, 0, 0, 1, 'Heart of the Wild Bear Effect'),
-(24900, 0, 0, 400, 1024, 0, 0, 2097152, 0, 1, 0, 0, 1, 0, 0, 101, 0, 0, 0, 0, 21, 1, 0, -1, 0,
-0, 6, 0, 0, 1, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 166, 0, 0, 0,
-0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-0, 0, 0, 0, 0, 1, 'Heart of the Wild Cat Effect');
-
-DELETE FROM spell_bonus_data WHERE entry IN (56160,56131);
-INSERT INTO `spell_bonus_data` (`entry`,`direct_bonus`,`dot_bonus`,`ap_bonus`,`ap_dot_bonus`,`comments`) VALUES
-(56160, 0, 0, 0, 0, 'Priest Glyph of Power Word: Shield'),
-(56131, 0, 0, 0, 0, 'Priest Glyph of Dispel Magic');
 
 #Icecrown Citadel
 #Cleanup first
@@ -2686,14 +2660,6 @@ DELETE FROM `spell_linked_spell` WHERE (`spell_trigger`='-74792') AND (`spell_ef
 INSERT INTO spell_linked_spell VALUES (-74562, 74610, 0, 'Fiery Combustion removed -> Combustion');
 INSERT INTO spell_linked_spell VALUES (-74792, 74800, 0, 'Soul Consumption removed -> Consumption');
 
-DELETE FROM `spell_bonus_data` WHERE `entry` IN (20187,54158);
-
--- Limit Flame Tsunami buff to Lava Blazes only
-DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId`=13 AND `SourceEntry`=60430;
-INSERT INTO `conditions` (`SourceTypeOrReferenceId`,`SourceEntry`,`ConditionTypeOrReference`,`ConditionValue1`,`ConditionValue2`) VALUES
-(13,60430,18,1,30643),
-(13,60430,18,1,31317);
-
 UPDATE `instance_template` SET `script`='instance_trial_of_the_champion' WHERE `map`=650;
 UPDATE `creature_template` SET `ScriptName`='npc_announcer_toc5' WHERE `entry`IN (35004,35005);
 
@@ -4810,6 +4776,8 @@ UPDATE `creature_template` SET `ScriptName` = 'boss_elder_stonebark' WHERE `entr
 UPDATE `creature_template` SET `ScriptName` = 'boss_elder_brightleaf' WHERE `entry` =32195;
 UPDATE `creature_template` SET `ScriptName` = 'creature_iron_roots' WHERE `entry` =33088;
 UPDATE `creature_template` SET `ScriptName` = 'creature_sun_beam' WHERE `entry` =33170;
+-- XT-002 vehicle id
+UPDATE `creature_template` SET `unit_flags` = 33554432, `type_flags` = 0, `VehicleId` = 335 WHERE `entry` = 33293;
 
 SET FOREIGN_KEY_CHECKS=0;
 -- ----------------------------
@@ -4957,9 +4925,6 @@ REPLACE INTO `creature_template` (`entry`, `difficulty_entry_1`, `difficulty_ent
 
 ALTER TABLE db_version CHANGE COLUMN required_3_world_icecrown_citadel required_27_world_command bit;
 
-DELETE FROM `command` WHERE `name` IN ('achievementadd');
-INSERT INTO `command` (`name`, `security`, `help`) VALUES ('achievementadd', '3', 'Syntax: .achievementadd #id');
-
 ALTER TABLE db_version CHANGE COLUMN required_27_world_command required_54_thorim_disarm bit;
 
 -- Thorim immunity on disarm
@@ -4987,162 +4952,113 @@ ALTER TABLE db_version CHANGE COLUMN required_91_ys_keepers required_117_proto_d
 -- Path time-lost protodrake
 DELETE FROM `creature` WHERE `id`=32491;
 INSERT INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `modelid`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `spawndist`, `currentwaypoint`, `curhealth`, `curmana`, `DeathState`, `MovementType`) VALUES 
-(5491004, 32491, 571, 1, 1, 0, 0, 7537.36, -854.089, 982.299, 3.19715, 86400, 0, 0, 18900, 0, 0, 2); -- respawn 24h
+(15636, 32491, 571, 1, 1, 0, 0, 7537.36, -854.089, 982.299, 3.19715, 86400, 0, 0, 18900, 0, 0, 2); -- respawn 24h
 
 UPDATE `creature_template` SET `speed_walk`=2, `speed_run`=2 where `entry`=32491;
 
-DELETE FROM `creature_addon` WHERE `guid`=5491004;
-INSERT INTO `creature_addon` (`guid`,`path_id`) VALUES (5491004,54910040);
+DELETE FROM `creature_addon` WHERE `guid`=15636;
+INSERT INTO `creature_addon` (`guid`,`path_id`) VALUES (15636,139111);
 
-DELETE FROM `waypoint_data` WHERE `id`=54910040; 
+DELETE FROM `waypoint_data` WHERE `id`=139111; 
 INSERT INTO `waypoint_data` (`id`, `point`, `position_x`, `position_y`, `position_z`, `delay`, `move_flag`, `action`, `action_chance`, `wpguid`) VALUES 
-(54910040, 4, 7327.08, -942.896, 974.397, 0, 0, 0, 100, 0),
-(54910040, 3, 7385.49, -878.718, 980.648, 0, 0, 0, 100, 0),
-(54910040, 2, 7474.28, -857.317, 977.674, 0, 0, 0, 100, 0),
-(54910040, 1, 7503.86, -856.766, 974.458, 0, 0, 0, 100, 0),
-(54910040, 5, 7304.96, -1048.66, 986.581, 0, 0, 0, 100, 0),
-(54910040, 6, 7320.79, -1137.46, 977.352, 0, 0, 0, 100, 0),
-(54910040, 7, 7325.62, -1190.25, 966.615, 0, 0, 0, 100, 0),
-(54910040, 8, 7308.36, -1240.42, 966.731, 0, 0, 0, 100, 0),
-(54910040, 9, 7264.87, -1299.48, 956.037, 0, 0, 0, 100, 0),
-(54910040, 10, 7228.44, -1360.63, 953.079, 0, 0, 0, 100, 0),
-(54910040, 11, 7200.34, -1419.23, 956.566, 0, 0, 0, 100, 0),
-(54910040, 12, 7176.4, -1470.62, 953.531, 0, 0, 0, 100, 0),
-(54910040, 13, 7205.6, -1503.5, 959.704, 0, 0, 0, 100, 0),
-(54910040, 14, 7268.69, -1537.84, 981.537, 0, 0, 0, 100, 0),
-(54910040, 15, 7328.43, -1506.58, 978.2, 0, 0, 0, 100, 0),
-(54910040, 16, 7418.04, -1460.2, 975.591, 0, 0, 0, 100, 0),
-(54910040, 17, 7485.83, -1440.65, 993.714, 0, 0, 0, 100, 0),
-(54910040, 18, 7558.21, -1390.25, 1005.14, 0, 0, 0, 100, 0),
-(54910040, 19, 7594.67, -1330.07, 1001.81, 0, 0, 0, 100, 0),
-(54910040, 20, 7636.35, -1254.23, 1004.71, 0, 0, 0, 100, 0),
-(54910040, 21, 7666.21, -1210.42, 1002.2, 0, 0, 0, 100, 0),
-(54910040, 22, 7717.33, -1139.02, 998.005, 0, 0, 0, 100, 0),
-(54910040, 23, 7758.72, -1099.12, 1003.15, 0, 0, 0, 100, 0),
-(54910040, 24, 7853.67, -1055.75, 1065.35, 0, 0, 0, 100, 0),
-(54910040, 25, 7905.68, -1031.95, 1083.13, 0, 0, 0, 100, 0),
-(54910040, 26, 7964.63, -1001.05, 1089.97, 0, 0, 0, 100, 0),
-(54910040, 27, 8016.11, -981.888, 1052.66, 0, 0, 0, 100, 0),
-(54910040, 28, 8063.91, -983.353, 1015.5, 0, 0, 0, 100, 0),
-(54910040, 29, 8171.07, -934.563, 995.578, 0, 0, 0, 100, 0),
-(54910040, 30, 8199.97, -850.786, 999.696, 0, 0, 0, 100, 0),
-(54910040, 31, 8220.44, -782.61, 996.339, 0, 0, 0, 100, 0),
-(54910040, 32, 8198.35, -729.709, 993.536, 0, 0, 0, 100, 0),
-(54910040, 33, 8164.23, -678.373, 990.623, 0, 0, 0, 100, 0),
-(54910040, 34, 8116.52, -620.548, 987.072, 0, 0, 0, 100, 0),
-(54910040, 35, 8080.91, -590.318, 961.444, 0, 0, 0, 100, 0),
-(54910040, 36, 8025.32, -559.044, 958.409, 0, 0, 0, 100, 0),
-(54910040, 37, 7934.42, -513.857, 953.61, 0, 0, 0, 100, 0),
-(54910040, 38, 7874.06, -433.282, 948.766, 0, 0, 0, 100, 0),
-(54910040, 39, 7821.26, -285.08, 941.347, 0, 0, 0, 100, 0),
-(54910040, 40, 7773.6, -208.615, 925.122, 0, 0, 0, 100, 0),
-(54910040, 41, 7718.75, -158.632, 910.074, 0, 0, 0, 100, 0),
-(54910040, 42, 7665.72, -134.088, 893.788, 0, 0, 0, 100, 0),
-(54910040, 43, 7589.5, -98.6794, 884.648, 0, 0, 0, 100, 0),
-(54910040, 44, 7492.43, -87.6879, 865.72, 0, 0, 0, 100, 0),
-(54910040, 45, 7388.29, -95.9055, 844.498, 0, 0, 0, 100, 0),
-(54910040, 46, 7240.53, -132.912, 852.502, 0, 0, 0, 100, 0),
-(54910040, 47, 7179.48, -170.757, 849.114, 0, 0, 0, 100, 0),
-(54910040, 48, 7128.93, -221.296, 845.666, 0, 0, 0, 100, 0),
-(54910040, 49, 7110.42, -260.984, 843.577, 0, 0, 0, 100, 0),
-(54910040, 50, 7101.34, -312.384, 841.101, 0, 0, 0, 100, 0),
-(54910040, 51, 7089.43, -377.234, 826.201, 0, 0, 0, 100, 0),
-(54910040, 52, 7084.02, -443.643, 792.785, 0, 0, 0, 100, 0),
-(54910040, 53, 7083.03, -489.624, 783.07, 0, 0, 0, 100, 0),
-(54910040, 54, 7080.87, -590.638, 764.014, 0, 0, 0, 100, 0),
-(54910040, 55, 7065.05, -676.21, 760.991, 0, 0, 0, 100, 0),
-(54910040, 56, 6978.95, -757.706, 759.465, 0, 0, 0, 100, 0),
-(54910040, 57, 6926.67, -765.875, 756.956, 0, 0, 0, 100, 0),
-(54910040, 58, 6861.22, -771.22, 757.357, 0, 0, 0, 100, 0),
-(54910040, 59, 6807.58, -775.6, 760.469, 0, 0, 0, 100, 0),
-(54910040, 60, 6743.8, -785.868, 757.409, 0, 0, 0, 100, 0),
-(54910040, 61, 6687.89, -795.147, 751.151, 0, 0, 0, 100, 0),
-(54910040, 62, 6639.95, -813.165, 725.154, 0, 0, 0, 100, 0),
-(54910040, 63, 6605.2, -826.225, 688.031, 0, 0, 0, 100, 0),
-(54910040, 64, 6512.56, -861.041, 628.843, 0, 0, 0, 100, 0),
-(54910040, 65, 6451.99, -883.808, 605.176, 0, 0, 0, 100, 0),
-(54910040, 66, 6415.95, -915.482, 547.719, 0, 0, 0, 100, 0),
-(54910040, 67, 6420.17, -963.738, 511.286, 0, 0, 0, 100, 0),
-(54910040, 68, 6414.8, -1034.58, 493.634, 0, 0, 0, 100, 0),
-(54910040, 69, 6408.01, -1143.4, 484.109, 0, 0, 0, 100, 0),
-(54910040, 70, 6393.39, -1257.52, 478.683, 0, 0, 0, 100, 0),
-(54910040, 71, 6387.67, -1387.35, 517.509, 0, 0, 0, 100, 0),
-(54910040, 72, 6411, -1395.61, 542.258, 0, 0, 0, 100, 0),
-(54910040, 73, 6564.67, -1450.02, 676.977, 0, 0, 0, 100, 0),
-(54910040, 74, 6594.86, -1460.71, 701.616, 0, 0, 0, 100, 0),
-(54910040, 75, 6640.73, -1476.95, 738.558, 0, 0, 0, 100, 0),
-(54910040, 76, 6682.87, -1491.87, 775.246, 0, 0, 0, 100, 0),
-(54910040, 77, 6741.23, -1509.22, 814.133, 0, 0, 0, 100, 0),
-(54910040, 78, 6788.69, -1526.15, 854.279, 0, 0, 0, 100, 0),
-(54910040, 79, 6813.13, -1534.87, 875.291, 0, 0, 0, 100, 0),
-(54910040, 80, 6908.43, -1568.86, 870.519, 0, 0, 0, 100, 0),
-(54910040, 81, 6940.94, -1580.46, 897.684, 0, 0, 0, 100, 0),
-(54910040, 82, 6990.34, -1598.08, 895.211, 0, 0, 0, 100, 0),
-(54910040, 83, 7053.23, -1590.21, 923.16, 0, 0, 0, 100, 0),
-(54910040, 84, 7083.66, -1561.51, 944.018, 0, 0, 0, 100, 0),
-(54910040, 85, 7103.84, -1542.48, 961.914, 0, 0, 0, 100, 0),
-(54910040, 86, 7151.78, -1497.26, 958.806, 0, 0, 0, 100, 0),
-(54910040, 87, 7199, -1452.73, 949.402, 0, 0, 0, 100, 0),
-(54910040, 88, 7248.36, -1406.18, 950.141, 0, 0, 0, 100, 0),
-(54910040, 89, 7293.73, -1363.39, 947.2, 0, 0, 0, 100, 0),
-(54910040, 90, 7368.66, -1355.03, 949.293, 0, 0, 0, 100, 0),
-(54910040, 91, 7475.82, -1325.68, 951.012, 0, 0, 0, 100, 0),
-(54910040, 92, 7584.79, -1275.39, 968.346, 0, 0, 0, 100, 0),
-(54910040, 93, 7618.68, -1210.81, 964.907, 0, 0, 0, 100, 0),
-(54910040, 94, 7651.48, -1148.31, 961.578, 0, 0, 0, 100, 0),
-(54910040, 95, 7675.21, -1088.75, 947.033, 0, 0, 0, 100, 0),
-(54910040, 96, 7684.79, -1006.75, 943.092, 0, 0, 0, 100, 0);
+(139111, 4, 7327.08, -942.896, 974.397, 0, 0, 0, 100, 0),
+(139111, 3, 7385.49, -878.718, 980.648, 0, 0, 0, 100, 0),
+(139111, 2, 7474.28, -857.317, 977.674, 0, 0, 0, 100, 0),
+(139111, 1, 7503.86, -856.766, 974.458, 0, 0, 0, 100, 0),
+(139111, 5, 7304.96, -1048.66, 986.581, 0, 0, 0, 100, 0),
+(139111, 6, 7320.79, -1137.46, 977.352, 0, 0, 0, 100, 0),
+(139111, 7, 7325.62, -1190.25, 966.615, 0, 0, 0, 100, 0),
+(139111, 8, 7308.36, -1240.42, 966.731, 0, 0, 0, 100, 0),
+(139111, 9, 7264.87, -1299.48, 956.037, 0, 0, 0, 100, 0),
+(139111, 10, 7228.44, -1360.63, 953.079, 0, 0, 0, 100, 0),
+(139111, 11, 7200.34, -1419.23, 956.566, 0, 0, 0, 100, 0),
+(139111, 12, 7176.4, -1470.62, 953.531, 0, 0, 0, 100, 0),
+(139111, 13, 7205.6, -1503.5, 959.704, 0, 0, 0, 100, 0),
+(139111, 14, 7268.69, -1537.84, 981.537, 0, 0, 0, 100, 0),
+(139111, 15, 7328.43, -1506.58, 978.2, 0, 0, 0, 100, 0),
+(139111, 16, 7418.04, -1460.2, 975.591, 0, 0, 0, 100, 0),
+(139111, 17, 7485.83, -1440.65, 993.714, 0, 0, 0, 100, 0),
+(139111, 18, 7558.21, -1390.25, 1005.14, 0, 0, 0, 100, 0),
+(139111, 19, 7594.67, -1330.07, 1001.81, 0, 0, 0, 100, 0),
+(139111, 20, 7636.35, -1254.23, 1004.71, 0, 0, 0, 100, 0),
+(139111, 21, 7666.21, -1210.42, 1002.2, 0, 0, 0, 100, 0),
+(139111, 22, 7717.33, -1139.02, 998.005, 0, 0, 0, 100, 0),
+(139111, 23, 7758.72, -1099.12, 1003.15, 0, 0, 0, 100, 0),
+(139111, 24, 7853.67, -1055.75, 1065.35, 0, 0, 0, 100, 0),
+(139111, 25, 7905.68, -1031.95, 1083.13, 0, 0, 0, 100, 0),
+(139111, 26, 7964.63, -1001.05, 1089.97, 0, 0, 0, 100, 0),
+(139111, 27, 8016.11, -981.888, 1052.66, 0, 0, 0, 100, 0),
+(139111, 28, 8063.91, -983.353, 1015.5, 0, 0, 0, 100, 0),
+(139111, 29, 8171.07, -934.563, 995.578, 0, 0, 0, 100, 0),
+(139111, 30, 8199.97, -850.786, 999.696, 0, 0, 0, 100, 0),
+(139111, 31, 8220.44, -782.61, 996.339, 0, 0, 0, 100, 0),
+(139111, 32, 8198.35, -729.709, 993.536, 0, 0, 0, 100, 0),
+(139111, 33, 8164.23, -678.373, 990.623, 0, 0, 0, 100, 0),
+(139111, 34, 8116.52, -620.548, 987.072, 0, 0, 0, 100, 0),
+(139111, 35, 8080.91, -590.318, 961.444, 0, 0, 0, 100, 0),
+(139111, 36, 8025.32, -559.044, 958.409, 0, 0, 0, 100, 0),
+(139111, 37, 7934.42, -513.857, 953.61, 0, 0, 0, 100, 0),
+(139111, 38, 7874.06, -433.282, 948.766, 0, 0, 0, 100, 0),
+(139111, 39, 7821.26, -285.08, 941.347, 0, 0, 0, 100, 0),
+(139111, 40, 7773.6, -208.615, 925.122, 0, 0, 0, 100, 0),
+(139111, 41, 7718.75, -158.632, 910.074, 0, 0, 0, 100, 0),
+(139111, 42, 7665.72, -134.088, 893.788, 0, 0, 0, 100, 0),
+(139111, 43, 7589.5, -98.6794, 884.648, 0, 0, 0, 100, 0),
+(139111, 44, 7492.43, -87.6879, 865.72, 0, 0, 0, 100, 0),
+(139111, 45, 7388.29, -95.9055, 844.498, 0, 0, 0, 100, 0),
+(139111, 46, 7240.53, -132.912, 852.502, 0, 0, 0, 100, 0),
+(139111, 47, 7179.48, -170.757, 849.114, 0, 0, 0, 100, 0),
+(139111, 48, 7128.93, -221.296, 845.666, 0, 0, 0, 100, 0),
+(139111, 49, 7110.42, -260.984, 843.577, 0, 0, 0, 100, 0),
+(139111, 50, 7101.34, -312.384, 841.101, 0, 0, 0, 100, 0),
+(139111, 51, 7089.43, -377.234, 826.201, 0, 0, 0, 100, 0),
+(139111, 52, 7084.02, -443.643, 792.785, 0, 0, 0, 100, 0),
+(139111, 53, 7083.03, -489.624, 783.07, 0, 0, 0, 100, 0),
+(139111, 54, 7080.87, -590.638, 764.014, 0, 0, 0, 100, 0),
+(139111, 55, 7065.05, -676.21, 760.991, 0, 0, 0, 100, 0),
+(139111, 56, 6978.95, -757.706, 759.465, 0, 0, 0, 100, 0),
+(139111, 57, 6926.67, -765.875, 756.956, 0, 0, 0, 100, 0),
+(139111, 58, 6861.22, -771.22, 757.357, 0, 0, 0, 100, 0),
+(139111, 59, 6807.58, -775.6, 760.469, 0, 0, 0, 100, 0),
+(139111, 60, 6743.8, -785.868, 757.409, 0, 0, 0, 100, 0),
+(139111, 61, 6687.89, -795.147, 751.151, 0, 0, 0, 100, 0),
+(139111, 62, 6639.95, -813.165, 725.154, 0, 0, 0, 100, 0),
+(139111, 63, 6605.2, -826.225, 688.031, 0, 0, 0, 100, 0),
+(139111, 64, 6512.56, -861.041, 628.843, 0, 0, 0, 100, 0),
+(139111, 65, 6451.99, -883.808, 605.176, 0, 0, 0, 100, 0),
+(139111, 66, 6415.95, -915.482, 547.719, 0, 0, 0, 100, 0),
+(139111, 67, 6420.17, -963.738, 511.286, 0, 0, 0, 100, 0),
+(139111, 68, 6414.8, -1034.58, 493.634, 0, 0, 0, 100, 0),
+(139111, 69, 6408.01, -1143.4, 484.109, 0, 0, 0, 100, 0),
+(139111, 70, 6393.39, -1257.52, 478.683, 0, 0, 0, 100, 0),
+(139111, 71, 6387.67, -1387.35, 517.509, 0, 0, 0, 100, 0),
+(139111, 72, 6411, -1395.61, 542.258, 0, 0, 0, 100, 0),
+(139111, 73, 6564.67, -1450.02, 676.977, 0, 0, 0, 100, 0),
+(139111, 74, 6594.86, -1460.71, 701.616, 0, 0, 0, 100, 0),
+(139111, 75, 6640.73, -1476.95, 738.558, 0, 0, 0, 100, 0),
+(139111, 76, 6682.87, -1491.87, 775.246, 0, 0, 0, 100, 0),
+(139111, 77, 6741.23, -1509.22, 814.133, 0, 0, 0, 100, 0),
+(139111, 78, 6788.69, -1526.15, 854.279, 0, 0, 0, 100, 0),
+(139111, 79, 6813.13, -1534.87, 875.291, 0, 0, 0, 100, 0),
+(139111, 80, 6908.43, -1568.86, 870.519, 0, 0, 0, 100, 0),
+(139111, 81, 6940.94, -1580.46, 897.684, 0, 0, 0, 100, 0),
+(139111, 82, 6990.34, -1598.08, 895.211, 0, 0, 0, 100, 0),
+(139111, 83, 7053.23, -1590.21, 923.16, 0, 0, 0, 100, 0),
+(139111, 84, 7083.66, -1561.51, 944.018, 0, 0, 0, 100, 0),
+(139111, 85, 7103.84, -1542.48, 961.914, 0, 0, 0, 100, 0),
+(139111, 86, 7151.78, -1497.26, 958.806, 0, 0, 0, 100, 0),
+(139111, 87, 7199, -1452.73, 949.402, 0, 0, 0, 100, 0),
+(139111, 88, 7248.36, -1406.18, 950.141, 0, 0, 0, 100, 0),
+(139111, 89, 7293.73, -1363.39, 947.2, 0, 0, 0, 100, 0),
+(139111, 90, 7368.66, -1355.03, 949.293, 0, 0, 0, 100, 0),
+(139111, 91, 7475.82, -1325.68, 951.012, 0, 0, 0, 100, 0),
+(139111, 92, 7584.79, -1275.39, 968.346, 0, 0, 0, 100, 0),
+(139111, 93, 7618.68, -1210.81, 964.907, 0, 0, 0, 100, 0),
+(139111, 94, 7651.48, -1148.31, 961.578, 0, 0, 0, 100, 0),
+(139111, 95, 7675.21, -1088.75, 947.033, 0, 0, 0, 100, 0),
+(139111, 96, 7684.79, -1006.75, 943.092, 0, 0, 0, 100, 0);
 
 ALTER TABLE db_version CHANGE COLUMN required_117_proto_drake_path required_183_world_wintergrasp bit;
-
-DELETE FROM `trinity_string` WHERE entry IN (756,757,758,759,760,761,762,763,764,765,766,767,768,769,770,771,772, 773, 780,781,782,783);
-INSERT INTO `trinity_string` VALUES ('756', 'Battle begins!', '', '', '', '', '', '', '', 'Битва началась');
-INSERT INTO `trinity_string` VALUES ('757', '%s has successfully defended the fortress!', '', '', '', '', '', '', '', '');
-INSERT INTO `trinity_string` VALUES ('758', '%s has taken over the fortress!', '', '', '', '', '', '', '', '');
-INSERT INTO `trinity_string` VALUES ('759', 'The %s siege workshop has been damaged by the %s!', '', '', '', '', '', '', '', '');
-INSERT INTO `trinity_string` VALUES ('760', 'The %s siege workshop has been destroyed by the %s!', '', '', '', '', '', '', '', '');
-INSERT INTO `trinity_string` VALUES ('761', 'The %s tower has been damaged!', '', '', '', '', '', '', '', '%s башня повреждена');
-INSERT INTO `trinity_string` VALUES ('762', 'The %s tower has been destroyed!', '', '', '', '', '', '', '', '%s башня уничтожена!');
-INSERT INTO `trinity_string` VALUES ('763', 'Wintergrasp fortress is under attack!', '', '', '', '', '', '', '', '');
-INSERT INTO `trinity_string` VALUES ('764', 'Wintergrasp is now under the control of the %s.', '', '', '', '', '', '', '', '');
-INSERT INTO `trinity_string` VALUES ('765', 'Wintergrasp timer set to %s.', '', '', '', '', '', '', '', '');
-INSERT INTO `trinity_string` VALUES ('766', 'Wintergrasp battle started.', '', '', '', '', '', '', '', '');
-INSERT INTO `trinity_string` VALUES ('767', 'Wintergrasp battle finished.', '', '', '', '', '', '', '', '');
-INSERT INTO `trinity_string` VALUES ('768', 'Wintergrasp info: %s controlled. Timer: %s. Wartime: %s. Number of Players: (Horde: %u, Alliance: %u)', '', '', '', '', '', '', '', '');
-INSERT INTO `trinity_string` VALUES ('769', 'Wintergrasp outdoorPvP is disabled.', '', '', '', '', '', '', '', '');
-INSERT INTO `trinity_string` VALUES ('770', 'Wintergrasp outdoorPvP is enabled.', '', '', '', '', '', '', '', '');
-INSERT INTO `trinity_string` VALUES ('771', 'You have reached Rank 1: Corporal', '', '', '', '', '', '', '', 'Вы достигли Ранга 1: Капрал');
-INSERT INTO `trinity_string` VALUES ('772', 'You have reached Rank 2: First Lieutenant', '', '', '', '', '', '', '', 'Вы достигли Ранга 2: Лейтенант');
-INSERT INTO `trinity_string` VALUES ('773', 'Not enough players to begin the battle.', '', '', '', '', '', '', '', '');
-INSERT INTO `trinity_string` VALUES ('780', 'Before the Battle of  Wintergrasp left 30 minutes!', '', '', '', '', '', '', '', 'До битвы на  Озере Ледяных Оков осталось 30 минут!');
-INSERT INTO `trinity_string` VALUES ('781', 'Before the Battle of  Wintergrasp left 10 minutes!', '', '', '', '', '', '', '', 'До битвы на  Озере Ледяных Оков осталось 10 минут!');
-INSERT INTO `trinity_string` VALUES ('782', 'The battle for Wintergrasp  has stopped! Not enough defenders. Wintergrasp Fortress remains  Attackers.', '', '', '', '', '', '', '', 'Битва за Озеро Ледяных Оков Остановлена. Не хватает защитников. Крепость переходит атакующей  стороне.');
-INSERT INTO `trinity_string` VALUES ('783', 'The battle for Wintergrasp  has stopped! Not enough attackers. Wintergrasp Fortress remains  Defenders.', '', '', '', '', '', '', '', 'Битва за Озеро Ледяных Оков Остановлена. Не хватает нападающих. Крепость остается защитникам.');
-DELETE FROM `command` WHERE name IN ('wg','wg enable','wg start','wg status','wg stop','wg switch','wg timer');
-INSERT INTO `command` VALUES ('wg', '3', 'Syntax: .wg $subcommand.');
-INSERT INTO `command` VALUES ('wg enable', '3', 'Syntax: .wg enable [on/off] Enable/Disable Wintergrasp outdoorPvP.');
-INSERT INTO `command` VALUES ('wg start', '3', 'Syntax: .wg start\r\nForce Wintergrasp battle start.');
-INSERT INTO `command` VALUES ('wg status', '3', 'Syntax: .wg status\r\nWintergrasp info, defender, timer, wartime.');
-INSERT INTO `command` VALUES ('wg stop', '3', 'Syntax: .wg stop\r\nForce Wintergrasp battle stop (No rewards).');
-INSERT INTO `command` VALUES ('wg switch', '3', 'Syntax: .wg switch\r\nSwitchs Wintergrasp defender team.');
-INSERT INTO `command` VALUES ('wg timer', '3', 'Syntax: .wg timer $minutes\r\nChange the current timer. Min value = 1, Max value 60 (Wartime), 1440 (Not Wartime)');
-/*Spirit healer FIX */
-UPDATE creature_template SET npcflag=npcflag|32768 WHERE entry   IN (31841,31842);
-/* Temp removed gameobject stopping you getting to the relic
-* 60070 - [Wintergrasp Keep Collision Wall X:5396.209961 Y:2840.010010 Z:432.268005 MapId:571
-* 60476 - [Doodad_WG_Keep_Door01_collision01 X:5397.109863 Y:2841.540039 Z:425.901001 MapId:571]*/
-DELETE FROM gameobject WHERE id IN ('194323', '194162');
-
-/*Defender's Portal Activate Proper Spell
-Not need it now*/
-/*
-REPLACE INTO `spell_linked_spell` VALUES ('54640','54643','0','Defender\'s Portal Activate Proper Spell');
-*/
-
-/* Teleport WG SPELLs*/
-REPLACE INTO `spell_target_position` VALUES ('59096', '571', '5325.06', '2843.36', '409.285', '3.20278');
-REPLACE INTO `spell_target_position` VALUES ('58632', '571', '5097.79', '2180.29', '365.61', '2.41');
-REPLACE INTO `spell_target_position` VALUES ('58633', '571', '5026.80', '3676.69', '362.58', '3.94');
 
 ALTER TABLE db_version CHANGE COLUMN required_183_world_wintergrasp required_187_world_halls_of_reflection bit;
 
@@ -5427,130 +5343,6 @@ INSERT INTO script_waypoint VALUES
 
 
 ALTER TABLE db_version CHANGE COLUMN required_187_world_halls_of_reflection required_205_world_access_requirement bit;
-
-TRUNCATE `access_requirement`;
-INSERT INTO `access_requirement` VALUES
-(33,0,14,0,0,0,0,0,0, NULL, 'Shadowfang Keep Entrance'),
-(34,0,15,0,0,0,0,0,0, NULL, 'Stormwind Stockades Entrance'),
-(36,0,10,0,0,0,0,0,0, NULL, 'DeadMines Entrance'),
-(43,0,10,0,0,0,0,0,0, NULL, 'The Barrens - Wailing Caverns'),
-(47,0,17,0,0,0,0,0,0, NULL, 'Razorfen Kraul Entrance'),
-(48,0,19,0,0,0,0,0,0, NULL, 'Blackphantom Deeps Entrance'),
-(70,0,30,0,0,0,0,0,0, NULL, 'Uldaman Entrance'),
-(90,0,15,0,0,0,0,0,0, NULL, 'Gnomeregan Entrance'),
-(109,0,35,0,0,0,0,0,0, NULL, 'Altar of Atal''Hakkar Entrance'),
-(129,0,25,0,0,0,0,0,0, NULL, 'Razorfen Downs Entrance'),
-(189,0,20,0,0,0,0,0,0, NULL, 'Scarlet Monastery - Graveyard (Entrance)'),
-(209,0,35,0,0,0,0,0,0, NULL, 'Zul''Farrak Entrance'),
-(229,0,45,0,0,0,0,0,0, NULL, 'Blackrock Spire - Searing Gorge Instance (Inside)'),
-(230,0,40,0,0,0,0,0,0, NULL, 'Blackrock Mountain - Searing Gorge Instance?'),
-(249,0,80,0,0,0,0,0,0, NULL, 'Onyxia''s Lair Entrance'),
-(249,1,80,0,0,0,0,0,0, NULL, 'Onyxia''s Lair Entrance'),
-(269,0,66,0,0,0,10285,10285,0, 'You must complete the quest \"Return to Andormu\" before entering the Black Morass.', 'Caverns Of Time, Black Morass (Entrance)'),
-(269,1,70,0,30635,0,10285,10285,0, 'You must complete the quest \"Return to Andormu\" and be level 70 before entering the Heroic difficulty of the Black Morass.', 'Caverns Of Time, Black Morass (Entrance)'),
-(289,0,45,0,0,0,0,0,0, NULL, 'Scholomance Entrance'),
-(309,0,50,0,0,0,0,0,0, NULL, 'Zul''Gurub Entrance '),
-(329,0,45,0,0,0,0,0,0, NULL, 'Stratholme - Eastern Plaguelands Instance'),
-(349,0,30,0,0,0,0,0,0, NULL, 'Maraudon'),
-(389,0,8,0,0,0,0,0,0, NULL, 'Ragefire Chasm - Ogrimmar Instance'),
-(409,0,50,0,0,0,0,0,0, NULL, 'The Molten Bridge'),
-(429,0,45,0,0,0,0,0,0, NULL, 'Dire Maul'),
-(469,0,60,0,0,0,0,0,0, NULL, 'Blackwing Lair - Blackrock Mountain - Eastern Kingdoms'),
-(509,0,50,0,0,0,0,0,0, NULL, 'Ruins Of Ahn\'Qiraj (Outside)'),
-(531,0,50,0,0,0,0,0,0, NULL, 'Ahn\'Qiraj Temple (Outside)'),
-(532,0,68,0,0,0,0,0,0, NULL, 'Karazhan, Main (Entrance)'),
-(533,0,80,0,0,0,0,0,0, NULL, 'Naxxramas'),
-(533,1,80,0,0,0,0,0,0, NULL, 'Naxxramas'),
-(534,0,70,0,0,0,0,0,0, NULL, 'Battle Of Mount Hyjal, Alliance Base (Entrance)'),
-(540,0,55,0,0,0,0,0,0, NULL, 'The Shattered Halls (Entrance)'),
-(540,1,70,0,30637,30622,0,0,0, NULL, 'The Shattered Halls (Entrance)'),
-(542,0,55,0,0,0,0,0,0, NULL, 'The Blood Furnace (Entrance)'),
-(542,1,70,0,30637,30622,0,0,0, NULL, 'The Blood Furnace (Entrance)'),
-(543,0,55,0,0,0,0,0,0, NULL, 'Hellfire Ramparts (Entrance)'),
-(543,1,70,0,30637,30622,0,0,0, NULL, 'Hellfire Ramparts (Entrance)'),
-(544,0,65,0,0,0,0,0,0, NULL, 'Magtheridon''s Lair (Entrance)'),
-(545,0,55,0,0,0,0,0,0, NULL, 'The Steamvault (Entrance)'),
-(545,1,70,0,30623,0,0,0,0, NULL, 'The Steamvault (Entrance)'),
-(546,0,55,0,0,0,0,0,0, NULL, 'The Underbog (Entrance)'),
-(546,1,70,0,30623,0,0,0,0, NULL, 'The Underbog (Entrance)'),
-(547,0,55,0,0,0,0,0,0, NULL, 'The Slave Pens (Entrance)'),
-(547,1,70,0,30623,0,0,0,0, NULL, 'The Slave Pens (Entrance)'),
-(548,0,68,0,0,0,0,0,0, NULL, 'Serpentshrine Cavern (Entrance)'),
-(550,0,70,0,0,0,0,0,0, NULL, 'The Eye (Entrance)'),
-(552,0,68,0,0,0,0,0,0, NULL, 'The Arcatraz (Entrance)'),
-(552,1,70,0,30634,0,0,0,0, NULL, 'The Arcatraz (Entrance)'),
-(553,0,68,0,0,0,0,0,0, NULL, 'The Botanica (Entrance)'),
-(553,1,70,0,30634,0,0,0,0, NULL, 'The Botanica (Entrance)'),
-(554,0,68,0,0,0,0,0,0, NULL, 'The Mechanar (Entrance)'),
-(554,1,70,0,30634,0,0,0,0, NULL, 'The Mechanar (Entrance)'),
-(555,0,65,0,0,0,0,0,0, NULL, 'Shadow Labyrinth (Entrance)'),
-(555,1,70,0,30633,0,0,0,0, NULL, 'Shadow Labyrinth (Entrance)'),
-(556,0,55,0,0,0,0,0,0, NULL, 'Sethekk Halls (Entrance)'),
-(556,1,70,0,30633,0,0,0,0, NULL, 'Sethekk Halls (Entrance)'),
-(557,0,55,0,0,0,0,0,0, NULL, 'Mana Tombs (Entrance)'),
-(557,1,70,0,30633,0,0,0,0, NULL, 'Mana Tombs (Entrance)'),
-(558,0,55,0,0,0,0,0,0, NULL, 'Auchenai Crypts (Entrance)'),
-(558,1,70,0,30633,0,0,0,0, NULL, 'Auchenai Crypts (Entrance)'),
-(560,0,66,0,0,0,0,0,0, NULL, 'Caverns Of Time, Old Hillsbrad Foothills (Entrance)'),
-(560,1,70,0,30635,0,0,0,0, NULL, 'Caverns Of Time, Old Hillsbrad Foothills (Entrance)'),
-(564,0,70,0,0,0,0,0,0, NULL, 'Black Temple (Entrance)'),
-(565,0,70,0,0,0,0,0,0, NULL, 'Gruul''s Lair (Entrance)'),
-(568,0,70,0,0,0,0,0,0, NULL, 'Zul''Aman (Entrance)'),
-(574,0,65,0,0,0,0,0,0, NULL, 'Utgarde Keep (entrance)'),
-(574,1,80,0,0,0,0,0,0, NULL, 'Utgarde Keep (entrance)'),
-(575,0,75,0,0,0,0,0,0, NULL, 'Utgarde Pinnacle (entrance)'),
-(575,1,80,0,0,0,0,0,0, NULL, 'Utgarde Pinnacle (entrance)'),
-(576,0,66,0,0,0,0,0,0, NULL, 'The Nexus (entrance)'),
-(576,1,80,0,0,0,0,0,0, NULL, 'The Nexus (entrance)'),
-(578,0,75,0,0,0,0,0,0, NULL, 'The Oculus (entrance)'),
-(578,1,80,0,0,0,0,0,0, NULL, 'The Oculus (entrance)'),
-(580,0,70,0,0,0,0,0,0, NULL, 'Sunwell Plateau (Entrance)'),
-(585,0,65,0,0,0,0,0,0, NULL, 'Magisters\' Terrace (Entrance)'),
-(585,1,70,0,0,0,11492,11492,0, NULL, 'Magisters\' Terrace (Entrance)'),
-(595,0,75,0,0,0,0,0,0, NULL, 'Culling of Stratholme (entrance)'),
-(595,1,80,0,0,0,0,0,0, NULL, 'Culling of Stratholme (entrance)'),
-(599,0,72,0,0,0,0,0,0, NULL, 'Ulduar, Halls of Stone (entrance)'),
-(599,1,80,0,0,0,0,0,0, NULL, 'Ulduar, Halls of Stone (entrance)'),
-(600,0,69,0,0,0,0,0,0, NULL, 'Drak''Tharon Keep (entrance)'),
-(600,1,80,0,0,0,0,0,0, NULL, 'Drak''Tharon Keep (entrance)'),
-(601,0,67,0,0,0,0,0,0, NULL, 'Azjol-Nerub (entrance)'),
-(601,1,80,0,0,0,0,0,0, NULL, 'Azjol-Nerub (entrance)'),
-(602,0,75,0,0,0,0,0,0, NULL, 'Ulduar, Halls of Lightning (entrance)'),
-(602,1,80,0,0,0,0,0,0, NULL, 'Ulduar, Halls of Lightning (entrance)'),
-(603,0,80,0,0,0,0,0,0, NULL, 'Ulduar Raid entrance'),
-(603,1,80,0,0,0,0,0,0, NULL, 'Ulduar Raid entrance'),
-(604,0,71,0,0,0,0,0,0, NULL, 'Gundrak (entrance north)'),
-(604,1,80,0,0,0,0,0,0, NULL, 'Gundrak (entrance north)'),
-(608,0,70,0,0,0,0,0,0, NULL, 'Violet Hold (entrance)'),
-(608,1,80,0,0,0,0,0,0, NULL, 'Violet Hold (entrance)'),
-(615,0,80,0,0,0,0,0,0, NULL, 'Chamber of Aspects, Obsidian Sanctum (entrance)'),
-(615,1,80,0,0,0,0,0,0, NULL, 'Chamber of Aspects, Obsidian Sanctum (entrance)'),
-(616,0,80,0,0,0,0,0,0, NULL, 'The Eye of Eternity (entrance)'),
-(616,1,80,0,0,0,0,0,0, NULL, 'The Eye of Eternity (entrance)'),
-(619,0,68,0,0,0,0,0,0, NULL, 'Ahn''Kahet (entrance)'),
-(619,1,80,0,0,0,0,0,0, NULL, 'Ahn''Kahet (entrance)'),
-(624,0,80,0,0,0,0,0,0, NULL, 'Vault of Archavon (Entrance)'),
-(624,1,80,0,0,0,0,0,0, NULL, 'Vault of Archavon (Entrance)'),
-(631,0,80,0,0,0,0,0,0, NULL, 'IceCrown Citadel (Entrance)'),
-(631,1,80,0,0,0,0,0,0, NULL, 'IceCrown Citadel (Entrance)'),
-(631,2,80,0,0,0,0,0,4530, NULL, 'IceCrown Citadel (Entrance)'),
-(631,3,80,0,0,0,0,0,4597, NULL, 'IceCrown Citadel (Entrance)'),
-(632,0,80,0,0,0,0,0,0, NULL, 'Forge of Souls (Entrance)'),
-(632,1,80,0,0,0,0,0,0, NULL, 'Forge of Souls (Entrance)'),
-(649,0,80,0,0,0,0,0,0, NULL, 'Trial of the Crusader'),
-(649,1,80,0,0,0,0,0,0, NULL, 'Trial of the Crusader'),
-(649,2,80,0,0,0,0,0,0, NULL, 'Trial of the Crusader'),
-(649,3,80,0,0,0,0,0,0, NULL, 'Trial of the Crusader'),
-(650,0,75,0,0,0,0,0,0, NULL, 'Trial of the Champion'),
-(650,1,80,0,0,0,0,0,0, NULL, 'Trial of the Champion'),
-(658,0,80,0,0,0,24499,24511,0, NULL, 'Pit of Saron (Entrance)'),
-(658,1,80,0,0,0,24499,24511,0, NULL, 'Pit of Saron (Entrance)'),
-(668,0,80,0,0,0,24710,24712,0, NULL, 'Halls of Reflection (Entrance)'),
-(668,1,80,0,0,0,24710,24712,0, NULL, 'Halls of Reflection (Entrance)'),
-(724,0,80,0,0,0,0,0,0, NULL, 'The Ruby Sanctum (Entrance)'),
-(724,1,80,0,0,0,0,0,0, NULL, 'The Ruby Sanctum (Entrance)'),
-(724,2,80,0,0,0,0,0,0, NULL, 'The Ruby Sanctum (Entrance)'),
-(724,3,80,0,0,0,0,0,0, NULL, 'The Ruby Sanctum (Entrance)');
 
 ALTER TABLE db_version CHANGE COLUMN required_205_world_access_requirement required_242_world_battleground_template bit;
 
@@ -6552,3 +6344,14 @@ INSERT INTO `script_texts` (`npc_entry`, `entry`, `content_default`, `content_lo
 (0, -1850010, 'I am defeated. Nice battle !', 'I am defeated. Nice battle !',''),
 (0, -1850011, 'It seems that I\'ve underestimated your skills. Well done.', 'It seems that I\'ve underestimated your skills. Well done.',''),
 (0, -1850012, 'You\'ll probably have more luck next time.', '','');
+
+ALTER TABLE db_version CHANGE COLUMN required_424_argent_quests required_436_world_command bit;
+
+-- Achievement lookup & add
+DELETE FROM command WHERE NAME IN ('lookup achievement', 'achievement add', 'achievement remove');
+INSERT INTO command (name, security, help) VALUES
+('lookup achievement', 1, 'Syntax: .lookup achievement $achievementname\r\n\r\nLooks up an achievement by $achievementname, and returns all matches with their Achievement ID\'s.');
+INSERT INTO command (name, security, help) VALUES
+('achievement add', 2, 'Syntax: .achievement add $achievementID\r\n\r\Adds the achievement with selected ID\'s.');
+INSERT INTO command (name, security, help) VALUES
+('achievement remove', 2, 'Syntax: .achievement remove $achievementID\r\n\r\removes the achievement with selected ID\'s.');

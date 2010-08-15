@@ -65,48 +65,20 @@ enum Misc
 /*######
 ## Boss Ionar
 ######*/
-class boss_ionar : public CreatureScript
+
+class boss_ionar : public CreatureScript
 {
 public:
     boss_ionar() : CreatureScript("boss_ionar") { }
-
-    bool EffectDummyCreature(Unit* pCaster, uint32 uiSpellId, uint32 uiEffIndex, Creature* pCreatureTarget)
-    {
-        //always check spellid and effectindex
-        if (uiSpellId == SPELL_DISPERSE && uiEffIndex == 0)
-        {
-            if (pCreatureTarget->GetEntry() != NPC_IONAR)
-                return true;
-
-            for (uint8 i = 0; i < DATA_MAX_SPARKS; ++i)
-                pCreatureTarget->CastSpell(pCreatureTarget, SPELL_SUMMON_SPARK, true);
-
-            pCreatureTarget->AttackStop();
-            pCreatureTarget->SetVisibility(VISIBILITY_OFF);
-            pCreatureTarget->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE|UNIT_FLAG_NOT_SELECTABLE|UNIT_FLAG_DISABLE_MOVE);
-
-            pCreatureTarget->GetMotionMaster()->Clear();
-            pCreatureTarget->GetMotionMaster()->MoveIdle();
-
-            //always return true when we are handling this spell and effect
-            return true;
-        }
-        return false;
-    }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_ionarAI(pCreature);
-    }
 
     struct boss_ionarAI : public ScriptedAI
     {
         boss_ionarAI(Creature *pCreature) : ScriptedAI(pCreature), lSparkList(pCreature)
         {
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
 
         SummonList lSparkList;
 
@@ -297,31 +269,53 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_ionarAI(pCreature);
+    }
+
+    bool EffectDummyCreature(Unit* pCaster, uint32 uiSpellId, uint32 uiEffIndex, Creature* pCreatureTarget)
+    {
+        //always check spellid and effectindex
+        if (uiSpellId == SPELL_DISPERSE && uiEffIndex == 0)
+        {
+            if (pCreatureTarget->GetEntry() != NPC_IONAR)
+                return true;
+
+            for (uint8 i = 0; i < DATA_MAX_SPARKS; ++i)
+                pCreatureTarget->CastSpell(pCreatureTarget, SPELL_SUMMON_SPARK, true);
+
+            pCreatureTarget->AttackStop();
+            pCreatureTarget->SetVisibility(VISIBILITY_OFF);
+            pCreatureTarget->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE|UNIT_FLAG_NOT_SELECTABLE|UNIT_FLAG_DISABLE_MOVE);
+
+            pCreatureTarget->GetMotionMaster()->Clear();
+            pCreatureTarget->GetMotionMaster()->MoveIdle();
+
+            //always return true when we are handling this spell and effect
+            return true;
+        }
+        return false;
+    }
 };
-
-
 
 /*######
 ## mob_spark_of_ionar
 ######*/
-class mob_spark_of_ionar : public CreatureScript
+
+class mob_spark_of_ionar : public CreatureScript
 {
 public:
     mob_spark_of_ionar() : CreatureScript("mob_spark_of_ionar") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_spark_of_ionarAI(pCreature);
-    }
 
     struct mob_spark_of_ionarAI : public ScriptedAI
     {
         mob_spark_of_ionarAI(Creature *pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
 
         uint32 uiCheckTimer;
 
@@ -384,11 +378,16 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_spark_of_ionarAI(pCreature);
+    }
+
 };
 
 
 void AddSC_boss_ionar()
 {
-    new boss_ionar();
-    new mob_spark_of_ionar();
+    new boss_ionar;
+    new mob_spark_of_ionar;
 }

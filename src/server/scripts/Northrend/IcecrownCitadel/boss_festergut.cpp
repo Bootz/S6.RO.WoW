@@ -64,24 +64,20 @@ enum Spells
 
 #define EMOTE_GAS_SPORE "Festergut farts."
 #define EMOTE_Pungent_Blight "Festergut vomits."
-class boss_festergut : public CreatureScript
+
+class boss_festergut : public CreatureScript
 {
 public:
     boss_festergut() : CreatureScript("boss_festergut") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_festergutAI(pCreature);
-    }
 
     struct boss_festergutAI : public ScriptedAI
     {
         boss_festergutAI(Creature *pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
     
         uint8 Inhalestack;
         uint32 m_uiPungentBlightTimer;
@@ -321,24 +317,25 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_festergutAI(pCreature);
+    }
+
 };
-class npc_stinky : public CreatureScript
+
+class npc_stinky : public CreatureScript
 {
 public:
     npc_stinky() : CreatureScript("npc_stinky") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_stinkyAI(pCreature);
-    }
 
     struct npc_stinkyAI : public ScriptedAI
     {
         npc_stinkyAI(Creature *pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
         }
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
         uint32 m_uiMortalWoundTimer;
         uint32 m_uiDecimateTimer;
         uint32 m_uiPlagueStench;
@@ -392,12 +389,17 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_stinkyAI(pCreature);
+    }
+
 };
 
 
 
 void AddSC_boss_festergut()
 {
-    new boss_festergut();
-    new npc_stinky();
+    new boss_festergut;
+    new npc_stinky;
 }

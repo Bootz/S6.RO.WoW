@@ -129,20 +129,31 @@ const Position SanityWellPos[10] =
 /*------------------------------------------------------*
  *                  Images of Keepers                   *
  *------------------------------------------------------*/
-class npc_keeper_image : public CreatureScript
+
+class npc_keeper_image : public CreatureScript
 {
 public:
     npc_keeper_image() : CreatureScript("npc_keeper_image") { }
 
-    CreatureAI* GetAI_keeper_image(Creature* pCreature)
+    struct keeper_imageAI : public ScriptedAI
+    {
+        keeper_imageAI(Creature *c) : ScriptedAI(c)
+        {
+            pInstance = c->GetInstanceScript();
+        }
+
+        InstanceScript* pInstance;
+    };
+
+    CreatureAI* GetAI_keeper_image(Creature* pCreature) const
     {
         return new keeper_imageAI (pCreature);
     }
 
-    bool GossipSelect_keeper_image(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+    bool OnGossipSelect_keeper_image(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
     {
-        InstanceData *data = pPlayer->GetInstanceData();
-        ScriptedInstance* pInstance = pCreature->GetInstanceData();
+        InstanceScript *data = pPlayer->GetInstanceScript();
+        InstanceScript* pInstance = pCreature->GetInstanceScript();
     
         if (pPlayer)
             pPlayer->CLOSE_GOSSIP_MENU();
@@ -177,10 +188,10 @@ public:
         return true;
     }
 
-    bool GossipHello_keeper_image(Player* pPlayer, Creature* pCreature)
+    bool OnGossipHello_keeper_image(Player* pPlayer, Creature* pCreature)
     {
-        InstanceData *data = pPlayer->GetInstanceData();
-        ScriptedInstance *pInstance = (ScriptedInstance *) pCreature->GetInstanceData();
+        InstanceScript *data = pPlayer->GetInstanceScript();
+        InstanceScript *pInstance = (InstanceScript *) pCreature->GetInstanceScript();
     
         if (pInstance && pPlayer)
         {
@@ -194,41 +205,23 @@ public:
         return true;
     }
 
-    struct keeper_imageAI : public ScriptedAI
-    {
-        keeper_imageAI(Creature *c) : ScriptedAI(c)
-        {
-            pInstance = c->GetInstanceData();
-        }
-
-        ScriptedInstance* pInstance;
-    };
-
 };
 
-
-
-
-class npc_ys_freya : public CreatureScript
+class npc_ys_freya : public CreatureScript
 {
 public:
     npc_ys_freya() : CreatureScript("npc_ys_freya") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_ys_freyaAI(pCreature);
-    }
 
     struct npc_ys_freyaAI : public ScriptedAI
     {
         npc_ys_freyaAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
             me->SetReactState(REACT_PASSIVE);
             me->SetVisibility(VISIBILITY_OFF);
         }
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
         int32 WellTimer;
 
         void Reset()
@@ -256,52 +249,54 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_ys_freyaAI(pCreature);
+    }
+
 };
 
-class npc_sanity_well : public CreatureScript
+
+class npc_sanity_well : public CreatureScript
 {
 public:
     npc_sanity_well() : CreatureScript("npc_sanity_well") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_sanity_wellAI(pCreature);
-    }
 
     struct npc_sanity_wellAI : public Scripted_NoMovementAI
     {
         npc_sanity_wellAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
             DoCast(me, SPELL_SANITY_WELL_VISUAL);
             DoCast(me, SPELL_SANITY_WELL);
         }
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
     };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_sanity_wellAI(pCreature);
+    }
 
 };
 
-class npc_ys_thorim : public CreatureScript
+
+class npc_ys_thorim : public CreatureScript
 {
 public:
     npc_ys_thorim() : CreatureScript("npc_ys_thorim") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_ys_thorimAI(pCreature);
-    }
 
     struct npc_ys_thorimAI : public ScriptedAI
     {
         npc_ys_thorimAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
             me->SetReactState(REACT_PASSIVE);
             me->SetVisibility(VISIBILITY_OFF);
         }
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
 
         void Reset(){}
     
@@ -320,28 +315,28 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_ys_thorimAI(pCreature);
+    }
+
 };
 
-class npc_ys_mimiron : public CreatureScript
+class npc_ys_mimiron : public CreatureScript
 {
 public:
     npc_ys_mimiron() : CreatureScript("npc_ys_mimiron") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_ys_mimironAI(pCreature);
-    }
 
     struct npc_ys_mimironAI : public ScriptedAI
     {
         npc_ys_mimironAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
             me->SetReactState(REACT_PASSIVE);
             me->SetVisibility(VISIBILITY_OFF);
         }
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
         int32 DestabilizeTimer;
 
         void Reset()
@@ -369,28 +364,29 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_ys_mimironAI(pCreature);
+    }
+
 };
 
-class npc_ys_hodir : public CreatureScript
+
+class npc_ys_hodir : public CreatureScript
 {
 public:
     npc_ys_hodir() : CreatureScript("npc_ys_hodir") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_ys_hodirAI(pCreature);
-    }
 
     struct npc_ys_hodirAI : public ScriptedAI
     {
         npc_ys_hodirAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
             me->SetReactState(REACT_PASSIVE);
             me->SetVisibility(VISIBILITY_OFF);
         }
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
 
         void Reset(){}
     
@@ -406,15 +402,20 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_ys_hodirAI(pCreature);
+    }
+
 };
 
 
 void AddSC_boss_yogg_saron()
 {
-    new npc_keeper_image();
-    new npc_ys_freya();
-    new npc_ys_thorim();
-    new npc_ys_mimiron();
-    new npc_ys_hodir();
-    new npc_sanity_well();
+    new npc_keeper_image;
+    new npc_ys_freya;
+    new npc_ys_thorim;
+    new npc_ys_mimiron;
+    new npc_ys_hodir;
+    new npc_sanity_well;
 }

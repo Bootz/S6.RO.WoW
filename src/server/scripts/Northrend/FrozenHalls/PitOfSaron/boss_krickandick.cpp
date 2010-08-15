@@ -486,6 +486,6 @@ public:
 
 void AddSC_boss_ick()
 {
-    new boss_ick();
-    new boss_krick();
+    new boss_ick;
+    new boss_krick;
 }

@@ -80,27 +80,23 @@ enum eEnums
 	SAY_START_7                             = -1999954,
 	SAY_START_6                             = -1999951
 };
-class boss_eadric : public CreatureScript
+
+class boss_eadric : public CreatureScript
 {
 public:
     boss_eadric() : CreatureScript("boss_eadric") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_eadricAI(pCreature);
-    }
 
     struct boss_eadricAI : public ScriptedAI
     {
         boss_eadricAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
             pCreature->SetReactState(REACT_PASSIVE);
             pCreature->SetFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_NON_ATTACKABLE);
     		pCreature->SetFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_NOT_SELECTABLE);
         }
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
     		
         uint32 uiVenganceTimer;
         uint32 uiRadianceTimer;
@@ -193,23 +189,23 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_eadricAI(pCreature);
+    }
 };
 
-class boss_paletress : public CreatureScript
+
+class boss_paletress : public CreatureScript
 {
 public:
     boss_paletress() : CreatureScript("boss_paletress") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_paletressAI(pCreature);
-    }
 
     struct boss_paletressAI : public ScriptedAI
     {
         boss_paletressAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
 
             MemoryGUID = 0;
             pCreature->SetReactState(REACT_PASSIVE);
@@ -218,7 +214,7 @@ public:
             pCreature->RestoreFaction();
         }
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
 
         Creature* pMemory;
         uint64 MemoryGUID;
@@ -418,17 +414,17 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new boss_paletressAI(pCreature);
+    }
 };
 
-class npc_memory : public CreatureScript
+
+class npc_memory : public CreatureScript
 {
 public:
     npc_memory() : CreatureScript("npc_memory") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_memoryAI(pCreature);
-    }
 
     struct npc_memoryAI : public ScriptedAI
     {
@@ -492,24 +488,24 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new npc_memoryAI(pCreature);
+    }
 };
 
 
-// THIS AI NEEDS MORE IMPROVEMENTSclass npc_argent_soldier : public CreatureScript
+// THIS AI NEEDS MORE IMPROVEMENTS
+class npc_argent_soldier : public CreatureScript
 {
 public:
     npc_argent_soldier() : CreatureScript("npc_argent_soldier") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_argent_soldierAI(pCreature);
-    }
 
     struct npc_argent_soldierAI : public npc_escortAI
     {
         npc_argent_soldierAI(Creature* pCreature) : npc_escortAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
             me->SetReactState(REACT_DEFENSIVE);
             me->SetFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_NON_ATTACKABLE);
             me->SetFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_NOT_SELECTABLE);
@@ -520,7 +516,7 @@ public:
             uiWaypoint = 0;
         }
     		
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
 
         uint8 uiWaypoint;
     	
@@ -752,13 +748,17 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new npc_argent_soldierAI(pCreature);
+    }
 };
 
 
 void AddSC_boss_argent_challenge()
 {
-    new boss_eadric();
-    new boss_paletress();
-    new npc_memory();
-    new npc_argent_soldier();
+    new boss_eadric;
+    new boss_paletress;
+    new npc_memory;
+    new npc_argent_soldier;
 }

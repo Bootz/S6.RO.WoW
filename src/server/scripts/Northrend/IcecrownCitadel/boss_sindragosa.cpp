@@ -99,15 +99,11 @@ Creature* pSindragosa;
 
 std::vector<Creature*> icetombs;
 std::vector<Player*> targetss;
-class npc_ice_tomb : public CreatureScript
+
+class npc_ice_tomb : public CreatureScript
 {
 public:
     npc_ice_tomb() : CreatureScript("npc_ice_tomb") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_ice_tombAI(pCreature);
-    }
 
     struct npc_ice_tombAI : public Scripted_NoMovementAI
     {
@@ -183,26 +179,27 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_ice_tombAI(pCreature);
+    }
+
 };
-class boss_sindragosa : public CreatureScript
+
+class boss_sindragosa : public CreatureScript
 {
 public:
     boss_sindragosa() : CreatureScript("boss_sindragosa") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_sindragosaAI(pCreature);
-    }
 
     struct boss_sindragosaAI : public ScriptedAI
     {
         boss_sindragosaAI(Creature* pCreature) : ScriptedAI (pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
             pSindragosa = me;
         }
 
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
 
         uint8 Phase;
 
@@ -315,7 +312,7 @@ public:
                             DoCast(i_pl, SPELL_ICE_TOMB_TRIGGER);
                             Creature* Tomb = me->SummonCreature(NPC_ICE_TOMB, i_pl->GetPositionX(), i_pl->GetPositionY(), i_pl->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 999999);
                             icetombs.push_back(Tomb);
-                            CAST_AI(npc_ice_tombAI, Tomb->AI())->SetPrisoner(i_pl);
+                            CAST_AI(npc_ice_tomb::npc_ice_tombAI, Tomb->AI())->SetPrisoner(i_pl);
                             Tomb->CastSpell(i_pl, SPELL_ICE_TOMB, true);
                             //Tomb->CastSpell(i_pl, SPELL_ASPHYXIATION, true);
                         }
@@ -550,25 +547,26 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_sindragosaAI(pCreature);
+    }
+
 };
-class npc_frost_bomb : public CreatureScript
+
+class npc_frost_bomb : public CreatureScript
 {
 public:
     npc_frost_bomb() : CreatureScript("npc_frost_bomb") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_frost_bombAI(pCreature);
-    }
 
     struct npc_frost_bombAI : public ScriptedAI
     {
         npc_frost_bombAI(Creature* pCreature) : ScriptedAI (pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
 
         uint32 m_uiBlastTimer;
 
@@ -631,26 +629,27 @@ public:
 
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_frost_bombAI(pCreature);
+    }
+
 };
-class npc_rimefang : public CreatureScript
+
+class npc_rimefang : public CreatureScript
 {
 public:
     npc_rimefang() : CreatureScript("npc_rimefang") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_rimefangAI(pCreature);
-    }
 
     struct npc_rimefangAI : public ScriptedAI
     {
         npc_rimefangAI(Creature* pCreature) : ScriptedAI (pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
             pRimefang = me;
         }
 
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
 
         uint32 m_uiRimefangFrostBreath;
         uint32 m_uiRimefangIcyBlast;
@@ -691,26 +690,27 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_rimefangAI(pCreature);
+    }
+
 };
-class npc_spinestalker : public CreatureScript
+
+class npc_spinestalker : public CreatureScript
 {
 public:
     npc_spinestalker() : CreatureScript("npc_spinestalker") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_spinestalkerAI(pCreature);
-    }
 
     struct npc_spinestalkerAI : public ScriptedAI
     {
         npc_spinestalkerAI(Creature* pCreature) : ScriptedAI (pCreature)
         {
-            m_pInstance = pCreature->GetInstanceData();
+            m_pInstance = pCreature->GetInstanceScript();
             pSpinestalker = me;
         }
 
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
 
         uint32 m_uiSpinestalkerRoar;
         uint32 m_uiSpinestalkerCleave;
@@ -753,18 +753,17 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_spinestalkerAI(pCreature);
+    }
 };
-
-
-
-
-
 
 void AddSC_boss_sindragosa()
 {
-    new boss_sindragosa();
-    new npc_spinestalker();
-    new npc_rimefang();
-    new npc_ice_tomb();
-    new npc_frost_bomb();
+    new boss_sindragosa;
+    new npc_spinestalker;
+    new npc_rimefang;
+    new npc_ice_tomb;
+    new npc_frost_bomb;
 }

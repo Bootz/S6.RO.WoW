@@ -38,12 +38,13 @@ enum eEnums
 };
 
 #define GOSSIP_ITEM_WHAT_HAPPENED   "Alexstrasza, can you show me what happened here?"
-class npc_alexstrasza_wr_gate : public CreatureScript
+
+class npc_alexstrasza_wr_gate : public CreatureScript
 {
 public:
     npc_alexstrasza_wr_gate() : CreatureScript("npc_alexstrasza_wr_gate") { }
 
-    bool GossipSelect(Player* pPlayer, Creature* /*pCreature*/, uint32 /*uiSender*/, uint32 uiAction)
+    bool OnGossipSelect(Player* pPlayer, Creature* /*pCreature*/, uint32 /*uiSender*/, uint32 uiAction)
     {
         if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
         {
@@ -54,7 +55,7 @@ public:
         return true;
     }
 
-    bool GossipHello(Player* pPlayer, Creature* pCreature)
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
     {
         if (pCreature->isQuestGiver())
             pPlayer->PrepareQuestMenu(pCreature->GetGUID());
@@ -110,7 +111,8 @@ enum eInquisitor
 };
 
 #define QUEST_A_RIGHTEOUS_SERMON     12321
-class npc_inquisitor_hallard : public CreatureScript
+
+class npc_inquisitor_hallard : public CreatureScript
 {
 public:
     npc_inquisitor_hallard() : CreatureScript("npc_inquisitor_hallard") { }
@@ -272,6 +274,6 @@ public:
 
 void AddSC_dragonblight()
 {
-    new npc_alexstrasza_wr_gate();
-    new npc_inquisitor_hallard();
+    new npc_alexstrasza_wr_gate;
+    new npc_inquisitor_hallard;
 }

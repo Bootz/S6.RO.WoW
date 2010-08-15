@@ -217,15 +217,11 @@ enum Events
 /*######
 ## Boss Sartharion
 ######*/
-class boss_sartharion : public CreatureScript
+
+class boss_sartharion : public CreatureScript
 {
 public:
     boss_sartharion() : CreatureScript("boss_sartharion") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_sartharionAI(pCreature);
-    }
 
     struct boss_sartharionAI : public BossAI
     {
@@ -637,6 +633,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_sartharionAI(pCreature);
+    }
+
 };
 
 
@@ -680,15 +681,11 @@ enum VespText
 #define SHIELD_ON_SARTHARION                40
 #define VESPERON_PORTAL_EVENT               50
 #define ACOLYTE_DEBUFF                      60
-class npc_disciple_of_vesperon : public CreatureScript
+
+class npc_disciple_of_vesperon : public CreatureScript
 {
 public:
     npc_disciple_of_vesperon() : CreatureScript("npc_disciple_of_vesperon") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_disciple_of_vesperonAI(pCreature);
-    }
 
     struct npc_disciple_of_vesperonAI : public TriggerAI
     {
@@ -711,6 +708,10 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_disciple_of_vesperonAI(pCreature);
+    }
 };
 
 //to control each dragons common abilities
@@ -718,10 +719,10 @@ struct dummy_dragonAI : public ScriptedAI
 {
     dummy_dragonAI(Creature* pCreature) : ScriptedAI(pCreature)
     {       
-        pInstance = pCreature->GetInstanceData();
+        pInstance = pCreature->GetInstanceScript();
     }
 
-    ScriptedInstance* pInstance;
+    InstanceScript* pInstance;
 
     uint32 m_uiWaypointId;
     uint32 m_uiMoveNextTimer;
@@ -908,21 +909,17 @@ struct dummy_dragonAI : public ScriptedAI
 /*######
 ## Mob Tenebron
 ######*/
-class mob_tenebron : public CreatureScript
+
+class mob_tenebron : public CreatureScript
 {
 public:
     mob_tenebron() : CreatureScript("mob_tenebron") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_tenebronAI(pCreature);
-    }
 
     struct mob_tenebronAI : public dummy_dragonAI
     {
         mob_tenebronAI(Creature* pCreature) : dummy_dragonAI(pCreature)
         {    
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
         }
 
         uint32 m_uiShadowBreathTimer;
@@ -1039,21 +1036,22 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_tenebronAI(pCreature);
+    }
+
 };
 
 
 /*######
 ## Mob Shadron
 ######*/
-class mob_shadron : public CreatureScript
+
+class mob_shadron : public CreatureScript
 {
 public:
     mob_shadron() : CreatureScript("mob_shadron") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_shadronAI(pCreature);
-    }
 
     struct mob_shadronAI : public dummy_dragonAI
     {
@@ -1166,21 +1164,22 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_shadronAI(pCreature);
+    }
+
 };
 
 
 /*######
 ## Mob Vesperon
 ######*/
-class mob_vesperon : public CreatureScript
+
+class mob_vesperon : public CreatureScript
 {
 public:
     mob_vesperon() : CreatureScript("mob_vesperon") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_vesperonAI(pCreature);
-    }
 
     struct mob_vesperonAI : public dummy_dragonAI
     {
@@ -1267,30 +1266,31 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_vesperonAI(pCreature);
+    }
+
 };
 
 
 /*######
 ## Mob Acolyte of Shadron
 ######*/
-class mob_acolyte_of_shadron : public CreatureScript
+
+class mob_acolyte_of_shadron : public CreatureScript
 {
 public:
     mob_acolyte_of_shadron() : CreatureScript("mob_acolyte_of_shadron") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_acolyte_of_shadronAI(pCreature);
-    }
 
     struct mob_acolyte_of_shadronAI : public ScriptedAI
     {
         mob_acolyte_of_shadronAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
         uint32 uiShiftEffectTimer;
         uint32 uiShieldTimer;
         bool shield;
@@ -1317,7 +1317,7 @@ public:
                 {
                     Creature* Shadron = pInstance->instance->GetCreature(pInstance->GetData64(DATA_SHADRON));
                     if(Shadron)
-                        ((mob_shadronAI*)Shadron->AI())->m_bHasPortalOpen = false;            
+                        ((mob_shadron::mob_shadronAI*)Shadron->AI())->m_bHasPortalOpen = false;            
                 
                     Map *map = me->GetMap();
                     if (map->IsDungeon())
@@ -1383,30 +1383,31 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_acolyte_of_shadronAI(pCreature);
+    }
+
 };
 
 
 /*######
 ## Mob Acolyte of Vesperon
 ######*/
-class mob_acolyte_of_vesperon : public CreatureScript
+
+class mob_acolyte_of_vesperon : public CreatureScript
 {
 public:
     mob_acolyte_of_vesperon() : CreatureScript("mob_acolyte_of_vesperon") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_acolyte_of_vesperonAI(pCreature);
-    }
 
     struct mob_acolyte_of_vesperonAI : public ScriptedAI
     {
         mob_acolyte_of_vesperonAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
 
         void Reset()
         {
@@ -1434,7 +1435,7 @@ public:
             {
                 Creature* pVesperon = pInstance->instance->GetCreature(pInstance->GetData64(DATA_VESPERON));
                 if (pVesperon)
-                    ((mob_vesperonAI*)pVesperon->AI())->m_bHasPortalOpen = false;
+                    ((mob_vesperon::mob_vesperonAI*)pVesperon->AI())->m_bHasPortalOpen = false;
 
                 if (pVesperon && pVesperon->isAlive() && pVesperon->HasAura(SPELL_TWILIGHT_TORMENT_VESP))
                     pVesperon->RemoveAurasDueToSpell(SPELL_TWILIGHT_TORMENT_VESP);
@@ -1448,7 +1449,7 @@ public:
                 {
                     Creature* Shadron = pInstance->instance->GetCreature(pInstance->GetData64(DATA_SHADRON));
                     if(Shadron)
-                        ((mob_shadronAI*)Shadron->AI())->m_bHasPortalOpen = false;            
+                        ((mob_shadron::mob_shadronAI*)Shadron->AI())->m_bHasPortalOpen = false;            
                 
                     Map *map = me->GetMap();
                     if (map->IsDungeon())
@@ -1485,32 +1486,33 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_acolyte_of_vesperonAI(pCreature);
+    }
+
 };
 
 
 /*######
 ## Mob Twilight Eggs
 ######*/
-class mob_twilight_eggs : public CreatureScript
+
+class mob_twilight_eggs : public CreatureScript
 {
 public:
     mob_twilight_eggs() : CreatureScript("mob_twilight_eggs") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_twilight_eggsAI(pCreature);
-    }
 
     struct mob_twilight_eggsAI : public Scripted_NoMovementAI
     {
         mob_twilight_eggsAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
         }
         uint32 m_uiFadeArmorTimer;
         uint32 m_uiHatchEggTimer;
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
 
         void Reset()
         {
@@ -1539,7 +1541,7 @@ public:
             {
                 Creature* Tenebron = pInstance->instance->GetCreature(pInstance->GetData64(DATA_TENEBRON));
                 if(Tenebron)
-                    (CAST_AI(mob_tenebronAI,Tenebron->AI()))->m_bHasPortalOpen = false;
+                    (CAST_AI(mob_tenebron::mob_tenebronAI,Tenebron->AI()))->m_bHasPortalOpen = false;
                 SpawnWhelps();
             }
             else
@@ -1554,20 +1556,21 @@ public:
         void MoveInLineOfSight(Unit* pWho) {}
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_twilight_eggsAI(pCreature);
+    }
+
 };
 
 
 /*######
 ## Flame Tzunami
-######*/class npc_flame_tsunami : public CreatureScript
+######*/
+class npc_flame_tsunami : public CreatureScript
 {
 public:
     npc_flame_tsunami() : CreatureScript("npc_flame_tsunami") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_flame_tsunamiAI(pCreature);
-    }
 
     struct npc_flame_tsunamiAI : public ScriptedAI
     {
@@ -1606,18 +1609,19 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_flame_tsunamiAI(pCreature);
+    }
+
 };
 /*######
 ## Twilight Fissure
-######*/class npc_twilight_fissure : public CreatureScript
+######*/
+class npc_twilight_fissure : public CreatureScript
 {
 public:
     npc_twilight_fissure() : CreatureScript("npc_twilight_fissure") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_twilight_fissureAI(pCreature);
-    }
 
     struct npc_twilight_fissureAI : public Scripted_NoMovementAI
     {
@@ -1645,6 +1649,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_twilight_fissureAI(pCreature);
+    }
+
 };
 
 
@@ -1653,15 +1662,11 @@ public:
 /*######
 ## Mob Twilight Whelps
 ######*/
-class mob_twilight_whelp : public CreatureScript
+
+class mob_twilight_whelp : public CreatureScript
 {
 public:
     mob_twilight_whelp() : CreatureScript("mob_twilight_whelp") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_twilight_whelpAI(pCreature);
-    }
 
     struct mob_twilight_whelpAI : public ScriptedAI
     {
@@ -1699,20 +1704,25 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_twilight_whelpAI(pCreature);
+    }
+
 };
 
 
 void AddSC_boss_sartharion()
 {
-    new boss_sartharion();
-    new npc_disciple_of_vesperon();
-    new mob_vesperon();
-    new mob_shadron();
-    new mob_tenebron();
-    new mob_acolyte_of_shadron();
-    new mob_acolyte_of_vesperon();
-    new mob_twilight_eggs();
-    new npc_flame_tsunami();
-    new npc_twilight_fissure();
-    new mob_twilight_whelp();
+    new boss_sartharion;
+    new npc_disciple_of_vesperon;
+    new mob_vesperon;
+    new mob_shadron;
+    new mob_tenebron;
+    new mob_acolyte_of_shadron;
+    new mob_acolyte_of_vesperon;
+    new mob_twilight_eggs;
+    new npc_flame_tsunami;
+    new npc_twilight_fissure;
+    new mob_twilight_whelp;
 }

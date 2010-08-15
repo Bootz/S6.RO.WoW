@@ -277,6 +277,6 @@ public:
 
 void AddSC_boss_tyrannus()
 {
-    new boss_tyrannus();
-    new boss_rimefang();
+    new boss_tyrannus;
+    new boss_rimefang;
 }

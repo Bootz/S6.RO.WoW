@@ -101,24 +101,20 @@ enum Misc
 {
     ACHIEV_WORSE                                  = 3804
 };
-class boss_black_knight : public CreatureScript
+
+class boss_black_knight : public CreatureScript
 {
 public:
     boss_black_knight() : CreatureScript("boss_black_knight") { }
-
-    CreatureAI* GetAI(Creature *pCreature)
-    {
-        return new boss_black_knightAI (pCreature);
-    }
 
     struct boss_black_knightAI : public ScriptedAI
     {
         boss_black_knightAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
         std::list<uint64> SummonList;
 
         bool bEventInProgress;
@@ -413,17 +409,18 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature *pCreature) const
+    {
+        return new boss_black_knightAI (pCreature);
+    }
+
 };
 
-class npc_risen_ghoul : public CreatureScript
+
+class npc_risen_ghoul : public CreatureScript
 {
 public:
     npc_risen_ghoul() : CreatureScript("npc_risen_ghoul") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_risen_ghoulAI(pCreature);
-    }
 
     struct npc_risen_ghoulAI : public ScriptedAI
     {
@@ -455,27 +452,27 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new npc_risen_ghoulAI(pCreature);
+    }
 };
 
-class npc_black_knight_skeletal_gryphon : public CreatureScript
+
+class npc_black_knight_skeletal_gryphon : public CreatureScript
 {
 public:
     npc_black_knight_skeletal_gryphon() : CreatureScript("npc_black_knight_skeletal_gryphon") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_black_knight_skeletal_gryphonAI(pCreature);
-    }
 
     struct npc_black_knight_skeletal_gryphonAI : public npc_escortAI
     {
         npc_black_knight_skeletal_gryphonAI(Creature* pCreature) : npc_escortAI(pCreature)
         {
             Start(false,true,0,NULL);
-    		pInstance = pCreature->GetInstanceData();
+    		pInstance = pCreature->GetInstanceScript();
         }
     	
-    	ScriptedInstance* pInstance;
+    	InstanceScript* pInstance;
 
         void WaypointReached(uint32 uiPointId)
         {
@@ -540,27 +537,27 @@ public:
 
     };
 
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new npc_black_knight_skeletal_gryphonAI(pCreature);
+    }
 };
 
-class npc_gr : public CreatureScript
+
+class npc_gr : public CreatureScript
 {
 public:
     npc_gr() : CreatureScript("npc_gr") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_grAI(pCreature);
-    }
 
     struct npc_grAI : public npc_escortAI
     {
         npc_grAI(Creature* pCreature) : npc_escortAI(pCreature)
         {
             Start(false,true,0,NULL);
-    		pInstance = pCreature->GetInstanceData();
+    		pInstance = pCreature->GetInstanceScript();
         }
     	
-    	ScriptedInstance* pInstance;
+    	InstanceScript* pInstance;
 
         void WaypointReached(uint32 uiPointId)
         {
@@ -626,13 +623,17 @@ public:
 
     };
 
+    CreatureAI* GetAI(Creature* pCreature)
+    {
+        return new npc_grAI(pCreature);
+    }
 };
 
 
 void AddSC_boss_black_knight()
 {
-    new boss_black_knight();
-    new npc_risen_ghoul();
-    new npc_black_knight_skeletal_gryphon();
-    new npc_gr();
+    new boss_black_knight;
+    new npc_risen_ghoul;
+    new npc_black_knight_skeletal_gryphon;
+    new npc_gr;
 }

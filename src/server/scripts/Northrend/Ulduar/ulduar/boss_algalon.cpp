@@ -80,15 +80,11 @@ enum Texts
     SAY_DEFEAT_2                 = -1620017,
     SAY_DEFEAT_3                 = -1620018
 };
-class boss_algalon : public CreatureScript
+
+class boss_algalon : public CreatureScript
 {
 public:
     boss_algalon() : CreatureScript("boss_algalon") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_algalonAI(pCreature);
-    }
 
     struct boss_algalonAI : public BossAI
     {
@@ -305,26 +301,28 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_algalonAI(pCreature);
+    }
+
 };
-//Collapsing Starclass mob_collapsing_star : public CreatureScript
+
+//Collapsing Star
+class mob_collapsing_star : public CreatureScript
 {
 public:
     mob_collapsing_star() : CreatureScript("mob_collapsing_star") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_collapsing_starAI(pCreature);
-    }
 
     struct mob_collapsing_starAI : public ScriptedAI
     {
         mob_collapsing_starAI(Creature *pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = (ScriptedInstance*)pCreature->GetInstanceData();
+            pInstance = (InstanceScript*)pCreature->GetInstanceScript();
             Reset();
         }
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
 
         uint32 BlackHoleExplosion_Timer;
 
@@ -346,12 +344,17 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_collapsing_starAI(pCreature);
+    }
+
 };
 
 
 
 void AddSC_boss_Algalon()
 {
-    new boss_algalon();
-    new mob_collapsing_star();
+    new boss_algalon;
+    new mob_collapsing_star;
 }

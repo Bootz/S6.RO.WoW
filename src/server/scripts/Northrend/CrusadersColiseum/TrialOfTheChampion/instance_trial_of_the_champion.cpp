@@ -36,19 +36,14 @@ enum eEnums
     SAY_START_1                               = -1999927,
 	SAY_START_2                               = -1999950
 };
-class instance_trial_of_the_champion : public InstanceMapScript
+class instance_trial_of_the_champion : public InstanceMapScript
 {
 public:
-    instance_trial_of_the_champion() : InstanceMapScript("instance_trial_of_the_champion") { }
+    instance_trial_of_the_champion() : InstanceMapScript("instance_trial_of_the_champion", 650) { }
 
-    InstanceData* GetInstanceData_InstanceMapScript(Map* pMap)
+    struct instance_trial_of_the_champion_InstanceMapScript : public InstanceScript
     {
-        return new instance_trial_of_the_champion_InstanceMapScript(pMap);
-    }
-
-    struct instance_trial_of_the_champion_InstanceMapScript : public ScriptedInstance
-    {
-        instance_trial_of_the_champion_InstanceMapScript(Map* pMap) : ScriptedInstance(pMap) {Initialize();}
+        instance_trial_of_the_champion_InstanceMapScript(Map* pMap) : InstanceScript(pMap) {Initialize();}
 
         uint32 m_auiEncounter[MAX_ENCOUNTER];
 
@@ -239,8 +234,6 @@ public:
             }
         }
     }
-
-};
 
     void SetData(uint32 uiType, uint32 uiData)
     {
@@ -508,10 +501,16 @@ public:
 
         OUT_LOAD_INST_DATA_COMPLETE;
     }
+	};
+
+    InstanceScript* GetInstanceScript(InstanceMap* pMap) const
+    {
+        return new instance_trial_of_the_champion_InstanceMapScript(pMap);
+    }
 };
 
 
 void AddSC_instance_trial_of_the_champion()
 {
-    new instance_trial_of_the_champion();
+    new instance_trial_of_the_champion;
 }

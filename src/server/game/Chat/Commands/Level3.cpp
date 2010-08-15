@@ -44,7 +44,6 @@
 #include "TargetedMovementGenerator.h"
 #include "SkillDiscovery.h"
 #include "SkillExtraItems.h"
-#include "SystemConfig.h"
 #include "Config.h"
 #include "Util.h"
 #include "ItemEnchantmentMgr.h"
@@ -2268,6 +2267,52 @@ bool ChatHandler::HandleLearnAllDefaultCommand(const char *args)
     return true;
 }
 
+bool ChatHandler::HandleAchievementsAddCommand(const char *args)
+{
+    Player* targetPlayer = getSelectedPlayer();
+
+    if (!targetPlayer)
+    {
+        SendSysMessage(LANG_PLAYER_NOT_FOUND);
+        SetSentErrorMessage(true);
+        return false;
+    }
+    uint32 id = atoi((char*)args);
+    AchievementEntry const *achievement = sAchievementStore.LookupEntry(id);
+    if (!achievement)
+        return false;
+    if (targetPlayer->GetAchievementMgr().HasAchieved(achievement))
+    {
+        SetSentErrorMessage(true);
+        return false;
+    }
+    targetPlayer->GetAchievementMgr().CompletedAchievement(achievement);
+    return true;
+}
+
+bool ChatHandler::HandleAchievementsRemoveCommand(const char *args)
+{
+    Player* targetPlayer = getSelectedPlayer();
+
+    if (!targetPlayer)
+    {
+        SendSysMessage(LANG_PLAYER_NOT_FOUND);
+        SetSentErrorMessage(true);
+        return false;
+    }
+    uint32 id = atoi((char*)args);
+    AchievementEntry const *achievement = sAchievementStore.LookupEntry(id);
+    if (!achievement)
+        return false;
+    if (!targetPlayer->GetAchievementMgr().HasAchieved(achievement))
+    {
+        SetSentErrorMessage(true);
+        return false;
+    }
+    targetPlayer->GetAchievementMgr().DeleteAchievementFromDB(targetPlayer->GetGUIDLow(), id);
+    return true;
+}
+
 bool ChatHandler::HandleLearnCommand(const char *args)
 {
     Player* targetPlayer = getSelectedPlayer();
@@ -3315,6 +3360,71 @@ bool ChatHandler::HandleLookupQuestCommand(const char *args)
     return true;
 }
 
+bool ChatHandler::HandleLookupAchievementCommand(const char *args)
+{
+    if(!*args)
+        return false;
+    std::string namepart = args;
+    std::wstring wnamepart;
+
+    Player* target = getSelectedPlayer();
+
+    // converting string that we try to find to lower case
+    if (!Utf8toWStr (namepart,wnamepart))
+        return false;
+    
+    wstrToLower (wnamepart);
+    bool found = false;
+
+    for (uint32 achie = 0; achie < sAchievementStore.GetNumRows (); ++achie)
+    {
+        AchievementEntry const* achievement = GetAchievementStore()->LookupEntry(achie);
+        if (!achievement)
+            continue;
+
+        int loc = GetSessionDbcLocale ();
+        std::string name = achievement->name[loc];
+        if (name.empty())
+            continue;
+
+        if (!Utf8FitTo (name, wnamepart))
+        {
+           loc = 0;
+            for (; loc < MAX_LOCALE; ++loc)
+            {
+                if (loc == GetSessionDbcLocale ())
+                    continue;
+
+                name = achievement->name[loc];
+                if (name.empty ())
+                    continue;
+
+                if (Utf8FitTo (name, wnamepart))
+                    break;
+            }
+        }
+        if (loc < MAX_LOCALE)
+        {
+            // send achievement in "id - [name]" format
+            std::ostringstream ss;
+            if (m_session)
+                ss << achievement->ID << " - |cffffffff|Hachievement:" << achievement->ID << "|h[" << name << " " << localeNames[loc]<< "]|h|r";
+            else
+                ss << achievement->ID << " - " << name << " " << localeNames[loc];
+
+            bool earned = target && target->GetAchievementMgr().HasAchieved(achievement);
+            if (earned)
+               ss << GetTrinityString(LANG_ACHIEVEMENT_EARNED);
+
+            SendSysMessage (ss.str ().c_str());
+
+            if (!found)
+                found = true;
+        }
+    }
+    return true;
+}
+
 bool ChatHandler::HandleLookupCreatureCommand(const char *args)
 {
     if (!*args)
@@ -3804,6 +3914,7 @@ bool ChatHandler::HandleGuildUninviteCommand(const char *args)
         return false;
 
     uint32 glId   = target ? target->GetGuildId () : Player::GetGuildIdFromDB (target_guid);
+
     if (!glId)
         return false;
 
@@ -3811,7 +3922,7 @@ bool ChatHandler::HandleGuildUninviteCommand(const char *args)
     if (!targetGuild)
         return false;
 
-    targetGuild->DelMember (target_guid);
+    targetGuild->DelMember (target_guid, false, true);
     return true;
 }
 
@@ -6198,7 +6309,7 @@ bool ChatHandler::HandleServerPLimitCommand(const char *args)
         else if (strncmp(param,"administrator",l) == 0)
             sWorld.SetPlayerSecurityLimit(SEC_ADMINISTRATOR);
         else if (strncmp(param,"reset",l) == 0)
-            sWorld.SetPlayerLimit(sConfig.GetIntDefault("PlayerLimit", DEFAULT_PLAYER_LIMIT));
+            sWorld.SetPlayerLimit(sConfig.GetIntDefault("PlayerLimit", 100));
         else
         {
             int val = atoi(param);

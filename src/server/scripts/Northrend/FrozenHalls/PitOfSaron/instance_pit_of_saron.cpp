@@ -237,5 +237,5 @@ public:
 
 void AddSC_instance_pit_of_saron()
 {
-    new instance_pit_of_saron();
+    new instance_pit_of_saron;
 }

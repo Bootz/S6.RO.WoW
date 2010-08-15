@@ -83,6 +83,14 @@ void Vehicle::Install()
                 me->setPowerType(POWER_ENERGY);
                 me->SetMaxPower(POWER_ENERGY, 50);
                 break;
+            case POWER_BLOOD_POWER:
+                me->setPowerType(POWER_ENERGY);
+                me->SetMaxPower(POWER_ENERGY, 100);
+                break;
+            case POWER_OOZE:
+                me->setPowerType(POWER_ENERGY);
+                me->SetMaxPower(POWER_ENERGY, 100);
+                break;
             default:
                 for (uint32 i = 0; i < MAX_SPELL_VEHICLE; ++i)
                 {
@@ -251,6 +259,7 @@ void Vehicle::InstallAccessory(uint32 entry, int8 seatId, bool minion)
         accessory->EnterVehicle(this, seatId);
         // This is not good, we have to send update twice
         accessory->SendMovementFlagUpdate();
+        accessory->setFaction(me->getFaction());
 
         if (GetBase()->GetTypeId() == TYPEID_UNIT)
             sScriptMgr.OnInstallAccessory(this, accessory);
@@ -301,8 +310,18 @@ bool Vehicle::AddPassenger(Unit *unit, int8 seatId)
     }
 
     if (seat->second.seatInfo->m_flags && !(seat->second.seatInfo->m_flags & 0x400))
+    {
+        switch (GetVehicleInfo()->m_ID)
+        {
+            case 342: //Ignis
+            case 335: //XT-002
+            case 380: //Kologarn's Right Arm
+                break;
+            default:
         unit->addUnitState(UNIT_STAT_ONVEHICLE);
-
+                break;
+        }
+    }
     //SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PLAYER_CONTROLLED);
 
     unit->AddUnitMovementFlag(MOVEMENTFLAG_ONTRANSPORT);

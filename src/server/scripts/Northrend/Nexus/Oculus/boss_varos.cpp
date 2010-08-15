@@ -51,11 +51,6 @@ class boss_varos : public CreatureScript
 public:
     boss_varos() : CreatureScript("boss_varos") { }
 
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_varosAI (pCreature);
-    }
-
     struct boss_varosAI : public ScriptedAI
     {
         boss_varosAI(Creature *c) : ScriptedAI(c)
@@ -151,10 +146,15 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_varosAI (pCreature);
+    }
+
 };
 
 
 void AddSC_boss_varos()
 {
-    new boss_varos();
+    new boss_varos;
 }

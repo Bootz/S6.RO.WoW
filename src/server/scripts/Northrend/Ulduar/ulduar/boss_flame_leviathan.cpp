@@ -141,22 +141,18 @@ const Position PosColossus[2] =
 {367.031, 12.784,409.886,3.263},
 {368.768,-46.847,409.886,3.036}
 };
-class boss_flame_leviathan : public CreatureScript
+
+class boss_flame_leviathan : public CreatureScript
 {
 public:
     boss_flame_leviathan() : CreatureScript("boss_flame_leviathan") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_flame_leviathanAI (pCreature);
-    }
 
     struct boss_flame_leviathanAI : public BossAI
     {
         boss_flame_leviathanAI(Creature *pCreature) : BossAI(pCreature, BOSS_LEVIATHAN), vehicle(me->GetVehicleKit())
         {
             assert(vehicle);
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
             ColossusCount = 0;
             me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);
             me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true); // Death Grip jump effect
@@ -170,7 +166,7 @@ public:
                     DoSummon(MOB_COLOSSUS, PosColossus[i], 7000, TEMPSUMMON_CORPSE_TIMED_DESPAWN);
     	}
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
         Vehicle *vehicle;
         uint32 ColossusCount;
 
@@ -353,18 +349,19 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_flame_leviathanAI (pCreature);
+    }
+
 };
 
 //#define BOSS_DEBUG
-class boss_flame_leviathan_seat : public CreatureScript
+
+class boss_flame_leviathan_seat : public CreatureScript
 {
 public:
     boss_flame_leviathan_seat() : CreatureScript("boss_flame_leviathan_seat") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_flame_leviathan_seatAI (pCreature);
-    }
 
     struct boss_flame_leviathan_seatAI : public PassiveAI
     {
@@ -423,16 +420,17 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_flame_leviathan_seatAI (pCreature);
+    }
+
 };
-class boss_flame_leviathan_defense_turret : public CreatureScript
+
+class boss_flame_leviathan_defense_turret : public CreatureScript
 {
 public:
     boss_flame_leviathan_defense_turret() : CreatureScript("boss_flame_leviathan_defense_turret") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_flame_leviathan_defense_turretAI (pCreature);
-    }
 
     struct boss_flame_leviathan_defense_turretAI : public TurretAI
     {
@@ -452,16 +450,17 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_flame_leviathan_defense_turretAI (pCreature);
+    }
+
 };
-class boss_flame_leviathan_overload_device : public CreatureScript
+
+class boss_flame_leviathan_overload_device : public CreatureScript
 {
 public:
     boss_flame_leviathan_overload_device() : CreatureScript("boss_flame_leviathan_overload_device") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_flame_leviathan_overload_deviceAI (pCreature);
-    }
 
     struct boss_flame_leviathan_overload_deviceAI : public PassiveAI
     {
@@ -487,7 +486,18 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_flame_leviathan_overload_deviceAI (pCreature);
+    }
+
 };
+
+
+class boss_flame_leviathan_safety_container : public CreatureScript
+{
+public:
+    boss_flame_leviathan_safety_container() : CreatureScript("boss_flame_leviathan_safety_container") { }
 
 struct boss_flame_leviathan_safety_containerAI : public PassiveAI
 {
@@ -509,15 +519,17 @@ struct boss_flame_leviathan_safety_containerAI : public PassiveAI
             me->GetMotionMaster()->MoveFall(409.8f, me->GetEntry());
     }
 };
-class spell_pool_of_tar : public CreatureScript
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_flame_leviathan_safety_containerAI(pCreature);
+    }
+};
+
+class spell_pool_of_tar : public CreatureScript
 {
 public:
     spell_pool_of_tar() : CreatureScript("spell_pool_of_tar") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new spell_pool_of_tarAI (pCreature);
-    }
 
     struct spell_pool_of_tarAI : public TriggerAI
     {
@@ -538,63 +550,26 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new spell_pool_of_tarAI (pCreature);
+    }
+
 };
-class npc_keeper_norgannon : public CreatureScript
+
+class npc_keeper_norgannon : public CreatureScript
 {
 public:
     npc_keeper_norgannon() : CreatureScript("npc_keeper_norgannon") { }
-
-    CreatureAI* GetAI_keeper_norgannon(Creature* pCreature)
-    {
-        return new keeper_norgannonAI (pCreature);
-    }
-
-    bool GossipSelect_keeper_norgannon(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-    {
-        InstanceData *data = pPlayer->GetInstanceData();
-        ScriptedInstance* pInstance = pCreature->GetInstanceData();
-        switch(uiAction)
-        {
-            case GOSSIP_ACTION_INFO_DEF:
-                if (pPlayer)
-                    pPlayer->CLOSE_GOSSIP_MENU();
-                if (Creature* Norgannon = Unit::GetCreature(*pCreature, pInstance ? pInstance->GetData64(DATA_NORGANNON) : 0))
-                    if (Norgannon->isAlive())
-                    {
-                        Norgannon->AI()->DoAction(ACTION_VEHICLE_RESPAWN);
-                        data->SetBossState(BOSS_LEVIATHAN, SPECIAL);
-                   }
-                break;
-        }
-        return true;
-    }
-
-    bool GossipHello_keeper_norgannon(Player* pPlayer, Creature* pCreature)
-    {
-        InstanceData *data = pPlayer->GetInstanceData();
-        ScriptedInstance *pInstance = (ScriptedInstance *) pCreature->GetInstanceData();
-    
-        if (pInstance && pPlayer)
-           if (data->GetBossState(BOSS_LEVIATHAN) != DONE)
-                if (data->GetBossState(BOSS_LEVIATHAN) != SPECIAL)
-                {
-                    pPlayer->PrepareQuestMenu(pCreature->GetGUID());
-                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT,GOSSIP_ITEM_1,GOSSIP_SENDER_MAIN,GOSSIP_ACTION_INFO_DEF);
-                    pPlayer->SEND_GOSSIP_MENU(13910, pCreature->GetGUID());
-                }
-        else pPlayer->SEND_GOSSIP_MENU(1, pCreature->GetGUID());
-
-        return true;
-    }
 
     struct keeper_norgannonAI : public ScriptedAI
     {
         keeper_norgannonAI(Creature *c) : ScriptedAI(c), summons(me)
         {
-            pInstance = c->GetInstanceData();
+            pInstance = c->GetInstanceScript();
         }
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
         SummonList summons;
 
         void JustSummoned(Creature *summon)
@@ -619,27 +594,65 @@ public:
         }
     };
 
+    bool OnGossipSelect_keeper_norgannon(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+    {
+        InstanceScript *data = pPlayer->GetInstanceScript();
+        InstanceScript* pInstance = pCreature->GetInstanceScript();
+        switch(uiAction)
+        {
+            case GOSSIP_ACTION_INFO_DEF:
+                if (pPlayer)
+                    pPlayer->CLOSE_GOSSIP_MENU();
+                if (Creature* Norgannon = Unit::GetCreature(*pCreature, pInstance ? pInstance->GetData64(DATA_NORGANNON) : 0))
+                    if (Norgannon->isAlive())
+                    {
+                        Norgannon->AI()->DoAction(ACTION_VEHICLE_RESPAWN);
+                        data->SetBossState(BOSS_LEVIATHAN, SPECIAL);
+                   }
+                break;
+        }
+        return true;
+    }
+
+    bool OnGossipHello_keeper_norgannon(Player* pPlayer, Creature* pCreature)
+    {
+        InstanceScript *data = pPlayer->GetInstanceScript();
+        InstanceScript *pInstance = (InstanceScript *) pCreature->GetInstanceScript();
+    
+        if (pInstance && pPlayer)
+           if (data->GetBossState(BOSS_LEVIATHAN) != DONE)
+                if (data->GetBossState(BOSS_LEVIATHAN) != SPECIAL)
+                {
+                    pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT,GOSSIP_ITEM_1,GOSSIP_SENDER_MAIN,GOSSIP_ACTION_INFO_DEF);
+                    pPlayer->SEND_GOSSIP_MENU(13910, pCreature->GetGUID());
+                }
+        else pPlayer->SEND_GOSSIP_MENU(1, pCreature->GetGUID());
+
+        return true;
+    }
+    CreatureAI* GetAI_keeper_norgannon(Creature* pCreature) const
+    {
+        return new keeper_norgannonAI (pCreature);
+    }
+
 };
 
 
-class mob_colossus : public CreatureScript
+
+class mob_colossus : public CreatureScript
 {
 public:
     mob_colossus() : CreatureScript("mob_colossus") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new mob_colossusAI(pCreature);
-    }
 
     struct mob_colossusAI : public ScriptedAI
     {
         mob_colossusAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            m_pInstance = me->GetInstanceData();
+            m_pInstance = me->GetInstanceScript();
         }
 
-        ScriptedInstance* m_pInstance;
+        InstanceScript* m_pInstance;
         int32 uiGroundSlamTimer;
 
         void Reset()
@@ -669,8 +682,14 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_colossusAI(pCreature);
+    }
+
 };
-class at_RX_214_repair_o_matic_station : public AreaTriggerScript
+
+class at_RX_214_repair_o_matic_station : public AreaTriggerScript
 {
 public:
     at_RX_214_repair_o_matic_station() : AreaTriggerScript("at_RX_214_repair_o_matic_station") { }
@@ -691,32 +710,15 @@ public:
 };
 
 
-
-
-class boss_flame_leviathan_safety_container : public CreatureScript
-{
-public:
-    boss_flame_leviathan_safety_container() : CreatureScript("boss_flame_leviathan_safety_container") { }
-
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new boss_flame_leviathan_safety_containerAI(pCreature);
-    }
-
-};
-
-
-
-
 void AddSC_boss_flame_leviathan()
 {
-    new boss_flame_leviathan();
-    new boss_flame_leviathan_seat();
-    new boss_flame_leviathan_defense_turret();
-    new boss_flame_leviathan_overload_device();
-    new boss_flame_leviathan_safety_container();
-    new spell_pool_of_tar();
-    new npc_keeper_norgannon();
-    new mob_colossus();
-    new at_RX_214_repair_o_matic_station();
+    new boss_flame_leviathan;
+    new boss_flame_leviathan_seat;
+    new boss_flame_leviathan_defense_turret;
+    new boss_flame_leviathan_overload_device;
+    new boss_flame_leviathan_safety_container;
+    new spell_pool_of_tar;
+    new npc_keeper_norgannon;
+    new mob_colossus;
+    new at_RX_214_repair_o_matic_station;
 }

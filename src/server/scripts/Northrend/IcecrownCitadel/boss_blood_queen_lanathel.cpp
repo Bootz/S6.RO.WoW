@@ -70,14 +70,19 @@ enum Achievments
 const Position Phase2Position = { 4595.640137, 2769.195557, 400.137054};
 const Position FlyPosition = { 4595.904785, 2769.315918, 421.838623};
 
+class boss_blood_queen_lanathel : public CreatureScript
+{
+public:
+    boss_blood_queen_lanathel() : CreatureScript("boss_blood_queen_lanathel") { }
+
 struct boss_blood_queen_lanathelAI : public ScriptedAI
 {
     boss_blood_queen_lanathelAI(Creature *pCreature) : ScriptedAI(pCreature)
     {
-        m_pInstance = pCreature->GetInstanceData();
+        m_pInstance = pCreature->GetInstanceScript();
     }
 
-    ScriptedInstance* m_pInstance;
+    InstanceScript* m_pInstance;
 
     uint32 m_uiTwilightBloodboltTimer;
     uint32 m_uiPhaseTimer;
@@ -281,14 +286,25 @@ struct boss_blood_queen_lanathelAI : public ScriptedAI
     }
 };
 
+    CreatureAI* GetAIboss_blood_queen_lanathelAI(Creature* pCreature) const
+    {
+        return new boss_blood_queen_lanathelAI (pCreature);
+    }
+};
+
+class npc_swarming_shadows : public CreatureScript
+{
+public:
+    npc_swarming_shadows() : CreatureScript("npc_swarming_shadows") { }
+
 struct npc_swarming_shadowsAI : public Scripted_NoMovementAI
 {
     npc_swarming_shadowsAI(Creature *pCreature) : Scripted_NoMovementAI(pCreature)
     {
-        m_pInstance = pCreature->GetInstanceData();
+        m_pInstance = pCreature->GetInstanceScript();
     }
 
-    ScriptedInstance* m_pInstance;
+    InstanceScript* m_pInstance;
 
     uint32 m_uiSwarmingShadowTimer;
 
@@ -310,23 +326,8 @@ struct npc_swarming_shadowsAI : public Scripted_NoMovementAI
         } else m_uiSwarmingShadowTimer -= uiDiff;
     }
 };
-class boss_blood_queen_lanathel : public CreatureScript
-{
-public:
-    boss_blood_queen_lanathel() : CreatureScript("boss_blood_queen_lanathel") { }
 
-    CreatureAI* GetAIboss_blood_queen_lanathelAI(Creature* pCreature)
-    {
-        return new boss_blood_queen_lanathelAI (pCreature);
-    }
-
-};
-class npc_swarming_shadows : public CreatureScript
-{
-public:
-    npc_swarming_shadows() : CreatureScript("npc_swarming_shadows") { }
-
-    CreatureAI* GetAInpc_swarming_shadowsAI(Creature* pCreature)
+    CreatureAI* GetAInpc_swarming_shadowsAI(Creature* pCreature) const
     {
         return new npc_swarming_shadowsAI (pCreature);
     }
@@ -335,6 +336,6 @@ public:
 
 void AddSC_boss_blood_queen_lana_thel()
 {
-    new boss_blood_queen_lanathel();
-    new npc_swarming_shadows();
+    new boss_blood_queen_lanathel;
+    new npc_swarming_shadows;
 }
