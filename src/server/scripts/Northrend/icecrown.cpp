@@ -59,7 +59,7 @@ class npc_arete : public CreatureScript
 public:
     npc_arete() : CreatureScript("npc_arete") { }
 
-    bool OnOnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
     {
         switch(uiAction)
         {
@@ -131,7 +131,7 @@ class npc_dame_evniki_kapsalis : public CreatureScript
 public:
     npc_dame_evniki_kapsalis() : CreatureScript("npc_dame_evniki_kapsalis") { }
 
-    bool OnOnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
     {
         if (uiAction == GOSSIP_ACTION_TRADE)
             pPlayer->SEND_VENDORLIST(pCreature->GetGUID());
@@ -173,7 +173,7 @@ class npc_squire_david : public CreatureScript
 public:
     npc_squire_david() : CreatureScript("npc_squire_david") { }
 
-    bool OnOnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
     {
         if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
         {
@@ -228,7 +228,7 @@ class npc_squire_danny : public CreatureScript
 public:
     npc_squire_danny() : CreatureScript("npc_squire_danny") { }
 
-    bool OnOnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
     {
         if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
         {
@@ -1220,7 +1220,7 @@ class npc_jeran_lockwood : public CreatureScript
 public:
     npc_jeran_lockwood() : CreatureScript("npc_jeran_lockwood") { }
 
-    bool OnOnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
     {
     	switch(uiAction)
     	{
@@ -1268,7 +1268,7 @@ class npc_rugan_steelbelly : public CreatureScript
 public:
     npc_rugan_steelbelly() : CreatureScript("npc_rugan_steelbelly") { }
 
-    bool OnOnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
     {
     	switch(uiAction)
     	{
@@ -1316,7 +1316,7 @@ class npc_valis_windchaser : public CreatureScript
 public:
     npc_valis_windchaser() : CreatureScript("npc_valis_windchaser") { }
 
-    bool OnOnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
     {
     	switch (uiAction)
     	{

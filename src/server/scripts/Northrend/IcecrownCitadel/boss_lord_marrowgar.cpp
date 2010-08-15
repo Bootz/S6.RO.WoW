@@ -342,7 +342,7 @@ public:
                 if (m_uiSaberSlashTimer <= uiDiff)
                 {
                     Unit* pTarget = SelectUnit(SELECT_TARGET_TOPAGGRO, 0);
-                    //me->CastCustomSpell(RAID_MODE(SPELL_SABER_SLASH_10_NORMAL,SPELL_SABER_SLASH_25_NORMAL,SPELL_SABER_SLASH_10_HEROIC,SPELL_SABER_SLASH_10_HEROIC)) , SPELLVALUE_RADIUS_MOD, 20);
+                    me->CastCustomSpell(RAID_MODE(SPELL_SABER_SLASH_10_NORMAL,SPELL_SABER_SLASH_25_NORMAL,SPELL_SABER_SLASH_10_HEROIC,SPELL_SABER_SLASH_10_HEROIC) , SPELLVALUE_RADIUS_MOD, 20);
                     DoCast(pTarget, RAID_MODE(SPELL_SABER_SLASH_10_NORMAL,SPELL_SABER_SLASH_25_NORMAL,SPELL_SABER_SLASH_10_HEROIC,SPELL_SABER_SLASH_10_HEROIC));
                     m_uiSaberSlashTimer = 9000;
                 } else m_uiSaberSlashTimer -= uiDiff;
