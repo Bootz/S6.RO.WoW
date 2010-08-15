@@ -35,129 +35,130 @@
 class icecrown_teleporter : public GameObjectScript
 {
 public:
-    icecrown_teleporter() : GameObjectScript("icecrown_teleporter") { }
+	icecrown_teleporter() : GameObjectScript("icecrown_teleporter") { }
 
-    bool OnGossipSelect( Player *pPlayer, GameObject *pGO, uint32 sender, uint32 action )
-    {
-        if(sender != GOSSIP_SENDER_MAIN) return true;
-        if(!pPlayer->getAttackers().empty()) return true;
+	bool OnGossipSelect( Player *pPlayer, GameObject *pGO, uint32 sender, uint32 action )
+	{
+		if(sender != GOSSIP_SENDER_MAIN) return true;
+		if(!pPlayer->getAttackers().empty()) return true;
 
-        switch(action)
-        {
-        case HAMMER:
-            pPlayer->TeleportTo(631, -17.1928, 2211.44, 30.1158, 3.12149);
-            pPlayer->CLOSE_GOSSIP_MENU();
-            break;
+		switch(action)
+		{
+		case HAMMER:
+			pPlayer->TeleportTo(631, -17.1928, 2211.44, 30.1158, 3.12149);
+			pPlayer->CLOSE_GOSSIP_MENU();
+			break;
 
-        case ORATORY:
-            pPlayer->TeleportTo(631, -503.62, 2211.47, 62.8235, 3.139313);
-            pPlayer->CLOSE_GOSSIP_MENU();
-            break;
+		case ORATORY:
+			pPlayer->TeleportTo(631, -503.62, 2211.47, 62.8235, 3.139313);
+			pPlayer->CLOSE_GOSSIP_MENU();
+			break;
 
-        case RAMPART:
-            pPlayer->TeleportTo(631, -615.145, 2211.47, 199.972, 6.26832);
-            pPlayer->CLOSE_GOSSIP_MENU();
-            break;
+		case RAMPART:
+			pPlayer->TeleportTo(631, -615.145, 2211.47, 199.972, 6.26832);
+			pPlayer->CLOSE_GOSSIP_MENU();
+			break;
 
-        case SAURFANG:
-            pPlayer->TeleportTo(631, -549.131, 2211.29, 539.291, 6.275452);
-            pPlayer->CLOSE_GOSSIP_MENU();
-            break;
+		case SAURFANG:
+			pPlayer->TeleportTo(631, -549.131, 2211.29, 539.291, 6.275452);
+			pPlayer->CLOSE_GOSSIP_MENU();
+			break;
 
-        case UPPER_SPIRE:
-            pPlayer->TeleportTo(631, 4198.42, 2769.22, 351.065, 6.266690);
-            pPlayer->CLOSE_GOSSIP_MENU();
-            break;
+		case UPPER_SPIRE:
+			pPlayer->TeleportTo(631, 4198.42, 2769.22, 351.065, 6.266690);
+			pPlayer->CLOSE_GOSSIP_MENU();
+			break;
 
-        case PLAGUEWORKS:
-            pPlayer->TeleportTo(631, 4356.780273, 2863.636230, 349.337982, 1.559445);
-            pPlayer->CLOSE_GOSSIP_MENU();
-            break;
+		case PLAGUEWORKS:
+			pPlayer->TeleportTo(631, 4356.780273, 2863.636230, 349.337982, 1.559445);
+			pPlayer->CLOSE_GOSSIP_MENU();
+			break;
 
-        case CRIMSONHALL:
-            pPlayer->TeleportTo(631, 4453.248535, 2769.325684, 349.347473, 0.023817);
-            pPlayer->CLOSE_GOSSIP_MENU();
-            break;
+		case CRIMSONHALL:
+			pPlayer->TeleportTo(631, 4453.248535, 2769.325684, 349.347473, 0.023817);
+			pPlayer->CLOSE_GOSSIP_MENU();
+			break;
 
-        case FWHALLS:
-            pPlayer->TeleportTo(631, 4356.853516, 2674.143311, 349.340118, 4.736377);
-            pPlayer->CLOSE_GOSSIP_MENU();
-            break;
+		case FWHALLS:
+			pPlayer->TeleportTo(631, 4356.853516, 2674.143311, 349.340118, 4.736377);
+			pPlayer->CLOSE_GOSSIP_MENU();
+			break;
 
-        case QUEEN:
-            pPlayer->TeleportTo(631, 4356.580, 2565.75, 220.40, 4.886216);
-            pPlayer->CLOSE_GOSSIP_MENU();
-            break;
+		case QUEEN:
+			pPlayer->TeleportTo(631, 4356.580, 2565.75, 220.40, 4.886216);
+			pPlayer->CLOSE_GOSSIP_MENU();
+			break;
 
-        case LICHKING:
-            pPlayer->TeleportTo(631, 529.3969, -2124.879883, 1041.86f, 0.120937);
-            pPlayer->CLOSE_GOSSIP_MENU();
-            break;
-        }
+		case LICHKING:
+			pPlayer->TeleportTo(631, 529.3969, -2124.879883, 1041.86f, 0.120937);
+			pPlayer->CLOSE_GOSSIP_MENU();
+			break;
+		}
 
-        return true;
-    }
+		return true;
+	}
 
-    bool OnGossipHello( Player *pPlayer, GameObject *pGO )
-    {
-        InstanceScript *pInstance = pGO->GetInstanceScript();
-        if(!pInstance) return true;
+	bool OnGossipHello( Player *pPlayer, GameObject *pGO )
+	{
+		InstanceScript *pInstance = pGO->GetInstanceScript();
+		if(!pInstance)
+			return true;
 
-        if(pInstance)
-        {
-            pPlayer->ADD_GOSSIP_ITEM(0, "Teleport to Light's Hammer", GOSSIP_SENDER_MAIN, HAMMER);
-        }
+		if(pInstance)
+		{
+			pPlayer->ADD_GOSSIP_ITEM(0, "Teleport to Light's Hammer", GOSSIP_SENDER_MAIN, HAMMER);
+		}
 
-        if(pInstance->GetData(DATA_MARROWGAR_EVENT) == DONE || pPlayer->isGameMaster())
-        {
-            pPlayer->ADD_GOSSIP_ITEM(0, "Teleport to the Oratory of the Damned", GOSSIP_SENDER_MAIN, ORATORY);
-        }
+		if(pInstance->GetData(DATA_MARROWGAR_EVENT) == DONE || pPlayer->isGameMaster())
+		{
+			pPlayer->ADD_GOSSIP_ITEM(0, "Teleport to the Oratory of the Damned", GOSSIP_SENDER_MAIN, ORATORY);
+		}
 
-        if(pInstance->GetData(DATA_DEATHWHISPER_EVENT) == DONE || pPlayer->isGameMaster())
-        {
-            pPlayer->ADD_GOSSIP_ITEM(0, "Teleport to the Rampart of Skulls", GOSSIP_SENDER_MAIN, RAMPART);
-            pPlayer->ADD_GOSSIP_ITEM(0, "Teleport to Deathbringer's Rise", GOSSIP_SENDER_MAIN, SAURFANG);
-        }
+		if(pInstance->GetData(DATA_DEATHWHISPER_EVENT) == DONE || pPlayer->isGameMaster())
+		{
+			pPlayer->ADD_GOSSIP_ITEM(0, "Teleport to the Rampart of Skulls", GOSSIP_SENDER_MAIN, RAMPART);
+			pPlayer->ADD_GOSSIP_ITEM(0, "Teleport to Deathbringer's Rise", GOSSIP_SENDER_MAIN, SAURFANG);
+		}
 
-        if(pGO->GetGoState() == GO_STATE_ACTIVE || pPlayer->isGameMaster())
-        {
-            pPlayer->ADD_GOSSIP_ITEM(0, "Teleport to the Upper Spire", GOSSIP_SENDER_MAIN, UPPER_SPIRE);
-        }
+		if(pGO->GetGoState() == GO_STATE_ACTIVE || pPlayer->isGameMaster())
+		{
+			pPlayer->ADD_GOSSIP_ITEM(0, "Teleport to the Upper Spire", GOSSIP_SENDER_MAIN, UPPER_SPIRE);
+		}
 
-        if(pInstance->GetData(DATA_PROFESSOR_PUTRICIDE_EVENT) == DONE || pPlayer->isGameMaster())
-        {
-            pPlayer->ADD_GOSSIP_ITEM(0, "Teleport to the Plagueworks", GOSSIP_SENDER_MAIN, PLAGUEWORKS);
-        }
+		if(pInstance->GetData(DATA_PROFESSOR_PUTRICIDE_EVENT) == DONE || pPlayer->isGameMaster())
+		{
+			pPlayer->ADD_GOSSIP_ITEM(0, "Teleport to the Plagueworks", GOSSIP_SENDER_MAIN, PLAGUEWORKS);
+		}
 
-        if(pInstance->GetData(DATA_BLOOD_QUEEN_LANATHEL_EVENT) == DONE || pPlayer->isGameMaster())
-        {
-            pPlayer->ADD_GOSSIP_ITEM(0, "Teleport to the Crimson Halls", GOSSIP_SENDER_MAIN, CRIMSONHALL);
-        }
+		if(pInstance->GetData(DATA_BLOOD_QUEEN_LANATHEL_EVENT) == DONE || pPlayer->isGameMaster())
+		{
+			pPlayer->ADD_GOSSIP_ITEM(0, "Teleport to the Crimson Halls", GOSSIP_SENDER_MAIN, CRIMSONHALL);
+		}
 
-        if(pInstance->GetData(DATA_VALITHRIA_DREAMWALKER_EVENT) == DONE || pPlayer->isGameMaster())
-        {
-            pPlayer->ADD_GOSSIP_ITEM(0, "Teleport to The Lair of the Queen of Ice", GOSSIP_SENDER_MAIN, QUEEN);
-        }
-        if(pInstance->GetData(DATA_SINDRAGOSA_EVENT) == DONE || pPlayer->isGameMaster())
-        {
-            pPlayer->ADD_GOSSIP_ITEM(0, "Teleport to the Frostwing Halls", GOSSIP_SENDER_MAIN, FWHALLS);
-        }
+		if(pInstance->GetData(DATA_VALITHRIA_DREAMWALKER_EVENT) == DONE || pPlayer->isGameMaster())
+		{
+			pPlayer->ADD_GOSSIP_ITEM(0, "Teleport to The Lair of the Queen of Ice", GOSSIP_SENDER_MAIN, QUEEN);
+		}
+		if(pInstance->GetData(DATA_SINDRAGOSA_EVENT) == DONE || pPlayer->isGameMaster())
+		{
+			pPlayer->ADD_GOSSIP_ITEM(0, "Teleport to the Frostwing Halls", GOSSIP_SENDER_MAIN, FWHALLS);
+		}
 
-        if(pInstance->GetData(DATA_PROFESSOR_PUTRICIDE_EVENT) == DONE && pInstance->GetData(DATA_BLOOD_QUEEN_LANATHEL_EVENT) == DONE &&
-            pInstance->GetData(DATA_SINDRAGOSA_EVENT) == DONE || pPlayer->isGameMaster())
-        {
-            pPlayer->ADD_GOSSIP_ITEM(0, "Teleport to the Frozen Throne", GOSSIP_SENDER_MAIN, LICHKING);
-        }
+		if(pInstance->GetData(DATA_PROFESSOR_PUTRICIDE_EVENT) == DONE && pInstance->GetData(DATA_BLOOD_QUEEN_LANATHEL_EVENT) == DONE &&
+			pInstance->GetData(DATA_SINDRAGOSA_EVENT) == DONE || pPlayer->isGameMaster())
+		{
+			pPlayer->ADD_GOSSIP_ITEM(0, "Teleport to the Frozen Throne", GOSSIP_SENDER_MAIN, LICHKING);
+		}
 
-        pPlayer->SEND_GOSSIP_MENU(DEFAULT_GOSSIP_MESSAGE, pGO->GetGUID());
+		pPlayer->SEND_GOSSIP_MENU(DEFAULT_GOSSIP_MESSAGE, pGO->GetGUID());
 
-        return true;
-    };
+		return true;
+	};
 
 };
 
 
 void AddSC_icecrown_teleporter()
 {
-    new icecrown_teleporter;
+	new icecrown_teleporter;
 }

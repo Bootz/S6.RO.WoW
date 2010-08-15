@@ -75,216 +75,216 @@ class boss_blood_queen_lanathel : public CreatureScript
 public:
     boss_blood_queen_lanathel() : CreatureScript("boss_blood_queen_lanathel") { }
 
-struct boss_blood_queen_lanathelAI : public ScriptedAI
-{
-    boss_blood_queen_lanathelAI(Creature *pCreature) : ScriptedAI(pCreature)
+    struct boss_blood_queen_lanathelAI : public ScriptedAI
     {
-        m_pInstance = pCreature->GetInstanceScript();
-    }
+        boss_blood_queen_lanathelAI(Creature *pCreature) : ScriptedAI(pCreature)
+        {
+            m_pInstance = pCreature->GetInstanceScript();
+        }
 
-    InstanceScript* m_pInstance;
+        InstanceScript* m_pInstance;
 
-    uint32 m_uiTwilightBloodboltTimer;
-    uint32 m_uiPhaseTimer;
-    uint32 m_uiVampBiteTimer;
-    uint32 m_uiSwarmingShadowsTimer;
-    uint32 m_uiPactofDarkfallenTimer;
-    uint32 m_uiPactofDarkfallenExplodeTimer;
-    uint32 m_uiPactofDarkfallenExplosionCount;
-    uint32 m_uiPhase;
-    uint32 m_uiBerserkTimer;
-    uint32 m_uiSetHoverTimer;
-    uint32 m_uiLandingTimer;
-    uint32 m_uiFlyingFalseTimer;
-    uint32 m_uiBloodboldSplashTimer;
-    uint32 m_uiBloodMirror;
-    
-	Unit* pMirrorTarget;
-	Unit* Darkfallen[5];
-    uint8 darkfallened;
+        uint32 m_uiTwilightBloodboltTimer;
+        uint32 m_uiPhaseTimer;
+        uint32 m_uiVampBiteTimer;
+        uint32 m_uiSwarmingShadowsTimer;
+        uint32 m_uiPactofDarkfallenTimer;
+        uint32 m_uiPactofDarkfallenExplodeTimer;
+        uint32 m_uiPactofDarkfallenExplosionCount;
+        uint32 m_uiPhase;
+        uint32 m_uiBerserkTimer;
+        uint32 m_uiSetHoverTimer;
+        uint32 m_uiLandingTimer;
+        uint32 m_uiFlyingFalseTimer;
+        uint32 m_uiBloodboldSplashTimer;
+        uint32 m_uiBloodMirror;
 
-    void Reset()
-    {
-        m_uiPhaseTimer = 90000;
+        Unit* pMirrorTarget;
+        Unit* Darkfallen[5];
+        uint8 darkfallened;
 
-        m_uiTwilightBloodboltTimer = 10000;
-        m_uiVampBiteTimer  = 15000;
-        m_uiSwarmingShadowsTimer = 30000;
-        m_uiPactofDarkfallenTimer  = 15000;
-        m_uiBloodMirror = 25000;
-        m_uiSetHoverTimer = 90000;
-        m_uiBloodboldSplashTimer = 900000;
-        m_uiLandingTimer = 900000;
-        m_uiFlyingFalseTimer = 900000;
+        void Reset()
+        {
+            m_uiPhaseTimer = 90000;
 
-        m_uiPhase = 1;
-        m_uiBerserkTimer = 330000;
-        me->SetFlying(false);
+            m_uiTwilightBloodboltTimer = 10000;
+            m_uiVampBiteTimer  = 15000;
+            m_uiSwarmingShadowsTimer = 30000;
+            m_uiPactofDarkfallenTimer  = 15000;
+            m_uiBloodMirror = 25000;
+            m_uiSetHoverTimer = 90000;
+            m_uiBloodboldSplashTimer = 900000;
+            m_uiLandingTimer = 900000;
+            m_uiFlyingFalseTimer = 900000;
 
-        me->SetReactState(REACT_AGGRESSIVE);
+            m_uiPhase = 1;
+            m_uiBerserkTimer = 330000;
+            me->SetFlying(false);
 
-        if (m_pInstance)
-            m_pInstance->SetData(DATA_BLOOD_QUEEN_LANATHEL_EVENT, NOT_STARTED);
-    }
+            me->SetReactState(REACT_AGGRESSIVE);
 
-    void EnterCombat(Unit *who)
-    {
-        DoScriptText(SAY_AGGRO, me);
+            if (m_pInstance)
+                m_pInstance->SetData(DATA_BLOOD_QUEEN_LANATHEL_EVENT, NOT_STARTED);
+        }
 
-        if (m_pInstance)
-            m_pInstance->SetData(DATA_BLOOD_QUEEN_LANATHEL_EVENT, IN_PROGRESS);
-    }
+        void EnterCombat(Unit *who)
+        {
+            DoScriptText(SAY_AGGRO, me);
 
-    void KilledUnit(Unit* victim)
-    {
-    }
+            if (m_pInstance)
+                m_pInstance->SetData(DATA_BLOOD_QUEEN_LANATHEL_EVENT, IN_PROGRESS);
+        }
 
-    void JustDied(Unit* Killer)
-    {
-        DoScriptText(SAY_DEATH, me);
+        void KilledUnit(Unit* victim)
+        {
+        }
 
-        if (m_pInstance)
-            m_pInstance->SetData(DATA_BLOOD_QUEEN_LANATHEL_EVENT, DONE);
-    }
+        void JustDied(Unit* Killer)
+        {
+            DoScriptText(SAY_DEATH, me);
 
-    void doPactOfDarkfallen()
-    {
-		uint8 num = RAID_MODE(3,5,3,5);
-        DoScriptText(SAY_PACT_DARKFALLEN, me);
-        for(uint8 i = 0; i <= num; ++i)
+            if (m_pInstance)
+                m_pInstance->SetData(DATA_BLOOD_QUEEN_LANATHEL_EVENT, DONE);
+        }
+
+        void doPactOfDarkfallen()
+        {
+            uint8 num = RAID_MODE(3,5,3,5);
+            DoScriptText(SAY_PACT_DARKFALLEN, me);
+            for(uint8 i = 0; i <= num; ++i)
             {   
                 Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM,0);
                 DoCast(pTarget, SPELL_PACT_OF_DARKFALLEN);
                 Darkfallen[++darkfallened] = pTarget;                    
             }
-	}
-	
-	void removePactOfDarkfallen()
-	{
-        uint8 all = 1;
-		if (Darkfallen[0])
-            for(uint8 j = 1; j < darkfallened; ++j)
-                if (Darkfallen[j] && Darkfallen[j]->IsWithinDistInMap(Darkfallen[0], 5.0f))
-					++all;
-        if (all == RAID_MODE(3,5,3,5))
-		{
-            for (uint8 i = 1; i < darkfallened; ++i)
-		{
-                   Darkfallen[i]->RemoveAurasDueToSpell(SPELL_PACT_OF_DARKFALLEN);
-                   Darkfallen[i] = NULL;
+        }
+
+        void removePactOfDarkfallen()
+        {
+            uint8 all = 1;
+            if (Darkfallen[0])
+                for(uint8 j = 1; j < darkfallened; ++j)
+                    if (Darkfallen[j] && Darkfallen[j]->IsWithinDistInMap(Darkfallen[0], 5.0f))
+                        ++all;
+            if (all == RAID_MODE(3,5,3,5))
+            {
+                for (uint8 i = 1; i < darkfallened; ++i)
+                {
+                    Darkfallen[i]->RemoveAurasDueToSpell(SPELL_PACT_OF_DARKFALLEN);
+                    Darkfallen[i] = NULL;
                 }
-            darkfallened = 0;
+                darkfallened = 0;
+            }
         }
-    }
 
-    void UpdateAI(const uint32 uiDiff)
-    {
-        if (!UpdateVictim())
-            return;
-
-        if (!me->HasAura(SPELL_SHROUD_OF_SORROW))
-            DoCast(me, SPELL_SHROUD_OF_SORROW);
-
-        if (m_uiPhase == 1)
+        void UpdateAI(const uint32 uiDiff)
         {
+            if (!UpdateVictim())
+                return;
 
-			if (darkfallened)
-				removePactOfDarkfallen();
-		
-            if (m_uiPactofDarkfallenTimer <= uiDiff)
-            {
-                doPactOfDarkfallen();
-				m_uiPactofDarkfallenTimer = 30000;
-				
-            } else m_uiPactofDarkfallenTimer -= uiDiff;
+            if (!me->HasAura(SPELL_SHROUD_OF_SORROW))
+                DoCast(me, SPELL_SHROUD_OF_SORROW);
 
-            if (m_uiBloodMirror <= uiDiff)
+            if (m_uiPhase == 1)
             {
-				pMirrorTarget = SelectTarget(SELECT_TARGET_RANDOM);
-                Unit* pTarget = SelectUnit(SELECT_TARGET_TOPAGGRO, 0);
-                pTarget->CastSpell(pMirrorTarget, SPELL_BLOOD_MIRROR_1, true);
-                m_uiBloodMirror = 32000;
-            } else m_uiBloodMirror -= uiDiff;
 
-            if (m_uiSwarmingShadowsTimer < uiDiff)
-            {
-                Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
-                DoCast(pTarget, SPELL_SWARMING_SHADOWS);
-                m_uiSwarmingShadowsTimer = 30000;
-            } else m_uiSwarmingShadowsTimer -= uiDiff;
+                if (darkfallened)
+                    removePactOfDarkfallen();
 
-            if (m_uiTwilightBloodboltTimer < uiDiff)
-            {
-                Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
-                DoCast(pTarget, SPELL_TWILIGHT_BLOODBOLT);
-                m_uiTwilightBloodboltTimer = 9000;
-            } else m_uiTwilightBloodboltTimer -= uiDiff;
+                if (m_uiPactofDarkfallenTimer <= uiDiff)
+                {
+                    doPactOfDarkfallen();
+                    m_uiPactofDarkfallenTimer = 30000;
 
-            if (m_uiVampBiteTimer < uiDiff)
-            {
-                DoScriptText(RAND(SAY_VAMP_BITE_1, SAY_VAMP_BITE_2), me);
-                Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
-                DoCast(pTarget, SPELL_VAMPIRIC_BITE);
-                m_uiVampBiteTimer = 45000 + rand()%20000;
-            } else m_uiVampBiteTimer -= uiDiff;
+                } else m_uiPactofDarkfallenTimer -= uiDiff;
 
-            if (m_uiPhaseTimer < uiDiff)
+                if (m_uiBloodMirror <= uiDiff)
+                {
+                    pMirrorTarget = SelectTarget(SELECT_TARGET_RANDOM);
+                    Unit* pTarget = SelectUnit(SELECT_TARGET_TOPAGGRO, 0);
+                    pTarget->CastSpell(pMirrorTarget, SPELL_BLOOD_MIRROR_1, true);
+                    m_uiBloodMirror = 32000;
+                } else m_uiBloodMirror -= uiDiff;
+
+                if (m_uiSwarmingShadowsTimer < uiDiff)
+                {
+                    Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
+                    DoCast(pTarget, SPELL_SWARMING_SHADOWS);
+                    m_uiSwarmingShadowsTimer = 30000;
+                } else m_uiSwarmingShadowsTimer -= uiDiff;
+
+                if (m_uiTwilightBloodboltTimer < uiDiff)
+                {
+                    Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
+                    DoCast(pTarget, SPELL_TWILIGHT_BLOODBOLT);
+                    m_uiTwilightBloodboltTimer = 9000;
+                } else m_uiTwilightBloodboltTimer -= uiDiff;
+
+                if (m_uiVampBiteTimer < uiDiff)
+                {
+                    DoScriptText(RAND(SAY_VAMP_BITE_1, SAY_VAMP_BITE_2), me);
+                    Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
+                    DoCast(pTarget, SPELL_VAMPIRIC_BITE);
+                    m_uiVampBiteTimer = 45000 + rand()%20000;
+                } else m_uiVampBiteTimer -= uiDiff;
+
+                if (m_uiPhaseTimer < uiDiff)
+                {
+                    DoScriptText(SAY_AIR_PHASE, me);
+                    DoCast(me, SPELL_INCITE_TERROR);
+                    me->GetMotionMaster()->MovePoint(0, Phase2Position);
+                    me->SetReactState(REACT_PASSIVE);
+                    me->AttackStop();
+                    m_uiPhase = 2;
+                    m_uiPhaseTimer = 90000;
+                    m_uiSetHoverTimer = 5000;
+                    m_uiBloodboldSplashTimer = 10000;
+                    m_uiLandingTimer = 26000;
+                    m_uiFlyingFalseTimer = 30000;
+                } else m_uiPhaseTimer -= uiDiff;
+            }
+
+            if (m_uiPhase == 2)
             {
-                DoScriptText(SAY_AIR_PHASE, me);
-                DoCast(me, SPELL_INCITE_TERROR);
-                me->GetMotionMaster()->MovePoint(0, Phase2Position);
-                me->SetReactState(REACT_PASSIVE);
-                me->AttackStop();
-                m_uiPhase = 2;
-                m_uiPhaseTimer = 90000;
-                m_uiSetHoverTimer = 5000;
-                m_uiBloodboldSplashTimer = 10000;
-                m_uiLandingTimer = 26000;
-                m_uiFlyingFalseTimer = 30000;
-            } else m_uiPhaseTimer -= uiDiff;
+                if (m_uiSetHoverTimer < uiDiff)
+                {
+                    me->GetMotionMaster()->MovePoint(0, FlyPosition);
+                    me->SetUnitMovementFlags(MOVEMENTFLAG_JUMPING);
+                    me->SetFlying(true);
+                    m_uiSetHoverTimer = 90000;
+                } else m_uiSetHoverTimer -= uiDiff;
+
+                if (m_uiBloodboldSplashTimer < uiDiff)
+                {
+                    std::list<Unit*> pTargets;
+                    SelectTargetList(pTargets, 5, SELECT_TARGET_RANDOM, 80, true);
+                    for (std::list<Unit*>::const_iterator i = pTargets.begin(); i != pTargets.end(); ++i)
+                        DoCast(*i, RAID_MODE(SPELL_TWILIGHT_BLOODBOLT,SPELL_TWILIGHT_BLOODBOLT));
+                    m_uiBloodboldSplashTimer = 6000;
+                } else m_uiBloodboldSplashTimer -= uiDiff;
+
+                if (m_uiLandingTimer < uiDiff)
+                {
+                    me->GetMotionMaster()->MovePoint(0, Phase2Position);
+                    me->SetUnitMovementFlags(MOVEMENTFLAG_JUMPING);
+                    m_uiLandingTimer = 900000;
+                    m_uiBloodboldSplashTimer = 900000;
+                } else m_uiLandingTimer -= uiDiff;
+
+                if (m_uiFlyingFalseTimer < uiDiff)
+                {
+                    me->SetFlying(false);
+                    me->RemoveAllAuras();
+                    me->SetReactState(REACT_AGGRESSIVE);
+                    me->GetMotionMaster()->MoveChase(me->getVictim());
+                    m_uiPhase = 1;
+                    m_uiFlyingFalseTimer = 900000;
+                } else m_uiFlyingFalseTimer -= uiDiff;
+            }
+
+            DoMeleeAttackIfReady();
         }
-
-        if (m_uiPhase == 2)
-        {
-            if (m_uiSetHoverTimer < uiDiff)
-            {
-                me->GetMotionMaster()->MovePoint(0, FlyPosition);
-                me->SetUnitMovementFlags(MOVEMENTFLAG_JUMPING);
-                me->SetFlying(true);
-                m_uiSetHoverTimer = 90000;
-            } else m_uiSetHoverTimer -= uiDiff;
-
-            if (m_uiBloodboldSplashTimer < uiDiff)
-            {
-                std::list<Unit*> pTargets;
-                SelectTargetList(pTargets, 5, SELECT_TARGET_RANDOM, 80, true);
-                for (std::list<Unit*>::const_iterator i = pTargets.begin(); i != pTargets.end(); ++i)
-                    DoCast(*i, RAID_MODE(SPELL_TWILIGHT_BLOODBOLT,SPELL_TWILIGHT_BLOODBOLT));
-                m_uiBloodboldSplashTimer = 6000;
-            } else m_uiBloodboldSplashTimer -= uiDiff;
-
-            if (m_uiLandingTimer < uiDiff)
-            {
-                me->GetMotionMaster()->MovePoint(0, Phase2Position);
-                me->SetUnitMovementFlags(MOVEMENTFLAG_JUMPING);
-                m_uiLandingTimer = 900000;
-                m_uiBloodboldSplashTimer = 900000;
-            } else m_uiLandingTimer -= uiDiff;
-
-            if (m_uiFlyingFalseTimer < uiDiff)
-            {
-                me->SetFlying(false);
-                me->RemoveAllAuras();
-                me->SetReactState(REACT_AGGRESSIVE);
-                me->GetMotionMaster()->MoveChase(me->getVictim());
-                m_uiPhase = 1;
-                m_uiFlyingFalseTimer = 900000;
-            } else m_uiFlyingFalseTimer -= uiDiff;
-        }
-
-        DoMeleeAttackIfReady();
-    }
-};
+    };
 
     CreatureAI* GetAIboss_blood_queen_lanathelAI(Creature* pCreature) const
     {
@@ -297,35 +297,35 @@ class npc_swarming_shadows : public CreatureScript
 public:
     npc_swarming_shadows() : CreatureScript("npc_swarming_shadows") { }
 
-struct npc_swarming_shadowsAI : public Scripted_NoMovementAI
-{
-    npc_swarming_shadowsAI(Creature *pCreature) : Scripted_NoMovementAI(pCreature)
+    struct npc_swarming_shadowsAI : public Scripted_NoMovementAI
     {
-        m_pInstance = pCreature->GetInstanceScript();
-    }
-
-    InstanceScript* m_pInstance;
-
-    uint32 m_uiSwarmingShadowTimer;
-
-    void Reset()
-    {
-        me->SetReactState(REACT_PASSIVE);
-        m_uiSwarmingShadowTimer = 1200;
-    }
-
-    void UpdateAI(const uint32 uiDiff)
-    {
-        if (!me->HasAura(SPELL_SWARMING_SHADOWS_VISUAL))
-            DoCast(me, SPELL_SWARMING_SHADOWS_VISUAL);
-
-        if (m_uiSwarmingShadowTimer < uiDiff)
+        npc_swarming_shadowsAI(Creature *pCreature) : Scripted_NoMovementAI(pCreature)
         {
-            DoCast(me, RAID_MODE(SPELL_SWARMING_SHADOW_10_NORMAL, SPELL_SWARMING_SHADOW_25_NORMAL, SPELL_SWARMING_SHADOW_10_HEROIC, SPELL_SWARMING_SHADOW_25_HEROIC));
-            m_uiSwarmingShadowTimer = 8000;
-        } else m_uiSwarmingShadowTimer -= uiDiff;
-    }
-};
+            m_pInstance = pCreature->GetInstanceScript();
+        }
+
+        InstanceScript* m_pInstance;
+
+        uint32 m_uiSwarmingShadowTimer;
+
+        void Reset()
+        {
+            me->SetReactState(REACT_PASSIVE);
+            m_uiSwarmingShadowTimer = 1200;
+        }
+
+        void UpdateAI(const uint32 uiDiff)
+        {
+            if (!me->HasAura(SPELL_SWARMING_SHADOWS_VISUAL))
+                DoCast(me, SPELL_SWARMING_SHADOWS_VISUAL);
+
+            if (m_uiSwarmingShadowTimer < uiDiff)
+            {
+                DoCast(me, RAID_MODE(SPELL_SWARMING_SHADOW_10_NORMAL, SPELL_SWARMING_SHADOW_25_NORMAL, SPELL_SWARMING_SHADOW_10_HEROIC, SPELL_SWARMING_SHADOW_25_HEROIC));
+                m_uiSwarmingShadowTimer = 8000;
+            } else m_uiSwarmingShadowTimer -= uiDiff;
+        }
+    };
 
     CreatureAI* GetAInpc_swarming_shadowsAI(Creature* pCreature) const
     {
