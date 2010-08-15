@@ -84,7 +84,7 @@ public:
             switch(pGo->GetEntry())
             {
                 case 193070: m_uiMalygosPlatformGUID = pGo->GetGUID(); break;
-                case 193958: m_uiFocusingIrisGUID = pGo->GetGUID(); break;//normal,hero
+                case 193958: //normal,hero
                 case 193960: m_uiFocusingIrisGUID = pGo->GetGUID(); break;
                 case 193908: m_uiExitPortalGUID = pGo->GetGUID(); break;
                 default:
@@ -106,12 +106,23 @@ public:
             switch(uiType)
             {
                 case TYPE_MALYGOS:
-                    if(uiData == IN_PROGRESS)
+                    if (uiData == IN_PROGRESS)
                     {
                         if(GameObject* m_uiExitPortal = instance->GetGameObject(m_uiExitPortalGUID))
-                            m_uiExitPortal->Delete();
+                            m_uiExitPortal->SetPhaseMask(2, true);
                         if(GameObject* m_uiFocusingIris = instance->GetGameObject(m_uiFocusingIrisGUID))
-                            m_uiFocusingIris->Delete();
+                            m_uiFocusingIris->SetPhaseMask(2, true);
+                }
+                if (uiData == NOT_STARTED)
+                {
+                    //Summon Platform
+                    SetData(TYPE_DESTROY_PLATFORM, NOT_STARTED);
+                    //Summon focusing iris
+                    if(GameObject* pGo = instance->GetGameObject(m_uiFocusingIrisGUID))
+                        pGo->SetPhaseMask(1, true);
+                    //Summon exit portal
+                    if(GameObject* pGo = instance->GetGameObject(m_uiExitPortalGUID))
+                        pGo->SetPhaseMask(1, true);
                     }
                     m_auiEncounter[0] = uiData;
                     break;

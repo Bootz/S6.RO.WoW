@@ -128,7 +128,7 @@ enum
     SAY_AGGRO2                     = -1616013,
     SAY_AGGRO3                     = -1616019,
     SAY_VORTEX                     = -1616006,
-    SAY_POWER_SPARK                = -1616035,
+    WHISPER_POWER_SPARK            = -1616035,
     SAY_POWER_SPARK_BUFF           = -1616007,
     SAY_KILL1_1                    = -1616008,
     SAY_KILL1_2                    = -1616009,
@@ -167,6 +167,7 @@ enum
     PHASE_NOSTART                  = 0,
         SUBPHASE_FLY_DOWN1         = 04,
         SUBPHASE_FLY_DOWN2         = 05,
+        SUBPHASE_WAIT              = 06,
     PHASE_FLOOR                    = 1,
         SUBPHASE_VORTEX            = 11,
     PHASE_ADDS                     = 2,
@@ -197,10 +198,10 @@ static Locations GOPositions[]=
 };
 static LocationsXY SparkLoc[]=
 {
-    {652.417, 1200.52},
-    {847.67, 1408.05},
-    {647.675, 1403.8},
-    {843.182, 1215.42},
+    {681.772, 1232.393},
+    {815.205, 1373.234},
+    {680.982, 1363.125},
+    {827.01, 1232.649},
 };
  
 //Also spawn locations for scions of eternity
@@ -234,13 +235,14 @@ static Locations OtherLoc[]=
     {749, 1244, 332, 1.544},      // Vortex FarSight loc
     {754.29, 1301.18, 266.17, 0}, // Center of the platform, ground.
     {823, 1241, 299, 0},          // Alexstrasza's  position
-    {749, 1244, 268, 5.33},       // Aggro position after Subphase fly down
+    {749, 1244, 266.17, 5.33},       // Aggro position after Subphase fly down
 };
-#define MAX_VORTEX              21
-#define VORTEX_Z                268
- 
-#define FLOOR_Z                 268.17
-#define AIR_Z                   297.24   
+
+#define MAX_VORTEX      21
+#define VORTEX_Z        268
+#define FLOOR_Z         266.18
+#define FALL_FROM_Z     287.20
+#define AIR_Z           297.24
 
 /*######
 ## boss_malygos
@@ -301,14 +303,13 @@ public:
                 me->ForcedDespawn();
 
             me->SetFlying(true);
-            me->AddUnitMovementFlag(MOVEMENTFLAG_SPLINE_ELEVATION);
+            me->setActive(true);
             me->RemoveUnitMovementFlag(MOVEMENTFLAG_LEVITATING);
 
             m_uiPhase = PHASE_NOSTART;
             m_uiSubPhase = 0;
             m_uiSpeechCount = 0;
             m_uiVortexPhase = 0;
-            m_lDiscGUIDList.clear();
             m_uiMounts.clear();
         
             m_uiIsDown = false;    
@@ -323,7 +324,7 @@ public:
             m_uiSpeechTimer[4] = 18000;
             m_uiSpeechTimer[5] = 17000;
             m_uiTimer = 7000;
-            m_uiVortexTimer = 60000;
+            m_uiVortexTimer = 10000;//60000;
             m_uiArcaneBreathTimer = 15000;
             m_uiPowerSparkTimer = 30000;
             m_uiDeepBreathTimer = 70000;
@@ -343,6 +344,14 @@ public:
             me->SetSpeed(MOVE_FLIGHT, 3.5f, true);
             me->SetSpeed(MOVE_RUN, 3.5f, true);
             me->SetSpeed(MOVE_WALK, 3.5f, true);
+
+        //Despawn all summoned creatures
+        DespawnCreatures(NPC_POWER_SPARK, 300.0f);
+        DespawnCreatures(NPC_ARCANE_OVERLOAD, 300.0f);
+        DespawnCreatures(NPC_NEXUS_LORD, 300.0f);
+        DespawnCreatures(NPC_SCION_OF_ETERNITY, 300.0f);
+        DespawnCreatures(NPC_HOVER_DISC, 300.0f, true);
+        DespawnCreatures(NPC_STATIC_FIELD, 300.0f);
         }
 
         void MoveInLineOfSight(Unit* who)
@@ -353,39 +362,6 @@ public:
             }
         }
 
-        void JustReachedHome()
-        {
-            Reset();
-
-            //Summon Platform
-            if(GameObject* pGo = GetClosestGameObjectWithEntry(me, GO_PLATFORM, 200.0f))
-            {
-                pGo->Respawn();
-                m_pInstance->SetData(TYPE_DESTROY_PLATFORM, NOT_STARTED);
-            }
-            else
-                me->SummonGameObject(GO_PLATFORM, GOPositions[0].x, GOPositions[0].y, GOPositions[0].z, GOPositions[0].o, 0, 0, 0, 0, 0);
- 
-            //Summon focusing iris
-            if(GameObject* pGo = GetClosestGameObjectWithEntry(me, GO_FOCUSING_IRIS, 200.0f))
-                pGo->Respawn();
-            else
-                me->SummonGameObject(GO_FOCUSING_IRIS, GOPositions[1].x, GOPositions[1].y, GOPositions[1].z, GOPositions[1].o, 0, 0, 0, 0, 0);
- 
-            //Summon exit portal
-            if(GameObject* pGo = GetClosestGameObjectWithEntry(me, GO_EXIT_PORTAL, 200.0f))
-                pGo->Respawn();
-            else
-                me->SummonGameObject(GO_EXIT_PORTAL, GOPositions[2].x, GOPositions[2].y, GOPositions[2].z, GOPositions[2].o, 0, 0, 0, 0, 0);
- 
-            //Despawn all summoned creatures	 
-            DespawnCreatures(NPC_POWER_SPARK, 300.0f);
-            DespawnCreatures(NPC_ARCANE_OVERLOAD, 300.0f);
-            DespawnCreatures(NPC_NEXUS_LORD, 300.0f);
-            DespawnCreatures(NPC_SCION_OF_ETERNITY, 300.0f);
-            DespawnCreatures(NPC_HOVER_DISC, 300.0f, true);
-            DespawnCreatures(NPC_STATIC_FIELD, 300.0f);  
-        }
         void AttackStart(Unit* pWho)
         {
             if(m_uiPhase != PHASE_FLOOR && m_uiPhase != PHASE_DRAGONS && !me->HasAura(SPELL_BERSERK))
@@ -402,6 +378,7 @@ public:
         }
         void EnterCombat(Unit* pWho)
         {
+            me->SetInCombatWithZone();
             me->SetSpeed(MOVE_FLIGHT, 1.0f, true);
             me->SetSpeed(MOVE_RUN, 1.0f, true);
             me->SetSpeed(MOVE_WALK, 1.0f, true);
@@ -411,7 +388,6 @@ public:
             if(m_pInstance->GetData(TYPE_OUTRO_CHECK) == 1) //Should be enought to trigger outro immediatly
             {
                 me->SetFlying(true);
-                me->AddUnitMovementFlag(MOVEMENTFLAG_SPLINE_ELEVATION);
                 //Destroy Platform
                 CastSpellToTrigger(SPELL_DESTROY_PLATFROM_BOOM, false);        
                 m_pInstance->SetData(TYPE_DESTROY_PLATFORM, IN_PROGRESS);
@@ -477,20 +453,13 @@ public:
             }
 
             if(m_uiPhase == PHASE_DRAGONS)
-            {
                 if(pVictim->GetEntry() == NPC_WYRMREST_SKYTALON)
-                {
                     for(std::list<std::pair<uint64, uint64> >::iterator iter = m_uiMounts.begin(); iter != m_uiMounts.end(); ++iter)
-                    {
                         if(pVictim->GetGUID() == (*iter).first)
                         {
                             m_uiMounts.erase(iter);
                             return;
                         }
-                    }
-                }
-            }
-            
         }
         void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
         {
@@ -500,24 +469,51 @@ public:
                 me->RemoveAurasDueToSpell(SPELL_POWER_SPARK);
         }
 
-        void SummonedCreatureDespawn(Creature* pDespawned)
+    void MoveFly(bool up)
+    {
+        if (up)
         {
-            if(pDespawned->GetEntry() != NPC_SCION_OF_ETERNITY && pDespawned->GetEntry() != NPC_NEXUS_LORD)
-                return;
- 
-            float x,y,z;
-            pDespawned->GetPosition(x,y,z);
-            z = FLOOR_Z;
-            if(Unit *pDisc = me->SummonCreature(NPC_HOVER_DISC, x, y, z, 0))
-            {
-                ((Creature*)pDisc)->SetSpeed(MOVE_FLIGHT, 3.5f, true);
-                ((Creature*)pDisc)->SetSpeed(MOVE_RUN, 3.5f, true);
-                ((Creature*)pDisc)->SetSpeed(MOVE_WALK, 3.5f, true);
-                ((Creature*)pDisc)->SetHealth(me->GetMaxHealth());
-                ((Creature*)pDisc)->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                m_lDiscGUIDList.push_back(((Creature*)pDisc)->GetGUID());
+            SetCombatMovement(false);
+            me->SetFlying(true);
+            //me->HandleEmoteCommand(EMOTE_ONESHOT_FLY_SIT_GROUND_UP);
+            //me->RemoveUnitMovementFlag(MOVEMENTFLAG_FLYING);
+            me->SendMovementFlagUpdate();
+            me->GetMotionMaster()->MoveJump(OtherLoc[2].x, OtherLoc[2].y, FLOOR_Z+20, 1.0f, 1.0f);
+        }
+        else //down
+        {
+            me->Relocate(OtherLoc[2].x, OtherLoc[2].y, FLOOR_Z);
+            me->SendMovementFlagUpdate();
+            me->HandleEmoteCommand(EMOTE_ONESHOT_FLY_SIT_GROUND_DOWN);
+            me->SetFlying(false);
+            SetCombatMovement(true);
+        }
+    }
+
+    void HoverDisk(Position &pos)
+    {
+        pos.m_positionZ = FLOOR_Z;
+        Creature * pDisc = me->SummonCreature(NPC_HOVER_DISC, pos);
+        if (pDisc)
+        {
+            pDisc->SetSpeed(MOVE_FLIGHT, 3.5f, true);
+            pDisc->SetSpeed(MOVE_RUN, 3.5f, true);
+            pDisc->SetSpeed(MOVE_WALK, 3.5f, true);
+            m_lDiscGUIDList.push_back(pDisc->GetGUID());
             }
         }
+
+    void SummonedCreatureDespawn(Creature* pWho)
+    {
+        uint32 entry = pWho->GetEntry();
+        if ((entry == NPC_SCION_OF_ETERNITY) || (entry == NPC_NEXUS_LORD))
+        {
+            Position pos;
+            pWho->GetPosition(&pos);
+            HoverDisk(pos);
+	        }
+    }
+
         void CastSpellToTrigger(uint32 uiSpellId, bool triggered = true, bool triggerCast = false)
         {  
             if(Creature *pTrigger = me->SummonCreature(NPC_VORTEX, OtherLoc[2].x, OtherLoc[2].y, OtherLoc[2].z, 0, TEMPSUMMON_TIMED_DESPAWN, 10000))
@@ -539,14 +535,8 @@ public:
         void DoVortex(uint8 phase)
         {
             if(phase == 0)
-            {
-                me->SetFlying(true);
-                me->AddUnitMovementFlag(MOVEMENTFLAG_SPLINE_ELEVATION);
-                me->GetMotionMaster()->Clear(false);
-                SetCombatMovement(false);
-                me->GetMotionMaster()->MovePoint(0, OtherLoc[2].x, OtherLoc[2].y, OtherLoc[2].z+20);
-            }
-            else if(phase == 1)
+            MoveFly(true);
+        else if (phase == 1)
             {
                 CastSpellToTrigger(SPELL_VORTEX_AOE_VISUAL, false);
 
@@ -559,7 +549,7 @@ public:
                 {
                     if(!itr->getSource()->isAlive())
                         continue;
-                    itr->getSource()->NearTeleportTo(VortexLoc[0].x, VortexLoc[0].y, VORTEX_Z, 0); 
+                    itr->getSource()->NearTeleportTo(VortexLoc[0].x, VortexLoc[0].y, FALL_FROM_Z, 0); 
                     itr->getSource()->CastSpell(itr->getSource(), SPELL_VORTEX, true, NULL, NULL, me->GetGUID());
                     if(Creature *pVortex = me->SummonCreature(NPC_VORTEX, OtherLoc[1].x, OtherLoc[1].y, OtherLoc[1].z, OtherLoc[1].o, TEMPSUMMON_TIMED_DESPAWN, 11000))
                     {                
@@ -593,7 +583,6 @@ public:
                 if(phase == 31)
                 {
                     me->SetFlying(false);
-                    me->RemoveUnitMovementFlag(MOVEMENTFLAG_SPLINE_ELEVATION);
                     if(me->getVictim())
                         me->GetMotionMaster()->MoveChase(me->getVictim());
 
@@ -613,20 +602,22 @@ public:
                 for(Map::PlayerList::const_iterator itr = lPlayers.begin(); itr != lPlayers.end(); ++itr)
                 {
                     itr->getSource()->SetUInt64Value(PLAYER_FARSIGHT, 0);
-                    itr->getSource()->NearTeleportTo(VortexLoc[0].x, VortexLoc[0].y, VORTEX_Z, 0);
-                }
-            
-                me->GetMotionMaster()->Clear(false);
-                SetCombatMovement(true);
-                float x, y, z;
-                me->GetPosition(x, y, z);
-                z = FLOOR_Z;
-                me->GetMotionMaster()->MovePoint(0, x, y, z);
+                  itr->getSource()->NearTeleportTo(VortexLoc[0].x, VortexLoc[0].y, FALL_FROM_Z, 0);
             }
-        
+            MoveFly(false);
         }
+    }
+
         void PowerSpark(uint8 action)
         {
+        if (m_pInstance && m_pInstance->instance)
+        {
+            Map::PlayerList const &PlayerList = m_pInstance->instance->GetPlayers();
+            if (!PlayerList.isEmpty())
+                for (Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
+                    DoScriptText(WHISPER_POWER_SPARK, me, i->getSource());
+        }
+
             uint8 random = urand(0, 3);
             if(Creature *pSpark = me->SummonCreature(NPC_POWER_SPARK, SparkLoc[random].x, SparkLoc[random].y, FLOOR_Z+10, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 120000))
             {
@@ -634,18 +625,16 @@ public:
                 pSpark->GetMotionMaster()->MoveFollow(me, 0, 0);
             }
         }
+
         void DoSpawnAdds()
         {
             //Nexus lords
-        
             int max_lords = m_uiIs10Man ? NEXUS_LORD_COUNT :NEXUS_LORD_COUNT_H;
             for(int i=0; i < max_lords;i++)
             {
                 if(Creature *pLord = me->SummonCreature(NPC_NEXUS_LORD, me->getVictim()->GetPositionX()-5+rand()%10, me->getVictim()->GetPositionY()-5+rand()%10, me->getVictim()->GetPositionZ(), 0, TEMPSUMMON_CORPSE_DESPAWN, 0))
-                {
                     pLord->AI()->AttackStart(me->getVictim());
                     pLord->SetInCombatWithZone();
-                }
             }
             //Scions of eternity
             int max_scions = m_uiIs10Man ? SCION_OF_ETERNITY_COUNT : SCION_OF_ETERNITY_COUNT_H;
@@ -654,11 +643,8 @@ public:
                 uint32 tmp = urand(1, 10);
                 if(Creature *pScion = me->SummonCreature(NPC_SCION_OF_ETERNITY, VortexLoc[tmp].x, VortexLoc[tmp].y, FLOOR_Z+10, 0, TEMPSUMMON_CORPSE_DESPAWN, 0))
                 {
-                    pScion->SetInCombatWithZone();
                     if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
-                    {
                         pScion->AI()->AttackStart(pTarget);
-                    }
                 }
             }   
         }
@@ -800,7 +786,6 @@ public:
             }
 
             SurgeOfPower->SetFlying(true);
-            SurgeOfPower->SetUnitMovementFlags(MOVEMENTFLAG_SPLINE_ELEVATION);
             SurgeOfPower->SetHealth(100000);
             SurgeOfPower->setFaction(14);
             SurgeOfPower->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE);
@@ -812,42 +797,46 @@ public:
 
             SurgeOfPower->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
         }
-          void DoAction(const int32 id)
-           {
-                   if (id==0)
-                   {
-                           sLog.outError("Action");
-                           m_uiSubPhase = SUBPHASE_FLY_DOWN1;
-                m_uiIsDown = true;
-                   }
-           } 
+
+    void DoAction(const int32 id)
+    {
+        if (id==0)
+            m_uiSubPhase = SUBPHASE_FLY_DOWN1;
+    }
+
+    void MovementInform(uint32, uint32 id)
+    {
+        switch (id)
+        {
+        case 1:
+            m_uiSubPhase = SUBPHASE_FLY_DOWN2;
+            break;
+        }
+    }
+
         void UpdateAI(const uint32 uiDiff)
         {
             if (m_uiPhase == PHASE_NOSTART)
             {
            
-                if(m_uiSubPhase == SUBPHASE_FLY_DOWN1)
+                if (m_uiSubPhase == SUBPHASE_WAIT)
+                return;
+
+            if (m_uiSubPhase == SUBPHASE_FLY_DOWN1)
                 {
                     me->InterruptNonMeleeSpells(false);
                     me->RemoveAurasDueToSpell(SPELL_PORTAL_BEAM);
                     me->GetMotionMaster()->Clear(false);
-                    me->GetMotionMaster()->MovePoint(0, OtherLoc[2].x, OtherLoc[2].y, FLOOR_Z+5);
-                    m_uiSubPhase = SUBPHASE_FLY_DOWN2;
-                    m_uiTimer = 3500;
+                    me->GetMotionMaster()->MovePoint(1, OtherLoc[2].x, OtherLoc[2].y, FLOOR_Z+25);
+                    m_uiSubPhase = SUBPHASE_WAIT;
                 }
                 else if (m_uiSubPhase == SUBPHASE_FLY_DOWN2)
                 {
-                    if(m_uiTimer <= uiDiff)
-                    {
-                        me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                        m_uiSubPhase = 0;
-                        m_uiPhase = PHASE_FLOOR;
-                        me->SetFlying(false);
-                        me->RemoveUnitMovementFlag(MOVEMENTFLAG_SPLINE_ELEVATION);
-                        me->SetInCombatWithZone();
-                        return;
-                    }
-                    else m_uiTimer -= uiDiff;
+                    MoveFly(false);
+                me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+                m_uiSubPhase = 0;
+                m_uiPhase = PHASE_FLOOR;
+                return;
                 }  
                 else
                 {
@@ -962,8 +951,7 @@ public:
                     if(m_pInstance)
                         m_pInstance->SetData(TYPE_VORTEX, 1);
 
-                    me->SetFlying(true);
-                    me->AddUnitMovementFlag(MOVEMENTFLAG_SPLINE_ELEVATION);
+                    MoveFly(true);
                     this->DespawnCreatures(NPC_VORTEX, 200.0f);
                     DoVortex(0);
                     m_uiVortexPhase = 1;
@@ -985,7 +973,6 @@ public:
                 if(m_uiPowerSparkTimer<= uiDiff)
                 {
                     PowerSpark(1);
-                    DoScriptText(SAY_POWER_SPARK, me);
                     m_uiPowerSparkTimer = 30000;
                 }else m_uiPowerSparkTimer -= uiDiff;
  
@@ -995,11 +982,9 @@ public:
                     uint8 health = me->GetHealth()*100 / me->GetMaxHealth();                
                     if(health <= 50)
                     {
-                        me->SetFlying(true);
-                        me->AddUnitMovementFlag(MOVEMENTFLAG_SPLINE_ELEVATION | MOVEMENTFLAG_LEVITATING);
                         me->InterruptNonMeleeSpells(true);
-                        SetCombatMovement(false);
-                        me->GetMotionMaster()->Clear(false);
+                        MoveFly(true);
+
                         DoScriptText(SAY_END_PHASE1, me);
                         me->GetMotionMaster()->MovePoint(0, OtherLoc[2].x, OtherLoc[2].y, OtherLoc[2].z+40);
                         //Despawn power sparks
@@ -1013,7 +998,8 @@ public:
                 }else m_uiTimer -= uiDiff;  
  
                 DoMeleeAttackIfReady();
-            }else if(m_uiPhase == PHASE_ADDS)
+            }
+        else if (m_uiPhase == PHASE_ADDS)
             {
                 if(m_uiSubPhase == SUBPHASE_TALK)
                 {
@@ -1174,7 +1160,6 @@ public:
                         {
                             pField->SetMaxHealth(1000000);
                             pField->SetFlying(true);
-                            pField->AddUnitMovementFlag(MOVEMENTFLAG_SPLINE_ELEVATION);
 
                             pField->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE);
                             pField->SetDisplayId(11686);
@@ -1222,7 +1207,6 @@ public:
                             if(Creature* pSurge = DoSpawnCreature(NPC_SURGE_OF_POWER, 0, 0, 0, 0, TEMPSUMMON_TIMED_DESPAWN, 10000))
                             {
                                 pSurge->SetFlying(true);
-                                pSurge->SetUnitMovementFlags(MOVEMENTFLAG_SPLINE_ELEVATION);
                                 pSurge->Attack(pTarget, true);
                                 pSurge->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE);
                                 pSurge->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
@@ -1274,7 +1258,6 @@ public:
                         pTemp->SetUInt32Value(UNIT_FIELD_BYTES_0, 50331648);
                         pTemp->SetUInt32Value(UNIT_FIELD_BYTES_1, 50331648);
                         pTemp->SetFlying(true);
-                        pTemp->SetUnitMovementFlags(MOVEMENTFLAG_SPLINE_ELEVATION);
                         pTemp->SetFacingToObject(me);
                         pTemp->SetVisibility(VISIBILITY_OFF);
                         m_AlexstraszaGUID = pTemp->GetGUID();
@@ -1503,7 +1486,6 @@ public:
         void Reset()
         {
             me->SetFlying(true);
-            me->AddUnitMovementFlag(MOVEMENTFLAG_SPLINE_ELEVATION);
             me->SetSpeed(MOVE_WALK, 0.7f, true);
             me->SetSpeed(MOVE_RUN, 0.7f, true);
             me->SetSpeed(MOVE_FLIGHT, 0.7f, true);
@@ -1753,18 +1735,13 @@ public:
 
     bool OnGossipHello(Player *pPlayer, GameObject* pGO)
     {
-           sLog.outError("Clique");
            if (Creature *malygos = pGO->FindNearestCreature(NPC_MALYGOS, 300.0f, true))
-           {
-                   if (malygos->AI())
-                   {
-                           sLog.outError("FindMalygos");
-                           malygos->AI()->DoAction(0);
-                           pGO->CastSpell(NULL,61012);
-                           pGO->AddUse();
-                      
-                   }  
-           }
+        if (malygos->AI())
+        {
+            malygos->AI()->DoAction(0);
+            pGO->CastSpell(NULL,61012);
+            pGO->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_DESTROYED);
+        }
         return true;
     } 
 
