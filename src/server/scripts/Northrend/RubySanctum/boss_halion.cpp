@@ -138,7 +138,7 @@ public:
     				me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
     				me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                 
-                    if (Difficulty() == RAID_DIFFICULTY_10MAN_NORMAL)
+                    if(pInstance->instance->GetDifficulty() == RAID_DIFFICULTY_10MAN_NORMAL)
                             isMode25 = false;
                     else
                             isMode25 = true;
