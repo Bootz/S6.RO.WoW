@@ -317,7 +317,7 @@ public:
                             DoCast(i_pl, SPELL_ICE_TOMB_TRIGGER);
                             Creature* Tomb = me->SummonCreature(NPC_ICE_TOMB, i_pl->GetPositionX(), i_pl->GetPositionY(), i_pl->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 999999);
                             icetombs.push_back(Tomb);
-                            CAST_AI(npc_ice_tomb::npc_ice_tombAI, Tomb->AI()->SetPrisoner(i_pl));
+                           // CAST_AI(npc_ice_tombAI, Tomb->AI()->SetPrisoner(i_pl));
                             Tomb->CastSpell(i_pl, SPELL_ICE_TOMB, true);
                             //Tomb->CastSpell(i_pl, SPELL_ASPHYXIATION, true);
                         }
