@@ -55,7 +55,7 @@ enum Mobs
     MOB_MECHANOLIFT                             = 33214,
     MOB_LIQUID                                  = 33189,
     MOB_CONTAINER                               = 33218,
-    MOB_COLOSSUS                                = 33240,
+    MOB_COLOSSUS                                = 33237
 };
 
 #define ACTION_VEHICLE_RESPAWN                    1
@@ -138,7 +138,7 @@ const Position PosDemolisher[5] =
 
 const Position PosColossus[2] =
 {
-{367.031, 12.784,409.886,3.263},
+{368.768, 12.784,409.886,3.263},
 {368.768,-46.847,409.886,3.036}
 };
 
@@ -155,15 +155,15 @@ public:
             pInstance = pCreature->GetInstanceScript();
             ColossusCount = 0;
             me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);
-            me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true); // Death Grip jump effect
+            me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true);  // Death Grip
         
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_STUNNED);
             me->SetReactState(REACT_PASSIVE);
-        
-            // Summon Ulduar Colossus
-            if (me->isAlive())
-                for(uint32 i = 0; i < 2; ++i)
-                    DoSummon(MOB_COLOSSUS, PosColossus[i], 7000, TEMPSUMMON_CORPSE_TIMED_DESPAWN);
+
+        // Summon Ulduar Colossus
+        if (me->isAlive())
+            for(uint32 i = 0; i < 2; ++i)
+                DoSummon(MOB_COLOSSUS, PosColossus[i], 7000, TEMPSUMMON_CORPSE_TIMED_DESPAWN);
     	}
 
         InstanceScript* pInstance;
@@ -662,9 +662,12 @@ public:
     
         void JustDied(Unit *victim)
         {
+            if (me->isSummon())
+        {
             if (Creature* pLeviathan = Unit::GetCreature(*me, m_pInstance->GetData64(DATA_LEVIATHAN)))
                 if (pLeviathan->AI())
                     pLeviathan->AI()->DoAction(INCREASE_COLOSSUS_COUNT);
+        }
         }
 
         void UpdateAI(const uint32 diff)
@@ -676,7 +679,8 @@ public:
             {
                 DoCast(me->getVictim(), SPELL_GROUND_SLAM);
                 uiGroundSlamTimer = 12000;
-            } else uiGroundSlamTimer -= diff;
+            }
+            else uiGroundSlamTimer -= diff;
 
             DoMeleeAttackIfReady();
         }
