@@ -620,7 +620,7 @@ public:
             {
                 Unit *pTarget = SelectUnit(SELECT_TARGET_TOPAGGRO, 0);
                 DoCast(pTarget, SPELL_MORTAL_WOUND);
-                m_uiMortalWoundTimer = 10000;
+                m_uiMortalWoundTimer = 20000;
             } else m_uiMortalWoundTimer -= diff;
 
             if (m_uiDecimateTimer <= diff)
@@ -628,7 +628,7 @@ public:
                 me->MonsterTextEmote(EMOTE_DECIMATE, 0, true);
                 Unit *pTarget = SelectUnit(SELECT_TARGET_TOPAGGRO, 0);
                 DoCast(pTarget, SPELL_DECIMATE);
-                m_uiDecimateTimer = 17800;
+                m_uiDecimateTimer = 30000;
             } else m_uiDecimateTimer -= diff;
 
             if (m_uiAwakenPlaguedZomiesTimer<= diff)
@@ -640,7 +640,7 @@ public:
                 me->SummonCreature(CREATURE_PLAGUE_ZOMBIE, me->GetPositionX(), me->GetPositionY()+5, me->GetPositionZ(), 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 10000);
                 me->SummonCreature(CREATURE_PLAGUE_ZOMBIE, me->GetPositionX(), me->GetPositionY()+5, me->GetPositionZ(), 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 10000);
                 me->SummonCreature(CREATURE_PLAGUE_ZOMBIE, me->GetPositionX(), me->GetPositionY()+5, me->GetPositionZ(), 0.0f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 10000);
-                m_uiAwakenPlaguedZomiesTimer = 12000;
+                m_uiAwakenPlaguedZomiesTimer = 60000;
             } else m_uiAwakenPlaguedZomiesTimer -= diff;
 
             DoMeleeAttackIfReady();
