@@ -5905,6 +5905,9 @@ INSERT INTO `trinity_string` VALUES ('11115', '$n has assaulted the %s', '', '',
 
 ALTER TABLE db_version CHANGE COLUMN required_423_world_isle_of_conquest required_424_argent_quests bit;
 
+-- Scriptname for training_dummy_argent
+-- with this now you can ride the mount and use the skills on the dummies
+UPDATE `creature_template` SET `ScriptName`='npc_training_dummy_argent' WHERE `entry` IN ('33172','33243');
 -- Horde
 -- The argent tournament Premier
 DELETE FROM `creature_questrelation` WHERE `quest`=13668;
