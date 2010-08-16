@@ -75,7 +75,7 @@ INSERT INTO `creature_template` (`entry`, `difficulty_entry_1`, `difficulty_entr
 
 -- Wrong type class
 -- Not sure if class is 1 need to check this on game to see if need it to have mana
-UPDATE `creature_template` SET `creature_template`='1' WHERE `entry` IN (38285,438700,500202,500203,500204,500205,500206,500207,500208);
+UPDATE `creature_template` SET `unit_class`='1' WHERE `entry` IN (38285,438700,500202,500203,500204,500205,500206,500207,500208);
 
 -- Can be equipet some items like robe, etc in a mob, who use this entries?
 UPDATE `creature_equip_template`SET `equipentry1`='0', `equipentry2`='0', `equipentry3`='0' WHERE `entry`='500203';
