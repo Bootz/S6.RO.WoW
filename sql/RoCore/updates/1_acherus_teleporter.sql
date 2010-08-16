@@ -1,5 +1,6 @@
 -- Patch acherus
-REPLACE INTO `creature_template` VALUES ('438700', '0', '0', '0', '0', '0', '18', '0', '18', '0', 'Acherus_porter', null, null, '0', '80', '80', '0', '35', '35', '0', '1', '1', '0', '0', '0', '0', '0', '1', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '0', '3', '1', '1', '1', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '0', '', '0', '0');
+DELETE FROM `creature_template` WHERE `entry` = 438700;
+INSERT INTO `creature_template` VALUES (438700, 0, 0, 0, 0, 0, 18, 0, 18, 0, 'Acherus_porter', NULL, NULL, 0, 80, 80, 0, 35, 35, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0);
 UPDATE `creature_template` SET `faction_A`=2082 WHERE `entry`=438700;
 UPDATE `creature_template` SET `faction_H`=2082 WHERE `entry`=438700;
 UPDATE `creature_template` SET `npcflag`=1 WHERE `entry`=438700;
