@@ -93,7 +93,7 @@ public:
         return true;
     }
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new npc_injured_rainspeaker_oracleAI(pCreature);
     }
@@ -301,7 +301,7 @@ class npc_bushwhacker : public CreatureScript
 public:
     npc_bushwhacker() : CreatureScript("npc_bushwhacker") { }
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new npc_bushwhackerAI(pCreature);
     }
@@ -374,7 +374,7 @@ public:
         return true;
     }
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new npc_engineer_heliceAI(pCreature);
     }
