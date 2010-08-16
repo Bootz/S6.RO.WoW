@@ -31,19 +31,20 @@ UPDATE `creature_template` SET `AIName`='', `Scriptname`='npc_frostworn_general'
 update `creature_template` set `AIName`='', `Scriptname`='npc_raging_gnoul' where `entry` in (36940);
 update `creature_template` set `AIName`='', `Scriptname`='npc_risen_witch_doctor' where `entry` in (36941);
 update `creature_template` set `AIName`='', `Scriptname`='npc_abon' where `entry` in (37069);
+
 -- conditions
 REPLACE INTO `conditions`  VALUES 
-(13, 0, 69431, 0, 18, 1, 37496, 0, 0, NULL),
-(13, 0, 69431, 0, 18, 1, 37497, 0, 0, NULL),
-(13, 0, 69431, 0, 18, 1, 37584, 0, 0, NULL),
-(13, 0, 69431, 0, 18, 1, 37587, 0, 0, NULL),
-(13, 0, 69431, 0, 18, 1, 37588, 0, 0, NULL),
-(13, 0, 69708, 0, 18, 1, 37226, 0, 0, NULL),
-(13, 0, 69784, 0, 18, 1, 37014, 0, 0, NULL),
-(13, 0, 70194, 0, 18, 1, 37226, 0, 0, NULL),
-(13, 0, 70224, 0, 18, 1, 37014, 0, 0, NULL),
-(13, 0, 70225, 0, 18, 1, 37014, 0, 0, NULL),
-(13, 0, 70464, 0, 18, 1, 36881, 0, 0, NULL);
+(13, 0, 69431, 0, 18, 1, 37496, 0, 0, '', NULL),
+(13, 0, 69431, 0, 18, 1, 37497, 0, 0, '', NULL),
+(13, 0, 69431, 0, 18, 1, 37584, 0, 0, '', NULL),
+(13, 0, 69431, 0, 18, 1, 37587, 0, 0, '', NULL),
+(13, 0, 69431, 0, 18, 1, 37588, 0, 0, '', NULL),
+(13, 0, 69708, 0, 18, 1, 37226, 0, 0, '', NULL),
+(13, 0, 69784, 0, 18, 1, 37014, 0, 0, '', NULL),
+(13, 0, 70194, 0, 18, 1, 37226, 0, 0, '', NULL),
+(13, 0, 70224, 0, 18, 1, 37014, 0, 0, '', NULL),
+(13, 0, 70225, 0, 18, 1, 37014, 0, 0, '', NULL),
+(13, 0, 70464, 0, 18, 1, 36881, 0, 0, '', NULL);
 
 REPLACE INTO `creature_equip_template` VALUES ('38112', '50249', '49777', '0'); #Falric
 UPDATE `creature_template` SET `equipment_id`='38112' WHERE `entry` IN (38112);

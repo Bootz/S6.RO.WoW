@@ -19,18 +19,19 @@ INSERT INTO `db_version` VALUES
 UNLOCK TABLES;
 
 -- Patch acherus
-REPLACE INTO `creature_template` VALUES ('438700', '0', '0', '0', '0', '0', '18', '0', '18', '0', 'Acherus_porter', null, null, '0', '80', '80', '0', '35', '35', '0', '1', '1', '0', '0', '0', '0', '0', '1', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '', '0', '3', '1', '1', '1', '0', '0', '0', '0', '0', '0', '0', '0', '1', '0', '0', '0', '', '0', '0');
+DELETE FROM `creature_template` WHERE `entry` = 438700;
+INSERT INTO `creature_template` VALUES (438700, 0, 0, 0, 0, 0, 18, 0, 18, 0, 'Acherus_porter', NULL, NULL, 0, 80, 80, 0, 35, 35, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0);
 UPDATE `creature_template` SET `faction_A`=2082 WHERE `entry`=438700;
 UPDATE `creature_template` SET `faction_H`=2082 WHERE `entry`=438700;
 UPDATE `creature_template` SET `npcflag`=1 WHERE `entry`=438700;
 UPDATE `creature_template` SET `unit_flags`=33554432 WHERE `entry`=438700;
 UPDATE `creature_template` SET `flags_extra`=130 WHERE `entry`=438700;
 DELETE FROM `creature` WHERE `id`=438700;
-INSERT INTO `creature` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`DeathState`,`MovementType`) VALUES
-('@GUID+1', 438700, 0, 1, 256, 0, 0, 2390.19, -5641.09, 378.069, 0.760892, 300, 0, 0, 5342, 0, 0, 0),
-('@GUID+1', 438700, 609, 1, 1, 0, 0, 2386.42, -5643.42, 420.97, 0.629104, 300, 0, 0, 5342, 0, 0, 0),
-('@GUID+1', 438700, 609, 1, 1, 0, 0, 2392.36, -5639.5, 377.518, 0.616926, 300, 0, 0, 5342, 0, 0, 0),
-('@GUID+1', 438700, 0, 1, 65535, 0, 0, 2386.39, -5643.9, 421.156, 3.57475, 25, 0, 0, 12, 12, 0, 0);
+INSERT INTO `creature` (`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`DeathState`,`MovementType`) VALUES
+(438700, 0, 1, 256, 0, 0, 2390.19, -5641.09, 378.069, 0.760892, 300, 0, 0, 5342, 0, 0, 0),
+(438700, 609, 1, 1, 0, 0, 2386.42, -5643.42, 420.97, 0.629104, 300, 0, 0, 5342, 0, 0, 0),
+(438700, 609, 1, 1, 0, 0, 2392.36, -5639.5, 377.518, 0.616926, 300, 0, 0, 5342, 0, 0, 0),
+(438700, 0, 1, 65535, 0, 0, 2386.39, -5643.9, 421.156, 3.57475, 25, 0, 0, 12, 12, 0, 0);
 
 -- Argent Tournament
 UPDATE gameobject SET state = 0 WHERE id = 194618;
@@ -509,7 +510,7 @@ INSERT INTO script_texts (entry,content_default,content_loc1,content_loc2,conten
 (-1900007, 'Perhaps... you were right... Crok.',null,null,null,null,null,null,null,null,17023,1,0,0,'');
 
 DELETE FROM `gameobject_scripts` WHERE `id`=201584;
-INSERT INTO `gameobject_scripts` (`id`, `delay`, `command`, `datalong`, `datalong2`, `dataint`) VALUES 
+REPLACE INTO `gameobject_scripts` (`id`, `delay`, `command`, `datalong`, `datalong2`, `dataint`) VALUES 
 (201584, 0, 15, 70308, 0, 'Transformation'),
 (201584, 5000, 15, 70311, 0, 'Transformation End'),
 (201584, 5000, 13, 201584, 0, 'Spawn');
@@ -565,7 +566,7 @@ REPLACE INTO spell_linked_spell VALUES (-74562, 74610, 0, 'Fiery Combustion remo
 REPLACE INTO spell_linked_spell VALUES (-74792, 74800, 0, 'Soul Consumption removed -> Consumption');
 
 DELETE FROM `gameobject_scripts` WHERE `id`=201584;
-INSERT INTO `gameobject_scripts` (`id`, `delay`, `command`, `datalong`, `datalong2`, `dataint`) VALUES
+REPLACE INTO `gameobject_scripts` (`id`, `delay`, `command`, `datalong`, `datalong2`, `dataint`) VALUES
 (201584, 0, 15, 70308, 0, 'Transformation'),
 (201584, 5000, 15, 70311, 0, 'Transformation End'),
 (201584, 5000, 13, 201584, 0, 'Spawn');
@@ -682,7 +683,7 @@ INSERT INTO `achievement_criteria_data` (`criteria_id`,`type`,`value1`,`value2`)
 
 
 DELETE FROM `gameobject_scripts` WHERE `id`=201584;
-INSERT INTO `gameobject_scripts` (`id`, `delay`, `command`, `datalong`, `datalong2`, `dataint`) VALUES 
+REPLACE INTO `gameobject_scripts` (`id`, `delay`, `command`, `datalong`, `datalong2`, `dataint`) VALUES 
 (201584, 0, 15, 70308, 0, 'Transformation'),
 (201584, 5000, 15, 70311, 0, 'Transformation End'),
 (201584, 5000, 13, 201584, 0, 'Spawn');
@@ -1576,7 +1577,7 @@ REPLACE INTO `creature_ai_scripts` (`id`,`creature_id`,`event_type`,`event_inver
 UPDATE `creature_ai_scripts` SET `action1_param1` = 71258 WHERE `id` = 26021102;
 
 DELETE FROM `gameobject_scripts` WHERE `id`=201584;
-INSERT INTO `gameobject_scripts` (`id`, `delay`, `command`, `datalong`, `datalong2`, `dataint`) VALUES
+REPLACE INTO `gameobject_scripts` (`id`, `delay`, `command`, `datalong`, `datalong2`, `dataint`) VALUES
 (201584, 0, 15, 70308, 0, 'Transformation'),
 (201584, 5000, 15, 70311, 0, 'Transformation End'),
 (201584, 5000, 13, 201584, 0, 'Spawn');
@@ -3065,14 +3066,14 @@ DELETE FROM `gameobject` WHERE `id` IN (195709, 195374, 195323, 195710, 195375, 
 -- drop and conditions
 DELETE FROM `conditions` WHERE `SourceGroup` IN (35451, 35490, 27327, 21417, 27325, 27416, 27321, 27414); 
 INSERT INTO `conditions` VALUES
-(1, 35451, 43228, 0, 1, 57940, 0, 0, 0,NULL),
-(1, 35490, 43228, 0, 1, 57940, 0, 0, 0,NULL),
-(4, 27327, 43228, 0, 1, 57940, 0, 0, 0,NULL),
-(4, 21417, 43228, 0, 1, 57940, 0, 0, 0,NULL),
-(4, 27325, 43228, 0, 1, 57940, 0, 0, 0,NULL),
-(4, 27416, 43228, 0, 1, 57940, 0, 0, 0,NULL),
-(4, 27321, 43228, 0, 1, 57940, 0, 0, 0,NULL),
-(4, 27414, 43228, 0, 1, 57940, 0, 0, 0,NULL);
+(1, 35451, 43228, 0, 1, 57940, 0, 0, 0, '', NULL),
+(1, 35490, 43228, 0, 1, 57940, 0, 0, 0, '', NULL),
+(4, 27327, 43228, 0, 1, 57940, 0, 0, 0, '', NULL),
+(4, 21417, 43228, 0, 1, 57940, 0, 0, 0, '', NULL),
+(4, 27325, 43228, 0, 1, 57940, 0, 0, 0, '', NULL),
+(4, 27416, 43228, 0, 1, 57940, 0, 0, 0, '', NULL),
+(4, 27321, 43228, 0, 1, 57940, 0, 0, 0, '', NULL),
+(4, 27414, 43228, 0, 1, 57940, 0, 0, 0, '', NULL);
 
 -- The Black Knight
 -- http://www.wowhead.com/npc=35451/el-caballero-negro#drops:mode=normal:0+1-15
@@ -4908,7 +4909,7 @@ UPDATE `creature_template` SET `ScriptName` = 'npc_malleable_goo' WHERE `entry` 
 UPDATE `creature_template` SET `ScriptName` = 'npc_abomination' WHERE `entry` = '37672';
 
 DELETE FROM `gameobject_scripts` WHERE `id`=201584;
-INSERT INTO `gameobject_scripts` (`id`, `delay`, `command`, `datalong`, `datalong2`, `dataint`) VALUES
+REPLACE INTO `gameobject_scripts` (`id`, `delay`, `command`, `datalong`, `datalong2`, `dataint`) VALUES
 (201584, 0, 15, 70308, 0, 'Transformation'),
 (201584, 5000, 15, 70311, 0, 'Transformation End'),
 (201584, 5000, 13, 201584, 0, 'Spawn');
@@ -5096,17 +5097,17 @@ update `creature_template` set `AIName`='', `Scriptname`='npc_abon' where `entry
 
 -- conditions
 REPLACE INTO `conditions`  VALUES 
-(13, 0, 69431, 0, 18, 1, 37496, 0, 0, NULL),
-(13, 0, 69431, 0, 18, 1, 37497, 0, 0, NULL),
-(13, 0, 69431, 0, 18, 1, 37584, 0, 0, NULL),
-(13, 0, 69431, 0, 18, 1, 37587, 0, 0, NULL),
-(13, 0, 69431, 0, 18, 1, 37588, 0, 0, NULL),
-(13, 0, 69708, 0, 18, 1, 37226, 0, 0, NULL),
-(13, 0, 69784, 0, 18, 1, 37014, 0, 0, NULL),
-(13, 0, 70194, 0, 18, 1, 37226, 0, 0, NULL),
-(13, 0, 70224, 0, 18, 1, 37014, 0, 0, NULL),
-(13, 0, 70225, 0, 18, 1, 37014, 0, 0, NULL),
-(13, 0, 70464, 0, 18, 1, 36881, 0, 0, NULL);
+(13, 0, 69431, 0, 18, 1, 37496, 0, 0, '', NULL),
+(13, 0, 69431, 0, 18, 1, 37497, 0, 0, '', NULL),
+(13, 0, 69431, 0, 18, 1, 37584, 0, 0, '', NULL),
+(13, 0, 69431, 0, 18, 1, 37587, 0, 0, '', NULL),
+(13, 0, 69431, 0, 18, 1, 37588, 0, 0, '', NULL),
+(13, 0, 69708, 0, 18, 1, 37226, 0, 0, '', NULL),
+(13, 0, 69784, 0, 18, 1, 37014, 0, 0, '', NULL),
+(13, 0, 70194, 0, 18, 1, 37226, 0, 0, '', NULL),
+(13, 0, 70224, 0, 18, 1, 37014, 0, 0, '', NULL),
+(13, 0, 70225, 0, 18, 1, 37014, 0, 0, '', NULL),
+(13, 0, 70464, 0, 18, 1, 36881, 0, 0, '', NULL);
 
 REPLACE INTO `creature_equip_template` VALUES ('38112', '50249', '49777', '0'); #Falric
 UPDATE `creature_template` SET `equipment_id`='38112' WHERE `entry` IN (38112);
