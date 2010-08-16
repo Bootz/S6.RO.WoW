@@ -253,7 +253,7 @@ class npc_sinclari_vh : public CreatureScript
 public:
     npc_sinclari_vh() : CreatureScript("npc_sinclari_vh") { }
 
-    bool GossipSelect_npc_sinclari(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+    bool OnGossipSelect_npc_sinclari(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
     {
         switch(uiAction)
         {
@@ -274,7 +274,7 @@ public:
         return true;
     }
 
-    bool GossipHello_npc_sinclari(Player* pPlayer, Creature* pCreature)
+    bool OnGossipHello_npc_sinclari(Player* pPlayer, Creature* pCreature)
     {
         if (InstanceScript* pInstance = pCreature->GetInstanceScript())
         {
