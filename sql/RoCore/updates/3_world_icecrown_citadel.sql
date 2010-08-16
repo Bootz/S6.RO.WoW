@@ -23,7 +23,7 @@ UPDATE `creature_template` SET `ScriptName` = 'npc_malleable_goo' WHERE `entry` 
 UPDATE `creature_template` SET `ScriptName` = 'npc_abomination' WHERE `entry` = '37672';
 
 DELETE FROM `gameobject_scripts` WHERE `id`=201584;
-INSERT INTO `gameobject_scripts` (`id`, `delay`, `command`, `datalong`, `datalong2`, `dataint`) VALUES
+REPLACE INTO `gameobject_scripts` (`id`, `delay`, `command`, `datalong`, `datalong2`, `dataint`) VALUES
 (201584, 0, 15, 70308, 0, 'Transformation'),
 (201584, 5000, 15, 70311, 0, 'Transformation End'),
 (201584, 5000, 13, 201584, 0, 'Spawn');

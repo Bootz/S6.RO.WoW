@@ -509,7 +509,7 @@ INSERT INTO script_texts (entry,content_default,content_loc1,content_loc2,conten
 (-1900007, 'Perhaps... you were right... Crok.',null,null,null,null,null,null,null,null,17023,1,0,0,'');
 
 DELETE FROM `gameobject_scripts` WHERE `id`=201584;
-INSERT INTO `gameobject_scripts` (`id`, `delay`, `command`, `datalong`, `datalong2`, `dataint`) VALUES 
+REPLACE INTO `gameobject_scripts` (`id`, `delay`, `command`, `datalong`, `datalong2`, `dataint`) VALUES 
 (201584, 0, 15, 70308, 0, 'Transformation'),
 (201584, 5000, 15, 70311, 0, 'Transformation End'),
 (201584, 5000, 13, 201584, 0, 'Spawn');
@@ -565,7 +565,7 @@ REPLACE INTO spell_linked_spell VALUES (-74562, 74610, 0, 'Fiery Combustion remo
 REPLACE INTO spell_linked_spell VALUES (-74792, 74800, 0, 'Soul Consumption removed -> Consumption');
 
 DELETE FROM `gameobject_scripts` WHERE `id`=201584;
-INSERT INTO `gameobject_scripts` (`id`, `delay`, `command`, `datalong`, `datalong2`, `dataint`) VALUES
+REPLACE INTO `gameobject_scripts` (`id`, `delay`, `command`, `datalong`, `datalong2`, `dataint`) VALUES
 (201584, 0, 15, 70308, 0, 'Transformation'),
 (201584, 5000, 15, 70311, 0, 'Transformation End'),
 (201584, 5000, 13, 201584, 0, 'Spawn');
@@ -682,7 +682,7 @@ INSERT INTO `achievement_criteria_data` (`criteria_id`,`type`,`value1`,`value2`)
 
 
 DELETE FROM `gameobject_scripts` WHERE `id`=201584;
-INSERT INTO `gameobject_scripts` (`id`, `delay`, `command`, `datalong`, `datalong2`, `dataint`) VALUES 
+REPLACE INTO `gameobject_scripts` (`id`, `delay`, `command`, `datalong`, `datalong2`, `dataint`) VALUES 
 (201584, 0, 15, 70308, 0, 'Transformation'),
 (201584, 5000, 15, 70311, 0, 'Transformation End'),
 (201584, 5000, 13, 201584, 0, 'Spawn');
@@ -1576,7 +1576,7 @@ REPLACE INTO `creature_ai_scripts` (`id`,`creature_id`,`event_type`,`event_inver
 UPDATE `creature_ai_scripts` SET `action1_param1` = 71258 WHERE `id` = 26021102;
 
 DELETE FROM `gameobject_scripts` WHERE `id`=201584;
-INSERT INTO `gameobject_scripts` (`id`, `delay`, `command`, `datalong`, `datalong2`, `dataint`) VALUES
+REPLACE INTO `gameobject_scripts` (`id`, `delay`, `command`, `datalong`, `datalong2`, `dataint`) VALUES
 (201584, 0, 15, 70308, 0, 'Transformation'),
 (201584, 5000, 15, 70311, 0, 'Transformation End'),
 (201584, 5000, 13, 201584, 0, 'Spawn');
@@ -4908,7 +4908,7 @@ UPDATE `creature_template` SET `ScriptName` = 'npc_malleable_goo' WHERE `entry` 
 UPDATE `creature_template` SET `ScriptName` = 'npc_abomination' WHERE `entry` = '37672';
 
 DELETE FROM `gameobject_scripts` WHERE `id`=201584;
-INSERT INTO `gameobject_scripts` (`id`, `delay`, `command`, `datalong`, `datalong2`, `dataint`) VALUES
+REPLACE INTO `gameobject_scripts` (`id`, `delay`, `command`, `datalong`, `datalong2`, `dataint`) VALUES
 (201584, 0, 15, 70308, 0, 'Transformation'),
 (201584, 5000, 15, 70311, 0, 'Transformation End'),
 (201584, 5000, 13, 201584, 0, 'Spawn');
