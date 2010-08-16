@@ -131,7 +131,7 @@ public:
         return true;
     }
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new npc_inquisitor_hallardAI(pCreature);
     }

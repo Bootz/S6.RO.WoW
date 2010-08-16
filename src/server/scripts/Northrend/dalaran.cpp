@@ -46,11 +46,6 @@ class npc_mageguard_dalaran : public CreatureScript
 public:
     npc_mageguard_dalaran() : CreatureScript("npc_mageguard_dalaran") { }
 
-    CreatureAI* GetAI(Creature* pCreature)
-    {
-        return new npc_mageguard_dalaranAI(pCreature);
-    }
-
     struct npc_mageguard_dalaranAI : public Scripted_NoMovementAI
     {
         npc_mageguard_dalaranAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
@@ -108,6 +103,11 @@ public:
 
         void UpdateAI(const uint32 /*diff*/){}
     };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_mageguard_dalaranAI(pCreature);
+    }
 
 };
 
