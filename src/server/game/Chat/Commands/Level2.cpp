@@ -106,10 +106,11 @@ bool ChatHandler::HandleMuteCommand(const char* args)
     announce += nameStr;
     announce += "' for ";
     announce += delayStr;
-    announce += " minutes.'";
+    announce += " minutes.";
 
-    announce += "' Reason: ";
+    announce += " Reason: '";
     announce += mutereason;
+    announce += "'";
     HandleAnnounceCommand(announce.c_str());
 
     return true;
@@ -2149,7 +2150,7 @@ bool ChatHandler::HandleKickPlayerCommand(const char *args)
     announce = m_session->GetPlayerName();
     announce += " kicked '";
     announce += target->GetName();
-    announce += ".";
+    announce += "'.";
     HandleAnnounceCommand(announce.c_str());
 
     return true;

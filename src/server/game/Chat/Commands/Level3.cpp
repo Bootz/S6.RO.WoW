@@ -5625,7 +5625,7 @@ bool ChatHandler::HandleBanHelper(BanMode mode, const char *args)
     }
 
     announce = m_session->GetPlayerName();
-    announce += "' banned ";
+    announce += " banned ";
 	if (mode == BAN_CHARACTER)
         announce += "the character '";
     else if (mode == BAN_IP)
@@ -5635,8 +5635,9 @@ bool ChatHandler::HandleBanHelper(BanMode mode, const char *args)
     announce += nameOrIP.c_str();
     announce += "' for ";
     announce += duration;
-    announce += "'. Reason: ";
+    announce += ". Reason: '";
     announce += reason;
+    announce += "'";
     HandleAnnounceCommand(announce.c_str());
 
     return true;
