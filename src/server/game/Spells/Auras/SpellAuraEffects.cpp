@@ -5776,9 +5776,17 @@ void AuraEffect::HandleAuraDummy(AuraApplication const * aurApp, uint8 mode, boo
                     {
                         if (AuraEffect const * aurEff = GetBase()->GetEffect(1))
                         {
-                            int32 damage = aurEff->GetAmount()*4;
-                            // backfire damage
-                            target->CastCustomSpell(target, 64085, &damage, NULL, NULL, true, NULL, NULL,GetCasterGUID());
+                            if (GetEffIndex() == 0) {
+                              // backfire damage
+                                int32 damage = caster->SpellDamageBonus(target, GetSpellProto(), aurEff->GetAmount(), DOT) * 3;
+                                target->CastCustomSpell(target, 64085, &damage, NULL, NULL, true, NULL, NULL, GetCasterGUID());
+                            }
+                            else {
+                                // Shadow Affinity
+                                int32 returnmana = (GetSpellProto()->ManaCostPercentage * caster->GetCreateMana() / 100);
+                                if (AuraEffect* aureff = caster->GetAuraEffect(SPELL_AURA_DUMMY, SPELLFAMILY_PRIEST, 178, 1))
+                                    caster->CastCustomSpell(caster, 64103, &returnmana, NULL, NULL, true, NULL, this, GetCasterGUID());
+                            }
                         }
                     }
                     break;
