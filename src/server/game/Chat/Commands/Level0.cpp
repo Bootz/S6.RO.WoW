@@ -18,7 +18,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
-#include "revision.h"
 
 #include "Common.h"
 #include "DatabaseEnv.h"
@@ -29,6 +28,8 @@
 #include "ObjectAccessor.h"
 #include "Language.h"
 #include "AccountMgr.h"
+#include "SystemConfig.h"
+#include "revision.h"
 #include "revision_nr.h"
 #include "Util.h"
 
