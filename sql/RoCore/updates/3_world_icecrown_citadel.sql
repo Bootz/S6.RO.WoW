@@ -1,3 +1,4 @@
+-- Icecrown Citadel
 -- Db version requirement
 ALTER TABLE db_version CHANGE COLUMN required_2_world_fixes required_3_world_icecrown_citadel bit;
 
@@ -81,10 +82,10 @@ UPDATE `gameobject_template` SET `flags` = 32 WHERE `entry` = 202223;
 UPDATE `gameobject_template` SET `flags` = 32 WHERE `entry` = 202242;
 
 DELETE FROM `gameobject_scripts` WHERE `id`=201584;
-INSERT INTO `gameobject_scripts` (`id`, `delay`, `command`, `datalong`, `datalong2`, `dataint`) VALUES 
-(201584, 0, 15, 70308, 0, 'Transformation'),
-(201584, 5000, 15, 70311, 0, 'Transformation End'),
-(201584, 5000, 13, 201584, 0, 'Spawn');
+REPLACE INTO `gameobject_scripts` (`id`, `delay`, `command`, `datalong`, `datalong2`, `dataint`) VALUES
+(201584, 0, 15, 70308, 0, '0'), -- transformation
+(201584, 5000, 15, 70311, 0, '0'), -- transformation end
+(201584, 5000, 13, 201584, 0, '0'); -- spawn
 
 DELETE FROM `gameobject` WHERE `id`=203624;
 INSERT INTO `gameobject` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`position_x`,`position_y`,`position_z`,`orientation`,`rotation0`,`rotation1`,`rotation2`,`rotation3`,`spawntimesecs`,`animprogress`,`state`) VALUES
@@ -93,10 +94,10 @@ INSERT INTO `gameobject` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`position_x`
 REPLACE INTO `gameobject_template` (`entry`, `type`, `displayId`, `name`, `IconName`, `castBarCaption`, `unk1`, `faction`, `flags`, `size`, `questItem1`, `questItem2`, `questItem3`, `questItem4`, `questItem5`, `questItem6`, `data0`, `data1`, `data2`, `data3`, `data4`, `data5`, `data6`, `data7`, `data8`, `data9`, `data10`, `data11`, `data12`, `data13`, `data14`, `data15`, `data16`, `data17`, `data18`, `data19`, `data20`, `data21`, `data22`, `data23`, `ScriptName`) VALUES (202796, 10, 1327, 'Twilight Portal', '', '', '', 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 74812, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '');
 
 DELETE FROM `gameobject_scripts` WHERE `id`=201584;
-INSERT INTO `gameobject_scripts` (`id`, `delay`, `command`, `datalong`, `datalong2`, `dataint`) VALUES
-(201584, 0, 15, 70308, 0, 'Transformation'),
-(201584, 5000, 15, 70311, 0, 'Transformation End'),
-(201584, 5000, 13, 201584, 0, 'Spawn');
+REPLACE INTO `gameobject_scripts` (`id`, `delay`, `command`, `datalong`, `datalong2`, `dataint`) VALUES
+(201584, 0, 15, 70308, 0, '0'), -- transformation
+(201584, 5000, 15, 70311, 0, '0'), -- transformation end
+(201584, 5000, 13, 201584, 0, '0'); -- spawn
 
 DELETE FROM `gameobject_template` WHERE (`entry`=202078);
 INSERT INTO `gameobject_template` VALUES (202078, 14, 9256, 'Arthas Precipice', '', '', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 3000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', 11723);
