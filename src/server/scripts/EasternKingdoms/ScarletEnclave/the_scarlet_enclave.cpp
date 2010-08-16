@@ -28,11 +28,6 @@ class npc_valkyr_battle_maiden : public CreatureScript
 public:
     npc_valkyr_battle_maiden() : CreatureScript("npc_valkyr_battle_maiden") { }
 
-    CreatureAI* GetAI(Creature* pCreature) const
-    {
-        return new npc_valkyr_battle_maidenAI (pCreature);
-    }
-
     struct npc_valkyr_battle_maidenAI : public PassiveAI
     {
         npc_valkyr_battle_maidenAI(Creature *c) : PassiveAI(c) {}
@@ -109,10 +104,14 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_valkyr_battle_maidenAI (pCreature);
+    }
 };
 
 
 void AddSC_the_scarlet_enclave()
 {
-    new npc_valkyr_battle_maiden();
+    new npc_valkyr_battle_maiden;
 }

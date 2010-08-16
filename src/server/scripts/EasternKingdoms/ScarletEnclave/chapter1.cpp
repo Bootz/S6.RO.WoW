@@ -622,11 +622,6 @@ class npc_salanar_the_horseman : public CreatureScript
 public:
     npc_salanar_the_horseman() : CreatureScript("npc_salanar_the_horseman") { }
 
-    CreatureAI* GetAI(Creature* pCreature) const
-    {
-        return new npc_salanar_the_horsemanAI(pCreature);
-    }
-
     struct npc_salanar_the_horsemanAI : public ScriptedAI
     {
         npc_salanar_the_horsemanAI(Creature *c) : ScriptedAI(c) {}
@@ -677,6 +672,10 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_salanar_the_horsemanAI(pCreature);
+    }
 };
 
 
@@ -688,11 +687,6 @@ class npc_ros_dark_rider : public CreatureScript
 {
 public:
     npc_ros_dark_rider() : CreatureScript("npc_ros_dark_rider") { }
-
-    CreatureAI* GetAI(Creature* pCreature) const
-    {
-        return new npc_ros_dark_riderAI(pCreature);
-    }
 
     struct npc_ros_dark_riderAI : public ScriptedAI
     {
@@ -727,6 +721,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_ros_dark_riderAI(pCreature);
+    }
+
 };
 
 
@@ -740,11 +739,6 @@ class npc_dkc1_gothik : public CreatureScript
 {
 public:
     npc_dkc1_gothik() : CreatureScript("npc_dkc1_gothik") { }
-
-    CreatureAI* GetAI(Creature* pCreature) const
-    {
-        return new npc_dkc1_gothikAI(pCreature);
-    }
 
     struct npc_dkc1_gothikAI : public ScriptedAI
     {
@@ -778,6 +772,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_dkc1_gothikAI(pCreature);
+    }
+
 };
 
 
@@ -785,11 +784,6 @@ class npc_scarlet_ghoul : public CreatureScript
 {
 public:
     npc_scarlet_ghoul() : CreatureScript("npc_scarlet_ghoul") { }
-
-    CreatureAI* GetAI(Creature* pCreature) const
-    {
-        return new npc_scarlet_ghoulAI(pCreature);
-    }
 
     struct npc_scarlet_ghoulAI : public ScriptedAI
     {
@@ -861,6 +855,11 @@ public:
             }
         }
     };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_scarlet_ghoulAI(pCreature);
+    }
 
 };
 
@@ -1095,16 +1094,16 @@ public:
 
 void AddSC_the_scarlet_enclave_c1()
 {
-    new npc_unworthy_initiate();
-    new npc_unworthy_initiate_anchor();
-    new go_acherus_soul_prison();
-    new npc_death_knight_initiate();
-    new npc_salanar_the_horseman();
-    new npc_dark_rider_of_acherus();
-    new npc_ros_dark_rider();
-    new npc_dkc1_gothik();
-    new npc_scarlet_ghoul();
-    new npc_scarlet_miner();
-    new npc_scarlet_miner_cart();
-    new go_inconspicuous_mine_car();
+    new npc_unworthy_initiate;
+    new npc_unworthy_initiate_anchor;
+    new go_acherus_soul_prison;
+    new npc_death_knight_initiate;
+    new npc_salanar_the_horseman;
+    new npc_dark_rider_of_acherus;
+    new npc_ros_dark_rider;
+    new npc_dkc1_gothik;
+    new npc_scarlet_ghoul;
+    new npc_scarlet_miner;
+    new npc_scarlet_miner_cart;
+    new go_inconspicuous_mine_car;
 }

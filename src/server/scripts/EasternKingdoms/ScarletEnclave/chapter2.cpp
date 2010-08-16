@@ -989,9 +989,9 @@ public:
 
 void AddSC_the_scarlet_enclave_c2()
 {
-    new npc_crusade_persuaded();
-    new mob_scarlet_courier();
-    new npc_koltira_deathweaver();
-    new mob_high_inquisitor_valroth();
-    new npc_a_special_surprise();
+    new npc_crusade_persuaded;
+    new mob_scarlet_courier;
+    new npc_koltira_deathweaver;
+    new mob_high_inquisitor_valroth;
+    new npc_a_special_surprise;
 }
