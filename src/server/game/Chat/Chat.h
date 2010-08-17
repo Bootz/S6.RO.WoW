@@ -384,6 +384,7 @@ class ChatHandler
         bool HandleReloadGameTeleCommand(const char* args);
         bool HandleReloadGossipMenuCommand(const char* args);
         bool HandleReloadGossipMenuOptionCommand(const char* args);
+        bool HandleReloadGossipScriptsCommand(const char* args);
         bool HandleReloadGOQuestRelationsCommand(const char* args);
         bool HandleReloadGOQuestInvRelationsCommand(const char* args);
         bool HandleReloadItemEnchantementsCommand(const char* args);
@@ -515,9 +516,9 @@ class ChatHandler
         bool HandleDismountCommand(const char* args);
         bool HandleSaveCommand(const char* args);
 
-        bool HandleNamegoCommand(const char* args);
-        bool HandleGonameCommand(const char* args);
-        bool HandleGroupgoCommand(const char* args);
+        bool HandleSummonCommand(const char* args);
+        bool HandleAppearCommand(const char* args);
+        bool HandleGroupSummonCommand(const char* args);
         bool HandleRecallCommand(const char* args);
         bool HandleAnnounceCommand(const char* args);
         bool HandleNotifyCommand(const char* args);

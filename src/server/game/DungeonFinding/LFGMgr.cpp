@@ -255,7 +255,8 @@ void LFGMgr::Update(uint32 diff)
 
             // Remove groups in the proposal from the queue
             for (LfgGuidList::const_iterator it = pProposal->queues.begin(); it != pProposal->queues.end(); ++it)
-                m_currentQueue.remove(*it);
+                RemoveFromQueue(*it);
+
             m_Proposals[++m_lfgProposalId] = pProposal;
 
             for (LfgProposalPlayerMap::const_iterator itPlayers = pProposal->players.begin(); itPlayers != pProposal->players.end(); ++itPlayers)
@@ -284,8 +285,10 @@ void LFGMgr::Update(uint32 diff)
             proposals.clear();
         }
         else
+        {
             m_currentQueue.push_back(m_newToQueue.front()); // Group not found, add this group to the queue.
-        m_newToQueue.pop_front();
+            m_newToQueue.pop_front();
+        }
         firstNew.clear();
     }
 
@@ -467,9 +470,13 @@ void LFGMgr::Join(Player *plr)
         for (GroupReference *itr = plr->GetGroup()->GetFirstMember(); itr != NULL; itr = itr->next())
         {
             plrg = itr->getSource();                        // Not null, checked earlier
-            dungeons = plrg->GetLfgDungeons();
-            for (LfgDungeonSet::const_iterator itDungeon = plr->GetLfgDungeons()->begin(); itDungeon != plr->GetLfgDungeons()->end(); ++itDungeon)
-                dungeons->insert(*itDungeon);
+            if (plrg != plr)
+            {
+                dungeons = plrg->GetLfgDungeons();
+                dungeons->clear();
+                for (LfgDungeonSet::const_iterator itDungeon = plr->GetLfgDungeons()->begin(); itDungeon != plr->GetLfgDungeons()->end(); ++itDungeon)
+                    dungeons->insert(*itDungeon);
+            }
             plrg->GetSession()->SendLfgUpdateParty(LFG_UPDATETYPE_JOIN_PROPOSAL);
         }
         UpdateRoleCheck(grp, plr);
@@ -839,32 +846,11 @@ void LFGMgr::UpdateRoleCheck(Group *grp, Player *plr /* = NULL*/)
             if (Player *plrg = itr->getSource())
                 pRoleCheck->roles[plrg->GetGUIDLow()] = 0;
 
-        // Check if it's offer continue (random + current one)
-        if (grp->isLFGGroup() && dungeons->size() == 2)
-        {
-            LfgDungeonSet::const_iterator itDungeon = dungeons->begin();
-            uint32 aDungeon = *itDungeon;
-            uint32 rDungeon = *(++itDungeon);
-
-            // it's a Offer to continue (Actual dungeon + random dungeon in the list)
-            // Rolecheck will be using the actual dungeon - Players random
-            if (aDungeon == grp->GetLfgDungeonEntry() && isRandomDungeon(rDungeon))
-            {
-                for (GroupReference *itr = grp->GetFirstMember(); itr != NULL; itr = itr->next())
-                {
-                    if (Player *plrg = itr->getSource())
-                    {
-                        plrg->GetLfgDungeons()->clear();
-                        plrg->GetLfgDungeons()->insert(rDungeon);
-                    }
-                }
-                pRoleCheck->dungeons.insert(aDungeon);
-            }
-
-        }
-
-        if (pRoleCheck->dungeons.empty())
-            for (LfgDungeonSet::const_iterator itDungeon = plr->GetLfgDungeons()->begin(); itDungeon != plr->GetLfgDungeons()->end(); ++itDungeon)
+        // Check if it's offer continue or trying to find a new instance after a random assigned (Join Random + LfgGroup)
+        if (grp->isLFGGroup() && dungeons->size() == 1 && isRandomDungeon(*dungeons->begin()))
+            pRoleCheck->dungeons.insert(grp->GetLfgDungeonEntry());
+        else
+            for (LfgDungeonSet::const_iterator itDungeon = dungeons->begin(); itDungeon != dungeons->end(); ++itDungeon)
                 pRoleCheck->dungeons.insert(*itDungeon);
     }
     else
@@ -1762,31 +1748,26 @@ LfgLockStatusSet* LFGMgr::GetPlayerLockStatusDungeons(Player *plr, LfgDungeonSet
             locktype = LFG_LOCKSTATUS_RAID_LOCKED;
         else if (dungeon->difficulty > DUNGEON_DIFFICULTY_NORMAL && plr->GetBoundInstance(dungeon->map, Difficulty(dungeon->difficulty)))
             locktype = LFG_LOCKSTATUS_RAID_LOCKED;
-        else
+        else if (dungeon->minlevel > level)
+            locktype = LFG_LOCKSTATUS_TOO_LOW_LEVEL;
+        else if (dungeon->maxlevel < level)
+            locktype = LFG_LOCKSTATUS_TOO_HIGH_LEVEL;
+        else if (locktype == LFG_LOCKSTATUS_OK && ar)
         {
-            if (!sWorld.getConfig(CONFIG_INSTANCE_IGNORE_LEVEL))
-                if (dungeon->minlevel > level)
-                    locktype = LFG_LOCKSTATUS_TOO_LOW_LEVEL;
-                else if (dungeon->maxlevel < level)
-                    locktype = LFG_LOCKSTATUS_TOO_HIGH_LEVEL;
-
-            if (locktype == LFG_LOCKSTATUS_OK && ar)
-            {
-                if (ar->achievement && !plr->GetAchievementMgr().HasAchieved(sAchievementStore.LookupEntry(ar->achievement)))
-                    locktype = LFG_LOCKSTATUS_RAID_LOCKED; // FIXME: Check the correct lock value
-                else if (plr->GetTeam() == ALLIANCE && ar->quest_A && !plr->GetQuestRewardStatus(ar->quest_A))
-                    locktype = LFG_LOCKSTATUS_QUEST_NOT_COMPLETED;
-                else if (plr->GetTeam() == HORDE && ar->quest_H && !plr->GetQuestRewardStatus(ar->quest_H))
-                    locktype = LFG_LOCKSTATUS_QUEST_NOT_COMPLETED;
-                else
-                    if (ar->item)
-                    {
-                        if (!plr->HasItemCount(ar->item, 1) && (!ar->item2 || !plr->HasItemCount(ar->item2, 1)))
-                            locktype = LFG_LOCKSTATUS_MISSING_ITEM;
-                    }
-                    else if (ar->item2 && !plr->HasItemCount(ar->item2, 1))
+            if (ar->achievement && !plr->GetAchievementMgr().HasAchieved(sAchievementStore.LookupEntry(ar->achievement)))
+                locktype = LFG_LOCKSTATUS_RAID_LOCKED; // FIXME: Check the correct lock value
+            else if (plr->GetTeam() == ALLIANCE && ar->quest_A && !plr->GetQuestRewardStatus(ar->quest_A))
+                locktype = LFG_LOCKSTATUS_QUEST_NOT_COMPLETED;
+            else if (plr->GetTeam() == HORDE && ar->quest_H && !plr->GetQuestRewardStatus(ar->quest_H))
+                locktype = LFG_LOCKSTATUS_QUEST_NOT_COMPLETED;
+            else
+                if (ar->item)
+                {
+                    if (!plr->HasItemCount(ar->item, 1) && (!ar->item2 || !plr->HasItemCount(ar->item2, 1)))
                         locktype = LFG_LOCKSTATUS_MISSING_ITEM;
-            }
+                }
+                else if (ar->item2 && !plr->HasItemCount(ar->item2, 1))
+                    locktype = LFG_LOCKSTATUS_MISSING_ITEM;
         }
         /* TODO VoA closed if WG is not under team control (LFG_LOCKSTATUS_RAID_LOCKED)
             locktype = LFG_LOCKSTATUS_TOO_LOW_GEAR_SCORE;
