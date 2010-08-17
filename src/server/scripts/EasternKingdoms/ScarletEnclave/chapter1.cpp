@@ -529,11 +529,6 @@ class npc_dark_rider_of_acherus : public CreatureScript
 public:
     npc_dark_rider_of_acherus() : CreatureScript("npc_dark_rider_of_acherus") { }
 
-    CreatureAI* GetAI(Creature* pCreature) const
-    {
-        return new npc_dark_rider_of_acherusAI(pCreature);
-    }
-
     struct npc_dark_rider_of_acherusAI : public ScriptedAI
     {
         npc_dark_rider_of_acherusAI(Creature *c) : ScriptedAI(c) {}
@@ -600,6 +595,11 @@ public:
         }
 
     };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_dark_rider_of_acherusAI(pCreature);
+    }
 
 };
 
@@ -876,11 +876,6 @@ class npc_scarlet_miner_cart : public CreatureScript
 public:
     npc_scarlet_miner_cart() : CreatureScript("npc_scarlet_miner_cart") { }
 
-    CreatureAI* GetAI(Creature *_Creature) const
-    {
-        return new npc_scarlet_miner_cartAI(_Creature);
-    }
-
     struct npc_scarlet_miner_cartAI : public PassiveAI
     {
         npc_scarlet_miner_cartAI(Creature *c) : PassiveAI(c), minerGUID(0)
@@ -916,6 +911,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature *_Creature) const
+    {
+        return new npc_scarlet_miner_cartAI(_Creature);
+    }
+
 };
 
 
@@ -930,11 +930,6 @@ class npc_scarlet_miner : public CreatureScript
 {
 public:
     npc_scarlet_miner() : CreatureScript("npc_scarlet_miner") { }
-
-    CreatureAI* GetAI(Creature *_Creature) const
-    {
-        return new npc_scarlet_minerAI(_Creature);
-    }
 
     struct npc_scarlet_minerAI : public npc_escortAI
     {
@@ -1052,6 +1047,11 @@ public:
             npc_escortAI::UpdateAI(diff);
         }
     };
+
+    CreatureAI* GetAI(Creature *_Creature) const
+    {
+        return new npc_scarlet_minerAI(_Creature);
+    }
 
 };
 
