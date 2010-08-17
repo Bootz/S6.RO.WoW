@@ -1,3 +1,9 @@
+-- RECOMENDATION: USE THIS DATA AT YOUR OWN RISK
+-- Hi, Misimouse from http://forum.siomproject.com/
+-- This SQL is a hack way to fix a lot of quest, on my opinion is not a good way and lots of this fixes are not working right, I think this SQL need to be redone or remove from repo
+-- Do not remove this text, this is a reference for future fixes
+-- Any way I fix like 30 of this erros.
+
 ALTER TABLE db_version CHANGE COLUMN required_295_world_forge_of_souls required_370_world_north_quest bit;
 
 UPDATE creature SET phaseMask = 2 WHERE id = 25496;
@@ -46,8 +52,8 @@ UPDATE `quest_template` SET `ReqCreatureOrGOId1` = 30250 WHERE `entry` = 12904;
 DELETE FROM `creature` WHERE `id`=26405;
 INSERT INTO `creature` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`DeathState`,`MovementType`) VALUES
 (NULL, 26405, 571, 1, 1, 0, 1419, 3290.45, -5106.34, 304.754, 5.41623, 25, 0, 0, 12762, 0, 0, 0);
--- Trust is Earned
-UPDATE `quest_template` SET `SpecialFlags` = 0, `ReqSourceId4` = 0, `ReqCreatureOrGOId1` = 24783, `ReqCreatureOrGOCount1` = 1, `Method` = 1 WHERE `entry` = 11460;
+-- Trust is Earned ReqsourceCount4 need to be set to 0
+UPDATE `quest_template` SET `SpecialFlags` = 0, `ReqSourceId4` = 0, `ReqSourceCount4` = 0, `ReqCreatureOrGOId1` = 24783, `ReqCreatureOrGOCount1` = 1, `Method` = 1 WHERE `entry` = 11460;
 DELETE FROM `creature` WHERE `id`=24783;
 INSERT INTO `creature` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`DeathState`,`MovementType`) VALUES
 (NULL, 24783, 571, 1, 1, 0, 0, 471.524, -5922.09, 308.72, 5.71113, 300, 0, 0, 1, 0, 0, 0);
@@ -91,24 +97,37 @@ UPDATE creature_template SET KillCredit1 = 29882 WHERE NAME LIKE "Vargul %" AND 
 -- Quest Gymer:
 DELETE FROM conditions  WHERE SourceEntry = 55525;
 INSERT INTO conditions (SourceTypeOrReferenceId,SourceGroup,SourceEntry,ConditionTypeOrReference,ConditionValue1,ConditionValue2)  VALUES (13, 0, 55525, 18, 1, 29928);
-UPDATE quest_template SET ReqSpellCast1 = 55525, ReqCreatureOrGOCount1 = 0 WHERE entry = 12916;
+-- ReqCreatureOrGOCount1 = 1 use method instead bad hacks
+UPDATE quest_template SET ReqSpellCast1 = 55525, ReqCreatureOrGOCount1 = 1 WHERE entry = 12916;
+-- Same here, for avoid errors on start is beter to set Method to 0 if oy want to set in autocomplete
+UPDATE quest_template SET Method= 0 WHERE entry = 12916;
 -- Troll Patrol:
 UPDATE creature_template SET npcflag = npcflag | 1 WHERE entry = 28042;
 -- Pickpocket:
 UPDATE creature_template SET pickpocketloot = 30003 WHERE entry IN (28078, 25428, 26492, 28108, 26792, 26357, 26728, 26344, 26447, 26727, 31396, 26704, 28242, 25429, 29554, 29404, 26343, 29623, 30597, 24540, 26554, 26202, 27278);
 UPDATE pickpocketing_loot_template SET ChanceOrQuestChance = 30 WHERE entry = 30003 AND item = 43575;
 UPDATE pickpocketing_loot_template SET ChanceOrQuestChance = 10 WHERE entry = 30003 AND item = 33447;
+-- This is de best stupid pacth never i seen, how you update lost of npcs with a unique pickpocket id? that is silly and stupid, but ok, RoCore accepted and I will do the patch for console errors
+DELETE FROM `pickpocketing_loot_template` WHERE `entry` IN (24540,25428,25429,26202,26343,26344,26357,26447,26492,26704,27278,28078,28108,28242,29404,29554,29623,31396);
 -- Quest Storm Peaks:
 UPDATE creature_template SET faction_A = 14, faction_H = 14 WHERE entry = 29466;
 UPDATE quest_template SET ReqCreatureOrGOid1 = 30146 WHERE entry = 12906;
-UPDATE quest_template SET ReqCreatureOrGOCount1 = 0 WHERE entry = 12970;
-UPDATE quest_template SET ReqCreatureOrGOCount1 = 0, ReqCreatureOrGOCount2 = 0 WHERE entry = 12851;
-UPDATE quest_template SET ReqCreatureOrGOid1 = 29639, ReqCreatureOrGOCount2 = 0 WHERE entry = 12856;
+-- My god, use please a good hack way at least
+UPDATE quest_template SET ReqCreatureOrGOCount1 = 1 WHERE entry = 12970;
+UPDATE quest_template SET Method= 0 WHERE entry = 12970;
+UPDATE quest_template SET ReqCreatureOrGOCount1 = 7, ReqCreatureOrGOCount2 = 15 WHERE entry = 12851;
+-- When you want to do a quest autocompletable only need to set to 0 Method yo don't need to remove requirements
+UPDATE quest_template SET Method= 0 WHERE entry = 12851;
+-- If you ReqCreatureOrGOCount2 = 0 also you need to remove the creature I saw all this fixes is a hack way, but at least do it rigth
+UPDATE quest_template SET ReqCreatureOrGOid1 = 29639, ReqCreatureOrGOCount2 = 0, `ReqCreatureOrGOId2` = 0 WHERE entry = 12856;
 UPDATE creature_template SET faction_H = 14, faction_A = 14 WHERE entry = 30174;
-UPDATE quest_template SET ReqCreatureOrGOCount1 = 0 WHERE entry = 13064;
+-- I really hate when people can read about how a emulator works
+UPDATE quest_template SET ReqCreatureOrGOCount1 = 1 WHERE entry = 13064;
+UPDATE quest_template SET Method= 0 WHERE entry = 13064;
 UPDATE creature_template SET faction_H = 14, faction_A = 14 WHERE entry = 29503;
 UPDATE quest_template SET ReqCreatureOrGOid1 = 29984, ReqCreatureOrGOid2 = 29978 WHERE entry = 13005;
-UPDATE quest_template SET SpecialFlags = 0, ReqSourceId2 = 0 WHERE entry = 13047;
+-- Very bad hacks, pelase learn at leas a bit about structures
+UPDATE quest_template SET SpecialFlags = 0, ReqSourceId2 = 0, `ReqSourceCount2` = 0 WHERE entry = 13047;
 DELETE FROM conditions  WHERE SourceEntry = 58151;
 INSERT INTO conditions (SourceTypeOrReferenceId,SourceGroup,SourceEntry,ConditionTypeOrReference,ConditionValue1,ConditionValue2)  VALUES (13, 0, 58151, 18, 1, 30894);
 -- Planning for the future
@@ -171,7 +190,11 @@ UPDATE `quest_template` SET `ReqCreatureOrGOId1` = 25814, `ReqCreatureOrGOCount1
 -- Master and Servant
 UPDATE `quest_template` SET `ReqCreatureOrGOId1` = 25752,`ReqCreatureOrGOCount1` = 15 WHERE `entry` = 11730;
 -- Trust is Earned
-UPDATE `quest_template` SET `ReqCreatureOrGOId1` = 24783, `ReqCreatureOrGOCount1` = 1 WHERE `entry` = 11460;
+-- Better way, my god, you did 3 fixes just for nothing
+DELETE FROM `quest_template` WHERE `entry`='11460';
+INSERT INTO `quest_template` (`entry`, `Method`, `ZoneOrSort`, `SkillOrClassMask`, `MinLevel`, `MaxLevel`, `QuestLevel`, `Type`, `RequiredRaces`, `RequiredSkillValue`, `RepObjectiveFaction`, `RepObjectiveValue`, `RepObjectiveFaction2`, `RepObjectiveValue2`, `RequiredMinRepFaction`, `RequiredMinRepValue`, `RequiredMaxRepFaction`, `RequiredMaxRepValue`, `SuggestedPlayers`, `LimitTime`, `QuestFlags`, `SpecialFlags`, `CharTitleId`, `PlayersSlain`, `BonusTalents`, `RewardArenaPoints`, `PrevQuestId`, `NextQuestId`, `ExclusiveGroup`, `NextQuestInChain`, `RewXPId`, `SrcItemId`, `SrcItemCount`, `SrcSpell`, `Title`, `Details`, `Objectives`, `OfferRewardText`, `RequestItemsText`, `EndText`, `CompletedText`, `ObjectiveText1`, `ObjectiveText2`, `ObjectiveText3`, `ObjectiveText4`, `ReqItemId1`, `ReqItemId2`, `ReqItemId3`, `ReqItemId4`, `ReqItemId5`, `ReqItemId6`, `ReqItemCount1`, `ReqItemCount2`, `ReqItemCount3`, `ReqItemCount4`, `ReqItemCount5`, `ReqItemCount6`, `ReqSourceId1`, `ReqSourceId2`, `ReqSourceId3`, `ReqSourceId4`, `ReqSourceCount1`, `ReqSourceCount2`, `ReqSourceCount3`, `ReqSourceCount4`, `ReqCreatureOrGOId1`, `ReqCreatureOrGOId2`, `ReqCreatureOrGOId3`, `ReqCreatureOrGOId4`, `ReqCreatureOrGOCount1`, `ReqCreatureOrGOCount2`, `ReqCreatureOrGOCount3`, `ReqCreatureOrGOCount4`, `ReqSpellCast1`, `ReqSpellCast2`, `ReqSpellCast3`, `ReqSpellCast4`, `RewChoiceItemId1`, `RewChoiceItemId2`, `RewChoiceItemId3`, `RewChoiceItemId4`, `RewChoiceItemId5`, `RewChoiceItemId6`, `RewChoiceItemCount1`, `RewChoiceItemCount2`, `RewChoiceItemCount3`, `RewChoiceItemCount4`, `RewChoiceItemCount5`, `RewChoiceItemCount6`, `RewItemId1`, `RewItemId2`, `RewItemId3`, `RewItemId4`, `RewItemCount1`, `RewItemCount2`, `RewItemCount3`, `RewItemCount4`, `RewRepFaction1`, `RewRepFaction2`, `RewRepFaction3`, `RewRepFaction4`, `RewRepFaction5`, `RewRepValueId1`, `RewRepValueId2`, `RewRepValueId3`, `RewRepValueId4`, `RewRepValueId5`, `RewRepValue1`, `RewRepValue2`, `RewRepValue3`, `RewRepValue4`, `RewRepValue5`, `RewHonorAddition`, `RewHonorMultiplier`, `unk0`, `RewOrReqMoney`, `RewMoneyMaxLevel`, `RewSpell`, `RewSpellCast`, `RewMailTemplateId`, `RewMailDelaySecs`, `PointMapId`, `PointX`, `PointY`, `PointOpt`, `DetailsEmote1`, `DetailsEmote2`, `DetailsEmote3`, `DetailsEmote4`, `DetailsEmoteDelay1`, `DetailsEmoteDelay2`, `DetailsEmoteDelay3`, `DetailsEmoteDelay4`, `IncompleteEmote`, `CompleteEmote`, `OfferRewardEmote1`, `OfferRewardEmote2`, `OfferRewardEmote3`, `OfferRewardEmote4`, `OfferRewardEmoteDelay1`, `OfferRewardEmoteDelay2`, `OfferRewardEmoteDelay3`, `OfferRewardEmoteDelay4`, `StartScript`, `CompleteScript`, `WDBVerified`) VALUES
+('11460','2','495','0','68','0','71','0','1101','0','0','0','0','0','0','0','0','0','0','0','138','2','0','0','0','0','0','11465','0','11465','5','0','0','0','Trust is Earned','The first and most important factor in falconry is the bond between the falconer and $g his:her; bird. Trust must be earned by the master!$B$B<Hidalgo points to the falcons in the cage at his feet.>$B$BIf you are to earn their trust you will first need to fill their bellies.$B$BThe fjord rock falcon, as these birds are known, primarily eat grubs. Throughout the fjord you will find loose rocks that serve as breeding grounds for these grubs. Find a grub and return here to feed the falcons in the cage.','Hidalgo at the Explorers\' League Outpost in the Howling Fjord wants you to find a Fjord Grub and feed it to one of the falcons in the cage by his feet.','Yes, $n. I can see the bond of companionship forming. She has accepted you as master.','This is an important exercise, $n. If you are to become a falconer you must learn how to feed your bird.','Fjord Rock Falcon Fed','Return to Hidalgo the Master Falconer at the Explorers\' League Outpost in Howling Fjord.','','','','','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','34102','0','0','0','1','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','1050','0','0','0','0','5','0','0','0','0','0','0','0','0','0','0','0','0','0','24000','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','11723');
+UPDATE quest_template SET Method= 0 WHERE entry = 11460;
 -- The Cleansing Of Jintha'kalar
 UPDATE `quest_template` SET `ReqCreatureOrGOId1` = 28270, `ReqCreatureOrGOCount1` = 15 WHERE `entry` = 12545;
 -- Darkness Calling
@@ -182,9 +205,6 @@ UPDATE `quest_template` SET `SpecialFlags` = 0 WHERE `entry` = 12028;
 UPDATE `creature_template` SET `faction_A` = 21, `faction_H` = 21 WHERE `entry` = 28820;
 UPDATE `quest_template` SET `ReqCreatureOrGOId1` = 27430 WHERE `entry` = 12261;
 UPDATE `creature_template` SET `faction_A` = 21, `faction_H` = 21 WHERE `entry` = 27430;
--- Trust is Earned
-UPDATE `quest_template` SET `ReqCreatureOrGOId1` = 24783, `ReqCreatureOrGOCount1` = 1 WHERE `entry` = 11460;
-UPDATE `creature_template` SET `faction_A` = 21, `faction_H` = 21 WHERE `entry` = 24783;
 -- Breaking Off A Piece
 UPDATE `creature_template` SET `faction_A` = 21, `faction_H` = 0, `pickpocketloot` = 27805, `spell1` = 51340, `spell2` = 20298 WHERE `entry` = 27805;
 UPDATE `creature_template` SET `faction_A` = 21, `faction_H` = 0, `pickpocketloot` = 27826, `spell1` = 20298, `spell2` = 51337 WHERE `entry` = 27826;
@@ -222,8 +242,6 @@ UPDATE `quest_template` SET `ReqCreatureOrGOId1` = 27482 WHERE `entry` = 12296;
 UPDATE `quest_template` SET `SpecialFlags` = 0 WHERE `entry` = 13343;
 -- No place to run
 UPDATE `creature_template` SET `npcflag` = 5 WHERE `entry` = 27430;
--- Trust is Earned
-UPDATE `quest_template` SET `Method` = 2 WHERE `entry` = 11460;
 -- The Echo of Ymiron
 UPDATE `quest_template` SET `Method` = 0 WHERE `entry` = 11343;
 -- Flight of the Wintergarde Defender
@@ -246,8 +264,22 @@ INSERT INTO `creature` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equ
 -- A return to Resting
 UPDATE `quest_template` SET `ReqSpellCast1` = 0, `ReqSpellCast2` = 0, `ReqSpellCast3` = 0, `ReqSpellCast4` = 0 WHERE `entry` = 11568;
 -- Raining Down Destruction
-UPDATE `quest_template` SET `ReqSourceId4` = 0, `ReqCreatureOrGOId1` = 26268 WHERE `entry` = 11982;
+-- Miss to update one requirement
+UPDATE `quest_template` SET `ReqSourceId4` = 0, `ReqSourceCount4` = 0, `ReqCreatureOrGOId1` = 26268 WHERE `entry` = 11982;
 -- Mounting Up
-UPDATE `quest_template` SET `SrcItemId` = 0, `SrcItemCount` = 0, `ReqSourceId3` = 0, `ReqSourceId4` = 0, `ReqCreatureOrGOId1` = 26472 WHERE `entry` = 12414;
+-- redone this line
+UPDATE `quest_template` SET `SrcItemId` = 0, `SrcItemCount` = 0, `ReqSourceId3` = 0, `ReqSourceCount3` = 0, `ReqSourceId4` = 0, `ReqSourceCount4` = 0, `ReqCreatureOrGOId1` = 26472 WHERE `entry` = 12414;
 -- Cultivating an Image
 UPDATE `quest_template` SET `SrcItemId` = 0, `SrcItemCount` = 0, `ReqItemId2` = 0, `ReqItemCount2` = 0, `ReqCreatureOrGOId1` = 26408 WHERE `entry` = 12184;
+-- I put this in the end, cos this sql is a crap
+-- Is better to use Method than hacks, specially if this hack can show errors on start
+DELETE FROM `quest_template` WHERE `entry`='13047';
+insert into `quest_template` (`entry`, `Method`, `ZoneOrSort`, `SkillOrClassMask`, `MinLevel`, `MaxLevel`, `QuestLevel`, `Type`, `RequiredRaces`, `RequiredSkillValue`, `RepObjectiveFaction`, `RepObjectiveValue`, `RepObjectiveFaction2`, `RepObjectiveValue2`, `RequiredMinRepFaction`, `RequiredMinRepValue`, `RequiredMaxRepFaction`, `RequiredMaxRepValue`, `SuggestedPlayers`, `LimitTime`, `QuestFlags`, `SpecialFlags`, `CharTitleId`, `PlayersSlain`, `BonusTalents`, `RewardArenaPoints`, `PrevQuestId`, `NextQuestId`, `ExclusiveGroup`, `NextQuestInChain`, `RewXPId`, `SrcItemId`, `SrcItemCount`, `SrcSpell`, `Title`, `Details`, `Objectives`, `OfferRewardText`, `RequestItemsText`, `EndText`, `CompletedText`, `ObjectiveText1`, `ObjectiveText2`, `ObjectiveText3`, `ObjectiveText4`, `ReqItemId1`, `ReqItemId2`, `ReqItemId3`, `ReqItemId4`, `ReqItemId5`, `ReqItemId6`, `ReqItemCount1`, `ReqItemCount2`, `ReqItemCount3`, `ReqItemCount4`, `ReqItemCount5`, `ReqItemCount6`, `ReqSourceId1`, `ReqSourceId2`, `ReqSourceId3`, `ReqSourceId4`, `ReqSourceCount1`, `ReqSourceCount2`, `ReqSourceCount3`, `ReqSourceCount4`, `ReqCreatureOrGOId1`, `ReqCreatureOrGOId2`, `ReqCreatureOrGOId3`, `ReqCreatureOrGOId4`, `ReqCreatureOrGOCount1`, `ReqCreatureOrGOCount2`, `ReqCreatureOrGOCount3`, `ReqCreatureOrGOCount4`, `ReqSpellCast1`, `ReqSpellCast2`, `ReqSpellCast3`, `ReqSpellCast4`, `RewChoiceItemId1`, `RewChoiceItemId2`, `RewChoiceItemId3`, `RewChoiceItemId4`, `RewChoiceItemId5`, `RewChoiceItemId6`, `RewChoiceItemCount1`, `RewChoiceItemCount2`, `RewChoiceItemCount3`, `RewChoiceItemCount4`, `RewChoiceItemCount5`, `RewChoiceItemCount6`, `RewItemId1`, `RewItemId2`, `RewItemId3`, `RewItemId4`, `RewItemCount1`, `RewItemCount2`, `RewItemCount3`, `RewItemCount4`, `RewRepFaction1`, `RewRepFaction2`, `RewRepFaction3`, `RewRepFaction4`, `RewRepFaction5`, `RewRepValueId1`, `RewRepValueId2`, `RewRepValueId3`, `RewRepValueId4`, `RewRepValueId5`, `RewRepValue1`, `RewRepValue2`, `RewRepValue3`, `RewRepValue4`, `RewRepValue5`, `RewHonorAddition`, `RewHonorMultiplier`, `unk0`, `RewOrReqMoney`, `RewMoneyMaxLevel`, `RewSpell`, `RewSpellCast`, `RewMailTemplateId`, `RewMailDelaySecs`, `PointMapId`, `PointX`, `PointY`, `PointOpt`, `DetailsEmote1`, `DetailsEmote2`, `DetailsEmote3`, `DetailsEmote4`, `DetailsEmoteDelay1`, `DetailsEmoteDelay2`, `DetailsEmoteDelay3`, `DetailsEmoteDelay4`, `IncompleteEmote`, `CompleteEmote`, `OfferRewardEmote1`, `OfferRewardEmote2`, `OfferRewardEmote3`, `OfferRewardEmote4`, `OfferRewardEmoteDelay1`, `OfferRewardEmoteDelay2`, `OfferRewardEmoteDelay3`, `OfferRewardEmoteDelay4`, `StartScript`, `CompleteScript`, `WDBVerified`) values
+('13047','2','67','0','77','0','80','0','0','0','0','0','0','0','0','0','0','0','0','0','138','2','0','0','0','0','13035','13108','0','13108','7','0','0','0','The Reckoning','Loken killed my wife, turned my followers and me against each other.  He took away everything I had, but today... that changes.$B$BToday we reclaim our sacred grounds.  Today... Loken dies.$B$BMeet me on the bridge near the Temple of Wisdom, just southwest of Ulduar.  I will finish this one way or the other.$B$BI need you there as a witness.  You will not aid me -- this is personal.$B$BAfter it\'s done, send word to Jokkum, King of the Frost Giants.  He\'s a good friend and will know what to do.','Meet Thorim near the Temple of Wisdom.  Report the outcome of the fight to King Jokkum in Dun Niffelem.','No... it cannot be...$b$bNo one can defeat Thorim in single combat. Not a giant, nor a beast... no one! Especially not that coward of a brother of his.$b$bOn my forefather\'s names, this I swear...$b$bLoken will pay for this!','Ach, $N! It\'s good to see you, little one.','Witness the Reckoning','Return to King Jokkum at Dun Niffelem in The Storm Peaks.','','','','','0','0','0','0','0','0','0','0','0','0','0','0','0','42840','0','0','0','1','0','0','0','0','0','0','0','0','0','0','0','0','0','0','43210','43211','43212','43213','0','0','1','1','1','1','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','222000','198600','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','11723');
+UPDATE quest_template SET Method= 0 WHERE entry = 13047;
+
+-- I really dont know why this SQL delete this NPCs, at least if you delete some guid be sure that need to be erased
+INSERT INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `modelid`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `spawndist`, `currentwaypoint`, `curhealth`, `curmana`, `DeathState`, `MovementType`) VALUES
+('88395','30300','571','1','8','0','0','7927.19','-154.457','868.181','0.298384','360','0','0','315000','0','0','2'),
+('96620','23749','571','1','1','0','0','1341.01','-3139.52','172.174','3.53166','600','0','0','9610','0','0','2'),
+('98440','32491','571','1','1','0','0','7093.84','-226.29','796.63','4.74999','600','0','0','18900','0','0','2');
