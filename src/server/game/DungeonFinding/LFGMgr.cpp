@@ -632,12 +632,15 @@ bool LFGMgr::RemoveFromQueue(uint64 guid)
 /// <param name="LfgProposalList *">Proposals found.</param>
 void LFGMgr::FindNewGroups(LfgGuidList &check, LfgGuidList all, LfgProposalList *proposals)
 {
+    if (!check.size() || check.size() > MAXGROUPSIZE)
+        return;
+
     uint8 numPlayers = 0;
     uint8 numLfgGroups = 0;
     uint32 groupLowGuid = 0;
     LfgQueueInfoMap pqInfoMap;
     LfgQueueInfoMap::iterator itQueue;
-    for (LfgGuidList::const_iterator it = check.begin(); it != check.end(); ++it)
+    for (LfgGuidList::const_iterator it = check.begin(); it != check.end() && numLfgGroups < 2 && numPlayers <= MAXGROUPSIZE; ++it)
     {
         itQueue = m_QueueInfoMap.find(*it);
         if (itQueue == m_QueueInfoMap.end())
@@ -670,7 +673,7 @@ void LFGMgr::FindNewGroups(LfgGuidList &check, LfgGuidList all, LfgProposalList 
 
     if (numPlayers < MAXGROUPSIZE)
     {
-        while (!all.empty() && check.size() < MAXGROUPSIZE)
+        while (!all.empty() && !proposals->size())
         {
             check.push_back(all.front());
             all.pop_front();
@@ -1074,9 +1077,10 @@ void LFGMgr::UpdateProposal(uint32 proposalId, uint32 lowGuid, uint8 accept)
     LfgProposal *pProposal = itProposal->second;
 
     // Check if proposal have the current player
-    LfgProposalPlayer *ppPlayer = pProposal->players[lowGuid];
-    if (!ppPlayer)
+    LfgProposalPlayerMap::iterator itProposalPlayer = pProposal->players.find(lowGuid);
+    if (itProposalPlayer == pProposal->players.end())
         return;
+    LfgProposalPlayer *ppPlayer = itProposalPlayer->second;
 
     ppPlayer->accept = accept;
     if (!accept)
@@ -1094,10 +1098,13 @@ void LFGMgr::UpdateProposal(uint32 proposalId, uint32 lowGuid, uint8 accept)
     {
         plr = sObjectMgr.GetPlayer(itPlayers->first);
 
-        if (plr && itPlayers->first == pProposal->leaderLowGuid)
-            players.push_front(plr);
-        else
-            players.push_back(plr);
+        if (plr)
+        {
+            if (itPlayers->first == pProposal->leaderLowGuid)
+                players.push_front(plr);
+            else
+                players.push_back(plr);
+        }
 
         if (itPlayers->second->accept < 1)                  // No answer (-1) or not accepted (0)
             allAnswered = false;
