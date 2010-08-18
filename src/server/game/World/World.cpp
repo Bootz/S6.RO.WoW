@@ -55,7 +55,6 @@
 #include "VMapFactory.h"
 #include "GameEventMgr.h"
 #include "PoolMgr.h"
-#include "DatabaseImpl.h"
 #include "GridNotifiersImpl.h"
 #include "CellImpl.h"
 #include "InstanceSaveMgr.h"
@@ -104,7 +103,6 @@ World::World()
     m_maxQueuedSessionCount = 0;
     m_PlayerCount = 0;
     m_MaxPlayerCount = 0;
-    m_resultQueue = NULL;
     m_NextDailyQuestReset = 0;
     m_NextWeeklyQuestReset = 0;
     m_scheduledScripts = 0;
@@ -134,8 +132,6 @@ World::~World()
         delete command;
 
     VMAP::VMapFactory::clear();
-
-    delete m_resultQueue;
 
     //TODO free addSessQueue
 }
@@ -483,6 +479,7 @@ void World::LoadConfigSettings(bool reload)
     rate_values[RATE_REPUTATION_GAIN]  = sConfig.GetFloatDefault("Rate.Reputation.Gain", 1.0f);
     rate_values[RATE_REPUTATION_LOWLEVEL_KILL]  = sConfig.GetFloatDefault("Rate.Reputation.LowLevel.Kill", 1.0f);
     rate_values[RATE_REPUTATION_LOWLEVEL_QUEST]  = sConfig.GetFloatDefault("Rate.Reputation.LowLevel.Quest", 1.0f);
+    rate_values[RATE_REPUTATION_RECRUIT_A_FRIEND_BONUS] = sConfig.GetFloatDefault("Rate.Reputation.RecruitAFriendBonus", 0.1f);
     rate_values[RATE_CREATURE_NORMAL_DAMAGE]          = sConfig.GetFloatDefault("Rate.Creature.Normal.Damage", 1.0f);
     rate_values[RATE_CREATURE_ELITE_ELITE_DAMAGE]     = sConfig.GetFloatDefault("Rate.Creature.Elite.Elite.Damage", 1.0f);
     rate_values[RATE_CREATURE_ELITE_RAREELITE_DAMAGE] = sConfig.GetFloatDefault("Rate.Creature.Elite.RAREELITE.Damage", 1.0f);
@@ -649,6 +646,8 @@ void World::LoadConfigSettings(bool reload)
     m_configs[CONFIG_SESSION_ADD_DELAY] = sConfig.GetIntDefault("SessionAddDelay", 10000);
 
     m_configs[CONFIG_GROUP_XP_DISTANCE] = sConfig.GetIntDefault("MaxGroupXPDistance", 74);
+    m_configs[CONFIG_MAX_RECRUIT_A_FRIEND_DISTANCE] = sConfig.GetIntDefault("MaxRecruitAFriendBonusDistance", 100);
+
     /// \todo Add MonsterSight and GuarderSight (with meaning) in worldserver.conf or put them as define
     m_configs[CONFIG_SIGHT_MONSTER] = sConfig.GetIntDefault("MonsterSight", 50);
     m_configs[CONFIG_SIGHT_GUARDER] = sConfig.GetIntDefault("GuarderSight", 50);
@@ -835,6 +834,22 @@ void World::LoadConfigSettings(bool reload)
         sLog.outError("StartArenaPoints (%i) must be in range 0..MaxArenaPoints(%u). Set to %u.",
             m_configs[CONFIG_START_ARENA_POINTS],m_configs[CONFIG_MAX_ARENA_POINTS],m_configs[CONFIG_MAX_ARENA_POINTS]);
         m_configs[CONFIG_START_ARENA_POINTS] = m_configs[CONFIG_MAX_ARENA_POINTS];
+    }
+
+     m_configs[CONFIG_MAX_RECRUIT_A_FRIEND_BONUS_PLAYER_LEVEL] = sConfig.GetIntDefault("RecruitAFriend.MaxLevel", 60);
+    if (m_configs[CONFIG_MAX_RECRUIT_A_FRIEND_BONUS_PLAYER_LEVEL] < 0 || m_configs[CONFIG_MAX_RECRUIT_A_FRIEND_BONUS_PLAYER_LEVEL] > m_configs[CONFIG_MAX_PLAYER_LEVEL])
+    {
+        sLog.outError("RecruitAFriend.MaxLevel (%i) must be in the range 0..MaxLevel(%u). Set to %u.",
+            m_configs[CONFIG_MAX_RECRUIT_A_FRIEND_BONUS_PLAYER_LEVEL],m_configs[CONFIG_MAX_PLAYER_LEVEL],60);
+        m_configs[CONFIG_MAX_RECRUIT_A_FRIEND_BONUS_PLAYER_LEVEL] = 60;
+    }
+
+    m_configs[CONFIG_MAX_RECRUIT_A_FRIEND_BONUS_PLAYER_LEVEL_DIFFERENCE] = sConfig.GetIntDefault("RecruitAFriend.MaxDifference", 3);
+    if (m_configs[CONFIG_MAX_RECRUIT_A_FRIEND_BONUS_PLAYER_LEVEL_DIFFERENCE] < 0)
+    {
+        sLog.outError("RecruitAFriend.MaxLevel (%i) must be greater than or equal to 0. Set to %u.",
+            m_configs[CONFIG_MAX_RECRUIT_A_FRIEND_BONUS_PLAYER_LEVEL_DIFFERENCE],3);
+        m_configs[CONFIG_MAX_RECRUIT_A_FRIEND_BONUS_PLAYER_LEVEL_DIFFERENCE] = 3;
     }
 
     m_configs[CONFIG_ALL_TAXI_PATHS] = sConfig.GetBoolDefault("AllFlightPaths", false);
@@ -1235,6 +1250,11 @@ void World::LoadConfigSettings(bool reload)
 
     // Dungeon finder
     m_configs[CONFIG_DUNGEON_FINDER_ENABLE] = sConfig.GetBoolDefault("DungeonFinder.Enable", false);
+
+    // MySQL thread bundling config for other runnable tasks
+    m_configs[CONFIG_MYSQL_BUNDLE_LOGINDB] = sConfig.GetIntDefault("LoginDatabase.ThreadBundleMask", MYSQL_BUNDLE_ALL);
+    m_configs[CONFIG_MYSQL_BUNDLE_CHARDB] = sConfig.GetIntDefault("CharacterDatabase.ThreadBundleMask", MYSQL_BUNDLE_ALL);
+    m_configs[CONFIG_MYSQL_BUNDLE_WORLDDB] = sConfig.GetIntDefault("WorldDatabase.ThreadBundleMask", MYSQL_BUNDLE_ALL);
 
     sScriptMgr.OnConfigLoad(reload);
 }
@@ -1968,8 +1988,8 @@ void World::Update(uint32 diff)
     RecordTimeDiff("UpdateLFGMgr");
 
     // execute callbacks from sql queries that were queued recently
-    UpdateResultQueue();
-    RecordTimeDiff("UpdateResultQueue");
+    ProcessQueryCallbacks();
+    RecordTimeDiff("ProcessQueryCallbacks");
 
     ///- Erase corpses once every 20 minutes
     if (m_timers[WUPDATE_CORPSES].Passed())
@@ -2502,8 +2522,10 @@ void World::UpdateResultQueue()
 
 void World::UpdateRealmCharCount(uint32 accountId)
 {
-    CharacterDatabase.AsyncPQuery(this, &World::_UpdateRealmCharCount, accountId,
-        "SELECT COUNT(guid) FROM characters WHERE account = '%u'", accountId);
+    m_realmCharCallback.SetParam(accountId);
+    m_realmCharCallback.SetFutureResult(
+        LoginDatabase.AsyncPQuery("SELECT COUNT(guid) FROM characters WHERE account = '%u'", accountId)
+        );
 }
 
 void World::_UpdateRealmCharCount(QueryResult_AutoPtr resultCharCount, uint32 accountId)
@@ -2731,7 +2753,18 @@ uint64 World::getWorldState(uint32 index) const
     WorldStatesMap::const_iterator it = m_worldstates.find(index);
     return it != m_worldstates.end() ? it->second : 0;
 }
+void World::ProcessQueryCallbacks()
+{
+    QueryResult_AutoPtr result;
 
+    //-UpdateRealmCharCount
+    if (m_realmCharCallback.IsReady())
+    {
+        uint32 param = m_realmCharCallback.GetParam();
+        m_realmCharCallback.GetResult(result);
+        _UpdateRealmCharCount(result, param);
+        m_realmCharCallback.FreeResult();	 
+}
 void World::SendWintergraspState()
 {
     OutdoorPvPWG *pvpWG = (OutdoorPvPWG*)sOutdoorPvPMgr.GetOutdoorPvPToZoneId(4197);
