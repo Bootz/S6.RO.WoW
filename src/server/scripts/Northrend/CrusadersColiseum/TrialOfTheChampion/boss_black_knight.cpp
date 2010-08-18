@@ -452,7 +452,7 @@ public:
         }
     };
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new npc_risen_ghoulAI(pCreature);
     }
@@ -537,7 +537,7 @@ public:
 
     };
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new npc_black_knight_skeletal_gryphonAI(pCreature);
     }
@@ -623,7 +623,7 @@ public:
 
     };
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new npc_grAI(pCreature);
     }

@@ -425,7 +425,7 @@ public:
         }
     };
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new boss_warrior_toc5AI(pCreature);
     }
@@ -559,7 +559,7 @@ public:
         }
     };
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new boss_mage_toc5AI(pCreature);
     }
@@ -708,7 +708,7 @@ public:
         }
     };
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new boss_shaman_toc5AI(pCreature);
     }
@@ -881,7 +881,7 @@ public:
  
     };
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new boss_hunter_toc5AI(pCreature);
     }
@@ -1004,7 +1004,7 @@ public:
         }
     };
 
-    CreatureAI* GetAI(Creature* pCreature)
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new boss_rouge_toc5AI(pCreature);
     }

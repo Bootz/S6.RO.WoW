@@ -355,7 +355,7 @@ struct Boss_Raid_AnubarakAI : public ScriptedAI
         DoScriptText(SAY_DEATH, me);
     }
 };
-    CreatureAI* GetAI_Raid_Anubarak(Creature* pCreature) const
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new Boss_Raid_AnubarakAI (pCreature);
     }
@@ -435,7 +435,7 @@ public:
         }
     };
 
-    CreatureAI* GetAI_mob_NerubianTrigger(Creature* pCreature) const
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new mob_NerubianTriggerAI (pCreature);
     }

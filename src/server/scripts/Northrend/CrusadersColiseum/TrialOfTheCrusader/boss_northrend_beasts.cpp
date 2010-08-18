@@ -919,7 +919,7 @@ public:
         }
     };
 
-    CreatureAI* GetAI_mob_FireBomb(Creature* pCreature) const
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new mob_FireBombAI (pCreature);
     }
