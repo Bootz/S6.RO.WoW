@@ -76,6 +76,7 @@ enum SaurfangSpells
 	SPELL_SCENT_OF_BLOOD          = 72769,
 	SPELL_BERSERK                 = 26662,
 	SPELL_AGONY                   = 70572,
+        SPELL_CHAMPION                = 72256,
 	SPELL_ZERO_POWER              = 72242,
 };
 #define ACHIEV_MESS       RAID_MODE(4537, 4613)
@@ -103,6 +104,9 @@ public:
 		uint32 m_uiRuneOfBloodTimer2;
 		uint32 m_uiSummonBloodBeastTimer;
 		uint32 m_uiBerserkTimer;
+                uint8 MessCount;
+                uint8 AchievementCount;
+
 
 		void Reset()
 		{
@@ -111,6 +115,8 @@ public:
 			m_uiRuneOfBloodTimer = 30000;
 			m_uiSummonBloodBeastTimer = 40000;
 			m_uiBerserkTimer = 480000;
+                        MessCount = 0;
+                        AchievementCount = RAID_MODE(3,5,3,5);
 
 			if (m_pInstance)
 				m_pInstance->SetData(DATA_SAURFANG, NOT_STARTED);
@@ -124,18 +130,31 @@ public:
 		void EnterCombat(Unit* pWho)
 		{
 			DoScriptText(SAY_AGGRO, me);
-
 			DoCast(me, SPELL_BLOOD_LINK);
 			DoCast(me, SPELL_BLOOD_POWER);
+                        DoCast(me, SPELL_CHAMPION);
 
 			if (m_pInstance)
 				m_pInstance->SetData(DATA_SAURFANG_EVENT, IN_PROGRESS);
 		}
 
+	        void DamageDealt(Unit *victim, uint32 &damage)
+	        {
+		        if(victim && victim->HasAura(SPELL_RUNE_OF_BLOOD_AURA))
+		        {
+			        DoCast(me,SPELL_RUNE_OF_BLOOD);
+		        }
+	        }
+
+
 		void JustDied(Unit* pKiller)
 		{
 			if (m_pInstance)
 				m_pInstance->SetData(DATA_SAURFANG_EVENT, DONE);
+
+                        if(MessCount < AchievementCount)
+			        m_pInstance->DoCompleteAchievement(ACHIEV_MESS);
+
 
 			DoScriptText(SAY_DEATH, me);
 		}
@@ -195,21 +214,42 @@ public:
 				}
 			}
 
+                        if (me->GetPower(POWER_ENERGY) > 99)
+                        {
+                                if(Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 1))
+			        {
+			                if(target && target->GetTypeId() == TYPEID_PLAYER && target->isAlive() && !target->HasAura(SPELL_FALLEN_CHAMPION))
+				        {
+                                               DoCast(target, SPELL_FALLEN_CHAMPION);
+                                               DoScriptText(SAY_FALLENCHAMPION, me);
+			                       ++MessCount;
+                                               me->SetPower(me->getPowerType(), 0);
+				        }
+			       }
+                         }
+
 			if (m_uiRuneOfBloodTimer2 < uiDiff)
 			{
 				if (Unit* pTarget = SelectUnit(SELECT_TARGET_TOPAGGRO, 0))
+                                {
+                                        if pTarget->HasAura(RAID_MODE(SPELL_RUNE_OF_BLOOD_10_NORMAL,SPELL_RUNE_OF_BLOOD_25_NORMAL,SPELL_RUNE_OF_BLOOD_10_HEROIC,SPELL_RUNE_OF_BLOOD_25_HEROIC))
 					DoCast(pTarget, SPELL_RUNE_OF_BLOOD_TRIGGER);
-				me->ModifyPower(me->getPowerType(), +2);
-				m_uiRuneOfBloodTimer2 = 60000;
+				me->ModifyPower(me->getPowerType(), +1);
+				m_uiRuneOfBloodTimer2 = 2000;
 			} else m_uiRuneOfBloodTimer2 -= uiDiff;
 
 			if (m_uiBoilingBloodTimer < uiDiff)
-			{
-				if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1))
-					DoCast(pTarget, SPELL_BOILING_BLOOD_10_NORMAL);
-				me->ModifyPower(me->getPowerType(), +2);
-				m_uiBoilingBloodTimer = 20000;
-			} else m_uiBoilingBloodTimer -= uiDiff;
+                        {
+                                if (Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 1))
+			        {
+				        if(target && target->GetTypeId() == TYPEID_PLAYER && target->isAlive())
+				        {
+                                                DoCast(target, SPELL_BOILING_BLOOD);
+				        }
+			        }
+                                m_uiBoilingBloodTimer = 25000;
+                        } else m_uiBoilingBloodTimer -= uiDiff;
+
 
 
 			if (m_uiBloodNovaTimer < uiDiff)
@@ -238,13 +278,20 @@ public:
 				m_uiSummonBloodBeastTimer = 48000;
 			} else m_uiSummonBloodBeastTimer -= uiDiff;
 
-			if (me->GetPower(POWER_ENERGY) == 100)
-			{
-				Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
-				DoCast(pTarget, SPELL_FALLEN_CHAMPION);
-				DoScriptText(SAY_FALLENCHAMPION, me);
-				me->SetPower(me->getPowerType(), 0);
-			}
+                        if (me->GetPower(POWER_ENERGY) > 99)
+                        {
+                                if(Unit* target = SelectUnit(SELECT_TARGET_RANDOM, 1))
+				{
+					if(target && target->GetTypeId() == TYPEID_PLAYER && target->isAlive() && !target->HasAura(SPELL_FALLEN_CHAMPION))
+				        {
+                                                DoCast(target, SPELL_FALLEN_CHAMPION);
+                                                DoScriptText(SAY_FALLENCHAMPION, me);
+			                       ++MessCount;
+                                                me->SetPower(me->getPowerType(), 0);
+				        }
+				}
+                         }
+
 
 			if (m_uiRuneOfBloodTimer < uiDiff)
 			{
@@ -253,7 +300,7 @@ public:
 				me->ModifyHealth(me->GetMaxHealth() * 0.01);
 				me->ModifyPower(me->getPowerType(), +2);
 				m_uiRuneOfBloodTimer = 40000;
-				m_uiRuneOfBloodTimer2 = 5000;
+				m_uiRuneOfBloodTimer2 = 4000;
 			} else m_uiRuneOfBloodTimer -= uiDiff;
 
 			if(me->GetHealth()*100 / me->GetMaxHealth() < 30)
