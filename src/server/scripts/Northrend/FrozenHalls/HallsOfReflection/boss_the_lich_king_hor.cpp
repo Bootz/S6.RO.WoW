@@ -356,7 +356,7 @@ public:
         }
     };
 
-    CreatureAI* GetAI_boss_lich_king_hr(Creature* pCreature) const
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new boss_lich_king_hrAI(pCreature);
     }

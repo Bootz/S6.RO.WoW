@@ -401,7 +401,7 @@ public:
 
 	};
 
-	CreatureAI* GetAI_boss_Keleseth_Icc(Creature* pCreature) const
+	CreatureAI* GetAI(Creature* pCreature) const
 	{
 		return new boss_Keleseth_IccAI (pCreature);
 	}
@@ -522,7 +522,7 @@ public:
 
 	};
 
-	CreatureAI* GetAI_boss_Taldaram_Icc(Creature* pCreature) const
+	CreatureAI* GetAI(Creature* pCreature) const
 	{
 		return new boss_Taldaram_IccAI (pCreature);
 	}
@@ -570,7 +570,7 @@ public:
 
 	};
 
-	CreatureAI* GetAI_npc_Nucleus(Creature* pCreature) const
+	CreatureAI* GetAI(Creature* pCreature) const
 	{
 		return new npc_NucleusAI (pCreature);
 	}
@@ -627,7 +627,7 @@ public:
 
 	};
 
-	CreatureAI* GetAI_npc_Fireball(Creature* pCreature) const
+	CreatureAI* GetAI(Creature* pCreature) const
 	{
 		return new npc_FireballAI (pCreature);
 	}
@@ -694,7 +694,7 @@ public:
 
 	};
 
-	CreatureAI* GetAI_npc_EmpFireball(Creature* pCreature) const
+	CreatureAI* GetAI(Creature* pCreature) const
 	{
 		return new npc_EmpFireballAI (pCreature);
 	}
@@ -755,7 +755,7 @@ public:
 
 	};
 
-	CreatureAI* GetAI_npc_Bomb(Creature* pCreature) const
+	CreatureAI* GetAI(Creature* pCreature) const
 	{
 		return new npc_BombAI (pCreature);
 	}
@@ -801,7 +801,7 @@ public:
 
 	};
 
-	CreatureAI* GetAI_npc_Vortex_icc(Creature* pCreature) const
+	CreatureAI* GetAI(Creature* pCreature) const
 	{
 		return new npc_Vortex_iccAI (pCreature);
 	}

@@ -812,7 +812,7 @@ public:
 		}
 	};
 
-	CreatureAI* GetAI_boss_lich_king(Creature* pCreature) const
+	CreatureAI* GetAI(Creature* pCreature) const
 	{
 		return new boss_lich_kingAI(pCreature);
 	}
@@ -941,7 +941,7 @@ public:
 		}
 	};
 
-	CreatureAI* GetAI_npc_tirion_citadell_icc(Creature* pCreature) const
+	CreatureAI* GetAI(Creature* pCreature) const
 	{
 		return new npc_tirion_citadell_iccAI(pCreature);
 	}
@@ -1095,7 +1095,7 @@ public:
 		}
 	};
 
-	CreatureAI *GetAI(Creature* pCreature) const
+	CreatureAI* GetAI(Creature* pCreature) const
 	{
 		return new npc_valkyr_iccAI(pCreature);
 	}
