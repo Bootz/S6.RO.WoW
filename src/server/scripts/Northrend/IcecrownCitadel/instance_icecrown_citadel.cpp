@@ -156,6 +156,7 @@ public:
 			uiCitadelTp             = 0;
 			uiSindragossaTp         = 0;
 			uiLichTp                = 0;
+			isBonedEgible           = true;
 		}
 
 		bool IsEncounterInProgress() const
@@ -451,6 +452,8 @@ public:
 				}
 				auiEncounter[0] = data;
 				break;
+				case COMMAND_FAIL_BONED:
+					isBonedEgible = data ? true : false;
 
 			case DATA_DEATHWHISPER_EVENT:
 				switch(data)
@@ -738,7 +741,7 @@ public:
 			OUT_SAVE_INST_DATA;
 
 			std::ostringstream saveStream;
-			saveStream << "I C" << auiEncounter[0] << " " << auiEncounter[1] << " " << auiEncounter[2] << " " << auiEncounter[3]
+			saveStream << "I C" << isBonedEgible << " " << auiEncounter[0] << " " << auiEncounter[1] << " " << auiEncounter[2] << " " << auiEncounter[3]
 			<< " " << auiEncounter[4] << " " << auiEncounter[5] << " " << auiEncounter[6] << " " << auiEncounter[7] << " " << auiEncounter[8]
 			<< " " << auiEncounter[9] << " " << auiEncounter[10] << " " << auiEncounter[11];
 
@@ -760,7 +763,7 @@ public:
 			uint16 data0,data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11;
 
 			std::istringstream loadStream(in);
-			loadStream >> dataHead1 >> dataHead2 >> data0 >> data1 >> data2 >> data3 >> data4 >> data5 >> data6
+			loadStream >> isBonedEgible >> dataHead1 >> dataHead2 >> data0 >> data1 >> data2 >> data3 >> data4 >> data5 >> data6
 				>> data7 >> data8 >> data9 >> data10 >> data11;
 
 			if (dataHead1 == 'I' && dataHead2 == 'C')
@@ -786,6 +789,21 @@ public:
 
 			OUT_LOAD_INST_DATA_COMPLETE;
 		}
+            bool CheckAchievementCriteriaMeet(uint32 criteria_id, Player const* /*source*/, Unit const* /*target*/, uint32 /*miscvalue1*/)
+            {
+                switch (criteria_id)
+                {
+                    case CRITERIA_BONED_10N:
+                    case CRITERIA_BONED_25N:
+                    case CRITERIA_BONED_10H:
+                    case CRITERIA_BONED_25H:
+                        return isBonedEgible;
+                }
+
+                return false;
+            }
+private:
+            bool isBonedEgible;
 	};
 
 	InstanceScript* GetInstanceScript (InstanceMap* pMap) const
