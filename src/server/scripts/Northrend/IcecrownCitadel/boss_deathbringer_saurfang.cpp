@@ -77,6 +77,7 @@ enum SaurfangSpells
 	SPELL_BERSERK                 = 26662,
 	SPELL_AGONY                   = 70572,
         SPELL_CHAMPION                = 72256,
+        SPELL_RUNE_OF_BLOOD_AURA      = 72408,
 	SPELL_ZERO_POWER              = 72242,
 };
 #define ACHIEV_MESS       RAID_MODE(4537, 4613)
@@ -235,6 +236,7 @@ public:
                                         if pTarget->HasAura(RAID_MODE(SPELL_RUNE_OF_BLOOD_10_NORMAL,SPELL_RUNE_OF_BLOOD_25_NORMAL,SPELL_RUNE_OF_BLOOD_10_HEROIC,SPELL_RUNE_OF_BLOOD_25_HEROIC))
 					DoCast(pTarget, SPELL_RUNE_OF_BLOOD_TRIGGER);
 				me->ModifyPower(me->getPowerType(), +1);
+                                }
 				m_uiRuneOfBloodTimer2 = 2000;
 			} else m_uiRuneOfBloodTimer2 -= uiDiff;
 
