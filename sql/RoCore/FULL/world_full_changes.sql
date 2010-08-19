@@ -2178,7 +2178,7 @@ UPDATE `creature_template` SET `mechanic_immune_mask` = 650854235 WHERE `entry` 
 UPDATE `creature_template` SET `mechanic_immune_mask` = 617299547 WHERE `entry` = 32857;
 
 UPDATE `script_texts` SET `content_default` = "Welcome, champions! All of our attempts at grounding her have failed. We could use a hand in bring her down with these harpoon guns.", `type` = 0  WHERE `entry` = -1603260;
-UPDATE `script_texts` SET `content_default` = "Move! Quickly! She won?t remain grounded for long.", `type` = 1  WHERE `entry` = -1603261;
+UPDATE `script_texts` SET `content_default` = "Move! Quickly! She won’t remain grounded for long.", `type` = 1  WHERE `entry` = -1603261;
 UPDATE `script_texts` SET `type` = 2  WHERE `entry` = -1603053;
 UPDATE `script_texts` SET `type` = 2  WHERE `entry` = -1603214;
 
@@ -3346,6 +3346,72 @@ UPDATE `creature_template` SET `ScriptName` = 'creature_iron_roots' WHERE `entry
 UPDATE `creature_template` SET `ScriptName` = 'creature_sun_beam' WHERE `entry` =33170;
 -- XT-002 vehicle id
 UPDATE `creature_template` SET `unit_flags` = 33554432, `type_flags` = 0, `VehicleId` = 335 WHERE `entry` = 33293;
+-- Ulduar Colossus
+DELETE FROM creature_template WHERE entry = 33240;
+DELETE FROM `creature` WHERE `id`=33237 AND `position_x` >= 367;
+UPDATE `creature_template` SET `ScriptName` = 'mob_colossus' WHERE `entry` = 33237;
+
+-- Creatures and Gameobjects 25 man spawn
+UPDATE `creature` SET `spawnMask` = 3 WHERE `map` = 603;
+UPDATE `gameobject` SET `spawnMask` = 3 WHERE `map` = 603;
+
+-- .tele Uld (teleporta davanti Ulduar)
+DELETE FROM `game_tele` WHERE `name` = "Uld";
+INSERT INTO `game_tele` VALUES
+(NULL, 9347.78, -1114.88, 1245.09, 6.278, 571, 'Uld');
+
+-- Salvaged Chopper has no heroic entry
+UPDATE `creature_template` SET `difficulty_entry_1` = 0 WHERE `entry` = 33062;
+
+-- Runeforged Sentry
+UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `mindmg` = 488, `maxdmg` = 642, `attackpower` = 782, `dmg_multiplier` = 15, `minrangedmg` = 363, `maxrangedmg` = 521, `rangedattackpower` = 121 WHERE `entry` = 34235;
+
+-- Ulduar Colossus
+UPDATE `creature_template` SET `faction_A` = 1692, `faction_H` = 1692, `mindmg` = 422, `maxdmg` = 586, `attackpower` = 987, `dmg_multiplier` = 15 WHERE `entry` = 34105;
+
+-- Flame Leviathan
+UPDATE `creature_template` SET `faction_A` = 1965, `faction_H` = 1965, `speed_walk` = 0.6, `mindmg` = 509, `maxdmg` = 683, `attackpower` = 805, `dmg_multiplier` = 35, `unit_flags` = 64, `minrangedmg` = 371, `maxrangedmg` = 535, `rangedattackpower` = 135, `mechanic_immune_mask` = 617299803, `flags_extra` = 257 WHERE `entry` = 34003;
+UPDATE `creature_template` SET `faction_A` = 1965, `faction_H` = 1965 WHERE `entry` = 34111;
+
+-- Molten Colossus
+UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `mindmg` = 488, `maxdmg` = 642, `attackpower` = 982, `dmg_multiplier` = 45, `minrangedmg` = 363, `maxrangedmg` = 521, `rangedattackpower` = 121, `mingold` = 142000, `maxgold` = 156000, `mechanic_immune_mask` = 617299803 WHERE `entry` = 34185;
+
+-- Magma Rager
+UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `mindmg` = 463, `maxdmg` = 640, `attackpower` = 726, `dmg_multiplier` = 30, `minrangedmg` = 360, `maxrangedmg` = 520, `rangedattackpower` = 91, `mingold` = 142000, `maxgold` = 156000, `mechanic_immune_mask` = 617299803 WHERE `entry` = 34201;
+
+-- Forge Construct
+UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `mindmg` = 463, `maxdmg` = 640, `attackpower` = 726, `dmg_multiplier` = 30, `minrangedmg` = 360, `maxrangedmg` = 520, `rangedattackpower` = 91, `mingold` = 142000, `maxgold` = 156000, `mechanic_immune_mask` = 617299803 WHERE `entry` = 34186;
+
+-- Ignis
+UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `speed_walk` = 0.888888, `mindmg` = 509, `maxdmg` = 683, `attackpower` = 805, `dmg_multiplier` = 75, `baseattacktime` = 1500, `minrangedmg` = 371, `maxrangedmg` = 535, `rangedattackpower` = 135, `type_flags` = 4194412, `mechanic_immune_mask` = 650854235, `flags_extra` = 9 WHERE `entry` = 33190;
+UPDATE `creature_template` SET `mindmg` = 422, `maxdmg` = 586, `attackpower` = 642, `dmg_multiplier` = 30, `unit_flags` = 33947654, `minrangedmg` = 345, `maxrangedmg` = 509, `rangedattackpower` = 103 WHERE `entry` = 33191;
+
+-- Razorscale
+UPDATE `creature_template` SET `faction_A` = 14, `faction_H` = 14, `mindmg` = 509, `maxdmg` = 683, `attackpower` = 805, `dmg_multiplier` = 70, `unit_flags` = 32768, `minrangedmg` = 371, `maxrangedmg` = 535, `rangedattackpower` = 135, `mingold` = 1720000, `maxgold` = 1760000, `mechanic_immune_mask` = 650854235, `flags_extra` = 1 WHERE `entry` = 33724;
+UPDATE `creature_template` SET `modelid1` = 11686, `modelid2` = 0, `faction_A` = 14, `faction_H` = 14, `unit_flags` = 33554432 WHERE `entry` = 34189;
+-- Expedition defender, trapper, engineer
+UPDATE `creature_template` SET `faction_A` = 2105, `faction_H` = 2105, `mindmg` = 422, `maxdmg` = 586, `attackpower` = 642, `dmg_multiplier` = 15, `baseattacktime` = 1500, `minrangedmg` = 342, `maxrangedmg` = 509, `rangedattackpower` = 103, `equipment_id` = 1016 WHERE `entry` = 34255;
+UPDATE `creature_template` SET `faction_A` = 2105, `faction_H` = 2105, `mindmg` = 422, `maxdmg` = 586, `attackpower` = 642, `dmg_multiplier` = 15, `baseattacktime` = 1500, `minrangedmg` = 342, `maxrangedmg` = 509, `rangedattackpower` = 103, `equipment_id` = 1762 WHERE `entry` = 34257;
+UPDATE `creature_template` SET `faction_A` = 2105, `faction_H` = 2105, `mindmg` = 422, `maxdmg` = 586, `attackpower` = 642, `dmg_multiplier` = 15, `baseattacktime` = 1500, `minrangedmg` = 342, `maxrangedmg` = 509, `rangedattackpower` = 103, `equipment_id` = 361 WHERE `entry` = 34256;
+-- Expedition Commader
+UPDATE `creature_template` SET `mindmg` = 422, `maxdmg` = 586, `attackpower` = 642, `dmg_multiplier` = 15, `unit_flags` = 514, `minrangedmg` = 342, `maxrangedmg` = 509, `rangedattackpower` = 103 WHERE `entry` = 34254;
+-- Dark Rune Guardian, Sentinel and Watcher
+UPDATE `creature_template` SET `faction_A` = 1965, `faction_H` = 1965, `mindmg` = 422, `maxdmg` = 586, `attackpower` = 642, `dmg_multiplier` = 25, `unit_flags` = 32768, `minrangedmg` = 342, `maxrangedmg` = 509, `rangedattackpower` = 103, `equipment_id` = 574, `mechanic_immune_mask` = 0 WHERE `entry` = 33850;
+UPDATE `creature_template` SET `faction_A` = 1965, `faction_H` = 1965, `mindmg` = 422, `maxdmg` = 586, `attackpower` = 642, `dmg_multiplier` = 40, `unit_flags` = 32768, `minrangedmg` = 342, `maxrangedmg` = 509, `rangedattackpower` = 103, `equipment_id` = 1863, `mechanic_immune_mask` = 0 WHERE `entry` = 33852;
+UPDATE `creature_template` SET `faction_A` = 1965, `faction_H` = 1965, `mindmg` = 422, `maxdmg` = 586, `attackpower` = 642, `dmg_multiplier` = 15, `unit_flags` = 32768, `minrangedmg` = 342, `maxrangedmg` = 509, `rangedattackpower` = 103, `equipment_id` = 1787, `mechanic_immune_mask` = 0 WHERE `entry` = 33851;
+
+-- XT-002
+UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `speed_walk` = 2.8, `mindmg` = 509, `maxdmg` = 683, `attackpower` = 805, `dmg_multiplier` = 100, `baseattacktime` = 1800, `minrangedmg` = 371, `maxrangedmg` = 535, `rangedattackpower` = 135, `type_flags` = 0, `mechanic_immune_mask` = 650854235, `flags_extra` = 1 WHERE `entry` = 33885;
+UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `speed_walk` = 0.6, `speed_run` = 0.6, `mindmg` = 422, `maxdmg` = 586, `attackpower` = 642, `dmg_multiplier` = 2, `minrangedmg` = 345, `maxrangedmg` = 509, `rangedattackpower` = 103, `type_flags` = 0 WHERE `entry` = 33887;
+UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `mindmg` = 422, `maxdmg` = 586, `attackpower` = 642, `dmg_multiplier` = 10, `minrangedmg` = 345, `maxrangedmg` = 509, `rangedattackpower` = 103 WHERE `entry` = 33888;
+UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `speed_walk` = 0.6, `speed_run` = 0.6, `mindmg` = 422, `maxdmg` = 586, `attackpower` = 642, `dmg_multiplier` = 45, `minrangedmg` = 345, `maxrangedmg` = 509, `rangedattackpower` = 103 WHERE `entry` = 33886;
+-- Heart
+UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `unit_flags` = 33554434, `mechanic_immune_mask` = 650854235 WHERE `entry` = 33995;
+-- XT-002 trash
+UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `mindmg` = 422, `maxdmg` = 586, `attackpower` = 642, `dmg_multiplier` = 20, `minrangedmg` = 345, `maxrangedmg` = 509, `rangedattackpower` = 103, `mingold` = 146000, `maxgold` = 152000, `mechanic_immune_mask` = 617299803 WHERE `entry` = 34268;
+UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `mindmg` = 422, `maxdmg` = 586, `attackpower` = 642, `dmg_multiplier` = 30, `minrangedmg` = 345, `maxrangedmg` = 509, `rangedattackpower` = 103, `mingold` = 146000, `maxgold` = 152000, `mechanic_immune_mask` = 617299803 WHERE `entry` IN (34270, 34272, 34274);
+-- Delete chests from db
+DELETE FROM `gameobject` WHERE `id` IN (194307, 194308, 195046, 195047);
 
 SET FOREIGN_KEY_CHECKS=0;
 -- ----------------------------
