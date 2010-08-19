@@ -72,7 +72,7 @@ enum Events
 
 enum Actions
 {
-    ACTION_VAPOR_DEAD                           = 0
+    ACTION_VAPOR_DEAD                           = 0,
     ACTION_ANIMUS_DEAD
 };
 

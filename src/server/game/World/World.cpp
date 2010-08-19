@@ -2509,17 +2509,6 @@ void World::SendRNDBroadcast()
     }
 }
 
-void World::InitResultQueue()
-{
-    m_resultQueue = new SqlResultQueue;
-    CharacterDatabase.SetResultQueue(m_resultQueue);
-}
-
-void World::UpdateResultQueue()
-{
-    m_resultQueue->Update();
-}
-
 void World::UpdateRealmCharCount(uint32 accountId)
 {
     m_realmCharCallback.SetParam(accountId);
@@ -2763,7 +2752,8 @@ void World::ProcessQueryCallbacks()
         uint32 param = m_realmCharCallback.GetParam();
         m_realmCharCallback.GetResult(result);
         _UpdateRealmCharCount(result, param);
-        m_realmCharCallback.FreeResult();	 
+        m_realmCharCallback.FreeResult();
+    }
 }
 void World::SendWintergraspState()
 {
