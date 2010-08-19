@@ -478,7 +478,7 @@ public:
                                     case 13:
                                             if(pInstance->GetData(PHASE_3)==DONE)
                                             {
-                                                    DoScriptText(-1999930, me);
+                                                    //DoScriptText(-1999930, me);
                                                     pInstance->SetData(PHASE_SPECHIAL, 14);
                                                     pInstance->SetData(SPECHIAL_TIMER, 500);
                                             }
