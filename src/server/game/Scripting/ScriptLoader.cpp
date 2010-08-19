@@ -447,7 +447,7 @@ void AddSC_boss_blood_queen_lana_thel();
 void AddSC_boss_saurfang();
 void AddSC_boss_festergut();
 void AddSC_boss_deahtwisper();
-void AddSC_boss_marrowgar();
+void AddSC_boss_lord_marrowgar();
 void AddSC_boss_professor_putricide();
 void AddSC_boss_rotface();
 void AddSC_boss_sindragosa();
@@ -1150,7 +1150,7 @@ void AddNorthrendScripts()
     AddSC_boss_saurfang();
     AddSC_boss_festergut();
     AddSC_boss_deahtwisper();
-    AddSC_boss_marrowgar();
+    AddSC_boss_lord_marrowgar();
     AddSC_boss_professor_putricide();
     AddSC_boss_rotface();
     AddSC_boss_sindragosa();
