@@ -35,6 +35,8 @@ enum Data
     DATA_VALITHRIA_DREAMWALKER_EVENT,
     DATA_SINDRAGOSA_EVENT,
     DATA_LICH_KING_EVENT,
+
+    COMMAND_FAIL_BONED
 };
 
 enum Data64
@@ -58,6 +60,8 @@ enum Data64
 enum mainCreatures
 {
     CREATURE_MARROWGAR               = 36612,
+    NPC_COLDFLAME                    = 36672,
+    NPC_BONE_SPIKE                   = 38711,
     CREATURE_DEATHWHISPER            = 36855,
     CREATURE_GUNSHIP                 = 30343,
     CREATURE_SAURFANG                = 37813,
@@ -82,6 +86,16 @@ enum GameObjects
     GO_GASVALVE                     = 201616,
     GO_PROFDOORORANGE               = 201613,
     GO_PROFDOORGREEN                = 201614,
+    DOODAD_ICECROWN_ICEWALL02       = 201910,
+    ICEWALL                         = 201911,
+    LORD_MARROWGAR_S_ENTRANCE       = 201857
 };
 
+enum eAchievementCriteria
+{
+    CRITERIA_BONED_10N  = 12775,
+    CRITERIA_BONED_25N  = 12962,
+    CRITERIA_BONED_10H  = 13393,
+    CRITERIA_BONED_25H  = 13394,
+};
 #endif
