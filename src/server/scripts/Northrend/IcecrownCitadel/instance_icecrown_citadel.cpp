@@ -156,7 +156,7 @@ public:
 			uiCitadelTp             = 0;
 			uiSindragossaTp         = 0;
 			uiLichTp                = 0;
-			iisBonedEligible           = true;
+			isBonedEligible           = true;
 		}
 
 		bool IsEncounterInProgress() const
@@ -453,7 +453,7 @@ public:
 				auiEncounter[0] = data;
 				break;
 				case COMMAND_FAIL_BONED:
-					iisBonedEligible = data ? true : false;
+					isBonedEligible = data ? true : false;
 
 			case DATA_DEATHWHISPER_EVENT:
 				switch(data)
@@ -741,7 +741,7 @@ public:
 			OUT_SAVE_INST_DATA;
 
 			std::ostringstream saveStream;
-			saveStream << "I C" << iisBonedEligible << " " << auiEncounter[0] << " " << auiEncounter[1] << " " << auiEncounter[2] << " " << auiEncounter[3]
+			saveStream << "I C" << isBonedEligible << " " << auiEncounter[0] << " " << auiEncounter[1] << " " << auiEncounter[2] << " " << auiEncounter[3]
 			<< " " << auiEncounter[4] << " " << auiEncounter[5] << " " << auiEncounter[6] << " " << auiEncounter[7] << " " << auiEncounter[8]
 			<< " " << auiEncounter[9] << " " << auiEncounter[10] << " " << auiEncounter[11];
 
@@ -763,7 +763,7 @@ public:
 			uint16 data0,data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11;
 
 			std::istringstream loadStream(in);
-			loadStream >> iisBonedEligible >> dataHead1 >> dataHead2 >> data0 >> data1 >> data2 >> data3 >> data4 >> data5 >> data6
+			loadStream >> isBonedEligible >> dataHead1 >> dataHead2 >> data0 >> data1 >> data2 >> data3 >> data4 >> data5 >> data6
 				>> data7 >> data8 >> data9 >> data10 >> data11;
 
 			if (dataHead1 == 'I' && dataHead2 == 'C')
@@ -797,13 +797,13 @@ public:
                     case CRITERIA_BONED_25N:
                     case CRITERIA_BONED_10H:
                     case CRITERIA_BONED_25H:
-                        return iisBonedEligible;
+                        return isBonedEligible;
                 }
 
                 return false;
             }
 private:
-            bool iisBonedEligible;
+            bool isBonedEligible;
 	};
 
 	InstanceScript* GetInstanceScript (InstanceMap* pMap) const
