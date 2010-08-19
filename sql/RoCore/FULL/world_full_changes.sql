@@ -91,7 +91,7 @@ UPDATE `gameobject_template` SET `data10` = 26566 WHERE `entry`=180911;
 DELETE FROM achievement_criteria_data WHERE criteria_id = 1400;
 INSERT INTO achievement_criteria_data VALUES
 (1400, 1, 28859, 0);
-*/
+ */
 
 UPDATE creature_template SET flags_extra = flags_extra | 2 WHERE entry = 30090;
 UPDATE creature_template SET flags_extra = flags_extra | 2, faction_A = 35, faction_H = 35, VehicleId = 165 WHERE entry IN (30234, 30248);
@@ -1064,7 +1064,7 @@ UPDATE creature_template SET spell1 = 49840, spell2 = 49838, spell3 = 49592, spe
 UPDATE creature_template SET spell1 = 50328, spell2 = 50341, spell3 = 50344, spell4 =  0, spell5 = 53112, VehicleId = 70 WHERE entry = 27692;
 /*
 UPDATE creature_template SET npcflag=1 WHERE entry IN (27657,27658,27659);
-*/
+ */
 UPDATE creature_template SET ScriptName='boss_drakos' WHERE entry = 27654;
 UPDATE creature_template SET ScriptName='boss_urom' WHERE entry = 27655;
 UPDATE creature_template SET ScriptName='mob_centrifige_construct' WHERE entry = 27641;
@@ -2275,7 +2275,7 @@ INSERT INTO `creature` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equ
 /*
 DELETE FROM `spell_script_target` WHERE `entry`=62016;
 INSERT INTO `spell_script_target` (`entry`, `type`, `targetEntry`) VALUES('62016','1','33378');
-*/
+ */
 UPDATE `creature_template` SET `unit_flags` = 0, `ScriptName` = 'mob_runic_colossus' WHERE `entry` = 32872;
 UPDATE `creature_template` SET `unit_flags` = 0, `ScriptName` = 'mob_rune_giant' WHERE `entry` = 32873;
 UPDATE `creature_template` SET `modelid1` = 16925, `modelid2` = 0, `ScriptName` = 'thorim_trap_bunny' WHERE `entry` IN (33725, 33282);
@@ -2738,10 +2738,10 @@ DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=33431);
 INSERT INTO `creature_ai_scripts` VALUES 
 (3343101, 33431, 0, 0, 100, 3, 3000, 9000, 10000, 20000, 11, 63059, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Forest Swarmer - Cast Pollinate 10'),
 (3343102, 33431, 0, 0, 100, 5, 3000, 9000, 10000, 20000, 11, 63059, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Forest Swarmer - Cast Pollinate 25');
-/*
+/* 
 DELETE FROM `spell_script_target` WHERE `entry`=63059;
 INSERT INTO `spell_script_target` (`entry`, `type`, `targetEntry`) VALUES('63059','1','33430');
-*/
+ */
 
 -- Guardian of Life
 UPDATE `creature_template` SET `spell1` = 63226, `mingold` = 7100, `maxgold` = 7600, `dmg_multiplier` = 15, `AIName` = 'EventAI' WHERE `entry` = 33528;
@@ -5404,7 +5404,7 @@ ALTER TABLE db_version CHANGE COLUMN required_187_world_halls_of_reflection requ
 ALTER TABLE db_version CHANGE COLUMN required_205_world_access_requirement required_242_world_battleground_template bit;
 -- note: uncheck if necessary, depending on the db you use /* */
 
-/*
+/* 
 -- Set battleground-names
 UPDATE `battleground_template` SET `Comment`= 'Alterac Valley' WHERE `battleground_template`.`id`=1;
 UPDATE `battleground_template` SET `Comment`= 'Warsong Gulch' WHERE `battleground_template`.`id`=2;
@@ -5419,7 +5419,7 @@ UPDATE `battleground_template` SET `Comment`= 'Dalaran Sewers' WHERE `battlegrou
 UPDATE `battleground_template` SET `Comment`= 'The Ring of Valor' WHERE `battleground_template`.`id`=11;
 UPDATE `battleground_template` SET `Comment`= 'Isle of Conquest' WHERE `battleground_template`.`id`=30;
 UPDATE `battleground_template` SET `Comment`= 'Random battleground' WHERE `battleground_template`.`id`=32;
-*/
+ */
 
 ALTER TABLE db_version CHANGE COLUMN required_242_world_battleground_template required_243_world_creature_transport bit;
 
@@ -6490,7 +6490,7 @@ INSERT INTO `command` VALUES ('wg timer', '3', 'Syntax: .wg timer $minutes\r\nCh
 * 60476 - [Doodad_WG_Keep_Door01_collision01 X:5397.109863 Y:2841.540039 Z:425.901001 MapId:571]*/
 DELETE FROM gameobject WHERE id IN ('194323', '194162');
 
-/*Defender's Portal Activate Proper Spell*/
+/*Defender's Portal Activate Proper Spell */
 REPLACE INTO `spell_linked_spell` VALUES ('54640','54643','0','Defender\'s Portal Activate Proper Spell');
 
 /* Teleport WG SPELLs*/
