@@ -51,7 +51,7 @@ UPDATE quest_template SET ReqSourceId2 = 0, ReqSourceCount2 = 0 WHERE ReqSourceI
 UPDATE item_template SET maxcount = 1 WHERE entry = 45005;
 UPDATE creature_template SET  ScriptName = 'npc_argent_valiant' WHERE entry = 33448;
 
--- script boreal tundra
+-- script borean tundra
 -- Fizzcrank Fullthrottle
 UPDATE creature_template SET  ScriptName = 'npc_fizzcrank_fullthrottle' WHERE entry = 25590;
 -- Surristrasz
@@ -147,7 +147,13 @@ INSERT INTO script_texts (npc_entry, entry, content_default, sound, type, langua
 (32295, -1616032, 'And so ends the Nexus War.', 14407, 1, 0, 0, 'Alexstrasza OUTRO 2'),
 (32295, -1616033, 'This resolution pains me deeply, but the destruction, the monumental loss of life had to end. Regardless of Malygos\' recent transgressions, I will mourn his loss. He was once a guardian, a protector. This day, one of the world\'s mightiest has fallen.', 14408, 1, 0, 0, 'Alexstrasza OUTRO 3'),
 (32295, -1616034, 'The red dragonflight will take on the burden of mending the devastation wrought on Azeroth. Return home to your people and rest. Tomorrow will bring you new challenges, and you must be ready to face them. Life...goes on.', 14409, 1, 0, 0, 'Alexstrasza OUTRO 4');
-
+	
+UPDATE creature_template SET  flags_extra =  flags_extra | 0x2 WHERE entry = 31253; -- Alexstrazsa
+UPDATE creature_model_info SET combat_reach = 15 WHERE modelid = 26752;
+DELETE FROM script_texts WHERE entry = -1616035;
+INSERT INTO script_texts (npc_entry, entry, content_default, TYPE, COMMENT) VALUE
+(28859, -1616035, "A Power Spark forms from a nearby rift!", 5, "Malygos WHISPER_POWER_SPARK");
+UPDATE script_texts SET content_default = "My patience has reached its limit. I will be rid of you!" WHERE entry = -1616005;
 
 -- some naxx loot and script_ai
 
@@ -5987,10 +5993,6 @@ INSERT INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `modelid`
 ('88395','30300','571','1','8','0','0','7927.19','-154.457','868.181','0.298384','360','0','0','315000','0','0','2'),
 ('96620','23749','571','1','1','0','0','1341.01','-3139.52','172.174','3.53166','600','0','0','9610','0','0','2'),
 ('98440','32491','571','1','1','0','0','7093.84','-226.29','796.63','4.74999','600','0','0','18900','0','0','2');
-
-
-#Fix Cyclone piercing through Divine Shield
-INSERT INTO spell_linked_spell VALUES (642, -33786, 2, 'Divine Shield Immune to Cyclone');
 
 #Bladestorm immunity fixes
 INSERT INTO `spell_linked_spell` (`spell_trigger`, `spell_effect`, `type`, `comment`) VALUES

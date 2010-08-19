@@ -1,4 +1,4 @@
--- script boreal tundra
+-- script borean tundra
 -- Fizzcrank Fullthrottle
 UPDATE creature_template SET  ScriptName = 'npc_fizzcrank_fullthrottle' WHERE entry = 25590;
 -- Surristrasz
