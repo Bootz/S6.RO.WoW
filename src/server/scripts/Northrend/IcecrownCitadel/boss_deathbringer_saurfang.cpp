@@ -244,7 +244,7 @@ public:
 			        {
 				        if(target && target->GetTypeId() == TYPEID_PLAYER && target->isAlive())
 				        {
-                                                DoCast(target, SPELL_BOILING_BLOOD);
+                                                DoCast(target, RAID_MODE(SPELL_BOILING_BLOOD_10_NORMAL, SPELL_BOILING_BLOOD_25_NORMAL));
 				        }
 			        }
                                 m_uiBoilingBloodTimer = 25000;
