@@ -163,7 +163,7 @@ public:
         InstanceScript* pInstance;
     };
 
-    CreatureAI* GetAI_keeper_image(Creature* pCreature) const
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new keeper_imageAI (pCreature);
     }

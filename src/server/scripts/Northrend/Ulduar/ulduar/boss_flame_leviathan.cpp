@@ -631,7 +631,7 @@ public:
 
         return true;
     }
-    CreatureAI* GetAI_keeper_norgannon(Creature* pCreature) const
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new keeper_norgannonAI (pCreature);
     }

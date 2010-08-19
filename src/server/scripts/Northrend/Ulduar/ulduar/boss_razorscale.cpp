@@ -567,7 +567,7 @@ struct npc_expedition_commanderAI : public ScriptedAI
         return true;
     }
 
-    CreatureAI* GetAI_commander_ulduar(Creature* pCreature) const
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new npc_expedition_commanderAI(pCreature);
     }

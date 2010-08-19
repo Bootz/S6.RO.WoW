@@ -266,7 +266,7 @@ public:
         }
     };
 
-    CreatureAI* GetAI(Creature *pCreature) const
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new boss_general_vezaxAI(pCreature);
     }
@@ -282,7 +282,7 @@ public:
 
     struct mob_saronite_vaporsAI : public ScriptedAI
     {
-        mob_saronite_vaporsAI(Creature *pCreature) : ScriptedAI(pCreature)
+        mob_saronite_vaporsAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
             pInstance = pCreature->GetInstanceScript();
             me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);
@@ -313,7 +313,7 @@ public:
         }
     };
 
-    CreatureAI* GetAI(Creature *pCreature) const
+    CreatureAI* GetAI(Creature* pCreature) const
     {
         return new mob_saronite_vaporsAI(pCreature);
     }
