@@ -6497,3 +6497,23 @@ REPLACE INTO `spell_target_position` VALUES ('60035', '571', '5325.06', '2843.36
 
 DELETE FROM `outdoorpvp_template` WHERE `TypeId` IN (7);
 INSERT INTO `outdoorpvp_template` (`TypeId`, `ScriptName`, `Comment`) VALUES (7, 'outdoorpvp_wg', 'Wintergrasp');
+
+ALTER TABLE db_version CHANGE COLUMN required_507_world_wintergrasp required_525_world_spell_scripts bit;
+
+DELETE FROM `spell_scripts` WHERE id IN (44997,45030,49625,49634,53343,53341);
+INSERT INTO `spell_scripts`(`id`,`effIndex`,`delay`,`command`,`datalong`,`datalong2`,`dataint`,`x`,`y`,`z`,`o`) VALUES 
+(44997,0,0,15,45009,1,1,0,0,0,0), -- Converting Sentry
+(45030,1,0,15,45088,1,1,0,0,0,0), -- Impale Emissary
+(49625,0,0,15,43106,1,1,0,0,0,0), -- Brave's Flare
+(49634,0,0,15,43068,1,1,0,0,0,0), -- Sergeant's Flare
+(53343,1,0,15,54586,1,1,0,0,0,0), -- Rune of Razorice
+(53341,1,0,15,54586,1,1,0,0,0,0); -- Rune of Cinderglacier
+
+ALTER TABLE db_version CHANGE COLUMN required_525_world_spell_scripts required_529_world_quest_free_your_mind bit;
+
+-- Leaper
+UPDATE `creature_template` SET `ScriptName`='npc_leaper' WHERE `entry`='29840';
+-- Lady Nightswood
+UPDATE `creature_template` SET `ScriptName`='npc_lady_nightswood' WHERE `entry`='29770';
+-- The Vile
+UPDATE `creature_template` SET `ScriptName`='npc_vile' WHERE `entry`='29769';
