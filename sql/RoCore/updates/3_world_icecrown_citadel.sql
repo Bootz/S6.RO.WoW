@@ -1453,3 +1453,8 @@ REPLACE INTO `creature_ai_scripts` (`id`,`creature_id`,`event_type`,`event_inver
 ('26021139','37134','2','0','100','30','15','0','0','0','22','2','0','0','0','0','0','0','0','0','0','0','Ymirjar Huntress - Set Phase 2 at 15% HP'),
 ('26021140','37134','2','11','100','30','15','0','0','0','21','1','0','0','25','0','0','0','1','-47','0','0','Ymirjar Huntress - Start Movement and Flee at 15% HP (Phase 2)'),
 ('26021141','37134','7','0','100','30','0','0','0','0','22','0','0','0','0','0','0','0','0','0','0','0','Ymirjar Huntress - On Evade set Phase to 0');
+
+UPDATE `creature_template` SET `unit_flags` = 528386, `type_flags` = 138, `mechanic_immune_mask` = 646658835 WHERE `entry` = 38456;
+UPDATE `creature_template` SET `modelid1` = 11686, `modelid3` = 11686, `AIName` = 'EventAI' WHERE `entry` = 38879;
+DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=38879);
+INSERT INTO `creature_ai_scripts` VALUES  (3887900, 38879, 9, 0, 100, 6, 1, 30, 8000, 10000, 11, 70460, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, '');

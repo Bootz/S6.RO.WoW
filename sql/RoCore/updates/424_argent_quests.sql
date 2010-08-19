@@ -337,6 +337,7 @@ UPDATE `creature_template` SET `ScriptName`='npc_valis_windchaser' WHERE `entry`
 UPDATE `creature_template` SET `ScriptName`='npc_rugan_steelbelly' WHERE `entry`=33972;
 UPDATE `creature_template` SET `ScriptName`='npc_jeran_lockwood' WHERE `entry`=33973;
 UPDATE `creature_template` SET `Scriptname`='npc_justicar_mariel_trueheart' WHERE `entry` = '33817';
+UPDATE `creature_template` SET `Scriptname`='npc_vendor_argent_tournament' WHERE `entry` IN (33553,33554,33556,33555,33557,33307,33310,33653,33650,33657);
 
 -- Debug QuestRelation A2
 DELETE FROM `creature_questrelation` WHERE `quest` IN (13828, 13672, 13679, 13684, 13685, 13689, 13688, 13690);
