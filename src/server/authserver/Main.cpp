@@ -42,6 +42,8 @@
 #include <openssl/opensslv.h>
 #include <openssl/crypto.h>
 
+#include "DatabaseWorker.h"
+
 #ifndef _TRINITY_REALM_CONFIG
 # define _TRINITY_REALM_CONFIG  "authserver.conf"
 #endif //_TRINITY_REALM_CONFIG
@@ -355,10 +357,10 @@ bool StartDB()
    if(!LoginDatabase.CheckRequiredField("realmd_db_version",REVISION_DB_REALMD))
         return false;
 
-    LoginDatabase.ThreadStart();
+    MySQL::Thread_Init();
 
     uint32 count = 0;
-    sPreparedStatement.LoadAuthserver(&LoginDatabase, count);
+   // sPreparedStatement.LoadAuthserver(&LoginDatabase, count);
     sLog.outString("Loaded %u prepared MySQL statements for auth DB.", count);
 
     return true;
