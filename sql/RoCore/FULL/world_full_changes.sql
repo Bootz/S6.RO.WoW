@@ -3835,6 +3835,7 @@ UPDATE `creature_template` SET `ScriptName`='npc_sister_svalna' WHERE `entry` = 
 UPDATE `creature_template` SET `ScriptName` = 'npc_impaling_spear' WHERE `entry` = '38248';
 UPDATE `creature_template` SET `ScriptName` = 'npc_gas_cloud' WHERE `entry` = '37562';
 UPDATE `creature_template` SET `ScriptName`='lanathel_intro' WHERE (`entry`='38004');
+UPDATE `creature_template` SET `vehicleId`=533 WHERE `entry`=36619;
 
 -- Inserting NPC's on world
 DELETE FROM `creature` WHERE `id`=38004;
@@ -4967,6 +4968,36 @@ UPDATE `creature_template` SET `unit_flags` = 528386, `type_flags` = 138, `mecha
 UPDATE `creature_template` SET `modelid1` = 11686, `modelid3` = 11686, `AIName` = 'EventAI' WHERE `entry` = 38879;
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=38879);
 INSERT INTO `creature_ai_scripts` VALUES  (3887900, 38879, 9, 0, 100, 6, 1, 30, 8000, 10000, 11, 70460, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, '');
+
+-- OTHER
+UPDATE `creature_template` SET `flags_extra`=`flags_extra`|128,minlevel=80,maxlevel=80 WHERE `entry`=36672;
+-- Achievements
+DELETE FROM `achievement_criteria_data` WHERE `criteria_id` IN (12775,12775,13393,13393,12962,12962,13394,13394,12770,12771,12772,12773,12945,12946,12947,12948,13039,13040,13041,13042,13050,13051,13052,13053);
+INSERT INTO `achievement_criteria_data` (`criteria_id`,`type`,`value1`,`value2`) VALUES
+(12775,12,0,0), -- Boned (10 player) mode requirement (10N)
+(12775,18,0,0), -- Boned (10 player) script requirement
+(13393,12,2,0), -- Boned (10 player) mode requirement (10H)
+(13393,18,0,0), -- Boned (10 player) script requirement
+(12962,12,1,0), -- Boned (25 player) mode requirement (25N)
+(12962,18,0,0), -- Boned (25 player) script requirement
+(13394,12,3,0), -- Boned (25 player) mode requirement (25H)
+(13394,18,0,0), -- Boned (25 player) script requirement
+(12770,12,0,0), -- Storming the Citadel (10 player), Lord Marrowgar, mode requirement (10N)
+(12771,12,0,0), -- Storming the Citadel (10 player), Claim victory in the Gunship Battle, mode requirement (10N)
+(12772,12,0,0), -- Storming the Citadel (10 player), The Deathbringer, mode requirement (10N)
+(12773,12,0,0), -- Storming the Citadel (10 player), Lady Deathwhisper, mode requirement (10N)
+(12945,12,1,0), -- Storming the Citadel (25 player), Lord Marrowgar, mode requirement (25N)
+(12946,12,1,0), -- Storming the Citadel (25 player), The Deathbringer, mode requirement (25N)
+(12947,12,1,0), -- Storming the Citadel (25 player), Claim victory in the Gunship Battle, mode requirement (25N)
+(12948,12,1,0), -- Storming the Citadel (25 player), Lady Deathwhisper, mode requirement (25N)
+(13039,12,2,0), -- Heroic: Storming the Citadel (10 player), Lord Marrowgar, mode requirement (10H)
+(13040,12,2,0), -- Heroic: Storming the Citadel (10 player), Lady Deathwhisper, mode requirement (10H)
+(13041,12,2,0), -- Heroic: Storming the Citadel (10 player), Claim victory in the Gunship Battle, mode requirement (10H)
+(13042,12,2,0), -- Heroic: Storming the Citadel (10 player), The Deathbringer, mode requirement (10H)
+(13050,12,3,0), -- Heroic: Storming the Citadel (25 player), Lord Marrowgar, mode requirement (25H)
+(13051,12,3,0), -- Heroic: Storming the Citadel (25 player), Lady Deathwhisper, mode requirement (25H)
+(13052,12,3,0), -- Heroic: Storming the Citadel (25 player), Claim victory in the Gunship Battle, mode requirement (25H)
+(13053,12,3,0); -- Heroic: Storming the Citadel (25 player), The Deathbringer, mode requirement (25H)
 
 ALTER TABLE db_version CHANGE COLUMN required_3_world_icecrown_citadel required_27_world_command bit;
 
