@@ -61,7 +61,7 @@ enum mainCreatures
 {
     CREATURE_MARROWGAR               = 36612,
     NPC_COLDFLAME                    = 36672,
-    NPC_BONE_SPIKE                   = 38711,
+    NPC_BONE_SPIKE                   = 36619,
     CREATURE_DEATHWHISPER            = 36855,
     CREATURE_GUNSHIP                 = 30343,
     CREATURE_SAURFANG                = 37813,

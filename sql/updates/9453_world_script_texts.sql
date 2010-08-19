@@ -1,5 +1,3 @@
-/*
-
 DELETE FROM `script_texts` WHERE `entry` BETWEEN -1631999 AND -1631000;
 INSERT INTO `script_texts` (`npc_entry`,`entry`,`content_default`,`content_loc1`,`content_loc2`,`content_loc3`,`content_loc4`,`content_loc5`,`content_loc6`,`content_loc7`,`content_loc8`,`sound`,`type`,`language`,`emote`,`comment`) VALUES
 (36612,-1631000,'This is the beginning AND the end, mortals. None may enter the master''s sanctum!',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16950,1,0,0,'SAY_ENTER_ZONE'),
@@ -12,5 +10,3 @@ INSERT INTO `script_texts` (`npc_entry`,`entry`,`content_default`,`content_loc1`
 (36612,-1631007,'Languish in damnation!',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16943,1,0,0,'SAY_KILL_2'),
 (36612,-1631008,'I see... only darkness...',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16944,1,0,0,'SAY_DEATH'),
 (36612,-1631009,'THE MASTER''S RAGE COURSES THROUGH ME!',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16945,1,0,0,'SAY_BERSERK');
-
-*/
