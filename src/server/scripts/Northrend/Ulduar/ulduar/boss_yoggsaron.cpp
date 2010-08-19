@@ -65,7 +65,6 @@ enum Phases
 
 Phases phase;
 
-// Images of Keepers
 enum Npcs
 {
     NPC_IMAGE_OF_FREYA                          = 33241,
@@ -74,6 +73,25 @@ enum Npcs
     NPC_IMAGE_OF_HODIR                          = 33213,
     
     NPC_SANITY_WELL                             = 33991,
+
+    NPC_GUARDIAN_OF_YOGGSARON                   = 33136,
+    NPC_CRUSHER_TENTACLE                        = 33966,
+    NPC_CORRUPTOR_TENTACLE                      = 33985,
+    NPC_CONSTRICTOR_TENTACLE                    = 33983,
+    NPC_DESCEND_INTO_MADNESS                    = 34072,
+
+    NPC_LAUGHING_SKULL                          = 33990,
+    NPC_INFLUENCE_TENTACLE                      = 33943,
+    NPC_IMMORTAL_GUARDIAN                       = 33988,
+
+    NPC_YOGG_SARON_BRAIN                        = 33890,
+    NPC_SUIT_OF_ARMOR                           = 33433,
+    NPC_AZURE_CONSORT                           = 33717,
+    NPC_EMERALD_CONSORT                         = 33719,
+    NPC_OBSIDIAN_CONSORT                        = 33720,
+    NPC_RUBY_CONSORT                            = 33716,
+    NPC_DEATHSWORN_ZEALOT                       = 33567,
+    NPC_OMINOUS_CLOUD                           = 33292
 };
 
 #define GOSSIP_KEEPER_HELP                      "I need your help."

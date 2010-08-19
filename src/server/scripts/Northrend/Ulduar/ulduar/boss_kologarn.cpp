@@ -103,6 +103,12 @@ uint32 GripTargetGUID;
 const Position RubbleRight = {1781.814, -3.716, 448.808, 4.211};
 const Position RubbleLeft  = {1781.814, -45.07, 448.808, 2.260};
 
+enum KologarnChests
+{
+    CACHE_OF_LIVING_STONE_10                        = 195046,
+    CACHE_OF_LIVING_STONE_25                        = 195047
+};
+
 class boss_kologarn : public CreatureScript
 {
 public:
@@ -167,6 +173,9 @@ public:
             // Hack to disable corpse fall
             me->GetMotionMaster()->MoveTargetedHome();
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+            me->setFaction(35);
+            // Chest spawn
+            me->SummonGameObject(RAID_MODE(CACHE_OF_LIVING_STONE_10, CACHE_OF_LIVING_STONE_25), 1836.52, -36.1111, 448.81, 0.558504, 0, 0, 0.7, 0.7, 604800);
         }
 
         void PassengerBoarded(Unit *who, int8 seatId, bool apply)

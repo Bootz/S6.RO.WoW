@@ -73,6 +73,7 @@ enum Events
 enum Actions
 {
     ACTION_VAPOR_DEAD                           = 0
+    ACTION_ANIMUS_DEAD
 };
 
 // Saronite Vapors
@@ -224,6 +225,7 @@ public:
                             me->AddLootMode(LOOT_MODE_HARD_MODE_1);
                             DespawnCreatures(MOB_SARONITE_VAPORS, 100);
                             events.CancelEvent(EVENT_SARONITE_VAPORS);
+                            events.CancelEvent(EVENT_SEARING_FLAMES);
                         }
                         if (VaporsCount == 8)
                             events.CancelEvent(EVENT_SARONITE_VAPORS);
@@ -246,6 +248,8 @@ public:
                 case ACTION_VAPOR_DEAD:
                     HardMode = false;
                     break;
+                case ACTION_ANIMUS_DEAD:
+                    events.ScheduleEvent(EVENT_SEARING_FLAMES, 10000);
             }
         }
     
@@ -301,7 +305,10 @@ public:
                 me->SetStandState(UNIT_STAND_STATE_DEAD);
                 DoCast(me, SPELL_SARONITE_VAPOR);
                 if (Creature* Vezax = me->GetCreature(*me, pInstance->GetData64(DATA_VEZAX)))
+	         {
                     Vezax->AI()->DoAction(ACTION_VAPOR_DEAD);
+                    Vezax->AI()->DoAction(ACTION_ANIMUS_DEAD);
+	         }
             }
         }
     };

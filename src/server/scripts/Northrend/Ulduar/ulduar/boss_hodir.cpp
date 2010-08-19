@@ -122,6 +122,11 @@ enum Yells
 #define EMOTE_FREEZE      "Hodir begins to cast Flash Freeze!"
 #define EMOTE_BLOWS       "Hodir gains Frozen Blows!"
 
+enum HodirChests
+{
+    CACHE_OF_WINTER_10                          = 194307,
+    CACHE_OF_WINTER_25                          = 194308
+};
 
 class boss_hodir : public CreatureScript
 {
@@ -233,6 +238,8 @@ struct boss_hodir_AI : public BossAI
         _JustDied();
         DoScriptText(SAY_DEATH, me);
         
+        me->setFaction(35);
+
         // Achievements
         if (pInstance)
         {
@@ -247,6 +254,8 @@ struct boss_hodir_AI : public BossAI
                 pInstance->DoCompleteAchievement(ACHIEVEMENT_THIS_CACHE_WAS_RARE);
                 pInstance->SetData(DATA_HODIR_RARE_CHEST, GO_STATE_READY);
             }
+            // Chest spawn
+            me->SummonGameObject(RAID_MODE(CACHE_OF_WINTER_10, CACHE_OF_WINTER_25), 1966.43, -203.906, 432.687, -0.90757, 0, 0, 0.7, 0.7, 604800);
         }
     }
 

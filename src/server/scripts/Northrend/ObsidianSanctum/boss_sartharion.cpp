@@ -1301,7 +1301,6 @@ public:
             uiShiftEffectTimer = 1000;
             shield = false;
             me->AddAura(SPELL_TWILIGHT_SHIFT_ENTER,me);
-            me->SetPhaseMask(2, true);
         }
 
         void JustDied(Unit* killer)
@@ -1415,7 +1414,6 @@ public:
             {
                 me->AddAura(SPELL_TWILIGHT_SHIFT_ENTER,me);
             }
-            me->SetPhaseMask(2, true);
         }
     
         void EnterCombat(Unit* who)

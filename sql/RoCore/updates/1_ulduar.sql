@@ -1445,3 +1445,5 @@ UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `unit_flags` 
 -- XT-002 trash
 UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `mindmg` = 422, `maxdmg` = 586, `attackpower` = 642, `dmg_multiplier` = 20, `minrangedmg` = 345, `maxrangedmg` = 509, `rangedattackpower` = 103, `mingold` = 146000, `maxgold` = 152000, `mechanic_immune_mask` = 617299803 WHERE `entry` = 34268;
 UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `mindmg` = 422, `maxdmg` = 586, `attackpower` = 642, `dmg_multiplier` = 30, `minrangedmg` = 345, `maxrangedmg` = 509, `rangedattackpower` = 103, `mingold` = 146000, `maxgold` = 152000, `mechanic_immune_mask` = 617299803 WHERE `entry` IN (34270, 34272, 34274);
+-- Delete chests from db
+DELETE FROM `gameobject` WHERE `id` IN (194307, 194308, 195046, 195047);
