@@ -113,21 +113,19 @@ public:
 		}
 
 		uint64 IceTombGUID;
-		Unit* TombPrisoner;
 		uint32 m_uiAsphyxiationTimer;
 
 		void SetPrisoner(Unit* uPrisoner)
 		{
-			TombPrisoner = uPrisoner;
 			IceTombGUID = uPrisoner->GetGUID();
+			uPrisoner->ApplySpellImmune(0, IMMUNITY_ID, SPELL_MYSTIC_BUFFET, true);
+			uPrisoner->ApplySpellImmune(0, IMMUNITY_ID, SPELL_MYSTIC_BUFFET2, true);
 		}
 
 		void Reset()
 		{
 			IceTombGUID = 0;
 			m_uiAsphyxiationTimer = 20000;
-			TombPrisoner->ApplySpellImmune(0, IMMUNITY_ID, SPELL_MYSTIC_BUFFET, true);
-			TombPrisoner->ApplySpellImmune(0, IMMUNITY_ID, SPELL_MYSTIC_BUFFET2, true);
 		}
 
 		void JustDied(Unit *killer)
