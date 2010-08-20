@@ -16,7 +16,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include "DatabaseEnv.h"
 #include "DatabaseWorkerPool.h"
 #include "MySQLConnection.h"
 #include "DatabaseEnv.h"
@@ -258,10 +257,140 @@ MySQLConnection* DatabaseWorkerPool::GetConnection()
         ACE_Guard<ACE_Thread_Mutex> guard(m_connectionMap_mtx);
         itr = m_sync_connections.find(ACE_Based::Thread::current());
         if (itr != m_sync_connections.end())
-            return itr->second;
+            conn = itr->second;
     }
     /*! Bundled threads */
     conn = m_bundle_conn;
     ASSERT (conn);
     return conn;
 }
+
+QueryNamedResult* DatabaseWorkerPool::QueryNamed(const char *sql)
+{
+    MYSQL_RES *result = NULL;
+    MYSQL_FIELD *fields = NULL;
+    uint64 rowCount = 0;
+    uint32 fieldCount = 0;
+
+    if (!PQuery(sql, &result, &fields, &rowCount, &fieldCount))
+        return NULL;
+
+    QueryFieldNames names(fieldCount);
+    for (uint32 i = 0; i < fieldCount; i++)
+         names[i] = fields[i].name;
+
+    QueryResult *queryResult = new QueryResult(result, fields, rowCount, fieldCount);
+
+    queryResult->NextRow();
+
+    return new QueryNamedResult(queryResult, names);
+}
+
+QueryNamedResult* DatabaseWorkerPool::PQueryNamed(const char *format, ...)
+{
+    if (!format)
+        return NULL;
+
+    va_list ap;
+    char szQuery [MAX_QUERY_LEN];
+    va_start(ap, format);
+    int res = vsnprintf(szQuery, MAX_QUERY_LEN, format, ap);
+    va_end(ap);
+
+    if (res == -1)
+    {
+        sLog.outError("SQL Query truncated (and not execute) for format: %s", format);
+        return false;
+    }
+
+    return QueryNamed(szQuery);
+}
+
+bool DatabaseWorkerPool::CheckRequiredField(char const* table_name, char const* required_name)
+{
+    // check required field
+    QueryResult_AutoPtr result = PQuery("SELECT %s FROM %s LIMIT 1",required_name,table_name);
+    if (result)
+    {
+        return true;
+    }
+
+    // check fail, prepare readabale error message
+
+    // search current required_* field in DB
+    const char* db_name;
+    if (!strcmp(table_name, "world_version"))
+        db_name = "WORLD";
+    else if (!strcmp(table_name, "character_version"))
+        db_name = "CHARACTER";
+    else if (!strcmp(table_name, "authserver_version"))
+        db_name = "LOGONSERVER";
+    else if (!strcmp(table_name, "config_version"))
+        db_name = "CONFIG";
+    else
+        db_name = "UNKNOWN";
+
+    char const* req_sql_update_name = required_name+strlen("required_");
+
+    QueryNamedResult* result2 = PQueryNamed("SELECT * FROM %s LIMIT 1",table_name);
+    if (result2)
+    {
+        QueryFieldNames const& namesMap = result2->GetFieldNames();
+        std::string reqName;
+        for(QueryFieldNames::const_iterator itr = namesMap.begin(); itr != namesMap.end(); ++itr)
+        {
+            if (itr->substr(0,9)=="required_")
+            {
+                reqName = *itr;
+                break;
+            }
+        }
+
+        delete result2;
+
+        std::string cur_sql_update_name = reqName.substr(strlen("required_"),reqName.npos);
+
+        if (!reqName.empty())
+        {
+            sLog.outErrorDb("The table `%s` in your [%s] database indicates that this database is out of date!",table_name,db_name);
+            sLog.outErrorDb("");
+            sLog.outErrorDb("  [A] You have: --> `%s.sql`",cur_sql_update_name.c_str());
+            sLog.outErrorDb("");
+            sLog.outErrorDb("  [B] You need: --> `%s.sql`",req_sql_update_name);
+            sLog.outErrorDb("");
+            sLog.outErrorDb("You must apply all updates after [A] to [B] to use RibonCore with this database.");
+            sLog.outErrorDb("These updates are included in the sql/updates folder.");
+        }
+        else
+        {
+            sLog.outErrorDb("The table `%s` in your [%s] database is missing its version info.",table_name,db_name);
+            sLog.outErrorDb("RibonCore cannot find the version info needed to check that the db is up to date.",table_name,db_name);
+            sLog.outErrorDb("");
+            sLog.outErrorDb("This revision of RibonCore requires a database updated to:");
+            sLog.outErrorDb("`%s.sql`",req_sql_update_name);
+            sLog.outErrorDb("");
+
+            if (!strcmp(db_name, "WORLD"))
+                sLog.outErrorDb("Post this error to your database provider forum or find a solution there.");
+            else
+                sLog.outErrorDb("Reinstall your [%s] database with the included sql file in the sql folder.",db_name);
+        }
+    }
+    else
+    {
+        sLog.outErrorDb("The table `%s` in your [%s] database is missing or corrupt.",table_name,db_name);
+        sLog.outErrorDb("RibonCore cannot find the version info needed to check that the db is up to date.",table_name,db_name);
+        sLog.outErrorDb("");
+        sLog.outErrorDb("This revision of RibonCore requires a database updated to:");
+        sLog.outErrorDb("`%s.sql`",req_sql_update_name);
+        sLog.outErrorDb("");
+
+        if (!strcmp(db_name, "WORLD"))
+            sLog.outErrorDb("Post this error to your database provider forum or find a solution there.");
+        else
+            sLog.outErrorDb("Reinstall your [%s] database with the included sql file in the sql folder.",db_name);
+    }
+
+    return false;
+}
+

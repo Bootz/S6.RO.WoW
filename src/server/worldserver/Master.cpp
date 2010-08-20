@@ -465,8 +465,8 @@ bool Master::_StartDB()
         return false;
     }
 
-    //if(!WorldDatabase.CheckRequiredField("db_version",REVISION_DB_WORLD))
-    //    return false;
+    if(!WorldDatabase.CheckRequiredField("db_version",REVISION_DB_WORLD))
+        return false;
 
     ///- Get character database info from configuration file
     dbstring = sConfig.GetStringDefault("CharacterDatabaseInfo", "");
@@ -491,8 +491,8 @@ bool Master::_StartDB()
         return false;
     }
 
-    //if(!CharacterDatabase.CheckRequiredField("character_db_version",REVISION_DB_CHARACTERS))
-    //    return false;
+    if(!CharacterDatabase.CheckRequiredField("character_db_version",REVISION_DB_CHARACTERS))
+        return false;
 
 
     ///- Get login database info from configuration file
@@ -518,8 +518,8 @@ bool Master::_StartDB()
         return false;
     }
 
-    //if(!LoginDatabase.CheckRequiredField("realmd_db_version",REVISION_DB_REALMD))
-     //   return false;
+    if(!LoginDatabase.CheckRequiredField("realmd_db_version",REVISION_DB_REALMD))
+        return false;
 
     ///- Get the realm Id from the configuration file
     realmID = sConfig.GetIntDefault("RealmID", 0);
