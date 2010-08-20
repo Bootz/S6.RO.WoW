@@ -103,6 +103,8 @@ public:
 		{
 			pInstance = c->GetInstanceScript();
 			pValanar = me;
+                        pKeleseth = pInstance->GetData64(DATA_PRINCE_KELESETH_ICC);
+                        pTaldaram = pInstance->GetData64(DATA_PRINCE_TALDARAM_ICC);
 		}
 
 		InstanceScript* pInstance;
@@ -155,8 +157,8 @@ public:
 			InvocationNumber = 0;
 			pKeleseth->SetInCombatWithZone();
 			pTaldaram->SetInCombatWithZone();
-			pKeleseth->GetMotionMaster()->MoveChase(me->getVictim());
-			pTaldaram->GetMotionMaster()->MoveChase(me->getVictim());
+			CAST_CRE(pKeleseth)->AI()->AttackStart(who);
+			CAST_CRE(pTaldaram)->AI()->AttackStart(who);
 		}
 
 		void KilledUnit(Unit *victim)
@@ -303,7 +305,7 @@ public:
 		boss_Keleseth_IccAI(Creature *c) : ScriptedAI(c)
 		{
 			pInstance = c->GetInstanceScript();
-			pKeleseth = me;
+			//pKeleseth = me;
 		}
 
 		InstanceScript* pInstance;
@@ -322,8 +324,8 @@ public:
 			AuraCheck = 1000;
 			pValanar->SetInCombatWithZone();
 			pTaldaram->SetInCombatWithZone();
-			pValanar->GetMotionMaster()->MoveChase(me->getVictim());
-			pTaldaram->GetMotionMaster()->MoveChase(me->getVictim());
+			CAST_CRE(pValanar)->AI()->AttackStart(who);
+			CAST_CRE(pTaldaram)->AI()->AttackStart(who);
 		}
 
 		void KilledUnit(Unit *victim)
@@ -422,7 +424,7 @@ public:
 		boss_Taldaram_IccAI(Creature *c) : ScriptedAI(c)
 		{
 			pInstance = c->GetInstanceScript();
-			pTaldaram = me;
+			//pTaldaram = me;
 		}
 
 		InstanceScript* pInstance;
@@ -442,8 +444,8 @@ public:
 			AuraCheck = 1000;
 			pValanar->SetInCombatWithZone();
 			pKeleseth->SetInCombatWithZone();
-			pKeleseth->GetMotionMaster()->MoveChase(me->getVictim());
-			pValanar->GetMotionMaster()->MoveChase(me->getVictim());
+			CAST_CRE(pKeleseth)->AI()->AttackStart(who);
+			CAST_CRE(pValanar)->AI()->AttackStart(who);
 		}
 
 		void JustSummoned(Creature* pSummoned)
