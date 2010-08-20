@@ -32,7 +32,6 @@
 #include "SharedDefines.h"
 #include "GridRefManager.h"
 #include "MapRefManager.h"
-#include "MersenneTwister.h"
 
 #include <bitset>
 #include <list>
@@ -426,15 +425,6 @@ class Map : public GridRefManager<NGridType>
 
         void UpdateIteratorBack(Player *player);
 
-#ifdef MAP_BASED_RAND_GEN
-        MTRand mtRand;
-        int32 irand(int32 min, int32 max)       { return int32 (mtRand.randInt(max - min)) + min; }
-        uint32 urand(uint32 min, uint32 max)    { return mtRand.randInt(max - min) + min; }
-        int32 rand32()                          { return mtRand.randInt(); }
-        double rand_norm()                      { return mtRand.randExc(); }
-        double rand_chance()                    { return mtRand.randExc(100.0); }
-#endif
-
         TempSummon *SummonCreature(uint32 entry, const Position &pos, SummonPropertiesEntry const *properties = NULL, uint32 duration = 0, Unit *summoner = NULL, uint32 vehId = 0);
         Creature* GetCreature(uint64 guid);
         GameObject* GetGameObject(uint64 guid);
@@ -508,13 +498,13 @@ class Map : public GridRefManager<NGridType>
         ActiveNonPlayers::iterator m_activeNonPlayersIter;
 
     private:
-        Player* _GetScriptPlayerSourceOrTarget(Object* source, Object* target, uint32 unScriptID, const char *sCommandName) const;
-        Creature* _GetScriptCreatureSourceOrTarget(Object* source, Object* target, uint32 unScriptID, const char *sCommandName, bool bReverse = false) const;
-        Unit* _GetScriptUnit(Object* obj, bool isSource, uint32 unScriptID, const char *sCommandName) const;
-        Player* _GetScriptPlayer(Object* obj, bool isSource, uint32 unScriptID, const char *sCommandName) const;
-        Creature* _GetScriptCreature(Object* obj, bool isSource, uint32 unScriptID, const char *sCommandName) const;
-        WorldObject* _GetScriptWorldObject(Object* obj, bool isSource, uint32 unScriptID, const char *sCommandName) const;
-        void _ScriptProcessDoor(Object* source, Object* target, bool bOpen, uint32 guid, int32 nTimeToToggle, uint32 unScriptID) const;
+        Player* _GetScriptPlayerSourceOrTarget(Object* source, Object* target, const ScriptInfo* scriptInfo) const;
+        Creature* _GetScriptCreatureSourceOrTarget(Object* source, Object* target, const ScriptInfo* scriptInfo, bool bReverse = false) const;
+        Unit* _GetScriptUnit(Object* obj, bool isSource, const ScriptInfo* scriptInfo) const;
+        Player* _GetScriptPlayer(Object* obj, bool isSource, const ScriptInfo* scriptInfo) const;
+        Creature* _GetScriptCreature(Object* obj, bool isSource, const ScriptInfo* scriptInfo) const;
+        WorldObject* _GetScriptWorldObject(Object* obj, bool isSource, const ScriptInfo* scriptInfo) const;
+        void _ScriptProcessDoor(Object* source, Object* target, const ScriptInfo* scriptInfo) const;
         GameObject* _FindGameObject(WorldObject* pWorldObject, uint32 guid) const;
 
         time_t i_gridExpiry;

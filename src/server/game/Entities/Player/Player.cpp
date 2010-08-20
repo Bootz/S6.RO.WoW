@@ -13492,8 +13492,10 @@ void Player::PrepareGossipMenu(WorldObject *pSource, uint32 menuId, bool showQue
                     if (getClass() != CLASS_HUNTER)
                         bCanTalk = false;
                     break;
-                case GOSSIP_OPTION_GOSSIP:
                 case GOSSIP_OPTION_QUESTGIVER:
+                    bCanTalk = false;
+                    break;
+                case GOSSIP_OPTION_GOSSIP:
                 case GOSSIP_OPTION_SPIRITGUIDE:
                 case GOSSIP_OPTION_INNKEEPER:
                 case GOSSIP_OPTION_BANKER:
