@@ -170,8 +170,15 @@ public:
 				me->DealDamage(me, me->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
 
 			if (m_uiAsphyxiationTimer <= diff)
-			{
-				//TombPrisoner->CastSpell(TombPrisoner, SPELL_ASPHYXIATION, true);
+			{				
+                                if (IceTombGUID)
+				{
+					Unit* Tomb = Unit::GetUnit((*me), IceTombGUID);
+					if (Tomb)
+					{
+						Tomb->CastSpell(Tomb, SPELL_ASPHYXIATION, true);
+					}
+				}
 				m_uiAsphyxiationTimer = 9999999;
 			} else m_uiAsphyxiationTimer -= diff;
 		}
