@@ -5382,6 +5382,8 @@ INSERT INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `position
 -- Lady Jaina Proudmoore
 INSERT INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `curhealth`) VALUES ('82809', '38160', '632', '3', '128', '5614.04', '2447.03', '705.852', '0.952404', '7200', '5040000');
 
+
+- ---------------------------------------------------------------------------------------------------------
 -- RECOMENDATION: USE THIS DATA AT YOUR OWN RISK
 -- Hi, Misimouse from http://forum.siomproject.com/
 -- This SQL is a hack way to fix a lot of quest, on my opinion is not a good way and lots of this fixes are not working right, I think this SQL need to be redone or remove from repo
