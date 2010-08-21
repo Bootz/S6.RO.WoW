@@ -1,4 +1,4 @@
-ALTER TABLE db_version CHANGE COLUMN required_183_world_wintergrasp required_187_world_halls_of_reflection bit;
+ALTER TABLE db_version CHANGE COLUMN required_117_proto_drake_path required_187_world_halls_of_reflection bit;
 
 -- Cleanup first
 UPDATE `creature_template` SET `Scriptname`=' ' WHERE `entry` IN (38112,38113,37221,37223,38175,38172,38567,38177,38173,38176);

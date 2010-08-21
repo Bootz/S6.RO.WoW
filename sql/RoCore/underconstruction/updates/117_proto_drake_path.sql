@@ -1,4 +1,4 @@
-ALTER TABLE db_version CHANGE COLUMN required_91_ys_keepers required_117_proto_drake_path bit;
+ALTER TABLE db_version CHANGE COLUMN required_3_world_icecrown_citadel required_117_proto_drake_path bit;
 
 -- Path time-lost protodrake
 DELETE FROM `creature` WHERE `id`=32491;
