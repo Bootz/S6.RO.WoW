@@ -273,6 +273,7 @@ UPDATE `creature_template` SET `ScriptName`='npc_bloodbeast' WHERE (`entry`='385
 UPDATE `creature_template` SET `ScriptName`='npc_volatile_ooze' WHERE (`entry`='37697');  
 UPDATE `creature_template` SET `ScriptName`='npc_ice_puls_icc' WHERE (`entry`='36633');
 UPDATE `creature_template` SET `ScriptName`='npc_valkyr_icc' WHERE (`entry`='36609');
+UPDATE `creature_template` SET `ScriptName`='npc_cold_flame' WHERE `entry` = 36672;
 UPDATE `creature_template` SET `ScriptName`='npc_ghoul_icc' WHERE (`entry`='37695');
 UPDATE `creature_template` SET `ScriptName`='npc_defile_icc' WHERE (`entry`='38757');
 UPDATE `creature_template` SET `ScriptName`='npc_raging_spirit_icc' WHERE (`entry`='36701');
