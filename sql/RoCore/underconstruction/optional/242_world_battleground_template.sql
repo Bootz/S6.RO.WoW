@@ -1,7 +1,3 @@
-ALTER TABLE db_version CHANGE COLUMN required_205_world_access_requirement required_242_world_battleground_template bit;
--- note: uncheck if necessary, depending on the db you use /* */
-
-/*
 -- Set battleground-names
 UPDATE `battleground_template` SET `Comment`= 'Alterac Valley' WHERE `battleground_template`.`id`=1;
 UPDATE `battleground_template` SET `Comment`= 'Warsong Gulch' WHERE `battleground_template`.`id`=2;
@@ -16,4 +12,3 @@ UPDATE `battleground_template` SET `Comment`= 'Dalaran Sewers' WHERE `battlegrou
 UPDATE `battleground_template` SET `Comment`= 'The Ring of Valor' WHERE `battleground_template`.`id`=11;
 UPDATE `battleground_template` SET `Comment`= 'Isle of Conquest' WHERE `battleground_template`.`id`=30;
 UPDATE `battleground_template` SET `Comment`= 'Random battleground' WHERE `battleground_template`.`id`=32;
-*/
