@@ -1,4 +1,4 @@
-ALTER TABLE db_version CHANGE COLUMN required_423_world_isle_of_conquest required_424_argent_quests bit;
+-- ALTER TABLE db_version CHANGE COLUMN required_423_world_isle_of_conquest required_424_argent_quests bit;
 
 -- Scriptname for training_dummy_argent
 -- with this now you can ride the mount and use the skills on the dummies

@@ -1,4 +1,4 @@
-ALTER TABLE db_version CHANGE COLUMN required_370_world_north_quest required_423_world_isle_of_conquest bit;
+-- ALTER TABLE db_version CHANGE COLUMN required_370_world_north_quest required_423_world_isle_of_conquest bit;
 
 -- Isle Of Conquest 
 INSERT INTO `trinity_string` VALUES ('11101', 'The battle will begin in two minutes!', null, null, null, null, null, null, null, null);

@@ -1,4 +1,4 @@
-ALTER TABLE db_version CHANGE COLUMN required_436_world_command required_507_world_wintergrasp bit;
+-- ALTER TABLE db_version CHANGE COLUMN required_436_world_command required_507_world_wintergrasp bit;
 
 DELETE FROM `trinity_string` WHERE entry IN (756,757,758,759,760,761,762,763,764,765,766,767,768,769,770,771,772,780,781);
 INSERT INTO `trinity_string` VALUES ('756', 'Battle begins!', '', '', '', '', '', '', '', 'Битва началась');
