@@ -171,7 +171,7 @@ public:
 
 			if (m_uiAsphyxiationTimer <= diff)
 			{
-				TombPrisoner->CastSpell(TombPrisoner, SPELL_ASPHYXIATION, true);
+				//TombPrisoner->CastSpell(TombPrisoner, SPELL_ASPHYXIATION, true);
 				m_uiAsphyxiationTimer = 9999999;
 			} else m_uiAsphyxiationTimer -= diff;
 		}

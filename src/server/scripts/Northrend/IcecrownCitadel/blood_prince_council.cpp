@@ -103,8 +103,8 @@ public:
 		{
 			pInstance = c->GetInstanceScript();
 			pValanar = me;
-                        pKeleseth = pInstance->GetData64(DATA_PRINCE_KELESETH_ICC);
-                        pTaldaram = pInstance->GetData64(DATA_PRINCE_TALDARAM_ICC);
+                        pKeleseth = pInstance->instance->GetCreature(pInstance->GetData64(DATA_PRINCE_KELESETH_ICC));
+                        pTaldaram = pInstance->instance->GetCreature(pInstance->GetData64(DATA_PRINCE_TALDARAM_ICC));
 		}
 
 		InstanceScript* pInstance;
