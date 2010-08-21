@@ -1,33 +1,9 @@
 -- Some cleanup
-UPDATE `creature_template` SET `ScriptName`= '' WHERE `entry` IN (33365,33370,33312,33367,33686,33579,34275,33214);
-UPDATE `gameobject_template` SET `ScriptName`= '' WHERE `entry` IN (194375,194371,194370,194377);
 DELETE FROM `areatrigger_scripts` WHERE `entry` IN (5369,5423);
-DELETE FROM `script_waypoint` WHERE `entry`=33370;
 
 DELETE FROM areatrigger_scripts WHERE `entry`=4156;
 INSERT INTO areatrigger_scripts VALUES (4156,'at_naxxramas_frostwyrm_wing');
 
-UPDATE `instance_template` SET `script`='instance_ulduar' WHERE `map`=603;
-UPDATE `creature_template` SET `ScriptName`='boss_auriaya' WHERE `entry`=33515;
-UPDATE `creature_template` SET `ScriptName`='boss_flame_leviathan' WHERE `entry`=33113;
-UPDATE `creature_template` SET `AIName`='TurretAI',`ScriptName`='' WHERE `entry`=33139;
-UPDATE `creature_template` SET `ScriptName`='boss_flame_leviathan_seat' WHERE `entry`=33114;
-UPDATE `creature_template` SET `ScriptName`='boss_flame_leviathan_defense_turret' WHERE `entry`=33142;
-UPDATE `creature_template` SET `ScriptName`='boss_flame_leviathan_overload_device' WHERE `entry`=33143;
-UPDATE `creature_template` SET `ScriptName`='spell_pool_of_tar' WHERE `entry`=33090;
-UPDATE `creature_template` SET `ScriptName`='boss_ignis' WHERE `entry`=33118;
-UPDATE `creature_template` SET `ScriptName`='boss_razorscale' WHERE `entry`=33186;
-UPDATE `creature_template` SET `ScriptName`='boss_xt002' WHERE `entry`=33293;
-UPDATE `creature_template` SET `ScriptName`='mob_xt002_heart' WHERE `entry`=33329;
-UPDATE `creature_template` SET `ScriptName`='mob_scrapbot' WHERE `entry`=33343;
-UPDATE `creature_template` SET `ScriptName`='mob_pummeller' WHERE `entry`=33344;
-UPDATE `creature_template` SET `ScriptName`='mob_boombot' WHERE `entry`=33346;
-UPDATE `creature_template` SET `ScriptName`='mob_void_zone' WHERE `entry`=34001;
-UPDATE `creature_template` SET `ScriptName`='mob_life_spark' WHERE `entry`=34004;
-UPDATE `creature_template` SET `ScriptName`='mob_rune_of_summoning' WHERE `entry`=33051;
-UPDATE `creature_template` SET `ScriptName`='boss_algalon' WHERE `entry`=32871;
-UPDATE `creature_template` SET `ScriptName`='mob_collapsing_star' WHERE `entry`=32955;
-UPDATE `gameobject_template` SET `ScriptName`='ulduar_teleporter' WHERE `entry`=194569;
 UPDATE `creature_template` SET `spell1`=62402 WHERE `entry`=33142;
 UPDATE `creature_template` SET `spell1`=62402 WHERE `entry`=33139;
 UPDATE `creature_template` SET `spell1`=62402 WHERE `entry`=34111;
@@ -50,7 +26,7 @@ DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=33119);
 INSERT INTO `creature_ai_scripts` VALUES 
 ( 10033119, 33119, 0, 0, 100, 3, 1000, 1000, 1000, 1000, 11, 62548, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 'Scorch Ground');
 
-UPDATE `creature_template` SET `faction_A` = 35, `faction_H` = 35, `unit_flags` = 33554434, `ScriptName` = 'mob_iron_construct', `flags_extra` = 0 WHERE `entry` = 33121;
+UPDATE `creature_template` SET `faction_A` = 35, `faction_H` = 35, `unit_flags` = 33554434, `flags_extra` = 0 WHERE `entry` = 33121;
 
 -- 7796_xt002_vehicleid
 UPDATE `creature_template` SET `vehicleId` = 332 WHERE `entry` = 33293;
@@ -81,12 +57,6 @@ INSERT INTO `creature_template` VALUES
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=33119);
 
 -- 8086_razorscale_event
-UPDATE `creature_template` SET `ScriptName` = 'mob_darkrune_watcher' WHERE `entry` = 33453;
-UPDATE `creature_template` SET `ScriptName` = 'mob_darkrune_sentinel' WHERE `entry` = 33846;
-UPDATE `creature_template` SET `ScriptName` = 'mob_darkrune_guardian' WHERE `entry` = 33388;
-UPDATE `creature_template` SET `ScriptName` = 'mob_devouring_flame' WHERE `entry` = 34188;
-UPDATE `creature_template` SET `ScriptName` = 'npc_expedition_commander_ulduar' WHERE `entry` = 33210;
-UPDATE `creature_template` SET `ScriptName` = 'mole_machine_trigger' WHERE `entry` = 33282;
 UPDATE `creature_template` SET `unit_flags` = 33685506 WHERE `entry` IN (33245,33233);
 DELETE FROM `creature` WHERE `id`=33186;
 
@@ -98,30 +68,20 @@ UPDATE `creature_template` SET `flags_extra` = 2 WHERE `entry` IN (33233,33259);
 DELETE FROM `creature` WHERE `id` IN (33632, 33802);
 UPDATE `creature_template` SET `unit_flags` = 33685510 WHERE `entry` = 33809;
 UPDATE `creature_template` SET `flags_extra` = 2 WHERE `entry` = 33661;
-UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `ScriptName` = 'mob_focused_eyebeam' WHERE `entry` IN (33632, 33802);
-UPDATE `creature_template` SET `ScriptName` = 'mob_left_arm' WHERE `entry` = 32933;
-UPDATE `creature_template` SET `ScriptName` = 'mob_right_arm' WHERE `entry` = 32934;
-
+UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16 WHERE `entry` IN (33632, 33802);
 UPDATE `creature_template` SET `unit_flags` = 33947654 WHERE `entry` = 33121;
 
 -- 8119_assembly_iron
-UPDATE `creature_template` SET `ScriptName` = 'boss_steelbreaker' WHERE `entry` = 32867;
-UPDATE `creature_template` SET `ScriptName` = 'boss_runemaster_molgeim' WHERE `entry` = 32927;
-UPDATE `creature_template` SET `ScriptName` = 'boss_stormcaller_brundir' WHERE `entry` = 32857;
-
 UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16 WHERE `entry` IN (33051, 33691, 33689);
-UPDATE creature_template SET faction_A=16, faction_H=16, scriptname='mob_rune_of_power' WHERE entry = 33705;
-UPDATE creature_template SET faction_A=16, faction_H=16, scriptname='mob_lightning_elemental', difficulty_entry_1 = 33689 WHERE entry = 32958;
+UPDATE creature_template SET faction_A=16, faction_H=16 WHERE entry = 33705;
+UPDATE creature_template SET faction_A=16, faction_H=16 difficulty_entry_1 = 33689 WHERE entry = 32958;
 
 -- 8124_auriaya_event
 DELETE FROM `creature` WHERE id = 34014;
 UPDATE `creature_template` SET `unit_flags` = 0, `type_flags` = 0 WHERE `entry` = 33515;
 UPDATE `creature_template` SET `equipment_id` = 2500 WHERE `entry` = 33515;
 
-UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `ScriptName` = 'feral_defender_trigger' WHERE `entry` = 34096;
-UPDATE `creature_template` SET `ScriptName` = 'mob_feral_defender' WHERE `entry` = 34035;
-UPDATE `creature_template` SET `ScriptName` = 'mob_sanctum_sentry' WHERE `entry` = 34014;
-UPDATE `creature_template` SET `ScriptName` = 'seeping_trigger' WHERE `entry` = 34098;
+UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16 WHERE `entry` = 34096;
 
 DELETE FROM `creature_equip_template` WHERE entry = 2500;
 INSERT INTO `creature_equip_template` VALUES ('2500','45315','0','0');
@@ -162,17 +122,17 @@ INSERT INTO `waypoint_data` (`id`, `point`, `position_x`, `position_y`, `positio
 UPDATE `creature` SET `MovementType` = 2 WHERE `id` = 33515;
 
 -- 8137_leviathan_vehiclesystem
-UPDATE `creature_template` SET `unit_flags` = 0, `npcflag` = 1, `ScriptName` = 'npc_keeper_norgannon' WHERE `entry` = 33686;
+UPDATE `creature_template` SET `unit_flags` = 0, `npcflag` = 1  WHERE `entry` = 33686;
 DELETE FROM `creature_template` WHERE `entry`=33115;
 DELETE FROM creature WHERE `id`=33115;
 
 -- 8148_boss_hodir
-UPDATE `creature_template` SET `unit_flags` = 0, `type_flags` = 0, `ScriptName` = 'boss_hodir' WHERE `entry` = 32845;
+UPDATE `creature_template` SET `unit_flags` = 0, `type_flags` = 0 WHERE `entry` = 32845;
 
 UPDATE `creature_template` SET `modelid1` = 11686, `modelid2` = 0 WHERE `entry` IN (34188, 33632, 33802, 34096, 34098);
-UPDATE `creature_template` SET `modelid1` = 25865, `modelid2` = 0, `flags_extra` = 0, `ScriptName` = 'mob_flash_freeze' WHERE `entry` = 32938;
-UPDATE `creature_template` SET `modelid1` = 28470, `modelid2` = 0, `ScriptName` = 'mob_icicle' WHERE `entry` = 33169;
-UPDATE `creature_template` SET `modelid1` = 28470, `modelid2` = 0, `ScriptName` = 'mob_icicle_snowdrift' WHERE `entry` = 33173;
+UPDATE `creature_template` SET `modelid1` = 25865, `modelid2` = 0, `flags_extra` = 0 WHERE `entry` = 32938;
+UPDATE `creature_template` SET `modelid1` = 28470, `modelid2` = 0 WHERE `entry` = 33169;
+UPDATE `creature_template` SET `modelid1` = 28470, `modelid2` = 0 WHERE `entry` = 33173;
 UPDATE `creature_template` SET `modelid1` = 15880, `modelid2` = 0 WHERE `entry` = 33174;
 UPDATE `gameobject_template` SET `flags` = 4 WHERE `entry` = 194173;
 
@@ -202,11 +162,8 @@ UPDATE `creature_template` SET `unit_flags` = 33948166 WHERE `entry` = 33174;
 DELETE FROM `creature` WHERE `id` IN (32941, 33333, 33332, 32950, 33331, 32946, 32948, 33330);
 
 UPDATE `creature_template` SET `faction_A` = 1665, `faction_H` = 1665, `unit_flags` = 32768 WHERE `entry` IN (33325, 32901, 33328, 32901, 32893, 33327, 32897, 33326, 32941, 33333, 33332, 32950, 33331, 32946, 32948, 33330);
-UPDATE `creature_template` SET `ScriptName` = 'mob_hodir_priest' WHERE `entry` IN (32897, 33326, 32948, 33330);
-UPDATE `creature_template` SET `ScriptName` = 'mob_hodir_shaman' WHERE `entry` IN (33328, 32901, 33332, 32950);
-UPDATE `creature_template` SET `ScriptName` = 'mob_hodir_druid' WHERE `entry` IN (33325, 32900, 32941, 33333);
-UPDATE `creature_template` SET `ScriptName` = 'mob_hodir_mage' WHERE `entry` IN (32893, 33327, 33331, 32946);
-UPDATE `creature_template` SET `modelid1` = 15880, `modelid2` = 0, `ScriptName` = 'toasty_fire' WHERE `entry` = 33342;
+
+UPDATE `creature_template` SET `modelid1` = 15880, `modelid2` = 0 WHERE `entry` = 33342;
 
 -- 8164_ulduar_immunities
 UPDATE `creature_template` SET `mechanic_immune_mask` = 650854235 WHERE `entry` IN (33113, 33118, 33186, 33293, 32867, 32927, 32930, 33515, 32906, 32845, 33350, 32865, 33271, 33288, 32871);
@@ -223,11 +180,8 @@ INSERT INTO `spell_linked_spell` VALUES
 (61990, 7940, 2, "Hodir Flash Freeze immunity");
 
 -- 8172_freya_elders
-UPDATE `creature_template` SET `ScriptName` = 'boss_elder_brightleaf' WHERE `entry` =32915;
-UPDATE `creature_template` SET `ScriptName` = 'boss_elder_ironbranch' WHERE `entry` =32913;
-UPDATE `creature_template` SET `ScriptName` = 'boss_elder_stonebark' WHERE `entry` =32914;
-UPDATE `creature_template` SET `ScriptName` = 'creature_sun_beam', `unit_flags` = 33685510, `modelid1` = 11686, `modelid2` = 0 WHERE `entry` =33170;
-UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `unit_flags` = 393220, `ScriptName` = 'creature_iron_roots' WHERE `entry` = 33168;
+UPDATE `creature_template` SET `unit_flags` = 33685510, `modelid1` = 11686, `modelid2` = 0 WHERE `entry` =33170;
+UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `unit_flags` = 393220 WHERE `entry` = 33168;
 
 DELETE FROM `spell_linked_spell` WHERE `spell_effect` = -62243;
 INSERT INTO `spell_linked_spell` (`spell_trigger`, `spell_effect`, `type`, `comment`) VALUES
@@ -235,16 +189,10 @@ INSERT INTO `spell_linked_spell` (`spell_trigger`, `spell_effect`, `type`, `comm
 (62922, -62243, 1, 'cancels the effects of Unstable Sun Beam');
 
 -- 8178_boss_freya
-UPDATE `creature_template` SET `ScriptName` = 'boss_freya' WHERE `entry` =32906;
-UPDATE `creature_template` SET `unit_flags` = 393220, `ScriptName` = 'creature_eonars_gift' WHERE `entry` =33228;
-UPDATE `creature_template` SET `modelid1` = 11686, `modelid2` = 0, `unit_flags` = 33685508, `ScriptName` = 'creature_nature_bomb' WHERE `entry` =34129;
-UPDATE `creature_template` SET `unit_class` = 2, `ScriptName` = 'creature_detonating_lasher' WHERE `entry` =32918;
-UPDATE `creature_template` SET `ScriptName` = 'creature_ancient_conservator' WHERE `entry` =33203;
-UPDATE `creature_template` SET `unit_flags` = 33686022, `ScriptName` = 'creature_healthy_spore' WHERE `entry` =33215;
-UPDATE `creature_template` SET `ScriptName` = 'creature_storm_lasher' WHERE `entry` =32919;
-UPDATE `creature_template` SET `ScriptName` = 'creature_snaplasher' WHERE `entry` =32916;
-UPDATE `creature_template` SET `ScriptName` = 'creature_ancient_water_spirit' WHERE `entry` =33202;
-
+UPDATE `creature_template` SET `unit_flags` = 393220 WHERE `entry` =33228;
+UPDATE `creature_template` SET `modelid1` = 11686, `modelid2` = 0, `unit_flags` = 33685508 WHERE `entry` =34129;
+UPDATE `creature_template` SET `unit_class` = 2 WHERE `entry` =32918;
+UPDATE `creature_template` SET `unit_flags` = 33686022 WHERE `entry` =33215;
 DELETE FROM `creature` WHERE `guid` = 136607;
 
 DELETE FROM `spell_linked_spell` WHERE `spell_effect` = -62532;
@@ -253,7 +201,7 @@ INSERT INTO `spell_linked_spell` (`spell_trigger`, `spell_effect`, `type`, `comm
 (62619, -62532, 1, 'Pheromones ward off the Conservator''s Grip');
 
 -- 8195_freya_event
-UPDATE `creature_template` SET `modelid1` = 11686, `modelid2` = 0, `unit_flags` = 33686022, `ScriptName` = 'creature_unstable_sun_beam' WHERE `entry` = 33050;
+UPDATE `creature_template` SET `modelid1` = 11686, `modelid2` = 0, `unit_flags` = 33686022 WHERE `entry` = 33050;
 
 -- 8199_ulduar_cleanup
 DELETE FROM `gameobject` WHERE `id` = '194905';
@@ -261,10 +209,10 @@ INSERT INTO `gameobject` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `positi
 ('270000','194905','603','1','1','401.308','-13.8236','409.524','3.14159','0','0','0','1','180','255','0');
 
 UPDATE `creature_template` SET `speed_walk` = 0.5 WHERE `entry` = 33113;
-UPDATE `creature_template` SET `unit_flags` = 0, `type_flags` = 8, `ScriptName` = 'boss_thorim' WHERE `entry` = 32865;
+UPDATE `creature_template` SET `unit_flags` = 0, `type_flags` = 8 WHERE `entry` = 32865;
 
 -- 8228_ignis_scorch
-UPDATE `creature_template` SET `modelid1` = 16925, `modelid2` = 0, `ScriptName` = 'mob_scorch_ground' WHERE `entry` = 33221;
+UPDATE `creature_template` SET `modelid1` = 16925, `modelid2` = 0 WHERE `entry` = 33221;
 DELETE FROM `creature_template` WHERE `entry` = 33119;
 
 -- 8241_thorim_gate
@@ -275,8 +223,8 @@ INSERT INTO `gameobject_scripts` (`id`, `delay`, `command`, `datalong`, `datalon
 UPDATE `gameobject` SET `id` = 101855, `rotation2` = 1, `rotation3` = 0, `spawntimesecs` = 7200, `animprogress` = 100 WHERE `guid` = 55194;
 
 -- 8252_boss_thorim
-UPDATE `creature_template` SET `faction_A` = 14, `faction_H` = 14, `ScriptName` = 'mob_pre_phase' WHERE `entry` IN (32882, 32908, 32885, 33110);
-UPDATE `creature_template` SET `unit_flags` = 0, `faction_A` = 14, `faction_H` = 14, `ScriptName` = 'mob_arena_phase' WHERE `entry` IN (32876, 32904, 32878, 32877, 32874, 32875);
+UPDATE `creature_template` SET `faction_A` = 14, `faction_H` = 14 WHERE `entry` IN (32882, 32908, 32885, 33110);
+UPDATE `creature_template` SET `unit_flags` = 0, `faction_A` = 14, `faction_H` = 14 WHERE `entry` IN (32876, 32904, 32878, 32877, 32874, 32875);
 
 UPDATE `creature` SET `spawndist` = 0 WHERE `id` = 32865;
 UPDATE `creature` SET `position_x` = 2135.078, `position_y` = -298.758, `orientation` = 1.61 WHERE `id` = 32865;
@@ -305,11 +253,10 @@ INSERT INTO `creature` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equ
 DELETE FROM `spell_script_target` WHERE `entry`=62016;
 INSERT INTO `spell_script_target` (`entry`, `type`, `targetEntry`) VALUES('62016','1','33378');
 */
-UPDATE `creature_template` SET `unit_flags` = 0, `ScriptName` = 'mob_runic_colossus' WHERE `entry` = 32872;
-UPDATE `creature_template` SET `unit_flags` = 0, `ScriptName` = 'mob_rune_giant' WHERE `entry` = 32873;
-UPDATE `creature_template` SET `modelid1` = 16925, `modelid2` = 0, `ScriptName` = 'thorim_trap_bunny' WHERE `entry` IN (33725, 33282);
-UPDATE `creature_template` SET `flags_extra` = 0, `ScriptName` = 'thorim_energy_source' WHERE `entry` = 32892;
-UPDATE `creature_template` SET `ScriptName` = 'boss_thorim' WHERE `entry` = 32865;
+UPDATE `creature_template` SET `unit_flags` = 0 WHERE `entry` = 32872;
+UPDATE `creature_template` SET `unit_flags` = 0 WHERE `entry` = 32873;
+UPDATE `creature_template` SET `modelid1` = 16925, `modelid2` = 0 WHERE `entry` IN (33725, 33282);
+UPDATE `creature_template` SET `flags_extra` = 0 WHERE `entry` = 32892;
 
 -- 8262_thorim_event
 DELETE FROM `creature` WHERE `id` IN (33378, 32892);
@@ -425,8 +372,8 @@ DELETE FROM `creature` WHERE `guid`=131934;
 INSERT INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `modelid`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `spawndist`, `currentwaypoint`, `curhealth`, `curmana`, `DeathState`, `MovementType`) VALUES
 ('131934','33725','603','1','1','16925','0','2134.93','-339.696','437.311','0','604800','0','0','12600','0','0','0');
 
-UPDATE `creature_template` SET `ScriptName` = '' WHERE `entry` = 33725;
-UPDATE `creature_template` SET `flags_extra` = 2, `ScriptName` = 'thorim_phase_trigger' WHERE `entry` = 32892;
+
+UPDATE `creature_template` SET `flags_extra` = 2 WHERE `entry` = 32892;
 
 DELETE FROM `creature_addon` WHERE `guid`IN (131817, 131934);
 INSERT INTO `creature_addon` (`guid`, `path_id`, `mount`, `bytes1`, `bytes2`, `emote`, `auras`) VALUES
@@ -436,7 +383,6 @@ INSERT INTO `creature_addon` (`guid`, `path_id`, `mount`, `bytes1`, `bytes2`, `e
 -- 8264_thorim_preadds
 UPDATE `creature_template` SET `mindmg` = 488, `maxdmg` = 642, `attackpower` = 682, `dmg_multiplier` = 7.5, `equipment_id` = 1852 WHERE `entry` = 32908;
 UPDATE `creature_template` SET `mindmg` = 488, `maxdmg` = 642, `attackpower` = 482, `dmg_multiplier` = 7.5, `equipment_id` = 1847 WHERE `entry` = 32885;
-UPDATE `creature_template` SET `ScriptName` = 'mob_pre_phase' WHERE `entry` IN (32907, 32883);
 
 -- 8265_thorim_chest
 DELETE FROM `gameobject` WHERE `id`=194314;
@@ -450,10 +396,10 @@ INSERT INTO `creature_template`  values
 ('33234','0','0','0','0','0','28488','0','0','0','Sif (1)','','','0','83','83','2','35','35','0','1','1.14286','1','3','370','531','0','343','70','2000','0','8','0','8','0','0','0','0','0','365','542','84','7','4','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','','0','3','350','1','1','0','0','0','0','0','0','0','0','1','0','0','0','','1');
 
 -- 8270_razorscale_triggers
-UPDATE `creature_template` SET `modelid1` = 16925, `modelid2` = 0, `flags_extra` = 2, `ScriptName` = 'mole_machine_trigger' WHERE `entry` = 33282;
+UPDATE `creature_template` SET `modelid1` = 16925, `modelid2` = 0, `flags_extra` = 2 WHERE `entry` = 33282;
 
 -- 8274_thorim_tram
-UPDATE `gameobject_template` SET `flags` = 32, `data2` = 3000, `ScriptName` = 'go_call_tram' WHERE `entry` IN (194914, 194912, 194437);
+UPDATE `gameobject_template` SET `flags` = 32, `data2` = 3000 WHERE `entry` IN (194914, 194912, 194437);
 DELETE FROM gameobject WHERE id = '194437';
 INSERT INTO `gameobject` (`guid`,`id`, `map`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`, `rotation0`, `rotation1`, `rotation2`, `rotation3`, `spawntimesecs`, `animprogress`, `state`) VALUES
 (' 270010','194437','603','1','1','2306.87','274.237','424.288','1.52255','0','0','0.689847','0.723956','300','0','1');
@@ -475,8 +421,7 @@ UPDATE `creature_template` SET `speed_walk` = 0.5, `speed_run` = 0.5, `faction_A
 UPDATE `creature_template` SET `modelid1` = 19139, `modelid2` = 0, `modelid3` = 0, `dmg_multiplier` = 35 WHERE `entry` = 33346;
 
 -- 8282_razorscale_event
-UPDATE `creature_template` SET `modelid1` = 11686, `modelid2` = 0, `flags_extra` = 2, `ScriptName` = 'mole_machine_trigger' WHERE `entry` = 33245;
-UPDATE `creature_template` SET `ScriptName` = '' WHERE `entry` = 33282;
+UPDATE `creature_template` SET `modelid1` = 11686, `modelid2` = 0, `flags_extra` = 2 WHERE `entry` = 33245;
 
 -- 8289_kologarn_arms
 DELETE FROM `creature_model_info` WHERE `modelid` IN (28638, 28821, 28822);
@@ -493,10 +438,6 @@ UPDATE `creature_template` SET `vehicleId` = 336 WHERE `entry` = 33432; -- Levia
 DELETE FROM creature WHERE id = 34071;
 DELETE FROM vehicle_accessory WHERE entry = 33432;
 INSERT INTO vehicle_accessory VALUE (33432, 34071, 7, 1, 'Leviathan Mk II turret');
-UPDATE creature_template SET ScriptName = 'boss_mimiron' WHERE entry = 33350;
-UPDATE creature_template SET ScriptName = 'boss_leviathan_mk' WHERE entry = 33432;
-UPDATE creature_template SET ScriptName = 'boss_leviathan_mk_turret' WHERE entry = 34071;
-UPDATE creature_template SET ScriptName = 'mob_proximity_mine' WHERE entry = 34362;
 DELETE FROM `creature_model_info` WHERE `modelid`=28831;
 INSERT INTO `creature_model_info` (`modelid`, `bounding_radius`, `combat_reach`, `gender`, `modelid_other_gender`) VALUES
 (28831, 0.5, 7, 2, 0);
@@ -508,26 +449,26 @@ INSERT INTO `creature_model_info` (`modelid`, `bounding_radius`, `combat_reach`,
 UPDATE `creature_template` SET `flags_extra` = 2 WHERE `entry` IN (33856, 34143, 34050);
 UPDATE `creature_template` SET `unit_flags` = 33686018 WHERE `entry` = 34050;
 UPDATE `creature` SET `position_x` = 2736.92, `position_y` = 2572.30, `orientation` = 5.723 WHERE `guid` = 137630;
-UPDATE `creature_template` SET `ScriptName` = 'boss_vx_001', `unit_flags` = 0, `vehicleid` = 371, `Health_mod` = 375 WHERE `entry` = 33651;
-UPDATE `creature_template` SET `ScriptName` = 'boss_aerial_unit', `unit_flags` = 0, `vehicleid` = 388, `Health_mod` = 250 WHERE `entry` = 33670;
+UPDATE `creature_template` SET `unit_flags` = 0, `vehicleid` = 371, `Health_mod` = 375 WHERE `entry` = 33651;
+UPDATE `creature_template` SET `unit_flags` = 0, `vehicleid` = 388, `Health_mod` = 250 WHERE `entry` = 33670;
 UPDATE `creature_template` SET `vehicleid` = 370, `Health_mod` = 156.185 WHERE `entry` = 33432;
 UPDATE `creature_template` SET `Health_mod` = 156.185 WHERE `entry` = 34071;
 
 DELETE FROM vehicle_accessory WHERE entry = 33432;
 INSERT INTO vehicle_accessory VALUE (33432, 34071, 3, 1, 'Leviathan Mk II turret');
 UPDATE `creature_template` SET `modelid1` = 17188, `modelid2` = 0 WHERE `entry` = 25171;
-UPDATE `creature_template` SET `speed_walk` = 0.5, `speed_run` = 0.5, `ScriptName` = 'mob_boom_bot' WHERE `entry` = 33836;
+UPDATE `creature_template` SET `speed_walk` = 0.5, `speed_run` = 0.5 WHERE `entry` = 33836;
 
 DELETE FROM `creature` WHERE `id`=33651;
 INSERT INTO `creature` (`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`DeathState`,`MovementType`) VALUES
 (33651, 603, 1, 1, 28841, 0, 2744.65, 2569.46, 364.397, 3.14159, 604800, 0, 0, 1742400, 0, 0, 0);
-UPDATE `creature_template` SET `unit_flags` = 33686020, `flags_extra` = 2, `ScriptName` = 'rocket_strike' WHERE `entry` = 34047;
+UPDATE `creature_template` SET `unit_flags` = 33686020, `flags_extra` = 2 WHERE `entry` = 34047;
 
 DELETE FROM `creature` WHERE `id`=33670;
 INSERT INTO `creature` (`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`DeathState`,`MovementType`) VALUES
 (33670, 603, 1, 1, 28979, 0, 2744.65, 2569.46, 380.040, 3.14159, 604800, 0, 0, 1742400, 0, 0, 0);
 
-UPDATE `creature_template` SET `unit_flags` = 33686020, `type_flags` = 0, `flags_extra` = 2, `ScriptName` = 'magnetic_core' WHERE `entry` = 34068;
+UPDATE `creature_template` SET `unit_flags` = 33686020, `type_flags` = 0, `flags_extra` = 2 WHERE `entry` = 34068;
 -- 8334_mimiron_chest
 UPDATE `gameobject_template` SET `size` = 1.5 WHERE `entry` = 194956;
 DELETE FROM `gameobject` WHERE `id`=194956;
@@ -997,9 +938,9 @@ UPDATE `creature_template` SET `mindmg` = 464, `maxdmg` = 604, `attackpower` = 7
 UPDATE `creature_template` SET `dmg_multiplier` = 65, `mingold` = 1720000, `maxgold` = 1760000 WHERE `entry` = 33271;
 
 -- 8362_boss_vezax
-UPDATE `creature_template` SET `mechanic_immune_mask` = 617299803, `flags_extra` = 257, `ScriptName` = 'boss_general_vezax' WHERE `entry` = 33271;
-UPDATE `creature_template` SET `faction_A` = 14, `faction_H` = 14, `mechanic_immune_mask` = 650854235, `ScriptName` = 'mob_saronite_vapors' WHERE `entry` = 33488;
-UPDATE `creature_template` SET `faction_A` = 14, `faction_H` = 14, `mechanic_immune_mask` = 650854235, `ScriptName` = 'mob_saronite_animus' WHERE `entry` = 33524;
+UPDATE `creature_template` SET `mechanic_immune_mask` = 617299803, `flags_extra` = 257 WHERE `entry` = 33271;
+UPDATE `creature_template` SET `faction_A` = 14, `faction_H` = 14, `mechanic_immune_mask` = 650854235 WHERE `entry` = 33488;
+UPDATE `creature_template` SET `faction_A` = 14, `faction_H` = 14, `mechanic_immune_mask` = 650854235 WHERE `entry` = 33524;
 
 -- 8378_ulduar_modelid
 -- XT-002
@@ -1274,13 +1215,13 @@ UPDATE `creature_template` SET `mindmg` = 464, `maxdmg` = 604, `attackpower` = 7
 UPDATE `creature_model_info` SET `bounding_radius` = 0.62, `combat_reach` = 10 WHERE `modelid` = 28992;
 
 -- mimiron_hardmode
-UPDATE `gameobject_template` SET `type` = 1, `flags` = 32, `ScriptName` = 'not_push_button' WHERE `entry` = 194739;
-UPDATE `creature_template` SET `unit_flags` = 33554946, `speed_walk` = 0.15, `speed_run` = 0.15, `ScriptName` = 'mob_mimiron_flame' WHERE `entry` = 34363;
-UPDATE `creature_template` SET `faction_A` = 14, `faction_H` = 14, `ScriptName` = 'mob_frost_bomb' WHERE `entry` = 34149;
-UPDATE `creature_template` SET `mindmg` = 464, `maxdmg` = 604, `attackpower` = 708, `dmg_multiplier` = 7.5, `minrangedmg` = 353, `maxrangedmg` = 512, `rangedattackpower` = 112, `ScriptName` = 'mob_junk_bot' WHERE `entry` = 33855;
-UPDATE `creature_template` SET `mindmg` = 464, `maxdmg` = 604, `attackpower` = 708, `dmg_multiplier` = 15, `minrangedmg` = 353, `maxrangedmg` = 512, `rangedattackpower` = 112, `ScriptName` = 'mob_assault_bot' WHERE `entry` = 34057;
-UPDATE `creature_template` SET `mindmg` = 464, `maxdmg` = 604, `attackpower` = 708, `dmg_multiplier` = 10, `minrangedmg` = 353, `maxrangedmg` = 512, `rangedattackpower` = 112, `ScriptName` = 'mob_boom_bot' WHERE `entry` = 33836;
-UPDATE `creature_template` SET `faction_A` = 14, `faction_H` = 14, `ScriptName` = 'mob_emergency_bot' WHERE `entry` = 34147;
+UPDATE `gameobject_template` SET `type` = 1, `flags` = 32 WHERE `entry` = 194739;
+UPDATE `creature_template` SET `unit_flags` = 33554946, `speed_walk` = 0.15, `speed_run` = 0.15 WHERE `entry` = 34363;
+UPDATE `creature_template` SET `faction_A` = 14, `faction_H` = 14 WHERE `entry` = 34149;
+UPDATE `creature_template` SET `mindmg` = 464, `maxdmg` = 604, `attackpower` = 708, `dmg_multiplier` = 7.5, `minrangedmg` = 353, `maxrangedmg` = 512, `rangedattackpower` = 112 WHERE `entry` = 33855;
+UPDATE `creature_template` SET `mindmg` = 464, `maxdmg` = 604, `attackpower` = 708, `dmg_multiplier` = 15, `minrangedmg` = 353, `maxrangedmg` = 512, `rangedattackpower` = 112 WHERE `entry` = 34057;
+UPDATE `creature_template` SET `mindmg` = 464, `maxdmg` = 604, `attackpower` = 708, `dmg_multiplier` = 10, `minrangedmg` = 353, `maxrangedmg` = 512, `rangedattackpower` = 112 WHERE `entry` = 33836;
+UPDATE `creature_template` SET `faction_A` = 14, `faction_H` = 14 WHERE `entry` = 34147;
 
 -- 8407_emalon
 UPDATE creature SET spawnMask = 1 WHERE id = 33993;
@@ -1367,7 +1308,7 @@ INSERT INTO `creature` (`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_
 (33244, 603, 1, 1, 0, 0, 2036.74, 25.4642, 411.357, 3.81412, 604800, 0, 0, 14433075, 0, 0, 0),
 (33213, 603, 1, 1, 0, 0, 1939.29, -90.6994, 411.357, 1.02595, 604800, 0, 0, 14433075, 0, 0, 0);
 
-UPDATE `creature_template` SET `faction_A` = 35, `faction_H` = 35, `npcflag` = 1, `flags_extra` = 2, `ScriptName` = 'npc_keeper_image' WHERE `entry` IN (33213, 33241, 33242, 33244);
+UPDATE `creature_template` SET `faction_A` = 35, `faction_H` = 35, `npcflag` = 1, `flags_extra` = 2 WHERE `entry` IN (33213, 33241, 33242, 33244);
 
 -- 8453_razorscale_yell
 -- razorscale yell fix
@@ -1377,7 +1318,6 @@ UPDATE `script_texts` SET `content_default` = "Move! Quickly! She won't remain g
 
 -- Thorim
 -- IA for Thorim
-UPDATE `creature_template` SET `ScriptName`='boss_thorim' WHERE (`entry`='32865');
 
 -- Thorim immunity on disarm
 UPDATE `creature_template` SET `mechanic_immune_mask` = 650854239 WHERE `entry` = 32865;
@@ -1392,27 +1332,17 @@ INSERT INTO `creature` (`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_
 (33412, 603, 1, 1, 0, 0, 1939.094, 42.534, 338.296, 5.321, 604800, 0, 0, 14433075, 0, 0, 0),
 (33413, 603, 1, 1, 0, 0, 2036.739, -73.705, 338.296, 2.435, 604800, 0, 0, 14433075, 0, 0, 0);
 
-UPDATE `creature_template` SET `ScriptName` = 'npc_ys_freya' WHERE `entry` = 33410;
-UPDATE `creature_template` SET `ScriptName` = 'npc_ys_hodir' WHERE `entry` = 33411;
-UPDATE `creature_template` SET `ScriptName` = 'npc_ys_mimiron' WHERE `entry` = 33412;
-UPDATE `creature_template` SET `ScriptName` = 'npc_ys_thorim' WHERE `entry` = 33413;
 
-UPDATE `creature_template` SET `modelid1` = 11686, `modelid2` = 0, `minlevel` = 80, `maxlevel` = 80, `unit_flags` = 33686018, `type_flags` = 0, `ScriptName` = 'npc_sanity_well' WHERE `entry` = 33991;
+UPDATE `creature_template` SET `modelid1` = 11686, `modelid2` = 0, `minlevel` = 80, `maxlevel` = 80, `unit_flags` = 33686018, `type_flags` = 0 WHERE `entry` = 33991;
 
 
 
 -- script names faltantes
-UPDATE `creature_template` SET `ScriptName` = 'boss_elder_ironbranch' WHERE `entry` =32913;
-UPDATE `creature_template` SET `ScriptName` = 'boss_elder_stonebark' WHERE `entry` =32914;
-UPDATE `creature_template` SET `ScriptName` = 'boss_elder_brightleaf' WHERE `entry` =32195;
-UPDATE `creature_template` SET `ScriptName` = 'creature_iron_roots' WHERE `entry` =33088;
-UPDATE `creature_template` SET `ScriptName` = 'creature_sun_beam' WHERE `entry` =33170;
 -- XT-002 vehicle id
 UPDATE `creature_template` SET `unit_flags` = 33554432, `type_flags` = 0, `VehicleId` = 335 WHERE `entry` = 33293;
 -- Ulduar Colossus
 DELETE FROM creature_template WHERE entry = 33240;
 DELETE FROM `creature` WHERE `id`=33237 AND `position_x` >= 367;
-UPDATE `creature_template` SET `ScriptName` = 'mob_colossus' WHERE `entry` = 33237;
 
 -- Creatures and Gameobjects 25 man spawn
 UPDATE `creature` SET `spawnMask` = 3 WHERE `map` = 603;

@@ -3,7 +3,6 @@
 ALTER TABLE db_version CHANGE COLUMN required_31_world_db_version required_3_world_icecrown_citadel bit;
 
 -- Cleaning scripts names for npc and bosses
-UPDATE `creature_template` SET `ScriptName`='' WHERE `entry` IN (37813,38508,36626,36855,38222,36678,37697,36853,36597,38995,36633,36609,37695,38757,36701,36725,37011,36724,37012,37007,36811,36807,36829,36844,36808,38135,37949,36627,36897,36899,37973,37970,37972,36789,38429,38068,38369,38332,38454,38422,38451);
 UPDATE `gameobject_template` SET `ScriptName`='' WHERE `entry` IN (202235,202242,202244,202243,202245,202246,202182,202181);
 DELETE FROM `creature` WHERE `id`=38995;
 
@@ -92,7 +91,6 @@ UPDATE `creature` SET `MovementType`='1'WHERE `guid`='54575';
 UPDATE `instance_template` SET `script`='instance_icecrown_citadel' WHERE (`map`='631');
 
 -- Some gameobjet for ICC (teleporters)
-UPDATE `gameobject_template` SET `ScriptName` = 'icecrown_teleporter' WHERE `entry` IN (202223,202235,202242,202243,202244,202245,202246);
 UPDATE `gameobject_template` SET `flags` = 32 WHERE `entry` = 202223;
 UPDATE `gameobject_template` SET `flags` = 32 WHERE `entry` = 202242;
 
@@ -240,77 +238,6 @@ UPDATE `creature_template` SET `VehicleId` = '591' WHERE `entry` = '38583';
 DELETE FROM `creature_loot_template` WHERE (`entry`=500209) AND (`item`=50307);
 INSERT INTO `creature_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `mincountOrRef`, `maxcount`) VALUES (500209, 50307, 100,  '1', '1');
 UPDATE `creature_template` SET `lootid` = '500209' WHERE `entry` = '38248';
-
--- First declaring scripts names
-# Boss
-UPDATE `creature_template` SET `ScriptName`='boss_blood_queen_lanathel' WHERE (`entry`='37955');
-UPDATE `creature_template` SET `ScriptName`='boss_blood_elf_keleset_icc' WHERE `entry` = 37972;
-UPDATE `creature_template` SET `ScriptName`='boss_blood_elf_taldaram_icc' WHERE `entry` = 37973;
-UPDATE `creature_template` SET `ScriptName`='boss_blood_council' WHERE (`entry`='37970');
-UPDATE `creature_template` SET `ScriptName`='boss_festergut' WHERE (`entry`='36626');
-UPDATE `creature_template` SET `ScriptName`='boss_saurfang' WHERE (`entry`='37813');
-UPDATE `creature_template` SET `ScriptName`='boss_lady_deathwisper' WHERE (`entry`='36855');
-UPDATE `creature_template` SET `ScriptName`='boss_professor_putricide' WHERE (`entry`='36678');
-UPDATE `creature_template` SET `ScriptName`='boss_sindragosa' WHERE (`entry`='36853');
-UPDATE `creature_template` SET `ScriptName`='boss_valithria' WHERE `entry` = 36789;
-UPDATE `creature_template` SET `ScriptName`='boss_the_lich_king' WHERE (`entry`='36597');
-UPDATE `creature_template` SET `ScriptName`='boss_rotface' WHERE `entry`= 36627;
-
-# Mobs
-UPDATE `creature_template` SET `ScriptName`='npc_tirion_icc' WHERE (`entry`='38995');
-UPDATE `creature_template` SET `ScriptName`='npc_swarming_shadows' WHERE (`entry`='38163');
-UPDATE `creature_template` SET `ScriptName`='npc_bloodbeast' WHERE (`entry`='38508');
-UPDATE `creature_template` SET `ScriptName`='npc_volatile_ooze' WHERE (`entry`='37697');  
-UPDATE `creature_template` SET `ScriptName`='npc_ice_puls_icc' WHERE (`entry`='36633');
-UPDATE `creature_template` SET `ScriptName`='npc_valkyr_icc' WHERE (`entry`='36609');
-UPDATE `creature_template` SET `ScriptName`='npc_ghoul_icc' WHERE (`entry`='37695');
-UPDATE `creature_template` SET `ScriptName`='npc_defile_icc' WHERE (`entry`='38757');
-UPDATE `creature_template` SET `ScriptName`='npc_raging_spirit_icc' WHERE (`entry`='36701');
-UPDATE `creature_template` SET `ScriptName`='npc_ooze_little' WHERE `entry`= 36897;
-UPDATE `creature_template` SET `ScriptName`='npc_ooze_big' WHERE `entry`= 36899;
-UPDATE `creature_template` SET `ScriptName`='npc_nerubar_brood_keeper' WHERE `entry` = 36725;
-UPDATE `creature_template` SET `ScriptName`='npc_the_damned' WHERE `entry` = 37011;
-UPDATE `creature_template` SET `ScriptName`='npc_servant_of_the_throne' WHERE `entry` = 36724;
-UPDATE `creature_template` SET `ScriptName`='npc_ancient_skeletal_soldier' WHERE `entry` = 37012;
-UPDATE `creature_template` SET `ScriptName`='npc_death_bound_ward' WHERE `entry` = 37007;
-UPDATE `creature_template` SET `ScriptName`='npc_death_speaker_attedant' WHERE `entry` = 36811;
-UPDATE `creature_template` SET `ScriptName`='npc_death_speaker_disciple' WHERE `entry` = 36807;
-UPDATE `creature_template` SET `ScriptName`='npc_death_speaker_high_priest' WHERE `entry` = 36829;
-UPDATE `creature_template` SET `ScriptName`='npc_death_speaker_servant' WHERE `entry` = 36844;
-UPDATE `creature_template` SET `ScriptName`='npc_death_speaker_zealot' WHERE `entry` = 36808;
-UPDATE `creature_template` SET `ScriptName`='npc_cult_fanatic' WHERE `entry` = 38135;
-UPDATE `creature_template` SET `ScriptName`='npc_cult_adherent' WHERE `entry` = 37949;
-UPDATE `creature_template` SET `ScriptName`='npc_shade' WHERE `entry` = 38222;
-UPDATE `creature_template` SET `ScriptName`='npc_skellmage_icc' WHERE `entry` = 37868;
-UPDATE `creature_template` SET `ScriptName`='npc_fireskell_icc' WHERE `entry` = 36791;
-UPDATE `creature_template` SET `ScriptName`='npc_suppressor_icc' WHERE `entry` = 37863;
-UPDATE `creature_template` SET `ScriptName`='npc_manavoid_icc' WHERE `entry` = 38068;
-UPDATE `creature_template` SET `ScriptName`='npc_glutabomination_icc' WHERE `entry` = 37886;
-UPDATE `creature_template` SET `ScriptName`='npc_blistzombie_icc' WHERE `entry` = 37934;
-UPDATE `creature_template` SET `ScriptName`='npc_dreamcloud_icc' WHERE `entry` = 37985;
-UPDATE `creature_template` SET `ScriptName`='npc_dreamportal_icc' WHERE `entry` = 37945;
-UPDATE `creature_template` SET `ScriptName`='npc_nucleus_icc' WHERE `entry`=38369;
-UPDATE `creature_template` SET `ScriptName`='npc_fireball_icc' WHERE `entry`=38332;
-UPDATE `creature_template` SET `ScriptName`='npc_bomb_icc' WHERE `entry`=38454;
-UPDATE `creature_template` SET `ScriptName`='npc_vortex_icc' WHERE `entry`=38422;
-UPDATE `creature_template` SET `ScriptName`='npc_empfireball_icc' WHERE `entry`=38451;
-UPDATE `creature_template` SET `ScriptName`='npc_precious' WHERE (`entry`='37217');
-UPDATE `creature_template` SET `ScriptName`='npc_stinky' WHERE (`entry`='37025');
-UPDATE `creature_template` SET `ScriptName`='npc_puddle_ooze' WHERE (`entry`='37690');
-UPDATE `creature_template` SET `ScriptName`='npc_malleable_goo' WHERE (`entry`='38556');
-UPDATE `creature_template` SET `ScriptName`='npc_abomination' WHERE (`entry`='37672');
-UPDATE `creature_template` SET `ScriptName`='npc_spinestalker' WHERE (`entry`='37534');
-UPDATE `creature_template` SET `ScriptName`='npc_rimefang' WHERE (`entry`='37533');
-UPDATE `creature_template` SET `ScriptName`='npc_ice_tomb' WHERE (`entry`='36980');
-UPDATE `creature_template` SET `ScriptName`='npc_frost_bomb' WHERE (`entry`='37186');
-UPDATE `creature_template` SET `ScriptName`='npc_shambling_horror_icc' WHERE (`entry`='37698');
-UPDATE `creature_template` SET `ScriptName`='npc_terenas_menethil' WHERE (`entry`='36823');
-UPDATE `creature_template` SET `ScriptName`='npc_spirit_warden' WHERE (`entry`='36824');
-UPDATE `creature_template` SET `ScriptName`='npc_sister_svalna' WHERE `entry` = '37126';
-UPDATE `creature_template` SET `ScriptName` = 'npc_impaling_spear' WHERE `entry` = '38248';
-UPDATE `creature_template` SET `ScriptName` = 'npc_gas_cloud' WHERE `entry` = '37562';
-UPDATE `creature_template` SET `ScriptName`='lanathel_intro' WHERE (`entry`='38004');
-UPDATE `creature_template` SET `vehicleId`=533 WHERE `entry`=36619;
 
 -- Inserting NPC's on world
 DELETE FROM `creature` WHERE `id`=38004;
@@ -1473,4 +1400,3 @@ INSERT INTO `achievement_criteria_data` (`criteria_id`,`type`,`value1`,`value2`)
 (13051,12,3,0), -- Heroic: Storming the Citadel (25 player), Lady Deathwhisper, mode requirement (25H)
 (13052,12,3,0), -- Heroic: Storming the Citadel (25 player), Claim victory in the Gunship Battle, mode requirement (25H)
 (13053,12,3,0); -- Heroic: Storming the Citadel (25 player), The Deathbringer, mode requirement (25H)
-

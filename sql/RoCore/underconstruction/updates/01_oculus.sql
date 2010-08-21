@@ -1,7 +1,3 @@
-UPDATE `instance_template` SET `script`='instance_oculus' WHERE `map`=578;
-UPDATE `creature_template` SET `ScriptName`='npc_unstable_sphere' WHERE `entry`=28166;
-UPDATE `creature_template` SET `ScriptName`='npc_oculus_drake' WHERE `entry` IN (27657,27658,27659);
-
 -- Ruby drake
 UPDATE creature_template SET spell1 = 50232, spell2 = 50248, spell3 = 50240, spell4 =  50253, spell5 = 53112, VehicleId = 70 WHERE entry = 27756;
 -- Amber Drake
@@ -11,11 +7,6 @@ UPDATE creature_template SET spell1 = 50328, spell2 = 50341, spell3 = 50344, spe
 /*
 UPDATE creature_template SET npcflag=1 WHERE entry IN (27657,27658,27659);
 */
-UPDATE creature_template SET ScriptName='boss_drakos' WHERE entry = 27654;
-UPDATE creature_template SET ScriptName='boss_urom' WHERE entry = 27655;
-UPDATE creature_template SET ScriptName='mob_centrifige_construct' WHERE entry = 27641;
-UPDATE creature_template SET ScriptName='boss_varos' WHERE entry = 27447;
-UPDATE creature_template SET ScriptName='boss_eregos' WHERE entry = 27656;
 
 -- Unstable Sphere
 UPDATE creature_template SET minlevel = 80, maxlevel = 80, mindmg = 422, maxdmg = 586, faction_A = 16, faction_H = 16, attackpower = 642, dmg_multiplier = 1, minrangedmg = 345, maxrangedmg = 509, rangedattackpower = 103 WHERE entry = 28166;
@@ -106,8 +97,7 @@ INSERT INTO `creature_onkill_reputation` (`creature_id`, `RewOnKillRepFaction1`,
 (27640, 1037, 1052, 7, 0, 5, 7, 0, 5, 1),
 (27639, 1037, 1052, 7, 0, 5, 7, 0, 5, 1),
 (28153, 1037, 1052, 7, 0, 5, 7, 0, 5, 1);
--- Planar Anomlay di Eregos
-UPDATE creature_template SET ScriptName = 'npc_planar_anomaly' WHERE entry = 30879;
+
 -- Arcane beam
 DELETE FROM creature WHERE id = 28239;
 UPDATE creature_template SET modelid3 = 0 WHERE entry = 30879;

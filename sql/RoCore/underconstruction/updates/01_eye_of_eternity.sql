@@ -1,12 +1,4 @@
-UPDATE instance_template SET script = 'instance_eye_of_eternity' WHERE map = 616;
 UPDATE creature_template SET VehicleId=264 WHERE entry = 30248;
-UPDATE `gameobject_template` SET `ScriptName` = 'go_malygos_iris' WHERE `entry` IN (193960,193958); 
-
-UPDATE creature_template SET ScriptName = 'boss_malygos', unit_flags = unit_flags & ~256 WHERE entry = 28859;
-UPDATE creature_template SET ScriptName = 'mob_nexus_lord' WHERE entry = 30245; -- Nexus Lord
-UPDATE creature_template SET ScriptName = 'mob_scion_of_eternity' WHERE entry = 30249; -- Scion of Eternity
-UPDATE creature_template SET ScriptName = 'mob_power_spark' WHERE entry = 30084;  -- Power Spark
-UPDATE creature_template SET ScriptName = 'npc_arcane_overload' WHERE entry = 30282; -- Arcane Overload
 
 UPDATE creature_template SET unit_flags = 1 WHERE entry = 28859;
 

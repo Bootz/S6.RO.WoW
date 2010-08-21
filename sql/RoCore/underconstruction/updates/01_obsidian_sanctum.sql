@@ -1,25 +1,14 @@
 --
 -- Obsidian Sanctum
 --
-UPDATE `instance_template` SET `script`='instance_obsidian_sanctum' WHERE `map`=615;
-UPDATE `creature_template` SET `ScriptName`='boss_sartharion' WHERE `entry`=28860;
-UPDATE `creature_template` SET `ScriptName`='mob_vesperon' WHERE `entry`=30449;
-UPDATE `creature_template` SET `ScriptName`='mob_shadron' WHERE `entry`=30451;
-UPDATE `creature_template` SET `ScriptName`='mob_tenebron' WHERE `entry`=30452;
-UPDATE `creature_template` SET `ScriptName`='mob_acolyte_of_shadron' WHERE `entry`=31218;
-UPDATE `creature_template` SET `ScriptName`='mob_acolyte_of_vesperon' WHERE `entry`=31219;
 -- flametsunami
-UPDATE creature_template SET minlevel=83, maxlevel=83, faction_A=14, faction_H=14, unit_flags=0x02000000, flags_extra=0x00000002, ScriptName="npc_flame_tsunami" WHERE entry=30616;
-
-UPDATE creature_template SET ScriptName="npc_twilight_fissure" WHERE entry=30641; 
-UPDATE creature_template SET ScriptName="npc_flame_tsunami" WHERE entry=30616;
+UPDATE creature_template SET minlevel=83, maxlevel=83, faction_A=14, faction_H=14, unit_flags=0x02000000, flags_extra=0x00000002 WHERE entry=30616;
 
 -- safezone flag
 UPDATE creature_template SET flags_extra = 0x00000002 WHERE entry=30494;
 
 -- sartharion door
 UPDATE `gameobject_template` SET `flags` = 4 WHERE `entry` = 181247;
-
 
 -- Add Twilight Portals
 DELETE FROM gameobject WHERE id=193988;
@@ -33,10 +22,6 @@ INSERT INTO gameobject (id, map, spawnMask, phaseMask, position_x, position_y, p
 UPDATE creature_template SET flags_extra = flags_extra | 2 WHERE entry = 31103; -- Twilight Egg (Cosmetic)
 UPDATE creature_template SET unit_flags = unit_flags | 4, faction_A = 103, faction_H = 103, flags_extra = 2 WHERE entry = 30648; -- Fire Cyclone 
 UPDATE creature SET spawndist = 0 WHERE id = 30648; -- Fire Cyclone
-UPDATE creature_template SET ScriptName = 'npc_twilight_fissure' WHERE entry = 30641;
-UPDATE creature_template SET ScriptName = 'npc_flame_tsunami' WHERE entry = 30616;
-UPDATE creature_template SET ScriptName = 'mob_twilight_eggs' WHERE entry IN (30882, 31204);
-UPDATE creature_template SET ScriptName = 'mob_twilight_whelp' WHERE entry IN (30890, 31540, 31214, 31548);
 UPDATE creature_template SET faction_A = 103, faction_H = 103, minlevel = 81, maxlevel = 81, mindmg = 1857, maxdmg = 2703 WHERE entry IN (30890, 31214);
 UPDATE creature_template SET faction_A = 103, faction_H = 103, minlevel = 81, maxlevel = 81, mindmg = 3032, maxdmg = 5194 WHERE entry IN (31540, 31548);
 UPDATE creature_template SET faction_A = 103, faction_H = 103, minlevel = 81, maxlevel = 81 WHERE entry IN (30882, 31539); -- Twilight Egg
@@ -54,5 +39,5 @@ UPDATE creature_template SET modelid1 = 29038 WHERE entry IN (30641, 31521);
 UPDATE creature_template SET unit_flags = 33554434 WHERE entry IN (30641, 31521, 31103);
 
 -- disciple of vesperon
-UPDATE creature_template SET faction_H = 16, faction_A = 16, ScriptName = 'npc_disciple_of_vesperon' WHERE entry = 30858;
+UPDATE creature_template SET faction_H = 16, faction_A = 16 WHERE entry = 30858;
 UPDATE gameobject SET spawntimesecs = -60 WHERE id = 193988;
