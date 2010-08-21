@@ -1,4 +1,4 @@
-
+-- Script_names of RoCore update files
 -- Argent tournament
 UPDATE `creature_template` SET `ScriptName` = 'npc_squire_danny' WHERE entry = 33518;
 UPDATE `creature_template` SET `ScriptName` = 'npc_argent_valiant' WHERE entry = 33448;
@@ -28,7 +28,7 @@ UPDATE `creature_template` SET `ScriptName`='npc_flame_tsunami' WHERE entry=3061
 UPDATE `creature_template` SET `ScriptName`='npc_twilight_fissure' WHERE entry = 30641;
 UPDATE `creature_template` SET `ScriptName`='npc_flame_tsunami' WHERE entry = 30616;
 UPDATE `creature_template` SET `ScriptName`='mob_twilight_eggs' WHERE entry IN (30882, 31204);
-UPDATE `creature_template` SET `ScriptName`='mob_twilight_whelp' WHERE entry IN (30890, 31540, 31214, 31548);
+UPDATE `creature_template` SET `ScriptName`='mob_twilight_whelp' WHERE entry IN (30890, 31214, 31548);
 UPDATE `creature_template` SET `ScriptName`='npc_disciple_of_vesperon' WHERE entry = 30858;
 UPDATE `creature_template` SET `ScriptName`='npc_flame_tsunami' WHERE entry=30616;
 
@@ -56,8 +56,18 @@ UPDATE `creature_template` SET `ScriptName` = 'npc_combustion' WHERE `entry` = '
 UPDATE `creature_template` SET `ScriptName` = 'npc_consumption' WHERE `entry` = '40135';
 UPDATE `creature_template` SET `ScriptName` = 'npc_meteor_flame' WHERE `entry` = '40044';
 
+-- Anuncios al comienzo del evento.
+-- Here does not exist the NPC, the we fix the script_name in this way
+-- Later we will fix in the right way
+DELETE FROM `creature_template` WHERE `entry` in (35591,35592);
+INSERT INTO `creature_template` (`entry`, `difficulty_entry_1`, `difficulty_entry_2`, `difficulty_entry_3`, `KillCredit1`, `KillCredit2`, `modelid1`, `modelid2`, `modelid3`, `modelid4`, `name`, `subname`, `IconName`, `gossip_menu_id`, `minlevel`, `maxlevel`, `exp`, `faction_A`, `faction_H`, `npcflag`, `speed_run`, `scale`, `rank`, `mindmg`, `maxdmg`, `dmgschool`, `attackpower`, `dmg_multiplier`, `baseattacktime`, `rangeattacktime`, `unit_class`, `unit_flags`, `dynamicflags`, `family`, `trainer_type`, `trainer_spell`, `trainer_class`, `trainer_race`, `minrangedmg`, `maxrangedmg`, `rangedattackpower`, `type`, `type_flags`, `lootid`, `pickpocketloot`, `skinloot`, `resistance1`, `resistance2`, `resistance3`, `resistance4`, `resistance5`, `resistance6`, `spell1`, `spell2`, `spell3`, `spell4`, `spell5`, `spell6`, `spell7`, `spell8`, `PetSpellDataId`, `VehicleId`, `mingold`, `maxgold`, `AIName`, `MovementType`, `InhabitType`, `Health_mod`, `Mana_mod`, `RacialLeader`, `questItem1`, `questItem2`, `questItem3`, `questItem4`, `questItem5`, `questItem6`, `movementId`, `RegenHealth`, `equipment_id`, `mechanic_immune_mask`, `flags_extra`, `ScriptName`) VALUES 
+(35591, 0, 0, 0, 0, 0, 29894, 0, 0, 0, 'Jaeren Sunsworn', '', '', 0, 75, 75, 2, 14, 14, 0, 1, 1, 0, 0, 0, 0, 0, 1, 2000, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', 0, 3, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 'npc_anstart'),
+(35592, 0, 0, 0, 0, 0, 29893, 0, 0, 0, 'Arelas Brightstar', '', '', 0, 75, 75, 2, 14, 14, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 512, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', 0, 3, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 'npc_anstart');
+
 -- Trial od the champion
 UPDATE `creature_template` SET `ScriptName`='npc_announcer_toc5' WHERE `entry`IN (35004,35005);
+UPDATE `creature_template` SET `ScriptName`='npc_gr' WHERE `entry`IN (35492);
+UPDATE `creature_template` SET `ScriptName`='npc_anstart' WHERE `entry`IN (35591,35592);
 
 -- Trial of crusader
 UPDATE `creature_template` SET `ScriptName`='Boss_Jaraxxus' WHERE (`entry`='34780');
@@ -214,7 +224,6 @@ UPDATE `creature_template` SET `ScriptName` = 'magnetic_core' WHERE `entry` = 34
 UPDATE `creature_template` SET `ScriptName` = 'boss_general_vezax' WHERE `entry` = 33271;
 UPDATE `creature_template` SET `ScriptName` = 'mob_saronite_vapors' WHERE `entry` = 33488;
 UPDATE `creature_template` SET `ScriptName` = 'mob_saronite_animus' WHERE `entry` = 33524;
-UPDATE `creature_template` SET `ScriptName` = 'not_push_button' WHERE `entry` = 194739;
 UPDATE `creature_template` SET `ScriptName` = 'mob_mimiron_flame' WHERE `entry` = 34363;
 UPDATE `creature_template` SET `ScriptName` = 'mob_frost_bomb' WHERE `entry` = 34149;
 UPDATE `creature_template` SET `ScriptName` = 'mob_junk_bot' WHERE `entry` = 33855;
@@ -234,10 +243,15 @@ UPDATE `creature_template` SET `ScriptName` = 'boss_elder_brightleaf' WHERE `ent
 UPDATE `creature_template` SET `ScriptName` = 'creature_iron_roots' WHERE `entry` =33088;
 UPDATE `creature_template` SET `ScriptName` = 'creature_sun_beam' WHERE `entry` =33170;
 UPDATE `creature_template` SET `ScriptName` = 'mob_colossus' WHERE `entry` = 33237;
+UPDATE `creature_template` SET `ScriptName` = 'npc_sif' WHERE `entry` = 33196;
+-- I set here this scriptname because I thi we are using a entrie script and them this is correct
+-- When we use it we have another error thorim_phase_trigger because this scriptname is assigned to this NPC from TC
+UPDATE `creature_template` SET `flags_extra` = 0, `ScriptName` = 'thorim_energy_source' WHERE `entry` = 32892;
 
 -- Icecrown Citadel
 -- First declaring scripts names
 UPDATE `creature_template` SET `ScriptName`='' WHERE `entry` IN (37813,38508,36626,36855,38222,36678,37697,36853,36597,38995,36633,36609,37695,38757,36701,36725,37011,36724,37012,37007,36811,36807,36829,36844,36808,38135,37949,36627,36897,36899,37973,37970,37972,36789,38429,38068,38369,38332,38454,38422,38451);
+
 # Boss
 UPDATE `creature_template` SET `ScriptName`='boss_blood_queen_lanathel' WHERE (`entry`='37955');
 UPDATE `creature_template` SET `ScriptName`='boss_blood_elf_keleset_icc' WHERE `entry` = 37972;
@@ -307,6 +321,10 @@ UPDATE `creature_template` SET `ScriptName` = 'npc_impaling_spear' WHERE `entry`
 UPDATE `creature_template` SET `ScriptName` = 'npc_gas_cloud' WHERE `entry` = '37562';
 UPDATE `creature_template` SET `ScriptName`='lanathel_intro' WHERE (`entry`='38004');
 UPDATE `creature_template` SET `vehicleId`=533 WHERE `entry`=36619;
+UPDATE `creature_template` SET `ScriptName`='npc_choke_bomb' WHERE (`entry`='38159');
+UPDATE `creature_template` SET `ScriptName`='npc_sticky_ooze' WHERE (`entry`='37006');
+UPDATE `creature_template` SET `ScriptName`='npc_flood_ooze' WHERE (`entry`='37013');
+UPDATE `creature_template` SET `ScriptName`='npc_shambling_horror' WHERE (`entry`='37698');
 
 -- Halls of Reflection
 -- Cleanup first
@@ -355,3 +373,35 @@ UPDATE `creature_template` SET `ScriptName`='npc_lady_nightswood' WHERE `entry`=
 -- The Vile
 UPDATE `creature_template` SET `ScriptName`='npc_vile' WHERE `entry`='29769';
 
+-- Declaring zones
+UPDATE `instance_template` SET `script` = 'instance_eye_of_eternity' WHERE map = 616;
+UPDATE `instance_template` SET `script`='instance_obsidian_sanctum' WHERE `map`=615;
+UPDATE `instance_template` SET `script`='instance_oculus' WHERE `map`=578;
+UPDATE `instance_template` SET `script`='instance_ruby_sanctum' WHERE (`map`='724');
+UPDATE `instance_template` SET `script`='instance_trial_of_the_champion' WHERE `map`=650;
+UPDATE `instance_template` SET `script`='instance_trial_of_the_crussader' WHERE (`map`='649');
+UPDATE `instance_template` SET `script`='instance_ulduar' WHERE `map`=603;
+UPDATE `instance_template` SET `script`='instance_hall_of_reflection' WHERE (`map`='668');
+UPDATE `instance_template` SET `script` = 'instance_halls_of_reflection' WHERE map=668;
+
+-- Is fix here if not "error" - Lo implemento aqui sino da error
+DELETE FROM gameobject_template WHERE entry = '194438';
+INSERT INTO `gameobject_template` (`entry`, `type`, `displayId`, `name`, `IconName`, `castBarCaption`, `unk1`, `faction`, `flags`, `size`, `questItem1`, `questItem2`, `questItem3`, `questItem4`, `questItem5`, `questItem6`, `data0`, `data1`, `data2`, `data3`, `data4`, `data5`, `data6`, `data7`, `data8`, `data9`, `data10`, `data11`, `data12`, `data13`, `data14`, `data15`, `data16`, `data17`, `data18`, `data19`, `data20`, `data21`, `data22`, `data23`, `ScriptName`, `WDBVerified`) VALUES
+('194438','1','8504','Activate Tram','','','','0','32','1','0','0','0','0','0','0','0','0','3000','0','0','1','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','go_call_tram','11159');
+
+-- Gameobject
+UPDATE `gameobject_template` SET `ScriptName` = 'go_malygos_iris' WHERE `entry` IN (193960,193958); 
+UPDATE `gameobject_template` SET `ScriptName` = 'go_firefield' WHERE `entry` = '203005';
+UPDATE `gameobject_template` SET `ScriptName`= '' WHERE `entry` IN (194375,194371,194370,194377);
+UPDATE `gameobject_template` SET `ScriptName`='ulduar_teleporter' WHERE `entry`=194569;
+UPDATE `gameobject_template` SET `ScriptName` = 'icecrown_teleporter' WHERE `entry` IN (202223,202235,202242,202243,202244,202245,202246);
+UPDATE `gameobject_template` SET `ScriptName` = 'go_call_tram' WHERE `entry` = 194438;
+UPDATE `gameobject_template` SET `ScriptName` = 'not_push_button' WHERE `entry` = 194739;
+
+-- WG
+DELETE FROM `outdoorpvp_template` WHERE `TypeId` IN (7);
+INSERT INTO `outdoorpvp_template` (`TypeId`, `ScriptName`, `Comment`) VALUES (7, 'outdoorpvp_wg', 'Wintergrasp');
+
+-- Clean error from started
+-- This delete was on Ulduar sql but i move here for start server with any error
+DELETE FROM `script_waypoint` WHERE `entry`=33370;
