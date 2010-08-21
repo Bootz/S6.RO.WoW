@@ -1,4 +1,4 @@
-ALTER TABLE db_version CHANGE COLUMN required_243_world_creature_transport required_280_world_pit_of_saron bit;
+-- Note: use this info only if use ytdb database
 
 -- npcs for pit of saron
 DELETE FROM `creature` WHERE `id` IN (36840, 36893, 36892, 36841, 36842, 36874, 36877, 36658, 38189, 38188, 37583, 37774, 37779, 37582, 36661) AND `map` = 658;

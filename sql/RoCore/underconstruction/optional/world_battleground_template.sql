@@ -1,3 +1,4 @@
+-- Use this info only for ytdb database and if `battleground_template` has not comment 
 -- Set battleground-names
 UPDATE `battleground_template` SET `Comment`= 'Alterac Valley' WHERE `battleground_template`.`id`=1;
 UPDATE `battleground_template` SET `Comment`= 'Warsong Gulch' WHERE `battleground_template`.`id`=2;
