@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2005-2010 MaNGOS <http://getmangos.com/>
+ *
  * Copyright (C) 2008-2010 Trinity <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -8,12 +10,12 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
 #ifndef _DATABASEWORKERPOOL_H
@@ -51,6 +53,7 @@ class DatabaseWorkerPoolEnd : public SQLOperation
         ACE_Condition_Thread_Mutex &shutdown_Mtx;
 };
 
+
 class DatabaseWorkerPool
 {
     public:
@@ -71,52 +74,10 @@ class DatabaseWorkerPool
         QueryResult_AutoPtr PQuery(const char* sql, ...);
         QueryNamedResult* QueryNamed(const char *sql);
         QueryNamedResult* PQueryNamed(const char *format,...) ATTR_PRINTF(2,3);
+        ACE_Future<QueryResult_AutoPtr> AsyncQuery(const char* sql);
+        ACE_Future<QueryResult_AutoPtr> AsyncPQuery(const char* sql, ...);
+        QueryResultHolderFuture DelayQueryHolder(SQLQueryHolder* holder);
 
-        /// Async queries and query holders, implemented in DatabaseImpl.h
-
-        // Query / member
-        template<class Class>
-            bool AsyncQuery(Class *object, void (Class::*method)(QueryResult_AutoPtr), const char *sql);
-        template<class Class, typename ParamType1>
-            bool AsyncQuery(Class *object, void (Class::*method)(QueryResult_AutoPtr, ParamType1), ParamType1 param1, const char *sql);
-        template<class Class, typename ParamType1, typename ParamType2>
-            bool AsyncQuery(Class *object, void (Class::*method)(QueryResult_AutoPtr, ParamType1, ParamType2), ParamType1 param1, ParamType2 param2, const char *sql);
-        template<class Class, typename ParamType1, typename ParamType2, typename ParamType3>
-            bool AsyncQuery(Class *object, void (Class::*method)(QueryResult_AutoPtr, ParamType1, ParamType2, ParamType3), ParamType1 param1, ParamType2 param2, ParamType3 param3, const char *sql);
-        // Query / static
-        template<typename ParamType1>
-            bool AsyncQuery(void (*method)(QueryResult_AutoPtr, ParamType1), ParamType1 param1, const char *sql);
-        template<typename ParamType1, typename ParamType2>
-            bool AsyncQuery(void (*method)(QueryResult_AutoPtr, ParamType1, ParamType2), ParamType1 param1, ParamType2 param2, const char *sql);
-        template<typename ParamType1, typename ParamType2, typename ParamType3>
-            bool AsyncQuery(void (*method)(QueryResult_AutoPtr, ParamType1, ParamType2, ParamType3), ParamType1 param1, ParamType2 param2, ParamType3 param3, const char *sql);
-        // PQuery / member
-        template<class Class>
-            bool AsyncPQuery(Class *object, void (Class::*method)(QueryResult_AutoPtr), const char *format,...) ATTR_PRINTF(4,5);
-        template<class Class, typename ParamType1>
-            bool AsyncPQuery(Class *object, void (Class::*method)(QueryResult_AutoPtr, ParamType1), ParamType1 param1, const char *format,...) ATTR_PRINTF(5,6);
-        template<class Class, typename ParamType1, typename ParamType2>
-            bool AsyncPQuery(Class *object, void (Class::*method)(QueryResult_AutoPtr, ParamType1, ParamType2), ParamType1 param1, ParamType2 param2, const char *format,...) ATTR_PRINTF(6,7);
-        template<class Class, typename ParamType1, typename ParamType2, typename ParamType3>
-            bool AsyncPQuery(Class *object, void (Class::*method)(QueryResult_AutoPtr, ParamType1, ParamType2, ParamType3), ParamType1 param1, ParamType2 param2, ParamType3 param3, const char *format,...) ATTR_PRINTF(7,8);
-        // PQuery / static
-        template<typename ParamType1>
-            bool AsyncPQuery(void (*method)(QueryResult_AutoPtr, ParamType1), ParamType1 param1, const char *format,...) ATTR_PRINTF(4,5);
-        template<typename ParamType1, typename ParamType2>
-            bool AsyncPQuery(void (*method)(QueryResult_AutoPtr, ParamType1, ParamType2), ParamType1 param1, ParamType2 param2, const char *format,...) ATTR_PRINTF(5,6);
-        template<typename ParamType1, typename ParamType2, typename ParamType3>
-            bool AsyncPQuery(void (*method)(QueryResult_AutoPtr, ParamType1, ParamType2, ParamType3), ParamType1 param1, ParamType2 param2, ParamType3 param3, const char *format,...) ATTR_PRINTF(6,7);
-        template<class Class>
-        // QueryHolder
-            bool DelayQueryHolder(Class *object, void (Class::*method)(QueryResult_AutoPtr, SQLQueryHolder*), SQLQueryHolder *holder);
-        template<class Class, typename ParamType1>
-            bool DelayQueryHolder(Class *object, void (Class::*method)(QueryResult_AutoPtr, SQLQueryHolder*, ParamType1), SQLQueryHolder *holder, ParamType1 param1);
-
-        void SetResultQueue(SQLResultQueue * queue)
-        {
-            m_queryQueues[ACE_Based::Thread::current()] = queue;
-        }
-        
         void BeginTransaction();
         void RollbackTransaction();
         void CommitTransaction();
@@ -152,7 +113,6 @@ class DatabaseWorkerPool
     private:
         typedef UNORDERED_MAP<ACE_Based::Thread*, MySQLConnection*> ConnectionMap;
         typedef UNORDERED_MAP<ACE_Based::Thread*, TransactionTask*> TransactionQueues;
-        typedef UNORDERED_MAP<ACE_Based::Thread*, SQLResultQueue*> QueryQueues;
         typedef ACE_Atomic_Op<ACE_SYNCH_MUTEX, uint32> AtomicUInt;
 
     private:
@@ -166,7 +126,6 @@ class DatabaseWorkerPool
         std::string                     m_infoString;        //! Infostring that is passed on to child connections.
         TransactionQueues               m_tranQueues;        //! Transaction queues from diff. threads
         ACE_Thread_Mutex                m_transQueues_mtx;   //! To guard m_transQueues
-        QueryQueues                     m_queryQueues;       //! Query queues from diff threads
 };
 
 #endif

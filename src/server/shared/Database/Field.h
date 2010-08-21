@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
+ * Copyright (C) 2005-2010 MaNGOS <http://getmangos.com/>
  *
  * Copyright (C) 2008-2010 Trinity <http://www.trinitycore.org/>
  *
@@ -56,7 +56,7 @@ class Field
         uint32 GetUInt32() const { return mValue ? static_cast<uint32>(atol(mValue)) : uint32(0); }
         uint64 GetUInt64() const
         {
-            if(mValue)
+            if (mValue)
             {
                 uint64 value;
                 sscanf(mValue,UI64FMTD,&value);
@@ -67,7 +67,7 @@ class Field
         }
         uint64 GetInt64() const
         {
-            if(mValue)
+            if (mValue)
             {
                 int64 value;
                 sscanf(mValue,SI64FMTD,&value);

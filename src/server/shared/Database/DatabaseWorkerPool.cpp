@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2005-2010 MaNGOS <http://getmangos.com/>
+ *
  * Copyright (C) 2008-2010 Trinity <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -8,14 +10,15 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 
+#include "DatabaseEnv.h"
 #include "DatabaseWorkerPool.h"
 #include "MySQLConnection.h"
 #include "DatabaseEnv.h"
@@ -257,7 +260,7 @@ MySQLConnection* DatabaseWorkerPool::GetConnection()
         ACE_Guard<ACE_Thread_Mutex> guard(m_connectionMap_mtx);
         itr = m_sync_connections.find(ACE_Based::Thread::current());
         if (itr != m_sync_connections.end())
-            conn = itr->second;
+            return itr->second;
     }
     /*! Bundled threads */
     conn = m_bundle_conn;
@@ -358,15 +361,15 @@ bool DatabaseWorkerPool::CheckRequiredField(char const* table_name, char const* 
             sLog.outErrorDb("");
             sLog.outErrorDb("  [B] You need: --> `%s.sql`",req_sql_update_name);
             sLog.outErrorDb("");
-            sLog.outErrorDb("You must apply all updates after [A] to [B] to use RibonCore with this database.");
+            sLog.outErrorDb("You must apply all updates after [A] to [B] to use RoCore with this database.");
             sLog.outErrorDb("These updates are included in the sql/updates folder.");
         }
         else
         {
             sLog.outErrorDb("The table `%s` in your [%s] database is missing its version info.",table_name,db_name);
-            sLog.outErrorDb("RibonCore cannot find the version info needed to check that the db is up to date.",table_name,db_name);
+            sLog.outErrorDb("RoCore cannot find the version info needed to check that the db is up to date.",table_name,db_name);
             sLog.outErrorDb("");
-            sLog.outErrorDb("This revision of RibonCore requires a database updated to:");
+            sLog.outErrorDb("This revision of RoCore requires a database updated to:");
             sLog.outErrorDb("`%s.sql`",req_sql_update_name);
             sLog.outErrorDb("");
 
@@ -379,9 +382,9 @@ bool DatabaseWorkerPool::CheckRequiredField(char const* table_name, char const* 
     else
     {
         sLog.outErrorDb("The table `%s` in your [%s] database is missing or corrupt.",table_name,db_name);
-        sLog.outErrorDb("RibonCore cannot find the version info needed to check that the db is up to date.",table_name,db_name);
+        sLog.outErrorDb("RoCore cannot find the version info needed to check that the db is up to date.",table_name,db_name);
         sLog.outErrorDb("");
-        sLog.outErrorDb("This revision of RibonCore requires a database updated to:");
+        sLog.outErrorDb("This revision of RoCore requires a database updated to:");
         sLog.outErrorDb("`%s.sql`",req_sql_update_name);
         sLog.outErrorDb("");
 
@@ -394,3 +397,4 @@ bool DatabaseWorkerPool::CheckRequiredField(char const* table_name, char const* 
     return false;
 }
 
+ 

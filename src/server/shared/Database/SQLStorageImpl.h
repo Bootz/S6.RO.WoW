@@ -1,5 +1,7 @@
 /*
- * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
+ * Copyright (C) 2005-2010 MaNGOS <http://getmangos.com/>
+ *
+ * Copyright (C) 2008-2010 Trinity <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,7 +32,7 @@ void SQLStorageLoaderBase<T>::convert(uint32 /*field_pos*/, S src, D &dst)
 template<class T>
 void SQLStorageLoaderBase<T>::convert_str_to_str(uint32 /*field_pos*/, char *src, char *&dst)
 {
-    if(!src)
+    if (!src)
     {
         dst = new char[1];
         *dst = 0;
@@ -123,7 +125,7 @@ void SQLStorageLoaderBase<T>::Load(SQLStorage &store)
     uint32 maxi;
     Field *fields;
     QueryResult_AutoPtr result  = WorldDatabase.PQuery("SELECT MAX(%s) FROM %s", store.entry_field, store.table);
-    if(!result)
+    if (!result)
     {
         sLog.outError("Error loading %s table (not exist?)\n", store.table);
         exit(1);                                            // Stop server at loading non exited table or not accessable table
@@ -132,7 +134,7 @@ void SQLStorageLoaderBase<T>::Load(SQLStorage &store)
     maxi = (*result)[0].GetUInt32()+1;
 
     result = WorldDatabase.PQuery("SELECT COUNT(*) FROM %s", store.table);
-    if(result)
+    if (result)
     {
         fields = result->Fetch();
         store.RecordCount = fields[0].GetUInt32();
@@ -142,7 +144,7 @@ void SQLStorageLoaderBase<T>::Load(SQLStorage &store)
 
     result = WorldDatabase.PQuery("SELECT * FROM %s", store.table);
 
-    if(!result)
+    if (!result)
     {
         sLog.outError("%s table is empty!\n", store.table);
         store.RecordCount = 0;
@@ -152,7 +154,7 @@ void SQLStorageLoaderBase<T>::Load(SQLStorage &store)
     uint32 recordsize = 0;
     uint32 offset = 0;
 
-    if(store.iNumFields != result->GetFieldCount())
+    if (store.iNumFields != result->GetFieldCount())
     {
         store.RecordCount = 0;
         sLog.outError("Error in %s table, probably sql file format was updated (there should be %d fields in sql).\n", store.table, store.iNumFields);
@@ -164,7 +166,7 @@ void SQLStorageLoaderBase<T>::Load(SQLStorage &store)
     uint32 bo=0;
     uint32 bb=0;
     for (uint32 x=0; x< store.iNumFields; x++)
-        if(store.dst_format[x]==FT_STRING)
+        if (store.dst_format[x]==FT_STRING)
             ++sc;
         else if (store.dst_format[x]==FT_LOGIC)
             ++bo;

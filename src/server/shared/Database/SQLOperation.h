@@ -1,4 +1,6 @@
 /*
+ * Copyright (C) 2005-2010 MaNGOS <http://getmangos.com/>
+ *
  * Copyright (C) 2008-2010 Trinity <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -23,7 +25,7 @@
 #include <ace/Activation_Queue.h>
 
 #include "Common.h"
-#include "Callback.h"
+#include "Threading/Callback.h"
 
 class MySQLConnection;
 
@@ -101,8 +103,6 @@ class SQLQueryHolderTask : public SQLOperation
         SQLQueryHolderTask(SQLQueryHolder *holder, QueryResultHolderFuture res)
             : m_holder(holder), m_result(res){};
         bool Execute();
-
 };
-
 
 #endif

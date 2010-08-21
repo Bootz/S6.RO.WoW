@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
+ * Copyright (C) 2005-2010 MaNGOS <http://getmangos.com/>
  *
  * Copyright (C) 2008-2010 Trinity <http://www.trinitycore.org/>
  *
@@ -27,11 +27,11 @@
 #include "Field.h"
 
 #ifdef _WIN32
-  #define FD_SETSIZE 1024
-  #include <winsock2.h>
-  #include <mysql.h>
+#define FD_SETSIZE 1024
+#include <winsock2.h>
+#include <mysql/mysql.h>
 #else
-  #include <mysql/mysql.h>
+#include <mysql.h>
 #endif
 
 class QueryResult
@@ -86,7 +86,7 @@ class QueryNamedResult
         {
             for (size_t idx = 0; idx < mFieldNames.size(); ++idx)
             {
-                if(mFieldNames[idx] == name)
+                if (mFieldNames[idx] == name)
                     return idx;
             }
             ASSERT(false && "unknown field name");
