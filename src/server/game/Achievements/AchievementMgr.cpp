@@ -186,7 +186,7 @@ bool AchievementCriteriaData::IsValid(AchievementCriteriaEntry const* criteria)
             }
             return true;
         case ACHIEVEMENT_CRITERIA_DATA_TYPE_T_LEVEL:
-            if (level.minlevel < 0 || level.minlevel > STRONG_MAX_LEVEL)
+            if (level.minlevel > STRONG_MAX_LEVEL)
             {
                 sLog.outErrorDb("Table `achievement_criteria_data` (Entry: %u Type: %u) for data type ACHIEVEMENT_CRITERIA_DATA_TYPE_T_LEVEL (%u) has wrong minlevel in value1 (%u), ignored.",
                     criteria->ID, criteria->requiredType,dataType,level.minlevel);
@@ -446,14 +446,6 @@ void AchievementMgr::DeleteFromDB(uint32 lowguid)
     CharacterDatabase.CommitTransaction(trans);
 }
 
-void AchievementMgr::DeleteAchievementFromDB(uint32 lowguid, uint32 achi_id)
-{
-    CharacterDatabase.BeginTransaction ();
-    CharacterDatabase.PExecute("DELETE FROM character_achievement WHERE guid = %u AND achievement = %u",lowguid,achi_id);
-    CharacterDatabase.CommitTransaction ();
-    SaveToDB();
-}
-
 void AchievementMgr::SaveToDB(SQLTransaction& trans)
 {
     if (!m_completedAchievements.empty())
@@ -553,7 +545,7 @@ void AchievementMgr::SaveToDB(SQLTransaction& trans)
         if (need_execute_del || need_execute_ins)
         {
             if (need_execute_del)
-                trans->Append(ssdel.str().c_str());;
+                trans->Append(ssdel.str().c_str());
             if (need_execute_ins)
                 trans->Append(ssins.str().c_str());
         }
@@ -653,9 +645,9 @@ void AchievementMgr::SendAchievementEarned(AchievementEntry const* achievement)
 
         Trinity::AchievementChatBuilder say_builder(*GetPlayer(), CHAT_MSG_ACHIEVEMENT, LANG_ACHIEVEMENT_EARNED,achievement->ID);
         Trinity::LocalizedPacketDo<Trinity::AchievementChatBuilder> say_do(say_builder);
-        Trinity::PlayerDistWorker<Trinity::LocalizedPacketDo<Trinity::AchievementChatBuilder> > say_worker(GetPlayer(),sWorld.getConfig(CONFIG_LISTEN_RANGE_SAY),say_do);
+        Trinity::PlayerDistWorker<Trinity::LocalizedPacketDo<Trinity::AchievementChatBuilder> > say_worker(GetPlayer(),(float)sWorld.getConfig(CONFIG_LISTEN_RANGE_SAY),say_do);
         TypeContainerVisitor<Trinity::PlayerDistWorker<Trinity::LocalizedPacketDo<Trinity::AchievementChatBuilder> >, WorldTypeMapContainer > message(say_worker);
-        cell.Visit(p, message, *GetPlayer()->GetMap(), *GetPlayer(), sWorld.getConfig(CONFIG_LISTEN_RANGE_SAY));
+        cell.Visit(p, message, *GetPlayer()->GetMap(), *GetPlayer(), (float)sWorld.getConfig(CONFIG_LISTEN_RANGE_SAY));
     }
 
     WorldPacket data(SMSG_ACHIEVEMENT_EARNED, 8+4+8);
@@ -663,7 +655,7 @@ void AchievementMgr::SendAchievementEarned(AchievementEntry const* achievement)
     data << uint32(achievement->ID);
     data << uint32(secsToTimeBitFields(time(NULL)));
     data << uint32(0);
-    GetPlayer()->SendMessageToSetInRange(&data, sWorld.getConfig(CONFIG_LISTEN_RANGE_SAY), true);
+    GetPlayer()->SendMessageToSetInRange(&data, (float)sWorld.getConfig(CONFIG_LISTEN_RANGE_SAY), true);
 }
 
 void AchievementMgr::SendCriteriaUpdate(AchievementCriteriaEntry const* entry, CriteriaProgress const* progress, uint32 timeElapsed, bool timedCompleted)

@@ -30,7 +30,7 @@ public:
 
 	struct instance_icecrown_citadel_InstanceMapScript : public InstanceScript
 	{
-		instance_icecrown_citadel_InstanceMapScript(Map* pMap) : InstanceScript(pMap)
+		instance_icecrown_citadel_InstanceMapScript(InstanceMap* pMap) : InstanceScript(pMap)
 		{
 			Initialize();
 		};
@@ -741,7 +741,7 @@ public:
 			OUT_SAVE_INST_DATA;
 
 			std::ostringstream saveStream;
-			saveStream << "I C" << isBonedEligible << " " << auiEncounter[0] << " " << auiEncounter[1] << " " << auiEncounter[2] << " " << auiEncounter[3]
+			saveStream << "I C" << " " << auiEncounter[0] << " " << auiEncounter[1] << " " << auiEncounter[2] << " " << auiEncounter[3]
 			<< " " << auiEncounter[4] << " " << auiEncounter[5] << " " << auiEncounter[6] << " " << auiEncounter[7] << " " << auiEncounter[8]
 			<< " " << auiEncounter[9] << " " << auiEncounter[10] << " " << auiEncounter[11];
 
@@ -763,7 +763,7 @@ public:
 			uint16 data0,data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11;
 
 			std::istringstream loadStream(in);
-			loadStream >> isBonedEligible >> dataHead1 >> dataHead2 >> data0 >> data1 >> data2 >> data3 >> data4 >> data5 >> data6
+			loadStream >> dataHead1 >> dataHead2 >> data0 >> data1 >> data2 >> data3 >> data4 >> data5 >> data6
 				>> data7 >> data8 >> data9 >> data10 >> data11;
 
 			if (dataHead1 == 'I' && dataHead2 == 'C')

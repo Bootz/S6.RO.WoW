@@ -83,7 +83,9 @@ enum eSpells
 
     // Vengeful Shade
     SPELL_VENGEFUL_BLAST            = 71544,
-    SPELL_VENGEFUL_BLAST_PASSIVE    = 71494
+    SPELL_VENGEFUL_BLAST_PASSIVE    = 71494,
+
+    SPELL_BERSERK   = 26662,
 };
 
 enum eEvents
@@ -180,7 +182,7 @@ class boss_lady_deathwhisper : public CreatureScript
                 me->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_TAUNT, false);
                 me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_ATTACK_ME, false);
                 if (pInstance)
-                    pInstance->SetData(DATA_LADY_DEATHWHISPER, NOT_STARTED);
+                    pInstance->SetData(DATA_DEATHWHISPER_EVENT, NOT_STARTED);
             }
 
             void MoveInLineOfSight(Unit* who)
@@ -230,7 +232,7 @@ class boss_lady_deathwhisper : public CreatureScript
                 DoCast(me, SPELL_MANA_BARRIER, true);
 
                 if (pInstance)
-                    pInstance->SetData(DATA_LADY_DEATHWHISPER, IN_PROGRESS);
+                    pInstance->SetData(DATA_DEATHWHISPER_EVENT, IN_PROGRESS);
             }
 
             void JustDied(Unit* killer)
@@ -238,7 +240,7 @@ class boss_lady_deathwhisper : public CreatureScript
                 DoScriptText(SAY_DEATH, me);
 
                 if (pInstance)
-                    pInstance->SetData(DATA_LADY_DEATHWHISPER, DONE);
+                    pInstance->SetData(DATA_DEATHWHISPER_EVENT, DONE);
 
                 std::set<uint32> livingAddEntries;
                 // Full House achievement
@@ -274,7 +276,7 @@ class boss_lady_deathwhisper : public CreatureScript
             void JustReachedHome()
             {
                 if(pInstance)
-                    pInstance->SetData(DATA_LADY_DEATHWHISPER, FAIL);
+                    pInstance->SetData(DATA_DEATHWHISPER_EVENT, FAIL);
 
                 summons.DespawnAll();
             }
