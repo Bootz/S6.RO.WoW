@@ -28,7 +28,10 @@ UPDATE `creature_template` SET `ScriptName`='npc_flame_tsunami' WHERE entry=3061
 UPDATE `creature_template` SET `ScriptName`='npc_twilight_fissure' WHERE entry = 30641;
 UPDATE `creature_template` SET `ScriptName`='npc_flame_tsunami' WHERE entry = 30616;
 UPDATE `creature_template` SET `ScriptName`='mob_twilight_eggs' WHERE entry IN (30882, 31204);
-UPDATE `creature_template` SET `ScriptName`='mob_twilight_whelp' WHERE entry IN (30890, 31214, 31548);
+-- Revisar: tiene script_name en 2 ids mas 31214 & 31548, la principal es 30890, producia un error "ERROR: Creature (Entry: 31214) lists difficulty 1 mode entry 31548 with `ScriptName` filled in. `ScriptName` of difficulty 0 mode creature is always used instead."
+-- UPDATE `creature_template` SET `ScriptName`='mob_twilight_whelp' WHERE entry IN (30890, 31214, 31548);
+-- ahora solo esta asignado a un solo id 30890, hay que probar si va bien.
+UPDATE `creature_template` SET `ScriptName`='mob_twilight_whelp' WHERE entry IN (30890);
 UPDATE `creature_template` SET `ScriptName`='npc_disciple_of_vesperon' WHERE entry = 30858;
 UPDATE `creature_template` SET `ScriptName`='npc_flame_tsunami' WHERE entry=30616;
 
