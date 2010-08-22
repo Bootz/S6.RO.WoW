@@ -1,3 +1,4 @@
+-- Ruby Sanctum
 -- Script Texts
 DELETE FROM script_texts where `entry` <= -1752008 AND `entry` >= -1752016;
 DELETE FROM script_texts where `entry` <= -1752001 AND `entry` >= -1752006;
@@ -43,8 +44,6 @@ INSERT INTO script_texts (`entry`, `content_default`, `npc_entry`, `content_loc3
 (-1752034, 'Beware the shadow!',NULL,NULL,17506,0,0),
 (-1752035, 'You will find only suffering within the realm of twilight! Enter if you dare!',NULL,NULL,17507,0,0),
 (-1752036, 'I am the light and the darkness! Cower, mortals, before the herald of Deathwing!',NULL,NULL,17508,0,0);
-
--- Scriptnames
 
 DELETE FROM `spell_linked_spell` WHERE (`spell_trigger`='-74562') AND (`spell_effect`='74610');
 DELETE FROM `spell_linked_spell` WHERE (`spell_trigger`='-74792') AND (`spell_effect`='74800');
