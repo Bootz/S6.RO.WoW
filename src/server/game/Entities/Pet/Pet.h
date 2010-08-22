@@ -116,7 +116,7 @@ typedef std::vector<uint32> AutoSpellList;
 
 #define ACTIVE_SPELLS_MAX           4
 
-#define PET_FOLLOW_DIST  1
+#define PET_FOLLOW_DIST  1.0f
 #define PET_FOLLOW_ANGLE (M_PI/2)
 #define PET_FOCUS_REGEN_INTERVAL 4 * IN_MILLISECONDS
 
@@ -191,11 +191,11 @@ class Pet : public Guardian
         bool IsPetAura(Aura const* aura);
 
         void _LoadSpellCooldowns();
-        void _SaveSpellCooldowns();
+        void _SaveSpellCooldowns(SQLTransaction& trans);
         void _LoadAuras(uint32 timediff);
-        void _SaveAuras();
+        void _SaveAuras(SQLTransaction& trans);
         void _LoadSpells();
-        void _SaveSpells();
+        void _SaveSpells(SQLTransaction& trans);
 
         bool addSpell(uint32 spell_id,ActiveStates active = ACT_DECIDE, PetSpellState state = PETSPELL_NEW, PetSpellType type = PETSPELL_NORMAL);
         bool learnSpell(uint32 spell_id);

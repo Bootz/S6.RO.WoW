@@ -16,6 +16,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+#include "DatabaseEnv.h"
 #include "ReputationMgr.h"
 #include "DBCStores.h"
 #include "Player.h"
@@ -290,7 +291,7 @@ bool ReputationMgr::SetReputation(FactionEntry const* factionEntry, int32 standi
                         if (m_player->GetReputationRank(repTemplate->faction[i]) <= ReputationRank(repTemplate->faction_rank[i]))
                         {
                             // bonuses are already given, so just modify standing by rate
-                            int32 spilloverRep = standing * repTemplate->faction_rate[i];
+                            int32 spilloverRep = int32(standing * repTemplate->faction_rate[i]);
                             SetOneFactionReputation(sFactionStore.LookupEntry(repTemplate->faction[i]), spilloverRep, incremental);
                         }
                     }
@@ -317,7 +318,7 @@ bool ReputationMgr::SetOneFactionReputation(FactionEntry const* factionEntry, in
         if (incremental)
         {
             // int32 *= float cause one point loss?
-            standing = floor((float)standing * sWorld.getRate(RATE_REPUTATION_GAIN) + 0.5);
+            standing = int32(floor((float)standing * sWorld.getRate(RATE_REPUTATION_GAIN) + 0.5));
             standing += itr->second.Standing + BaseRep;
         }
 
@@ -508,14 +509,14 @@ void ReputationMgr::LoadFromDB(QueryResult_AutoPtr result)
     }
 }
 
-void ReputationMgr::SaveToDB()
+void ReputationMgr::SaveToDB(SQLTransaction& trans)
 {
     for (FactionStateList::iterator itr = m_factions.begin(); itr != m_factions.end(); ++itr)
     {
         if (itr->second.Changed)
         {
-            CharacterDatabase.PExecute("DELETE FROM character_reputation WHERE guid = '%u' AND faction='%u'", m_player->GetGUIDLow(), itr->second.ID);
-            CharacterDatabase.PExecute("INSERT INTO character_reputation (guid,faction,standing,flags) VALUES ('%u', '%u', '%i', '%u')", m_player->GetGUIDLow(), itr->second.ID, itr->second.Standing, itr->second.Flags);
+            trans->PAppend("DELETE FROM character_reputation WHERE guid = '%u' AND faction='%u'", m_player->GetGUIDLow(), itr->second.ID);
+            trans->PAppend("INSERT INTO character_reputation (guid,faction,standing,flags) VALUES ('%u', '%u', '%i', '%u')", m_player->GetGUIDLow(), itr->second.ID, itr->second.Standing, itr->second.Flags);
             itr->second.Changed = false;
         }
     }

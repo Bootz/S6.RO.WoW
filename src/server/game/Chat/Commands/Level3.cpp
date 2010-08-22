@@ -1114,7 +1114,7 @@ bool ChatHandler::HandleReloadAuctionsCommand(const char * /*args*/)
     return true;
 }
 
-bool ChatHandler::HandleReloadConditions(const char* args)
+bool ChatHandler::HandleReloadConditions(const char* /*args*/)
 {
     sLog.outString("Re-Loading Conditions...");
     sConditionMgr.LoadConditions(true);
@@ -1161,7 +1161,7 @@ bool ChatHandler::HandleAccountSetGmLevelCommand(const char *args)
 
     // Check for invalid specified GM level.
     gm = (isAccountNameGiven) ? atoi(arg2) : atoi(arg1);
-    if (gm < SEC_PLAYER)
+    if (gm > SEC_CONSOLE)
     {
         SendSysMessage(LANG_BAD_VALUE);
         SetSentErrorMessage(true);
@@ -3647,8 +3647,8 @@ bool ChatHandler::HandleLookupFactionCommand(const char *args)
 
                 if (repState)                               // and then target != NULL also
                 {
-                    ReputationRank rank = target->GetReputationMgr().GetRank(factionEntry);
-                    std::string rankName = GetTrinityString(ReputationRankStrIndex[rank]);
+                    uint32 index = target->GetReputationMgr().GetReputationRankStrIndex(factionEntry);
+                    std::string rankName = GetTrinityString(index);
 
                     ss << " " << rankName << "|h|r (" << target->GetReputationMgr().GetReputation(factionEntry) << ")";
 
@@ -5508,7 +5508,7 @@ bool ChatHandler::HandleQuestComplete(const char *args)
     // All creature/GO slain/casted (not required, but otherwise it will display "Creature slain 0/10")
     for (uint8 i = 0; i < QUEST_OBJECTIVES_COUNT; ++i)
     {
-        uint32 creature = pQuest->ReqCreatureOrGOId[i];
+        int32 creature = pQuest->ReqCreatureOrGOId[i];
         uint32 creaturecount = pQuest->ReqCreatureOrGOCount[i];
 
         if (uint32 spell_id = pQuest->ReqSpell[i])
@@ -6947,16 +6947,19 @@ bool ChatHandler::HandleSendItemsCommand(const char *args)
     // fill mail
     MailDraft draft(subject, text);
 
+    SQLTransaction trans = CharacterDatabase.BeginTransaction();
+
     for (ItemPairs::const_iterator itr = items.begin(); itr != items.end(); ++itr)
     {
         if (Item* item = Item::CreateItem(itr->first,itr->second,m_session ? m_session->GetPlayer() : 0))
         {
-            item->SaveToDB();                               // save for prevent lost at next mail load, if send fail then item will deleted
+            item->SaveToDB(trans);                               // save for prevent lost at next mail load, if send fail then item will deleted
             draft.AddItem(item);
         }
     }
 
-    draft.SendMailTo(MailReceiver(receiver,GUID_LOPART(receiver_guid)), sender);
+    draft.SendMailTo(trans, MailReceiver(receiver,GUID_LOPART(receiver_guid)), sender);
+    CharacterDatabase.CommitTransaction(trans);
 
     std::string nameLink = playerLink(receiver_name);
     PSendSysMessage(LANG_MAIL_SENT, nameLink.c_str());
@@ -7002,9 +7005,13 @@ bool ChatHandler::HandleSendMoneyCommand(const char *args)
     // from console show not existed sender
     MailSender sender(MAIL_NORMAL,m_session ? m_session->GetPlayer()->GetGUIDLow() : 0, MAIL_STATIONERY_GM);
 
+    SQLTransaction trans = CharacterDatabase.BeginTransaction();
+
     MailDraft(subject, text)
         .AddMoney(money)
-        .SendMailTo(MailReceiver(receiver,GUID_LOPART(receiver_guid)),sender);
+        .SendMailTo(trans, MailReceiver(receiver,GUID_LOPART(receiver_guid)),sender);
+
+    CharacterDatabase.CommitTransaction(trans);
 
     std::string nameLink = playerLink(receiver_name);
     PSendSysMessage(LANG_MAIL_SENT, nameLink.c_str());

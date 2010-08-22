@@ -69,6 +69,7 @@ std::string GetScriptsTableNameByType(ScriptsType type)
         case SCRIPTS_EVENT:         res = "event_scripts";      break;
         case SCRIPTS_WAYPOINT:      res = "waypoint_scripts";   break;
         case SCRIPTS_GOSSIP:        res = "gossip_scripts";     break;
+        default: break;
     }
     return res;
 }
@@ -85,6 +86,7 @@ ScriptMapMap* GetScriptsMapByType(ScriptsType type)
         case SCRIPTS_EVENT:         res = &sEventScripts;       break;
         case SCRIPTS_WAYPOINT:      res = &sWaypointScripts;    break;
         case SCRIPTS_GOSSIP:        res = &sGossipScripts;      break;
+        default: break;
     }
     return res;
 }
@@ -239,6 +241,8 @@ bool SpellClickInfo::IsFitToRequirements(Player const* player, Creature const * 
         case SPELL_CLICK_USER_PARTY:
             if (!player->IsInPartyWith(summoner))
                 return false;
+            break;
+        default:
             break;
     }
 
@@ -2591,7 +2595,8 @@ void ObjectMgr::LoadItemSetNames()
         {
             uint32 entry = *itr;
             // add data from item_template if available
-            if (pProto = GetItemPrototype(entry))
+            pProto = GetItemPrototype(entry);
+            if (pProto)
             {
                 sLog.outErrorDb("Item set part (Entry: %u) does not have entry in `item_set_names`, adding data from `item_template`.", entry);
                 ItemSetNameEntry &data = mItemSetNameMap[entry];
@@ -4874,6 +4879,8 @@ void ObjectMgr::LoadScripts(ScriptsType type)
                 }
                 break;
             }
+            default:
+                break;
         }
 
         if (scripts->find(tmp.id) == scripts->end())
@@ -5628,7 +5635,7 @@ uint32 ObjectMgr::GetNearestTaxiNode(float x, float y, float z, uint32 mapid, ui
     {
         TaxiNodesEntry const* node = sTaxiNodesStore.LookupEntry(i);
 
-        if (!node || node->map_id != mapid || !node->MountCreatureID[team == ALLIANCE ? 1 : 0] && node->MountCreatureID[0] != 32981) // dk flight
+        if (!node || node->map_id != mapid || (!node->MountCreatureID[team == ALLIANCE ? 1 : 0] && node->MountCreatureID[0] != 32981)) // dk flight
             continue;
 
         uint8  field   = (uint8)((i - 1) / 32);
@@ -8876,6 +8883,8 @@ void ObjectMgr::CheckScripts(ScriptsType type, std::set<int32>& ids)
                     if (ids.find(itrM->second.dataint) != ids.end())
                         ids.erase(itrM->second.dataint);
                 }
+                default:
+                    break;
             }
         }
     }
@@ -9040,9 +9049,10 @@ void ObjectMgr::_AddOrUpdateGMTicket(GM_Ticket &ticket)
     ss << ticket.closed << "', '";
     ss << ticket.assignedToGM << "', '";
     ss << comment << "');";
-    CharacterDatabase.BeginTransaction();
-    CharacterDatabase.Execute(ss.str().c_str());
-    CharacterDatabase.CommitTransaction();
+    
+    SQLTransaction trans = CharacterDatabase.BeginTransaction();
+    trans->Append(ss.str().c_str());
+    CharacterDatabase.CommitTransaction(trans);
 }
 
 void ObjectMgr::RemoveGMTicket(GM_Ticket *ticket, int64 source, bool permanently)

@@ -329,14 +329,13 @@ void AddSC_boss_black_knight();
 void AddSC_boss_grand_champions();
 void AddSC_instance_trial_of_the_champion();
 void AddSC_trial_of_the_champion();
-void AddSC_boss_tc_alliance_champions();      //Trial of the Crussader
-void AddSC_Raid_Anubarak();
-void AddSC_boss_lord_jaraxxus();
+void AddSC_boss_anubarak_trial();        //Trial of the Crusader
+void AddSC_boss_faction_champions();
+void AddSC_boss_jaraxxus();
 void AddSC_boss_northrend_beasts();
-void AddSC_twin_valkyr();
-void AddSC_boss_tc_horde_champions();
-void AddSC_instance_trial_of_the_crussader();
-void AddSC_trial_of_the_crussader();
+void AddSC_boss_twin_valkyr();
+void AddSC_trial_of_the_crusader();
+void AddSC_instance_trial_of_the_crusader();
 void AddSC_boss_anubrekhan();            //Naxxramas
 void AddSC_boss_maexxna();
 void AddSC_boss_patchwerk();
@@ -446,7 +445,7 @@ void AddSC_boss_blood_council();   // Icecrown Citadel
 void AddSC_boss_blood_queen_lana_thel();
 void AddSC_boss_saurfang();
 void AddSC_boss_festergut();
-void AddSC_boss_deahtwisper();
+void AddSC_boss_lady_deathwhisper();
 void AddSC_boss_lord_marrowgar();
 void AddSC_boss_professor_putricide();
 void AddSC_boss_rotface();
@@ -1028,14 +1027,13 @@ void AddNorthrendScripts()
     AddSC_boss_grand_champions();
     AddSC_instance_trial_of_the_champion();
     AddSC_trial_of_the_champion();
-    AddSC_boss_tc_alliance_champions();      //Trial of the Crussader
-    AddSC_Raid_Anubarak();
-    AddSC_boss_lord_jaraxxus();
+    AddSC_boss_anubarak_trial();        //Trial of the Crusader
+    AddSC_boss_faction_champions();
+    AddSC_boss_jaraxxus();
+    AddSC_trial_of_the_crusader();
+    AddSC_boss_twin_valkyr();
     AddSC_boss_northrend_beasts();
-    AddSC_twin_valkyr();
-    AddSC_boss_tc_horde_champions();
-    AddSC_instance_trial_of_the_crussader();
-    AddSC_trial_of_the_crussader();
+    AddSC_instance_trial_of_the_crusader();
     AddSC_boss_krik_thir();             //Azjol-Nerub Azjol-Nerub
     AddSC_boss_hadronox();
     AddSC_boss_anub_arak();
@@ -1149,7 +1147,7 @@ void AddNorthrendScripts()
     AddSC_boss_blood_queen_lana_thel();
     AddSC_boss_saurfang();
     AddSC_boss_festergut();
-    AddSC_boss_deahtwisper();
+    AddSC_boss_lady_deathwhisper();
     AddSC_boss_lord_marrowgar();
     AddSC_boss_professor_putricide();
     AddSC_boss_rotface();

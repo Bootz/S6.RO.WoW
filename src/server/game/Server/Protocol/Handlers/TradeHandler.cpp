@@ -220,7 +220,7 @@ static void setAcceptTradeMode(TradeData* myTrade, TradeData* hisTrade, Item **m
     {
         if (Item* item = myTrade->GetItem(TradeSlots(i)))
         {
-            DEBUG_LOG("player trade item %u bag: %u slot: %u", item->GetGUIDLow(), item->GetBagSlot(), item->GetSlot());
+            sLog.outStaticDebug("player trade item %u bag: %u slot: %u", item->GetGUIDLow(), item->GetBagSlot(), item->GetSlot());
             //Can return NULL
             myItems[i] = item;
             myItems[i]->SetInTrade();
@@ -228,7 +228,7 @@ static void setAcceptTradeMode(TradeData* myTrade, TradeData* hisTrade, Item **m
 
         if (Item* item = hisTrade->GetItem(TradeSlots(i)))
         {
-            DEBUG_LOG("partner trade item %u bag: %u slot: %u", item->GetGUIDLow(), item->GetBagSlot(), item->GetSlot());
+            sLog.outStaticDebug("partner trade item %u bag: %u slot: %u", item->GetGUIDLow(), item->GetBagSlot(), item->GetSlot());
             hisItems[i] = item;
             hisItems[i]->SetInTrade();
         }
@@ -480,10 +480,10 @@ void WorldSession::HandleAcceptTradeOpcode(WorldPacket& /*recvPacket*/)
         trader->m_trade = NULL;
 
         // desynchronized with the other saves here (SaveInventoryAndGoldToDB() not have own transaction guards)
-        CharacterDatabase.BeginTransaction();
-        _player->SaveInventoryAndGoldToDB();
-        trader->SaveInventoryAndGoldToDB();
-        CharacterDatabase.CommitTransaction();
+        SQLTransaction trans = CharacterDatabase.BeginTransaction();
+        _player->SaveInventoryAndGoldToDB(trans);
+        trader->SaveInventoryAndGoldToDB(trans);
+        CharacterDatabase.CommitTransaction(trans);
 
         trader->GetSession()->SendTradeStatus(TRADE_STATUS_TRADE_COMPLETE);
         SendTradeStatus(TRADE_STATUS_TRADE_COMPLETE);

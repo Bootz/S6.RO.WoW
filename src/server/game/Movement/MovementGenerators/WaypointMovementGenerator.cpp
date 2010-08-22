@@ -262,7 +262,9 @@ void FlightPathMovementGenerator::Finalize(Player & player)
 {
     player.clearUnitState(UNIT_STAT_IN_FLIGHT);
 
-    float x, y, z;
+    float x = 0;
+    float y = 0;
+    float z = 0;
     i_destinationHolder.GetLocationNow(player.GetBaseMap(), x, y, z);
     player.SetPosition(x, y, z, player.GetOrientation());
 
@@ -286,7 +288,7 @@ bool FlightPathMovementGenerator::Update(Player &player, const uint32 &diff)
                 {
                     DoEventIfAny(player,(*i_path)[i_currentNode], true);
 
-                    DEBUG_LOG("loading node %u for player %s", i_currentNode, player.GetName());
+                    sLog.outStaticDebug("loading node %u for player %s", i_currentNode, player.GetName());
                     if ((*i_path)[i_currentNode].mapid == curMap)
                     {
                         // do not send movement, it was sent already

@@ -214,6 +214,8 @@ void WorldSession::HandleQuestgiverAcceptQuestOpcode(WorldPacket & recv_data)
                 case TYPEID_GAMEOBJECT:
                     sScriptMgr.OnQuestAccept(_player, ((GameObject*)pObject), qInfo);
                     break;
+                default:
+                    break;
             }
             _player->PlayerTalkClass->CloseGossip();
 
@@ -237,7 +239,7 @@ void WorldSession::HandleQuestgiverQueryQuestOpcode(WorldPacket & recv_data)
 
     // Verify that the guid is valid and is a questgiver or involved in the requested quest
     Object* pObject = ObjectAccessor::GetObjectByTypeMask(*_player, guid,TYPEMASK_UNIT|TYPEMASK_GAMEOBJECT|TYPEMASK_ITEM);
-    if (!pObject||!pObject->hasQuest(quest) && !pObject->hasInvolvedQuest(quest))
+    if (!pObject || (!pObject->hasQuest(quest) && !pObject->hasInvolvedQuest(quest)))
     {
         _player->PlayerTalkClass->CloseGossip();
         return;
@@ -321,6 +323,8 @@ void WorldSession::HandleQuestgiverChooseRewardOpcode(WorldPacket & recv_data)
                         if (Quest const* nextquest = _player->GetNextQuest(guid ,pQuest))
                             _player->PlayerTalkClass->SendQuestGiverQuestDetails(nextquest,guid,true);
                     }
+                    break;
+                default:
                     break;
             }
         }

@@ -46,11 +46,14 @@
 #include "Transport.h"
 
 /// WorldSession constructor
-WorldSession::WorldSession(uint32 id, WorldSocket *sock, AccountTypes sec, uint8 expansion, time_t mute_time, LocaleConstant locale, uint32 recruiter) :
-m_muteTime(mute_time), _player(NULL), m_Socket(sock),_security(sec), _accountId(id), m_expansion(expansion),
-m_sessionDbcLocale(sWorld.GetAvailableDbcLocale(locale)), m_sessionDbLocaleIndex(sObjectMgr.GetIndexForLocale(locale)),
-_logoutTime(0), m_inQueue(false), m_playerLoading(false), m_playerLogout(false), m_playerRecentlyLogout(false), m_playerSave(false),
-m_latency(0), m_TutorialsChanged(false), m_timeOutTime(0), recruiterId(recruiter)
+WorldSession::WorldSession(uint32 id, WorldSocket *sock, AccountTypes sec, uint8 expansion, time_t mute_time, LocaleConstant locale, uint32 recruiter):
+m_muteTime(mute_time), m_timeOutTime(0), _player(NULL), m_Socket(sock),
+_security(sec), _accountId(id), m_expansion(expansion), _logoutTime(0),
+m_inQueue(false), m_playerLoading(false), m_playerLogout(false),
+m_playerRecentlyLogout(false), m_playerSave(false),
+m_sessionDbcLocale(sWorld.GetAvailableDbcLocale(locale)),
+m_sessionDbLocaleIndex(sObjectMgr.GetIndexForLocale(locale)),
+m_latency(0), m_TutorialsChanged(false), recruiterId(recruiter)
 {
     if (sock)
     {
@@ -77,7 +80,7 @@ WorldSession::~WorldSession()
     }
 
     ///- empty incoming packet queue
-    WorldPacket* packet;
+    WorldPacket* packet = NULL;
     while (_recvQueue.next(packet))
         delete packet;
 
@@ -625,11 +628,11 @@ void WorldSession::SetAccountData(AccountDataType type, time_t time_, std::strin
     {
         uint32 acc = GetAccountId();
 
-        CharacterDatabase.BeginTransaction ();
-        CharacterDatabase.PExecute("DELETE FROM account_data WHERE account='%u' AND type='%u'", acc, type);
+        SQLTransaction trans = CharacterDatabase.BeginTransaction();
+        trans->PAppend("DELETE FROM account_data WHERE account='%u' AND type='%u'", acc, type);
         CharacterDatabase.escape_string(data);
-        CharacterDatabase.PExecute("INSERT INTO account_data VALUES ('%u','%u','%u','%s')", acc, type, (uint32)time_, data.c_str());
-        CharacterDatabase.CommitTransaction ();
+        trans->PAppend("INSERT INTO account_data VALUES ('%u','%u','%u','%s')", acc, type, (uint32)time_, data.c_str());
+        CharacterDatabase.CommitTransaction(trans);
     }
     else
     {
@@ -637,11 +640,11 @@ void WorldSession::SetAccountData(AccountDataType type, time_t time_, std::strin
         if (!m_GUIDLow)
             return;
 
-        CharacterDatabase.BeginTransaction ();
-        CharacterDatabase.PExecute("DELETE FROM character_account_data WHERE guid='%u' AND type='%u'", m_GUIDLow, type);
+        SQLTransaction trans = CharacterDatabase.BeginTransaction();
+        trans->PAppend("DELETE FROM character_account_data WHERE guid='%u' AND type='%u'", m_GUIDLow, type);
         CharacterDatabase.escape_string(data);
-        CharacterDatabase.PExecute("INSERT INTO character_account_data VALUES ('%u','%u','%u','%s')", m_GUIDLow, type, (uint32)time_, data.c_str());
-        CharacterDatabase.CommitTransaction ();
+        trans->PAppend("INSERT INTO character_account_data VALUES ('%u','%u','%u','%s')", m_GUIDLow, type, (uint32)time_, data.c_str());
+        CharacterDatabase.CommitTransaction(trans);
     }
 
     m_accountData[type].Time = time_;
@@ -689,7 +692,7 @@ void WorldSession::SendTutorialsData()
     SendPacket(&data);
 }
 
-void WorldSession::SaveTutorialsData()
+void WorldSession::SaveTutorialsData(SQLTransaction& trans)
 {
     if (!m_TutorialsChanged)
         return;
@@ -701,14 +704,10 @@ void WorldSession::SaveTutorialsData()
         Rows = result->Fetch()[0].GetUInt32();
 
     if (Rows)
-    {
-        CharacterDatabase.PExecute("UPDATE character_tutorial SET tut0='%u', tut1='%u', tut2='%u', tut3='%u', tut4='%u', tut5='%u', tut6='%u', tut7='%u' WHERE account = '%u'",
+        trans->PAppend("UPDATE character_tutorial SET tut0='%u', tut1='%u', tut2='%u', tut3='%u', tut4='%u', tut5='%u', tut6='%u', tut7='%u' WHERE account = '%u'",
             m_Tutorials[0], m_Tutorials[1], m_Tutorials[2], m_Tutorials[3], m_Tutorials[4], m_Tutorials[5], m_Tutorials[6], m_Tutorials[7], GetAccountId());
-    }
     else
-    {
-        CharacterDatabase.PExecute("INSERT INTO character_tutorial (account,tut0,tut1,tut2,tut3,tut4,tut5,tut6,tut7) VALUES ('%u', '%u', '%u', '%u', '%u', '%u', '%u', '%u', '%u')", GetAccountId(), m_Tutorials[0], m_Tutorials[1], m_Tutorials[2], m_Tutorials[3], m_Tutorials[4], m_Tutorials[5], m_Tutorials[6], m_Tutorials[7]);
-    }
+        trans->PAppend("INSERT INTO character_tutorial (account,tut0,tut1,tut2,tut3,tut4,tut5,tut6,tut7) VALUES ('%u', '%u', '%u', '%u', '%u', '%u', '%u', '%u', '%u')", GetAccountId(), m_Tutorials[0], m_Tutorials[1], m_Tutorials[2], m_Tutorials[3], m_Tutorials[4], m_Tutorials[5], m_Tutorials[6], m_Tutorials[7]);
 
     m_TutorialsChanged = false;
 }
@@ -994,7 +993,7 @@ void WorldSession::ProcessQueryCallbacks()
     //! HandleAddFriendOpcode
     if (m_addFriendCallback.IsReady())
     {
-        const std::string& param = m_addFriendCallback.GetParam();
+        std::string param = m_addFriendCallback.GetParam();
         m_addFriendCallback.GetResult(result);
         HandleAddFriendOpcodeCallBack(result, param);
         m_addFriendCallback.FreeResult();
@@ -1003,7 +1002,7 @@ void WorldSession::ProcessQueryCallbacks()
     //- HandleCharRenameOpcode
     if (m_charRenameCallback.IsReady())
     {
-        const std::string& param = m_charRenameCallback.GetParam();
+        std::string param = m_charRenameCallback.GetParam();
         m_charRenameCallback.GetResult(result);
         HandleChangePlayerNameOpcodeCallBack(result, param);
         m_charRenameCallback.FreeResult();

@@ -68,7 +68,7 @@ class ReputationMgr
             m_visibleFactionCount(0), m_honoredFactionCount(0), m_reveredFactionCount(0), m_exaltedFactionCount(0) {}
         ~ReputationMgr() {}
 
-        void SaveToDB();
+        void SaveToDB(SQLTransaction& trans);
         void LoadFromDB(QueryResult_AutoPtr result);
     public:                                                 // statics
         static const int32 PointsInRank[MAX_REPUTATION_RANK];
@@ -101,6 +101,10 @@ class ReputationMgr
 
         ReputationRank GetRank(FactionEntry const* factionEntry) const;
         ReputationRank GetBaseRank(FactionEntry const* factionEntry) const;
+        uint32 GetReputationRankStrIndex(FactionEntry const* factionEntry)
+        {
+			return ReputationRankStrIndex[GetRank(factionEntry)];
+		};
 
         ReputationRank const* GetForcedRankIfAny(FactionTemplateEntry const* factionTemplateEntry) const
         {

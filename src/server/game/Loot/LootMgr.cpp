@@ -936,7 +936,7 @@ LootStoreItem const * LootTemplate::LootGroup::Roll() const
 {
     if (!ExplicitlyChanced.empty())                             // First explicitly chanced entries are checked
     {
-        float Roll = rand_chance();
+        float Roll = (float)rand_chance();
 
         for (uint32 i = 0; i < ExplicitlyChanced.size(); ++i)   // check each explicitly chanced entry in the template and modify its chance based on quality.
         {
@@ -978,7 +978,7 @@ bool LootTemplate::LootGroup::HasQuestDropForPlayer(Player const * player) const
     return false;
 }
 
-void LootTemplate::LootGroup::CopyConditions(ConditionList conditions)
+void LootTemplate::LootGroup::CopyConditions(ConditionList /*conditions*/)
 {
     for (LootStoreItemList::iterator i = ExplicitlyChanced.begin(); i != ExplicitlyChanced.end(); ++i)
     {
@@ -1013,7 +1013,7 @@ void LootTemplate::LootGroup::Process(Loot& loot, uint16 lootMode) const
         if (!ExplicitPossibleDrops.empty())              // First explicitly chanced entries are checked
         {
             itemSource = 1;
-            float Roll = rand_chance();
+            float Roll = (float)rand_chance();
             // check each explicitly chanced entry in the template and modify its chance based on quality
             for (itr = ExplicitPossibleDrops.begin(); itr != ExplicitPossibleDrops.end(); itr = ExplicitPossibleDrops.erase(itr))
             {
@@ -1114,7 +1114,7 @@ void LootTemplate::LootGroup::Verify(LootStore const& lootstore, uint32 id, uint
     }
 }
 
-void LootTemplate::LootGroup::CheckLootRefs(LootTemplateMap const& store, LootIdSet* ref_set) const
+void LootTemplate::LootGroup::CheckLootRefs(LootTemplateMap const& /*store*/, LootIdSet* ref_set) const
 {
     for (LootStoreItemList::const_iterator ieItr=ExplicitlyChanced.begin(); ieItr != ExplicitlyChanced.end(); ++ieItr)
     {

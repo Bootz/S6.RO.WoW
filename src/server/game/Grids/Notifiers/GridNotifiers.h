@@ -86,7 +86,7 @@ namespace Trinity
         CellPair &p;
         const float i_radius;
         DelayedUnitRelocation(Cell &c, CellPair &pair, Map &map, float radius) :
-            cell(c), p(pair), i_map(map), i_radius(radius) {}
+            i_map(map), cell(c), p(pair), i_radius(radius) {}
         template<class T> void Visit(GridRefManager<T> &) {}
         void Visit(CreatureMapType &);
         void Visit(PlayerMapType   &);
@@ -129,7 +129,7 @@ namespace Trinity
         uint32 team;
         Player const* skipped_receiver;
         MessageDistDeliverer(WorldObject *src, WorldPacket *msg, float dist, bool own_team_only = false, Player const* skipped = NULL)
-            : i_source(src), i_message(msg), i_distSq(dist * dist), i_phaseMask(src->GetPhaseMask())
+            : i_source(src), i_message(msg), i_phaseMask(src->GetPhaseMask()), i_distSq(dist * dist)
             , team((own_team_only && src->GetTypeId() == TYPEID_PLAYER) ? ((Player*)src)->GetTeam() : 0)
             , skipped_receiver(skipped)
         {
@@ -614,7 +614,7 @@ namespace Trinity
                 if (go->GetGOInfo()->spellFocus.focusId != i_focusId)
                     return false;
 
-                float dist = (go->GetGOInfo()->spellFocus.dist)/2;
+                float dist = (float)((go->GetGOInfo()->spellFocus.dist)/2);
 
                 return go->IsWithinDistInMap(i_unit, dist);
             }
@@ -630,7 +630,7 @@ namespace Trinity
             NearestGameObjectFishingHole(WorldObject const& obj, float range) : i_obj(obj), i_range(range) {}
             bool operator()(GameObject* go)
             {
-                if (go->GetGOInfo()->type == GAMEOBJECT_TYPE_FISHINGHOLE && go->isSpawned() && i_obj.IsWithinDistInMap(go, i_range) && i_obj.IsWithinDistInMap(go, go->GetGOInfo()->fishinghole.radius))
+                if (go->GetGOInfo()->type == GAMEOBJECT_TYPE_FISHINGHOLE && go->isSpawned() && i_obj.IsWithinDistInMap(go, i_range) && i_obj.IsWithinDistInMap(go, (float)go->GetGOInfo()->fishinghole.radius))
                 {
                     i_range = i_obj.GetDistance(go);
                     return true;
@@ -1207,7 +1207,7 @@ namespace Trinity
           x(_x), y(_y), z(_z), range(_range), entry(_entry) {}
         bool operator() (GameObject* go)
         {
-            if (!entry || go->GetGOInfo() && go->GetGOInfo()->id == entry)
+            if (!entry || (go->GetGOInfo() && go->GetGOInfo()->id == entry))
                 return go->IsInRange(x, y, z, range);
             else return false;
         }

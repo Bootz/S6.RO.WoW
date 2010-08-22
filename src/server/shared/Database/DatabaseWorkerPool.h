@@ -1,6 +1,4 @@
 /*
- * Copyright (C) 2005-2010 MaNGOS <http://getmangos.com/>
- *
  * Copyright (C) 2008-2010 Trinity <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -30,6 +28,7 @@
 #include "QueryResult.h"
 #include "Callback.h"
 #include "MySQLConnection.h"
+#include "Transaction.h"
 
 enum MySQLThreadBundle
 {
@@ -52,7 +51,6 @@ class DatabaseWorkerPoolEnd : public SQLOperation
         
         ACE_Condition_Thread_Mutex &shutdown_Mtx;
 };
-
 
 class DatabaseWorkerPool
 {
@@ -78,9 +76,8 @@ class DatabaseWorkerPool
         ACE_Future<QueryResult_AutoPtr> AsyncPQuery(const char* sql, ...);
         QueryResultHolderFuture DelayQueryHolder(SQLQueryHolder* holder);
 
-        void BeginTransaction();
-        void RollbackTransaction();
-        void CommitTransaction();
+        SQLTransaction BeginTransaction();
+        void CommitTransaction(SQLTransaction transaction);
 
         bool CheckRequiredField(char const *table_name, char const *required_name);
 
@@ -124,8 +121,6 @@ class DatabaseWorkerPool
         MySQLConnection*                m_bundle_conn;       //! Bundled connection (see Database.ThreadBundleMask config)
         AtomicUInt                      m_connections;       //! Counter of MySQL connections; 
         std::string                     m_infoString;        //! Infostring that is passed on to child connections.
-        TransactionQueues               m_tranQueues;        //! Transaction queues from diff. threads
-        ACE_Thread_Mutex                m_transQueues_mtx;   //! To guard m_transQueues
 };
 
 #endif

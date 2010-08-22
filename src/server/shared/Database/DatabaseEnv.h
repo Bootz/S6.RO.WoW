@@ -22,16 +22,18 @@
 #define DATABASEENV_H
 
 #include "Common.h"
-#include "Log.h"
 #include "Errors.h"
+#include "Log.h"
 
 #include "Field.h"
 #include "QueryResult.h"
 
 #include "DatabaseWorkerPool.h"
 #include "MySQLThreading.h"
+#include "Transaction.h"
 
 typedef DatabaseWorkerPool DatabaseType;
+
 #define _LIKE_           "LIKE"
 #define _TABLE_SIM_      "`"
 #define _CONCAT3_(A,B,C) "CONCAT( " A " , " B " , " C " )"

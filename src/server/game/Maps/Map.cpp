@@ -141,7 +141,7 @@ void Map::LoadVMap(int gx,int gy)
             sLog.outDetail("Could not load VMAP name:%s, id:%d, x:%d, y:%d (vmap rep.: x:%d, y:%d)", GetMapName(), GetId(), gx,gy,gx,gy);
             break;
         case VMAP::VMAP_LOAD_RESULT_IGNORED:
-            DEBUG_LOG("Ignored VMAP name:%s, id:%d, x:%d, y:%d (vmap rep.: x:%d, y:%d)", GetMapName(), GetId(), gx,gy,gx,gy);
+            sLog.outStaticDebug("Ignored VMAP name:%s, id:%d, x:%d, y:%d (vmap rep.: x:%d, y:%d)", GetMapName(), GetId(), gx,gy,gx,gy);
             break;
     }
 }
@@ -215,13 +215,12 @@ void Map::DeleteStateMachine()
     delete si_GridStates[GRID_STATE_REMOVAL];
 }
 
-Map::Map(uint32 id, time_t expiry, uint32 InstanceId, uint8 SpawnMode, Map* _parent)
-  : i_mapEntry (sMapStore.LookupEntry(id)), i_spawnMode(SpawnMode), i_InstanceId(InstanceId), m_unloadTimer(0),
-  m_activeNonPlayersIter(m_activeNonPlayers.end()),
-  i_gridExpiry(expiry), m_parentMap(_parent ? _parent : this),
-  m_VisibleDistance(DEFAULT_VISIBILITY_DISTANCE),
-  m_VisibilityNotifyPeriod(DEFAULT_VISIBILITY_NOTIFY_PERIOD),
-  i_scriptLock(false)
+Map::Map(uint32 id, time_t expiry, uint32 InstanceId, uint8 SpawnMode, Map* _parent):
+i_mapEntry (sMapStore.LookupEntry(id)), i_spawnMode(SpawnMode), i_InstanceId(InstanceId),
+m_unloadTimer(0), m_VisibleDistance(DEFAULT_VISIBILITY_DISTANCE),
+m_VisibilityNotifyPeriod(DEFAULT_VISIBILITY_NOTIFY_PERIOD),
+m_activeNonPlayersIter(m_activeNonPlayers.end()), i_gridExpiry(expiry),
+m_parentMap(_parent ? _parent : this), i_scriptLock(false)
 {
     for (unsigned int idx=0; idx < MAX_NUMBER_OF_GRIDS; ++idx)
     {
@@ -290,7 +289,7 @@ void Map::SwitchGridContainers(T* obj, bool on)
     if (!loaded(GridPair(cell.data.Part.grid_x, cell.data.Part.grid_y)))
         return;
 
-    DEBUG_LOG("Switch object " I64FMT " from grid[%u,%u] %u", obj->GetGUID(), cell.data.Part.grid_x, cell.data.Part.grid_y, on);
+    sLog.outStaticDebug("Switch object " I64FMT " from grid[%u,%u] %u", obj->GetGUID(), cell.data.Part.grid_x, cell.data.Part.grid_y, on);
     NGridType *ngrid = getNGrid(cell.GridX(), cell.GridY());
     ASSERT(ngrid != NULL);
 
@@ -373,11 +372,11 @@ Map::EnsureGridLoadedAtEnter(const Cell &cell, Player *player)
 
     if (player)
     {
-        DEBUG_LOG("Player %s enter cell[%u,%u] triggers loading of grid[%u,%u] on map %u", player->GetName(), cell.CellX(), cell.CellY(), cell.GridX(), cell.GridY(), GetId());
+        sLog.outStaticDebug("Player %s enter cell[%u,%u] triggers loading of grid[%u,%u] on map %u", player->GetName(), cell.CellX(), cell.CellY(), cell.GridX(), cell.GridY(), GetId());
     }
     else
     {
-        DEBUG_LOG("Active object nearby triggers loading of grid [%u,%u] on map %u", cell.GridX(), cell.GridY(), GetId());
+        sLog.outStaticDebug("Active object nearby triggers loading of grid [%u,%u] on map %u", cell.GridX(), cell.GridY(), GetId());
     }
 
     // refresh grid state & timer
@@ -482,7 +481,7 @@ Map::Add(T *obj)
     if (obj->isActiveObject())
         AddToActive(obj);
 
-    DEBUG_LOG("Object %u enters grid[%u,%u]", GUID_LOPART(obj->GetGUID()), cell.GridX(), cell.GridY());
+    sLog.outStaticDebug("Object %u enters grid[%u,%u]", GUID_LOPART(obj->GetGUID()), cell.GridX(), cell.GridY());
 
     //something, such as vehicle, needs to be update immediately
     //also, trigger needs to cast spell, if not update, cannot see visual
@@ -725,7 +724,7 @@ void Map::Remove(Player *player, bool remove)
             sLog.outError("Map::Remove() i_grids was NULL x:%d, y:%d",cell.data.Part.grid_x,cell.data.Part.grid_y);
         else
         {
-            DEBUG_LOG("Remove player %s from grid[%u,%u]", player->GetName(), cell.GridX(), cell.GridY());
+            sLog.outStaticDebug("Remove player %s from grid[%u,%u]", player->GetName(), cell.GridX(), cell.GridY());
             NGridType *grid = getNGrid(cell.GridX(), cell.GridY());
             ASSERT(grid != NULL);
 
@@ -756,7 +755,7 @@ Map::Remove(T *obj, bool remove)
         Cell cell(p);
         if (loaded(GridPair(cell.data.Part.grid_x, cell.data.Part.grid_y)))
         {
-            DEBUG_LOG("Remove object " I64FMT " from grid[%u,%u]", obj->GetGUID(), cell.data.Part.grid_x, cell.data.Part.grid_y);
+            sLog.outStaticDebug("Remove object " I64FMT " from grid[%u,%u]", obj->GetGUID(), cell.data.Part.grid_x, cell.data.Part.grid_y);
             NGridType *grid = getNGrid(cell.GridX(), cell.GridY());
             ASSERT(grid != NULL);
 
@@ -791,7 +790,7 @@ Map::PlayerRelocation(Player *player, float x, float y, float z, float orientati
 
     if (old_cell.DiffGrid(new_cell) || old_cell.DiffCell(new_cell))
     {
-        DEBUG_LOG("Player %s relocation grid[%u,%u]cell[%u,%u]->grid[%u,%u]cell[%u,%u]", player->GetName(), old_cell.GridX(), old_cell.GridY(), old_cell.CellX(), old_cell.CellY(), new_cell.GridX(), new_cell.GridY(), new_cell.CellX(), new_cell.CellY());
+        sLog.outStaticDebug("Player %s relocation grid[%u,%u]cell[%u,%u]->grid[%u,%u]cell[%u,%u]", player->GetName(), old_cell.GridX(), old_cell.GridY(), old_cell.CellX(), old_cell.CellY(), new_cell.GridX(), new_cell.GridY(), new_cell.CellX(), new_cell.CellY());
 
         NGridType* oldGrid = getNGrid(old_cell.GridX(), old_cell.GridY());
         RemoveFromGrid(player, oldGrid,old_cell);
@@ -1036,7 +1035,7 @@ bool Map::UnloadGrid(const uint32 &x, const uint32 &y, bool unloadAll)
 
         GridMaps[gx][gy] = NULL;
     }
-    DEBUG_LOG("Unloading grid[%u,%u] for map %u finished", x,y, GetId());
+    sLog.outStaticDebug("Unloading grid[%u,%u] for map %u finished", x,y, GetId());
     return true;
 }
 
@@ -1647,7 +1646,7 @@ float Map::GetHeight(float x, float y, float z, bool pUseVmaps, float maxSearchD
     }
 }
 
-inline bool IsOutdoorWMO(uint32 mogpFlags, int32 adtId, int32 rootId, int32 groupId, WMOAreaTableEntry const* wmoEntry, AreaTableEntry const* atEntry)
+inline bool IsOutdoorWMO(uint32 mogpFlags, int32 /*adtId*/, int32 /*rootId*/, int32 /*groupId*/, WMOAreaTableEntry const* wmoEntry, AreaTableEntry const* atEntry)
 {
     bool outdoor = true;
 
@@ -1684,7 +1683,7 @@ bool Map::IsOutdoors(float x, float y, float z) const
     WMOAreaTableEntry const* wmoEntry= GetWMOAreaTableEntryByTripple(rootId, adtId, groupId);
     if(wmoEntry)
     {
-        DEBUG_LOG("Got WMOAreaTableEntry! flag %u, areaid %u", wmoEntry->Flags, wmoEntry->areaId);
+        sLog.outStaticDebug("Got WMOAreaTableEntry! flag %u, areaid %u", wmoEntry->Flags, wmoEntry->areaId);
         atEntry = GetAreaEntryByAreaID(wmoEntry->areaId);
     }
     return IsOutdoorWMO(mogpFlags, adtId, rootId, groupId, wmoEntry, atEntry);
@@ -1720,7 +1719,8 @@ uint16 Map::GetAreaFlag(float x, float y, float z, bool *isOutdoors) const
     if (GetAreaInfo(x, y, z, mogpFlags, adtId, rootId, groupId))
     {
         haveAreaInfo = true;
-        if (wmoEntry = GetWMOAreaTableEntryByTripple(rootId, adtId, groupId))
+        wmoEntry = GetWMOAreaTableEntryByTripple(rootId, adtId, groupId);
+        if (wmoEntry)
             atEntry = GetAreaEntryByAreaID(wmoEntry->areaId);
     }
 
@@ -2056,10 +2056,12 @@ void Map::RemoveAllObjectsInRemoveList()
 
         switch(obj->GetTypeId())
         {
-        case TYPEID_UNIT:
-            if (!obj->ToCreature()->isPet())
-                SwitchGridContainers(obj->ToCreature(), on);
-            break;
+            case TYPEID_UNIT:
+                if (!obj->ToCreature()->isPet())
+                    SwitchGridContainers(obj->ToCreature(), on);
+                break;
+            default:
+                break;
         }
     }
 
@@ -2276,7 +2278,6 @@ bool InstanceMap::CanEnter(Player *player)
     // permanent save in the same instance id
 
     PlayerList const &playerList = GetPlayers();
-    Player *firstInsidePlayer = NULL;
 
     if (!playerList.isEmpty())
         for (PlayerList::const_iterator i = playerList.begin(); i != playerList.end(); ++i)
@@ -3233,8 +3234,8 @@ void Map::ScriptsProcess()
 
                 // when script called for item spell casting then target == (unit or GO) and source is player
                 WorldObject* worldObject;
-                Player* pTarget = NULL;
-                if (pTarget = target->ToPlayer())
+                Player* pTarget = target->ToPlayer();
+                if (pTarget)
                 {
                     if (source->GetTypeId() != TYPEID_UNIT && source->GetTypeId() != TYPEID_GAMEOBJECT && source->GetTypeId() != TYPEID_PLAYER)
                     {
@@ -3244,23 +3245,27 @@ void Map::ScriptsProcess()
                     }
                     worldObject = dynamic_cast<WorldObject*>(source);
                 }
-                else if (pTarget = source->ToPlayer())
+                else 
                 {
-                    if (target->GetTypeId() != TYPEID_UNIT && target->GetTypeId() != TYPEID_GAMEOBJECT && target->GetTypeId() != TYPEID_PLAYER)
-                    {
-                        sLog.outError("%s target is not unit, gameobject or player (TypeId: %u, Entry: %u, GUID: %u), skipping.",
-                            step.script->GetDebugInfo().c_str(), target->GetTypeId(), target->GetEntry(), target->GetGUIDLow());
-                        break;
-                    }
-                    worldObject =  dynamic_cast<WorldObject*>(target);
-                }
-                else
-                {
-                    sLog.outError("%s neither source nor target is player (source: TypeId: %u, Entry: %u, GUID: %u; target: TypeId: %u, Entry: %u, GUID: %u), skipping.",
-                        step.script->GetDebugInfo().c_str(), 
-                        source ? source->GetTypeId() : 0, source ? source->GetEntry() : 0, source ? source->GetGUIDLow() : 0,
-                        target ? target->GetTypeId() : 0, target ? target->GetEntry() : 0, target ? target->GetGUIDLow() : 0);
-                    break;
+					pTarget = source->ToPlayer();
+					if (pTarget)
+					{
+						if (target->GetTypeId() != TYPEID_UNIT && target->GetTypeId() != TYPEID_GAMEOBJECT && target->GetTypeId() != TYPEID_PLAYER)
+						{
+							sLog.outError("%s target is not unit, gameobject or player (TypeId: %u, Entry: %u, GUID: %u), skipping.",
+								step.script->GetDebugInfo().c_str(), target->GetTypeId(), target->GetEntry(), target->GetGUIDLow());
+							break;
+						}
+						worldObject =  dynamic_cast<WorldObject*>(target);
+					}
+					else
+					{
+						sLog.outError("%s neither source nor target is player (source: TypeId: %u, Entry: %u, GUID: %u; target: TypeId: %u, Entry: %u, GUID: %u), skipping.",
+							step.script->GetDebugInfo().c_str(), 
+							source ? source->GetTypeId() : 0, source ? source->GetEntry() : 0, source ? source->GetGUIDLow() : 0,
+							target ? target->GetTypeId() : 0, target ? target->GetEntry() : 0, target ? target->GetGUIDLow() : 0);
+						break;
+					}
                 }
 
                 // quest id and flags checked at script loading

@@ -61,19 +61,7 @@ class BasicStatementTask :  public SQLOperation
         QueryResultFuture m_result;
 };
 
-/*! Transactions */
-class TransactionTask : public SQLOperation
-{
-    public:
-        TransactionTask();
-        ~TransactionTask();
-        void ForcefulDelete();
 
-        bool Execute();
-
-    private:
-        std::queue<char*> m_queries;
-};
 
 class SQLQueryHolder
 {

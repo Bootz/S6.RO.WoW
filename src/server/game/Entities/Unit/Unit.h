@@ -805,7 +805,7 @@ enum MeleeHitOutcome
 struct CleanDamage
 {
     CleanDamage(uint32 mitigated, uint32 absorbed, WeaponAttackType _attackType, MeleeHitOutcome _hitOutCome) :
-    mitigated_damage(mitigated), absorbed_damage(absorbed), attackType(_attackType), hitOutCome(_hitOutCome) {}
+    absorbed_damage(absorbed), mitigated_damage(mitigated), attackType(_attackType), hitOutCome(_hitOutCome) {}
 
     uint32 absorbed_damage;
     uint32 mitigated_damage;
@@ -1976,7 +1976,7 @@ class Unit : public WorldObject
 
         void RewardRage(uint32 damage, uint32 weaponSpeedHitFactor, bool attacker);
 
-        virtual float GetFollowAngle() const { return M_PI/2; }
+        virtual float GetFollowAngle() const { return static_cast<float>(M_PI/2); }
 
         void OutDebugInfo() const;
         virtual bool isBeingLoaded() const { return false;}

@@ -182,7 +182,7 @@ struct PeriodicTimer
     public:
 
         PeriodicTimer(int32 period, int32 start_time)
-            : i_expireTime(start_time), i_period(period)
+            : i_period(period), i_expireTime(start_time)
         {
         }
 
@@ -191,7 +191,7 @@ struct PeriodicTimer
             if ((i_expireTime -= diff) > 0)
                 return false;
 
-            i_expireTime += i_period > diff ? i_period : diff;
+            i_expireTime += i_period > int32(diff) ? i_period : diff;
             return true;
         }
 

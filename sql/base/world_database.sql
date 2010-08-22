@@ -6309,6 +6309,13 @@ INSERT INTO `spell_linked_spell` (`spell_trigger`,`spell_effect`,`type`,`comment
 -- Trial of the Champion
 ( 66680, 66547, 0, 'Confess - Confess'),
 ( 66889,-66865, 0, 'Remove Vengeance'),
+-- Trial of the Crusader
+( 66870,-66823, 1, 'Remove Paralytic Toxin when hit by Burning Bite'),
+( 67621,-67618, 1, 'Remove Paralytic Toxin when hit by Burning Bite'),
+( 67622,-67619, 1, 'Remove Paralytic Toxin when hit by Burning Bite'),
+( 67623,-67620, 1, 'Remove Paralytic Toxin when hit by Burning Bite'),
+(-66683, 68667, 0, 'Icehowl - Surge of Adrenaline'),
+(-67661, 68667, 0, 'Icehowl - Surge of Adrenaline'),
 -- Warsong Gulch
 ( 54861,-23335, 0, 'Drop Flag on Nitro Boost WSG'),
 ( 54861,-23333, 0, 'Drop Flag on Nitro Boost WSG'),
@@ -14749,6 +14756,8 @@ INSERT INTO `spell_script_names` (`spell_id`,`ScriptName`) VALUES
 ( 70834, 'spell_marrowgar_bone_storm'),
 ( 70835, 'spell_marrowgar_bone_storm'),
 ( 70836, 'spell_marrowgar_bone_storm'),
+( 70903, 'spell_cultist_dark_martyrdrom'),
+( 71236, 'spell_cultist_dark_martyrdrom'),
 -- quest
 ( 45449, 'spell_q11587_arcane_prisoner_rescue'),
 ( 46023, 'spell_q11730_ultrasonic_screwdriver'),

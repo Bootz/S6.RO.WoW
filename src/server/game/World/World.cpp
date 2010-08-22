@@ -127,7 +127,7 @@ World::~World()
         m_sessions.erase(m_sessions.begin());
     }
 
-    CliCommandHolder* command;
+    CliCommandHolder* command = NULL;
     while (cliCmdQueue.next(command))
         delete command;
 
@@ -288,7 +288,7 @@ World::AddSession_ (WorldSession* s)
     // Updates the population
     if (pLimit > 0)
     {
-        float popu = GetActiveSessionCount ();              // updated number of users on the server
+        float popu = (float)GetActiveSessionCount();              // updated number of users on the server
         popu /= pLimit;
         popu *= 2;
         sLog.outDetail ("Server Population (%f).", popu);
@@ -837,7 +837,7 @@ void World::LoadConfigSettings(bool reload)
     }
 
      m_configs[CONFIG_MAX_RECRUIT_A_FRIEND_BONUS_PLAYER_LEVEL] = sConfig.GetIntDefault("RecruitAFriend.MaxLevel", 60);
-    if (m_configs[CONFIG_MAX_RECRUIT_A_FRIEND_BONUS_PLAYER_LEVEL] < 0 || m_configs[CONFIG_MAX_RECRUIT_A_FRIEND_BONUS_PLAYER_LEVEL] > m_configs[CONFIG_MAX_PLAYER_LEVEL])
+    if (m_configs[CONFIG_MAX_RECRUIT_A_FRIEND_BONUS_PLAYER_LEVEL] > m_configs[CONFIG_MAX_PLAYER_LEVEL])
     {
         sLog.outError("RecruitAFriend.MaxLevel (%i) must be in the range 0..MaxLevel(%u). Set to %u.",
             m_configs[CONFIG_MAX_RECRUIT_A_FRIEND_BONUS_PLAYER_LEVEL],m_configs[CONFIG_MAX_PLAYER_LEVEL],60);
@@ -845,12 +845,14 @@ void World::LoadConfigSettings(bool reload)
     }
 
     m_configs[CONFIG_MAX_RECRUIT_A_FRIEND_BONUS_PLAYER_LEVEL_DIFFERENCE] = sConfig.GetIntDefault("RecruitAFriend.MaxDifference", 3);
+    /* "comparison of unsigned expression < 0 is always false"
     if (m_configs[CONFIG_MAX_RECRUIT_A_FRIEND_BONUS_PLAYER_LEVEL_DIFFERENCE] < 0)
     {
         sLog.outError("RecruitAFriend.MaxLevel (%i) must be greater than or equal to 0. Set to %u.",
             m_configs[CONFIG_MAX_RECRUIT_A_FRIEND_BONUS_PLAYER_LEVEL_DIFFERENCE],3);
         m_configs[CONFIG_MAX_RECRUIT_A_FRIEND_BONUS_PLAYER_LEVEL_DIFFERENCE] = 3;
     }
+    */
 
     m_configs[CONFIG_ALL_TAXI_PATHS] = sConfig.GetBoolDefault("AllFlightPaths", false);
     m_configs[CONFIG_INSTANT_TAXI] = sConfig.GetBoolDefault("InstantFlightPaths", false);
@@ -940,32 +942,40 @@ void World::LoadConfigSettings(bool reload)
     m_configs[CONFIG_SKILL_MILLING] = sConfig.GetBoolDefault("SkillChance.Milling",false);
 
     m_configs[CONFIG_SKILL_GAIN_CRAFTING]  = sConfig.GetIntDefault("SkillGain.Crafting", 1);
+    /* "comparison of unsigned expression < 0 is always false"
     if (m_configs[CONFIG_SKILL_GAIN_CRAFTING] < 0)
     {
         sLog.outError("SkillGain.Crafting (%i) can't be negative. Set to 1.",m_configs[CONFIG_SKILL_GAIN_CRAFTING]);
         m_configs[CONFIG_SKILL_GAIN_CRAFTING] = 1;
     }
+    */
 
     m_configs[CONFIG_SKILL_GAIN_DEFENSE]  = sConfig.GetIntDefault("SkillGain.Defense", 1);
+    /* "comparison of unsigned expression < 0 is always false"
     if (m_configs[CONFIG_SKILL_GAIN_DEFENSE] < 0)
     {
         sLog.outError("SkillGain.Defense (%i) can't be negative. Set to 1.",m_configs[CONFIG_SKILL_GAIN_DEFENSE]);
         m_configs[CONFIG_SKILL_GAIN_DEFENSE] = 1;
     }
+    */
 
     m_configs[CONFIG_SKILL_GAIN_GATHERING]  = sConfig.GetIntDefault("SkillGain.Gathering", 1);
+    /* "comparison of unsigned expression < 0 is always false"
     if (m_configs[CONFIG_SKILL_GAIN_GATHERING] < 0)
     {
         sLog.outError("SkillGain.Gathering (%i) can't be negative. Set to 1.",m_configs[CONFIG_SKILL_GAIN_GATHERING]);
         m_configs[CONFIG_SKILL_GAIN_GATHERING] = 1;
     }
+    */
 
     m_configs[CONFIG_SKILL_GAIN_WEAPON]  = sConfig.GetIntDefault("SkillGain.Weapon", 1);
+    /* "comparison of unsigned expression < 0 is always false"
     if (m_configs[CONFIG_SKILL_GAIN_WEAPON] < 0)
     {
         sLog.outError("SkillGain.Weapon (%i) can't be negative. Set to 1.",m_configs[CONFIG_SKILL_GAIN_WEAPON]);
         m_configs[CONFIG_SKILL_GAIN_WEAPON] = 1;
     }
+    */
 
     m_configs[CONFIG_MAX_OVERSPEED_PINGS] = sConfig.GetIntDefault("MaxOverspeedPings",2);
     if (m_configs[CONFIG_MAX_OVERSPEED_PINGS] != 0 && m_configs[CONFIG_MAX_OVERSPEED_PINGS] < 2)
@@ -1013,7 +1023,7 @@ void World::LoadConfigSettings(bool reload)
     m_configs[CONFIG_QUEST_IGNORE_RAID] = sConfig.GetBoolDefault("Quests.IgnoreRaid", false);
 
     m_configs[CONFIG_RANDOM_BG_RESET_HOUR] = sConfig.GetIntDefault("Battleground.Random.ResetHour", 6);
-    if (m_configs[CONFIG_RANDOM_BG_RESET_HOUR] < 0 || m_configs[CONFIG_RANDOM_BG_RESET_HOUR] > 23)
+    if (m_configs[CONFIG_RANDOM_BG_RESET_HOUR] > 23)
     {
         sLog.outError("Battleground.Random.ResetHour (%i) can't be load. Set to 6.", m_configs[CONFIG_RANDOM_BG_RESET_HOUR]);
         m_configs[CONFIG_RANDOM_BG_RESET_HOUR] = 6;
@@ -1207,8 +1217,10 @@ void World::LoadConfigSettings(bool reload)
     m_configs[CONFIG_BG_START_MUSIC] = sConfig.GetBoolDefault("MusicInBattleground", false);
     m_configs[CONFIG_START_ALL_SPELLS] = sConfig.GetBoolDefault("PlayerStart.AllSpells", false);
     m_configs[CONFIG_HONOR_AFTER_DUEL] = sConfig.GetIntDefault("HonorPointsAfterDuel", 0);
+    /* "comparison of unsigned expression < 0 is always false"
     if (m_configs[CONFIG_HONOR_AFTER_DUEL] < 0)
         m_configs[CONFIG_HONOR_AFTER_DUEL]= 0;
+    */
     m_configs[CONFIG_START_ALL_EXPLORED] = sConfig.GetBoolDefault("PlayerStart.MapsExplored", false);
     m_configs[CONFIG_START_ALL_REP] = sConfig.GetBoolDefault("PlayerStart.AllReputation", false);
     m_configs[CONFIG_ALWAYS_MAXSKILL] = sConfig.GetBoolDefault("AlwaysMaxWeaponSkill", false);
@@ -2390,7 +2402,7 @@ void World::ShutdownMsg(bool show, Player* player)
         ServerMessageType msgid = (m_ShutdownMask & SHUTDOWN_MASK_RESTART) ? SERVER_MSG_RESTART_TIME : SERVER_MSG_SHUTDOWN_TIME;
 
         SendServerMessage(msgid,str.c_str(),player);
-        DEBUG_LOG("Server is %s in %s",(m_ShutdownMask & SHUTDOWN_MASK_RESTART ? "restart" : "shuttingdown"),str.c_str());
+        sLog.outStaticDebug("Server is %s in %s",(m_ShutdownMask & SHUTDOWN_MASK_RESTART ? "restart" : "shuttingdown"),str.c_str());
     }
 }
 
@@ -2408,7 +2420,7 @@ void World::ShutdownCancel()
     m_ExitCode = SHUTDOWN_EXIT_CODE;                       // to default value
     SendServerMessage(msgid);
 
-    DEBUG_LOG("Server %s cancelled.",(m_ShutdownMask & SHUTDOWN_MASK_RESTART ? "restart" : "shuttingdown"));
+    sLog.outStaticDebug("Server %s cancelled.",(m_ShutdownMask & SHUTDOWN_MASK_RESTART ? "restart" : "shuttingdown"));
 
     sScriptMgr.OnShutdownCancel();
 }
@@ -2742,6 +2754,7 @@ uint64 World::getWorldState(uint32 index) const
     WorldStatesMap::const_iterator it = m_worldstates.find(index);
     return it != m_worldstates.end() ? it->second : 0;
 }
+
 void World::ProcessQueryCallbacks()
 {
     QueryResult_AutoPtr result;

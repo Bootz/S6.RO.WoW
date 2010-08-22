@@ -850,7 +850,7 @@ bool ChatHandler::HandleGameObjectPhaseCommand(const char* args)
 
 bool ChatHandler::HandleGameObjectNearCommand(const char* args)
 {
-    float distance = (!*args) ? 10 : atol(args);
+    float distance = (!*args) ? 10.0f : (float)(atof(args));
     uint32 count = 0;
 
     Player* pl = m_session->GetPlayer();
@@ -1615,7 +1615,7 @@ bool ChatHandler::HandleNpcSpawnDistCommand(const char* args)
     if (!*args)
         return false;
 
-    float option = atof((char*)args);
+    float option = (float)(atof((char*)args));
     if (option < 0.0f)
     {
         SendSysMessage(LANG_BAD_VALUE);
@@ -2694,7 +2694,7 @@ bool ChatHandler::HandleWpEventCommand(const char* args)
 
             if (arg_str_2 == "posx")
             {
-                coord = atof(arg_3);
+                coord = (float)(atof(arg_3));
                 WorldDatabase.PExecute("UPDATE waypoint_scripts SET x='%f' WHERE guid='%u'",
                     coord, id);
                 PSendSysMessage("|cff00ff00Waypoint script:|r|cff00ffff %u|r|cff00ff00 position_x updated.|r", id);
@@ -2702,7 +2702,7 @@ bool ChatHandler::HandleWpEventCommand(const char* args)
             }
             else if (arg_str_2 == "posy")
             {
-                coord = atof(arg_3);
+                coord = (float)(atof(arg_3));
                 WorldDatabase.PExecute("UPDATE waypoint_scripts SET y='%f' WHERE guid='%u'",
                     coord, id);
                 PSendSysMessage("|cff00ff00Waypoint script: %u position_y updated.|r", id);
@@ -2710,7 +2710,7 @@ bool ChatHandler::HandleWpEventCommand(const char* args)
             }
             else if (arg_str_2 == "posz")
             {
-                coord = atof(arg_3);
+                coord = (float)(atof(arg_3));
                 WorldDatabase.PExecute("UPDATE waypoint_scripts SET z='%f' WHERE guid='%u'",
                     coord, id);
                 PSendSysMessage("|cff00ff00Waypoint script: |r|cff00ffff%u|r|cff00ff00 position_z updated.|r", id);
@@ -2718,7 +2718,7 @@ bool ChatHandler::HandleWpEventCommand(const char* args)
             }
             else if (arg_str_2 == "orientation")
             {
-                coord = atof(arg_3);
+                coord = (float)(atof(arg_3));
                 WorldDatabase.PExecute("UPDATE waypoint_scripts SET o='%f' WHERE guid='%u'",
                     coord, id);
                 PSendSysMessage("|cff00ff00Waypoint script: |r|cff00ffff%u|r|cff00ff00 orientation updated.|r", id);

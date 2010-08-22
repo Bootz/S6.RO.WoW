@@ -30,10 +30,10 @@
 #include "GridNotifiersImpl.h"
 #include "CellImpl.h"
 
-OPvPCapturePoint::OPvPCapturePoint(OutdoorPvP * pvp)
-: m_PvP(pvp), m_value(0), m_maxValue(0), m_team(TEAM_NEUTRAL),
-m_State(OBJECTIVESTATE_NEUTRAL), m_OldState(OBJECTIVESTATE_NEUTRAL), m_capturePointGUID(0), m_neutralValuePct(0),
-m_maxSpeed(0), m_capturePoint(NULL)
+OPvPCapturePoint::OPvPCapturePoint(OutdoorPvP * pvp):
+m_capturePointGUID(0), m_capturePoint(NULL), m_maxValue(0), m_maxSpeed(0),
+m_value(0), m_team(TEAM_NEUTRAL), m_OldState(OBJECTIVESTATE_NEUTRAL),
+m_State(OBJECTIVESTATE_NEUTRAL), m_neutralValuePct(0), m_PvP(pvp)
 {
 }
 
@@ -133,7 +133,7 @@ bool OPvPCapturePoint::SetCapturePointData(uint32 entry, uint32 map, float x, fl
         return false;
 
     // get the needed values from goinfo
-    m_maxValue = goinfo->capturePoint.maxTime;
+    m_maxValue = (float)goinfo->capturePoint.maxTime;
     m_maxSpeed = m_maxValue / (goinfo->capturePoint.minTime ? goinfo->capturePoint.minTime : 60);
     m_neutralValuePct = goinfo->capturePoint.neutralPercent;
     m_minValue = m_maxValue * goinfo->capturePoint.neutralPercent / 100;
@@ -274,7 +274,7 @@ bool OPvPCapturePoint::Update(uint32 diff)
     if (!m_capturePoint)
         return false;
 
-    float radius = m_capturePoint->GetGOInfo()->capturePoint.radius;
+    float radius = (float)m_capturePoint->GetGOInfo()->capturePoint.radius;
 
     for (uint32 team = 0; team < 2; ++team)
     {

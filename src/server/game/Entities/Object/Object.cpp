@@ -1215,15 +1215,11 @@ void MovementInfo::OutDebug()
     }
 }
 
-WorldObject::WorldObject()
-    : WorldLocation(), m_InstanceId(0), m_phaseMask(PHASEMASK_NORMAL), m_currMap(NULL)
-    , m_zoneScript(NULL)
-    , m_isActive(false), m_isWorldObject(false)
-    , m_name("")
-    , m_notifyflags(0), m_executed_notifies(0)
-{
-    m_transport = NULL;
-}
+WorldObject::WorldObject(): WorldLocation(), 
+m_isWorldObject(false), m_name(""), m_isActive(false), m_zoneScript(NULL),
+m_transport(NULL), m_currMap(NULL), m_InstanceId(0),
+m_phaseMask(PHASEMASK_NORMAL), m_notifyflags(0), m_executed_notifies(0)
+{}
 
 void WorldObject::SetWorldObject(bool on)
 {
@@ -1483,7 +1479,7 @@ void Position::GetSinCos(const float x, const float y, float &vsin, float &vcos)
 
     if (dx < 0.001f && dy < 0.001f)
     {
-        float angle = rand_norm()*2*M_PI;
+        float angle = (float)rand_norm()*static_cast<float>(2*M_PI);
         vcos = cos(angle);
         vsin = sin(angle);
     }
@@ -1551,8 +1547,8 @@ void WorldObject::GetRandomPoint(const Position &pos, float distance, float &ran
     }
 
     // angle to face `obj` to `this`
-    float angle = rand_norm()*2*M_PI;
-    float new_dist = rand_norm()*distance;
+    float angle = (float)rand_norm()*static_cast<float>(2*M_PI);
+    float new_dist = (float)rand_norm()*static_cast<float>(distance);
 
     rand_x = pos.m_positionX + new_dist * cos(angle);
     rand_y = pos.m_positionY + new_dist * sin(angle);
@@ -1579,21 +1575,21 @@ void WorldObject::MonsterSay(const char* text, uint32 language, uint64 TargetGui
 {
     WorldPacket data(SMSG_MESSAGECHAT, 200);
     BuildMonsterChat(&data,CHAT_MSG_MONSTER_SAY,text,language,GetName(),TargetGuid);
-    SendMessageToSetInRange(&data,sWorld.getConfig(CONFIG_LISTEN_RANGE_SAY),true);
+    SendMessageToSetInRange(&data,(float)sWorld.getConfig(CONFIG_LISTEN_RANGE_SAY),true);
 }
 
 void WorldObject::MonsterYell(const char* text, uint32 language, uint64 TargetGuid)
 {
     WorldPacket data(SMSG_MESSAGECHAT, 200);
     BuildMonsterChat(&data,CHAT_MSG_MONSTER_YELL,text,language,GetName(),TargetGuid);
-    SendMessageToSetInRange(&data,sWorld.getConfig(CONFIG_LISTEN_RANGE_YELL),true);
+    SendMessageToSetInRange(&data,(float)sWorld.getConfig(CONFIG_LISTEN_RANGE_YELL),true);
 }
 
 void WorldObject::MonsterTextEmote(const char* text, uint64 TargetGuid, bool IsBossEmote)
 {
     WorldPacket data(SMSG_MESSAGECHAT, 200);
     BuildMonsterChat(&data,IsBossEmote ? CHAT_MSG_RAID_BOSS_EMOTE : CHAT_MSG_MONSTER_EMOTE,text,LANG_UNIVERSAL,GetName(),TargetGuid);
-    SendMessageToSetInRange(&data,sWorld.getConfig(CONFIG_LISTEN_RANGE_TEXTEMOTE),true);
+    SendMessageToSetInRange(&data,(float)sWorld.getConfig(CONFIG_LISTEN_RANGE_TEXTEMOTE),true);
 }
 
 void WorldObject::MonsterWhisper(const char* text, uint64 receiver, bool IsBossWhisper)
@@ -1665,9 +1661,9 @@ void WorldObject::MonsterSay(int32 textId, uint32 language, uint64 TargetGuid)
 
     Trinity::MonsterChatBuilder say_build(*this, CHAT_MSG_MONSTER_SAY, textId,language,TargetGuid);
     Trinity::LocalizedPacketDo<Trinity::MonsterChatBuilder> say_do(say_build);
-    Trinity::PlayerDistWorker<Trinity::LocalizedPacketDo<Trinity::MonsterChatBuilder> > say_worker(this,sWorld.getConfig(CONFIG_LISTEN_RANGE_SAY),say_do);
+    Trinity::PlayerDistWorker<Trinity::LocalizedPacketDo<Trinity::MonsterChatBuilder> > say_worker(this,(float)sWorld.getConfig(CONFIG_LISTEN_RANGE_SAY),say_do);
     TypeContainerVisitor<Trinity::PlayerDistWorker<Trinity::LocalizedPacketDo<Trinity::MonsterChatBuilder> >, WorldTypeMapContainer > message(say_worker);
-    cell.Visit(p, message, *GetMap(), *this, sWorld.getConfig(CONFIG_LISTEN_RANGE_SAY));
+    cell.Visit(p, message, *GetMap(), *this, (float)sWorld.getConfig(CONFIG_LISTEN_RANGE_SAY));
 }
 
 void WorldObject::MonsterYell(int32 textId, uint32 language, uint64 TargetGuid)
@@ -1680,9 +1676,9 @@ void WorldObject::MonsterYell(int32 textId, uint32 language, uint64 TargetGuid)
 
     Trinity::MonsterChatBuilder say_build(*this, CHAT_MSG_MONSTER_YELL, textId,language,TargetGuid);
     Trinity::LocalizedPacketDo<Trinity::MonsterChatBuilder> say_do(say_build);
-    Trinity::PlayerDistWorker<Trinity::LocalizedPacketDo<Trinity::MonsterChatBuilder> > say_worker(this,sWorld.getConfig(CONFIG_LISTEN_RANGE_YELL),say_do);
+    Trinity::PlayerDistWorker<Trinity::LocalizedPacketDo<Trinity::MonsterChatBuilder> > say_worker(this,(float)sWorld.getConfig(CONFIG_LISTEN_RANGE_YELL),say_do);
     TypeContainerVisitor<Trinity::PlayerDistWorker<Trinity::LocalizedPacketDo<Trinity::MonsterChatBuilder> >, WorldTypeMapContainer > message(say_worker);
-    cell.Visit(p, message, *GetMap(), *this, sWorld.getConfig(CONFIG_LISTEN_RANGE_YELL));
+    cell.Visit(p, message, *GetMap(), *this, (float)sWorld.getConfig(CONFIG_LISTEN_RANGE_YELL));
 }
 
 void WorldObject::MonsterYellToZone(int32 textId, uint32 language, uint64 TargetGuid)
@@ -1708,9 +1704,9 @@ void WorldObject::MonsterTextEmote(int32 textId, uint64 TargetGuid, bool IsBossE
 
     Trinity::MonsterChatBuilder say_build(*this, IsBossEmote ? CHAT_MSG_RAID_BOSS_EMOTE : CHAT_MSG_MONSTER_EMOTE, textId,LANG_UNIVERSAL,TargetGuid);
     Trinity::LocalizedPacketDo<Trinity::MonsterChatBuilder> say_do(say_build);
-    Trinity::PlayerDistWorker<Trinity::LocalizedPacketDo<Trinity::MonsterChatBuilder> > say_worker(this,sWorld.getConfig(CONFIG_LISTEN_RANGE_TEXTEMOTE),say_do);
+    Trinity::PlayerDistWorker<Trinity::LocalizedPacketDo<Trinity::MonsterChatBuilder> > say_worker(this,(float)sWorld.getConfig(CONFIG_LISTEN_RANGE_TEXTEMOTE),say_do);
     TypeContainerVisitor<Trinity::PlayerDistWorker<Trinity::LocalizedPacketDo<Trinity::MonsterChatBuilder> >, WorldTypeMapContainer > message(say_worker);
-    cell.Visit(p, message, *GetMap(), *this, sWorld.getConfig(CONFIG_LISTEN_RANGE_TEXTEMOTE));
+    cell.Visit(p, message, *GetMap(), *this, (float)sWorld.getConfig(CONFIG_LISTEN_RANGE_TEXTEMOTE));
 }
 
 void WorldObject::MonsterWhisper(int32 textId, uint64 receiver, bool IsBossWhisper)
@@ -1994,6 +1990,8 @@ Pet* Player::SummonPet(uint32 entry, float x, float y, float z, float ang, PetTy
             pet->SetPower(POWER_MANA, pet->GetMaxPower(POWER_MANA));
             pet->SetUInt32Value(UNIT_FIELD_PET_NAME_TIMESTAMP, time(NULL));
             break;
+        default:
+            break;
     }
 
     map->Add(pet->ToCreature());
@@ -2005,6 +2003,8 @@ Pet* Player::SummonPet(uint32 entry, float x, float y, float z, float ang, PetTy
             pet->InitTalentForLevel();
             pet->SavePetToDB(PET_SAVE_AS_CURRENT);
             PetSpellInitialize();
+            break;
+        default:
             break;
     }
 

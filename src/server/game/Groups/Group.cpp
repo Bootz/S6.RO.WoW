@@ -116,20 +116,19 @@ bool Group::Create(const uint64 &guid, const char * name)
 
         Player::ConvertInstancesToGroup(leader, this, guid);
 
+        if (!AddMember(guid, name))
+            return false;
+
         // store group in database
-        CharacterDatabase.BeginTransaction();
-        CharacterDatabase.PExecute("DELETE FROM groups WHERE guid ='%u'", lowguid);
-        CharacterDatabase.PExecute("DELETE FROM group_member WHERE guid ='%u'", lowguid);
-        CharacterDatabase.PExecute("INSERT INTO groups (guid,leaderGuid,lootMethod,looterGuid,lootThreshold,icon1,icon2,icon3,icon4,icon5,icon6,icon7,icon8,groupType,difficulty,raiddifficulty) "
+        SQLTransaction trans = CharacterDatabase.BeginTransaction();
+        trans->PAppend("DELETE FROM groups WHERE guid ='%u'", lowguid);
+        trans->PAppend("DELETE FROM group_member WHERE guid ='%u'", lowguid);
+        trans->PAppend("INSERT INTO groups (guid,leaderGuid,lootMethod,looterGuid,lootThreshold,icon1,icon2,icon3,icon4,icon5,icon6,icon7,icon8,groupType,difficulty,raiddifficulty) "
             "VALUES ('%u','%u','%u','%u','%u','" UI64FMTD "','" UI64FMTD "','" UI64FMTD "','" UI64FMTD "','" UI64FMTD "','" UI64FMTD "','" UI64FMTD "','" UI64FMTD "','%u','%u','%u')",
             lowguid, GUID_LOPART(m_leaderGuid), uint32(m_lootMethod),
             GUID_LOPART(m_looterGuid), uint32(m_lootThreshold), m_targetIcons[0], m_targetIcons[1], m_targetIcons[2], m_targetIcons[3], m_targetIcons[4], m_targetIcons[5], m_targetIcons[6], m_targetIcons[7], uint8(m_groupType), uint32(m_dungeonDifficulty), m_raidDifficulty);
-        if (!AddMember(guid, name))
-        {
-            CharacterDatabase.RollbackTransaction();
-            return false;
-        }
-        CharacterDatabase.CommitTransaction();
+        
+        CharacterDatabase.CommitTransaction(trans);
     }
     else if (!AddMember(guid, name))
         return false;
@@ -497,10 +496,10 @@ void Group::Disband(bool hideDestroy)
     if (!isBGGroup())
     {
         uint32 lowguid = GUID_LOPART(m_guid);
-        CharacterDatabase.BeginTransaction();
-        CharacterDatabase.PExecute("DELETE FROM groups WHERE guid=%u", lowguid);
-        CharacterDatabase.PExecute("DELETE FROM group_member WHERE guid=%u", lowguid);
-        CharacterDatabase.CommitTransaction();
+        SQLTransaction trans = CharacterDatabase.BeginTransaction();
+        trans->PAppend("DELETE FROM groups WHERE guid=%u", lowguid);
+        trans->PAppend("DELETE FROM group_member WHERE guid=%u", lowguid);
+        CharacterDatabase.CommitTransaction(trans);
         ResetInstances(INSTANCE_RESET_GROUP_DISBAND, false, NULL);
         ResetInstances(INSTANCE_RESET_GROUP_DISBAND, true, NULL);
     }
@@ -654,7 +653,7 @@ void Group::GroupLoot(Loot *loot, WorldObject* pLootedObject)
                     continue;
                 if (i->AllowedForPlayer(member))
                 {
-                    if (member->IsWithinDistInMap(pLootedObject,sWorld.getConfig(CONFIG_GROUP_XP_DISTANCE),false))
+                    if (member->IsWithinDistInMap(pLootedObject,(float)sWorld.getConfig(CONFIG_GROUP_XP_DISTANCE),false))
                     {
                         r->totalPlayersRolling++;
 
@@ -745,7 +744,7 @@ void Group::NeedBeforeGreed(Loot *loot, WorldObject* pLootedObject)
 
                 if (playerToRoll->CanUseItem(item) == EQUIP_ERR_OK && i->AllowedForPlayer(playerToRoll))
                 {
-                    if (playerToRoll->IsWithinDistInMap(pLootedObject,sWorld.getConfig(CONFIG_GROUP_XP_DISTANCE),false))
+                    if (playerToRoll->IsWithinDistInMap(pLootedObject,(float)sWorld.getConfig(CONFIG_GROUP_XP_DISTANCE),false))
                     {
                         r->totalPlayersRolling++;
 
@@ -824,7 +823,7 @@ void Group::MasterLoot(Loot* /*loot*/, WorldObject* pLootedObject)
         if (!looter->IsInWorld())
             continue;
 
-        if (looter->IsWithinDistInMap(pLootedObject,sWorld.getConfig(CONFIG_GROUP_XP_DISTANCE),false))
+        if (looter->IsWithinDistInMap(pLootedObject,(float)sWorld.getConfig(CONFIG_GROUP_XP_DISTANCE),false))
         {
             data << uint64(looter->GetGUID());
             ++real_count;
@@ -836,7 +835,7 @@ void Group::MasterLoot(Loot* /*loot*/, WorldObject* pLootedObject)
     for (GroupReference *itr = GetFirstMember(); itr != NULL; itr = itr->next())
     {
         Player *looter = itr->getSource();
-        if (looter->IsWithinDistInMap(pLootedObject,sWorld.getConfig(CONFIG_GROUP_XP_DISTANCE),false))
+        if (looter->IsWithinDistInMap(pLootedObject,(float)sWorld.getConfig(CONFIG_GROUP_XP_DISTANCE),false))
             looter->GetSession()->SendPacket(&data);
     }
 }
@@ -1334,14 +1333,14 @@ void Group::_setLeader(const uint64 &guid)
     if (!isBGGroup())
     {
         // TODO: set a time limit to have this function run rarely cause it can be slow
-        CharacterDatabase.BeginTransaction();
+        SQLTransaction trans = CharacterDatabase.BeginTransaction();
 
         // update the group's bound instances when changing leaders
 
         // remove all permanent binds from the group
         // in the DB also remove solo binds that will be replaced with permbinds
         // from the new leader
-        CharacterDatabase.PExecute(
+        trans->PAppend(
             "DELETE FROM group_instance WHERE guid=%u AND (permanent = 1 OR "
             "instance IN (SELECT instance FROM character_instance WHERE guid = '%u')"
             ")", GUID_LOPART(m_guid), GUID_LOPART(slot->guid)
@@ -1371,8 +1370,8 @@ void Group::_setLeader(const uint64 &guid)
         Player::ConvertInstancesToGroup(player, this, slot->guid);
 
         // update the group leader
-        CharacterDatabase.PExecute("UPDATE groups SET leaderGuid='%u' WHERE guid='%u'", GUID_LOPART(slot->guid), GUID_LOPART(m_guid));
-        CharacterDatabase.CommitTransaction();
+        trans->PAppend("UPDATE groups SET leaderGuid='%u' WHERE guid='%u'", GUID_LOPART(slot->guid), GUID_LOPART(m_guid));
+        CharacterDatabase.CommitTransaction(trans);
     }
 
     m_leaderGuid = slot->guid;
@@ -1546,7 +1545,7 @@ void Group::UpdateLooterGuid(WorldObject* pLootedObject, bool ifneed)
         {
             // not update if only update if need and ok
             Player* looter = ObjectAccessor::FindPlayer(guid_itr->guid);
-            if (looter && looter->IsWithinDistInMap(pLootedObject,sWorld.getConfig(CONFIG_GROUP_XP_DISTANCE),false))
+            if (looter && looter->IsWithinDistInMap(pLootedObject,(float)sWorld.getConfig(CONFIG_GROUP_XP_DISTANCE),false))
                 return;
         }
         ++guid_itr;
@@ -1557,7 +1556,7 @@ void Group::UpdateLooterGuid(WorldObject* pLootedObject, bool ifneed)
     for (member_citerator itr = guid_itr; itr != m_memberSlots.end(); ++itr)
     {
         if (Player* pl = ObjectAccessor::FindPlayer(itr->guid))
-            if (pl->IsWithinDistInMap(pLootedObject,sWorld.getConfig(CONFIG_GROUP_XP_DISTANCE),false))
+            if (pl->IsWithinDistInMap(pLootedObject,(float)sWorld.getConfig(CONFIG_GROUP_XP_DISTANCE),false))
             {
                 pNewLooter = pl;
                 break;
@@ -1570,7 +1569,7 @@ void Group::UpdateLooterGuid(WorldObject* pLootedObject, bool ifneed)
         for (member_citerator itr = m_memberSlots.begin(); itr != guid_itr; ++itr)
         {
             if (Player* pl = ObjectAccessor::FindPlayer(itr->guid))
-                if (pl->IsWithinDistInMap(pLootedObject,sWorld.getConfig(CONFIG_GROUP_XP_DISTANCE),false))
+                if (pl->IsWithinDistInMap(pLootedObject,(float)sWorld.getConfig(CONFIG_GROUP_XP_DISTANCE),false))
                 {
                     pNewLooter = pl;
                     break;
@@ -1872,7 +1871,7 @@ void Group::BroadcastGroupUpdate(void)
         {
             pp->ForceValuesUpdateAtIndex(UNIT_FIELD_BYTES_2);
             pp->ForceValuesUpdateAtIndex(UNIT_FIELD_FACTIONTEMPLATE);
-            DEBUG_LOG("-- Forced group value update for '%s'", pp->GetName());
+            sLog.outStaticDebug("-- Forced group value update for '%s'", pp->GetName());
         }
     }
 }

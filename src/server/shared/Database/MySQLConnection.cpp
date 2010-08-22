@@ -1,6 +1,4 @@
 /*
- * Copyright (C) 2005-2010 MaNGOS <http://getmangos.com/>
- *
  * Copyright (C) 2008-2010 Trinity <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -17,6 +15,12 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
+
+
+#include "Common.h"
+
+#include <mysql.h>
+
 #include "DatabaseEnv.h"
 #include "QueryResult.h"
 #include "SQLOperation.h"
@@ -27,9 +31,9 @@
 #include "Timer.h"
 
 MySQLConnection::MySQLConnection() :
-m_Mysql(NULL),
+m_queue(NULL),
 m_worker(NULL),
-m_queue(NULL)
+m_Mysql(NULL)
 {
 }
 
@@ -250,4 +254,3 @@ void MySQLConnection::CommitTransaction()
 {
     Execute("COMMIT");
 }
-

@@ -1828,7 +1828,7 @@ bool SpellMgr::IsSkillTypeSpell(uint32 spellId, SkillType type) const
 }
 
 // basepoints provided here have to be valid basepoints (use SpellMgr::CalculateSpellEffectBaseAmount)
-int32 SpellMgr::CalculateSpellEffectAmount(SpellEntry const * spellEntry, uint8 effIndex, Unit const * caster, int32 const * effBasePoints, Unit const * target)
+int32 SpellMgr::CalculateSpellEffectAmount(SpellEntry const * spellEntry, uint8 effIndex, Unit const * caster, int32 const * effBasePoints, Unit const * /*target*/)
 {
     float basePointsPerLevel = spellEntry->EffectRealPointsPerLevel[effIndex];
     int32 basePoints = effBasePoints ? *effBasePoints : spellEntry->EffectBasePoints[effIndex];
@@ -1966,10 +1966,6 @@ void SpellMgr::LoadSpellLearnSkills()
                 else
                     dbc_node.value = dbc_node.step * 75;
                 dbc_node.maxvalue = dbc_node.step * 75;
-
-                // FIXME: db_node not used... remove it?
-                SpellLearnSkillNode const* db_node = GetSpellLearnSkill(spell);
-
                 mSpellLearnSkills[spell] = dbc_node;
                 ++dbc_count;
                 break;
@@ -3081,7 +3077,7 @@ bool SpellArea::IsFitToRequirements(Player const* player, uint32 newZone, uint32
             return false;
 
     if (questStart)                              // not in expected required quest state
-        if (!player || (!questStartCanActive || !player->IsActiveQuest(questStart)) && !player->GetQuestRewardStatus(questStart))
+        if (!player || ((!questStartCanActive || !player->IsActiveQuest(questStart)) && !player->GetQuestRewardStatus(questStart)))
             return false;
 
     if (questEnd)                                // not in expected forbidden quest state
@@ -3089,7 +3085,7 @@ bool SpellArea::IsFitToRequirements(Player const* player, uint32 newZone, uint32
             return false;
 
     if (auraSpell)                               // not have expected aura
-        if (!player || auraSpell > 0 && !player->HasAura(auraSpell) || auraSpell < 0 && player->HasAura(-auraSpell))
+        if (!player || (auraSpell > 0 && !player->HasAura(auraSpell)) || (auraSpell < 0 && player->HasAura(-auraSpell)))
             return false;
     // Extra conditions
     switch(spellId)
@@ -3140,7 +3136,7 @@ bool SpellMgr::CanAurasStack(SpellEntry const *spellInfo_1, SpellEntry const *sp
     SpellSpecific spellSpec_2 = GetSpellSpecific(spellInfo_2);
     if (spellSpec_1 && spellSpec_2)
         if (IsSingleFromSpellSpecificPerTarget(spellSpec_1, spellSpec_2)
-            || sameCaster && IsSingleFromSpellSpecificPerCaster(spellSpec_1, spellSpec_2))
+            || (sameCaster && IsSingleFromSpellSpecificPerCaster(spellSpec_1, spellSpec_2)))
             return false;
 
     SpellGroupStackRule stackRule = CheckSpellGroupStackRules(spellInfo_1->Id, spellInfo_2->Id);
@@ -3547,6 +3543,8 @@ void SpellMgr::LoadSpellCustomAttr()
                 case TARGET_TYPE_DEST_TARGET:
                     spellInfo->Targets |= TARGET_FLAG_UNIT;
                     count++;
+                    break;
+                default:
                     break;
             }
         }
