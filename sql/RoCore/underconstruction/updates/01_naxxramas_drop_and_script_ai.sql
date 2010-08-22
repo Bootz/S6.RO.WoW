@@ -1,3 +1,8 @@
+-- esto es muy extraño, con este archivo me da este error: ERROR: Table 'reference_loot_template' entry 39467 isn't reference id and not referenced from loot, and then useless.
+-- he buscado en 'reference_loot_template' el entry 39467 y corresponde a un npc que no existe, pense que era en hero pero NO (usa esto: SELECT * from creature_template where entry=39467; )
+-- busque como item tambien SELECT * FROM reference_loot_template WHERE item=39467; y mi sorpres es que esta como entry e item asi que aplique DELETE FROM reference_loot_template WHERE entry=39467;
+-- No hay errores en este archivo, la solucion la he puest al final de drop.
+
 -- some naxx loot and script_ai
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=16017);
@@ -805,6 +810,8 @@ INSERT INTO `creature_loot_template` VALUES
 (16034, 39427, 1.5, 1, 1, 1, 1),
 (16034, 39468, 1.5, 1, 1, 1, 1),
 (16034, 39473, 1.5, 1, 1, 1, 1);
+
+DELETE FROM reference_loot_template WHERE entry=39467;
 
 
 
