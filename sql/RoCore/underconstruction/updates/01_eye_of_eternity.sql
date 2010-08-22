@@ -80,7 +80,7 @@ INSERT INTO script_texts (npc_entry, entry, content_default, TYPE, COMMENT) VALU
 UPDATE script_texts SET content_default = "My patience has reached its limit. I will be rid of you!" WHERE entry = -1616005;
 
 -- ------------------
--- LOOT FORM MALYGOS
+-- LOOT FROM MALYGOS
 -- ------------------
 
 -- Redone loot for Malygos http://www.wowhead.com/npc=28859/malygos#drops:mode=normal10:0+1-16
