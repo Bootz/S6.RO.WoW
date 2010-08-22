@@ -74,7 +74,7 @@ UPDATE `creature_template` SET `unit_flags` = 33947654 WHERE `entry` = 33121;
 -- 8119_assembly_iron
 UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16 WHERE `entry` IN (33051, 33691, 33689);
 UPDATE creature_template SET faction_A=16, faction_H=16 WHERE entry = 33705;
-UPDATE creature_template SET faction_A=16, faction_H=16 difficulty_entry_1 = 33689 WHERE entry = 32958;
+UPDATE creature_template SET faction_A=16, faction_H=16, difficulty_entry_1 = 33689 WHERE entry = 32958;
 
 -- 8124_auriaya_event
 DELETE FROM `creature` WHERE id = 34014;
