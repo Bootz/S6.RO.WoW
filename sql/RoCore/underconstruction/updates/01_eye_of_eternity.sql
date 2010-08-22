@@ -1,46 +1,40 @@
-UPDATE creature_template SET VehicleId=264 WHERE entry = 30248;
+-- Eye of Eternity review
+UPDATE creature_template SET VehicleId=264 WHERE entry = 30248; -- Hover Disk
+UPDATE creature_template SET unit_flags = 1 WHERE entry = 28859; -- Malygos
 
-UPDATE creature_template SET unit_flags = 1 WHERE entry = 28859;
-
-UPDATE creature_template SET mindmg = 3684, maxdmg = 4329, dmg_multiplier = 7.5, mechanic_immune_mask = 1072918979 WHERE entry = 30245; -- Nexus Lord
+-- Damanges 
+UPDATE creature_template SET mindmg = 3684, maxdmg = 4329, dmg_multiplier = 7.5, mechanic_immune_mask = 1072918979 WHERE entry =30245; -- Nexus Lord
 UPDATE creature_template SET mindmg = 3684, maxdmg = 4329, dmg_multiplier = 13,  mechanic_immune_mask = 1072918979 WHERE entry = 31750; -- Nexus Lord (1)
-UPDATE creature_template SET mechanic_immune_mask = 1072918979 WHERE entry IN (30249, 31751);
 
-DELETE FROM creature WHERE id = 33224;
-INSERT INTO creature (`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`DeathState`,`MovementType`) VALUES
-(33224, 571, 1, 1, 0, 0, 3730.57, -4302.91, 182.097, 2.35789, 300, 0, 0, 40, 120, 0, 0),  
-(33224, 571, 1, 1, 0, 0, 3726.49, -4312.76, 179.671, 1.68559, 300, 0, 0, 40, 120, 0, 0),  
-(33224, 571, 1, 1, 0, 0, 3714.32, -4311.07, 181.014, 0.81772, 300, 0, 0, 40, 120, 0, 0),  
-(33224, 571, 1, 1, 0, 0, 3715.14, -4305.41, 182.313, 1.36436, 300, 0, 0, 40, 120, 0, 0),
-(33224, 571, 1, 1, 0, 0, 3723.58, -4306.54, 182.245, 1.89215, 300, 0, 0, 40, 120, 0, 0);  
+-- Immunities
+UPDATE creature_template SET mechanic_immune_mask = 1072918979 WHERE entry IN (30249, 31751); -- Scion of Eternity
 
-UPDATE `gameobject_template` SET `data10` = 26572 WHERE `entry`=180912;
-UPDATE `gameobject_template` SET `data10` = 26566 WHERE `entry`=180911;
+UPDATE `gameobject_template` SET `data10` = 26572 WHERE `entry`=180912; -- Orb of Translocation
+UPDATE `gameobject_template` SET `data10` = 26566 WHERE `entry`=180911; -- Orb of Translocation
 
-/*
--- achievement realm first magic seeker non-existing criteria Entry: 1400
-DELETE FROM achievement_criteria_data WHERE criteria_id = 1400;
-INSERT INTO achievement_criteria_data VALUES
-(1400, 1, 28859, 0);
-*/
+UPDATE creature_template SET flags_extra = flags_extra | 2 WHERE entry = 30090; -- Vortex
+UPDATE creature_template SET flags_extra = flags_extra | 2, faction_A = 35, faction_H = 35, VehicleId = 165 WHERE entry IN (30234, 30248); -- Hover Disk
+UPDATE creature_template SET flags_extra = flags_extra | 2, faction_A = 35, faction_H = 35 WHERE entry = 30118; -- Portal (Malygos)
+UPDATE creature_template SET flags_extra = flags_extra | 2 WHERE entry = 30282; --Arcane Overload
+UPDATE creature_template SET mindmg = 1, maxdmg = 1, dmg_multiplier = 1 WHERE entry = 30592; -- Static Field
+UPDATE creature_template SET modelid1 = 11686, modelid2 = 11686 WHERE entry = 22517; -- World Trigger (Large AOI)
 
-UPDATE creature_template SET flags_extra = flags_extra | 2 WHERE entry = 30090;
-UPDATE creature_template SET flags_extra = flags_extra | 2, faction_A = 35, faction_H = 35, VehicleId = 165 WHERE entry IN (30234, 30248);
-UPDATE creature_template SET flags_extra = flags_extra | 2, faction_A = 35, faction_H = 35 WHERE entry = 30118;
-UPDATE creature_template SET flags_extra = flags_extra | 2 WHERE entry = 30282;
-UPDATE creature_template SET mindmg = 1, maxdmg = 1, dmg_multiplier = 1 WHERE entry = 30592;
-UPDATE creature_template SET modelid1 = 11686, modelid2 = 11686 WHERE entry = 22517;
 -- Wyrmest Drake Spell & mount
-UPDATE creature_template SET spell1 = 56091, spell2 = 56092, spell3 = 57090, spell4 = 57143, spell5 = 57108, spell6 = 57403, VehicleId = 165 WHERE entry IN (30161, 31752);
--- add de malygos & gameobject
-UPDATE gameobject_template SET flags = 4, data0 = 43 WHERE entry in (193967, 193905);
+UPDATE creature_template SET spell1 = 56091, spell2 = 56092, spell3 = 57090, spell4 = 57143, spell5 = 57108, spell6 = 57403, VehicleId = 165 WHERE entry IN (30161, 31752); -- Wyrmrest Skytalon
+
+-- add de malygos & gameobject 
+-- Why flag 4 for a chest? with flag 4 the chest can be target, that solve untargeteable chest
+UPDATE gameobject_template SET flags = 0, data0 = 43 WHERE entry in (193967, 193905); -- Alexstraszas Gift (chest)
 
 -- Aggro Malygos
-UPDATE creature_model_info SET combat_reach = '30' WHERE modelid = 26752;
+UPDATE creature_model_info SET combat_reach = '30' WHERE modelid = 26752; -- Update aggro for Malygos
 
 -- drakes_disks
-UPDATE creature_template SET InhabitType = 4, VehicleId = 223 WHERE entry IN (30234, 30248);
-UPDATE creature_template SET spell6 = 57092, spell7 = 57403 WHERE entry IN (30161, 31752);
+UPDATE creature_template SET InhabitType = 4, VehicleId = 223 WHERE entry IN (30234, 30248); -- Hover Disk
+UPDATE creature_template SET spell6 = 57092, spell7 = 57403 WHERE entry IN (30161, 31752); -- Wyrmrest Skytalon
+
+UPDATE creature_template SET  flags_extra =  flags_extra | 0x2 WHERE entry = 31253; --Alexstrasza the Life-Binder
+-- UPDATE creature_model_info SET combat_reach = 15 WHERE modelid = 26752; -- Donwgrade now? it a bit stupid? see line 47
 
 -- script_texts
 DELETE FROM script_texts WHERE entry BETWEEN -1616034 AND -1616000;
@@ -79,9 +73,63 @@ INSERT INTO script_texts (npc_entry, entry, content_default, sound, type, langua
 (32295, -1616033, 'This resolution pains me deeply, but the destruction, the monumental loss of life had to end. Regardless of Malygos\' recent transgressions, I will mourn his loss. He was once a guardian, a protector. This day, one of the world\'s mightiest has fallen.', 14408, 1, 0, 0, 'Alexstrasza OUTRO 3'),
 (32295, -1616034, 'The red dragonflight will take on the burden of mending the devastation wrought on Azeroth. Return home to your people and rest. Tomorrow will bring you new challenges, and you must be ready to face them. Life...goes on.', 14409, 1, 0, 0, 'Alexstrasza OUTRO 4');
 
-UPDATE creature_template SET  flags_extra =  flags_extra | 0x2 WHERE entry = 31253; -- Alexstrazsa
-UPDATE creature_model_info SET combat_reach = 15 WHERE modelid = 26752;
+-- Some text corrections seems
 DELETE FROM script_texts WHERE entry = -1616035;
 INSERT INTO script_texts (npc_entry, entry, content_default, TYPE, COMMENT) VALUE
 (28859, -1616035, "A Power Spark forms from a nearby rift!", 5, "Malygos WHISPER_POWER_SPARK");
 UPDATE script_texts SET content_default = "My patience has reached its limit. I will be rid of you!" WHERE entry = -1616005;
+
+-- ------------------
+-- LOOT FORM MALYGOS
+-- ------------------
+
+-- Redone loot for Malygos http://www.wowhead.com/npc=28859/malygos#drops:mode=normal10:0+1-16
+-- This also need to be include on CTDB 0.14
+-- Normal 10p
+DELETE FROM `gameobject_loot_template` WHERE `entry`='193905';
+INSERT INTO `gameobject_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `lootmode`, `groupid`, `mincountOrRef`, `maxcount`) VALUES
+('193905','47241','100','1','0','2','2'), -- Emblem of Triumph
+('193905','43952','0.3','1','0','1','1'), -- Reins of the Azure Drake
+('193905','40486','20','1','1','1','1'), -- Necklace of the Glittering Chamber
+('193905','40488','20','1','1','1','1'), -- Ice Spire Scepter
+('193905','40511','20','1','1','1','1'), -- Focusing Energy Epaulets
+('193905','40519','20','1','1','1','1'), -- Footsteps of Malygos
+('193905','40526','20','1','1','1','1'), -- Gown of the Spell-Weaver
+('193905','40474','20','1','2','1','1'), -- Surge Needle Ring
+('193905','40475','20','1','2','1','1'), -- Barricade of Eternity
+('193905','40489','20','1','2','1','1'), -- Greatstaff of the Nexus
+('193905','40491','20','1','2','1','1'), -- Hailstorm
+('193905','40497','20','1','2','1','1'); -- Black Ice
+
+-- Redona loot for Malygos http://www.wowhead.com/npc=28859/malygos#drops:mode=normal25:0+1-16
+-- This also need to be include on CTDB 0.14
+-- Normal 25p
+DELETE FROM `gameobject_loot_template` WHERE `entry`='193967';
+INSERT INTO `gameobject_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `lootmode`, `groupid`, `mincountOrRef`, `maxcount`) VALUES
+('193967','44651','-100','1','0','1','1'), -- Heart of Magic (quest)
+('193967','47241','100','1','0','2','2'), -- Emblem of Triumph
+('193967','43952','0.6','1','0','1','1'), -- Reins of the Azure Drake
+('193967','40592','20','1','1','1','1'), -- Boots of Healing Energies
+('193967','40594','20','1','1','1','1'), -- Spaulders of Catatonia
+('193967','40589','20','1','1','1','1'), -- Legplates of Sovereignty
+('193967','40560','20','1','1','1','1'), -- Leggings of the Wanton Spellcaster
+('193967','40566','20','1','1','1','1'), -- Unravelling Strands of Sanity
+('193967','40555','20','1','2','1','1'), -- Mantle of Dissemination
+('193967','40543','20','1','2','1','1'), -- Blue Aspect Helm
+('193967','40561','20','1','2','1','1'), -- Leash of Heedless Magic
+('193967','40590','20','1','2','1','1'), -- Elevated Lair Pauldrons
+('193967','40588','20','1','2','1','1'), -- Tunic of the Artifact Guardian
+('193967','40194','16.666','1','3','1','1'), -- Blanketing Robes of Snow
+('193967','40532','16.666','1','3','1','1'), -- Living Ice Crystals
+('193967','40541','16.666','1','3','1','1'), -- Frosted Adroit Handguards
+('193967','40562','16.666','1','3','1','1'), -- Hood of Rationality
+('193967','40564','16.666','1','3','1','1'), -- Winter Spectacle Gloves
+('193967','40591','16.666','1','3','1','1'), -- Melancholy Sabatons
+('193967','40474','16.666','1','4','1','1'), -- Surge Needle Ring
+('193967','40526','16.666','1','4','1','1'), -- Gown of the Spell-Weaver
+('193967','40531','16.666','1','4','1','1'), -- Mark of Norgannon
+('193967','40539','16.666','1','4','1','1'), -- Chestguard of the Recluse
+('193967','40549','16.666','1','4','1','1'), -- Boots of the Renewed Flight
+('193967','40558','16.666','1','4','1','1'); -- Arcanic Tramplers
+
+
