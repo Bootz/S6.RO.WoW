@@ -380,15 +380,15 @@ UPDATE `creature_template` SET `ScriptName`='npc_lady_nightswood' WHERE `entry`=
 UPDATE `creature_template` SET `ScriptName`='npc_vile' WHERE `entry`='29769';
 
 -- Declaring zones
-UPDATE `instance_template` SET `script` = 'instance_eye_of_eternity' WHERE map = 616;
-UPDATE `instance_template` SET `script`='instance_obsidian_sanctum' WHERE `map`=615;
-UPDATE `instance_template` SET `script`='instance_oculus' WHERE `map`=578;
-UPDATE `instance_template` SET `script`='instance_ruby_sanctum' WHERE (`map`='724');
-UPDATE `instance_template` SET `script`='instance_trial_of_the_champion' WHERE `map`=650;
-UPDATE `instance_template` SET `script`='instance_trial_of_the_crussader' WHERE (`map`='649');
-UPDATE `instance_template` SET `script`='instance_ulduar' WHERE `map`=603;
-UPDATE `instance_template` SET `script`='instance_hall_of_reflection' WHERE (`map`='668');
-UPDATE `instance_template` SET `script` = 'instance_halls_of_reflection' WHERE map=668;
+UPDATE `instance_template` SET `script` = 'instance_eye_of_eternity' WHERE `map`= 616;
+UPDATE `instance_template` SET `script` = 'instance_obsidian_sanctum' WHERE `map`= 615;
+UPDATE `instance_template` SET `script` = 'instance_oculus' WHERE `map`= 578;
+UPDATE `instance_template` SET `script` = 'instance_ruby_sanctum' WHERE `map`= 724;
+UPDATE `instance_template` SET `script` = 'instance_trial_of_the_champion' WHERE `map`= 650;
+UPDATE `instance_template` SET `script` = 'instance_trial_of_the_crussader' WHERE `map`= 649;
+UPDATE `instance_template` SET `script` = 'instance_ulduar' WHERE `map`= 603;
+UPDATE `instance_template` SET `script`=  'instance_icecrown_citadel' WHERE `map`= 631;
+UPDATE `instance_template` SET `script` = 'instance_halls_of_reflection' WHERE `map`= 668;
 
 -- Is fix here if not "error" - Lo implemento aqui sino da error
 DELETE FROM gameobject_template WHERE entry = '194438';
