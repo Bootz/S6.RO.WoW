@@ -253,6 +253,7 @@ UPDATE `creature_template` SET `flags_extra` = 0, `ScriptName` = 'thorim_energy_
 UPDATE `creature_template` SET `ScriptName`='' WHERE `entry` IN (37813,38508,36626,36855,38222,36678,37697,36853,36597,38995,36633,36609,37695,38757,36701,36725,37011,36724,37012,37007,36811,36807,36829,36844,36808,38135,37949,36627,36897,36899,37973,37970,37972,36789,38429,38068,38369,38332,38454,38422,38451);
 
 # Boss
+UPDATE `creature_template` SET `ScriptName`='boss_lord_marrowgar' WHERE `entry` = 36612;
 UPDATE `creature_template` SET `ScriptName`='boss_blood_queen_lanathel' WHERE (`entry`='37955');
 UPDATE `creature_template` SET `ScriptName`='boss_blood_elf_keleset_icc' WHERE `entry` = 37972;
 UPDATE `creature_template` SET `ScriptName`='boss_blood_elf_taldaram_icc' WHERE `entry` = 37973;
@@ -267,6 +268,7 @@ UPDATE `creature_template` SET `ScriptName`='boss_the_lich_king' WHERE (`entry`=
 UPDATE `creature_template` SET `ScriptName`='boss_rotface' WHERE `entry`= 36627;
 
 # Mobs
+UPDATE `creature_template` SET `ScriptName`='npc_bone_spike' WHERE `entry`=38711;
 UPDATE `creature_template` SET `ScriptName`='npc_tirion_icc' WHERE (`entry`='38995');
 UPDATE `creature_template` SET `ScriptName`='npc_swarming_shadows' WHERE (`entry`='38163');
 UPDATE `creature_template` SET `ScriptName`='npc_bloodbeast' WHERE (`entry`='38508');
