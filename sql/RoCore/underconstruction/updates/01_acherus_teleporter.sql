@@ -1,10 +1,14 @@
+-- Fix starting errors with `unit_class` and `MovementType`, later will be change for one file
+-- Thanks Spyder (SiOMProject)
 -- Patch acherus
 DELETE FROM `creature_template` WHERE `entry` = 438700;
 INSERT INTO `creature_template` VALUES (438700, 0, 0, 0, 0, 0, 18, 0, 18, 0, 'Acherus_porter', NULL, NULL, 0, 80, 80, 0, 35, 35, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0);
 UPDATE `creature_template` SET `faction_A`=2082 WHERE `entry`=438700;
 UPDATE `creature_template` SET `faction_H`=2082 WHERE `entry`=438700;
 UPDATE `creature_template` SET `npcflag`=1 WHERE `entry`=438700;
+UPDATE `creature_template` SET `MovementType`=0 WHERE `entry`=438700;
 UPDATE `creature_template` SET `unit_flags`=33554432 WHERE `entry`=438700;
+UPDATE `creature_template` SET `unit_class`=1 WHERE `entry`=438700;
 UPDATE `creature_template` SET `flags_extra`=130 WHERE `entry`=438700;
 DELETE FROM `creature` WHERE `id`=438700;
 INSERT INTO `creature` (`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`DeathState`,`MovementType`) VALUES
