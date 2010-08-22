@@ -27,6 +27,8 @@ INSERT INTO `npc_spellclick_spells` VALUES (34567, 65684, 0, 0, 0, 1, 0, 0, 0), 
 
 -- INSERT INTO `spell_script_target` VALUES (65875, 1, 34497), (65876, 1, 34496);
 
+-- NOT NECESSARY AT THE MOMENTO BECAUSE ROCORE IS USSING TC TOC RAID SCRIPTS
+/*
 DELETE FROM script_texts where `entry` <= -1600205 AND `entry` >= -1600224;
 DELETE FROM script_texts where `entry`='-1600229';
 DELETE FROM script_texts where `entry` <= -1600234 AND `entry` >= -1600237;
@@ -91,3 +93,4 @@ INSERT INTO `script_texts` VALUES ('34564', '-1713558', 'F-lakkh shir!', null, n
 INSERT INTO `script_texts` VALUES ('34564', '-1713559', 'Another soul to sate the host.', null, null, null, null, null, null, null, null, '16237', '1', '0', '0', null);
 INSERT INTO `script_texts` VALUES ('34564', '-1713560', 'I have failed you, master...', null, null, null, null, null, null, null, null, '16238', '1', '0', '0', null);
 INSERT INTO `script_texts` VALUES ('34564', '-1713561', 'Highlord Tirion Fordring yells: Champions, you''re alive! Not only have you defeated every challenge of the Trial of the Crusader, but thwarted Arthas directly! Your skill and cunning will prove to be a powerful weapon against the Scourge. Well done! Allow one of my mages to transport you back to the surface!', null, null, null, null, null, null, null, null, '0', '1', '0', '0', null);
+*/
