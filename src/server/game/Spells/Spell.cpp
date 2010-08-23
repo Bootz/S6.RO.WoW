@@ -107,7 +107,6 @@ void SpellCastTargets::setUnitTarget(Unit *target)
 
 void SpellCastTargets::setSrc(float x, float y, float z)
 {
-
     m_srcPos.Relocate(x, y, z);
     m_srcTransGUID = 0;
     m_targetMask |= TARGET_FLAG_SOURCE_LOCATION;
@@ -115,12 +114,9 @@ void SpellCastTargets::setSrc(float x, float y, float z)
 
 void SpellCastTargets::setSrc(Position &pos)
 {
-    if (pos)
-	{
-	m_srcPos.Relocate(pos);
+    m_srcPos.Relocate(pos);
     m_srcTransGUID = 0;
     m_targetMask |= TARGET_FLAG_SOURCE_LOCATION;
-	}
 }
 
 void SpellCastTargets::setSrc(WorldObject &wObj)
