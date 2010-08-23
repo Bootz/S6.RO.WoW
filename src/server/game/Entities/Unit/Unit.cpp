@@ -860,7 +860,8 @@ uint32 Unit::DealDamage(Unit *pVictim, uint32 damage, CleanDamage const* cleanDa
                     {
                         uint32 channelInterruptFlags = spell->m_spellInfo->ChannelInterruptFlags;
                         if (channelInterruptFlags & CHANNEL_FLAG_DELAY)
-                            spell->DelayedChannel();
+                            if (damagetype != DOT) // DoTs don't cause pushback
+                                spell->DelayedChannel();
                     }
                 }
             }
