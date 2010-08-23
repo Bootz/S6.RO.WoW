@@ -84,6 +84,11 @@ public:
 		void SetPrisoner(Unit* uPrisoner)
 		{
 			BoneSpikeGUID = uPrisoner->GetGUID();
+			float x, y, z;
+			me->GetPosition(x, y, z);
+			uPrisoner->SetUInt32Value(UNIT_NPC_EMOTESTATE, EMOTE_STATE_DROWNED);
+			DoCast(unit, SPELL_BONE_SPIKE_IMPALING, true);
+			uPrisoner->NearTeleportTo(x, y, z+4.0f, unit->GetOrientation(), false);
 		}
 
 		void Reset()
