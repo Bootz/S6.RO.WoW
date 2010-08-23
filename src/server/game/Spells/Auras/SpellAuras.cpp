@@ -1103,6 +1103,21 @@ void Aura::HandleAuraSpecificMods(AuraApplication const * aurApp, Unit * caster,
 						if (target->getPowerType() == POWER_MANA)
 							target->CastSpell(target, 60242, true);
 						break;
+                    case 69674:
+                    case 71224:
+                    case 73022:
+                    case 73023:
+                        if(target)
+                           target->CastSpell(target, 69706, true); //Infection
+                        break;
+                    case 70308:
+                        if(target)
+                           target->CastSpell(target, 70311, true); //Aboma call
+                        break;
+                    case 69290:
+                        if(target)
+                            target->CastSpell(target, 69291, true); //Gaseous spore
+                        break;
                     case 72368: // Shared Suffering
                     case 72369:
                         if (caster)

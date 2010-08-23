@@ -1822,9 +1822,29 @@ void AuraEffect::PeriodicTick(Unit * target, Unit * caster) const
                 target->CastSpell((Unit*)NULL , GetAmount() , true);
             break;
         case SPELL_AURA_PERIODIC_DUMMY:
+            //Saurfang Blood Link
+            if(GetId() == 72178)
+                caster->CastSpell(caster, 72202, true);
+			//Blood beast Blood Link
+            if(GetId() == 72176)
+                caster->CastSpell(caster, 72202, true);
             PeriodicDummyTick(target, caster);
             break;
         case SPELL_AURA_PERIODIC_TRIGGER_SPELL:
+            switch (GetId())
+            {
+                case 70842: // Mana Barrier (hack)
+                {
+                    uint32 uiDamage = caster->GetMaxHealth() - caster->GetHealth();
+                    uint32 uiMana = caster->GetPower(POWER_MANA);
+                    if(uiDamage < uiMana)
+                    {
+                        caster->ModifyHealth(uiDamage);
+                        caster->ModifyPower(POWER_MANA, -uiDamage);
+                    } else caster->RemoveAurasDueToSpell(70842);
+                    return;
+                }
+            }
             TriggerSpell(target, caster);
             break;
         case SPELL_AURA_PERIODIC_TRIGGER_SPELL_WITH_VALUE:

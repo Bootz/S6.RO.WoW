@@ -438,6 +438,24 @@ void Spell::SpellDamageSchoolDmg(uint32 effect_idx)
                         damage = unitTarget->GetMaxHealth() / 2;
                         break;
                     }
+                    // Bone Storm
+                    case 69075:
+                    case 70834:
+                    case 70835:
+                    case 70836:
+                    {
+                        if (unitTarget->GetGUID() == m_caster->GetGUID())
+                            return;
+
+                        float radius = 12.0f;
+                        float distance = m_caster->GetDistance2d(unitTarget);
+                        int bp0 = m_spellInfo->EffectBasePoints[0];
+                        if(!radius || !distance || !bp0)
+                            return;
+
+                        damage = bp0 / (distance / radius);
+                        break;
+                    }                    
                     // Tympanic Tantrum
                     case 62775:
                     {
@@ -4858,6 +4876,62 @@ void Spell::EffectScriptEffect(uint32 effIndex)
                         }
 
                     }
+                    return;
+                }
+                case 72219: //gastric bloat
+                {
+                    if(!m_caster)
+                        return;
+
+                    Aura* GastricAur = m_caster->GetAura(72219);
+
+                    if (GastricAur && GastricAur->GetCharges() > 9)
+                        m_caster->CastSpell(m_caster, 72227, true);  //gastric explosion
+                        m_caster->RemoveAurasDueToSpell(72219);
+                        return;
+                }
+                case 69200:                                 // Raging Spirit
+                {
+                    if (!unitTarget)
+                        return;
+
+                    unitTarget->CastSpell(unitTarget, 69201, true);
+                    return;
+                }
+                case 71446:                                 // Twilight Bloodbolt 10N
+                case 71478:                                 // Twilight Bloodbolt 25N
+                case 71479:                                 // Twilight Bloodbolt 10H
+                case 71480:                                 // Twilight Bloodbolt 25H
+                {
+                    if (!unitTarget)
+                        return;
+
+                    uint32 spellId = 71447;
+                    switch (m_spellInfo->Id)
+                    {
+                        case 71478: spellId = 71481; break;
+                        case 71479: spellId = 71482; break;
+                        case 71480: spellId = 71483; break;
+                    }
+                    unitTarget->CastSpell(unitTarget, spellId, true);
+                    return;
+                }
+                case 71899:                                 // Bloodbolt Whirl 10N
+                case 71900:                                 // Bloodbolt Whirl 25N
+                case 71901:                                 // Bloodbolt Whirl 10H
+                case 71902:                                 // Bloodbolt Whirl 25H
+                {
+                    if (!unitTarget)
+                        return;
+
+                    uint32 spellId = 71446;
+                    switch (m_spellInfo->Id)
+                    {
+                        case 71900: spellId = 71478; break;
+                        case 71901: spellId = 71479; break;
+                        case 71902: spellId = 71480; break;
+                    }
+                    m_caster->CastSpell(unitTarget, spellId, true);
                     return;
                 }
                 case 45204: // Clone Me!
