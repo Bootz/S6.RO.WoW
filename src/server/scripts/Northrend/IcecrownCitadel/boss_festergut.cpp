@@ -89,6 +89,7 @@ public:
 		uint32 m_uiBerserkTimer;
 		uint32 m_uiGastricBoom;
 		uint32 m_uiBlightTimer;
+                uint32 m_uiDamageTimer;
 		uint64 uiPutricide;
 
 		void Reset()
@@ -101,6 +102,7 @@ public:
 			m_uiBerserkTimer = 300000;
 			m_uiGastricBoom = 20000;
 			m_uiBlightTimer = 4000;
+                        m_uiDamageTimer = 4000;
 			uiPutricide = 0;
 			Inhalestack = 0;
 
@@ -160,7 +162,7 @@ public:
 			}
 		}
 
-		/*   void SpellHitTarget(Unit *pTarget,const SpellEntry* spell)
+		void SpellHitTarget(Unit *pTarget,const SpellEntry* spell)
 		{
 		switch(spell->Id)
 		{
@@ -183,7 +185,7 @@ public:
 		pTarget->CastSpell(pTarget, SPELL_INOCULATED, true);
 		break;
 		}
-		}*/
+		}
 
 		void UpdateAI(const uint32 uiDiff)
 		{
@@ -240,6 +242,24 @@ public:
 				}
 				m_uiBlightTimer = 2000;
 			} else  m_uiBlightTimer -= uiDiff;
+                        
+			if (me->HasAura(SPELL_GAS_VISUAL_SMALL) && m_uiDamageTimer < uiDiff)
+			{ 
+				me->CastCustomSpell(GASEOUSBLIGHT_INH3 , SPELLVALUE_RADIUS_MOD, 60.0f);
+                                m_uiDamageTimer = 2000;
+                        } else m_uiDamageTimer -= uiDiff;
+
+                        if (me->HasAura(SPELL_GAS_VISUAL_MEDIUM) && m_uiDamageTimer < uiDiff)
+			{ 
+				me->CastCustomSpell(GASEOUSBLIGHT_INH2 , SPELLVALUE_RADIUS_MOD, 60.0f);
+                                m_uiDamageTimer = 2000;
+                        } else m_uiDamageTimer -= uiDiff;
+
+                        if (me->HasAura(SPELL_GAS_VISUAL_BIG) && m_uiDamageTimer < uiDiff)
+			{ 
+				me->CastCustomSpell(GASEOUSBLIGHT_INH1 , SPELLVALUE_RADIUS_MOD, 60.0f);
+                                m_uiDamageTimer = 2000;
+                        } else m_uiDamageTimer -= uiDiff;
 
 			if (m_uiGastricBloatTimer < uiDiff)
 			{
@@ -287,7 +307,7 @@ public:
 					Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
 					if (pTarget && !pTarget->HasAura(SPELL_GAS_SPORES))
 					{
-						me->AddAura(SPELL_GAS_SPORES, pTarget);
+						me->ApplyAura(SPELL_GAS_SPORES, pTarget);
 						me->PlayDirectSound(16911);
 						me->MonsterTextEmote(EMOTE_GAS_SPORE, 0, true);
 					}
