@@ -768,6 +768,6 @@ void AddSC_icecrown_citadel_trash()
 	new npc_death_speaker_high_priest;
 	new npc_death_speaker_servant;
 	new npc_death_speaker_zealot;
-	new npc_cult_adherent;
-	new npc_cult_fanatic;
+//	new npc_cult_adherent;
+//	new npc_cult_fanatic;
 }
