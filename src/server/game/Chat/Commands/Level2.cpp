@@ -2290,7 +2290,7 @@ bool ChatHandler::HandlePInfoCommand(const char* args)
         if (email.empty())
             email = "-";
 
-        if (!m_session || m_session->GetSecurity() >= security)
+        if (!m_session || m_session->GetSecurity() >= AccountTypes(security))
         {
             last_ip = fields[3].GetCppString();
             last_login = fields[4].GetCppString();
@@ -3105,7 +3105,7 @@ bool ChatHandler::HandleWpShowCommand(const char* args)
                 return false;
             }
 
-            sLog.outDebug("DEBUG: UPDATE waypoint_data SET wpguid = '%u");
+            sLog.outDebug("DEBUG: UPDATE waypoint_data SET wpguid = '%u' WHERE id = '%u' and point = '%u'", wpCreature->GetGUIDLow(), pathid, point);
             // set "wpguid" column to the visual waypoint
             WorldDatabase.PExecute("UPDATE waypoint_data SET wpguid = '%u' WHERE id = '%u' and point = '%u'", wpCreature->GetGUIDLow(), pathid, point);
 
@@ -3632,7 +3632,7 @@ bool ChatHandler::HandleEventStartCommand(const char* args)
 
     GameEventMgr::GameEventDataMap const& events = sGameEventMgr.GetEventMap();
 
-    if (event_id < 1 || event_id >=events.size())
+    if (event_id < 1 || uint32(event_id) >= events.size())
     {
         SendSysMessage(LANG_EVENT_NOT_EXIST);
         SetSentErrorMessage(true);
@@ -3673,7 +3673,7 @@ bool ChatHandler::HandleEventStopCommand(const char* args)
 
     GameEventMgr::GameEventDataMap const& events = sGameEventMgr.GetEventMap();
 
-    if (event_id < 1 || event_id >=events.size())
+    if (event_id < 1 || uint32(event_id) >= events.size())
     {
         SendSysMessage(LANG_EVENT_NOT_EXIST);
         SetSentErrorMessage(true);
@@ -4324,7 +4324,7 @@ bool ChatHandler::HandleNpcSetLinkCommand(const char* args)
 
     if (!pCreature->GetDBTableGUIDLow())
     {
-        PSendSysMessage("Selected creature isn't in creature table", pCreature->GetGUIDLow());
+        PSendSysMessage("Selected creature %u isn't in creature table", pCreature->GetGUIDLow());
         SetSentErrorMessage(true);
         return false;
     }
