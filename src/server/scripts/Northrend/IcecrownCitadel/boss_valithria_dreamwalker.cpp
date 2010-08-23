@@ -104,19 +104,14 @@ class boss_valithria : public CreatureScript
 public:
     boss_valithria() : CreatureScript("boss_valithria") { }
 
-    CreatureAI* GetAI(Creature* pCreature) const
-    {
-        return new boss_valithriaAI (pCreature);
-    }
-
     struct boss_valithriaAI : public BossAI
     {
         boss_valithriaAI(Creature* pCreature) : BossAI(pCreature, DATA_VALITHRIA_DREAMWALKER_EVENT), summons(me)
         {
-            pInstance = me->GetInstanceData();
+            pInstance = me->GetInstanceScript();
         }
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
 
         uint32 Phase;
         uint32 m_uiPortalTimer;
@@ -313,6 +308,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_valithriaAI (pCreature);
+    }
+
 };
 
 class npc_dreamportal_icc : public CreatureScript
@@ -320,19 +320,14 @@ class npc_dreamportal_icc : public CreatureScript
 public:
     npc_dreamportal_icc() : CreatureScript("npc_dreamportal_icc") { }
 
-    CreatureAI* GetAI(Creature* pCreature) const
-    {
-        return new npc_dreamportal_iccAI (pCreature);
-    }
-
     struct npc_dreamportal_iccAI : public ScriptedAI
     {
         npc_dreamportal_iccAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
 
         uint32 m_uiStateTimer;
 
@@ -375,6 +370,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_dreamportal_iccAI (pCreature);
+    }
+
 };
 
 class npc_skellmage_icc : public CreatureScript
@@ -382,19 +382,14 @@ class npc_skellmage_icc : public CreatureScript
 public:
     npc_skellmage_icc() : CreatureScript("npc_skellmage_icc") { }
 
-    CreatureAI* GetAI(Creature* pCreature) const
-    {
-        return new npc_skellmage_iccAI (pCreature);
-    }
-
     struct npc_skellmage_iccAI : public ScriptedAI
     {
         npc_skellmage_iccAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
 
         uint32 m_uiVolleyTimer;
         uint32 m_uiColumnTimer;
@@ -451,6 +446,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_skellmage_iccAI (pCreature);
+    }
+
 };
 
 class npc_fireskell_icc : public CreatureScript
@@ -458,19 +458,14 @@ class npc_fireskell_icc : public CreatureScript
 public:
     npc_fireskell_icc() : CreatureScript("npc_fireskell_icc") { }
 
-    CreatureAI* GetAI(Creature* pCreature) const
-    {
-        return new npc_fireskell_iccAI (pCreature);
-    }
-
     struct npc_fireskell_iccAI : public ScriptedAI
     {
         npc_fireskell_iccAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
 
         uint32 m_uiWasteTimer;
         uint32 m_uiFireballTimer;
@@ -507,26 +502,25 @@ public:
             DoMeleeAttackIfReady();
         }
     };
-class npc_suppressor_icc : public CreatureScript
-
-};
-{
-public:
-    npc_suppressor_icc() : CreatureScript("npc_suppressor_icc") { }
 
     CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new npc_suppressor_iccAI (pCreature);
+        return new npc_fireskell_iccAI (pCreature);
     }
+};
+class npc_suppressor_icc : public CreatureScript
+{
+public:
+    npc_suppressor_icc() : CreatureScript("npc_suppressor_icc") { }
 
     struct npc_suppressor_iccAI : public ScriptedAI
     {
         npc_suppressor_iccAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
 
         uint32 m_uiCheckTimer;
 
@@ -550,6 +544,11 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_suppressor_iccAI (pCreature);
+    }
+
 };
 
 class npc_manavoid_icc : public CreatureScript
@@ -557,19 +556,14 @@ class npc_manavoid_icc : public CreatureScript
 public:
     npc_manavoid_icc() : CreatureScript("npc_manavoid_icc") { }
 
-    CreatureAI* GetAI(Creature* pCreature) const
-    {
-        return new npc_manavoid_iccAI (pCreature);
-    }
-
     struct npc_manavoid_iccAI : public ScriptedAI
     {
         npc_manavoid_iccAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
 
         void InitializeAI()
         {
@@ -582,26 +576,26 @@ public:
             DoStartNoMovement(me->getVictim());
         }
     };
-class npc_glutabomination_icc : public CreatureScript
-
-};
-{
-public:
-    npc_glutabomination_icc() : CreatureScript("npc_glutabomination_icc") { }
 
     CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new npc_glutabomination_iccAI (pCreature);
+        return new npc_manavoid_iccAI (pCreature);
     }
+};
+
+class npc_glutabomination_icc : public CreatureScript
+{
+public:
+    npc_glutabomination_icc() : CreatureScript("npc_glutabomination_icc") { }
 
     struct npc_glutabomination_iccAI : public ScriptedAI
     {
         npc_glutabomination_iccAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
 
         uint32 m_uiSprayTimer;
 
@@ -637,26 +631,26 @@ public:
             DoMeleeAttackIfReady();
         }
     };
-class npc_blistzombie_icc : public CreatureScript
-
-};
-{
-public:
-    npc_blistzombie_icc() : CreatureScript("npc_blistzombie_icc") { }
 
     CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new npc_blistzombie_iccAI (pCreature);
+        return new npc_glutabomination_iccAI (pCreature);
     }
+};
+
+class npc_blistzombie_icc : public CreatureScript
+{
+public:
+    npc_blistzombie_icc() : CreatureScript("npc_blistzombie_icc") { }
 
     struct npc_blistzombie_iccAI : public ScriptedAI
     {
         npc_blistzombie_iccAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
 
         uint32 m_uiBurstTTimer;
         uint32 m_uiDelayTimer;
@@ -693,6 +687,13 @@ public:
             DoMeleeAttackIfReady();
         }
     };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_blistzombie_iccAI (pCreature);
+    }
+};
+
 class npc_impaling_spear : public CreatureScript
 {
 public:
@@ -831,26 +832,20 @@ public:
 	}
 
 };
-class npc_dreamcloud_icc : public CreatureScript
 
-};
+class npc_dreamcloud_icc : public CreatureScript
 {
 public:
     npc_dreamcloud_icc() : CreatureScript("npc_dreamcloud_icc") { }
-
-    CreatureAI* GetAI(Creature* pCreature) const
-    {
-        return new npc_dreamcloud_iccAI (pCreature);
-    }
 
     struct npc_dreamcloud_iccAI : public ScriptedAI
     {
         npc_dreamcloud_iccAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceData();
+            pInstance = pCreature->GetInstanceScript();
         }
 
-        ScriptedInstance* pInstance;
+        InstanceScript* pInstance;
 
         uint32 m_uiSpawnTimer;
         uint32 m_uiDelayTimer;
@@ -891,6 +886,11 @@ public:
             } else m_uiDelayTimer -= diff;
         }
     };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_dreamcloud_iccAI (pCreature);
+    }
 
 };
 

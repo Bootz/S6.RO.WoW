@@ -153,7 +153,7 @@ public:
 		pPlayer->SEND_GOSSIP_MENU(DEFAULT_GOSSIP_MESSAGE, pGO->GetGUID());
 
 		return true;
-	};
+	}
 
 };
 
