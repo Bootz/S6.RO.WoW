@@ -38,9 +38,9 @@ enum Yells
 
 enum Spells
 {
-	SPELL_SABER_SLASH_10_NORMAL          =  71021, //69055
-	SPELL_SABER_SLASH_25_NORMAL          =  40816, //70814
-	SPELL_SABER_SLASH_10_HEROIC          =  71021, //70814
+	SPELL_SABER_SLASH_10_NORMAL          =  69055, //69055
+	SPELL_SABER_SLASH_25_NORMAL          =  70814, //70814
+	SPELL_SABER_SLASH_10_HEROIC          =  70814, //70814
 	SPELL_SABER_SLASH_25_HEROIC          =  70814, //70814
 	SPELL_COLD_FLAME_10_NORMAL           =  69145, //69146 - was the old spell - and it was the wrong one - or maybe not but lets try using this for the given situation
 	SPELL_COLD_FLAME_25_NORMAL           =  69145, //
@@ -217,6 +217,43 @@ public:
 			ScriptedAI::MoveInLineOfSight(who);
 		}
 
+		void Flame()
+        {
+			float x, y, z;
+			Creature* Flame1 = me->SummonCreature(CREATURE_COLD_FLAME, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN, 12000);
+			if(Flame1)
+        {
+            Flame1->GetNearPoint2D(x, y, 20, 0);
+            Flame1->GetMotionMaster()->MovePoint(0, x, y, me->GetPositionZ());
+            Flame1->SetSpeed(MOVE_WALK, 0.4f, true);
+            Flame1->SetSpeed(MOVE_RUN, 0.4f, true);
+        }
+        Creature* Flame2 = me->SummonCreature(CREATURE_COLD_FLAME, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), M_PI/2, TEMPSUMMON_TIMED_DESPAWN, 12000);
+        if(Flame2)
+        {
+            Flame2->GetNearPoint2D(x, y, 20, M_PI/2);
+            Flame2->GetMotionMaster()->MovePoint(0, x, y, me->GetPositionZ());
+            Flame2->SetSpeed(MOVE_WALK, 0.4f, true);
+            Flame2->SetSpeed(MOVE_RUN, 0.4f, true);
+        }
+        Creature* Flame3 = me->SummonCreature(CREATURE_COLD_FLAME, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), M_PI*(M_PI/2), TEMPSUMMON_TIMED_DESPAWN, 12000);
+        if(Flame3)
+        {
+            Flame3->GetNearPoint2D(x, y, 20, M_PI*(M_PI/2));
+            Flame3->GetMotionMaster()->MovePoint(0, x, y, me->GetPositionZ());
+            Flame3->SetSpeed(MOVE_WALK, 0.4f, true);
+            Flame3->SetSpeed(MOVE_RUN, 0.4f, true);
+        }
+        Creature* Flame4 = me->SummonCreature(CREATURE_COLD_FLAME, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), M_PI, TEMPSUMMON_TIMED_DESPAWN, 12000);
+        if(Flame4)
+        {
+            Flame4->GetNearPoint2D(x, y, 20, M_PI);
+            Flame4->GetMotionMaster()->MovePoint(0, x, y, me->GetPositionZ());
+            Flame4->SetSpeed(MOVE_WALK, 0.4f, true);
+            Flame4->SetSpeed(MOVE_RUN, 0.4f, true);
+        }
+    }
+
 		void UpdateAI(const uint32 uiDiff)
 		{
 			if (!UpdateVictim())
@@ -250,16 +287,17 @@ public:
 						m_uiBoneSpikeGraveyardTimer = 15000;
 					} else m_uiBoneSpikeGraveyardTimer -= uiDiff;
 
-					if (m_uiColdFlameTimer <= uiDiff)
-					{
-						me->SummonCreature(CREATURE_COLD_FLAME, me->GetPositionX()+20, me->GetPositionY()+20, me->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN, 8000);
-						me->SummonCreature(CREATURE_COLD_FLAME, me->GetPositionX()-20, me->GetPositionY()-20, me->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN, 8000);
-						me->SummonCreature(CREATURE_COLD_FLAME, me->GetPositionX()+20, me->GetPositionY()-20, me->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN, 8000);
-						me->SummonCreature(CREATURE_COLD_FLAME, me->GetPositionX()-20, me->GetPositionY()+20, me->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN, 8000);
-						m_uiColdFlameTimer = 15000;
-					} else m_uiColdFlameTimer -= uiDiff;
-				}
-			}
+			if (m_uiColdFlameTimer <= uiDiff)
+			{
+                if(Unit* pTarget = SelectUnit(SELECT_TARGET_NEAREST, 1))
+                {
+                    float x,y,z;
+                    float angle = me->GetAngle(pTarget);
+                    pTarget->GetPosition(x,y,z);
+					Flame();
+                }
+                m_uiColdFlameTimer = 7000;
+            } else m_uiColdFlameTimer -= uiDiff;
 
 			if (getDifficulty() == RAID_DIFFICULTY_10MAN_HEROIC || getDifficulty() == RAID_DIFFICULTY_25MAN_HEROIC)
 			{
@@ -297,21 +335,9 @@ public:
 				if (m_uiSaberSlashTimer <= uiDiff)
 				{
 					Unit* pTarget = SelectUnit(SELECT_TARGET_TOPAGGRO, 0);
-					me->CastCustomSpell(RAID_MODE(SPELL_SABER_SLASH_10_NORMAL,SPELL_SABER_SLASH_25_NORMAL,SPELL_SABER_SLASH_10_HEROIC,SPELL_SABER_SLASH_10_HEROIC) , SPELLVALUE_RADIUS_MOD, 20);
 					DoCast(pTarget, RAID_MODE(SPELL_SABER_SLASH_10_NORMAL,SPELL_SABER_SLASH_25_NORMAL,SPELL_SABER_SLASH_10_HEROIC,SPELL_SABER_SLASH_10_HEROIC));
 					m_uiSaberSlashTimer = 9000;
 				} else m_uiSaberSlashTimer -= uiDiff;
-
-				if (me->HasAura(SPELL_BONE_STORM_CHANNEL))
-				{
-					if (m_uiMove <= uiDiff)
-					{
-						Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
-						me->GetMotionMaster()->MovePoint(0, pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ());
-						m_uiMove = 9500;
-					}
-				} else m_uiMove -= uiDiff;
-
 			}
 
 			if (me->HasAura(SPELL_BONE_STORM_CHANNEL))
@@ -327,6 +353,13 @@ public:
 					me->RemoveAurasDueToSpell(SPELL_BONE_STORM_CHANNEL);
 					m_uiBoneStormRemoveTimer = 20000;
 				} else m_uiBoneStormRemoveTimer -= uiDiff;
+
+				if (m_uiMove <= uiDiff)
+				{
+						Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
+						me->GetMotionMaster()->MovePoint(0, pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ());
+						m_uiMove = 9500;
+				} else m_uiMove -= uiDiff;
 			}
 
 			DoMeleeAttackIfReady();
@@ -370,7 +403,7 @@ public:
 			if(m_uiColdFlameTimer <= uiDiff)
 			{
 				DoCast(me,RAID_MODE(SPELL_COLD_FLAME_10_NORMAL,SPELL_COLD_FLAME_25_NORMAL,SPELL_COLD_FLAME_10_HEROIC,SPELL_COLD_FLAME_25_HEROIC));
-				m_uiColdFlameTimer = 1000;
+				m_uiColdFlameTimer = 2000;
 			} else m_uiColdFlameTimer -= uiDiff;
 
 			if(m_uiColdDespawn <= uiDiff)
