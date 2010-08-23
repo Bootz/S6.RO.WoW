@@ -2088,7 +2088,7 @@ void Spell::EffectTriggerSpell(uint32 effIndex)
         {                       
              if (m_caster && unitTarget->GetTypeId() == 37690)                 
              {                               
-             unitTarget->RemoveAuraFromStack(70347, 3, REMOVE_AURA_BY_DEFAULT)
+             unitTarget->RemoveAuraFromStack(70347, 3, REMOVE_AURA_BY_DEFAULT);
              m_caster->ModifyPower(POWER_ENERGY, +4) // You get 4 energy right?
              break;                  
              }                       
