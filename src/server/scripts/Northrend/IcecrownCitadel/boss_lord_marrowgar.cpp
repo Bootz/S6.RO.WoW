@@ -88,8 +88,16 @@ public:
 			uPrisoner->EnterVehicle(vehicle, 0);
 		}
 
+		void PassengerBoarded(Unit * who, int8 /*seatId*/, bool apply)
+		{
+                if (!apply)
+                    return;
+
+                me->AddAura(SPELL_BONE_SPIKE_IMPALING, who);
+		}
 		void Reset()
 		{
+			me->ForcedDespawn();
 			BoneSpikeGUID = 0;
 		}
 
@@ -120,9 +128,9 @@ public:
 		void UpdateAI(const uint32 diff)
 		{
 			if(!BoneSpikeGUID)
-			eturn;
+			return;
 			Unit* boned = Unit::GetUnit((*me), BoneSpikeGUID);
-			if ((boned && boned->isAlive() && !boned->HasAura(SPELL_SPIKE_IMPALING)) || !boned)
+			if ((boned && boned->isAlive() && !boned->HasAura(SPELL_BONE_SPIKE_IMPALING)) || !boned)
 				me->Kill(me);
 		}
 	};
@@ -392,4 +400,8 @@ void AddSC_boss_lord_marrowgar()
 	new boss_lord_marrowgar;
 	new npc_cold_flame;
 	new npc_bone_spike;
+
+    // has to be done or else players threat will be wiped for impaled player and he will absorb all damage
+    if (VehicleSeatEntry* vehSeat = const_cast<VehicleSeatEntry*>(sVehicleSeatStore.LookupEntry(6206)))
+        vehSeat->m_flags |= 0x400;
 }
