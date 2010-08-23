@@ -5599,6 +5599,8 @@ void AuraEffect::HandleAuraDummy(AuraApplication const * aurApp, uint8 mode, boo
 	OutdoorPvPWG *pvpWG = (OutdoorPvPWG*)sOutdoorPvPMgr.GetOutdoorPvPToZoneId(4197);
 
     Unit * caster = GetCaster();
+    if (!caster)
+		return;
 
     if (mode & AURA_EFFECT_HANDLE_REAL)
     {
