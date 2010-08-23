@@ -3,7 +3,7 @@
 ALTER TABLE db_version CHANGE COLUMN required_2_world_fixes required_3_world_icecrown_citadel bit;
 
 -- Cleaning scripts names for npc and bosses
-UPDATE `creature_template` SET `ScriptName`='' WHERE `entry` IN (37813,38508,36626,36855,38222,36678,37697,36853,36597,38995,36633,36609,37695,38757,36701,36725,37011,36724,37012,37007,36811,36807,36829,36844,36808,38135,37949,36627,36897,36899,37973,37970,37972,36789,38429,38068,38369,38332,38454,38422,38451);
+UPDATE `creature_template` SET `ScriptName`='' WHERE `entry` IN (37813,38508,36626,36855,38222,36672,36612,38711,36678,37697,36853,36597,38995,36633,36609,37695,38757,36701,36725,37011,36724,37012,37007,36811,36807,36829,36844,36808,38135,37949,36627,36897,36899,37973,37970,37972,36789,38429,38068,38369,38332,38454,38422,38451);
 UPDATE `gameobject_template` SET `ScriptName`='' WHERE `entry` IN (202235,202242,202244,202243,202245,202246,202182,202181);
 DELETE FROM `creature` WHERE `id`=38995;
 
@@ -255,6 +255,9 @@ UPDATE `creature_template` SET `ScriptName`='boss_sindragosa' WHERE (`entry`='36
 UPDATE `creature_template` SET `ScriptName`='boss_valithria' WHERE `entry` = 36789;
 UPDATE `creature_template` SET `ScriptName`='boss_the_lich_king' WHERE (`entry`='36597');
 UPDATE `creature_template` SET `ScriptName`='boss_rotface' WHERE `entry`= 36627;
+UPDATE `creature_template` SET `ScriptName`='boss_lord_marrowgar' WHERE (`entry`='36612');
+UPDATE `creature_template` SET `ScriptName`='npc_cold_flame' WHERE (`entry`='36672');	 	
+UPDATE `creature_template` SET `ScriptName`='npc_bone_spike' WHERE (`entry`='38711'); 
 
 # Mobs
 UPDATE `creature_template` SET `ScriptName`='npc_tirion_icc' WHERE (`entry`='38995');
@@ -1473,4 +1476,3 @@ INSERT INTO `achievement_criteria_data` (`criteria_id`,`type`,`value1`,`value2`)
 (13051,12,3,0), -- Heroic: Storming the Citadel (25 player), Lady Deathwhisper, mode requirement (25H)
 (13052,12,3,0), -- Heroic: Storming the Citadel (25 player), Claim victory in the Gunship Battle, mode requirement (25H)
 (13053,12,3,0); -- Heroic: Storming the Citadel (25 player), The Deathbringer, mode requirement (25H)
-
