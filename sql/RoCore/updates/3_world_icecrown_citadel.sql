@@ -1477,3 +1477,107 @@ INSERT INTO `achievement_criteria_data` (`criteria_id`,`type`,`value1`,`value2`)
 (13051,12,3,0), -- Heroic: Storming the Citadel (25 player), Lady Deathwhisper, mode requirement (25H)
 (13052,12,3,0), -- Heroic: Storming the Citadel (25 player), Claim victory in the Gunship Battle, mode requirement (25H)
 (13053,12,3,0); -- Heroic: Storming the Citadel (25 player), The Deathbringer, mode requirement (25H)
+
+UPDATE `creature_template` SET `unit_flags` = 528386, `type_flags` = 138, `mechanic_immune_mask` = 646658835 WHERE `entry` = 38456;
+UPDATE `creature_template` SET `modelid1` = 11686, `modelid3` = 11686, `AIName` = 'EventAI' WHERE `entry` = 38879;
+DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=38879);
+INSERT INTO `creature_ai_scripts` VALUES 
+(3887900, 38879, 9, 0, 100, 6, 1, 30, 8000, 10000, 11, 70460, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, '');
+UPDATE `creature_template` SET `spell4` = 34873, `spell5` = 60534 WHERE `entry` = 27258;
+DELETE FROM `creature_questrelation` WHERE `quest` = 12779;
+DELETE FROM `gameobject_questrelation` WHERE `quest` = 12779;
+UPDATE `item_template` SET `StartQuest`=0 WHERE `StartQuest` = 12779;
+INSERT INTO `creature_questrelation` (`id`, `quest`) VALUES (29110, 12779);
+UPDATE `creature_template` SET `npcflag`=`npcflag`|2 WHERE `entry` = 29110;
+INSERT INTO `creature_questrelation` (`id`, `quest`) VALUES (25462, 12779);
+UPDATE `creature_template` SET `npcflag`=`npcflag`|2 WHERE `entry` = 25462;
+DELETE FROM `creature_involvedrelation` WHERE `quest` = 12779;
+DELETE FROM `gameobject_involvedrelation` WHERE `quest` = 12779;
+INSERT INTO `creature_involvedrelation` (`id`, `quest`) VALUES (29110, 12779);
+UPDATE `creature_template` SET `npcflag`=`npcflag`|2 WHERE `entry`=29110;
+INSERT INTO `creature_involvedrelation` (`id`, `quest`) VALUES (25462, 12779);
+UPDATE `creature_template` SET `npcflag`=`npcflag`|2 WHERE `entry`=25462;
+DELETE FROM `creature` WHERE `id`=25462;
+INSERT INTO `creature` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`DeathState`,`MovementType`) VALUES
+(96146, 25462, 609, 1, 7, 0, 0, 2345.3, -5671.36, 426.03, 3.78, 120, 0, 0, 27890000, 0, 0, 0),
+(5683368, 25462, 609, 1, 64, 0, 0, 2310.21, -5741.9, 161.147, 0.561972, 300, 0, 0, 17964000, 0, 0, 0);
+DELETE FROM `creature` WHERE `id`=25462;
+INSERT INTO `creature` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`DeathState`,`MovementType`) VALUES
+(96146, 25462, 609, 1, 7, 0, 0, 2345.3, -5671.36, 426.03, 3.78, 120, 0, 0, 27890000, 0, 0, 0),
+(5683368, 25462, 609, 1, 64, 0, 0, 2310.21, -5741.9, 161.147, 0.561972, 300, 0, 0, 17964000, 0, 0, 0);
+# Cleanup
+UPDATE `creature_template` SET `ScriptName`='' WHERE `entry` IN (SELECT `id` FROM `creature` WHERE `map` = 631);
+
+# GameObject
+UPDATE `gameobject_template` SET `ScriptName` = 'icecrown_teleporter' WHERE `entry` IN (202223,202235,202242,202243,202244,202245,202246);
+UPDATE `gameobject_template` SET `flags` = 32 WHERE `entry` IN (202235,202242,202243,202244,202245,202246);
+UPDATE `gameobject_template` SET `flags` = 52 WHERE `entry` = 202223;
+UPDATE `gameobject_template` SET `ScriptName` = '', `data10` = 70308 WHERE `entry` = 201584;
+UPDATE `gameobject` SET `phaseMask` = '1' WHERE `id` IN (202242,202243,202244,202245,202235,202223,202246);
+
+# Other
+UPDATE `creature_template` SET `faction_A` = 1802, `faction_H` = 1801, `type_flags` = 67113036 WHERE `entry` IN (36789,10067,10068,10069);
+UPDATE `creature_template` SET `faction_A` = 14, `faction_H` = 14 WHERE `entry` IN (37006,37013,37986,38107,38548,36659,37690,37562,38159);
+UPDATE `creature_template` SET `minlevel` = 82,`maxlevel` = 82,`faction_A` = 14,`faction_H` = 14,`unit_flags` = 2 WHERE `entry` = 36672;
+UPDATE `creature_template` SET `VehicleId` = 639 WHERE `entry` IN (37813,13106,13107,13108);
+UPDATE `creature_template` SET `vehicleId` = 318 WHERE `entry` IN (36609,10242,10243,10244);
+UPDATE `creature_model_info` SET `bounding_radius` = 5,`combat_reach` = 5 WHERE `modelid` = 31119;
+UPDATE `creature_template` SET `flags_extra` = 2 WHERE `entry` = 36672;
+UPDATE `creature_template` SET `mechanic_immune_mask` = 634339327 WHERE `entry` = 36855;
+UPDATE `creature_template` SET `flags_extra` = 2 WHERE `entry` = 37007;
+UPDATE `creature` SET `modelid` = 11686 WHERE `map` = 631 AND `id` IN (SELECT `entry` FROM `creature_template` WHERE `flags_extra` = 128 OR `flags_extra` = 130);
+UPDATE `creature_template` SET `flags_extra` = 2, `unit_flags` = `unit_flags`|33554432 WHERE `flags_extra` = 128 OR `flags_extra` = 130 AND `entry` IN (SELECT `id` FROM `creature` WHERE `map` = 631);
+UPDATE `creature_template` SET `vehicleid` = 533 WHERE `entry` IN (36619,38233,38459,38460);
+
+# Not attackable and disable move flag
+UPDATE `creature_template` SET `unit_flags` = 33555204 WHERE `entry` IN (37986,37824,38234,38317,36659,38548,37186);
+UPDATE `creature_template` SET `unit_flags` = 33587972 WHERE `entry` = 37013;
+
+# Instance
+UPDATE `instance_template` SET `script`='instance_icecrown_citadel' WHERE `map` = 631;
+
+# Creature loot template
+
+DELETE FROM creature_loot_template WHERE item = 49426 AND entry IN
+(SELECT id FROM creature WHERE map = 631);
+
+# Creature addon template
+
+DELETE FROM `creature_addon` WHERE `guid` = 136107;
+DELETE FROM `creature_template_addon` WHERE `entry`= 37690;
+DELETE FROM `creature_template_addon` WHERE `entry`= 37672;
+
+INSERT INTO creature_addon (`guid`, `path_id`, `mount`, `bytes1`, `bytes2`, `emote`, `auras`) VALUES
+(136107, 0, 0, 0, 1, 0, '18950 0 18950 1 72242 0');
+
+INSERT INTO `creature_template_addon` (`entry`, `path_id`, `mount`, `bytes1`, `bytes2`, `emote`, `auras`) VALUES
+(37690, 0, 0, 0, 0, 0, '70345 0  70343 0'),
+(37672, 0, 0, 0, 0, 0, '70385 0 70405 0');
+
+#Thanks YTDB
+
+# Conditions
+
+DELETE FROM `conditions` WHERE `SourceEntry` IN (69508,69785,69788,70881,69248,69240,70341,70360,71617);
+
+INSERT INTO `conditions` (`SourceTypeOrReferenceId`,`SourceGroup`,`SourceEntry`,`ElseGroup`,`ConditionTypeOrReference`,`ConditionValue1`,`ConditionValue2`,`ConditionValue3`) VALUES
+(13,0,69508,0,18,1,37986,0),
+(13,0,70881,0,18,1,37986,0),
+(13,0,70360,0,18,1,37690,0);
+
+#creature
+
+DELETE FROM `creature` WHERE `id`=37013;
+INSERT INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `modelid`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `spawndist`, `currentwaypoint`, `curhealth`, `curmana`, `DeathState`, `MovementType`) VALUES
+(48969,37013,631,1,1,11686,0,4291.18,3092.92,372.97,2.33874,300,0,0,25200,0,0,0),
+(48971,37013,631,1,1,11686,0,4312.14,3112.98,372.97,2.51327,300,0,0,25200,0,0,0),
+(48973,37013,631,1,1,11686,0,4244.04,3092.66,372.97,0.97738,300,0,0,25200,0,0,0),
+(48976,37013,631,1,1,11686,0,4223.47,3113.58,372.97,0.76794,300,0,0,25200,0,0,0),
+(48981,37013,631,1,1,11686,0,4222.44,3161.69,372.97,5.53269,300,0,0,25200,0,0,0),
+(48983,37013,631,1,1,11686,0,4243.89,3181.74,372.97,5.44543,300,0,0,25200,0,0,0),
+(48989,37013,631,1,1,11686,0,4312.36,3160.84,372.97,3.80482,300,0,0,25200,0,0,0),
+(48990,37013,631,1,1,11686,0,4291.45,3181.25,372.97,4.10152,300,0,0,25200,0,0,0);
+
+#Linked spell
+
+DELETE FROM `spell_linked_spell` WHERE `spell_trigger` = 72202;
