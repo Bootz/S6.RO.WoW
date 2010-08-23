@@ -4312,7 +4312,7 @@ void Unit::RemoveAurasDueToSpellBySteal(uint32 spellId, uint64 casterGUID, Unit 
             }
             else
             {
-                int32 dur = 2*MINUTE*IN_MILLISECONDS < aura->GetDuration() ? 2*MINUTE*IN_MILLISECONDS : aura->GetDuration();
+                int32 dur = (2*MINUTE*IN_MILLISECONDS < aura->GetDuration() || aura->GetDuration() == -1) ? 2*MINUTE*IN_MILLISECONDS : aura->GetDuration();
 
                 newAura = Aura::TryCreate(aura->GetSpellProto(), effMask, stealer, NULL, &baseDamage[0], NULL, aura->GetCasterGUID());
                 if (!newAura)
