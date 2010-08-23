@@ -74,30 +74,20 @@ public:
 
 	struct npc_bone_spikeAI : public Scripted_NoMovementAI
 	{
-		npc_bone_spikeAI(Creature *pCreature) : Scripted_NoMovementAI(pCreature), vehicle(pCreature->GetVehicleKit())
+		npc_bone_spikeAI(Creature *pCreature) : Scripted_NoMovementAI(pCreature)
 		{
-			ASSERT(vehicle);
+			BoneSpikeGUID = 0;
 		}
 
 		uint64 BoneSpikeGUID;
-		Vehicle* vehicle;
 
 		void SetPrisoner(Unit* uPrisoner)
 		{
 			BoneSpikeGUID = uPrisoner->GetGUID();
-			uPrisoner->EnterVehicle(vehicle, 0);
 		}
 
-		void PassengerBoarded(Unit * who, int8 /*seatId*/, bool apply)
-		{
-                if (!apply)
-                    return;
-
-                me->AddAura(SPELL_BONE_SPIKE_IMPALING, who);
-		}
 		void Reset()
 		{
-			me->ForcedDespawn();
 			BoneSpikeGUID = 0;
 		}
 
@@ -127,11 +117,9 @@ public:
 
 		void UpdateAI(const uint32 diff)
 		{
-			if(!BoneSpikeGUID)
-			return;
-			Unit* boned = Unit::GetUnit((*me), BoneSpikeGUID);
-			if ((boned && boned->isAlive() && !boned->HasAura(SPELL_BONE_SPIKE_IMPALING)) || !boned)
-				me->Kill(me);
+			Unit* temp = Unit::GetUnit((*me),BoneSpikeGUID);
+			if ((temp && temp->isAlive() && !temp->HasAura(SPELL_BONE_SPIKE_IMPALING)) || !temp)
+				me->DealDamage(me, me->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
 		}
 	};
 
@@ -400,8 +388,4 @@ void AddSC_boss_lord_marrowgar()
 	new boss_lord_marrowgar;
 	new npc_cold_flame;
 	new npc_bone_spike;
-
-    // has to be done or else players threat will be wiped for impaled player and he will absorb all damage
-    if (VehicleSeatEntry* vehSeat = const_cast<VehicleSeatEntry*>(sVehicleSeatStore.LookupEntry(6206)))
-        vehSeat->m_flags |= 0x400;
 }

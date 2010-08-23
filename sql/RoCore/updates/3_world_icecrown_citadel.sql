@@ -258,7 +258,7 @@ UPDATE `creature_template` SET `ScriptName`='boss_rotface' WHERE `entry`= 36627;
 UPDATE `creature_template` SET `ScriptName`='boss_lord_marrowgar' WHERE (`entry`='36612');
 UPDATE `creature_template` SET `ScriptName`='npc_cold_flame' WHERE (`entry`='36672');	 	
 UPDATE `creature_template` SET `ScriptName`='npc_bone_spike' WHERE (`entry`='38711');
-UPDATE `creature_template` SET `vehicleId`=533 WHERE `entry`=36619;
+UPDATE `creature_template` SET `vehicleId`='' WHERE `entry`=36619;
 
 # Mobs
 UPDATE `creature_template` SET `ScriptName`='npc_tirion_icc' WHERE (`entry`='38995');
