@@ -3792,8 +3792,12 @@ void Player::removeSpell(uint32 spell_id, bool disabled, bool learn_low_rank)
         }
     }
 
-    if (spell_id == 46917 && m_canTitanGrip)
-        SetCanTitanGrip(false);
+     if (spell_id == 46917 && m_canTitanGrip)
+         SetCanTitanGrip(false);
+ 
+     if (spell_id == 674 && m_canDualWield)
+         SetCanDualWield(false);
+
 
     if (sWorld.getConfig(CONFIG_OFFHAND_CHECK_AT_SPELL_UNLEARN))
         AutoUnequipOffhandIfNeed();
@@ -21559,8 +21563,12 @@ void Player::AddItemDurations(Item *item)
 void Player::AutoUnequipOffhandIfNeed(bool force /*= false*/)
 {
     Item *offItem = GetItemByPos(INVENTORY_SLOT_BAG_0, EQUIPMENT_SLOT_OFFHAND);
-    if (!offItem)
-        return;
+     if (!offItem)
+         return;
+ 
+      // unequip offhand weapon if no dual wield
+      if (!CanDualWield() && (offItem->GetProto()->InventoryType == INVTYPE_WEAPONOFFHAND || offItem->GetProto()->InventoryType == INVTYPE_WEAPON))
+           force=true;
 
     // need unequip offhand for 2h-weapon without TitanGrip (in any from hands)
     if (!force && (CanTitanGrip() || (offItem->GetProto()->InventoryType != INVTYPE_2HWEAPON && !IsTwoHandUsed())))
