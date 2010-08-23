@@ -2083,6 +2083,18 @@ void Spell::EffectTriggerSpell(uint32 effIndex)
             triggered_spell_id = 7870;
             break;
         }
+        // Eat Ooze - Putricide          
+        case 72527:             
+        {                       
+             if (m_caster && unitTarget->GetTypeId() == 37690)                 
+             {                               
+             unitTarget->RemoveAuraFromStack(70347, 3, REMOVE_AURA_BY_DEFAULT)
+             m_caster->ModifyPower(POWER_ENERGY, +4) // You get 4 energy right?
+             break;                  
+             }                       
+             else
+             return;         
+        }
         // just skip
         case 23770:                                         // Sayge's Dark Fortune of *
             // not exist, common cooldown can be implemented in scripts if need.
