@@ -10740,6 +10740,14 @@ bool Unit::isSpellCrit(Unit *pVictim, SpellEntry const *spellProto, SpellSchoolM
                             break;
                         }
                     break;
+					case SPELLFAMILY_PRIEST:
+						// Inner Focus
+						if (spellProto->Id == 14751)
+						{
+                            crit_chance+=25.0f;
+							break;
+						}
+					break;
                 }
             }
             break;
