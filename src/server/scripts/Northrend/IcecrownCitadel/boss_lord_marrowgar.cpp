@@ -74,16 +74,18 @@ public:
 
 	struct npc_bone_spikeAI : public Scripted_NoMovementAI
 	{
-		npc_bone_spikeAI(Creature *pCreature) : Scripted_NoMovementAI(pCreature)
+		npc_bone_spikeAI(Creature *pCreature) : Scripted_NoMovementAI(pCreature), vehicle(pCreature->GetVehicleKit())
 		{
-			BoneSpikeGUID = 0;
+			ASSERT(vehicle);
 		}
 
 		uint64 BoneSpikeGUID;
+		Vehicle* vehicle;
 
 		void SetPrisoner(Unit* uPrisoner)
 		{
 			BoneSpikeGUID = uPrisoner->GetGUID();
+			uPrisoner->EnterVehicle(vehicle, 0);
 		}
 
 		void Reset()
@@ -117,9 +119,11 @@ public:
 
 		void UpdateAI(const uint32 diff)
 		{
-			Unit* temp = Unit::GetUnit((*me),BoneSpikeGUID);
-			if ((temp && temp->isAlive() && !temp->HasAura(SPELL_BONE_SPIKE_IMPALING)) || !temp)
-				me->DealDamage(me, me->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+			if(!BoneSpikeGUID)
+			eturn;
+			Unit* boned = Unit::GetUnit((*me), BoneSpikeGUID);
+			if ((boned && boned->isAlive() && !boned->HasAura(SPELL_SPIKE_IMPALING)) || !boned)
+				me->Kill(me);
 		}
 	};
 
@@ -284,6 +288,7 @@ public:
 					me->SetSpeed(MOVE_RUN, 0.6f, true);
 					DoCast(SPELL_BONE_STORM_CHANNEL);
 					DoScriptText(SAY_BONE_STORM, me);
+					DoScriptText(SAY_BONE_STORM_EMOTE, me);
 					m_uiBoneStormChanelTimer = 45000;
 					m_uiMove = 4000;
 				} else m_uiBoneStormChanelTimer -= uiDiff;
