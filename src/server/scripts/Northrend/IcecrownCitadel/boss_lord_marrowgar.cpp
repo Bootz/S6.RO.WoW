@@ -58,7 +58,14 @@ enum Spells
 	SPELL_BONE_STORM_25_HEROIC           =  70836,
 	SPELL_BONE_SHIELD                    =  70207,
 	SPELL_BERSERK                        =  26662,
+	SPELL_IMPALED                        =  69065,
 };
+
+enum eEvents
+{
+    EVENT_FAIL_BONED
+};
+
 
 enum NPC
 {
@@ -246,7 +253,7 @@ public:
 							if (pTarget && !pTarget->HasAura(SPELL_BONE_SPIKE_IMPALING))
 							{
 								Creature* Bone = me->SummonCreature(CREATURE_BONE_SPIKE, pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 999999);
-								CAST_AI(npc_bone_spike::npc_bone_spikeAI, Bone->AI())->SetPrisoner(pTarget);
+								CAST_AI(npc_bone_spike::npc_bone_spikeAI, Bone->AI())->SetTrappedUnit(pTarget);
 								Bone->CastSpell(pTarget, SPELL_BONE_SPIKE_IMPALING, true);
 							}
 						}
@@ -276,7 +283,7 @@ public:
 						if (pTarget && !pTarget->HasAura(SPELL_BONE_SPIKE_IMPALING))
 						{
 							Creature* Bone = me->SummonCreature(CREATURE_BONE_SPIKE, pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 999999);
-							CAST_AI(npc_bone_spike::npc_bone_spikeAI, Bone->AI())->SetPrisoner(pTarget);
+							CAST_AI(npc_bone_spike::npc_bone_spikeAI, Bone->AI())->SetTrappedUnit(pTarget);
 							Bone->CastSpell(pTarget, SPELL_BONE_SPIKE_IMPALING, true);
 						}
 					}
