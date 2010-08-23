@@ -286,6 +286,7 @@ public:
 						}
 						m_uiBoneSpikeGraveyardTimer = 15000;
 					} else m_uiBoneSpikeGraveyardTimer -= uiDiff;
+				}
 
 			if (m_uiColdFlameTimer <= uiDiff)
 			{
