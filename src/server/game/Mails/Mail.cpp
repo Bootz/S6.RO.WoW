@@ -1005,6 +1005,7 @@ void MailDraft::SendMailTo(SQLTransaction& trans, MailReceiver const& receiver, 
 }
 void WorldSession::SendExternalMails()
 {
+    SQLTransaction trans = CharacterDatabase.BeginTransaction();
     sLog.outString("EXTERNAL MAIL> Sending mails in queue...");
     QueryResult_AutoPtr result = CharacterDatabase.Query("SELECT id,receiver,subject,message,money,item,item_count FROM mail_external WHERE sent = 0 ORDER BY id;");
     if(!result)
@@ -1038,7 +1039,7 @@ void WorldSession::SendExternalMails()
                 if (last_id != 0)
                 {
                     sLog.outString("EXTERNAL MAIL> Sending mail to character with guid %d", last_receiver_guid);
-                    mail->SendMailTo( MailReceiver(last_receiver_guid), MailSender(MAIL_NORMAL, 0, MAIL_STATIONERY_GM), MAIL_CHECK_MASK_RETURNED);
+                    mail->SendMailTo(trans, MailReceiver(last_receiver_guid), MailSender(MAIL_NORMAL, 0, MAIL_STATIONERY_GM), MAIL_CHECK_MASK_RETURNED);
                     delete mail;
                     CharacterDatabase.PExecute("UPDATE mail_external set sent = 1 WHERE id=%u", last_id);
                     sLog.outString("EXTERNAL MAIL> Mail sent");
@@ -1062,7 +1063,7 @@ void WorldSession::SendExternalMails()
 					sLog.outString("EXTERNAL MAIL> Adding %u of item with id %u", itemCount, itemId);
 					Item* mailItem = Item::CreateItem( itemId, itemCount, receiver );
 					if(mailItem)
-						mailItem->SaveToDB();
+						mailItem->SaveToDB(trans);
 					mail->AddItem(mailItem);
 				}
 				else 
@@ -1081,7 +1082,7 @@ void WorldSession::SendExternalMails()
             // send last mail
             sLog.outString("EXTERNAL MAIL> Sending mail to character with guid %d", last_receiver_guid);
 
-            mail->SendMailTo( MailReceiver(last_receiver_guid), MailSender(MAIL_NORMAL, 0, MAIL_STATIONERY_GM), MAIL_CHECK_MASK_RETURNED);
+            mail->SendMailTo(trans,MailReceiver(last_receiver_guid), MailSender(MAIL_NORMAL, 0, MAIL_STATIONERY_GM), MAIL_CHECK_MASK_RETURNED);
             delete mail;
 			CharacterDatabase.PExecute("UPDATE mail_external set sent = 1 WHERE id=%u", last_id);
             sLog.outString("EXTERNAL MAIL> Mail sent");
