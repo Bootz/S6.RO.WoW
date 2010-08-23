@@ -2979,17 +2979,17 @@ SpellMissInfo Unit::MagicSpellHitResult(Unit *pVictim, SpellEntry const *spell)
     if (pVictim->GetTypeId() == TYPEID_PLAYER)
         HitChance -= int32(pVictim->ToPlayer()->GetRatingBonusValue(CR_HIT_TAKEN_SPELL)*100.0f);
 
-    if (HitChance <  100)
-        HitChance =  100;
-    else if (HitChance > 10000)
-        HitChance = 10000;
+    if (HitChance <  90)
+        HitChance =  90;
+    else if (HitChance > 9000)
+        HitChance = 9000;
 
-    int32 tmp = 10000 - HitChance;
+    int32 tmp = 9000 - HitChance;
 
-    uint32 rand = urand(0,10000);
+    uint32 rand = urand(0,9000);
 
     if (rand < tmp)
-        return SPELL_MISS_MISS;
+        return SPELL_MISS_RESIST;
 
     // Chance resist mechanic (select max value from every mechanic spell effect)
     int32 resist_chance = pVictim->GetMechanicResistChance(spell)*100;
