@@ -7244,6 +7244,18 @@ void Player::DuelComplete(DuelCompleteType type)
     if (uint32 amount = sWorld.getConfig(CONFIG_HONOR_AFTER_DUEL))
         duel->opponent->RewardHonor(NULL,1,amount);
 
+	// Spell cooldown reset & full hp/ mana
+    duel->initiator->RemoveAllSpellCooldown();
+    duel->opponent->RemoveAllSpellCooldown();
+    RemoveAllSpellCooldown();
+    duel->initiator->SetHealth(duel->initiator->GetMaxHealth());
+    duel->opponent->SetHealth(duel->opponent->GetMaxHealth());
+    SetHealth(GetMaxHealth());
+	duel->initiator->SetPower(POWER_MANA, duel->initiator->GetMaxPower(POWER_MANA));
+    duel->opponent->SetPower(POWER_MANA,  duel->opponent->GetMaxPower(POWER_MANA));
+    SetPower(POWER_MANA,  GetMaxPower(POWER_MANA));
+
+
     //cleanups
     SetUInt64Value(PLAYER_DUEL_ARBITER, 0);
     SetUInt32Value(PLAYER_DUEL_TEAM, 0);
@@ -7266,6 +7278,10 @@ void Player::_ApplyItemMods(Item *item, uint8 slot,bool apply)
     ItemPrototype const *proto = item->GetProto();
 
     if (!proto)
+        return;
+
+    // don't apply/remove mods if the weapon is disarmed
+    if (item->GetSlot() == EQUIPMENT_SLOT_MAINHAND && !IsUseEquipedWeapon(true))
         return;
 
     // not apply/remove mods for broken item
@@ -17984,8 +18000,7 @@ void Player::_SaveInventory(SQLTransaction& trans)
                 trans->PAppend("INSERT INTO character_inventory (guid,bag,slot,item,item_template) VALUES ('%u', '%u', '%u', '%u', '%u')", GetGUIDLow(), bag_guid, item->GetSlot(), item->GetGUIDLow(), item->GetEntry());
                 break;
             case ITEM_CHANGED:
-                trans->PAppend("DELETE FROM character_inventory WHERE item = '%u'", item->GetGUIDLow());
-                trans->PAppend("INSERT INTO character_inventory (guid,bag,slot,item,item_template) VALUES ('%u', '%u', '%u', '%u', '%u')", GetGUIDLow(), bag_guid, item->GetSlot(), item->GetGUIDLow(), item->GetEntry());
+                trans->PAppend("UPDATE character_inventory SET guid='%u', bag='%u', slot='%u', item_template='%u' WHERE item='%u'", GetGUIDLow(), bag_guid, item->GetSlot(), item->GetEntry(), item->GetGUIDLow());
                 break;
             case ITEM_REMOVED:
                 trans->PAppend("DELETE FROM character_inventory WHERE item = '%u'", item->GetGUIDLow());
