@@ -287,18 +287,19 @@ public:
 						m_uiBoneSpikeGraveyardTimer = 15000;
 					} else m_uiBoneSpikeGraveyardTimer -= uiDiff;
 				}
+			}
 
-			if (m_uiColdFlameTimer <= uiDiff)
+			if (m_uiColdFlameTimer <= uiDiff && !me->HasAura(SPELL_BONE_STORM_CHANNEL))
 			{
-                if(Unit* pTarget = SelectUnit(SELECT_TARGET_NEAREST, 1))
-                {
-                    float x,y,z;
-                    float angle = me->GetAngle(pTarget);
-                    pTarget->GetPosition(x,y,z);
+				if(Unit* pTarget = SelectUnit(SELECT_TARGET_NEAREST, 1))
+				{
+					float x,y,z;
+					float angle = me->GetAngle(pTarget);
+					pTarget->GetPosition(x,y,z);
 					Flame();
-                }
-                m_uiColdFlameTimer = 7000;
-            } else m_uiColdFlameTimer -= uiDiff;
+                		}
+                	m_uiColdFlameTimer = 7000;
+           		} else m_uiColdFlameTimer -= uiDiff;
 
 			if (getDifficulty() == RAID_DIFFICULTY_10MAN_HEROIC || getDifficulty() == RAID_DIFFICULTY_25MAN_HEROIC)
 			{
