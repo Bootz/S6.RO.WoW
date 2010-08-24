@@ -181,9 +181,13 @@ INSERT INTO `npc_text` (`ID`,`Text0_0`) VALUES
 UPDATE `creature_template` SET  `faction_A`=1770,`faction_H`=1770 WHERE `entry`=35458;
 
 
-
-
 -- INSERT INTO `spell_script_target` VALUES (65875, 1, 34497), (65876, 1, 34496);
+
+-- ------------------------------------------------------------------------------------------------------------------------------------ --
+-- ACORDING WITH THE LAST SCRIPTS OF TC ANUB'ARAK IS NOT ATTACKABLE, THIS IS THE SOLUTION
+-- THANKS MISIMOUSE
+UPDATE creature_template SET unit_flags = 0, type_flags= 8, dynamicflags = 0, flags_extra = 2 WHERE entry IN (34564, 34566, 33615, 36616);
+-- ------------------------------------------------------------------------------------------------------------------------------------ --
 
 -- NOT NECESSARY AT THE MOMENTO BECAUSE ROCORE IS USSING TC TOC RAID SCRIPTS
 /*
