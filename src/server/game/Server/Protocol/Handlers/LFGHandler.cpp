@@ -25,7 +25,7 @@
 void WorldSession::HandleLfgJoinOpcode(WorldPacket &recv_data)
 {
     sLog.outDebug("CMSG_LFG_JOIN");
-    if (!sWorld.getConfig(CONFIG_DUNGEON_FINDER_ENABLE))
+    if (!sWorld.getBoolConfig(CONFIG_DUNGEON_FINDER_ENABLE))
     {
         recv_data.rpos(recv_data.wpos());
         return;
@@ -64,10 +64,10 @@ void WorldSession::HandleLfgJoinOpcode(WorldPacket &recv_data)
     Group *grp = GetPlayer()->GetGroup();
     bool isRandomDungeon = dungeons->size() == 1 && sLFGMgr.isRandomDungeon(*dungeons->begin());
     bool isCurrentDungeon = newDungeons.size() == 1 && grp && grp->isLFGGroup() &&  grp->GetLfgDungeonEntry() == *newDungeons.begin();
-    
+
     if (!isRandomDungeon || !isCurrentDungeon)              // is not offer to continue - clear old dungeons and use new dungeons
     {
-        dungeons->clear();       
+        dungeons->clear();
         for (LfgDungeonSet::const_iterator it = newDungeons.begin(); it != newDungeons.end(); ++it)
             dungeons->insert(*it);
     }

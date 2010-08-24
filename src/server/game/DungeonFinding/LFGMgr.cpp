@@ -101,7 +101,7 @@ void LFGMgr::Cleaner()
             m_QueueInfoMap.erase(itQueue);
         }
     }
-   
+
     // Remove from NewToQueue those guids that do not exist in queueMap
     for (LfgGuidList::iterator it = m_newToQueue.begin(); it != m_newToQueue.end();)
     {
@@ -174,7 +174,7 @@ void LFGMgr::AddGuidToNewQueue(uint64 guid)
 
 void LFGMgr::Update(uint32 diff)
 {
-    if (!m_update || !sWorld.getConfig(CONFIG_DUNGEON_FINDER_ENABLE))
+    if (!m_update || !sWorld.getBoolConfig(CONFIG_DUNGEON_FINDER_ENABLE))
         return;
 
     m_update = false;
@@ -248,7 +248,7 @@ void LFGMgr::Update(uint32 diff)
     // Check if a proposal can be formed with the new groups being added
     LfgProposalList proposals;
     LfgGuidList firstNew;
-    while(!m_newToQueue.empty())
+    if (!m_newToQueue.empty())
     {
         firstNew.push_back(m_newToQueue.front());
         FindNewGroups(firstNew, m_currentQueue, &proposals);
@@ -278,7 +278,7 @@ void LFGMgr::Update(uint32 diff)
                     SendUpdateProposal(plr, m_lfgProposalId, pProposal);
                 }
             }
-            
+
             if (pProposal->state == LFG_PROPOSAL_SUCCESS)
                 UpdateProposal(m_lfgProposalId, lowGuid, 1);
 
@@ -715,7 +715,7 @@ void LFGMgr::FindNewGroups(LfgGuidList &check, LfgGuidList all, LfgProposalList 
             if (plr->GetSocial()->HasIgnore((*itPlayer)->GetGUIDLow()) || (*itPlayer)->GetSocial()->HasIgnore(plr->GetGUIDLow()))
                 plr = NULL;
             // neither with diferent faction if it's not a mixed faction server
-            else if (plr->GetTeam() != (*itPlayer)->GetTeam() && !sWorld.getConfig(CONFIG_ALLOW_TWO_SIDE_INTERACTION_GROUP))
+            else if (plr->GetTeam() != (*itPlayer)->GetTeam() && !sWorld.getBoolConfig(CONFIG_ALLOW_TWO_SIDE_INTERACTION_GROUP))
                 plr = NULL;
         }
         if (plr)
@@ -1185,7 +1185,7 @@ void LFGMgr::UpdateProposal(uint32 proposalId, uint32 lowGuid, uint8 accept)
                 else if (role & ROLE_DAMAGE)
                     m_WaitTimeDps = int32((m_WaitTimeDps * m_NumWaitTimeDps + waitTime) / ++m_NumWaitTimeDps);
             }
-                
+
             grp->SetLfgRoles(plr->GetGUID(), pProposal->players[plr->GetGUIDLow()]->role);
         }
 
@@ -1251,7 +1251,7 @@ void LFGMgr::RemoveProposal(LfgProposalMap::iterator itProposal, LfgUpdateType t
             updateType = type;
             plr->GetLfgDungeons()->clear();
             plr->SetLfgRoles(ROLE_NONE);
-            
+
             if (itQueue != m_QueueInfoMap.end())
                 m_QueueInfoMap.erase(itQueue);
         }
@@ -1656,7 +1656,7 @@ void LFGMgr::SendLfgPlayerReward(Player *plr)
     uint32 rdungeonId = 0;
     uint32 sdungeonId = 0;
     LFGDungeonEntry const *dungeon = sLFGDungeonStore.LookupEntry(*plr->GetLfgDungeons()->begin());
-    if (dungeon)        
+    if (dungeon)
         rdungeonId = dungeon->Entry();
     if (plr->GetGroup())
         sdungeonId = plr->GetGroup()->GetLfgDungeonEntry(false);

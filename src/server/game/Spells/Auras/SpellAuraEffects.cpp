@@ -3762,7 +3762,7 @@ void AuraEffect::HandleAuraMounted(AuraApplication const * aurApp, uint8 mode, b
             if (GetSpellProto()->Effect[i] == SPELL_EFFECT_SUMMON
                 && GetSpellProto()->EffectMiscValue[i] == GetMiscValue())
                 display_id = 0;
-        target->Mount(display_id,ci->VehicleId);
+        target->Mount(display_id, ci->VehicleId, GetMiscValue());
     }
     else
     {
@@ -4297,8 +4297,6 @@ void AuraEffect::HandleModStateImmunityMask(AuraApplication const * aurApp, uint
     std::list <AuraType> immunity_list;
     if (GetMiscValue() & (1<<10))
         immunity_list.push_back(SPELL_AURA_MOD_STUN);
-    if ((GetMiscValue() & (1<<7)) && !(apply && GetId() == 46924))
-        immunity_list.push_back(SPELL_AURA_MOD_DISARM);
     if (GetMiscValue() & (1<<1))
         immunity_list.push_back(SPELL_AURA_TRANSFORM);
 
@@ -4312,10 +4310,16 @@ void AuraEffect::HandleModStateImmunityMask(AuraApplication const * aurApp, uint
     if (GetMiscValue() & (1<<9))
         immunity_list.push_back(SPELL_AURA_MOD_FEAR);
 
+    // must be last due to Bladestorm
+    if (GetMiscValue() & (1<<7))
+        immunity_list.push_back(SPELL_AURA_MOD_DISARM);
+
+    // TODO: figure out a better place to put this...
     // Patch 3.0.3 Bladestorm now breaks all snares and roots on the warrior when activated.
     // however not all mechanic specified in immunity
     if (apply && GetId() == 46924)
     {
+        immunity_list.pop_back(); // delete Disarm
         target->RemoveAurasByType(SPELL_AURA_MOD_ROOT);
         target->RemoveAurasByType(SPELL_AURA_MOD_DECREASE_SPEED);
     }

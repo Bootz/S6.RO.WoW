@@ -859,7 +859,7 @@ uint32 Unit::DealDamage(Unit *pVictim, uint32 damage, CleanDamage const* cleanDa
                     if (spell->getState() == SPELL_STATE_CASTING)
                     {
                         uint32 channelInterruptFlags = spell->m_spellInfo->ChannelInterruptFlags;
-                        if (channelInterruptFlags & CHANNEL_FLAG_DELAY != 0 && damagetype != DOT)
+                        if (((channelInterruptFlags & CHANNEL_FLAG_DELAY) != 0) && (damagetype != DOT))
                             spell->DelayedChannel();
                     }
                 }
@@ -7491,34 +7491,57 @@ bool Unit::HandleDummyAuraProc(Unit *pVictim, uint32 damage, AuraEffect* trigger
                 // Shaman T8 Elemental 4P Bonus
                 case 64928:
                 {
-                    basepoints0 = int32(basepoints0 / 2);
+                    basepoints0 = int32(triggerAmount * damage / 100);
                     triggered_spell_id = 64930;            // Electrified
                     break;
                 }
                 // Shaman T9 Elemental 4P Bonus
                 case 67228:
                 {
-                    basepoints0 = int32(basepoints0 / 3); // basepoints is for 1 tick, not the entire DoT amount
+                    // Lava Burst
+                    if (procSpell->SpellFamilyFlags[1] & 0x1000)
+                    {
                     triggered_spell_id = 71824;
+                        SpellEntry const* triggeredSpell = sSpellStore.LookupEntry(triggered_spell_id);
+                        if (!triggeredSpell)
+                            return false;
+                        basepoints0 = int32(triggerAmount * damage / 100 / (GetSpellMaxDuration(triggeredSpell) / triggeredSpell->EffectAmplitude[0]));
+                    }
                     break;
                 }
                 // Item - Shaman T10 Restoration 4P Bonus
                 case 70808:
                 {
-                    basepoints0 = int32( triggerAmount * damage / 100 );
-                    basepoints0 = int32( basepoints0 / 3); // basepoints is for 1 tick, not all DoT amount
+                    // Chain Heal
+                    if((procSpell->SpellFamilyFlags[0] & 0x100) && (procEx & PROC_EX_CRITICAL_HIT))
+                    {
                     triggered_spell_id = 70809;
+                        SpellEntry const* triggeredSpell = sSpellStore.LookupEntry(triggered_spell_id);
+                        if (!triggeredSpell)
+                            return false;
+                        basepoints0 = int32(triggerAmount * damage / 100 / (GetSpellMaxDuration(triggeredSpell) / triggeredSpell->EffectAmplitude[0]));
+                    }
                     break;
                 }
-                // Item - Shaman T10 Elemental 4P Bonus
-                case 70817:
+                // Item - Shaman T10 Elemental 2P Bonus
+                case 70811:
                 {
-                    if (AuraEffect const * aura = pVictim->GetAuraEffect(SPELL_AURA_PERIODIC_DAMAGE, SPELLFAMILY_SHAMAN, 0x10000000, 0, 0))
+                    // Lightning Bolt & Chain Lightning
+                    if(procSpell->SpellFamilyFlags[0] & 0x3)
                     {
-                        int32 amount = aura->GetBase()->GetDuration() + triggerAmount * IN_MILLISECONDS;
-                        aura->GetBase()->SetDuration(amount);
-                        //aura->SendAuraUpdate(false);
+                        if (ToPlayer()->HasSpellCooldown(16166))
+                        {
+                            uint32 newCooldownDelay = ToPlayer()->GetSpellCooldownDelay(16166) - 2;
+                            if (newCooldownDelay < 0) newCooldownDelay = 0;
+                                ToPlayer()->AddSpellCooldown(16166,0, uint32(time(NULL) + newCooldownDelay));
+
+                            WorldPacket data(SMSG_MODIFY_COOLDOWN, 4+8+4);
+                            data << uint32(16166);                  // Spell ID
+                            data << uint64(GetGUID());              // Player GUID
+                            data << int32(-2000);                   // Cooldown mod in milliseconds
+                            ToPlayer()->GetSession()->SendPacket(&data);
                         return true;
+                        }
                     }
                     return false;
                 }
@@ -8218,6 +8241,7 @@ bool Unit::HandleAuraProc(Unit * pVictim, uint32 damage, Aura * triggeredByAura,
                     // Make sure 28682 wasn't already removed by previous call
                     if(HasAura(28682))
                         this->CastSpell(this, 28682, true);
+
                     return false; // ordinary chrages will be removed during crit chance computations.
                 }
                 // Empowered Fire
@@ -11965,7 +11989,7 @@ float Unit::GetPPMProcChance(uint32 WeaponSpeed, float PPM, const SpellEntry * s
     return floor((WeaponSpeed * PPM) / 600.0f);   // result is chance in percents (probability = Speed_in_sec * (PPM / 60))
 }
 
-void Unit::Mount(uint32 mount, uint32 VehicleId)
+void Unit::Mount(uint32 mount, uint32 VehicleId, uint32 creatureEntry)
 {
     RemoveAurasWithInterruptFlags(AURA_INTERRUPT_FLAG_MOUNT);
 
@@ -11996,6 +12020,10 @@ void Unit::Mount(uint32 mount, uint32 VehicleId)
                 if (CreateVehicleKit(VehicleId))
                 {
                     GetVehicleKit()->Reset();
+
+                    // mounts can also have accessories
+                    GetVehicleKit()->GetBase()->SetEntry(creatureEntry); // set creature entry so InstallAllAccessories() can read correct accessories
+                    GetVehicleKit()->InstallAllAccessories();
 
                     // Send others that we now have a vehicle
                     WorldPacket data(SMSG_PLAYER_VEHICLE_DATA, GetPackGUID().size()+4);
@@ -12193,15 +12221,21 @@ bool Unit::canAttack(Unit const* target, bool force) const
     {
         if (IsFriendlyTo(target))
             return false;
+
         if (GetTypeId()!=TYPEID_PLAYER)
-            if (!IsHostileTo(target))
+        {
+            if (isPet())
+            {
+                if (Unit *owner = GetOwner())
+                    if (!(owner->canAttack(target)))
                 return false;
     }
     else if (!IsHostileTo(target))
         return false;
-
-    //if (m_Vehicle && m_Vehicle == target->m_Vehicle)
-    //    return true;
+        }
+    }
+    else if (!IsHostileTo(target))
+        return false;
 
     if (!target->isAttackableByAOE() || target->hasUnitState(UNIT_STAT_DIED))
         return false;
@@ -15412,7 +15446,7 @@ void Unit::Kill(Unit *pVictim, bool durabilityLoss)
         pVictim->ToPlayer()->SetPvPDeath(player != NULL);
 
         // only if not player and not controlled by player pet. And not at BG
-        if ((durabilityLoss && !player && !pVictim->ToPlayer()->InBattleground()) || (player && sWorld.getConfig(CONFIG_DURABILITY_LOSS_IN_PVP)))
+        if ((durabilityLoss && !player && !pVictim->ToPlayer()->InBattleground()) || (player && sWorld.getBoolConfig(CONFIG_DURABILITY_LOSS_IN_PVP)))
         {
             sLog.outStaticDebug("We are dead, losing %u percent durability", sWorld.getRate(RATE_DURABILITY_LOSS_ON_DEATH));
             pVictim->ToPlayer()->DurabilityLossAll(sWorld.getRate(RATE_DURABILITY_LOSS_ON_DEATH),false);
@@ -15660,7 +15694,7 @@ void Unit::SetFeared(bool apply)
             caster = ObjectAccessor::GetUnit(*this, fearAuras.front()->GetCasterGUID());
         if (!caster)
             caster = getAttackerForHelper();
-        GetMotionMaster()->MoveFleeing(caster, fearAuras.empty() ? sWorld.getConfig(CONFIG_CREATURE_FAMILY_FLEE_DELAY) : 0);             // caster == NULL processed in MoveFleeing
+        GetMotionMaster()->MoveFleeing(caster, fearAuras.empty() ? sWorld.getIntConfig(CONFIG_CREATURE_FAMILY_FLEE_DELAY) : 0);             // caster == NULL processed in MoveFleeing
     }
     else
     {
