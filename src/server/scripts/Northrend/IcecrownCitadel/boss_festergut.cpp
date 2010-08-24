@@ -47,7 +47,7 @@ enum Spells
 	SPELL_GAS_VISUAL_SMALL     =    69154,
 	SPELL_GAS_VISUAL_MEDIUM    =    69152,
 	SPELL_GAS_VISUAL_BIG       =    69126,
-	SPELL_GAS_SPORES           =    69278,
+	SPELL_GAS_SPORES           =    69279,
 	SPELL_BERSERK              =    47008,
 	SPELL_INOCULATED           =    72103,
 	SPELL_BLIGHTED_SPORES      =    69290,
@@ -272,7 +272,7 @@ public:
 			{
 				Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true);
 				if(pTarget && pTarget->HasAura(SPELL_GASTRIC_BLOAT))
-					if (pTarget->GetAura(SPELL_GASTRIC_BLOAT, 0)->GetStackAmount() >= 10)
+					if (pTarget->GetAura(SPELL_GASTRIC_BLOAT, 0)->GetStackAmount() = 10)
 					{
 						DoCast(pTarget, SPELL_GASTRIC_EXPLOSION);
 						m_uiGastricBoom = 5000;
@@ -307,8 +307,9 @@ public:
 					Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
 					if (pTarget && !pTarget->HasAura(SPELL_GAS_SPORES))
 					{
-						me->ApplyAura(SPELL_GAS_SPORES, pTarget);
+						me->AddAura(SPELL_GAS_SPORES, pTarget);
 						me->PlayDirectSound(16911);
+                                                DoScriptText(SAY_GAS_SPORES, me);
 						me->MonsterTextEmote(EMOTE_GAS_SPORE, 0, true);
 					}
 				}
