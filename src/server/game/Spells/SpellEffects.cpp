@@ -2109,7 +2109,7 @@ void Spell::EffectTriggerSpell(uint32 effIndex)
              if (unitTarget->HasAura(70347))
                  for (uint8 j = 0; j < 3; ++j)
                  unitTarget->RemoveAuraFromStack(70347);
-                 m_caster->ModifyPower(POWER_ENERGY, +3) // For each eat ooze you gain 3 energy
+                 m_caster->ModifyPower(POWER_ENERGY, +3); // For each eat ooze you gain 3 energy
                  break;
              } else
              return;         
