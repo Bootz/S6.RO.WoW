@@ -750,10 +750,10 @@ class npc_vengeful_shade : public CreatureScript
         }
 };
 
-class spell_cultist_dark_martyrdom : public SpellHandlerScript
+class spell_cultist_dark_martyrdom : public SpellScriptLoader
 {
     public:
-        spell_cultist_dark_martyrdom() : SpellHandlerScript("spell_cultist_dark_martyrdom") { }
+        spell_cultist_dark_martyrdom() : SpellScriptLoader("spell_cultist_dark_martyrdom") { }
 
         class spell_cultist_dark_martyrdom_SpellScript : public SpellScript
         {
@@ -780,7 +780,7 @@ class spell_cultist_dark_martyrdom : public SpellHandlerScript
 
             void Register()
             {
-                EffectHandlers += EffectHandlerFn(spell_cultist_dark_martyrdom_SpellScript::HandleEffect, EFFECT_2, SPELL_EFFECT_FORCE_DESELECT);
+                OnEffect += SpellEffectFn(spell_cultist_dark_martyrdom_SpellScript::HandleEffect, EFFECT_2, SPELL_EFFECT_FORCE_DESELECT);
             }
         };
 

@@ -4344,10 +4344,12 @@ void Spell::EffectTaunt(uint32 /*i*/)
         return;
     }
 
-    if (m_spellInfo->Id == 62124) // Hand of Reckoning
+    if (m_spellInfo->Id == 62124)
     {
+        int32 damageDone = int32(1 + m_caster->GetTotalAttackPowerValue(BASE_ATTACK) * 0.5f);
         bool is_crit = m_caster->isSpellCrit(unitTarget, m_spellInfo, m_spellSchoolMask, m_attackType);
-        int32 damageDone = 1 + m_caster->GetTotalAttackPowerValue(BASE_ATTACK) * 0.5f * ((uint8)is_crit + 1);
+        if (is_crit)
+            damageDone *= 2;
         m_caster->DealDamage(unitTarget, damageDone, NULL, SPELL_DIRECT_DAMAGE, SPELL_SCHOOL_MASK_HOLY, m_spellInfo, false);
         m_caster->SendSpellNonMeleeDamageLog(unitTarget, m_spellInfo->Id, damageDone, SPELL_SCHOOL_MASK_HOLY, 0, 0, false, false, is_crit);
     }

@@ -859,9 +859,8 @@ uint32 Unit::DealDamage(Unit *pVictim, uint32 damage, CleanDamage const* cleanDa
                     if (spell->getState() == SPELL_STATE_CASTING)
                     {
                         uint32 channelInterruptFlags = spell->m_spellInfo->ChannelInterruptFlags;
-                        if (channelInterruptFlags & CHANNEL_FLAG_DELAY)
-                            if (damagetype != DOT) // DoTs don't cause pushback
-                                spell->DelayedChannel();
+                        if (channelInterruptFlags & CHANNEL_FLAG_DELAY != 0 && damagetype != DOT)
+                            spell->DelayedChannel();
                     }
                 }
             }
@@ -4313,7 +4312,7 @@ void Unit::RemoveAurasDueToSpellBySteal(uint32 spellId, uint64 casterGUID, Unit 
             }
             else
             {
-                int32 dur = (2*MINUTE*IN_MILLISECONDS < aura->GetDuration() || aura->GetDuration() == -1) ? 2*MINUTE*IN_MILLISECONDS : aura->GetDuration();
+                int32 dur = (2*MINUTE*IN_MILLISECONDS < aura->GetDuration() || aura->GetDuration() < 0) ? 2*MINUTE*IN_MILLISECONDS : aura->GetDuration();
 
                 newAura = Aura::TryCreate(aura->GetSpellProto(), effMask, stealer, NULL, &baseDamage[0], NULL, aura->GetCasterGUID());
                 if (!newAura)
