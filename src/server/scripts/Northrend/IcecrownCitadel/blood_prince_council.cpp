@@ -152,11 +152,11 @@ public:
 		{
 			KineticBombTimer = 45000;
 			VortexTimer = 30000;
-			InvocationTimer = 60000;
+			InvocationTimer = urand(45000,60000);
 			EmpoweredVortexTimer = 25000;
 			InvocationNumber = 0;
-			pKeleseth->SetInCombatWithZone();
-			pTaldaram->SetInCombatWithZone();
+			//pKeleseth->SetInCombatWithZone(); //These 2 lines cause a crash - Andu should fix them.
+			//pTaldaram->SetInCombatWithZone();
 			CAST_CRE(pKeleseth)->AI()->AttackStart(who);
 			CAST_CRE(pTaldaram)->AI()->AttackStart(who);
 		}
@@ -237,7 +237,7 @@ public:
 				pKeleseth->RemoveAllAuras();
 				pTaldaram->RemoveAllAuras();
 				InvocationNumber = urand(1,3);
-				InvocationTimer = 60000;
+				InvocationTimer = urand(45000,60000);
 				if (InvocationNumber == 1) //Since only 1 of the bosses is attackable during the invocation
 				{
 					DoScriptText(Valanar_Invocation, me);
