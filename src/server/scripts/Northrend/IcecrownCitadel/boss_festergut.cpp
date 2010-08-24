@@ -272,7 +272,7 @@ public:
             {
                 Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true);
                 if(pTarget && pTarget->HasAura(SPELL_GASTRIC_BLOAT))
-                    if (pTarget->GetAura(SPELL_GASTRIC_BLOAT, 0)->GetStackAmount() = 10)
+                    if (pTarget->GetAura(SPELL_GASTRIC_BLOAT, 0)->GetStackAmount() == 10)
                     {
                         DoCast(pTarget, SPELL_GASTRIC_EXPLOSION);
                         m_uiGastricBoom = 5000;
