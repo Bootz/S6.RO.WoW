@@ -453,8 +453,9 @@ enum RealmZone
 
 enum WorldStates
 {
-    WS_WEEKLY_QUEST_RESET_TIME = 20002,                      // Next weekly reset time
-    WS_BG_DAILY_RESET_TIME     = 20003                       // Next daily BG reset time
+    WS_BG_DAILY_RESET_TIME  = 20003,    // Next daily BG reset time
+    WS_NEXT_TIME_DAILY      = 90101,    // Daily quest last time entries within the worldstates table
+    WS_NEXT_TIME_WEEKLY     = 90102     // Weekly quest last time entries within the worldstates table
 };
 
 // DB scripting commands
@@ -479,7 +480,6 @@ enum ScriptCommands
     SCRIPT_COMMAND_PLAY_SOUND            = 16,               // source = WorldObject, target = none/Player, datalong = sound id, datalong2 (bitmask: 0/1=anyone/player, 0/2=without/with distance dependency, so 1|2 = 3 is target with distance dependency)
     SCRIPT_COMMAND_CREATE_ITEM           = 17,               // target/source = Player, datalong = item entry, datalong2 = amount
     SCRIPT_COMMAND_DESPAWN_SELF          = 18,               // target/source = Creature, datalong = despawn delay
-
     SCRIPT_COMMAND_LOAD_PATH             = 20,               // source = Unit, datalong = path id, datalong2 = is repeatable
     SCRIPT_COMMAND_CALLSCRIPT_TO_UNIT    = 21,               // source = WorldObject (if present used as a search center), datalong = script id, datalong2 = unit lowguid, dataint = script table to use (see ScriptsType)
     SCRIPT_COMMAND_KILL                  = 22,               // source/target = Creature, dataint = remove corpse attribute
@@ -604,9 +604,12 @@ class World
         uint32 GetUpdateTime() const { return m_updateTime; }
         void SetRecordDiffInterval(int32 t) { if (t >= 0) m_int_configs[CONFIG_INTERVAL_LOG_UPDATE] = (uint32)t; }
 
-        /// Next daily quests and random bg reset time
-        time_t GetNextDailyQuestsResetTime() const { return m_NextDailyQuestReset; }
-        time_t GetNextWeeklyQuestsResetTime() const { return m_NextWeeklyQuestReset; }
+        /// Next daily quest reset time
+        time_t GetNextDailyQuestReset() const { return m_NextDailyQuestReset; }
+        /// Next weekly quest reset time
+        time_t GetNextWeeklyQuestReset() const { return m_NextWeeklyQuestReset; }
+
+        /// Next random bg reset time
         time_t GetNextRandomBGResetTime() const { return m_NextRandomBGReset; }
 
         /// Get the maximum skill level a player can reach
@@ -758,11 +761,9 @@ class World
         // callback for UpdateRealmCharacters
         void _UpdateRealmCharCount(QueryResult_AutoPtr resultCharCount, uint32 accountId);
 
-        void InitDailyQuestResetTime();
-        void InitWeeklyQuestResetTime();
+        void InitTimedQuestResetTime();
         void InitRandomBGResetTime();
-        void ResetDailyQuests();
-        void ResetWeeklyQuests();
+        void ResetTimedQuests(bool daily);
         void ResetRandomBG();
     private:
         static volatile bool m_stopEvent;
@@ -827,9 +828,12 @@ class World
         // CLI command holder to be thread safe
         ACE_Based::LockedQueue<CliCommandHolder*,ACE_Thread_Mutex> cliCmdQueue;
 
-        // next daily quests and random bg reset time
+        // Next daily quest reset time
         time_t m_NextDailyQuestReset;
+        // Next weekly quest reset time
         time_t m_NextWeeklyQuestReset;
+
+        // next random bg reset time
         time_t m_NextRandomBGReset;
 
         //Player Queue
@@ -854,4 +858,3 @@ extern uint32 realmID;
 
 #define sWorld (*ACE_Singleton<World, ACE_Null_Mutex>::instance())
 #endif
-/// @}

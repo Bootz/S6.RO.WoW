@@ -316,6 +316,29 @@ struct QuestPOI
 typedef std::vector<QuestPOI> QuestPOIVector;
 typedef UNORDERED_MAP<uint32, QuestPOIVector> QuestPOIMap;
 
+// For the daily/weekly quest pool
+struct QuestPool
+{
+    uint32  quest;      // Quest entry
+    bool    daily;      // Whether it is daily (if not it's a weekly)
+    bool    active;     // Is this quest active atm?
+
+    QuestPool() : quest(0), daily(0), active(0) {}
+    QuestPool(uint32 _quest, bool _daily, bool _active) : quest(_quest), daily(_daily), active(_active) {}
+};
+typedef std::vector<QuestPool> QuestPoolVector;
+
+// For the daily/weekly quest pool
+struct QuestPoolEntry
+{
+    uint32          qnum;   // Number of quest in pool for the npc
+    QuestPoolVector pool;   // QuestPool entry
+
+    QuestPoolEntry() : qnum(0), pool(0) {}
+    QuestPoolEntry(uint32 _qnum, QuestPoolVector _pool) : qnum(_qnum), pool(_pool) {}
+};
+typedef std::map<uint32, QuestPoolEntry> QuestPoolMap;
+
 struct GraveYardData
 {
     uint32 safeLocId;
@@ -501,6 +524,8 @@ class ObjectMgr
             return itr != mQuestTemplates.end() ? itr->second : NULL;
         }
         QuestMap const& GetQuestTemplates() const { return mQuestTemplates; }
+        QuestPoolMap const& GetDailyQuestPoolMap() const { return mDailyQuestPoolMap; }
+        QuestPoolMap const& GetWeeklyQuestPoolMap() const { return mWeeklyQuestPoolMap; }
 
         uint32 GetQuestForAreaTrigger(uint32 Trigger_ID) const
         {
@@ -611,6 +636,10 @@ class ObjectMgr
         void LoadArenaTeams();
         void LoadGroups();
         void LoadQuests();
+
+        void LoadQuestPool(bool reset = false, bool daily = true);
+        void ResetQuestPool(bool daily);
+
         void LoadQuestRelations()
         {
             sLog.outString("Loading GO Start Quest Data...");
@@ -982,6 +1011,7 @@ class ObjectMgr
         {
             return GossipMenuItemsMapBounds(m_mGossipMenuItemsMap.lower_bound(uiMenuId),m_mGossipMenuItemsMap.upper_bound(uiMenuId));
         }
+
         GossipMenuItemsMapBoundsNonConst GetGossipMenuItemsMapBoundsNonConst(uint32 uiMenuId)
         {
             return GossipMenuItemsMapBoundsNonConst(m_mGossipMenuItemsMap.lower_bound(uiMenuId),m_mGossipMenuItemsMap.upper_bound(uiMenuId));
@@ -1047,6 +1077,10 @@ class ObjectMgr
         PointOfInterestMap  mPointsOfInterest;
 
         QuestPOIMap         mQuestPOIMap;
+
+        QuestPoolMap        mDailyQuestPoolMap;
+        QuestPoolMap        mWeeklyQuestPoolMap;
+        QuestPoolMap        mDisabledQuestPoolMap;
 
         //character reserved names
         typedef std::set<std::wstring> ReservedNamesMap;
