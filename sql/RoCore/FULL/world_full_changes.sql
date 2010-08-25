@@ -5683,6 +5683,10 @@ INSERT INTO `spell_linked_spell` (`spell_trigger`, `spell_effect`, `type`, `comm
 (46924, -68766, 2, 'Bladestorm immune at Desecration');
 #Fixed Cyclone piercing through Ice Block
 INSERT INTO spell_linked_spell VALUES (45438, -33786, 2, 'Iceblock immune to cyclone');
+#Fixed Vanish not applying Stealth
+REPLACE INTO `spell_linked_spell` VALUES (1856, 1784, 0, 'Vanish rk1 -> Stealth');
+REPLACE INTO `spell_linked_spell` VALUES (1857, 1784, 0, 'Vanish rk2 -> Stealth');
+REPLACE INTO `spell_linked_spell` VALUES (26889, 1784, 0, 'Vanish rk3 -> Stealth');
 
 ALTER TABLE db_version CHANGE COLUMN required_370_world_north_quest required_423_world_isle_of_conquest bit;
 
