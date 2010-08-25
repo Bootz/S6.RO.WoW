@@ -2968,6 +2968,13 @@ SpellMissInfo Unit::MagicSpellHitResult(Unit *pVictim, SpellEntry const *spell)
     // Chance hit from victim SPELL_AURA_MOD_ATTACKER_SPELL_HIT_CHANCE auras
     modHitChance+= pVictim->GetTotalAuraModifierByMiscMask(SPELL_AURA_MOD_ATTACKER_SPELL_HIT_CHANCE, schoolMask);
     // Reduce spell hit chance for Area of effect spells from victim SPELL_AURA_MOD_AOE_AVOIDANCE aura
+
+    // Cloak of Shadows Hack part 1
+    int32 cosResist = 0;
+    if (AuraEffect * auraEff = pVictim->GetAuraEffect(31224, 0))
+        cosResist = auraEff->GetAmount();
+    modHitChance -= cosResist;
+
     if (IsAreaOfEffectSpell(spell))
         modHitChance-=pVictim->GetTotalAuraModifier(SPELL_AURA_MOD_AOE_AVOIDANCE);
 
@@ -2995,28 +3002,14 @@ SpellMissInfo Unit::MagicSpellHitResult(Unit *pVictim, SpellEntry const *spell)
     int32 resist_chance = pVictim->GetMechanicResistChance(spell)*100;
     tmp += resist_chance;
 
-    // Chance resist debuff
-    if (!IsPositiveSpell(spell->Id))
-    {
-        bool bNegativeAura = false;
-        for (uint8 I = 0; I < 3; I++)
-        {
-            if (spell->EffectApplyAuraName[I] != 0)
-            {
-                bNegativeAura = true;
-                break;
-            }
-        }
-
-        if (bNegativeAura)
-        {
-            tmp += pVictim->GetMaxPositiveAuraModifierByMiscValue(SPELL_AURA_MOD_DEBUFF_RESISTANCE, int32(spell->Dispel)) * 100;
-            tmp += pVictim->GetMaxNegativeAuraModifierByMiscValue(SPELL_AURA_MOD_DEBUFF_RESISTANCE, int32(spell->Dispel)) * 100;
-        }
-    }
+ // Chance resist debuff
+    tmp -= pVictim->GetTotalAuraModifierByMiscValue(SPELL_AURA_MOD_DEBUFF_RESISTANCE, int32(spell->Dispel));
+    // Chaos Bolt cannot be Resisted/Deflected
+    if (spell->SpellFamilyName == 5 && spell->SpellFamilyFlags[1] & 0x20000)
+        return SPELL_MISS_NONE;
 
    // Roll chance
-    if (rand < tmp)
+    if (rand < (tmp - cosResist * 100)) // Cloak of Shadows Hack part 2
         return SPELL_MISS_RESIST;
 
     // cast by caster in front of victim
