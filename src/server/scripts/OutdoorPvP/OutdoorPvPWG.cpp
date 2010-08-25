@@ -55,7 +55,7 @@ OutdoorPvPWG::OutdoorPvPWG()
 
 bool OutdoorPvPWG::SetupOutdoorPvP()
 {
-    if (!sWorld.getConfig(CONFIG_OUTDOORPVP_WINTERGRASP_ENABLED))
+    if (!sWorld.getIntConfig(CONFIG_OUTDOORPVP_WINTERGRASP_ENABLED))
     {
         sWorld.setWorldState(WORLDSTATE_WINTERGRASP_CONTROLING_FACTION, TEAM_NEUTRAL);
         return false;
@@ -390,7 +390,7 @@ QueryResult_AutoPtr result = WorldDatabase.PQuery("SELECT guid, id FROM creature
     _LoadTeamPair(m_creEntryPair, OutdoorPvPWGCreEntryPair);
 
     m_wartime = false;
-    m_timer = sWorld.getConfig(CONFIG_OUTDOORPVP_WINTERGRASP_START_TIME) * MINUTE * IN_MILLISECONDS;
+    m_timer = sWorld.getIntConfig(CONFIG_OUTDOORPVP_WINTERGRASP_START_TIME) * MINUTE * IN_MILLISECONDS;
     sWorld.SendWintergraspState();
     m_towerDamagedCount[TEAM_ALLIANCE] = 0;
     m_towerDestroyedCount[TEAM_ALLIANCE] = 0;
@@ -1063,7 +1063,7 @@ bool OutdoorPvPWG::UpdateGameObjectInfo(GameObject *go) const
 
 void OutdoorPvPWG::HandlePlayerEnterZone(Player * plr, uint32 zone)
 {
-    if (!sWorld.getConfig(CONFIG_OUTDOORPVP_WINTERGRASP_ENABLED))
+    if (!sWorld.getIntConfig(CONFIG_OUTDOORPVP_WINTERGRASP_ENABLED))
         return;
 
     if (isWarTime())
@@ -1099,7 +1099,7 @@ void OutdoorPvPWG::HandlePlayerEnterZone(Player * plr, uint32 zone)
 // Reapply Auras if needed
 void OutdoorPvPWG::HandlePlayerResurrects(Player * plr, uint32 zone)
 {
-    if (!sWorld.getConfig(CONFIG_OUTDOORPVP_WINTERGRASP_ENABLED))
+    if (!sWorld.getIntConfig(CONFIG_OUTDOORPVP_WINTERGRASP_ENABLED))
         return;
 
     if (isWarTime())
@@ -1137,7 +1137,7 @@ void OutdoorPvPWG::HandlePlayerResurrects(Player * plr, uint32 zone)
 
 void OutdoorPvPWG::HandlePlayerLeaveZone(Player * plr, uint32 zone)
 {
-    if (!sWorld.getConfig(CONFIG_OUTDOORPVP_WINTERGRASP_ENABLED))
+    if (!sWorld.getIntConfig(CONFIG_OUTDOORPVP_WINTERGRASP_ENABLED))
         return;
 
     if (!plr->GetSession()->PlayerLogout())
@@ -1184,7 +1184,7 @@ void OutdoorPvPWG::PromotePlayer(Player *killer) const
 
 void OutdoorPvPWG::HandleKill(Player *killer, Unit *victim)
 {
-    if (!sWorld.getConfig(CONFIG_OUTDOORPVP_WINTERGRASP_ENABLED) || !isWarTime())
+    if (!sWorld.getIntConfig(CONFIG_OUTDOORPVP_WINTERGRASP_ENABLED) || !isWarTime())
         return;
 
     bool ok = false;
@@ -1321,7 +1321,7 @@ void OutdoorPvPWG::UpdateClock()
 
 bool OutdoorPvPWG::Update(uint32 diff)
 {
-    if (!sWorld.getConfig(CONFIG_OUTDOORPVP_WINTERGRASP_ENABLED))
+    if (!sWorld.getIntConfig(CONFIG_OUTDOORPVP_WINTERGRASP_ENABLED))
         return false;
 
     if (m_timer > diff)
@@ -1469,7 +1469,7 @@ void OutdoorPvPWG::StartBattle()
 	int CountDef=0;
 	int CountAtk=0;
     m_wartime = true;
-    m_timer = sWorld.getConfig(CONFIG_OUTDOORPVP_WINTERGRASP_BATTLE_TIME) * MINUTE * IN_MILLISECONDS;
+    m_timer = sWorld.getIntConfig(CONFIG_OUTDOORPVP_WINTERGRASP_BATTLE_TIME) * MINUTE * IN_MILLISECONDS;
 
 for (PlayerSet::iterator itr = m_players[getDefenderTeam()].begin(); itr != m_players[getDefenderTeam()].end(); ++itr)
 {
@@ -1639,18 +1639,18 @@ for (PlayerSet::iterator itr = m_players[getAttackerTeam()].begin(); itr != m_pl
         uint32 playersWithRankNum = 0;
         uint32 honor = 0;
 
-        if (sWorld.getConfig(CONFIG_OUTDOORPVP_WINTERGRASP_CUSTOM_HONOR))
+        if (sWorld.getIntConfig(CONFIG_OUTDOORPVP_WINTERGRASP_CUSTOM_HONOR))
         {
             // Calculate Level 70+ with Corporal or Lieutenant rank
             for (PlayerSet::iterator itr = m_players[team].begin(); itr != m_players[team].end(); ++itr)
                 if ((*itr)->getLevel() > 76 && ((*itr)->HasAura(SPELL_LIEUTENANT) || (*itr)->HasAura(SPELL_CORPORAL)))
                     ++playersWithRankNum;
 
-            baseHonor = team == getDefenderTeam() ? sWorld.getConfig(CONFIG_OUTDOORPVP_WINTERGRASP_WIN_BATTLE) : sWorld.getConfig(CONFIG_OUTDOORPVP_WINTERGRASP_LOSE_BATTLE);
-            baseHonor += (sWorld.getConfig(CONFIG_OUTDOORPVP_WINTERGRASP_DAMAGED_TOWER) * m_towerDamagedCount[OTHER_TEAM(team)]);
-            baseHonor += (sWorld.getConfig(CONFIG_OUTDOORPVP_WINTERGRASP_DESTROYED_TOWER) * m_towerDestroyedCount[OTHER_TEAM(team)]);
-            baseHonor += (sWorld.getConfig(CONFIG_OUTDOORPVP_WINTERGRASP_INTACT_BUILDING) * intactNum);
-            baseHonor += (sWorld.getConfig(CONFIG_OUTDOORPVP_WINTERGRASP_DAMAGED_BUILDING) * damagedNum);
+            baseHonor = team == getDefenderTeam() ? sWorld.getIntConfig(CONFIG_OUTDOORPVP_WINTERGRASP_WIN_BATTLE) : sWorld.getIntConfig(CONFIG_OUTDOORPVP_WINTERGRASP_LOSE_BATTLE);
+            baseHonor += (sWorld.getIntConfig(CONFIG_OUTDOORPVP_WINTERGRASP_DAMAGED_TOWER) * m_towerDamagedCount[OTHER_TEAM(team)]);
+            baseHonor += (sWorld.getIntConfig(CONFIG_OUTDOORPVP_WINTERGRASP_DESTROYED_TOWER) * m_towerDestroyedCount[OTHER_TEAM(team)]);
+            baseHonor += (sWorld.getIntConfig(CONFIG_OUTDOORPVP_WINTERGRASP_INTACT_BUILDING) * intactNum);
+            baseHonor += (sWorld.getIntConfig(CONFIG_OUTDOORPVP_WINTERGRASP_DAMAGED_BUILDING) * damagedNum);
             if (playersWithRankNum)
                 baseHonor /= playersWithRankNum;
         }
@@ -1662,7 +1662,7 @@ for (PlayerSet::iterator itr = m_players[getAttackerTeam()].begin(); itr != m_pl
                 continue; // No rewards for level <70
 
             // give rewards
-            if (sWorld.getConfig(CONFIG_OUTDOORPVP_WINTERGRASP_CUSTOM_HONOR))
+            if (sWorld.getIntConfig(CONFIG_OUTDOORPVP_WINTERGRASP_CUSTOM_HONOR))
             {
                 if (team == getDefenderTeam())
                 {
@@ -1739,7 +1739,7 @@ for (PlayerSet::iterator itr = m_players[getAttackerTeam()].begin(); itr != m_pl
     }
 
     m_wartime = false;
-    m_timer = sWorld.getConfig(CONFIG_OUTDOORPVP_WINTERGRASP_INTERVAL) * MINUTE * IN_MILLISECONDS;
+    m_timer = sWorld.getIntConfig(CONFIG_OUTDOORPVP_WINTERGRASP_INTERVAL) * MINUTE * IN_MILLISECONDS;
     TeamCastSpell(getAttackerTeam(), SPELL_TELEPORT_DALARAN);
     RemoveOfflinePlayerWGAuras();
     // Update timer in players battlegrounds tab

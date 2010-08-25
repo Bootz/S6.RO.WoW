@@ -5910,7 +5910,7 @@ void Player::ModifySkillBonus(uint32 skillid,int32 val, bool talent)
 
 void Player::UpdateSkillsForLevel()
 {
-    uint16 maxconfskill = sWorld.getIntConfigMaxSkillValue();
+    uint16 maxconfskill = sWorld.GetConfigMaxSkillValue();
     uint32 maxSkill = GetMaxSkillValueForLevel();
 
     bool alwaysMaxSkill = sWorld.getBoolConfig(CONFIG_ALWAYS_MAX_SKILL_FOR_LEVEL);

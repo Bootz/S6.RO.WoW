@@ -120,7 +120,7 @@ public:
             ALLIANCE_CONTROL_PHASE_SHIFT_1 = 55774,
             ALLIANCE_CONTROL_PHASE_SHIFT_2 = 60027,
         };
-            if (!sWorld.getConfig(CONFIG_ALLOW_TWO_SIDE_INTERACTION_GROUP)) return;
+            if (!sWorld.getBoolConfig(CONFIG_ALLOW_TWO_SIDE_INTERACTION_GROUP)) return;
 
             switch (pPlayer->GetTeam())
             {
