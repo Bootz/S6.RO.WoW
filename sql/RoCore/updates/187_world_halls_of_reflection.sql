@@ -1,36 +1,17 @@
-ALTER TABLE db_version CHANGE COLUMN required_183_world_wintergrasp required_187_world_halls_of_reflection bit;
-
--- Cleanup first
-UPDATE `creature_template` SET `Scriptname`=' ' WHERE `entry` IN (38112,38113,37221,37223,38175,38172,38567,38177,38173,38176);
-UPDATE `instance_template` SET `script`='instance_hall_of_reflection' WHERE (`map`='668');
-
-UPDATE `instance_template` SET `script` = 'instance_halls_of_reflection' WHERE map=668;
+-- ALTER TABLE db_version CHANGE COLUMN required_117_proto_drake_path required_187_world_halls_of_reflection bit;
 UPDATE `gameobject_template` SET `ScriptName` = '' WHERE `entry` IN (202236,202302);
 DELETE FROM `creature` WHERE `map` = 668 AND `id` IN (38177,38176,38173,38172,38567,38175,36940,36941,37069);
-
-UPDATE `creature_template` SET `ScriptName`='generic_creature' WHERE `entry` IN (38177,38176,38173,38172,38567,38175);
 
 UPDATE `gameobject_template` SET `faction` = '114' WHERE `entry` IN (197341, 201976);
 UPDATE `gameobject_template` SET `faction`='1375' WHERE `entry` IN (197341, 202302, 201385, 201596);
 
 UPDATE `creature_template` SET `speed_walk`='1.5', `speed_run`='2.0' WHERE `entry` IN (36954, 37226);
-UPDATE `creature_template` SET `AIName`='', `Scriptname`='npc_jaina_and_sylvana_HRintro' WHERE `entry` IN (37221, 37223);
-UPDATE `creature_template` SET `AIName`='', `Scriptname`='boss_falric' WHERE `entry` IN (38112);
-UPDATE `creature_template` SET `AIName`='', `Scriptname`='boss_marwyn' WHERE `entry` IN (38113);
-UPDATE `creature_template` SET `AIName`='', `Scriptname`='npc_lich_king_hr' WHERE `entry` IN (36954);
-UPDATE `creature_template` SET `AIName`='', `Scriptname`='boss_lich_king_hor' WHERE `entry` IN (37226);
-UPDATE `creature_template` SET `AIName`='', `Scriptname`='npc_jaina_and_sylvana_HRextro' WHERE `entry` IN (36955, 37554);
-UPDATE `creature_template` SET `AIName`='', `Scriptname`='generic_creature' WHERE `entry` IN (36940,36941,37069);
 UPDATE `creature_template` SET `scale`='0.8', `equipment_id`='1221' WHERE `entry` IN (37221, 36955);
 UPDATE `creature_template` SET `equipment_id`='1290' WHERE `entry` IN (37223, 37554);
 UPDATE `creature_template` SET `equipment_id`='0' WHERE `entry`=36954;
 UPDATE `creature_template` SET `scale`='1' WHERE `entry` IN (37223);
 UPDATE `creature_template` SET `scale`='0.8' WHERE `entry` IN (36658, 37225, 37223, 37226, 37554);
 UPDATE `creature_template` SET `unit_flags`='768', `type_flags`='268435564' WHERE `entry` IN (38177, 38176, 38173, 38172, 38567, 38175);
-UPDATE `creature_template` SET `AIName`='', `Scriptname`='npc_frostworn_general' WHERE `entry`=36723;
-update `creature_template` set `AIName`='', `Scriptname`='npc_raging_gnoul' where `entry` in (36940);
-update `creature_template` set `AIName`='', `Scriptname`='npc_risen_witch_doctor' where `entry` in (36941);
-update `creature_template` set `AIName`='', `Scriptname`='npc_abon' where `entry` in (37069);
 
 -- conditions
 REPLACE INTO `conditions`  VALUES 

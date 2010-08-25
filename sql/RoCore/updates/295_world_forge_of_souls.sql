@@ -1,4 +1,4 @@
-ALTER TABLE db_version CHANGE COLUMN required_280_world_pit_of_saron required_295_world_forge_of_souls bit;
+-- ALTER TABLE db_version CHANGE COLUMN required_187_world_halls_of_reflection required_295_world_forge_of_souls bit;
 
 DELETE FROM `creature` where `id` IN (38161,38160);
 -- Lady Sylvanas Windrunner

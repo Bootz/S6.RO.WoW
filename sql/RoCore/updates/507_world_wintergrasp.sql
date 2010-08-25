@@ -1,4 +1,4 @@
-ALTER TABLE db_version CHANGE COLUMN required_436_world_command required_507_world_wintergrasp bit;
+-- ALTER TABLE db_version CHANGE COLUMN required_436_world_command required_507_world_wintergrasp bit;
 
 DELETE FROM `trinity_string` WHERE entry IN (756,757,758,759,760,761,762,763,764,765,766,767,768,769,770,771,772,780,781);
 INSERT INTO `trinity_string` VALUES ('756', 'Battle begins!', '', '', '', '', '', '', '', 'Битва началась');
@@ -43,6 +43,3 @@ REPLACE INTO `spell_linked_spell` VALUES ('54640','54643','0','Defender\'s Porta
 /* Teleport WG SPELLs*/
 REPLACE INTO `spell_target_position` VALUES ('59096', '571', '4561.58', '2835.33', '389.79', '0.34');
 REPLACE INTO `spell_target_position` VALUES ('60035', '571', '5325.06', '2843.36', '409.285', '3.20278');
-
-DELETE FROM `outdoorpvp_template` WHERE `TypeId` IN (7);
-INSERT INTO `outdoorpvp_template` (`TypeId`, `ScriptName`, `Comment`) VALUES (7, 'outdoorpvp_wg', 'Wintergrasp');

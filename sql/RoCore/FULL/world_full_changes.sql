@@ -3344,6 +3344,34 @@ UPDATE `creature_template` SET `faction_A` = 35, `faction_H` = 35, `npcflag` = 1
 -- razorscale yell fix
 UPDATE `script_texts` SET `content_default` = "Move! Quickly! She won't remain grounded for long.", `type` = 1  WHERE `entry` = -1603261;
 
+
+
+-- Thorim
+-- IA for Thorim
+UPDATE `creature_template` SET `ScriptName`='boss_thorim' WHERE (`entry`='32865');
+
+-- Thorim immunity on disarm
+UPDATE `creature_template` SET `mechanic_immune_mask` = 650854239 WHERE `entry` = 32865;
+
+
+
+-- Keepers (Yogg Saron Encounter)
+DELETE FROM `creature` WHERE `id` IN (33410, 33411, 33412, 33413);
+INSERT INTO `creature` (`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`DeathState`,`MovementType`) VALUES
+(33410, 603, 1, 1, 0, 0, 2036.739, 25.464, 338.296, 3.814, 604800, 0, 0, 14433075, 0, 0, 0),
+(33411, 603, 1, 1, 0, 0, 1939.094, -90.699, 338.296, 1.026, 604800, 0, 0, 14433075, 0, 0, 0),
+(33412, 603, 1, 1, 0, 0, 1939.094, 42.534, 338.296, 5.321, 604800, 0, 0, 14433075, 0, 0, 0),
+(33413, 603, 1, 1, 0, 0, 2036.739, -73.705, 338.296, 2.435, 604800, 0, 0, 14433075, 0, 0, 0);
+
+UPDATE `creature_template` SET `ScriptName` = 'npc_ys_freya' WHERE `entry` = 33410;
+UPDATE `creature_template` SET `ScriptName` = 'npc_ys_hodir' WHERE `entry` = 33411;
+UPDATE `creature_template` SET `ScriptName` = 'npc_ys_mimiron' WHERE `entry` = 33412;
+UPDATE `creature_template` SET `ScriptName` = 'npc_ys_thorim' WHERE `entry` = 33413;
+
+UPDATE `creature_template` SET `modelid1` = 11686, `modelid2` = 0, `minlevel` = 80, `maxlevel` = 80, `unit_flags` = 33686018, `type_flags` = 0, `ScriptName` = 'npc_sanity_well' WHERE `entry` = 33991;
+
+
+
 -- script names faltantes
 UPDATE `creature_template` SET `ScriptName` = 'boss_elder_ironbranch' WHERE `entry` =32913;
 UPDATE `creature_template` SET `ScriptName` = 'boss_elder_stonebark' WHERE `entry` =32914;
@@ -3476,59 +3504,13 @@ CREATE TABLE `player_factionchange_achievements` (
 -- Records of player_factionchange_achievements
 -- ----------------------------
 
-ALTER TABLE db_version CHANGE COLUMN required_31_world_db_version required_2_world_fixes bit;
-
--- IcecrownCitadel
-DELETE FROM `gameobject_scripts` WHERE id= 201584;
-
--- EyeOfEternity
-DELETE FROM achievement_criteria_data WHERE criteria_id = 1400;
-UPDATE `creature_template` SET `difficulty_entry_1` = '0' WHERE `creature_template`.`entry` =28859 LIMIT 1 ;
-
--- TheOculus
-UPDATE `creature` SET `phaseMask` = '1' WHERE `creature`.`guid` =86828 LIMIT 1;
-UPDATE `creature` SET `phaseMask` = '1' WHERE `creature`.`guid` =86829 LIMIT 1;
-UPDATE `creature` SET `phaseMask` = '1' WHERE `creature`.`guid` =86830 LIMIT 1;
-UPDATE `creature` SET `phaseMask` = '1' WHERE `creature`.`guid` =86831 LIMIT 1;
-UPDATE `creature` SET `phaseMask` = '1' WHERE `creature`.`guid` =86832 LIMIT 1;
-UPDATE `creature` SET `phaseMask` = '1' WHERE `creature`.`guid` =86833 LIMIT 1;
-UPDATE `creature` SET `phaseMask` = '1' WHERE `creature`.`guid` =86834 LIMIT 1;
-UPDATE `creature` SET `phaseMask` = '1' WHERE `creature`.`guid` =86835 LIMIT 1;
-DELETE FROM `creature_questrelation` WHERE `id` = 27658; 
-DELETE FROM `creature_involvedrelation` WHERE `id` = 27658; 
-
--- ObsidianSanctum
-UPDATE `creature` SET `MovementType` = '0' WHERE `creature`.`guid` =123400 LIMIT 1;
-UPDATE `creature` SET `MovementType` = '0' WHERE `creature`.`guid` =123401 LIMIT 1;
-UPDATE `creature` SET `MovementType` = '0' WHERE `creature`.`guid` =123402 LIMIT 1;
-UPDATE `creature` SET `MovementType` = '0' WHERE `creature`.`guid` =123403 LIMIT 1;
-UPDATE `creature` SET `MovementType` = '0' WHERE `creature`.`guid` =123404 LIMIT 1;
-UPDATE `creature_template` SET `difficulty_entry_1` = '0' WHERE `creature_template`.`entry` =31214 LIMIT 1 ;
-UPDATE `creature_template` SET `difficulty_entry_1` = '0' WHERE `creature_template`.`entry` =30890 LIMIT 1 ;
-
--- RubySanctum
-UPDATE `creature_template` SET `difficulty_entry_2` = '0' WHERE `creature_template`.`entry` =39751 LIMIT 1 ;
-UPDATE `gameobject` SET `spawnMask` = '1' WHERE `gameobject`.`guid` =750008 LIMIT 1;
-UPDATE `gameobject` SET `spawnMask` = '1' WHERE `gameobject`.`guid` =750007 LIMIT 1;
-UPDATE `gameobject` SET `spawnMask` = '1' WHERE `gameobject`.`guid` =750006 LIMIT 1;
-UPDATE `gameobject` SET `spawnMask` = '1' WHERE `gameobject`.`guid` =750005 LIMIT 1;
-
-
--- Ulduar
-UPDATE `creature_addon` SET `auras` = NULL WHERE `creature_addon`.`guid` =137496 LIMIT 1;
-UPDATE `creature_template` SET `difficulty_entry_1` = '0' WHERE `creature_template`.`entry` =33240 LIMIT 1 ;
-UPDATE `creature_template` SET `unit_class` = '2' WHERE `creature_template`.`entry` =33515 LIMIT 1;
-UPDATE `creature_template` SET `unit_class` = '1' WHERE `creature_template`.`entry` =32918 LIMIT 1;
-UPDATE `creature_template` SET `unit_class` = '1' WHERE `creature_template`.`entry` =33399 LIMIT 1;
-UPDATE `creature_template` SET `unit_class` = '2' WHERE `creature_template`.`entry` =34175 LIMIT 1;
-update gameobject_scripts set `command`=11 where `id`=55194;
 
 -- Icecrown Citadel
 -- Db version requirement
-ALTER TABLE db_version CHANGE COLUMN required_2_world_fixes required_3_world_icecrown_citadel bit;
+ALTER TABLE db_version CHANGE COLUMN required_31_world_db_version required_3_world_icecrown_citadel bit;
 
 -- Cleaning scripts names for npc and bosses
-UPDATE `creature_template` SET `ScriptName`='' WHERE `entry` IN (37813,38508,36626,36672,36612,38711,36678,37697,36853,36597,38995,36633,36609,37695,38757,36701,36725,37011,36724,37012,37007,36811,36807,36829,36844,36808,36627,36897,36899,37973,37970,37972,36789,38429,38068,38369,38332,38454,38422,38451);
+UPDATE `creature_template` SET `ScriptName`='' WHERE `entry` IN (37813,38508,36626,36855,38222,36678,37697,36853,36597,38995,36633,36609,37695,38757,36701,36725,37011,36724,37012,37007,36811,36807,36829,36844,36808,38135,37949,36627,36897,36899,37973,37970,37972,36789,38429,38068,38369,38332,38454,38422,38451);
 UPDATE `gameobject_template` SET `ScriptName`='' WHERE `entry` IN (202235,202242,202244,202243,202245,202246,202182,202181);
 DELETE FROM `creature` WHERE `id`=38995;
 
@@ -3774,15 +3756,12 @@ UPDATE `creature_template` SET `ScriptName`='boss_blood_elf_taldaram_icc' WHERE 
 UPDATE `creature_template` SET `ScriptName`='boss_blood_council' WHERE (`entry`='37970');
 UPDATE `creature_template` SET `ScriptName`='boss_festergut' WHERE (`entry`='36626');
 UPDATE `creature_template` SET `ScriptName`='boss_saurfang' WHERE (`entry`='37813');
+UPDATE `creature_template` SET `ScriptName`='boss_lady_deathwisper' WHERE (`entry`='36855');
 UPDATE `creature_template` SET `ScriptName`='boss_professor_putricide' WHERE (`entry`='36678');
 UPDATE `creature_template` SET `ScriptName`='boss_sindragosa' WHERE (`entry`='36853');
 UPDATE `creature_template` SET `ScriptName`='boss_valithria' WHERE `entry` = 36789;
 UPDATE `creature_template` SET `ScriptName`='boss_the_lich_king' WHERE (`entry`='36597');
 UPDATE `creature_template` SET `ScriptName`='boss_rotface' WHERE `entry`= 36627;
-UPDATE `creature_template` SET `ScriptName`='boss_lord_marrowgar' WHERE (`entry`='36612');
-UPDATE `creature_template` SET `ScriptName`='npc_cold_flame' WHERE (`entry`='36672');	 	
-UPDATE `creature_template` SET `ScriptName`='npc_bone_spike' WHERE (`entry`='38711');
-UPDATE `creature_template` SET `vehicleId`='' WHERE `entry`=36619;
 
 # Mobs
 UPDATE `creature_template` SET `ScriptName`='npc_tirion_icc' WHERE (`entry`='38995');
@@ -3806,6 +3785,9 @@ UPDATE `creature_template` SET `ScriptName`='npc_death_speaker_disciple' WHERE `
 UPDATE `creature_template` SET `ScriptName`='npc_death_speaker_high_priest' WHERE `entry` = 36829;
 UPDATE `creature_template` SET `ScriptName`='npc_death_speaker_servant' WHERE `entry` = 36844;
 UPDATE `creature_template` SET `ScriptName`='npc_death_speaker_zealot' WHERE `entry` = 36808;
+UPDATE `creature_template` SET `ScriptName`='npc_cult_fanatic' WHERE `entry` = 38135;
+UPDATE `creature_template` SET `ScriptName`='npc_cult_adherent' WHERE `entry` = 37949;
+UPDATE `creature_template` SET `ScriptName`='npc_shade' WHERE `entry` = 38222;
 UPDATE `creature_template` SET `ScriptName`='npc_skellmage_icc' WHERE `entry` = 37868;
 UPDATE `creature_template` SET `ScriptName`='npc_fireskell_icc' WHERE `entry` = 36791;
 UPDATE `creature_template` SET `ScriptName`='npc_suppressor_icc' WHERE `entry` = 37863;
@@ -3894,6 +3876,25 @@ DELETE FROM script_texts WHERE entry <= -1665902 AND entry >= -1666080;
 DELETE FROM script_texts WHERE entry <= -1810001 AND entry >= -1810031;
 
 -- Scripts texts
+
+# 2
+INSERT INTO `script_texts` VALUES ('36855', '-1665902', 'You have found your way here, because you are among the few gifted with true vision in a world cursed with blindness!', '', '', '', '', '', '', '', '', '17272', '1', '0', '0', '');
+INSERT INTO `script_texts` VALUES ('36855', '-1665903', 'You can see through the fog that hangs over this world like a shroud and grasp where true power lies!', '', '', '', '', '', '', '', '', '17273', '1', '0', '0', '');
+INSERT INTO `script_texts` VALUES ('36855', '-1665904', 'Fix your eyes upon your crude hands! The sinew, the soft meat, the dark blood coursing within!', '', '', '', '', '', '', '', '', '16878', '1', '0', '0', '');
+INSERT INTO `script_texts` VALUES ('36855', '-1665905', 'It is a weakness! A crippling flaw! A joke played by the creators upon their own creations!', '', '', '', '', '', '', '', '', '17268', '1', '0', '0', '');
+INSERT INTO `script_texts` VALUES ('36855', '-1665906', 'The sooner you come to accept your condition as a defect, the sooner you will find yourselves in a position to transcend it!', '', '', '', '', '', '', '', '', '17269', '1', '0', '0', '');
+INSERT INTO `script_texts` VALUES ('36855', '-1665907', 'Through our master all things are possible! His power is without limit, and his will unbending!', '', '', '', '', '', '', '', '', '17270', '1', '0', '0', '');
+INSERT INTO `script_texts` VALUES ('36855', '-1665908', 'Those who oppose him will be destroyed utterly! And those who serve, who serve wholly, unquestioningly, with utter devotion of mind and soul? Elevated! To heights beyond your ken!', '', '', '', '', '', '', '', '', '17271', '1', '0', '0', '');
+INSERT INTO `script_texts` VALUES ('36855', '-1665909', 'What is this disturbance?! You dare trespass upon this hallowed ground? This shall be your final resting place.', '', '', '', '', '', '', '', '', '16868', '1', '0', '0', '');
+INSERT INTO `script_texts` VALUES ('36855', '-1665910', 'Enough! I see I must take matters into my own hands!', '', '', '', '', '', '', '', '', '16877', '1', '0', '0', '');
+INSERT INTO `script_texts` VALUES ('36855', '-1665911', 'Take this blessing and show these intruders a taste of our master''s power.', '', '', '', '', '', '', '', '', '16873', '1', '0', '0', '');
+INSERT INTO `script_texts` VALUES ('36855', '-1665912', 'I release you from the curse of flesh!', '', '', '', '', '', '', '', '', '16874', '1', '0', '0', '');
+INSERT INTO `script_texts` VALUES ('36855', '-1665913', 'Arise and exalt in your pure form!', '', '', '', '', '', '', '', '', '16875', '1', '0', '0', '');
+INSERT INTO `script_texts` VALUES ('36855', '-1665914', 'You are weak, powerless to resist my will!', '', '', '', '', '', '', '', '', '16876', '1', '0', '0', '');
+INSERT INTO `script_texts` VALUES ('36855', '-1665915', 'This charade has gone on long enough.', '', '', '', '', '', '', '', '', '16872', '1', '0', '0', '');
+INSERT INTO `script_texts` VALUES ('36855', '-1665916', 'All part of the masters plan! Your end is... inevitable!', '', '', '', '', '', '', '', '', '16871', '1', '0', '0', '');
+INSERT INTO `script_texts` VALUES ('36855', '-1665917', 'Do you yet grasp of the futility of your actions?', '', '', '', '', '', '', '', '', '16869', '1', '0', '0', '');
+INSERT INTO `script_texts` VALUES ('36855', '-1665918', 'Embrace the darkness... Darkness eternal!', '', '', '', '', '', '', '', '', '16870', '1', '0', '0', '');
 
 # 3
 INSERT INTO `script_texts` (`npc_entry`,`entry`,`content_default`,`content_loc1`,`content_loc2`,`content_loc3`,`content_loc4`,`content_loc5`,`content_loc6`,`content_loc7`,`content_loc8`,`sound`,`type`,`language`,`emote`,`comment`) VALUES
@@ -4980,135 +4981,7 @@ INSERT INTO `achievement_criteria_data` (`criteria_id`,`type`,`value1`,`value2`)
 (13052,12,3,0), -- Heroic: Storming the Citadel (25 player), Claim victory in the Gunship Battle, mode requirement (25H)
 (13053,12,3,0); -- Heroic: Storming the Citadel (25 player), The Deathbringer, mode requirement (25H)
 
-UPDATE `creature_template` SET `unit_flags` = 528386, `type_flags` = 138, `mechanic_immune_mask` = 646658835 WHERE `entry` = 38456;
-UPDATE `creature_template` SET `modelid1` = 11686, `modelid3` = 11686, `AIName` = 'EventAI' WHERE `entry` = 38879;
-DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=38879);
-INSERT INTO `creature_ai_scripts` VALUES 
-(3887900, 38879, 9, 0, 100, 6, 1, 30, 8000, 10000, 11, 70460, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, '');
-UPDATE `creature_template` SET `spell4` = 34873, `spell5` = 60534 WHERE `entry` = 27258;
-DELETE FROM `creature_questrelation` WHERE `quest` = 12779;
-DELETE FROM `gameobject_questrelation` WHERE `quest` = 12779;
-UPDATE `item_template` SET `StartQuest`=0 WHERE `StartQuest` = 12779;
-INSERT INTO `creature_questrelation` (`id`, `quest`) VALUES (29110, 12779);
-UPDATE `creature_template` SET `npcflag`=`npcflag`|2 WHERE `entry` = 29110;
-INSERT INTO `creature_questrelation` (`id`, `quest`) VALUES (25462, 12779);
-UPDATE `creature_template` SET `npcflag`=`npcflag`|2 WHERE `entry` = 25462;
-DELETE FROM `creature_involvedrelation` WHERE `quest` = 12779;
-DELETE FROM `gameobject_involvedrelation` WHERE `quest` = 12779;
-INSERT INTO `creature_involvedrelation` (`id`, `quest`) VALUES (29110, 12779);
-UPDATE `creature_template` SET `npcflag`=`npcflag`|2 WHERE `entry`=29110;
-INSERT INTO `creature_involvedrelation` (`id`, `quest`) VALUES (25462, 12779);
-UPDATE `creature_template` SET `npcflag`=`npcflag`|2 WHERE `entry`=25462;
-DELETE FROM `creature` WHERE `id`=25462;
-INSERT INTO `creature` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`DeathState`,`MovementType`) VALUES
-(96146, 25462, 609, 1, 7, 0, 0, 2345.3, -5671.36, 426.03, 3.78, 120, 0, 0, 27890000, 0, 0, 0),
-(5683368, 25462, 609, 1, 64, 0, 0, 2310.21, -5741.9, 161.147, 0.561972, 300, 0, 0, 17964000, 0, 0, 0);
-DELETE FROM `creature` WHERE `id`=25462;
-INSERT INTO `creature` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`DeathState`,`MovementType`) VALUES
-(96146, 25462, 609, 1, 7, 0, 0, 2345.3, -5671.36, 426.03, 3.78, 120, 0, 0, 27890000, 0, 0, 0),
-(5683368, 25462, 609, 1, 64, 0, 0, 2310.21, -5741.9, 161.147, 0.561972, 300, 0, 0, 17964000, 0, 0, 0);
-
-# GameObject
-UPDATE `gameobject_template` SET `ScriptName` = 'icecrown_teleporter' WHERE `entry` IN (202223,202235,202242,202243,202244,202245,202246);
-UPDATE `gameobject_template` SET `flags` = 32 WHERE `entry` IN (202235,202242,202243,202244,202245,202246);
-UPDATE `gameobject_template` SET `flags` = 52 WHERE `entry` = 202223;
-UPDATE `gameobject_template` SET `ScriptName` = '', `data10` = 70308 WHERE `entry` = 201584;
-UPDATE `gameobject` SET `phaseMask` = '1' WHERE `id` IN (202242,202243,202244,202245,202235,202223,202246);
-
-# Other
-UPDATE `creature_template` SET `faction_A` = 1802, `faction_H` = 1801, `type_flags` = 67113036 WHERE `entry` IN (36789,10067,10068,10069);
-UPDATE `creature_template` SET `faction_A` = 14, `faction_H` = 14 WHERE `entry` IN (37006,37013,37986,38107,38548,36659,37690,37562,38159);
-UPDATE `creature_template` SET `minlevel` = 82,`maxlevel` = 82,`faction_A` = 14,`faction_H` = 14,`unit_flags` = 2 WHERE `entry` = 36672;
-UPDATE `creature_template` SET `VehicleId` = 639 WHERE `entry` IN (37813,13106,13107,13108);
-UPDATE `creature_template` SET `vehicleId` = 318 WHERE `entry` IN (36609,10242,10243,10244);
-UPDATE `creature_model_info` SET `bounding_radius` = 5,`combat_reach` = 5 WHERE `modelid` = 31119;
-UPDATE `creature_template` SET `flags_extra` = 2 WHERE `entry` = 36672;
-UPDATE `creature_template` SET `flags_extra` = 2 WHERE `entry` = 37007;
-UPDATE `creature` SET `modelid` = 11686 WHERE `map` = 631 AND `id` IN (SELECT `entry` FROM `creature_template` WHERE `flags_extra` = 128 OR `flags_extra` = 130);
-UPDATE `creature_template` SET `flags_extra` = 2, `unit_flags` = `unit_flags`|33554432 WHERE `flags_extra` = 128 OR `flags_extra` = 130 AND `entry` IN (SELECT `id` FROM `creature` WHERE `map` = 631);
-UPDATE `creature_template` SET `vehicleid` = 533 WHERE `entry` IN (36619,38233,38459,38460);
-
-# Not attackable and disable move flag
-UPDATE `creature_template` SET `unit_flags` = 33555204 WHERE `entry` IN (37986,37824,38234,38317,36659,38548,37186);
-UPDATE `creature_template` SET `unit_flags` = 33587972 WHERE `entry` = 37013;
-
-# Instance
-UPDATE `instance_template` SET `script`='instance_icecrown_citadel' WHERE `map` = 631;
-
-# Creature loot template
-
-DELETE FROM creature_loot_template WHERE item = 49426 AND entry IN
-(SELECT id FROM creature WHERE map = 631);
-
-# Creature addon template
-
-DELETE FROM `creature_addon` WHERE `guid` = 136107;
-DELETE FROM `creature_template_addon` WHERE `entry`= 37690;
-DELETE FROM `creature_template_addon` WHERE `entry`= 37672;
-
-INSERT INTO creature_addon (`guid`, `path_id`, `mount`, `bytes1`, `bytes2`, `emote`, `auras`) VALUES
-(136107, 0, 0, 0, 1, 0, '18950 0 18950 1 72242 0');
-
-INSERT INTO `creature_template_addon` (`entry`, `path_id`, `mount`, `bytes1`, `bytes2`, `emote`, `auras`) VALUES
-(37690, 0, 0, 0, 0, 0, '70345 0  70343 0'),
-(37672, 0, 0, 0, 0, 0, '70385 0 70405 0');
-
-#Thanks YTDB
-
-# Conditions
-
-DELETE FROM `conditions` WHERE `SourceEntry` IN (69508,69785,69788,70881,69248,69240,70341,70360,71617);
-
-INSERT INTO `conditions` (`SourceTypeOrReferenceId`,`SourceGroup`,`SourceEntry`,`ElseGroup`,`ConditionTypeOrReference`,`ConditionValue1`,`ConditionValue2`,`ConditionValue3`) VALUES
-(13,0,69508,0,18,1,37986,0),
-(13,0,70881,0,18,1,37986,0),
-(13,0,70360,0,18,1,37690,0);
-
-#creature
-
-DELETE FROM `creature` WHERE `id`=37013;
-INSERT INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `modelid`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `spawndist`, `currentwaypoint`, `curhealth`, `curmana`, `DeathState`, `MovementType`) VALUES
-(48969,37013,631,1,1,11686,0,4291.18,3092.92,372.97,2.33874,300,0,0,25200,0,0,0),
-(48971,37013,631,1,1,11686,0,4312.14,3112.98,372.97,2.51327,300,0,0,25200,0,0,0),
-(48973,37013,631,1,1,11686,0,4244.04,3092.66,372.97,0.97738,300,0,0,25200,0,0,0),
-(48976,37013,631,1,1,11686,0,4223.47,3113.58,372.97,0.76794,300,0,0,25200,0,0,0),
-(48981,37013,631,1,1,11686,0,4222.44,3161.69,372.97,5.53269,300,0,0,25200,0,0,0),
-(48983,37013,631,1,1,11686,0,4243.89,3181.74,372.97,5.44543,300,0,0,25200,0,0,0),
-(48989,37013,631,1,1,11686,0,4312.36,3160.84,372.97,3.80482,300,0,0,25200,0,0,0),
-(48990,37013,631,1,1,11686,0,4291.45,3181.25,372.97,4.10152,300,0,0,25200,0,0,0);
-
-#Linked spell
-
-DELETE FROM `spell_linked_spell` WHERE `spell_trigger` = 72202;
-
-ALTER TABLE db_version CHANGE COLUMN required_3_world_icecrown_citadel required_27_world_command bit;
-
-ALTER TABLE db_version CHANGE COLUMN required_27_world_command required_54_thorim_disarm bit;
-
--- IA for Thorim
-UPDATE `creature_template` SET `ScriptName`='boss_thorim' WHERE (`entry`='32865');
-
--- Thorim immunity on disarm
-UPDATE `creature_template` SET `mechanic_immune_mask` = 650854239 WHERE `entry` = 32865;
-
-ALTER TABLE db_version CHANGE COLUMN required_54_thorim_disarm required_91_ys_keepers bit;
-
--- Keepers (Yogg Saron Encounter)
-DELETE FROM `creature` WHERE `id` IN (33410, 33411, 33412, 33413);
-INSERT INTO `creature` (`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`DeathState`,`MovementType`) VALUES
-(33410, 603, 1, 1, 0, 0, 2036.739, 25.464, 338.296, 3.814, 604800, 0, 0, 14433075, 0, 0, 0),
-(33411, 603, 1, 1, 0, 0, 1939.094, -90.699, 338.296, 1.026, 604800, 0, 0, 14433075, 0, 0, 0),
-(33412, 603, 1, 1, 0, 0, 1939.094, 42.534, 338.296, 5.321, 604800, 0, 0, 14433075, 0, 0, 0),
-(33413, 603, 1, 1, 0, 0, 2036.739, -73.705, 338.296, 2.435, 604800, 0, 0, 14433075, 0, 0, 0);
-
-UPDATE `creature_template` SET `ScriptName` = 'npc_ys_freya' WHERE `entry` = 33410;
-UPDATE `creature_template` SET `ScriptName` = 'npc_ys_hodir' WHERE `entry` = 33411;
-UPDATE `creature_template` SET `ScriptName` = 'npc_ys_mimiron' WHERE `entry` = 33412;
-UPDATE `creature_template` SET `ScriptName` = 'npc_ys_thorim' WHERE `entry` = 33413;
-
-UPDATE `creature_template` SET `modelid1` = 11686, `modelid2` = 0, `minlevel` = 80, `maxlevel` = 80, `unit_flags` = 33686018, `type_flags` = 0, `ScriptName` = 'npc_sanity_well' WHERE `entry` = 33991;
-
-ALTER TABLE db_version CHANGE COLUMN required_91_ys_keepers required_117_proto_drake_path bit;
+ALTER TABLE db_version CHANGE COLUMN required_3_world_icecrown_citadel required_117_proto_drake_path bit;
 
 -- Path time-lost protodrake
 DELETE FROM `creature` WHERE `id`=32491;
@@ -5219,9 +5092,7 @@ INSERT INTO `waypoint_data` (`id`, `point`, `position_x`, `position_y`, `positio
 (139111, 95, 7675.21, -1088.75, 947.033, 0, 0, 0, 100, 0),
 (139111, 96, 7684.79, -1006.75, 943.092, 0, 0, 0, 100, 0);
 
-ALTER TABLE db_version CHANGE COLUMN required_117_proto_drake_path required_183_world_wintergrasp bit;
-
-ALTER TABLE db_version CHANGE COLUMN required_183_world_wintergrasp required_187_world_halls_of_reflection bit;
+ALTER TABLE db_version CHANGE COLUMN required_117_proto_drake_path required_187_world_halls_of_reflection bit;
 
 -- Cleanup first
 UPDATE `creature_template` SET `Scriptname`=' ' WHERE `entry` IN (38112,38113,37221,37223,38175,38172,38567,38177,38173,38176);
@@ -5503,308 +5374,7 @@ INSERT INTO script_waypoint VALUES
    (37226, 21, 5283.589,1703.755,784.176, 0, 'WP19');
 
 
-ALTER TABLE db_version CHANGE COLUMN required_187_world_halls_of_reflection required_205_world_access_requirement bit;
-
-ALTER TABLE db_version CHANGE COLUMN required_205_world_access_requirement required_242_world_battleground_template bit;
--- note: uncheck if necessary, depending on the db you use /* */
-
-/* 
--- Set battleground-names
-UPDATE `battleground_template` SET `Comment`= 'Alterac Valley' WHERE `battleground_template`.`id`=1;
-UPDATE `battleground_template` SET `Comment`= 'Warsong Gulch' WHERE `battleground_template`.`id`=2;
-UPDATE `battleground_template` SET `Comment`= 'Arathi Basin' WHERE `battleground_template`.`id`=3;
-UPDATE `battleground_template` SET `Comment`= 'Nagrand Arena' WHERE `battleground_template`.`id`=4;
-UPDATE `battleground_template` SET `Comment`= 'Blades''s Edge Arena' WHERE `battleground_template`.`id`=5;
-UPDATE `battleground_template` SET `Comment`= 'All Arena' WHERE `battleground_template`.`id`=6;
-UPDATE `battleground_template` SET `Comment`= 'Eye of The Storm' WHERE `battleground_template`.`id`=7;
-UPDATE `battleground_template` SET `Comment`= 'Ruins of Lordaeron' WHERE `battleground_template`.`id`=8;
-UPDATE `battleground_template` SET `Comment`= 'Strand of the Ancients' WHERE `battleground_template`.`id`=9;
-UPDATE `battleground_template` SET `Comment`= 'Dalaran Sewers' WHERE `battleground_template`.`id`=10;
-UPDATE `battleground_template` SET `Comment`= 'The Ring of Valor' WHERE `battleground_template`.`id`=11;
-UPDATE `battleground_template` SET `Comment`= 'Isle of Conquest' WHERE `battleground_template`.`id`=30;
-UPDATE `battleground_template` SET `Comment`= 'Random battleground' WHERE `battleground_template`.`id`=32;
- */
-
-ALTER TABLE db_version CHANGE COLUMN required_242_world_battleground_template required_243_world_creature_transport bit;
-
-DELETE FROM `creature_transport`;
-INSERT INTO `creature_transport` (`guid`,`transport_entry`,`npc_entry`,`TransOffsetX`,`TransOffsetY`,`TransOffsetZ`,`TransOffsetO`,`emote`) VALUES
-(11,164871,25075,4.22547,-13.2054,-23.6771,1.54314,0),
-(17,176310,25012,18.1475,-7.41572,6.09809,1.88535,0),
-(3,192241,30753,-26.8391,-10.402,35.5991,1.29366,432),
-(66,192241,29795,45.6197,7.29317,30.0955,4.67642,0),
-(5,192241,30754,-54.639,-15.3254,34.3972,3.83128,0),
-(1,176310,25013,0.194107,9.84585,6.09941,3.08731,0),
-(7,190536,31790,34.0851,0.015993,19.7141,3.03935,0),
-(8,192241,30752,7.30473,24.2619,34.9491,4.43536,0),
-(27,176310,25010,13.2057,-2.817,6.09989,3.88733,0),
-(10,192241,30755,7.49121,6.05275,34.4239,3.16615,0),
-(15,176310,25009,25.2165,6.9111,16.1459,3.94958,0),
-(16,176310,25015,34.0669,0.119702,18.287,3.17832,0),
-(1,190536,31792,-4.5113,-0.220224,9.36188,1.57535,432),
-(2,190536,31791,-11.4596,-8.43786,9.52534,4.77978,432),
-(2,176310,25014,-0.532552,-8.68575,6.09815,3.19019,0),
-(3,176310,25017,6.22581,9.13103,11.4836,1.53614,0),
-(17,192241,30755,37.6428,-9.00797,30.0954,0.004917,0),
-(70,192241,30754,-18.9215,-26.8371,89.9664,0.087792,0),
-(19,192241,30866,-36.528,23.9373,33.9184,1.89617,0),
-(20,192241,30755,-3.46042,28.0231,34.2784,4.66548,0),
-(5,190536,31793,16.8969,-3.34782,9.82203,5.62173,432),
-(22,192241,30754,-54.7182,15.5861,34.3897,2.50086,0),
-(6,190536,31789,28.0019,6.04888,19.2448,3.26161,0),
-(24,192241,30866,-36.1494,-23.2606,33.9568,4.2232,0),
-(25,192241,30753,-26.9812,10.5208,35.5936,4.74156,432),
-(26,176310,25016,-11.1276,6.60326,6.09852,3.05167,432),
-(27,192241,30866,15.9225,26.2539,35.4586,1.60085,0),
-(9,176310,25018,10.2474,2.78122,11.803,3.46823,432),
-(29,192241,30755,7.21494,-6.31021,34.4191,3.11118,0),
-(30,192241,32301,-3.37706,0.007499,34.0151,4.65055,0),
-(31,192241,30752,8.25547,-21.6199,34.8875,1.73515,0),
-(32,192241,30755,-5.59682,-28.2501,34.1226,1.55058,0),
-(33,192241,30866,17.7216,-26.2695,35.5686,5.06367,0),
-(34,192241,30755,37.6401,8.9586,30.0954,0.012771,0),
-(35,192241,30755,37.6428,-9.00797,30.0954,0.004917,0),
-(71,192241,30753,-7.63407,0.007234,86.0904,6.2728,0),
-(37,192241,30827,45.884,-8.99976,30.0955,1.52942,0),
-(7,176310,25011,19.2178,-8.20848,12.1102,4.81518,0),
-(39,192241,30753,-34.939,-11.6484,11.4697,5.50858,432),
-(40,192241,30753,-34.785,11.9312,11.4869,0.836243,432),
-(41,192241,30755,-26.188,-6.1712,9.33333,3.14217,0),
-(42,192241,30755,-26.1511,6.90449,9.405,3.12647,0),
-(43,192241,30825,38.4745,0.038424,10.1868,3.15788,0),
-(44,192241,30753,46.382,7.89944,10.4129,3.96271,0),
-(45,192241,30753,45.981,-6.55312,10.3636,2.23091,0),
-(46,192241,30755,24.5852,6.86575,7.06382,3.11055,0),
-(47,192241,30755,24.3302,-6.97827,7.08356,3.34184,0),
-(48,192241,31243,15.2483,-33.3678,10.5837,4.72649,0),
-(49,192241,31243,1.91814,-32.9286,10.0097,4.6891,0),
-(50,192241,31243,-11.0915,-32.8872,10.5819,4.68507,0),
-(51,192241,31243,-11.2408,33.2155,10.5949,1.58668,0),
-(52,192241,31243,1.99373,33.0756,10.0105,1.53853,0),
-(53,192241,31243,15.239,32.5832,10.5826,1.52441,0),
-(54,192241,30755,8.85995,18.8224,8.7027,4.69035,0),
-(55,192241,30755,-4.43012,18.742,8.62646,4.66286,0),
-(56,192241,30755,-4.46811,-18.5567,8.62604,1.53698,0),
-(57,192241,30755,9.06884,-18.7113,8.70787,1.56054,0),
-(58,192241,30753,1.98831,-18.0873,9.16057,4.66993,0),
-(59,192241,30753,2.15579,17.0338,9.16353,1.54405,0),
-(60,192241,30752,15.4321,28.6642,9.92277,1.54012,0),
-(61,192241,30752,2.01988,28.7211,9.33565,1.58332,0),
-(62,192241,30752,-11.241,28.5576,9.91826,1.5519,0),
-(68,192241,30826,55.0542,-3.74557,30.0955,2.77577,0),
-(69,192241,30755,29.8693,-29.5825,89.7663,3.05267,0),
-(67,192241,30824,55.5028,0.080449,30.5268,3.15669,0),
-(1,192242,30352,48.8813,8.78624,40.0817,3.1426,433),
-(2,192242,30352,48.8649,-8.72834,40.0818,3.12642,433),
-(3,192242,30352,-17.337,3.98796,20.7652,3.1541,433),
-(4,192242,30351,39.976,44.3876,25.0331,3.16019,0),
-(5,192242,30867,36.8757,45.226,25.0331,2.16509,0),
-(6,192242,30352,-17.2379,-3.94242,20.7667,3.1541,433),
-(7,192242,30867,36.9277,-44.9241,25.0318,4.11052,0),
-(8,192242,32566,34.6465,-41.7087,25.0325,3.20731,0),
-(9,192242,29799,34.5332,-38.5618,25.0323,3.15234,0),
-(10,192242,30351,2.42088,-23.0053,22.5625,0.046087,432),
-(11,192242,30867,-11.0475,-22.7053,22.5096,4.51265,0),
-(12,192242,30867,-32.9158,-22.1469,22.5861,4.59982,0),
-(13,192242,30394,-57.9337,6.01148,23.5029,1.54855,432),
-(14,192242,30351,-36.4471,6.81573,20.4485,4.73177,432),
-(15,192242,30351,-36.1811,-6.90251,20.4501,1.6483,432),
-(16,192242,30352,-49.1048,0.044213,20.6694,0.029782,433),
-(17,192242,30351,1.44228,9.63379,20.4566,3.15096,432),
-(18,192242,30351,1.29162,-9.37181,20.458,3.17295,432),
-(19,192242,30833,6.18656,-0.008156,20.5756,6.28313,0),
-(20,192242,30352,16.5684,2.46962,20.4252,3.1329,44),
-(64,192242,30350,16.4056,-2.2827,20.4235,3.11453,0),
-(22,192242,30392,28.7566,7.6217,23.2872,6.08285,0),
-(23,192242,30347,28.6378,-7.55243,23.2873,0.157027,0),
-(24,192242,30344,43.6738,0.121325,25.1341,3.10227,0),
-(25,192242,32777,42.9517,4.20903,25.1088,3.47298,0),
-(26,192242,31259,16.8761,-17.8635,20.4597,2.02864,0),
-(27,192242,30351,0.773476,22.5004,22.5503,3.2248,432),
-(28,192242,30867,-10.0824,23.2226,22.5129,1.54405,0),
-(29,192242,30867,-33.4747,22.2096,22.5895,1.56211,0),
-(30,192242,30346,25.0778,-0.047958,9.59893,3.13291,0),
-(31,192242,30352,36.4909,6.11523,9.60666,3.01117,433),
-(32,192242,30352,36.436,-6.06257,9.60687,3.09364,433),
-(33,192242,30380,3.92454,20.827,9.67354,1.30372,0),
-(34,192242,30380,-6.13984,21.6533,9.991,1.48436,0),
-(35,192242,30380,-17.4619,22.2092,9.60018,1.58254,0),
-(36,192242,30380,-30.2521,21.9534,9.5974,1.54169,0),
-(37,192242,30380,-37.3836,19.9617,9.59771,1.87549,0),
-(38,192242,30380,-37.1975,-20.2765,9.65711,4.32467,0),
-(39,192242,30380,-30.1731,-21.9358,9.59686,4.72914,0),
-(40,192242,30380,-18.0212,-22.0926,9.60068,4.66788,0),
-(41,192242,30380,-6.33308,-21.7722,9.99575,4.85167,0),
-(42,192242,30380,3.99105,-21.2539,9.67311,4.9577,0),
-(43,192242,30394,-11.7295,-24.7904,9.58663,1.63703,0),
-(44,192242,30394,-11.9688,25.5424,9.58513,4.66945,0),
-(45,192242,30352,-67.4841,3.50927,9.60209,5.83577,433),
-(46,192242,30352,-67.1723,-3.73439,9.60211,0.318344,433),
-(47,192242,30394,-48.1449,-3.10366,-5.21617,3.11436,0),
-(48,192242,30345,-48.0654,-0.185737,-4.98898,3.11436,0),
-(49,192242,30352,-60.5592,0.055898,-5.27774,0.004184,433),
-(50,192242,30394,-14.1505,23.0373,-5.24869,0.027745,0),
-(51,192242,30380,-8.79147,30.0334,-0.157799,0.471494,0),
-(52,192242,30380,1.92073,28.7498,0.101361,0.232732,0),
-(53,192242,30394,-14.3898,-23.2398,-5.25039,6.16013,0),
-(54,192242,30380,-7.54172,-30.0747,0.101348,4.17752,0),
-(55,192242,30380,3.45962,-28.1289,0.101388,4.29376,0),
-(56,192242,30380,-24.7068,-29.9771,0.101334,3.66623,0),
-(57,192242,30380,-39.6946,-26.8419,0.82802,2.93659,0),
-(58,192242,30380,-41.0289,25.7685,1.20385,1.49696,0),
-(59,192242,30380,-26.5726,29.6008,-0.15773,0.856857,0),
-(60,192242,30352,43.7981,13.0009,-2.07474,4.61776,433),
-(72,192241,30753,15.254,-0.009458,86.0904,3.14299,0),
-(65,192242,32302,54.6648,-6.9431,40.0874,3.0302,0),
-(63,192242,32193,-21.6978,0.127903,-18.1897,3.12341,0),
-(1,175080,24935,9.42351,-11.8801,-23.5908,3.08558,0),
-(2,175080,24934,9.56883,-3.62246,-23.5893,3.07458,0),
-(3,175080,24924,-1.61694,-10.1641,-23.7649,0.008681,0),
-(4,175080,24926,-5.41824,-2.06021,-17.7263,1.97218,0),
-(5,175080,25080,-4.65078,-4.74596,-17.7144,1.65016,0),
-(6,175080,25081,-5.03417,-10.8253,-17.689,4.69751,0),
-(7,175080,24931,7.15704,-3.89011,-17.7735,5.15776,432),
-(1,164871,25083,-5.86083,-5.09646,-17.6306,1.1754,0),
-(2,164871,25071,6.71222,-4.1415,-17.794,4.99008,432),
-(3,164871,25074,4.49415,-7.97789,-17.8975,0.065626,432),
-(4,164871,25072,7.03763,-11.1073,-17.7946,1.2987,432),
-(5,164871,25079,-5.00414,-10.5989,-17.6843,4.66884,0),
-(6,164871,25070,-9.52824,-7.63628,-17.2095,3.16716,0),
-(7,164871,25076,-1.27746,-7.88328,-23.7608,3.14124,432),
-(8,164871,24934,-4.77478,-12.8175,-22.6773,4.60522,0),
-(9,164871,24935,-6.29228,-12.7502,-22.6769,4.66805,0),
-(1,190549,3084,-4.75387,-10.8675,-17.7074,4.59518,0),
-(2,190549,3084,-5.13627,-4.61703,-17.6884,1.65007,0),
-(3,190549,34715,-9.9527,-7.70295,-17.0973,3.12662,0),
-(4,190549,34723,-17.7755,-5.62641,-14.9376,3.69996,0),
-(5,190549,34717,-13.0353,-12.0914,-16.2584,4.22853,0),
-(6,190549,34719,7.35889,-11.108,-17.7826,1.57997,28),
-(7,190549,34721,-0.488628,-5.93246,-23.7484,3.81128,0),
-(8,190549,34730,-0.979586,-7.9528,-23.7559,3.0456,0),
-(9,190549,24934,9.49791,-3.56853,-23.5906,6.28222,0),
-(10,190549,24935,9.32634,-12.0478,-23.5942,6.24295,0),
-(11,190549,34718,13.5225,-5.26085,-24.1585,0.03595,207),
-(1,186238,31725,11.1323,-7.8428,-16.6839,3.15041,0),
-(2,186238,31724,5.72734,-3.28376,-17.8139,1.55213,0),
-(3,186238,31727,-4.01569,-2.02455,-17.6298,1.16964,0),
-(4,186238,31726,-3.59444,-13.8231,-17.678,5.47991,0),
-(5,186238,31723,-11.0334,-12.5191,-16.8298,4.64346,0),
-(6,186238,31720,-15.8872,-5.06557,-16.1287,2.13411,0),
-(1,176495,25105,-9.54405,-7.94072,-17.2053,3.17242,0),
-(2,176495,25106,-4.93938,-10.9634,-17.6988,4.76285,0),
-(3,176495,25107,-4.98215,-4.67863,-17.696,1.59455,0),
-(4,176495,25101,7.56919,-4.02088,-17.7543,4.77071,0),
-(5,176495,25103,7.59398,-11.5166,-17.7745,1.62204,0),
-(6,176495,25102,-11.0882,-3.47446,-16.7988,2.00924,0),
-(7,186238,25075,9.86442,-7.77519,-16.6839,0.043302,0),
-(8,176495,25104,-0.898213,-7.76559,-23.7548,3.11116,0),
-(9,176495,25100,-0.411733,-5.7239,-23.7457,3.70414,0),
-(10,176495,24934,9.63549,-3.67192,-23.588,6.25904,0),
-(11,176495,24935,9.79838,-11.8681,-23.5848,6.25118,0),
-(1,181689,31706,-16.8964,-10.8497,-15.9745,1.45699,0),
-(2,181689,31708,-2.74581,-1.47146,-17.7765,4.67712,0),
-(3,181689,31708,-3.54276,-13.8752,-17.684,1.53946,0),
-(4,181689,31705,5.07824,-13.1188,-17.8135,5.24182,0),
-(5,181689,31716,11.5731,-7.65137,-16.6839,3.20372,0),
-(6,181689,31704,5.21605,-2.36685,-17.8223,1.04622,0),
-(8,190536,31788,26.1618,-2.95068,19.2448,2.72126,0),
-(1,176244,24996,-0.258897,-7.62734,4.80823,5.66423,0),
-(2,176244,24997,-0.416482,4.39825,4.79739,5.10346,0),
-(3,176244,24993,13.1874,7.71381,6.07001,3.09834,0),
-(4,176244,24995,13.3456,-7.63689,6.09325,3.06064,0),
-(5,176244,25007,21.2462,1.87803,11.7334,3.19572,0),
-(6,176244,24456,29.5627,0.150031,16.6147,3.18002,0),
-(1,181646,25052,13.5093,7.8287,6.11039,3.12838,0),
-(3,181646,25051,13.4899,-7.71638,6.11067,3.11424,0),
-(4,181646,25056,20.3045,1.2971,11.7088,3.06319,0),
-(5,181646,25050,29.8662,-0.374622,16.6206,3.09382,0),
-(6,181646,25054,-21.8863,-2.61623,4.33103,6.14509,0),
-(7,181646,25055,-21.4646,2.87105,4.31055,6.26055,0),
-(1,20808,25097,-11.4014,6.67999,6.09785,2.93715,0),
-(2,20808,25082,15.6121,1.09944,6.09764,2.52482,0),
-(5,20808,25089,17.8437,-7.84575,6.09877,1.64493,0),
-(6,20808,25078,34.095,3.54049,17.8892,5.50987,0),
-(11,20808,25094,34.0585,-0.04162,18.2865,3.17017,0),
-(13,20808,25095,9.39981,9.17899,11.5941,1.52083,432),
-(14,20808,25093,15.8067,-5.80051,11.9732,1.86484,0),
-(15,20808,25111,6.20811,0.005208,14.0554,2.54813,0),
-(73,192241,30755,8.83021,-4.6978,84.7137,2.34582,0),
-(74,192241,30755,8.67689,4.88796,84.7137,3.90012,0),
-(75,192241,30755,29.4588,29.8761,89.7684,3.15321,0),
-(76,192241,30754,-19.0109,27.0177,89.9667,6.22411,0),
-(12,164871,25075,10.6353,-12.1104,-23.5736,3.01351,0),
-(13,164871,25075,10.6391,-3.68298,-23.5737,3.14703,0),
-(14,164871,25075,4.53411,-2.57645,-23.6704,4.7411,0),
-(18,164871,25075,-2.82445,-6.38118,-23.7807,4.71631,432),
-(16,164871,25075,-3.59545,-7.90852,-23.7812,6.26982,0),
-(17,164871,25075,-2.95326,-9.17582,-23.7804,1.60848,0),
-(8,175080,25075,-3.59016,-7.79262,-23.7806,6.27391,0),
-(12,176495,25075,-3.59133,-7.84061,-23.7802,6.1969,0),
-(12,190549,25075,-3.59986,-8.08202,-23.7802,0.039869,0),
-(2,195276,34935,-21.401,-31.343,34.173,4.62057,0),
-(3,195276,34935,-12.1064,-31.9697,34.3807,4.62057,0),
-(4,195276,34935,-2.4877,-31.9885,34.8384,4.62057,0),
-(5,195276,34935,10.2664,-32.0713,35.7357,4.62057,0),
-(6,195276,34935,19.4636,-30.794,36.2254,4.83106,0),
-(1,195121,34929,-41.7122,23.1838,22.5605,1.60659,0),
-(2,195121,34929,-31.0354,25.1286,21.6921,1.60659,0),
-(3,195121,34929,-21.4492,25.8326,21.6309,1.60659,0),
-(4,195121,34929,-12.4734,26.321,21.6237,1.60659,0),
-(5,195121,34929,-2.81125,26.2077,21.6566,1.60659,0);
-
-ALTER TABLE db_version CHANGE COLUMN required_243_world_creature_transport required_280_world_pit_of_saron bit;
-
--- npcs for pit of saron
-DELETE FROM `creature` WHERE `id` IN (36840, 36893, 36892, 36841, 36842, 36874, 36877, 36658, 38189, 38188, 37583, 37774, 37779, 37582, 36661) AND `map` = 658;
-INSERT INTO `creature` VALUES 
-(117110, 36658, 658, 3, 1, 0, 0, 1014.51, 170.423, 628.156, 5.31184, 43200, 0, 0, 653828, 0, 0, 0),
-(125749, 36840, 658, 3, 1, 0, 0, 882.177, 41.2741, 522.097, 3.95888, 7200, 0, 0, 81900, 0, 0, 0),
-(125753, 36840, 658, 3, 1, 0, 0, 886.136, 64.1428, 533.154, 3.75861, 7200, 0, 0, 81900, 0, 0, 0),
-(125754, 36840, 658, 3, 1, 0, 0, 913.474, 67.6754, 550.663, 3.91962, 7200, 0, 0, 81900, 0, 0, 0),
-(125757, 36840, 658, 3, 1, 0, 0, 917.57, 84.9234, 556.676, 3.75468, 7200, 0, 0, 81900, 0, 0, 0),
-(131125, 36841, 658, 3, 1, 0, 0, 947.581, 34.0093, 571.633, 1.40239, 7200, 0, 0, 81900, 0, 0, 0),
-(131126, 36841, 658, 3, 1, 0, 0, 951.159, 33.5683, 571.75, 1.44952, 7200, 0, 0, 81900, 0, 0, 0),
-(131127, 36841, 658, 3, 1, 0, 0, 944.023, 34.4286, 571.594, 1.38826, 7200, 0, 0, 81900, 0, 0, 0),
-(131128, 36841, 658, 3, 1, 0, 0, 939.562, 35.252, 571.669, 1.38826, 7200, 0, 0, 81900, 0, 0, 0),
-(131131, 36841, 658, 3, 1, 0, 0, 929.059, -20.3498, 586.029, 1.41574, 7200, 0, 0, 81900, 0, 0, 0),
-(131132, 36841, 658, 3, 1, 0, 0, 932.611, -21.3107, 586.766, 1.40396, 7200, 0, 0, 81900, 0, 0, 0),
-(131133, 36841, 658, 3, 1, 0, 0, 925.708, -20.2347, 585.547, 1.41574, 7200, 0, 0, 81900, 0, 0, 0),
-(131134, 36841, 658, 3, 1, 0, 0, 922.202, -19.6826, 584.918, 1.41967, 7200, 0, 0, 81900, 0, 0, 0),
-(131137, 36841, 658, 3, 1, 0, 0, 994.85, -138.133, 614.399, 2.53934, 7200, 0, 0, 81900, 0, 0, 0),
-(131138, 36841, 658, 3, 1, 0, 0, 999.423, -128.53, 615.554, 2.61396, 7200, 0, 0, 81900, 0, 0, 0),
-(131139, 36841, 658, 3, 1, 0, 0, 1048.1, -114.391, 629.424, 3.78029, 7200, 0, 0, 81900, 0, 0, 0),
-(131140, 36841, 658, 3, 1, 0, 0, 1043.74, -109.28, 629.596, 4.20048, 7200, 0, 0, 81900, 0, 0, 0),
-(127040, 36841, 658, 3, 1, 0, 0, 1069.92, -38.0944, 633.657, 4.55392, 7200, 0, 0, 81900, 0, 0, 0),
-(127041, 36841, 658, 3, 1, 0, 0, 1063.65, -37.3515, 633.866, 4.59711, 7200, 0, 0, 81900, 0, 0, 0),
-(127044, 36841, 658, 3, 1, 0, 0, 1068.29, 100.874, 631.011, 4.88379, 7200, 0, 0, 81900, 0, 0, 0),
-(102307, 36841, 658, 3, 1, 0, 0, 1060.86, 98.6396, 631.014, 4.96233, 7200, 0, 0, 81900, 0, 0, 0),
-(131129, 36842, 658, 3, 1, 0, 0, 938.636, 30.7012, 572.706, 1.37255, 7200, 0, 0, 81900, 11982, 0, 0),
-(131130, 36842, 658, 3, 1, 0, 0, 949.152, 28.2762, 572.978, 1.33328, 7200, 0, 0, 81900, 11982, 0, 0),
-(131135, 36842, 658, 3, 1, 0, 0, 925.383, -23.7866, 586.518, 1.40396, 7200, 0, 0, 81900, 11982, 0, 0),
-(131136, 36842, 658, 3, 1, 0, 0, 932.371, -24.7884, 587.913, 1.47857, 7200, 0, 0, 81900, 11982, 0, 0),
-(131141, 36874, 658, 3, 1, 0, 0, 1053.98, -93.1026, 632.772, 4.33794, 7200, 0, 0, 252000, 3994, 0, 0),
-(131142, 36877, 658, 3, 1, 0, 0, 1048.02, -89.2714, 632.862, 4.15337, 7200, 0, 0, 12600, 0, 0, 0),
-(127039, 36877, 658, 3, 1, 0, 0, 1060.64, -96.576, 632.739, 4.07876, 7200, 0, 0, 12600, 0, 0, 0),
-(127042, 36877, 658, 3, 1, 0, 0, 1065.42, -33.8081, 633.793, 4.49501, 7200, 0, 0, 12600, 0, 0, 0),
-(127043, 36877, 658, 3, 1, 0, 0, 1067.96, -34.4012, 633.718, 4.48323, 7200, 0, 0, 12600, 0, 0, 0),
-(125751, 36892, 658, 3, 1, 0, 0, 883.563, 53.5074, 528.023, 3.68007, 7200, 0, 0, 126000, 79880, 0, 0),
-(125756, 36892, 658, 3, 1, 0, 0, 916.021, 76.8641, 554.391, 3.71541, 7200, 0, 0, 126000, 79880, 0, 0),
-(125750, 36893, 658, 3, 1, 0, 0, 879.753, 60.3149, 528.601, 3.88819, 7200, 0, 0, 81900, 31952, 0, 0),
-(125752, 36893, 658, 3, 1, 0, 0, 886.291, 46.5289, 526.211, 3.55833, 7200, 0, 0, 81900, 31952, 0, 0),
-(125755, 36893, 658, 3, 1, 0, 0, 909.752, 81.9853, 551.412, 3.75076, 7200, 0, 0, 81900, 31952, 0, 0),
-(125758, 36893, 658, 3, 1, 0, 0, 923.682, 75.5856, 559.362, 3.57797, 7200, 0, 0, 81900, 31952, 0, 0),
-(124334, 37582, 658, 3, 128, 0, 0, 441.213, 215.893, 528.71, 6.1897, 7200, 0, 0, 60480, 176280, 0, 0),
-(123585, 37582, 658, 3, 128, 0, 0, 1079.01, 205.893, 628.156, 3.63306, 7200, 0, 0, 60480, 176280, 0, 0),
-(124333, 37583, 658, 3, 64, 0, 0, 441.213, 215.893, 528.71, 6.1897, 7200, 0, 0, 126000, 0, 0, 0),
-(123745, 37583, 658, 3, 64, 0, 0, 1076.62, 209.063, 628.156, 3.79407, 7200, 0, 0, 126000, 0, 0, 0),
-(124335, 37774, 658, 3, 128, 0, 0, 440.351, 211.155, 528.71, 6.15829, 7200, 0, 0, 100800, 264420, 0, 0),
-(123548, 37774, 658, 3, 128, 0, 0, 1076.62, 209.063, 628.156, 3.79407, 7200, 0, 0, 100800, 264420, 0, 0),
-(124332, 37779, 658, 3, 64, 0, 0, 440.351, 211.155, 528.71, 6.15829, 7200, 0, 0, 126000, 0, 0, 0),
-(123584, 37779, 658, 3, 64, 0, 0, 1079.01, 205.893, 628.156, 3.63306, 7200, 0, 0, 126000, 0, 0, 0),
-(124329, 38188, 658, 3, 128, 0, 1221, 1060.82, 97.608, 630.996, 2.12527, 7200, 0, 0, 5040000, 881400, 0, 0),
-(124328, 38189, 658, 3, 64, 0, 1290, 1060.82, 97.608, 630.996, 2.12527, 7200, 0, 0, 6972500, 85160, 0, 0);
-
-ALTER TABLE db_version CHANGE COLUMN required_280_world_pit_of_saron required_295_world_forge_of_souls bit;
+ALTER TABLE db_version CHANGE COLUMN required_187_world_halls_of_reflection required_295_world_forge_of_souls bit;
 
 DELETE FROM `creature` where `id` IN (38161,38160);
 -- Lady Sylvanas Windrunner
@@ -5812,6 +5382,8 @@ INSERT INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `position
 -- Lady Jaina Proudmoore
 INSERT INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `curhealth`) VALUES ('82809', '38160', '632', '3', '128', '5614.04', '2447.03', '705.852', '0.952404', '7200', '5040000');
 
+
+- ---------------------------------------------------------------------------------------------------------
 -- RECOMENDATION: USE THIS DATA AT YOUR OWN RISK
 -- Hi, Misimouse from http://forum.siomproject.com/
 -- This SQL is a hack way to fix a lot of quest, on my opinion is not a good way and lots of this fixes are not working right, I think this SQL need to be redone or remove from repo
@@ -6625,428 +6197,3 @@ UPDATE `creature_template` SET `ScriptName`='npc_leaper' WHERE `entry`='29840';
 UPDATE `creature_template` SET `ScriptName`='npc_lady_nightswood' WHERE `entry`='29770';
 -- The Vile
 UPDATE `creature_template` SET `ScriptName`='npc_vile' WHERE `entry`='29769';
-
-
--- --------------------------------------------------------------------------------------------------------------- --
-
--- ---------------------- --
--- ALL SCRIPTNAMES IN ONE --
--- ---------------------- --
--- THIS IS PROVISIONAL UNTIL PREPARE THE LAST WORLD FULL JUST TO KEEP ALL SCRIPTNAMES IN ONE
-
--- Script_names of RoCore update files
--- Argent tournament
-UPDATE `creature_template` SET `ScriptName` = 'npc_squire_danny' WHERE entry = 33518;
-UPDATE `creature_template` SET `ScriptName` = 'npc_argent_valiant' WHERE entry = 33448;
-UPDATE `creature_template` SET `ScriptName` = 'npc_argent_champion' WHERE entry = 33707;
-
--- Borean tundra
-UPDATE `creature_template` SET  `ScriptName` = 'npc_fizzcrank_fullthrottle' WHERE entry = 25590; -- Fizzcrank Fullthrottle
-UPDATE `creature_template` SET  `ScriptName` = 'npc_surristrasz' WHERE entry =24795; -- Surristrasz
-UPDATE `creature_template` SET  `ScriptName` = 'npc_tiare' WHERE entry =30051; -- Librarian Tiare
-
--- Eye of eternity
-UPDATE `creature_template` SET `ScriptName` = 'boss_malygos', unit_flags = unit_flags & ~256 WHERE entry = 28859;
-UPDATE `creature_template` SET `ScriptName` = 'mob_nexus_lord' WHERE entry = 30245; -- Nexus Lord
-UPDATE `creature_template` SET `ScriptName` = 'mob_scion_of_eternity' WHERE entry = 30249; -- Scion of Eternity
-UPDATE `creature_template` SET `ScriptName` = 'mob_power_spark' WHERE entry = 30084;  -- Power Spark
-UPDATE `creature_template` SET `ScriptName` = 'npc_arcane_overload' WHERE entry = 30282; -- Arcane Overload
-
--- Obsidian Santum
-UPDATE `creature_template` SET `ScriptName`='boss_sartharion' WHERE `entry`=28860;
-UPDATE `creature_template` SET `ScriptName`='mob_vesperon' WHERE `entry`=30449;
-UPDATE `creature_template` SET `ScriptName`='mob_shadron' WHERE `entry`=30451;
-UPDATE `creature_template` SET `ScriptName`='mob_tenebron' WHERE `entry`=30452;
-UPDATE `creature_template` SET `ScriptName`='mob_acolyte_of_shadron' WHERE `entry`=31218;
-UPDATE `creature_template` SET `ScriptName`='mob_acolyte_of_vesperon' WHERE `entry`=31219;
-UPDATE `creature_template` SET `ScriptName`='npc_twilight_fissure' WHERE entry=30641; 
-UPDATE `creature_template` SET `ScriptName`='npc_flame_tsunami' WHERE entry=30616;
-UPDATE `creature_template` SET `ScriptName`='npc_twilight_fissure' WHERE entry = 30641;
-UPDATE `creature_template` SET `ScriptName`='npc_flame_tsunami' WHERE entry = 30616;
-UPDATE `creature_template` SET `ScriptName`='mob_twilight_eggs' WHERE entry IN (30882, 31204);
--- Revisar: tiene script_name en 2 ids mas 31214 & 31548, la principal es 30890, producia un error "ERROR: Creature (Entry: 31214) lists difficulty 1 mode entry 31548 with `ScriptName` filled in. `ScriptName` of difficulty 0 mode creature is always used instead."
--- UPDATE `creature_template` SET `ScriptName`='mob_twilight_whelp' WHERE entry IN (30890, 31214, 31548);
--- ahora solo esta asignado a un solo id 30890, hay que probar si va bien.
-UPDATE `creature_template` SET `ScriptName`='mob_twilight_whelp' WHERE entry IN (30890);
-UPDATE `creature_template` SET `ScriptName`='npc_disciple_of_vesperon' WHERE entry = 30858;
-UPDATE `creature_template` SET `ScriptName`='npc_flame_tsunami' WHERE entry=30616;
-
--- Oculus
-UPDATE `creature_template` SET `ScriptName`='npc_unstable_sphere' WHERE `entry`=28166;
-UPDATE `creature_template` SET `ScriptName`='npc_oculus_drake' WHERE `entry` IN (27657,27658,27659);
-UPDATE `creature_template` SET `ScriptName`='boss_drakos' WHERE entry = 27654;
-UPDATE `creature_template` SET `ScriptName`='boss_urom' WHERE entry = 27655;
-UPDATE `creature_template` SET `ScriptName`='mob_centrifige_construct' WHERE entry = 27641;
-UPDATE `creature_template` SET `ScriptName`='boss_varos' WHERE entry = 27447;
-UPDATE `creature_template` SET `ScriptName`='boss_eregos' WHERE entry = 27656;
-UPDATE `creature_template` SET `ScriptName`= 'npc_planar_anomaly' WHERE entry = 30879; -- Planar Anomlay di Eregos 
-
--- Ruby Sanctum
-UPDATE `creature_template` SET `ScriptName` = 'boss_baltharus' WHERE `entry` = '39751';
-UPDATE `creature_template` SET `ScriptName` = 'boss_baltharus_clone' WHERE `entry` = '39899';
-UPDATE `creature_template` SET `ScriptName` = 'npc_xerestrasza' WHERE `entry` = '40429';
-UPDATE `creature_template` SET `ScriptName` = 'boss_zarithrian' WHERE `entry` = '39746';
-UPDATE `creature_template` SET `ScriptName` = 'boss_ragefire' WHERE `entry` = '39747';
-UPDATE `creature_template` SET `ScriptName` = 'boss_halion' WHERE `entry`= '39863';
-UPDATE `creature_template` SET `ScriptName` = 'boss_twilight_halion' WHERE `entry` = '40142';
-UPDATE `creature_template` SET `ScriptName` = 'npc_onyx_flamecaller' WHERE `entry` = '39814';
-UPDATE `creature_template` SET `ScriptName` = 'npc_meteor_strike' WHERE `entry` = '40055';
-UPDATE `creature_template` SET `ScriptName` = 'npc_combustion' WHERE `entry` = '40001';
-UPDATE `creature_template` SET `ScriptName` = 'npc_consumption' WHERE `entry` = '40135';
-UPDATE `creature_template` SET `ScriptName` = 'npc_meteor_flame' WHERE `entry` = '40044';
-
--- Anuncios al comienzo del evento.
--- Here does not exist the NPC, the we fix the script_name in this way
--- Later we will fix in the right way
-DELETE FROM `creature_template` WHERE `entry` in (35591,35592);
-INSERT INTO `creature_template` (`entry`, `difficulty_entry_1`, `difficulty_entry_2`, `difficulty_entry_3`, `KillCredit1`, `KillCredit2`, `modelid1`, `modelid2`, `modelid3`, `modelid4`, `name`, `subname`, `IconName`, `gossip_menu_id`, `minlevel`, `maxlevel`, `exp`, `faction_A`, `faction_H`, `npcflag`, `speed_run`, `scale`, `rank`, `mindmg`, `maxdmg`, `dmgschool`, `attackpower`, `dmg_multiplier`, `baseattacktime`, `rangeattacktime`, `unit_class`, `unit_flags`, `dynamicflags`, `family`, `trainer_type`, `trainer_spell`, `trainer_class`, `trainer_race`, `minrangedmg`, `maxrangedmg`, `rangedattackpower`, `type`, `type_flags`, `lootid`, `pickpocketloot`, `skinloot`, `resistance1`, `resistance2`, `resistance3`, `resistance4`, `resistance5`, `resistance6`, `spell1`, `spell2`, `spell3`, `spell4`, `spell5`, `spell6`, `spell7`, `spell8`, `PetSpellDataId`, `VehicleId`, `mingold`, `maxgold`, `AIName`, `MovementType`, `InhabitType`, `Health_mod`, `Mana_mod`, `RacialLeader`, `questItem1`, `questItem2`, `questItem3`, `questItem4`, `questItem5`, `questItem6`, `movementId`, `RegenHealth`, `equipment_id`, `mechanic_immune_mask`, `flags_extra`, `ScriptName`) VALUES 
-(35591, 0, 0, 0, 0, 0, 29894, 0, 0, 0, 'Jaeren Sunsworn', '', '', 0, 75, 75, 2, 14, 14, 0, 1, 1, 0, 0, 0, 0, 0, 1, 2000, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', 0, 3, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 'npc_anstart'),
-(35592, 0, 0, 0, 0, 0, 29893, 0, 0, 0, 'Arelas Brightstar', '', '', 0, 75, 75, 2, 14, 14, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 512, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', 0, 3, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 'npc_anstart');
-
--- Solo nos quedan estos antiguos, no sé si nos sobran o deben quedarse, que opinas?
--- Trial of the champion
-UPDATE `creature_template` SET `ScriptName`='npc_announcer_toc5' WHERE `entry`IN (35004,35005);
-UPDATE `creature_template` SET `ScriptName`='npc_gr' WHERE `entry`IN (35492);
-UPDATE `creature_template` SET `ScriptName`='npc_anstart' WHERE `entry`IN (35591,35592);
-
--- Trial of the crusader
-UPDATE `creature_template` SET `ScriptName`='mob_firebomb_trigger' WHERE (`entry`='34854');
-UPDATE `creature_template` SET `ScriptName`='Mob_NerubianTrigger' WHERE (`entry`='34862');
-UPDATE `creature_template` SET `ScriptName`='mob_swarm_scarab' WHERE (`entry`='34605');
-UPDATE `creature_template` SET `ScriptName`='creature_impale' WHERE (`entry`='29184');
-
--- TOC segun TC
-UPDATE `creature_template` SET `scriptname`='npc_announcer_toc10' WHERE `entry` in (34816);
-UPDATE `creature_template` SET `scriptname`='boss_lich_king_toc' WHERE `entry`=35877;
-UPDATE `creature_template` SET `scriptname`='npc_fizzlebang_toc' WHERE `entry`=35458;
-UPDATE `creature_template` SET `scriptname`='npc_tirion_toc' WHERE `entry`=34996;
-UPDATE `creature_template` SET `scriptname`='npc_garrosh_toc' WHERE `entry`=34995;
-UPDATE `creature_template` SET `scriptname`='npc_varian_toc' WHERE `entry`=34990;
-UPDATE `creature_template` SET `scriptname`='boss_gormok', `AIName` ='' WHERE `entry`=34796;
-UPDATE `creature_template` SET `scriptname`='mob_snobold_vassal', `AIName` ='' WHERE `entry`=34800;
-UPDATE `creature_template` SET `scriptname`='boss_dreadscale', `AIName` ='' WHERE `entry`=34799;
-UPDATE `creature_template` SET `scriptname`='boss_acidmaw', `AIName` ='' WHERE `entry`=35144;
-UPDATE `creature_template` SET `scriptname`='mob_slime_pool', `AIName` ='' WHERE `entry` = 35176;
-UPDATE `creature_template` SET `scriptname`='boss_icehowl', `AIName` ='' WHERE `entry`=34797;
-UPDATE `creature_template` SET `scriptname`='boss_jaraxxus', `AIName` ='' WHERE `entry`= 34780;
-UPDATE `creature_template` SET `scriptname`='mob_legion_flame', `AIName` ='' WHERE `entry` = 34784;
-UPDATE `creature_template` SET `scriptname`='mob_infernal_volcano', `AIName` ='' WHERE `entry` = 34813;
-UPDATE `creature_template` SET `scriptname`='mob_nether_portal', `AIName` ='' WHERE `entry` = 34825;
-UPDATE `creature_template` SET `scriptname`='mob_fel_infernal', `AIName` ='' WHERE `entry` = 34815;
-UPDATE `creature_template` SET `scriptname`='mob_mistress_of_pain', `AIName` ='' WHERE `entry` = 34826;
-UPDATE `creature_template` SET `scriptname`='boss_toc_champion_controller', `AIName` ='' WHERE `entry` IN (34781);
-UPDATE `creature_template` SET `scriptname`='boss_anubarak_trial', `AIName` ='' WHERE `entry`=34564;
-UPDATE `creature_template` SET `scriptname`='boss_fjola', `AIName` ='' WHERE `entry`=34497;
-UPDATE `creature_template` SET `scriptname`='boss_eydis', `AIName` ='' WHERE `entry`=34496;
-UPDATE `creature_template` SET `scriptname`='mob_essence_of_twin', `AIName` ='' WHERE `entry` IN (34567,34568);
-UPDATE `creature_template` SET `scriptname`='mob_unleashed_dark', `AIName` ='' WHERE entry = 34628;
-UPDATE `creature_template` SET `scriptname`='mob_unleashed_light', `AIName` ='' WHERE entry = 34630;
-UPDATE `creature_template` SET `ScriptName`='mob_frost_sphere', `AIName` = '' WHERE `entry` = 34606;
-UPDATE `creature_template` SET `scriptname`='mob_nerubian_burrower', `AIName` ='' WHERE `entry`=34607;
-UPDATE `creature_template` SET `scriptname`='mob_anubarak_spike', `AIName` ='' WHERE `entry`=34660;
-
--- Faction Champions Horde
-
--- Faction Champions Alliance
-
--- Segun TC
--- Lo han hech muy bien un solo script_name para ambos en cada facción mucho mas fácil
-UPDATE `creature_template` SET `scriptname`='mob_toc_warrior', `AIName` ='' WHERE `entry` IN (34475,34453);
-UPDATE `creature_template` SET `scriptname`='mob_toc_mage', `AIName` ='' WHERE `entry` IN (34468,34449);
-UPDATE `creature_template` SET `scriptname`='mob_toc_shaman', `AIName` ='' WHERE `entry` IN (34470,34444);
-UPDATE `creature_template` SET `scriptname`='mob_toc_enh_shaman', `AIName` ='' WHERE `entry` IN (34463,34455);
-UPDATE `creature_template` SET `scriptname`='mob_toc_hunter', `AIName` ='' WHERE `entry` IN (34467,34448);
-UPDATE `creature_template` SET `scriptname`='mob_toc_rogue', `AIName` ='' WHERE `entry` IN (34472,34454);
-UPDATE `creature_template` SET `scriptname`='mob_toc_priest', `AIName` ='' WHERE `entry` IN (34466,34447);
-UPDATE `creature_template` SET `scriptname`='mob_toc_shadow_priest', `AIName` ='' WHERE `entry` IN (34473,34441);
-UPDATE `creature_template` SET `scriptname`='mob_toc_dk', `AIName` ='' WHERE `entry` IN (34461,34458);
-UPDATE `creature_template` SET `scriptname`='mob_toc_paladin', `AIName` ='' WHERE `entry` IN (34465,34445);
-UPDATE `creature_template` SET `scriptname`='mob_toc_retro_paladin', `AIName` ='' WHERE `entry` IN (34471,34456);
-UPDATE `creature_template` SET `scriptname`='mob_toc_druid', `AIName` ='' WHERE `entry` IN (34469,34459);
-UPDATE `creature_template` SET `scriptname`='mob_toc_boomkin', `AIName` ='' WHERE `entry` IN (34460,34451);
-UPDATE `creature_template` SET `scriptname`='mob_toc_warlock' WHERE `entry` IN (34474,34450);
-
--- Ulduar
-UPDATE `creature_template` SET `ScriptName`= '' WHERE `entry` IN (33365,33370,33312,33367,33686,33579,34275,33214);
-UPDATE `creature_template` SET `ScriptName`='boss_auriaya' WHERE `entry`=33515;
-UPDATE `creature_template` SET `ScriptName`='boss_flame_leviathan' WHERE `entry`=33113;
-UPDATE `creature_template` SET `AIName`='TurretAI',`ScriptName`='' WHERE `entry`=33139;
-UPDATE `creature_template` SET `ScriptName`='boss_flame_leviathan_seat' WHERE `entry`=33114;
-UPDATE `creature_template` SET `ScriptName`='boss_flame_leviathan_defense_turret' WHERE `entry`=33142;
-UPDATE `creature_template` SET `ScriptName`='boss_flame_leviathan_overload_device' WHERE `entry`=33143;
-UPDATE `creature_template` SET `ScriptName`='spell_pool_of_tar' WHERE `entry`=33090;
-UPDATE `creature_template` SET `ScriptName`='boss_ignis' WHERE `entry`=33118;
-UPDATE `creature_template` SET `ScriptName`='boss_razorscale' WHERE `entry`=33186;
-UPDATE `creature_template` SET `ScriptName`='boss_xt002' WHERE `entry`=33293;
-UPDATE `creature_template` SET `ScriptName`='mob_xt002_heart' WHERE `entry`=33329;
-UPDATE `creature_template` SET `ScriptName`='mob_scrapbot' WHERE `entry`=33343;
-UPDATE `creature_template` SET `ScriptName`='mob_pummeller' WHERE `entry`=33344;
-UPDATE `creature_template` SET `ScriptName`='mob_boombot' WHERE `entry`=33346;
-UPDATE `creature_template` SET `ScriptName`='mob_void_zone' WHERE `entry`=34001;
-UPDATE `creature_template` SET `ScriptName`='mob_life_spark' WHERE `entry`=34004;
-UPDATE `creature_template` SET `ScriptName`='mob_rune_of_summoning' WHERE `entry`=33051;
-UPDATE `creature_template` SET `ScriptName`='boss_algalon' WHERE `entry`=32871;
-UPDATE `creature_template` SET `ScriptName`='mob_collapsing_star' WHERE `entry`=32955;
-UPDATE `creature_template` SET `ScriptName`= 'mob_iron_construct' WHERE `entry` = 33121;
-UPDATE `creature_template` SET `ScriptName`= 'mob_darkrune_watcher' WHERE `entry` = 33453;
-UPDATE `creature_template` SET `ScriptName`= 'mob_darkrune_sentinel' WHERE `entry` = 33846;
-UPDATE `creature_template` SET `ScriptName`= 'mob_darkrune_guardian' WHERE `entry` = 33388;
-UPDATE `creature_template` SET `ScriptName`= 'mob_devouring_flame' WHERE `entry` = 34188;
-UPDATE `creature_template` SET `ScriptName`= 'npc_expedition_commander_ulduar' WHERE `entry` = 33210;
-UPDATE `creature_template` SET `ScriptName`= 'mole_machine_trigger' WHERE `entry` = 33282;
-UPDATE `creature_template` SET `ScriptName`= 'mob_focused_eyebeam' WHERE `entry` IN (33632, 33802);
-UPDATE `creature_template` SET `ScriptName`= 'mob_left_arm' WHERE `entry` = 32933;
-UPDATE `creature_template` SET `ScriptName`= 'mob_right_arm' WHERE `entry` = 32934;
-UPDATE `creature_template` SET `ScriptName`= 'boss_steelbreaker' WHERE `entry` = 32867;
-UPDATE `creature_template` SET `ScriptName`= 'boss_runemaster_molgeim' WHERE `entry` = 32927;
-UPDATE `creature_template` SET `ScriptName`= 'boss_stormcaller_brundir' WHERE `entry` = 32857;
-UPDATE `creature_template` SET `ScriptName`='mob_rune_of_power' WHERE entry = 33705;
-UPDATE `creature_template` SET `ScriptName`='mob_lightning_elemental' WHERE entry = 32958;
-UPDATE `creature_template` SET `ScriptName`= 'feral_defender_trigger' WHERE `entry` = 34096;
-UPDATE `creature_template` SET `ScriptName`= 'mob_feral_defender' WHERE `entry` = 34035;
-UPDATE `creature_template` SET `ScriptName`= 'mob_sanctum_sentry' WHERE `entry` = 34014;
-UPDATE `creature_template` SET `ScriptName`= 'seeping_trigger' WHERE `entry` = 34098;
-UPDATE `creature_template` SET `ScriptName`= 'npc_keeper_norgannon' WHERE `entry` = 33686;
-UPDATE `creature_template` SET `ScriptName`= 'boss_hodir' WHERE `entry` = 32845;
-UPDATE `creature_template` SET `ScriptName`= 'mob_flash_freeze' WHERE `entry` = 32938;
-UPDATE `creature_template` SET `ScriptName`= 'mob_icicle' WHERE `entry` = 33169;
-UPDATE `creature_template` SET `ScriptName`= 'mob_icicle_snowdrift' WHERE `entry` = 33173;
-UPDATE `creature_template` SET `ScriptName`= 'mob_hodir_priest' WHERE `entry` IN (32897, 33326, 32948, 33330);
-UPDATE `creature_template` SET `ScriptName`= 'mob_hodir_shaman' WHERE `entry` IN (33328, 32901, 33332, 32950);
-UPDATE `creature_template` SET `ScriptName`= 'mob_hodir_druid' WHERE `entry` IN (33325, 32900, 32941, 33333);
-UPDATE `creature_template` SET `ScriptName`= 'mob_hodir_mage' WHERE `entry` IN (32893, 33327, 33331, 32946);
-UPDATE `creature_template` SET `ScriptName`= 'toasty_fire' WHERE `entry` = 33342;
-UPDATE `creature_template` SET `ScriptName` = 'boss_elder_brightleaf' WHERE `entry` =32915;
-UPDATE `creature_template` SET `ScriptName` = 'boss_elder_ironbranch' WHERE `entry` =32913;
-UPDATE `creature_template` SET `ScriptName` = 'boss_elder_stonebark' WHERE `entry` =32914;
-UPDATE `creature_template` SET `ScriptName` = 'creature_sun_beam'WHERE `entry` =33170;
-UPDATE `creature_template` SET `ScriptName` = 'creature_iron_roots' WHERE `entry` = 33168;
-UPDATE `creature_template` SET `ScriptName` = 'boss_freya' WHERE `entry` =32906;
-UPDATE `creature_template` SET `ScriptName` = 'creature_eonars_gift' WHERE `entry` =33228;
-UPDATE `creature_template` SET `ScriptName` = 'creature_nature_bomb' WHERE `entry` =34129;
-UPDATE `creature_template` SET `ScriptName` = 'creature_detonating_lasher' WHERE `entry` =32918;
-UPDATE `creature_template` SET `ScriptName` = 'creature_ancient_conservator' WHERE `entry` =33203;
-UPDATE `creature_template` SET `ScriptName` = 'creature_storm_lasher' WHERE `entry` =32919;
-UPDATE `creature_template` SET `ScriptName` = 'creature_snaplasher' WHERE `entry` =32916;
-UPDATE `creature_template` SET `ScriptName` = 'creature_ancient_water_spirit' WHERE `entry` =33202;
-UPDATE `creature_template` SET `ScriptName` = 'creature_healthy_spore' WHERE `entry` =33215;
-UPDATE `creature_template` SET `ScriptName` = 'creature_unstable_sun_beam' WHERE `entry` = 33050;
-UPDATE `creature_template` SET `ScriptName` = 'boss_thorim' WHERE `entry` = 32865;
-UPDATE `creature_template` SET `ScriptName` = 'mob_scorch_ground' WHERE `entry` = 33221;
-UPDATE `creature_template` SET `ScriptName` = 'mob_pre_phase' WHERE `entry` IN (32882, 32908, 32885, 33110);
-UPDATE `creature_template` SET `ScriptName` = 'mob_arena_phase' WHERE `entry` IN (32876, 32904, 32878, 32877, 32874, 32875);
-UPDATE `creature_template` SET `ScriptName` = 'mob_runic_colossus' WHERE `entry` = 32872;
-UPDATE `creature_template` SET `ScriptName` = 'mob_rune_giant' WHERE `entry` = 32873;
-UPDATE `creature_template` SET `ScriptName` = 'thorim_trap_bunny' WHERE `entry` IN (33725, 33282);
-UPDATE `creature_template` SET `ScriptName` = 'thorim_energy_source' WHERE `entry` = 32892;
-UPDATE `creature_template` SET `ScriptName` = 'boss_thorim' WHERE `entry` = 32865;
-UPDATE `creature_template` SET `ScriptName` = '' WHERE `entry` = 33725;
-UPDATE `creature_template` SET `ScriptName` = 'thorim_phase_trigger' WHERE `entry` = 32892;
-UPDATE `creature_template` SET `ScriptName` = 'mob_pre_phase' WHERE `entry` IN (32907, 32883);
-UPDATE `creature_template` SET `ScriptName` = 'mole_machine_trigger' WHERE `entry` = 33282;
-UPDATE `creature_template` SET `ScriptName` = 'go_call_tram' WHERE `entry` IN (194914, 194912, 194437);
-UPDATE `creature_template` SET `ScriptName` = 'mole_machine_trigger' WHERE `entry` = 33245;
-UPDATE `creature_template` SET `ScriptName` = '' WHERE `entry` = 33282;
-UPDATE `creature_template` SET `ScriptName` = 'boss_mimiron' WHERE entry = 33350;
-UPDATE `creature_template` SET `ScriptName` = 'boss_leviathan_mk' WHERE entry = 33432;
-UPDATE `creature_template` SET `ScriptName` = 'boss_leviathan_mk_turret' WHERE entry = 34071;
-UPDATE `creature_template` SET `ScriptName` = 'mob_proximity_mine' WHERE entry = 34362;
-UPDATE `creature_template` SET `ScriptName` = 'boss_vx_001'WHERE `entry` = 33651;
-UPDATE `creature_template` SET `ScriptName` = 'boss_aerial_unit'WHERE `entry` = 33670;
-UPDATE `creature_template` SET `ScriptName` = 'mob_boom_bot' WHERE `entry` = 33836;
-UPDATE `creature_template` SET `ScriptName` = 'rocket_strike' WHERE `entry` = 34047;
-UPDATE `creature_template` SET `ScriptName` = 'magnetic_core' WHERE `entry` = 34068;
-UPDATE `creature_template` SET `ScriptName` = 'boss_general_vezax' WHERE `entry` = 33271;
-UPDATE `creature_template` SET `ScriptName` = 'mob_saronite_vapors' WHERE `entry` = 33488;
-UPDATE `creature_template` SET `ScriptName` = 'mob_saronite_animus' WHERE `entry` = 33524;
-UPDATE `creature_template` SET `ScriptName` = 'mob_mimiron_flame' WHERE `entry` = 34363;
-UPDATE `creature_template` SET `ScriptName` = 'mob_frost_bomb' WHERE `entry` = 34149;
-UPDATE `creature_template` SET `ScriptName` = 'mob_junk_bot' WHERE `entry` = 33855;
-UPDATE `creature_template` SET `ScriptName` = 'mob_assault_bot' WHERE `entry` = 34057;
-UPDATE `creature_template` SET `ScriptName` = 'mob_boom_bot' WHERE `entry` = 33836;
-UPDATE `creature_template` SET `ScriptName` = 'mob_emergency_bot' WHERE `entry` = 34147;
-UPDATE `creature_template` SET `ScriptName` = 'npc_keeper_image' WHERE `entry` IN (33213, 33241, 33242, 33244);
-UPDATE `creature_template` SET `ScriptName`='boss_thorim' WHERE (`entry`='32865');
-UPDATE `creature_template` SET `ScriptName` = 'npc_ys_freya' WHERE `entry` = 33410;
-UPDATE `creature_template` SET `ScriptName` = 'npc_ys_hodir' WHERE `entry` = 33411;
-UPDATE `creature_template` SET `ScriptName` = 'npc_ys_mimiron' WHERE `entry` = 33412;
-UPDATE `creature_template` SET `ScriptName` = 'npc_ys_thorim' WHERE `entry` = 33413;
-UPDATE `creature_template` SET `ScriptName` = 'npc_sanity_well' WHERE `entry` = 33991;
-UPDATE `creature_template` SET `ScriptName` = 'boss_elder_ironbranch' WHERE `entry` =32913;
-UPDATE `creature_template` SET `ScriptName` = 'boss_elder_stonebark' WHERE `entry` =32914;
-UPDATE `creature_template` SET `ScriptName` = 'boss_elder_brightleaf' WHERE `entry` =32195;
-UPDATE `creature_template` SET `ScriptName` = 'creature_iron_roots' WHERE `entry` =33088;
-UPDATE `creature_template` SET `ScriptName` = 'creature_sun_beam' WHERE `entry` =33170;
-UPDATE `creature_template` SET `ScriptName` = 'mob_colossus' WHERE `entry` = 33237;
-UPDATE `creature_template` SET `ScriptName` = 'npc_sif' WHERE `entry` = 33196;
--- I set here this scriptname because I thi we are using a entrie script and them this is correct
--- When we use it we have another error thorim_phase_trigger because this scriptname is assigned to this NPC from TC
-UPDATE `creature_template` SET `flags_extra` = 0, `ScriptName` = 'thorim_energy_source' WHERE `entry` = 32892;
-
--- Icecrown Citadel
--- First declaring scripts names
-UPDATE `creature_template` SET `ScriptName`='' WHERE `entry` IN (37813,38508,36626,36855,38222,36678,37697,36853,36597,38995,36633,36609,37695,38757,36701,36725,37011,36724,37012,37007,36811,36807,36829,36844,36808,38135,37949,36627,36897,36899,37973,37970,37972,36789,38429,38068,38369,38332,38454,38422,38451);
-
-# Boss
-UPDATE `creature_template` SET `ScriptName`='boss_blood_queen_lanathel' WHERE (`entry`='37955');
-UPDATE `creature_template` SET `ScriptName`='boss_blood_elf_keleset_icc' WHERE `entry` = 37972;
-UPDATE `creature_template` SET `ScriptName`='boss_blood_elf_taldaram_icc' WHERE `entry` = 37973;
-UPDATE `creature_template` SET `ScriptName`='boss_blood_council' WHERE (`entry`='37970');
-UPDATE `creature_template` SET `ScriptName`='boss_festergut' WHERE (`entry`='36626');
-UPDATE `creature_template` SET `ScriptName`='boss_saurfang' WHERE (`entry`='37813');
-UPDATE `creature_template` SET `ScriptName`='boss_professor_putricide' WHERE (`entry`='36678');
-UPDATE `creature_template` SET `ScriptName`='boss_sindragosa' WHERE (`entry`='36853');
-UPDATE `creature_template` SET `ScriptName`='boss_valithria' WHERE `entry` = 36789;
-UPDATE `creature_template` SET `ScriptName`='boss_the_lich_king' WHERE (`entry`='36597');
-UPDATE `creature_template` SET `ScriptName`='boss_rotface' WHERE `entry`= 36627;
-
--- Script_names segun TC
-UPDATE `creature_template` SET `ScriptName`='boss_lord_marrowgar' WHERE `entry`=36612;
-UPDATE `creature_template` SET `ScriptName`='boss_lady_deathwhisper' WHERE `entry`=36855;
-
-# Mobs
-UPDATE `creature_template` SET `ScriptName`='npc_tirion_icc' WHERE (`entry`='38995');
-UPDATE `creature_template` SET `ScriptName`='npc_swarming_shadows' WHERE (`entry`='38163');
-UPDATE `creature_template` SET `ScriptName`='npc_bloodbeast' WHERE (`entry`='38508');
-UPDATE `creature_template` SET `ScriptName`='npc_volatile_ooze' WHERE (`entry`='37697');  
-UPDATE `creature_template` SET `ScriptName`='npc_ice_puls_icc' WHERE (`entry`='36633');
-UPDATE `creature_template` SET `ScriptName`='npc_valkyr_icc' WHERE (`entry`='36609');
-UPDATE `creature_template` SET `ScriptName`='npc_ghoul_icc' WHERE (`entry`='37695');
-UPDATE `creature_template` SET `ScriptName`='npc_defile_icc' WHERE (`entry`='38757');
-UPDATE `creature_template` SET `ScriptName`='npc_raging_spirit_icc' WHERE (`entry`='36701');
-UPDATE `creature_template` SET `ScriptName`='npc_ooze_little' WHERE `entry`= 36897;
-UPDATE `creature_template` SET `ScriptName`='npc_ooze_big' WHERE `entry`= 36899;
-UPDATE `creature_template` SET `ScriptName`='npc_nerubar_brood_keeper' WHERE `entry` = 36725;
-UPDATE `creature_template` SET `ScriptName`='npc_the_damned' WHERE `entry` = 37011;
-UPDATE `creature_template` SET `ScriptName`='npc_servant_of_the_throne' WHERE `entry` = 36724;
-UPDATE `creature_template` SET `ScriptName`='npc_ancient_skeletal_soldier' WHERE `entry` = 37012;
-UPDATE `creature_template` SET `ScriptName`='npc_death_bound_ward' WHERE `entry` = 37007;
-UPDATE `creature_template` SET `ScriptName`='npc_death_speaker_attedant' WHERE `entry` = 36811;
-UPDATE `creature_template` SET `ScriptName`='npc_death_speaker_disciple' WHERE `entry` = 36807;
-UPDATE `creature_template` SET `ScriptName`='npc_death_speaker_high_priest' WHERE `entry` = 36829;
-UPDATE `creature_template` SET `ScriptName`='npc_death_speaker_servant' WHERE `entry` = 36844;
-UPDATE `creature_template` SET `ScriptName`='npc_death_speaker_zealot' WHERE `entry` = 36808;
-UPDATE `creature_template` SET `ScriptName`='npc_skellmage_icc' WHERE `entry` = 37868;
-UPDATE `creature_template` SET `ScriptName`='npc_fireskell_icc' WHERE `entry` = 36791;
-UPDATE `creature_template` SET `ScriptName`='npc_suppressor_icc' WHERE `entry` = 37863;
-UPDATE `creature_template` SET `ScriptName`='npc_manavoid_icc' WHERE `entry` = 38068;
-UPDATE `creature_template` SET `ScriptName`='npc_glutabomination_icc' WHERE `entry` = 37886;
-UPDATE `creature_template` SET `ScriptName`='npc_blistzombie_icc' WHERE `entry` = 37934;
-UPDATE `creature_template` SET `ScriptName`='npc_dreamcloud_icc' WHERE `entry` = 37985;
-UPDATE `creature_template` SET `ScriptName`='npc_dreamportal_icc' WHERE `entry` = 37945;
-UPDATE `creature_template` SET `ScriptName`='npc_nucleus_icc' WHERE `entry`=38369;
-UPDATE `creature_template` SET `ScriptName`='npc_fireball_icc' WHERE `entry`=38332;
-UPDATE `creature_template` SET `ScriptName`='npc_bomb_icc' WHERE `entry`=38454;
-UPDATE `creature_template` SET `ScriptName`='npc_vortex_icc' WHERE `entry`=38422;
-UPDATE `creature_template` SET `ScriptName`='npc_empfireball_icc' WHERE `entry`=38451;
-UPDATE `creature_template` SET `ScriptName`='npc_precious' WHERE (`entry`='37217');
-UPDATE `creature_template` SET `ScriptName`='npc_stinky' WHERE (`entry`='37025');
-UPDATE `creature_template` SET `ScriptName`='npc_puddle_ooze' WHERE (`entry`='37690');
-UPDATE `creature_template` SET `ScriptName`='npc_malleable_goo' WHERE (`entry`='38556');
-UPDATE `creature_template` SET `ScriptName`='npc_abomination' WHERE (`entry`='37672');
-UPDATE `creature_template` SET `ScriptName`='npc_spinestalker' WHERE (`entry`='37534');
-UPDATE `creature_template` SET `ScriptName`='npc_rimefang' WHERE (`entry`='37533');
-UPDATE `creature_template` SET `ScriptName`='npc_ice_tomb' WHERE (`entry`='36980');
-UPDATE `creature_template` SET `ScriptName`='npc_frost_bomb' WHERE (`entry`='37186');
-UPDATE `creature_template` SET `ScriptName`='npc_shambling_horror_icc' WHERE (`entry`='37698');
-UPDATE `creature_template` SET `ScriptName`='npc_terenas_menethil' WHERE (`entry`='36823');
-UPDATE `creature_template` SET `ScriptName`='npc_spirit_warden' WHERE (`entry`='36824');
-UPDATE `creature_template` SET `ScriptName`='npc_sister_svalna' WHERE `entry` = '37126';
-UPDATE `creature_template` SET `ScriptName` = 'npc_impaling_spear' WHERE `entry` = '38248';
-UPDATE `creature_template` SET `ScriptName` = 'npc_gas_cloud' WHERE `entry` = '37562';
-UPDATE `creature_template` SET `ScriptName`='lanathel_intro' WHERE (`entry`='38004');
-UPDATE `creature_template` SET `vehicleId`=533 WHERE `entry`=36619;
-UPDATE `creature_template` SET `ScriptName`='npc_choke_bomb' WHERE (`entry`='38159');
-UPDATE `creature_template` SET `ScriptName`='npc_sticky_ooze' WHERE (`entry`='37006');
-UPDATE `creature_template` SET `ScriptName`='npc_flood_ooze' WHERE (`entry`='37013');
-UPDATE `creature_template` SET `ScriptName`='npc_shambling_horror' WHERE (`entry`='37698');
-
--- Script_names segun TC
-UPDATE `creature_template` SET `ScriptName`='npc_cold_flame' WHERE `entry`=36672;
-UPDATE `creature_template` SET `ScriptName`='npc_bone_spike' WHERE `entry`=38711;
-UPDATE `creature_template` SET `ScriptName`='npc_cult_fanatic' WHERE `entry` IN (37890,38009,38135);
-UPDATE `creature_template` SET `ScriptName`='npc_cult_adherent' WHERE `entry` IN(37949,38010,38136);
-UPDATE `creature_template` SET `ScriptName`='npc_vengeful_shade' WHERE `entry`=38222;
-
--- Halls of Reflection
--- Cleanup first
-UPDATE `creature_template` SET `Scriptname`=' ' WHERE `entry` IN (38112,38113,37221,37223,38175,38172,38567,38177,38173,38176);
-
-UPDATE `creature_template` SET `AIName`='', `Scriptname`='npc_jaina_and_sylvana_HRintro' WHERE `entry` IN (37221, 37223);
-UPDATE `creature_template` SET `AIName`='', `Scriptname`='boss_falric' WHERE `entry` IN (38112);
-UPDATE `creature_template` SET `AIName`='', `Scriptname`='boss_marwyn' WHERE `entry` IN (38113);
-UPDATE `creature_template` SET `AIName`='', `Scriptname`='npc_lich_king_hr' WHERE `entry` IN (36954);
-UPDATE `creature_template` SET `AIName`='', `Scriptname`='boss_lich_king_hor' WHERE `entry` IN (37226);
-UPDATE `creature_template` SET `AIName`='', `Scriptname`='npc_jaina_and_sylvana_HRextro' WHERE `entry` IN (36955, 37554);
-UPDATE `creature_template` SET `AIName`='', `Scriptname`='generic_creature' WHERE `entry` IN (36940,36941,37069);
-UPDATE `creature_template` SET `ScriptName`='generic_creature' WHERE `entry` IN (38177,38176,38173,38172,38567,38175);
-UPDATE `creature_template` SET `AIName`='', `Scriptname`='npc_frostworn_general' WHERE `entry`=36723;
-update `creature_template` set `AIName`='', `Scriptname`='npc_raging_gnoul' where `entry` in (36940);
-update `creature_template` set `AIName`='', `Scriptname`='npc_risen_witch_doctor' where `entry` in (36941);
-update `creature_template` set `AIName`='', `Scriptname`='npc_abon' where `entry` in (37069);
-
--- Argent quest
--- Scriptname for training_dummy_argent
--- with this now you can ride the mount and use the skills on the dummies
-UPDATE `creature_template` SET `ScriptName`='npc_training_dummy_argent' WHERE `entry` IN ('33172','33243');
--- Add Scripts to NPCs
-UPDATE `creature_template` SET `ScriptName`='npc_quest_givers_argent_tournament' WHERE `entry` IN (33593, 33592, 33225, 33312, 33335, 33379, 33373, 33361, 33403, 33372);
-UPDATE `creature_template` SET `ScriptName`='npc_quest_givers_for_crusaders' WHERE `entry` IN (34882, 35094);
-UPDATE `creature_template` SET `ScriptName`='npc_crusader_rhydalla' WHERE `entry`=33417;
-UPDATE `creature_template` SET `ScriptName`='npc_eadric_the_pure' WHERE `entry`=33759;
-UPDATE `creature_template` SET `ScriptName`='npc_crok_scourgebane' WHERE `entry`=33762;
-UPDATE `creature_template` SET `ScriptName`='npc_valis_windchaser' WHERE `entry`=33974;
-UPDATE `creature_template` SET `ScriptName`='npc_rugan_steelbelly' WHERE `entry`=33972;
-UPDATE `creature_template` SET `ScriptName`='npc_jeran_lockwood' WHERE `entry`=33973;
-UPDATE `creature_template` SET `Scriptname`='npc_justicar_mariel_trueheart' WHERE `entry` = '33817';
-UPDATE `creature_template` SET `Scriptname`='npc_vendor_argent_tournament' WHERE `entry` IN(33553,33554,33556,33555,33557,33307,33310,33653,33650,33657);
--- Quest 13666 & 13673:  Une lame digne d'un champion!
--- Lake Frog
--- Maiden Of Ahswood Lake
-UPDATE `creature_template` SET `ScriptName` = 'npc_lake_frog' WHERE `creature_template`.`entry` =33211 LIMIT 1 ;
-UPDATE `creature_template` SET `npcflag` = `npcflag` | 1, `ScriptName` = 'npc_maiden_of_ashwood_lake' WHERE `creature_template`.`entry` =33220;
-UPDATE `creature_template` SET `InhabitType`=5, `ScriptName`='npc_maiden_of_drak_mar' WHERE `entry`=33273;
-
--- Quest Free your mind
--- Leaper
-UPDATE `creature_template` SET `ScriptName`='npc_leaper' WHERE `entry`='29840';
--- Lady Nightswood
-UPDATE `creature_template` SET `ScriptName`='npc_lady_nightswood' WHERE `entry`='29770';
--- The Vile
-UPDATE `creature_template` SET `ScriptName`='npc_vile' WHERE `entry`='29769';
-
--- Declaring zones
-UPDATE `instance_template` SET `script` = 'instance_eye_of_eternity' WHERE `map`= 616;
-UPDATE `instance_template` SET `script` = 'instance_obsidian_sanctum' WHERE `map`= 615;
-UPDATE `instance_template` SET `script` = 'instance_oculus' WHERE `map`= 578;
-UPDATE `instance_template` SET `script` = 'instance_ruby_sanctum' WHERE `map`= 724;
-UPDATE `instance_template` SET `script` = 'instance_trial_of_the_champion' WHERE `map`= 650;
-UPDATE `instance_template` SET `script` = 'instance_ulduar' WHERE `map`= 603;
-UPDATE `instance_template` SET `script`=  'instance_icecrown_citadel' WHERE `map`= 631;
-UPDATE `instance_template` SET `script` = 'instance_halls_of_reflection' WHERE `map`= 668;
-
--- Segun TC
-UPDATE `instance_template` SET `script`='instance_trial_of_the_crusader' WHERE `map`=649;
-
--- Is fix here if not "error" - Lo implemento aqui sino da error
-DELETE FROM gameobject_template WHERE entry = '194438';
-INSERT INTO `gameobject_template` (`entry`, `type`, `displayId`, `name`, `IconName`, `castBarCaption`, `unk1`, `faction`, `flags`, `size`, `questItem1`, `questItem2`, `questItem3`, `questItem4`, `questItem5`, `questItem6`, `data0`, `data1`, `data2`, `data3`, `data4`, `data5`, `data6`, `data7`, `data8`, `data9`, `data10`, `data11`, `data12`, `data13`, `data14`, `data15`, `data16`, `data17`, `data18`, `data19`, `data20`, `data21`, `data22`, `data23`, `ScriptName`, `WDBVerified`) VALUES
-('194438','1','8504','Activate Tram','','','','0','32','1','0','0','0','0','0','0','0','0','3000','0','0','1','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','go_call_tram','11159');
-
--- Gameobject
-UPDATE `gameobject_template` SET `ScriptName` = 'go_malygos_iris' WHERE `entry` IN (193960,193958); 
-UPDATE `gameobject_template` SET `ScriptName` = 'go_firefield' WHERE `entry` = '203005';
-UPDATE `gameobject_template` SET `ScriptName`= '' WHERE `entry` IN (194375,194371,194370,194377);
-UPDATE `gameobject_template` SET `ScriptName`='ulduar_teleporter' WHERE `entry`=194569;
-UPDATE `gameobject_template` SET `ScriptName` = 'icecrown_teleporter' WHERE `entry` IN (202223,202235,202242,202243,202244,202245,202246);
-UPDATE `gameobject_template` SET `ScriptName` = 'go_call_tram' WHERE `entry` = 194438;
-UPDATE `gameobject_template` SET `ScriptName` = 'not_push_button' WHERE `entry` = 194739;
-
-
--- WG
-DELETE FROM `outdoorpvp_template` WHERE `TypeId` IN (7);
-INSERT INTO `outdoorpvp_template` (`TypeId`, `ScriptName`, `Comment`) VALUES (7, 'outdoorpvp_wg', 'Wintergrasp');
-
--- Clean error from started
--- This delete was on Ulduar sql but i move here for start server with any error
-DELETE FROM `script_waypoint` WHERE `entry`=33370;

@@ -1,5 +1,3 @@
-
--- NOTE INSTALL AT FINAL
 -- Script_names of RoCore update files
 -- Argent tournament
 UPDATE `creature_template` SET `ScriptName` = 'npc_squire_danny' WHERE entry = 33518;

@@ -4,7 +4,7 @@
 -- Do not remove this text, this is a reference for future fixes
 -- Any way I fix like 30 of this erros.
 
-ALTER TABLE db_version CHANGE COLUMN required_295_world_forge_of_souls required_370_world_north_quest bit;
+-- ALTER TABLE db_version CHANGE COLUMN required_295_world_forge_of_souls required_370_world_north_quest bit;
 
 UPDATE creature SET phaseMask = 2 WHERE id = 25496;
 UPDATE gameobject SET phasemask = 3 WHERE id IN (187684, 187685, 187686, 187687);

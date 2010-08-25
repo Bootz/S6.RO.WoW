@@ -1,4 +1,4 @@
-ALTER TABLE db_version CHANGE COLUMN required_424_argent_quests required_436_world_command bit;
+-- ALTER TABLE db_version CHANGE COLUMN required_424_argent_quests required_436_world_command bit;
 
 -- Achievement lookup & add
 DELETE FROM command WHERE NAME IN ('lookup achievement', 'achievement add', 'achievement remove');
