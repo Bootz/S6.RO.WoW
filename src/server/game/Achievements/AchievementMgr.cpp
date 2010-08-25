@@ -729,6 +729,10 @@ void AchievementMgr::UpdateAchievementCriteria(AchievementCriteriaTypes type, ui
         if (!achievement)
             continue;
 
+        // GMs are not permited the get "First of the realm ..." Achievements
+        if (achievement->categoryId == 81 && achievement->flags & 256 && GetPlayer()->GetSession()->GetSecurity() > SEC_PLAYER)
+            continue;
+
         if ((achievement->factionFlag == ACHIEVEMENT_FACTION_HORDE    && GetPlayer()->GetTeam() != HORDE) ||
             (achievement->factionFlag == ACHIEVEMENT_FACTION_ALLIANCE && GetPlayer()->GetTeam() != ALLIANCE))
             continue;
@@ -850,7 +854,7 @@ void AchievementMgr::UpdateAchievementCriteria(AchievementCriteriaTypes type, ui
             }
             case ACHIEVEMENT_CRITERIA_TYPE_COMPLETE_DAILY_QUEST_DAILY:
             {
-                time_t nextDailyResetTime = sWorld.GetNextDailyQuestsResetTime();
+                time_t nextDailyResetTime = sWorld.GetNextDailyQuestReset();
                 CriteriaProgress *progress = GetCriteriaProgress(achievementCriteria);
 
                 if (!miscvalue1) // Login case.
