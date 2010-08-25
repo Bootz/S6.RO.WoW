@@ -1372,12 +1372,6 @@ REPLACE INTO `creature_ai_scripts` (`id`,`creature_id`,`event_type`,`event_inver
 ('26021092','37098','0','0','100','25','14000','17000','27000','37000','11','71942','4','0','0','0','0','0','0','0','0','0','Valkyr Herald - Casts Severed Essence'),
 ('26021093','37133','0','0','100','7','15000','15000','25000','25000','11','41056','0','0','0','0','0','0','0','0','0','0','Ymirjar Warlord - Casts Whirlwind'),
 ('26021094','37133','0','0','100','25','15000','15000','25000','25000','11','41057','0','0','0','0','0','0','0','0','0','0','Ymirjar Warlord - Casts Whirlwind'),
-('26021095','37697','0','0','80','7','14000','15000','25000','30000','11','70492','0','0','0','0','0','0','0','0','0','0','Volatile Ooze - Casts Ooze Eruption'),
-('26021096','37697','0','0','80','9','14000','15000','25000','30000','11','72505','0','0','0','0','0','0','0','0','0','0','Volatile Ooze - Casts Ooze Eruption'),
-('26021097','37697','0','0','80','17','14000','15000','25000','30000','11','72624','0','0','0','0','0','0','0','0','0','0','Volatile Ooze - Casts Ooze Eruption'),
-('26021098','37697','0','0','100','7','12000','12000','22000','28000','11','70447','4','0','0','0','0','0','0','0','0','0','Volatile Ooze - Casts Volatile Ooze Adhesive'),
-('26021099','37697','0','0','100','9','12000','12000','22000','28000','11','72836','4','0','0','0','0','0','0','0','0','0','Volatile Ooze - Casts Volatile Ooze Adhesive'),
-('26021100','37697','0','0','100','17','12000','12000','22000','28000','11','72837','4','0','0','0','0','0','0','0','0','0','Volatile Ooze - Casts Volatile Ooze Adhesive'),
 ('26021101','37038','4','0','100','30','0','0','0','0','11','71164','0','0','0','0','0','0','0','0','0','0','Vengeful Fleshreaper - Cast Leaping Face Maul on Aggro'),
 ('26021102','37132','0','0','80','31','15000','15000','27000','32000','11','72624','0','1','0','0','0','0','0','0','0','0','Ymirjar Battle-Maiden - Casts Adrenaline Rush'),
 ('26021103','37132','0','0','70','31','10000','10000','17000','19000','11','71257','1','0','0','0','0','0','0','0','0','0','Ymirjar Battle-Maiden - Casts Barbaric Strike'),
@@ -1555,3 +1549,7 @@ INSERT INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `modelid`
 #Linked spell
 
 DELETE FROM `spell_linked_spell` WHERE `spell_trigger` = 72202;
+
+
+DELETE FROM `creature_template` WHERE (`entry`=37672);
+INSERT INTO `creature_template` (`entry`, `difficulty_entry_1`, `difficulty_entry_2`, `difficulty_entry_3`, `KillCredit1`, `KillCredit2`, `modelid1`, `modelid2`, `modelid3`, `modelid4`, `name`, `subname`, `IconName`, `gossip_menu_id`, `minlevel`, `maxlevel`, `exp`, `faction_A`, `faction_H`, `npcflag`, `scale`, `rank`, `mindmg`, `maxdmg`, `dmgschool`, `attackpower`, `dmg_multiplier`, `baseattacktime`, `rangeattacktime`, `unit_class`, `unit_flags`, `dynamicflags`, `family`, `trainer_type`, `trainer_spell`, `trainer_class`, `trainer_race`, `minrangedmg`, `maxrangedmg`, `rangedattackpower`, `type`, `type_flags`, `lootid`, `pickpocketloot`, `skinloot`, `resistance1`, `resistance2`, `resistance3`, `resistance4`, `resistance5`, `resistance6`, `spell1`, `spell2`, `spell3`, `spell4`, `spell5`, `spell6`, `spell7`, `spell8`, `PetSpellDataId`, `VehicleId`, `mingold`, `maxgold`, `AIName`, `MovementType`, `InhabitType`, `Health_mod`, `Mana_mod`, `RacialLeader`, `questItem1`, `questItem2`, `questItem3`, `questItem4`, `questItem5`, `questItem6`, `movementId`, `RegenHealth`, `equipment_id`, `mechanic_immune_mask`, `flags_extra`, `ScriptName`) VALUES (37672, 38605, 38786, 38787, 0, 0, 31008, 0, 0, 0, 'Mutated Abomination', '', 'vehichleCursor', 0, 83, 83, 2, 35, 35, 0, 1, 1, 468, 702, 0, 175, 2, 2000, 2000, 1, 33554440, 8, 0, 0, 0, 0, 0, 374, 562, 140, 6, 108, 0, 0, 0, 0, 0, 0, 0, 0, 0, 70542, 72527, 70539, 0, 0, 0, 0, 0, 0, 591, 0, 0, '', 0, 3, 50, 1, 0, 0, 0, 0, 0, 0, 0, 170, 1, 0, 0, 0, 'npc_abomination');
