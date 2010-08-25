@@ -815,7 +815,7 @@ void World::LoadConfigSettings(bool reload)
         m_int_configs[CONFIG_START_HONOR_POINTS] = m_int_configs[CONFIG_MAX_HONOR_POINTS];
     }
 
-    m_int_configs[CONFIG_MAX_ARENA_POINTS] = sConfig.GetIntDefault("MaxArenaPoints", 5000);
+    m_int_configs[CONFIG_MAX_ARENA_POINTS] = sConfig.GetIntDefault("MaxArenaPoints", 10000);
     if (int32(m_int_configs[CONFIG_MAX_ARENA_POINTS]) < 0)
     {
         sLog.outError("MaxArenaPoints (%i) can't be negative. Set to 0.",m_int_configs[CONFIG_MAX_ARENA_POINTS]);
@@ -888,7 +888,7 @@ void World::LoadConfigSettings(bool reload)
     m_bool_configs[CONFIG_GM_LOWER_SECURITY] = sConfig.GetBoolDefault("GM.LowerSecurity", false);
     m_bool_configs[CONFIG_GM_ALLOW_ACHIEVEMENT_GAINS] = sConfig.GetBoolDefault("GM.AllowAchievementGain", true);
 
-    m_int_configs[CONFIG_GROUP_VISIBILITY] = sConfig.GetIntDefault("Visibility.GroupMode",0);
+    m_int_configs[CONFIG_GROUP_VISIBILITY] = sConfig.GetIntDefault("Visibility.GroupMode", 1);
 
     m_int_configs[CONFIG_MAIL_DELIVERY_DELAY] = sConfig.GetIntDefault("MailDeliveryDelay",HOUR);
 
@@ -1043,7 +1043,7 @@ void World::LoadConfigSettings(bool reload)
     m_int_configs[CONFIG_ARENA_START_PERSONAL_RATING]                = sConfig.GetIntDefault ("Arena.ArenaStartPersonalRating", 0);
     m_bool_configs[CONFIG_ARENA_SEASON_IN_PROGRESS]                  = sConfig.GetBoolDefault("Arena.ArenaSeason.InProgress", true);
 
-    m_bool_configs[CONFIG_OFFHAND_CHECK_AT_SPELL_UNLEARN]            = sConfig.GetBoolDefault("OffhandCheckAtSpellUnlearn", false);
+    m_bool_configs[CONFIG_OFFHAND_CHECK_AT_SPELL_UNLEARN]            = sConfig.GetBoolDefault("OffhandCheckAtSpellUnlearn", true);
 
     if (int32 clientCacheId = sConfig.GetIntDefault("ClientCacheVersion", 0))
     {
@@ -1206,7 +1206,7 @@ void World::LoadConfigSettings(bool reload)
     m_bool_configs[CONFIG_NO_RESET_TALENT_COST] = sConfig.GetBoolDefault("NoResetTalentsCost", false);
     m_bool_configs[CONFIG_SHOW_KICK_IN_WORLD] = sConfig.GetBoolDefault("ShowKickInWorld", false);
     m_int_configs[CONFIG_INTERVAL_LOG_UPDATE] = sConfig.GetIntDefault("RecordUpdateTimeDiffInterval", 60000);
-    m_int_configs[CONFIG_MIN_LOG_UPDATE] = sConfig.GetIntDefault("MinRecordUpdateTimeDiff", 10);
+    m_int_configs[CONFIG_MIN_LOG_UPDATE] = sConfig.GetIntDefault("MinRecordUpdateTimeDiff", 100);
     m_int_configs[CONFIG_NUMTHREADS] = sConfig.GetIntDefault("MapUpdate.Threads", 1);
 
     // chat logging
@@ -1843,7 +1843,7 @@ void World::Update(uint32 diff)
 {
     m_updateTime = diff;
 
-    if (m_int_configs[CONFIG_INTERVAL_LOG_UPDATE])
+    if (m_int_configs[CONFIG_INTERVAL_LOG_UPDATE] && diff > m_int_configs[CONFIG_MIN_LOG_UPDATE])
     {
         if (m_updateTimeSum > m_int_configs[CONFIG_INTERVAL_LOG_UPDATE])
         {
