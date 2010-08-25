@@ -287,7 +287,7 @@ public:
             }
 
             // Health check
-            if (!m_bCanShatterGolem && (me->GetHealth()*100 / me->GetMaxHealth()) < (100-(20*m_uiHealthAmountModifier)))
+            if (!m_bCanShatterGolem && me->HealthBelowPct(100 - 20 * m_uiHealthAmountModifier))
             {
                 ++m_uiHealthAmountModifier;
 
