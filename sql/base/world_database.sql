@@ -6017,7 +6017,10 @@ INSERT INTO `spell_group` (`id`, `spell_id`) VALUES
 (1109, 21562),
 -- Prayer of/Shadow Protection
 (1110, 976),
-(1110, 27683);
+(1110, 27683),
+(1006, 72586), -- Blessing of Forgotten Kings (Drums)
+(1108, 72588), -- Gift of the Wild (Drums)
+(1109, 72590); -- Fortitude (Scroll)
 
 /*!40000 ALTER TABLE `spell_group` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -7614,7 +7617,10 @@ INSERT INTO spell_group_stack_rules (`group_id`, `stack_rule`) VALUES
 (1099,1),
 (1103,1),
 (1046,1),
-(1107,1);
+(1107,1),
+(1108,1),
+(1109,1),
+(1110,1);
 
 /*!40000 ALTER TABLE `spell_group_stack_rules` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -15795,6 +15801,31 @@ LOCK TABLES `vehicle_accessory` WRITE;
 /*!40000 ALTER TABLE `vehicle_accessory` DISABLE KEYS */;
 /*!40000 ALTER TABLE `vehicle_accessory` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `vehicle_scaling_info`
+--
+
+DROP TABLE IF EXISTS `vehicle_scaling_info`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `vehicle_scaling_info` (
+  `entry` mediumint(8) unsigned NOT NULL default '0',
+  `baseItemLevel` float NOT NULL default '0',
+  `scalingFactor` float NOT NULL default '0',
+  PRIMARY KEY  (`entry`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `vehicle_scaling_info`
+--
+
+LOCK TABLES `vehicle_scaling_info` WRITE;
+/*!40000 ALTER TABLE `vehicle_scaling_info` DISABLE KEYS */;
+/*!40000 ALTER TABLE `vehicle_scaling_info` ENABLE KEYS */;
+UNLOCK TABLES;
+
 --
 -- Table structure for table `version`
 --

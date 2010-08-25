@@ -414,7 +414,7 @@ void Spell::SpellDamageSchoolDmg(uint32 effect_idx)
                         float radius = GetSpellRadiusForHostile(sSpellRadiusStore.LookupEntry(m_spellInfo->EffectRadiusIndex[0]));
                         if (!radius) return;
                         float distance = m_caster->GetDistance2d(unitTarget);
-                        damage = (distance > radius) ? 0 : int32(m_spellInfo->EffectBasePoints[0]*((radius - distance)/radius));
+                        damage = (distance > radius) ? 0 : int32(SpellMgr::CalculateSpellEffectAmount(m_spellInfo, 0) * ((radius - distance)/radius));
                         break;
                     }
                     // TODO: add spell specific target requirement hook for spells
@@ -482,7 +482,7 @@ void Spell::SpellDamageSchoolDmg(uint32 effect_idx)
                         if (!radius)
                             return;
                         float distance = m_caster->GetDistance2d(unitTarget);
-                        damage = (distance > radius) ? 0 : int32(m_spellInfo->EffectBasePoints[0]*distance);
+                        damage = (distance > radius) ? 0 : int32(SpellMgr::CalculateSpellEffectAmount(m_spellInfo, 0) * distance);
                         break;
                     }
                 }
@@ -745,7 +745,7 @@ void Spell::SpellDamageSchoolDmg(uint32 effect_idx)
 
                     // TODO: should this be put on taken but not done?
                     if (found)
-                        damage += m_spellInfo->EffectBasePoints[1];
+                        damage += SpellMgr::CalculateSpellEffectAmount(m_spellInfo, 1);
 
                     if (m_caster->GetTypeId() == TYPEID_PLAYER)
                     {
@@ -780,19 +780,21 @@ void Spell::SpellDamageSchoolDmg(uint32 effect_idx)
                 {
                     damage += int32(m_caster->GetShieldBlockValue() * 1.3f);
                 }
-                // Judgement of Righteousness
-                else if (m_spellInfo->Id == 20187)
+                // Judgements
+                else switch (m_spellInfo->Id)
                 {
-                    float ap = m_caster->GetTotalAttackPowerValue(BASE_ATTACK);
-                    float sp = (float)m_caster->SpellBaseDamageBonus(GetSpellSchoolMask(m_spellInfo));
-                    damage += int32(0.2f*ap + 0.32f*sp);
-                }
-                // Judgement of Wisdom, Light, Justice
-                else if (m_spellInfo->Id == 54158)
-                {
-                    float ap = m_caster->GetTotalAttackPowerValue(BASE_ATTACK);
-                    float sp = (float)m_caster->SpellBaseDamageBonus(GetSpellSchoolMask(m_spellInfo));
-                    damage += int32(0.14f*ap + 0.22f*sp);
+                    case 20187:
+                    case 54158:
+                    case 31804:
+                        float attackPower = m_caster->GetTotalAttackPowerValue(BASE_ATTACK);
+                        float spellPower = (float)(m_caster->SpellBaseDamageBonus(GetSpellSchoolMask(m_spellInfo)));
+                        if (m_spellInfo->Id == 20187) // Judgement of Righteousness
+                            damage += int32(0.2f * attackPower + 0.32f * spellPower);
+                        if (m_spellInfo->Id == 54158) // Judgement of Wisdom, Light, Justice
+                            damage += int32(0.16f * attackPower + 0.25f * spellPower);
+                        if (m_spellInfo->Id == 31804) // Judgement of Vengeance
+                            damage += int32(0.14f * attackPower + 0.22f * spellPower);
+                        break;
                 }
                 break;
             }
@@ -1624,7 +1626,7 @@ void Spell::EffectDummy(uint32 i)
                     case 27222:
                     case 57946: spFactor = 0.5f; break;
                 }
-                int32 damage = int32(m_spellInfo->EffectBasePoints[0] + (6.3875 * m_spellInfo->baseLevel));
+                int32 damage = int32(SpellMgr::CalculateSpellEffectAmount(m_spellInfo, 0) + (6.3875 * m_spellInfo->baseLevel));
                 int32 mana = int32(damage + (m_caster->ToPlayer()->GetUInt32Value(PLAYER_FIELD_MOD_DAMAGE_DONE_POS+SPELL_SCHOOL_SHADOW) * spFactor));
 
                 if (unitTarget && (int32(unitTarget->GetHealth()) > damage))
@@ -2255,6 +2257,10 @@ void Spell::EffectJump(uint32 i)
     if (m_caster->isInFlight())
         return;
 
+    // Instantly interrupt non melee spells being casted
+    if (m_caster->IsNonMeleeSpellCasted(true))
+        m_caster->InterruptNonMeleeSpells(true);
+
     float x,y,z,o;
     if (m_targets.getUnitTarget())
     {
@@ -2281,6 +2287,10 @@ void Spell::EffectJumpDest(uint32 i)
 {
     if (m_caster->isInFlight())
         return;
+
+    // Instantly interrupt non melee spells being casted
+    if (m_caster->IsNonMeleeSpellCasted(true))
+        m_caster->InterruptNonMeleeSpells(true);
 
     // Init dest coordinates
     float x,y,z,o;
@@ -6637,6 +6647,10 @@ void Spell::EffectKnockBack(uint32 i)
     if (!unitTarget)
         return;
 
+    // Instantly interrupt non melee spells being casted
+    if (unitTarget->IsNonMeleeSpellCasted(true))
+        unitTarget->InterruptNonMeleeSpells(true);
+
     // Typhoon
     if (m_spellInfo->SpellFamilyName == SPELLFAMILY_DRUID && m_spellInfo->SpellFamilyFlags[1] & 0x01000000)
     {
@@ -6752,7 +6766,7 @@ void Spell::EffectPullTowards(uint32 i)
     if (!unitTarget)
         return;
 
-    float speedZ = (float)(m_spellInfo->EffectBasePoints[i]/10);
+    float speedZ = (float)(SpellMgr::CalculateSpellEffectAmount(m_spellInfo, i) / 10);
     float speedXY = (float)(m_spellInfo->EffectMiscValue[i]/10);
     Position pos;
     if (m_spellInfo->Effect[i] == SPELL_EFFECT_PULL_TOWARDS_DEST)

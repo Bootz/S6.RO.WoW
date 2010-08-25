@@ -238,7 +238,7 @@ typedef std::list<PlayerCreateInfoAction> PlayerCreateInfoActions;
 
 struct PlayerInfo
 {
-                                                            // existence checked by displayId != 0             // existence checked by displayId != 0
+                                                            // existence checked by displayId != 0
     PlayerInfo() : displayId_m(0),displayId_f(0),levelInfo(NULL)
     {
     }
@@ -1273,6 +1273,8 @@ class Player : public Unit, public GridObject<Player>
         void SendItemDurations();
         void LoadCorpse();
         void LoadPet();
+
+        bool AddItem(uint32 itemId, uint32 count);
 
         uint32 m_stableSlots;
 

@@ -1106,24 +1106,6 @@ uint32 ObjectMgr::ChooseDisplayId(uint32 /*team*/, const CreatureInfo *cinfo, co
     else
         return data->displayid;
 
-    /*if (!team)
-    {
-        switch(cinfo->Entry)
-        {
-            case 28511: // Eye of Acherus
-            case 33114: // Flame Leviathan Seat (model 24914 chair)
-            case 33167: // Salvaged Demolisher Mechanic Seat
-            case 33189: // Liquid Pryite
-                return cinfo->Modelid1;
-            case 33218: // Pyrite Safety Container
-                return cinfo->Modelid2;
-            case 33143: // Overload Control Device
-                return cinfo->Modelid3;
-            default:
-                return cinfo->GetRandomValidModelId();
-        }
-    }*/
-
     return display_id;
 }
 
@@ -2663,6 +2645,51 @@ void ObjectMgr::LoadVehicleAccessories()
 
     sLog.outString();
     sLog.outString(">> Loaded %u Vehicle Accessories", count);
+}
+
+void ObjectMgr::LoadVehicleScaling()
+{
+    m_VehicleScalingMap.clear();                           // needed for reload case
+
+    uint32 count = 0;
+
+    QueryResult_AutoPtr result = WorldDatabase.Query("SELECT `entry`,`baseItemLevel`,`scalingFactor` FROM `vehicle_scaling_info`");
+
+    if (!result)
+    {
+        barGoLink bar(1);
+        bar.step();
+        sLog.outString();
+        sLog.outErrorDb(">> Loaded 0 vehicle scaling entries. DB table `vehicle_scaling_info` is empty.");
+        return;
+    }
+
+    barGoLink bar(result->GetRowCount());
+
+    do
+    {
+        Field *fields = result->Fetch();
+        bar.step();
+
+        uint32 vehicleEntry       = fields[0].GetUInt32();
+        float baseItemLevel       = fields[1].GetFloat();
+        float scalingFactor       = fields[2].GetFloat();
+
+        if (!sVehicleStore.LookupEntry(vehicleEntry))
+        {
+            sLog.outErrorDb("Table `vehicle_scaling_info`: vehicle entry %u does not exist.", vehicleEntry);
+            continue;
+        }
+
+        m_VehicleScalingMap[vehicleEntry].ID = vehicleEntry;
+        m_VehicleScalingMap[vehicleEntry].baseItemLevel = baseItemLevel;
+        m_VehicleScalingMap[vehicleEntry].scalingFactor = scalingFactor;
+
+        ++count;
+    } while (result->NextRow());
+
+    sLog.outString();
+    sLog.outString(">> Loaded %u vehicle scaling entries.", count);
 }
 
 void ObjectMgr::LoadPetLevelInfo()
