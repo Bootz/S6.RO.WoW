@@ -14470,20 +14470,20 @@ void Player::RewardQuest(Quest const *pQuest, uint32 reward, Object* questGiver,
     // Send reward mail
     if (uint32 mail_template_id = pQuest->GetRewMailTemplateId())
     {
-        if (pQuest->IsDaily() || pQuest->IsWeekly())
-        {
         //- TODO: Poor design of mail system
         SQLTransaction trans = CharacterDatabase.BeginTransaction();
         MailDraft(mail_template_id).SendMailTo(trans, this, questGiver, MAIL_CHECK_MASK_HAS_BODY, pQuest->GetRewMailDelaySecs());
         CharacterDatabase.CommitTransaction(trans);
-
-    if (pQuest->IsDaily())
-    {
-        GetAchievementMgr().UpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_COMPLETE_DAILY_QUEST, quest_id);
-        GetAchievementMgr().UpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_COMPLETE_DAILY_QUEST_DAILY, quest_id);
     }
-            SetTimedQuestStatus(quest_id);
+
+    if (pQuest->IsDaily() || pQuest->IsWeekly())
+    {
+        if (pQuest->IsDaily())
+        {
+            GetAchievementMgr().UpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_COMPLETE_DAILY_QUEST, quest_id);
+            GetAchievementMgr().UpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_COMPLETE_DAILY_QUEST_DAILY, quest_id);
         }
+        SetTimedQuestStatus(quest_id);
     }
 
     if (!pQuest->IsRepeatable())
@@ -15574,7 +15574,7 @@ bool Player::HasQuestForItem(uint32 itemid) const
                     ItemPrototype const *pProto = sObjectMgr.GetItemPrototype(itemid);
 
                     // 'unique' item
-                    if (pProto->MaxCount && GetItemCount(itemid,true) < pProto->MaxCount)
+                    if (pProto->MaxCount && GetItemCount(itemid,true) < static_cast<uint32>(pProto->MaxCount))
                         return true;
 
                     // allows custom amount drop when not 0
@@ -15582,7 +15582,7 @@ bool Player::HasQuestForItem(uint32 itemid) const
                     {
                         if (GetItemCount(itemid,true) < qinfo->ReqSourceCount[j])
                             return true;
-                    } else if (GetItemCount(itemid,true) < pProto->Stackable)
+                    } else if (GetItemCount(itemid,true) < static_cast<uint32>(pProto->Stackable))
                         return true;
                 }
             }
@@ -15673,7 +15673,7 @@ void Player::SendQuestConfirmAccept(const Quest* pQuest, Player* pReceiver)
         {
             if (const QuestLocale* pLocale = sObjectMgr.GetQuestLocale(pQuest->GetQuestId()))
             {
-                if (pLocale->Title.size() > loc_idx && !pLocale->Title[loc_idx].empty())
+                if (pLocale->Title.size() > static_cast<uint32>(loc_idx) && !pLocale->Title[loc_idx].empty())
                     strTitle = pLocale->Title[loc_idx];
             }
         }
