@@ -55,7 +55,7 @@ OutdoorPvPWG::OutdoorPvPWG()
 
 bool OutdoorPvPWG::SetupOutdoorPvP()
 {
-    if (!sWorld.getIntConfig(CONFIG_OUTDOORPVP_WINTERGRASP_ENABLED))
+    if (!sWorld.getBoolConfig(CONFIG_OUTDOORPVP_WINTERGRASP_ENABLED))
     {
         sWorld.setWorldState(WORLDSTATE_WINTERGRASP_CONTROLING_FACTION, TEAM_NEUTRAL);
         return false;
@@ -1063,7 +1063,7 @@ bool OutdoorPvPWG::UpdateGameObjectInfo(GameObject *go) const
 
 void OutdoorPvPWG::HandlePlayerEnterZone(Player * plr, uint32 zone)
 {
-    if (!sWorld.getIntConfig(CONFIG_OUTDOORPVP_WINTERGRASP_ENABLED))
+    if (!sWorld.getBoolConfig(CONFIG_OUTDOORPVP_WINTERGRASP_ENABLED))
         return;
 
     if (isWarTime())
@@ -1099,7 +1099,7 @@ void OutdoorPvPWG::HandlePlayerEnterZone(Player * plr, uint32 zone)
 // Reapply Auras if needed
 void OutdoorPvPWG::HandlePlayerResurrects(Player * plr, uint32 zone)
 {
-    if (!sWorld.getIntConfig(CONFIG_OUTDOORPVP_WINTERGRASP_ENABLED))
+    if (!sWorld.getBoolConfig(CONFIG_OUTDOORPVP_WINTERGRASP_ENABLED))
         return;
 
     if (isWarTime())
@@ -1137,7 +1137,7 @@ void OutdoorPvPWG::HandlePlayerResurrects(Player * plr, uint32 zone)
 
 void OutdoorPvPWG::HandlePlayerLeaveZone(Player * plr, uint32 zone)
 {
-    if (!sWorld.getIntConfig(CONFIG_OUTDOORPVP_WINTERGRASP_ENABLED))
+    if (!sWorld.getBoolConfig(CONFIG_OUTDOORPVP_WINTERGRASP_ENABLED))
         return;
 
     if (!plr->GetSession()->PlayerLogout())
@@ -1321,7 +1321,7 @@ void OutdoorPvPWG::UpdateClock()
 
 bool OutdoorPvPWG::Update(uint32 diff)
 {
-    if (!sWorld.getIntConfig(CONFIG_OUTDOORPVP_WINTERGRASP_ENABLED))
+    if (!sWorld.getBoolConfig(CONFIG_OUTDOORPVP_WINTERGRASP_ENABLED))
         return false;
 
     if (m_timer > diff)
