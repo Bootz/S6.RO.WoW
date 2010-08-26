@@ -6256,3 +6256,10 @@ INSERT INTO `pool_quest`(`entry`,`quest`,`daily`,`enabled`,`comment`) VALUES
 (28701,12961,1,1,'Dalaran - Daily jewelcrafting quest of Timothy Jones'),
 (28701,12962,1,1,'Dalaran - Daily jewelcrafting quest of Timothy Jones'),
 (28701,12963,1,1,'Dalaran - Daily jewelcrafting quest of Timothy Jones');
+
+-- Some spell fixes
+
+UPDATE spell_proc_event SET procFlags = 20, procEx = 2 WHERE entry IN (53486, 53488);
+
+DELETE FROM `spell_bonus_data` where entry=50444;
+INSERT INTO `spell_bonus_data`(`entry`, `direct_bonus`, `dot_bonus`, `ap_bonus`, `comments`) VALUES (50444, 0, 0, 0.105, "Death Knight - Corpse Explosion Triggered");
