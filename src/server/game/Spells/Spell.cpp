@@ -1557,11 +1557,11 @@ SpellMissInfo Spell::DoSpellHitOnUnit(Unit *unit, const uint32 effectMask, bool 
                     float durationadd = 0.0f;
                     
                     if (m_originalCaster->GetOwner()->HasAura(18754))
-                        durationadd += float(1.5*IN_MILISECONDS*0.22);
+                        durationadd += float(1.5*IN_MILLISECONDS*0.22);
                     else if (m_originalCaster->GetOwner()->HasAura(18755))
-                        durationadd += float(1.5*IN_MILISECONDS*0.44);
+                        durationadd += float(1.5*IN_MILLISECONDS*0.44);
                     else if (m_originalCaster->GetOwner()->HasAura(18756))
-                        durationadd += float(1.5*IN_MILISECONDS*0.66);
+                        durationadd += float(1.5*IN_MILLISECONDS*0.66);
 
                     if (durationadd)
                     {
