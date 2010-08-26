@@ -1184,7 +1184,7 @@ void OutdoorPvPWG::PromotePlayer(Player *killer) const
 
 void OutdoorPvPWG::HandleKill(Player *killer, Unit *victim)
 {
-    if (!sWorld.getIntConfig(CONFIG_OUTDOORPVP_WINTERGRASP_ENABLED) || !isWarTime())
+    if (!sWorld.getBoolConfig(CONFIG_OUTDOORPVP_WINTERGRASP_ENABLED) || !isWarTime())
         return;
 
     bool ok = false;

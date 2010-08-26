@@ -4409,7 +4409,7 @@ bool ChatHandler::HandleWintergraspEnableCommand(const char* args)
         if (!sWorld.getBoolConfig(CONFIG_OUTDOORPVP_WINTERGRASP_ENABLED))
         {
             pvpWG->forceStopBattle();
-            sWorld.setIntConfig(CONFIG_OUTDOORPVP_WINTERGRASP_ENABLED, true);
+            sWorld.setBoolConfig(CONFIG_OUTDOORPVP_WINTERGRASP_ENABLED, true);
         }
         PSendSysMessage(LANG_BG_WG_ENABLE);
         return true;
@@ -4419,7 +4419,7 @@ bool ChatHandler::HandleWintergraspEnableCommand(const char* args)
         if (sWorld.getBoolConfig(CONFIG_OUTDOORPVP_WINTERGRASP_ENABLED))
         {
             pvpWG->forceStopBattle();
-            sWorld.setIntConfig(CONFIG_OUTDOORPVP_WINTERGRASP_ENABLED, false);
+            sWorld.setBoolConfig(CONFIG_OUTDOORPVP_WINTERGRASP_ENABLED, false);
         }
         PSendSysMessage(LANG_BG_WG_DISABLE);
         return true;
