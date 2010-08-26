@@ -1199,6 +1199,8 @@ void Spell::DoAllEffectOnTarget(TargetInfo *target)
     // Reset damage/healing counter
     m_damage = target->damage;
     m_healing = -target->damage;
+    int32 enddamage = m_damage;
+    int32 endhealing = m_healing;
 
     // Fill base trigger info
     uint32 procAttacker = m_procAttacker;
@@ -1307,6 +1309,8 @@ void Spell::DoAllEffectOnTarget(TargetInfo *target)
 
         int32 gain = caster->DealHeal(unitTarget, addhealth, m_spellInfo, crit);
         unitTarget->getHostileRefManager().threatAssist(caster, float(gain) * 0.5f, m_spellInfo);
+
+        endhealing = addhealth;
     }
     // Do damage and triggers
     else if (m_damage > 0)
@@ -1341,6 +1345,7 @@ void Spell::DoAllEffectOnTarget(TargetInfo *target)
             AuraEffect * aurEff = m_spellAura->GetEffect(1);
             aurEff->SetAmount(aurEff->GetAmount() * damageInfo.damage / 100);
         }
+       enddamage = damageInfo.damage;
     }
     // Passive spell hits/misses or active spells only misses (only triggers)
     else
@@ -1402,6 +1407,11 @@ void Spell::DoAllEffectOnTarget(TargetInfo *target)
 
         CallScriptAfterHitHandlers();
     }
+
+    // Used by Divine Storm Implementation
+    m_damage = enddamage;
+    m_healing = endhealing;
+
 }
 
 SpellMissInfo Spell::DoSpellHitOnUnit(Unit *unit, const uint32 effectMask, bool scaleAura)

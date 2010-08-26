@@ -1450,7 +1450,11 @@ void Spell::EffectDummy(uint32 i)
                     return;
                 case 54171:                                   //Divine Storm
                 {
-                    m_caster->CastCustomSpell(unitTarget, 54172, &damage, 0, 0, true);
+                    int32 heal = 0;
+                    if (m_UniqueTargetInfo.size())
+                        heal = damage / m_UniqueTargetInfo.size();
+                    if (heal)
+                        m_caster->CastCustomSpell(unitTarget, 54172, &heal, 0, 0, true);
                     return;
                 }
                 case 58418:                                 // Portal to Orgrimmar
@@ -1685,13 +1689,34 @@ void Spell::EffectDummy(uint32 i)
             }
          case SPELLFAMILY_PALADIN:
             // Divine Storm
-            if (m_spellInfo->SpellFamilyFlags[1] & SPELLFAMILYFLAG1_PALADIN_DIVINESTORM && i == 1)
+            if (m_spellInfo->SpellFamilyFlags[1] & SPELLFAMILYFLAG1_PALADIN_DIVINESTORM)
             {
-                int32 dmg = m_damage * damage / 100;
-                if (!unitTarget)
-                    unitTarget = m_caster;
-                m_caster->CastCustomSpell(unitTarget, 54171, &dmg, 0, 0, true);
-                return;
+                int32 dmg = 0;
+                switch (i)
+                {
+                    case EFFECT_0:
+                        for (std::list<TargetInfo>::iterator ihit = m_UniqueTargetInfo.begin(); ihit != m_UniqueTargetInfo.end(); ++ihit)
+                            if (ihit->effectMask & (1<<EFFECT_2))
+                            {
+                                DoAllEffectOnTarget(&(*ihit));
+                                ihit->damage = m_damage;
+                            }
+                        return;
+                    case EFFECT_1:
+                        for (std::list<TargetInfo>::iterator ihit = m_UniqueTargetInfo.begin(); ihit != m_UniqueTargetInfo.end(); ++ihit)
+                            if (ihit->effectMask & (1<<EFFECT_2))
+                                dmg += ihit->damage;
+                        if (dmg)
+                        {
+                            if (!unitTarget)
+                                unitTarget = m_caster;
+                            dmg *= (float)damage / 100.0f;
+                            m_caster->CastCustomSpell(unitTarget, 54171, &dmg, 0, 0, true);
+                        }
+                        return;
+                    default:
+                        return;
+                }
             }
 
             switch(m_spellInfo->Id)
