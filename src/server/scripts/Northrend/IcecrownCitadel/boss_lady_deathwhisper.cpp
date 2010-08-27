@@ -786,7 +786,7 @@ class spell_cultist_dark_martyrdom : public SpellScriptLoader
             bool Validate(SpellEntry const* spellEntry)
             {
                 if (uint32 scriptId = sObjectMgr.GetScriptId("boss_lady_deathwhisper"))
-                    if (CreatureInfo const* creInfo = ObjectMgr::GetCreatureTemplate(NPC_LADY_DEATHWHISPER))
+                    if (CreatureInfo const* creInfo = ObjectMgr::GetCreatureTemplate(CREATURE_DEATHWHISPER))
                         if (creInfo->ScriptID == scriptId)
                             return true;
 
@@ -797,7 +797,7 @@ class spell_cultist_dark_martyrdom : public SpellScriptLoader
             {
                 if (GetCaster()->isSummon())
                     if (Unit* owner = GetCaster()->ToTempSummon()->GetSummoner())
-                        if (owner->GetEntry() == NPC_LADY_DEATHWHISPER)
+                        if (owner->GetEntry() == CREATURE_DEATHWHISPER)
                             CAST_AI(boss_lady_deathwhisper::boss_lady_deathwhisperAI, owner->ToCreature()->AI())->AddToReanimationQueue(GetCaster());
 
                 GetCaster()->Kill(GetCaster());

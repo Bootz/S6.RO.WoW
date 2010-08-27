@@ -21,7 +21,6 @@
 #ifndef DEF_ICECROWN_CITADEL_H
 #define DEF_ICECROWN_CITADEL_H
 
-
 enum eSharedSpells
 {
     SPELL_BERSERK   = 26662
@@ -30,11 +29,9 @@ enum eSharedSpells
 enum Data
 {
     DATA_MARROWGAR_EVENT,
-    DATA_LORD_MARROWGAR,
     DATA_DEATHWHISPER_EVENT,
     DATA_GUNSHIP_BATTLE_EVENT,
     DATA_SAURFANG_EVENT,
-    DATA_DEATHBRINGER_SAURFANG,
     DATA_FESTERGURT_EVENT,
     DATA_ROTFACE_EVENT,
     DATA_PROFESSOR_PUTRICIDE_EVENT,
@@ -45,7 +42,6 @@ enum Data
     DATA_LICH_KING_EVENT,
 
     COMMAND_FAIL_BONED,
-    DATA_SAURFANG_EVENT_NPC,
     DATA_SAURFANG_DOOR,
 };
 
@@ -65,24 +61,27 @@ enum Data64
     DATA_VALITHRIA_DREAMWALKER,
     DATA_SINDRAGOSA,
     DATA_LICH_KING,
+    DATA_SAURFANG_EVENT_NPC,
 };
 
 enum mainCreatures
 {
-    NPC_LORD_MARROWGAR              = 36612,
+    CREATURE_MARROWGAR               = 36612,
     NPC_COLDFLAME                   = 36672,
     NPC_BONE_SPIKE                  = 36619,
 
-    NPC_LADY_DEATHWHISPER   = 36855,
-    NPC_CULT_FANATIC        = 37890,
-    NPC_DEFORMED_FANATIC    = 38135,
-    NPC_REANIMATED_FANATIC  = 38009,
-    NPC_CULT_ADHERENT       = 37949,
-    NPC_EMPOWERED_ADHERENT  = 38136,
-    NPC_REANIMATED_ADHERENT = 38010,
-    NPC_VENGEFUL_SHADE      = 38222,
+    CREATURE_DEATHWHISPER            = 36855,
+    NPC_CULT_FANATIC                = 37890,
+    NPC_DEFORMED_FANATIC            = 38135,
+    NPC_REANIMATED_FANATIC          = 38009,
+    NPC_CULT_ADHERENT               = 37949,
+    NPC_EMPOWERED_ADHERENT          = 38136,
+    NPC_REANIMATED_ADHERENT         = 38010,
+    NPC_VENGEFUL_SHADE              = 38222,
 
-    NPC_DEATHBRINGER_SAURFANG       = 37813,
+    CREATURE_GUNSHIP                 = 30343,
+
+    CREATURE_SAURFANG               = 37813,
     NPC_BLOOD_BEAST                 = 38508,
     NPC_SE_JAINA_PROUDMOORE         = 37188,    // SE means Saurfang Event
     NPC_SE_MURADIN_BRONZEBEARD      = 37200,
@@ -91,9 +90,6 @@ enum mainCreatures
     NPC_SE_KOR_KRON_REAVER          = 37920,
     NPC_SE_SKYBREAKER_MARINE        = 37830,
 
-    CREATURE_DEATHWHISPER            = 36855,
-    CREATURE_GUNSHIP                 = 30343,
-    CREATURE_SAURFANG                = 37813,
     CREATURE_FESTERGURT              = 36626,
     CREATURE_ROTFACE                 = 36627,
     CREATURE_PROFESSOR_PUTRICIDE     = 36678,
@@ -115,11 +111,6 @@ enum GameObjects
     GO_GASVALVE                     = 201616,
     GO_PROFDOORORANGE               = 201613,
     GO_PROFDOORGREEN                = 201614,
-    DOODAD_ICECROWN_ICEWALL02       = 201910,
-    ICEWALL                         = 201911,
-    LORD_MARROWGAR_S_ENTRANCE       = 201857,
-    ORATORY_OF_THE_DAMNED_ENTRANCE  = 201563,
-    LADY_DEATHWHISPER_ELEVATOR      = 202220,
 };
 
 enum eAchievementCriteria
@@ -129,4 +120,5 @@ enum eAchievementCriteria
     CRITERIA_BONED_10H  = 13393,
     CRITERIA_BONED_25H  = 13394,
 };
+
 #endif

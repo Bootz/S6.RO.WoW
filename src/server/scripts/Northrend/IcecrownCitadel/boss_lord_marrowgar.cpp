@@ -101,7 +101,7 @@ class boss_lord_marrowgar : public CreatureScript
                 events.ScheduleEvent(EVENT_WARN_BONE_STORM, urand(35000, 50000));
                 events.ScheduleEvent(EVENT_ENRAGE, 600000);
                 if (pInstance)
-                    pInstance->SetData(DATA_LORD_MARROWGAR, NOT_STARTED);
+                    pInstance->SetData(DATA_MARROWGAR_EVENT, NOT_STARTED);
             }
 
             void EnterCombat(Unit* who)
@@ -109,7 +109,7 @@ class boss_lord_marrowgar : public CreatureScript
                 DoScriptText(SAY_AGGRO, me);
 
                 if (pInstance)
-                    pInstance->SetData(DATA_LORD_MARROWGAR, IN_PROGRESS);
+                    pInstance->SetData(DATA_MARROWGAR_EVENT, IN_PROGRESS);
             }
 
             void JustDied(Unit* killer)
@@ -117,13 +117,13 @@ class boss_lord_marrowgar : public CreatureScript
                 DoScriptText(SAY_DEATH, me);
 
                 if (pInstance)
-                    pInstance->SetData(DATA_LORD_MARROWGAR, DONE);
+                    pInstance->SetData(DATA_MARROWGAR_EVENT, DONE);
             }
 
             void JustReachedHome()
             {
                 if(pInstance)
-                    pInstance->SetData(DATA_LORD_MARROWGAR, FAIL);
+                    pInstance->SetData(DATA_MARROWGAR_EVENT, FAIL);
             }
 
             void KilledUnit(Unit *victim)
@@ -444,7 +444,7 @@ class spell_marrowgar_coldflame : public SpellScriptLoader
 
             bool Load()
             {
-                if (GetCaster()->GetEntry() != NPC_LORD_MARROWGAR)
+                if (GetCaster()->GetEntry() != CREATURE_MARROWGAR)
                     return false;
                 return true;
             }
@@ -493,7 +493,7 @@ class spell_marrowgar_bone_spike_graveyard : public SpellScriptLoader
 
             bool Load()
             {
-                if (GetCaster()->GetEntry() != NPC_LORD_MARROWGAR)
+                if (GetCaster()->GetEntry() != CREATURE_MARROWGAR)
                     return false;
                 return true;
             }
@@ -530,7 +530,7 @@ class spell_marrowgar_bone_storm : public SpellScriptLoader
 
             bool Load()
             {
-                if (GetCaster()->GetEntry() != NPC_LORD_MARROWGAR)
+                if (GetCaster()->GetEntry() != CREATURE_MARROWGAR)
                     return false;
                 return true;
             }
