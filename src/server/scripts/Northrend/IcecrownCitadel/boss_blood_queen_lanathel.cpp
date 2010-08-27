@@ -46,7 +46,6 @@ enum BloodQuennSpells
     SPELL_TWILIGHT_BLOODBOLT            =    71446,
     SPELL_BLOODBOLD_WHIRL               =    71772,
     SPELL_BLOODBOLD_SPLASH              =    71481,
-    SPELL_BERSERK                       =    47008,
     SPELL_INCITE_TERROR                 =    73070,
     SPELL_SWARMING_SHADOWS_VISUAL       =    71267,
     SPELL_SWARMING_SHADOW_10_NORMAL     =    71267,

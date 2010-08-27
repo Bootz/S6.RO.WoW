@@ -581,14 +581,14 @@ public:
 
 };
 
-class npc_precious : public CreatureScript
+class npc_precious_icc : public CreatureScript
 {
 public:
-	npc_precious() : CreatureScript("npc_precious") { }
+	npc_precious_icc() : CreatureScript("npc_precious_icc") { }
 
-	struct npc_preciousAI : public ScriptedAI
+	struct npc_precious_iccAI : public ScriptedAI
 	{
-		npc_preciousAI(Creature *pCreature) : ScriptedAI(pCreature)
+		npc_precious_iccAI(Creature *pCreature) : ScriptedAI(pCreature)
 		{
 			m_pInstance = pCreature->GetInstanceScript();
 		}
@@ -655,7 +655,7 @@ public:
 
 	CreatureAI* GetAI(Creature* pCreature) const
 	{
-		return new npc_preciousAI(pCreature);
+		return new npc_precious_iccAI(pCreature);
 	}
 
 };
