@@ -36,7 +36,9 @@ enum Data
     DATA_SINDRAGOSA_EVENT,
     DATA_LICH_KING_EVENT,
 
-    COMMAND_FAIL_BONED
+    COMMAND_FAIL_BONED,
+    DATA_SAURFANG_EVENT_NPC,
+    DATA_SAURFANG_DOOR,
 };
 
 enum Data64
@@ -63,6 +65,10 @@ enum mainCreatures
     NPC_COLDFLAME                    = 36672,
     NPC_BONE_SPIKE                   = 36619,
 
+    NPC_LORD_MARROWGAR              = 36612,
+    NPC_COLDFLAME                   = 36672,
+    NPC_BONE_SPIKE                  = 36619,
+
     NPC_LADY_DEATHWHISPER   = 36855,
     NPC_CULT_FANATIC        = 37890,
     NPC_DEFORMED_FANATIC    = 38135,
@@ -71,6 +77,15 @@ enum mainCreatures
     NPC_EMPOWERED_ADHERENT  = 38136,
     NPC_REANIMATED_ADHERENT = 38010,
     NPC_VENGEFUL_SHADE      = 38222,
+
+    NPC_DEATHBRINGER_SAURFANG       = 37813,
+    NPC_BLOOD_BEAST                 = 38508,
+    NPC_SE_JAINA_PROUDMOORE         = 37188,    // SE means Saurfang Event
+    NPC_SE_MURADIN_BRONZEBEARD      = 37200,
+    NPC_SE_KING_VARIAN_WRYNN        = 37879,
+    NPC_SE_HIGH_OVERLORD_SAURFANG   = 37187,
+    NPC_SE_KOR_KRON_REAVER          = 37920,
+    NPC_SE_SKYBREAKER_MARINE        = 37830,
 
     CREATURE_DEATHWHISPER            = 36855,
     CREATURE_GUNSHIP                 = 30343,

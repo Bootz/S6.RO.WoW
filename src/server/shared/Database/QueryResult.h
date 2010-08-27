@@ -27,9 +27,9 @@
 #include "Field.h"
 
 #ifdef _WIN32
-#define FD_SETSIZE 1024
-#include <mysql.h>
+  #include <winsock2.h>
 #endif
+#include <mysql.h>
 
 class QueryResult
 {
