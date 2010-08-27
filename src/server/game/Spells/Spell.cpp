@@ -437,7 +437,6 @@ m_caster(Caster), m_spellValue(new SpellValue(m_spellInfo))
     m_delayStart = 0;
     m_delayAtDamageCount = 0;
 
-    m_applyMultiplierMask = 0;
     m_effectMask = 0;
     m_auraScaleMask = 0;
 
@@ -473,8 +472,6 @@ m_caster(Caster), m_spellValue(new SpellValue(m_spellInfo))
                 m_spellSchoolMask = SpellSchoolMask(1 << pItem->GetProto()->Damage[0].DamageType);
         }
     }
-    // Set health leech amount to zero
-    m_healthLeech = 0;
 
     if (originalCasterGUID)
         m_originalCasterGUID = originalCasterGUID;
@@ -488,9 +485,6 @@ m_caster(Caster), m_spellValue(new SpellValue(m_spellInfo))
         m_originalCaster = ObjectAccessor::GetUnit(*m_caster, m_originalCasterGUID);
         if (m_originalCaster && !m_originalCaster->IsInWorld()) m_originalCaster = NULL;
     }
-
-    for (int i=0; i <3; ++i)
-        m_currentBasePoints[i] = m_spellInfo->EffectBasePoints[i];
 
     m_spellState = SPELL_STATE_NULL;
 
@@ -994,7 +988,7 @@ void Spell::AddUnitTarget(Unit* pVictim, uint32 effIndex)
             if (m_auraScaleMask && ihit->effectMask == m_auraScaleMask && m_caster != pVictim)
             {
                 SpellEntry const * auraSpell = sSpellStore.LookupEntry(sSpellMgr.GetFirstSpellInChain(m_spellInfo->Id));
-                if ((pVictim->getLevel() + 10) >= auraSpell->spellLevel)
+                if (uint32(pVictim->getLevel() + 10) >= auraSpell->spellLevel)
                     ihit->scaleAura = true;
             }
             return;
@@ -1015,7 +1009,7 @@ void Spell::AddUnitTarget(Unit* pVictim, uint32 effIndex)
     if (m_auraScaleMask && target.effectMask == m_auraScaleMask && m_caster != pVictim)
     {
         SpellEntry const * auraSpell = sSpellStore.LookupEntry(sSpellMgr.GetFirstSpellInChain(m_spellInfo->Id));
-        if ((pVictim->getLevel() + 10) >= auraSpell->spellLevel)
+        if (uint32(pVictim->getLevel() + 10) >= auraSpell->spellLevel)
             target.scaleAura = true;
     }
 
@@ -1307,7 +1301,7 @@ void Spell::DoAllEffectOnTarget(TargetInfo *target)
         if (canEffectTrigger && missInfo != SPELL_MISS_REFLECT)
             caster->ProcDamageAndSpell(unitTarget, procAttacker, procVictim, procEx, addhealth, m_attackType, m_spellInfo, m_triggeredByAuraSpell);
 
-        int32 gain = caster->DealHeal(unitTarget, addhealth, m_spellInfo, crit);
+        int32 gain = caster->HealBySpell(unitTarget, m_spellInfo, addhealth, crit);
         unitTarget->getHostileRefManager().threatAssist(caster, float(gain) * 0.5f, m_spellInfo);
 
         endhealing = addhealth;
@@ -1429,7 +1423,7 @@ SpellMissInfo Spell::DoSpellHitOnUnit(Unit *unit, const uint32 effectMask, bool 
     if (unit->GetTypeId() == TYPEID_PLAYER)
     {
         unit->ToPlayer()->GetAchievementMgr().StartTimedAchievement(ACHIEVEMENT_TIMED_TYPE_SPELL_TARGET, m_spellInfo->Id);
-        unit->ToPlayer()->GetAchievementMgr().UpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_BE_SPELL_TARGET, m_spellInfo->Id);
+        unit->ToPlayer()->GetAchievementMgr().UpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_BE_SPELL_TARGET, m_spellInfo->Id, 0, m_caster);
         unit->ToPlayer()->GetAchievementMgr().UpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_BE_SPELL_TARGET2, m_spellInfo->Id);
     }
 
@@ -1532,7 +1526,7 @@ SpellMissInfo Spell::DoSpellHitOnUnit(Unit *unit, const uint32 effectMask, bool 
         if (m_originalCaster)
         {
             m_spellAura = Aura::TryCreate(aurSpellInfo, effectMask, unit,
-                m_originalCaster,(aurSpellInfo == m_spellInfo)? &m_currentBasePoints[0] : &basePoints[0], m_CastItem);
+                m_originalCaster,(aurSpellInfo == m_spellInfo)? &m_spellValue->EffectBasePoints[0] : &basePoints[0], m_CastItem);
             if (m_spellAura)
             {
                 // Now Reduce spell duration using data received at spell hit
@@ -2466,10 +2460,6 @@ void Spell::SelectEffectTargets(uint32 i, uint32 cur)
 
         if (maxTargets > 1)
         {
-            //otherwise, this multiplier is used for something else
-            m_damageMultipliers[i] = 1.0f;
-            m_applyMultiplierMask |= 1 << i;
-
             float range;
             std::list<Unit*> unitList;
 
@@ -2850,6 +2840,18 @@ void Spell::SelectEffectTargets(uint32 i, uint32 cur)
                     case 59725: // Improved Spell Reflection - aoe aura
                         unitList.remove(m_caster);
                         break;
+                    case 72255: // Mark of the Fallen Champion (Deathbringer Saurfang)
+                    case 72444:
+                    case 72445:
+                    case 72446:
+                        for (std::list<Unit*>::iterator itr = unitList.begin() ; itr != unitList.end();)
+                        {
+                            if (!(*itr)->HasAura(72293))
+                                itr = unitList.erase(itr);
+                            else
+                                ++itr;
+                        }
+                        break;
                 }
                 // Death Pact
                 if (m_spellInfo->SpellFamilyName == SPELLFAMILY_DEATHKNIGHT && m_spellInfo->SpellFamilyFlags[0] & 0x00080000)
@@ -2976,7 +2978,7 @@ void Spell::prepare(SpellCastTargets const* targets, AuraEffect const * triggere
                 if (IsPositiveEffect(m_spellInfo->Id, i))
                 {
                     m_auraScaleMask |= (1<<i);
-                    if (m_currentBasePoints[i] != m_spellInfo->EffectBasePoints[i])
+                    if (m_spellValue->EffectBasePoints[i] != m_spellInfo->EffectBasePoints[i])
                     {
                         m_auraScaleMask = 0;
                         break;
@@ -3759,10 +3761,6 @@ void Spell::finish(bool ok)
     // Okay to remove extra attacks
     if (IsSpellHaveEffect(m_spellInfo, SPELL_EFFECT_ADD_EXTRA_ATTACKS))
         m_caster->m_extraAttacks = 0;
-
-    // Heal caster for all health leech from all targets
-    if (m_healthLeech)
-        m_caster->DealHeal(m_caster, uint32(m_healthLeech), m_spellInfo);
 
     if (IsMeleeAttackResetSpell())
     {
@@ -6086,7 +6084,7 @@ SpellCastResult Spell::CheckPower()
     // health as power used - need check health amount
     if (m_spellInfo->powerType == POWER_HEALTH)
     {
-        if (m_caster->GetHealth() <= m_powerCost)
+        if (int32(m_caster->GetHealth()) <= m_powerCost)
             return SPELL_FAILED_CASTER_AURASTATE;
         return SPELL_CAST_OK;
     }
@@ -6107,7 +6105,7 @@ SpellCastResult Spell::CheckPower()
 
     // Check power amount
     Powers powerType = Powers(m_spellInfo->powerType);
-    if (m_caster->GetPower(powerType) < m_powerCost)
+    if (int32(m_caster->GetPower(powerType)) < m_powerCost)
         return SPELL_FAILED_NO_POWER;
     else
         return SPELL_CAST_OK;
@@ -7030,18 +7028,11 @@ bool Spell::IsValidSingleTargetSpell(Unit const* target) const
 
 void Spell::CalculateDamageDoneForAllTargets()
 {
-    float multiplier[3];
-    for (uint8 i = 0; i < 3; ++i)
+    float multiplier[MAX_SPELL_EFFECTS];
+    for (uint8 i = 0; i < MAX_SPELL_EFFECTS; ++i)
     {
-        if (m_applyMultiplierMask & (1 << i))
-        {
-            // Get multiplier
-            multiplier[i] = m_spellInfo->DmgMultiplier[i];
-            // Apply multiplier mods
-            if (m_originalCaster)
-                if (Player* modOwner = m_originalCaster->GetSpellModOwner())
-                    modOwner->ApplySpellMod(m_spellInfo->Id, SPELLMOD_EFFECT_PAST_FIRST, multiplier[i], this);
-        }
+        // Get multiplier
+        multiplier[i] = SpellMgr::CalculateSpellEffectDamageMultiplier(m_spellInfo, i, m_originalCaster, this);
     }
 
     bool usesAmmo = true;
@@ -7145,11 +7136,6 @@ int32 Spell::CalculateDamageDone(Unit *unit, const uint32 effectMask, float *mul
                     }
                 }
             }
-            if (m_applyMultiplierMask & (1 << i))
-            {
-                m_damage = int32(m_damage * m_damageMultipliers[i]);
-                m_damageMultipliers[i] *= multiplier[i];
-            }
 
             damageDone += m_damage;
         }
@@ -7226,15 +7212,12 @@ void Spell::SetSpellValue(SpellValueMod mod, int32 value)
     {
         case SPELLVALUE_BASE_POINT0:
             m_spellValue->EffectBasePoints[0] = SpellMgr::CalculateSpellEffectBaseAmount(value, m_spellInfo, 0);
-            m_currentBasePoints[0] = m_spellValue->EffectBasePoints[0]; //this should be removed in the future
             break;
         case SPELLVALUE_BASE_POINT1:
             m_spellValue->EffectBasePoints[1] = SpellMgr::CalculateSpellEffectBaseAmount(value, m_spellInfo, 1);
-            m_currentBasePoints[1] = m_spellValue->EffectBasePoints[1];
             break;
         case SPELLVALUE_BASE_POINT2:
             m_spellValue->EffectBasePoints[2] = SpellMgr::CalculateSpellEffectBaseAmount(value, m_spellInfo, 2);
-            m_currentBasePoints[2] = m_spellValue->EffectBasePoints[2];
             break;
         case SPELLVALUE_RADIUS_MOD:
             m_spellValue->RadiusMod = (float)value / 10000;

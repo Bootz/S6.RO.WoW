@@ -1124,12 +1124,12 @@ void Unit::CalculateSpellDamageTaken(SpellNonMeleeDamage *damageInfo, int32 dama
             // Spell weapon based damage CAN BE crit & blocked at same time
             if (blocked)
             {
-                damageInfo->blocked = uint32(pVictim->GetShieldBlockValue());
+                damageInfo->blocked = pVictim->GetShieldBlockValue();
                 //double blocked amount if block is critical
                 if (pVictim->isBlockCritical())
-                    damageInfo->blocked+=damageInfo->blocked;
-                if (damage < damageInfo->blocked)
-                    damageInfo->blocked = damage;
+                    damageInfo->blocked += damageInfo->blocked;
+                if (damage < int32(damageInfo->blocked))
+                    damageInfo->blocked = uint32(damage);
                 damage -= damageInfo->blocked;
             }
 
@@ -1978,7 +1978,7 @@ void Unit::CalcAbsorbResist(Unit *pVictim, SpellSchoolMask schoolMask, DamageEff
                         pVictim->CastCustomSpell(pVictim, 66235, &healAmount, NULL, NULL, true);
                         pVictim->ToPlayer()->AddSpellCooldown(66235,0,time(NULL) + 120);
                     }
-                    else if (remainingHealth < allowedHealth)
+                    else if (remainingHealth < int32(allowedHealth))
                     {
                         // Reduce damage that brings us under 35% (or full damage if we are already under 35%) by x%
                         uint32 damageToReduce = (pVictim->GetHealth() < allowedHealth)
@@ -2240,7 +2240,7 @@ void Unit::CalcAbsorbResist(Unit *pVictim, SpellSchoolMask schoolMask, DamageEff
     RemainingDamage += auraAbsorbMod * TotalAbsorb / 100;
 
     // Apply death prevention spells effects
-    if (preventDeathSpell && RemainingDamage >= pVictim->GetHealth())
+    if (preventDeathSpell && RemainingDamage >= int32(pVictim->GetHealth()))
     {
         switch(preventDeathSpell->SpellFamilyName)
         {
@@ -2968,9 +2968,9 @@ SpellMissInfo Unit::MagicSpellHitResult(Unit *pVictim, SpellEntry const *spell)
     if (Player *modOwner = GetSpellModOwner())
         modOwner->ApplySpellMod(spell->Id, SPELLMOD_RESIST_MISS_CHANCE, modHitChance);
     // Increase from attacker SPELL_AURA_MOD_INCREASES_SPELL_PCT_TO_HIT auras
-    modHitChance+=GetTotalAuraModifierByMiscMask(SPELL_AURA_MOD_INCREASES_SPELL_PCT_TO_HIT, schoolMask);
+    modHitChance += GetTotalAuraModifierByMiscMask(SPELL_AURA_MOD_INCREASES_SPELL_PCT_TO_HIT, schoolMask);
     // Chance hit from victim SPELL_AURA_MOD_ATTACKER_SPELL_HIT_CHANCE auras
-    modHitChance+= pVictim->GetTotalAuraModifierByMiscMask(SPELL_AURA_MOD_ATTACKER_SPELL_HIT_CHANCE, schoolMask);
+    modHitChance += pVictim->GetTotalAuraModifierByMiscMask(SPELL_AURA_MOD_ATTACKER_SPELL_HIT_CHANCE, schoolMask);
     // Reduce spell hit chance for Area of effect spells from victim SPELL_AURA_MOD_AOE_AVOIDANCE aura
 
     // Cloak of Shadows Hack part 1
@@ -2980,24 +2980,23 @@ SpellMissInfo Unit::MagicSpellHitResult(Unit *pVictim, SpellEntry const *spell)
     modHitChance -= cosResist;
 
     if (IsAreaOfEffectSpell(spell))
-        modHitChance-=pVictim->GetTotalAuraModifier(SPELL_AURA_MOD_AOE_AVOIDANCE);
+        modHitChance -= pVictim->GetTotalAuraModifier(SPELL_AURA_MOD_AOE_AVOIDANCE);
 
     int32 HitChance = modHitChance * 100;
     // Increase hit chance from attacker SPELL_AURA_MOD_SPELL_HIT_CHANCE and attacker ratings
-    HitChance += int32(m_modSpellHitChance*100.0f);
+    HitChance += int32(m_modSpellHitChance * 100.0f);
 
     // Decrease hit chance from victim rating bonus
     if (pVictim->GetTypeId() == TYPEID_PLAYER)
-        HitChance -= int32(pVictim->ToPlayer()->GetRatingBonusValue(CR_HIT_TAKEN_SPELL)*100.0f);
-
-    if (HitChance <  100)
-        HitChance =  100;
+        HitChance -= int32(pVictim->ToPlayer()->GetRatingBonusValue(CR_HIT_TAKEN_SPELL) * 100.0f);
+    if (HitChance < 100)
+        HitChance = 100;
     else if (HitChance > 10000)
         HitChance = 10000;
 
     int32 tmp = 10000 - HitChance;
 
-    uint32 rand = urand(0,10000);
+    int32 rand = irand(0, 10000);
 
     if (rand < tmp)
         return SPELL_MISS_MISS;
@@ -3017,10 +3016,10 @@ SpellMissInfo Unit::MagicSpellHitResult(Unit *pVictim, SpellEntry const *spell)
         return SPELL_MISS_RESIST;
 
     // cast by caster in front of victim
-    if (pVictim->HasInArc(M_PI,this) || pVictim->HasAuraType(SPELL_AURA_IGNORE_HIT_DIRECTION))
+    if (pVictim->HasInArc(M_PI, this) || pVictim->HasAuraType(SPELL_AURA_IGNORE_HIT_DIRECTION))
     {
-        int32 deflect_chance = pVictim->GetTotalAuraModifier(SPELL_AURA_DEFLECT_SPELLS)*100;
-        tmp+=deflect_chance;
+        int32 deflect_chance = pVictim->GetTotalAuraModifier(SPELL_AURA_DEFLECT_SPELLS) * 100;
+        tmp += deflect_chance;
         if (rand < tmp)
             return SPELL_MISS_DEFLECT;
     }
@@ -3569,10 +3568,14 @@ void Unit::FinishSpell(CurrentSpellTypes spellType, bool ok /*= true*/)
     spell->finish(ok);
 }
 
-bool Unit::IsNonMeleeSpellCasted(bool withDelayed, bool skipChanneled, bool skipAutorepeat, bool isAutoshoot) const
+bool Unit::IsNonMeleeSpellCasted(bool withDelayed, bool skipChanneled, bool skipAutorepeat, bool isAutoshoot, bool skipInstant) const
 {
     // We don't do loop here to explicitly show that melee spell is excluded.
     // Maybe later some special spells will be excluded too.
+
+    // if checkInstant then instant spells shouldn't count as being casted
+    if (!skipInstant && m_currentSpells[CURRENT_GENERIC_SPELL] && !m_currentSpells[CURRENT_GENERIC_SPELL]->GetCastTime())
+        return false;
 
     // generic spells are casted when they are not finished and not delayed
     if (m_currentSpells[CURRENT_GENERIC_SPELL] &&
@@ -5197,8 +5200,7 @@ void Unit::SendSpellNonMeleeDamageLog(SpellNonMeleeDamage *log)
     data << uint32(log->SpellID);
     data << uint32(log->damage);                            // damage amount
     int32 overkill = log->damage - log->target->GetHealth();
-    data << uint32(overkill > 0 ? overkill : 0);
-    //data << uint32(log->overkill);                          // overkill
+    data << uint32(overkill > 0 ? overkill : 0);            // overkill
     data << uint8 (log->schoolMask);                        // damage school
     data << uint32(log->absorb);                            // AbsorbedDamage
     data << uint32(log->resist);                            // resist
@@ -5260,7 +5262,7 @@ void Unit::SendPeriodicAuraLog(SpellPeriodicAuraLogInfo *pInfo)
         case SPELL_AURA_OBS_MOD_HEALTH:
             data << uint32(pInfo->damage);                  // damage
             data << uint32(pInfo->overDamage);              // overheal
-            data << uint32(0);                              // absorb
+            ta << uint32(pInfo->absorb);                  // absorb
             data << uint8(pInfo->critical);                 // new 3.1.2 critical tick
             break;
         case SPELL_AURA_OBS_MOD_POWER:
@@ -5537,12 +5539,13 @@ bool Unit::HandleDummyAuraProc(Unit *pVictim, uint32 damage, AuraEffect* trigger
                 case 25988:
                 {
                     // return damage % to attacker but < 50% own total health
-                    basepoints0 = int32((triggerAmount* damage) /100);
+                    basepoints0 = int32((triggerAmount * damage) /100);
 
-                    if (basepoints0 > GetMaxHealth()/2)
-                        basepoints0 = GetMaxHealth()/2;
+                    int32 halfMaxHealth = int32(CountPctFromMaxHealth(50));
+                    if (basepoints0 > halfMaxHealth)
+                        basepoints0 = halfMaxHealth;
 
-                    sLog.outDebug("DEBUG LINE: Data about Eye for an Eye ID %u, damage taken %u, unit max health %u, damage done %u", dummySpell->Id, damage, GetMaxHealth(),basepoints0);
+                    sLog.outDebug("DEBUG LINE: Data about Eye for an Eye ID %u, damage taken %u, unit max health %u, damage done %u", dummySpell->Id, damage, GetMaxHealth(), basepoints0);
 
                     triggered_spell_id = 25997;
 
@@ -6285,7 +6288,7 @@ bool Unit::HandleDummyAuraProc(Unit *pVictim, uint32 damage, AuraEffect* trigger
                 if (procSpell && procSpell->Id == 27285)
                     return false;
                 // if damage is more than need or target die from damage deal finish spell
-                if (triggeredByAura->GetAmount() <= damage || GetHealth() <= damage)
+                if (triggeredByAura->GetAmount() <= int32(damage) || GetHealth() <= damage)
                 {
                     // remember guid before aura delete
                     uint64 casterGuid = triggeredByAura->GetCasterGUID();
@@ -6304,10 +6307,10 @@ bool Unit::HandleDummyAuraProc(Unit *pVictim, uint32 damage, AuraEffect* trigger
                 return true;
             }
             // Seed of Corruption (Mobs cast) - no die req
-            if (dummySpell->SpellFamilyFlags.IsEqual(0,0,0) && dummySpell->SpellIconID == 1932)
+            if (dummySpell->SpellFamilyFlags.IsEqual(0, 0, 0) && dummySpell->SpellIconID == 1932)
             {
                 // if damage is more than need deal finish spell
-                if (triggeredByAura->GetAmount() <= damage)
+                if (triggeredByAura->GetAmount() <= int32(damage))
                 {
                     // remember guid before aura delete
                     uint64 casterGuid = triggeredByAura->GetCasterGUID();
@@ -8901,6 +8904,16 @@ bool Unit::HandleProcTriggerSpell(Unit *pVictim, uint32 damage, AuraEffect* trig
             if (!pVictim->HasAuraState(AURA_STATE_HEALTHLESS_35_PERCENT, procSpell, this))
                 return false;
             break;
+	        // Deathbringer Saurfang - Rune of Blood
+        case 72408:
+            // can proc only if target is marked with rune
+            if (!pVictim->HasAura(72410))
+                return false;
+            break;
+        // Deathbringer Saurfang - Blood Beast's Blood Link
+        case 72176:
+            basepoints0 = 3;
+            break;
     }
 
       // Glyph of Death Grip
@@ -9104,6 +9117,10 @@ bool Unit::HandleProcTriggerSpell(Unit *pVictim, uint32 damage, AuraEffect* trig
                 return false;
             break;
         }
+	        // Deathbringer Saurfang - Blood Link
+        case 72202:
+            target = FindNearestCreature(37813, 75.0f); // NPC_DEATHBRINGER_SAURFANG = 37813
+            break;
     }
 
     if (cooldown && GetTypeId() == TYPEID_PLAYER && ToPlayer()->HasSpellCooldown(trigger_spell_id))
@@ -10145,11 +10162,8 @@ void Unit::SetCharm(Unit* charm, bool apply)
     }
 }
 
-int32 Unit::DealHeal(Unit *pVictim, uint32 addhealth, SpellEntry const *spellProto, bool critical)
+int32 Unit::DealHeal(Unit *pVictim, uint32 addhealth)
 {
-    uint32 absorb = 0;
-    // calculate heal absorb and reduce healing
-    CalcHealAbsorb(pVictim, spellProto, addhealth, absorb);
     int32 gain = 0;
 
     if (addhealth)
@@ -10162,9 +10176,6 @@ int32 Unit::DealHeal(Unit *pVictim, uint32 addhealth, SpellEntry const *spellPro
 
     if (unit->GetTypeId() == TYPEID_PLAYER)
     {
-        // overheal = addhealth - gain
-        unit->SendHealSpellLog(pVictim, spellProto->Id, addhealth, addhealth - gain, absorb, critical);
-
         if (Battleground *bg = unit->ToPlayer()->GetBattleground())
             bg->UpdatePlayerScore((Player*)unit, SCORE_HEALING_DONE, gain);
 
@@ -10384,6 +10395,17 @@ void Unit::SendHealSpellLog(Unit *pVictim, uint32 SpellID, uint32 Damage, uint32
     data << uint32(Absorb); // Absorb amount
     data << uint8(critical ? 1 : 0);
     SendMessageToSet(&data, true);
+}
+
+int32 Unit::HealBySpell(Unit * pVictim, SpellEntry const * spellInfo, uint32 addHealth, bool critical)
+{
+    uint32 absorb = 0;
+    // calculate heal absorb and reduce healing
+    CalcHealAbsorb(pVictim, spellInfo, addHealth, absorb);
+
+    int32 gain = DealHeal(pVictim, addHealth);
+    SendHealSpellLog(pVictim, spellInfo->Id, addHealth, uint32(addHealth - gain), absorb, critical);
+    return gain;
 }
 
 void Unit::SendEnergizeSpellLog(Unit *pVictim, uint32 SpellID, uint32 Damage, Powers powertype)
@@ -11308,11 +11330,9 @@ uint32 Unit::SpellHealingBonus(Unit *pVictim, SpellEntry const *spellProto, uint
         {
             scripted = true;
             int32 apBonus = int32(std::max(GetTotalAttackPowerValue(BASE_ATTACK), GetTotalAttackPowerValue(RANGED_ATTACK)));
-            int32 spBonus = SpellBaseDamageBonus(SPELL_SCHOOL_MASK_HOLY);
-      if (apBonus > spBonus)
-        DoneTotal += apBonus * 0.220f;
+            DoneTotal += apBonus * 0.22f; // 22% of AP per tick
             else
-                DoneTotal += spBonus * 0.377f;
+                DoneTotal += DoneAdvertisedBenefit * 0.377f; //37.7% of BH per tick
         }
         // Earthliving - 0.45% of normal hot coeff
         else if (spellProto->SpellFamilyName == SPELLFAMILY_SHAMAN && spellProto->SpellFamilyFlags[1] & 0x80000)
@@ -12390,7 +12410,7 @@ bool Unit::canDetectInvisibilityOf(Unit const* u) const
             uint32 invLevel = 0;
             Unit::AuraEffectList const& iAuras = u->GetAuraEffectsByType(SPELL_AURA_MOD_INVISIBILITY);
             for (Unit::AuraEffectList::const_iterator itr = iAuras.begin(); itr != iAuras.end(); ++itr)
-                if (uint8((*itr)->GetMiscValue()) == i && invLevel < (*itr)->GetAmount())
+                if (uint8((*itr)->GetMiscValue()) == i && int32(invLevel) < (*itr)->GetAmount())
                     invLevel = (*itr)->GetAmount();
 
             // find invisibility detect level
@@ -12403,7 +12423,7 @@ bool Unit::canDetectInvisibilityOf(Unit const* u) const
             {
                 Unit::AuraEffectList const& dAuras = GetAuraEffectsByType(SPELL_AURA_MOD_INVISIBILITY_DETECTION);
                 for (Unit::AuraEffectList::const_iterator itr = dAuras.begin(); itr != dAuras.end(); ++itr)
-                    if (uint8((*itr)->GetMiscValue()) == i && detectLevel < (*itr)->GetAmount())
+                    if (uint8((*itr)->GetMiscValue()) == i && int32(detectLevel) < (*itr)->GetAmount())
                         detectLevel = (*itr)->GetAmount();
             }
 
@@ -12509,12 +12529,12 @@ void Unit::UpdateSpeed(UnitMoveType mtype, bool forced)
                 stack_bonus     = GetTotalAuraMultiplier(SPELL_AURA_MOD_VEHICLE_SPEED_ALWAYS);
 
                 // for some spells this mod is applied on vehicle owner
-                uint32 owner_speed_mod = 0;
+                int32 owner_speed_mod = 0;
 
                 if (Unit * owner = GetCharmer())
                     owner_speed_mod = owner->GetMaxPositiveAuraModifier(SPELL_AURA_MOD_INCREASE_VEHICLE_FLIGHT_SPEED);
 
-                main_speed_mod = main_speed_mod>owner_speed_mod ? main_speed_mod : owner_speed_mod;
+                main_speed_mod = std::max(main_speed_mod, owner_speed_mod);
             }
             else if (IsMounted())
             {
@@ -13196,7 +13216,7 @@ void Unit::IncrDiminishing(DiminishingGroup group)
     {
         if (i->DRGroup != group)
             continue;
-        if (i->hitCount < GetDiminishingReturnsMaxLevel(group))
+        if (int32(i->hitCount) < GetDiminishingReturnsMaxLevel(group))
             i->hitCount += 1;
         return;
     }
@@ -14518,7 +14538,7 @@ void Unit::ProcDamageAndSpellFor(bool isVictim, Unit * pTarget, uint32 procFlag,
                     {
                         int32 damageLeft = triggeredByAura->GetAmount();
                         // No damage left
-                        if (damageLeft < damage)
+                        if (damageLeft < int32(damage))
                             i->aura->Remove();
                         else
                             triggeredByAura->SetAmount(damageLeft - damage);

@@ -28,10 +28,7 @@
 
 #ifdef _WIN32
 #define FD_SETSIZE 1024
-#include <winsock2.h>
-  #include <mysql.h>
-#else
-#include <mysql/mysql.h>
+#include <mysql.h>
 #endif
 
 class QueryResult

@@ -55,7 +55,7 @@ public:
     	uint64 uiEternos;
 
 
-        uint8 m_auiEncounter[MAX_ENCOUNTER];
+        uint16 m_auiEncounter[MAX_ENCOUNTER];
         std::string str_data;
 
     	void Initialize()

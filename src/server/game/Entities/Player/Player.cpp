@@ -7979,7 +7979,7 @@ void Player::CastItemUseSpell(Item *item,SpellCastTargets const& targets,uint8 c
         Spell *spell = new Spell(this, spellInfo,false);
         spell->m_CastItem = item;
         spell->m_cast_count = cast_count;                   //set count of casts
-        spell->m_currentBasePoints[0] = SpellMgr::CalculateSpellEffectBaseAmount(learning_spell_id, spellInfo, 0);
+        spell->SetSpellValue(SPELLVALUE_BASE_POINT0, learning_spell_id);
         spell->prepare(&targets);
         return;
     }
@@ -13581,18 +13581,13 @@ void Player::PrepareGossipMenu(WorldObject *pSource, uint32 menuId, bool showQue
             std::string strBoxText = itr->second.box_text;
 
             int loc_idx = GetSession()->GetSessionDbLocaleIndex();
-
             if (loc_idx >= 0)
             {
                 uint32 idxEntry = MAKE_PAIR32(menuId, itr->second.id);
-
                 if (GossipMenuItemsLocale const *no = sObjectMgr.GetGossipMenuItemsLocale(idxEntry))
                 {
-                    if (no->OptionText.size() > (size_t)loc_idx && !no->OptionText[loc_idx].empty())
-                        strOptionText = no->OptionText[loc_idx];
-
-                    if (no->BoxText.size() > (size_t)loc_idx && !no->BoxText[loc_idx].empty())
-                        strBoxText = no->BoxText[loc_idx];
+                    sObjectMgr.GetLocaleString(no->OptionText, loc_idx, strOptionText);
+                    sObjectMgr.GetLocaleString(no->BoxText, loc_idx, strBoxText);
                 }
             }
 
@@ -13959,15 +13954,8 @@ void Player::SendPreparedQuest(uint64 guid)
 
                     int loc_idx = GetSession()->GetSessionDbLocaleIndex();
                     if (loc_idx >= 0)
-                    {
-                        uint8 uloc_idx = uint8(loc_idx);
-                        NpcTextLocale const *nl = sObjectMgr.GetNpcTextLocale(textid);
-                        if (nl)
-                        {
-                            if (nl->Text_0[0].size() > uloc_idx && !nl->Text_0[0][uloc_idx].empty())
-                                title = nl->Text_0[0][uloc_idx];
-                        }
-                    }
+                    if (NpcTextLocale const *nl = sObjectMgr.GetNpcTextLocale(textid))
+                            sObjectMgr.GetLocaleString(nl->Text_0[0], loc_idx, title);
                 }
                 else
                 {
@@ -13975,15 +13963,8 @@ void Player::SendPreparedQuest(uint64 guid)
 
                     int loc_idx = GetSession()->GetSessionDbLocaleIndex();
                     if (loc_idx >= 0)
-                    {
-                        uint8 uloc_idx = uint8(loc_idx);
-                        NpcTextLocale const *nl = sObjectMgr.GetNpcTextLocale(textid);
-                        if (nl)
-                        {
-                            if (nl->Text_1[0].size() > uloc_idx && !nl->Text_1[0][uloc_idx].empty())
-                                title = nl->Text_1[0][uloc_idx];
-                        }
-                    }
+                    if (NpcTextLocale const *nl = sObjectMgr.GetNpcTextLocale(textid))
+                            sObjectMgr.GetLocaleString(nl->Text_1[0], loc_idx, title);
                 }
             }
         }
@@ -15574,15 +15555,15 @@ bool Player::HasQuestForItem(uint32 itemid) const
                     ItemPrototype const *pProto = sObjectMgr.GetItemPrototype(itemid);
 
                     // 'unique' item
-                    if (pProto->MaxCount && GetItemCount(itemid,true) < static_cast<uint32>(pProto->MaxCount))
+                    if (pProto->MaxCount && int32(GetItemCount(itemid, true)) < pProto->MaxCount)
                         return true;
 
                     // allows custom amount drop when not 0
                     if (qinfo->ReqSourceCount[j])
                     {
-                        if (GetItemCount(itemid,true) < qinfo->ReqSourceCount[j])
+                        if (GetItemCount(itemid, true) < qinfo->ReqSourceCount[j])
                             return true;
-                    } else if (GetItemCount(itemid,true) < static_cast<uint32>(pProto->Stackable))
+                    } else if (int32(GetItemCount(itemid, true)) < pProto->Stackable)
                         return true;
                 }
             }
@@ -15668,15 +15649,9 @@ void Player::SendQuestConfirmAccept(const Quest* pQuest, Player* pReceiver)
         std::string strTitle = pQuest->GetTitle();
 
         int loc_idx = pReceiver->GetSession()->GetSessionDbLocaleIndex();
-
         if (loc_idx >= 0)
-        {
             if (const QuestLocale* pLocale = sObjectMgr.GetQuestLocale(pQuest->GetQuestId()))
-            {
-                if (pLocale->Title.size() > static_cast<uint32>(loc_idx) && !pLocale->Title[loc_idx].empty())
-                    strTitle = pLocale->Title[loc_idx];
-            }
-        }
+            sObjectMgr.GetLocaleString(pLocale->Title, loc_idx, strTitle);
 
         WorldPacket data(SMSG_QUEST_CONFIRM_ACCEPT, (4 + strTitle.size() + 8));
         data << uint32(pQuest->GetQuestId());
@@ -20312,6 +20287,11 @@ bool Player::canSeeOrDetect(Unit const* u, bool detect, bool inVisibleList, bool
     // Always can see self
     if (m_mover == u || this == u)
         return true;
+
+    // Arena visibility before arena start
+    if (InArena() && GetBattleground() && GetBattleground()->GetStatus() == STATUS_WAIT_JOIN)
+        if (const Player* target = u->GetCharmerOrOwnerPlayerOrPlayerItself())
+            return GetBGTeam() == target->GetBGTeam();
 
     // phased visibility (both must phased in same way)
     if (!InSamePhase(u))
