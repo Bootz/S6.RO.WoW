@@ -84,8 +84,6 @@ enum eSpells
     // Vengeful Shade
     SPELL_VENGEFUL_BLAST            = 71544,
     SPELL_VENGEFUL_BLAST_PASSIVE    = 71494,
-
-    SPELL_BERSERK   = 26662,
 };
 
 enum eEvents

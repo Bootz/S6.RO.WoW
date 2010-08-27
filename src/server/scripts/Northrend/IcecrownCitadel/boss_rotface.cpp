@@ -60,7 +60,6 @@ enum Spells
 	SPELL_MUTATED_INFECTION_H  = 73022,
 	SPELL_SUMMON_LITTLE_OOZE   = 69706,
 	SPELL_SUMMON_BIG_OOZE      = 69540,
-	SPELL_BERSERK              = 47008,
 	SPELL_STICKY_OOZE          = 69775,
 	SPELL_OOZE_STICKY          = 69776,
 	SPELL_RADIATING_OOZE       = 71212,
@@ -668,5 +667,5 @@ void AddSC_boss_rotface()
 	new npc_ooze_little;
 	new npc_sticky_ooze;
 	new npc_flood_ooze;
-	new npc_precious;
+	new npc_precious_icc;
 }

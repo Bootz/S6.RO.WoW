@@ -444,7 +444,7 @@ void AddSC_boss_marwyn();
 void AddSC_boss_lich_king_hr();
 void AddSC_boss_blood_council();   // Icecrown Citadel
 void AddSC_boss_blood_queen_lana_thel();
-void AddSC_boss_saurfang();
+void AddSC_boss_deathbringer_saurfang();
 void AddSC_boss_festergut();
 void AddSC_boss_lady_deathwhisper();
 void AddSC_boss_lord_marrowgar();
@@ -1147,7 +1147,7 @@ void AddNorthrendScripts()
     AddSC_boss_lich_king_hr();
     AddSC_boss_blood_council();   // Icecrown Citadel
     AddSC_boss_blood_queen_lana_thel();
-    AddSC_boss_saurfang();
+    AddSC_boss_deathbringer_saurfang();
     AddSC_boss_festergut();
     AddSC_boss_lady_deathwhisper();
     AddSC_boss_lord_marrowgar();

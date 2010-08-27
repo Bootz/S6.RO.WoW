@@ -77,20 +77,13 @@ void Vehicle::Install()
         {
             case POWER_STEAM:
             case POWER_BLOOD:
+            case POWER_OOZE:
                 me->setPowerType(POWER_ENERGY);
                 me->SetMaxPower(POWER_ENERGY, 100);
                 break;
             case POWER_PYRITE:
                 me->setPowerType(POWER_ENERGY);
                 me->SetMaxPower(POWER_ENERGY, 50);
-                break;
-            case POWER_BLOOD_POWER:
-                me->setPowerType(POWER_ENERGY);
-                me->SetMaxPower(POWER_ENERGY, 100);
-                break;
-            case POWER_OOZE:
-                me->setPowerType(POWER_ENERGY);
-                me->SetMaxPower(POWER_ENERGY, 100);
                 break;
             default:
                 for (uint32 i = 0; i < MAX_SPELL_VEHICLE; ++i)

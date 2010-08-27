@@ -3748,8 +3748,8 @@ UPDATE `creature_template` SET `ScriptName`='npc_fireball_icc' WHERE `entry`=383
 UPDATE `creature_template` SET `ScriptName`='npc_bomb_icc' WHERE `entry`=38454;
 UPDATE `creature_template` SET `ScriptName`='npc_vortex_icc' WHERE `entry`=38422;
 UPDATE `creature_template` SET `ScriptName`='npc_empfireball_icc' WHERE `entry`=38451;
-UPDATE `creature_template` SET `ScriptName`='npc_precious' WHERE (`entry`='37217');
-UPDATE `creature_template` SET `ScriptName`='npc_stinky' WHERE (`entry`='37025');
+UPDATE `creature_template` SET `ScriptName`='npc_precious_icc' WHERE (`entry`='37217');
+UPDATE `creature_template` SET `ScriptName`='npc_stinky_icc' WHERE (`entry`='37025');
 UPDATE `creature_template` SET `ScriptName`='npc_puddle_ooze' WHERE (`entry`='37690');
 UPDATE `creature_template` SET `ScriptName`='npc_malleable_goo' WHERE (`entry`='38556');
 UPDATE `creature_template` SET `ScriptName`='npc_abomination' WHERE (`entry`='37672');

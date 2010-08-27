@@ -21,12 +21,20 @@
 #ifndef DEF_ICECROWN_CITADEL_H
 #define DEF_ICECROWN_CITADEL_H
 
+
+enum eSharedSpells
+{
+    SPELL_BERSERK   = 26662
+};
+
 enum Data
 {
     DATA_MARROWGAR_EVENT,
+    DATA_LORD_MARROWGAR,
     DATA_DEATHWHISPER_EVENT,
     DATA_GUNSHIP_BATTLE_EVENT,
     DATA_SAURFANG_EVENT,
+    DATA_DEATHBRINGER_SAURFANG,
     DATA_FESTERGURT_EVENT,
     DATA_ROTFACE_EVENT,
     DATA_PROFESSOR_PUTRICIDE_EVENT,
@@ -61,10 +69,6 @@ enum Data64
 
 enum mainCreatures
 {
-    CREATURE_MARROWGAR               = 36612,
-    NPC_COLDFLAME                    = 36672,
-    NPC_BONE_SPIKE                   = 36619,
-
     NPC_LORD_MARROWGAR              = 36612,
     NPC_COLDFLAME                   = 36672,
     NPC_BONE_SPIKE                  = 36619,
