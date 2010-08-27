@@ -3896,18 +3896,6 @@ void SpellMgr::LoadSpellCustomAttr()
         case 32233: // Avoidance warlock pet
         case 65220: // Avoidance hunter pet
             spellInfo->EffectApplyAuraName[0] = SPELL_AURA_MOD_AOE_DAMAGE_AVOIDANCE;
-        case 69055:     // Saber Lash
-        case 70814:     // Saber Lash
-            spellInfo->EffectRadiusIndex[0] = 8;
-            count++;
-            break;
-        case 69075:     // Bone Storm
-        case 70834:     // Bone Storm
-        case 70835:     // Bone Storm
-        case 70836:     // Bone Storm
-            spellInfo->EffectRadiusIndex[0] = 12;
-            count++;
-            break;
         case 18500: // Wing Buffet
         case 33086: // Wild Bite
         case 49749: // Piercing Blow

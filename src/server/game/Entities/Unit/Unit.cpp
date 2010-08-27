@@ -8201,15 +8201,6 @@ bool Unit::HandleAuraProc(Unit * pVictim, uint32 damage, Aura * triggeredByAura,
                         CastCustomSpell(pVictim, 66922, &bp0, NULL, NULL, true);
                         return true;
                     }
-                    // Mark of the Fallen Champion
-                    case 72293:
-                        if(pVictim && pVictim->HasAura(72293) && !pVictim->isAlive())
-                        {
-                            Creature* saurfang = pVictim->FindNearestCreature(37813, 500.0f, true);
-                                if(saurfang && saurfang->isAlive())
-                                   saurfang->CastSpell(saurfang, 72260, true);
-                        }
-                        return true;
                 }
                 // but should not proc on non-critical Holy Shocks
                 else if ((procSpell->SpellFamilyFlags[0] & 0x200000 || procSpell->SpellFamilyFlags[1] & 0x10000) && !(procEx & PROC_EX_CRITICAL_HIT))
