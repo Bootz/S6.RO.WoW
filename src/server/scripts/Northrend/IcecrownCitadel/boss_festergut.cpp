@@ -306,10 +306,10 @@ public:
                     Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
                     if (pTarget && !pTarget->HasAura(SPELL_GAS_SPORES))
                     {
+                        me->MonsterTextEmote(EMOTE_GAS_SPORE, 0, true);
                         me->AddAura(SPELL_GAS_SPORES, pTarget);
                         me->PlayDirectSound(16911);
                         DoScriptText(SAY_GAS_SPORES, me);
-                        me->MonsterTextEmote(EMOTE_GAS_SPORE, 0, true);
                     }
                 }
                 m_uiGasSporesTimer = 23000;
