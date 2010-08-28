@@ -758,34 +758,8 @@ uint32 Unit::DealDamage(Unit *pVictim, uint32 damage, CleanDamage const* cleanDa
         }
 
         Kill(pVictim, durabilityLoss);
-
-        //Hook for OnPVPKill Event
-        if (this->GetTypeId() == TYPEID_PLAYER)
-        {
-            if (pVictim->GetTypeId() == TYPEID_PLAYER)
-            {
-                Player *killer = this->ToPlayer();
-                Player *killed = pVictim->ToPlayer();
-                sScriptMgr.OnPVPKill(killer, killed);
-            }
-            else if (pVictim->GetTypeId() == TYPEID_UNIT)
-            {
-                Player *killer = this->ToPlayer();
-                Creature *killed = pVictim->ToCreature();
-                sScriptMgr.OnCreatureKill(killer, killed);
-            }
-        }
-        else if (this->GetTypeId() == TYPEID_UNIT)
-        {
-            if (pVictim->GetTypeId() == TYPEID_PLAYER)
-            {
-                Creature *killer = this->ToCreature();
-                Player *killed = pVictim->ToPlayer();
-                sScriptMgr.OnPlayerKilledByCreature(killer, killed);
-            }
-        }
     }
-    else                                                    // if (health <= damage)
+    else // if (health > damage)
     {
         sLog.outStaticDebug("DealDamageAlive");
 
@@ -1312,7 +1286,7 @@ void Unit::CalculateMeleeDamage(Unit *pVictim, uint32 damage, CalcDamageInfo *da
         case MELEE_HIT_MISS:
         {
             damageInfo->HitInfo    |= HITINFO_MISS;
-            damageInfo->TargetState = VICTIMSTATE_NORMAL;
+            damageInfo->TargetState = VICTIMSTATE_INTACT;
 
             damageInfo->procEx |= PROC_EX_MISS;
             damageInfo->damage  = 0;
@@ -1320,13 +1294,13 @@ void Unit::CalculateMeleeDamage(Unit *pVictim, uint32 damage, CalcDamageInfo *da
             break;
         }
         case MELEE_HIT_NORMAL:
-            damageInfo->TargetState = VICTIMSTATE_NORMAL;
+            damageInfo->TargetState = VICTIMSTATE_HIT;
             damageInfo->procEx|=PROC_EX_NORMAL_HIT;
             break;
         case MELEE_HIT_CRIT:
         {
             damageInfo->HitInfo     |= HITINFO_CRITICALHIT;
-            damageInfo->TargetState  = VICTIMSTATE_NORMAL;
+            damageInfo->TargetState  = VICTIMSTATE_HIT;
 
             damageInfo->procEx      |= PROC_EX_CRITICAL_HIT;
             // Crit bonus calc
@@ -1379,7 +1353,7 @@ void Unit::CalculateMeleeDamage(Unit *pVictim, uint32 damage, CalcDamageInfo *da
             break;
         case MELEE_HIT_BLOCK:
         {
-            damageInfo->TargetState = VICTIMSTATE_NORMAL;
+            damageInfo->TargetState = VICTIMSTATE_HIT;
             damageInfo->HitInfo    |= HITINFO_BLOCK;
             damageInfo->procEx     |= PROC_EX_BLOCK;
             damageInfo->blocked_amount = damageInfo->target->GetShieldBlockValue();
@@ -1401,7 +1375,7 @@ void Unit::CalculateMeleeDamage(Unit *pVictim, uint32 damage, CalcDamageInfo *da
         case MELEE_HIT_GLANCING:
         {
             damageInfo->HitInfo     |= HITINFO_GLANCING;
-            damageInfo->TargetState  = VICTIMSTATE_NORMAL;
+            damageInfo->TargetState  = VICTIMSTATE_HIT;
             damageInfo->procEx      |= PROC_EX_NORMAL_HIT;
             int32 leveldif = int32(pVictim->getLevel()) - int32(getLevel());
             if (leveldif > 3) leveldif = 3;
@@ -1413,7 +1387,7 @@ void Unit::CalculateMeleeDamage(Unit *pVictim, uint32 damage, CalcDamageInfo *da
         case MELEE_HIT_CRUSHING:
         {
             damageInfo->HitInfo     |= HITINFO_CRUSHING;
-            damageInfo->TargetState  = VICTIMSTATE_NORMAL;
+            damageInfo->TargetState  = VICTIMSTATE_HIT;
             damageInfo->procEx      |= PROC_EX_NORMAL_HIT;
             // 150% normal damage
             damageInfo->damage += (damageInfo->damage / 2);
@@ -15558,6 +15532,32 @@ void Unit::Kill(Unit *pVictim, bool durabilityLoss)
             pVictim->ToPlayer()->GetAchievementMgr().UpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_KILLED_BY_CREATURE, GetEntry());
         else if (GetTypeId() == TYPEID_PLAYER && pVictim != this)
             pVictim->ToPlayer()->GetAchievementMgr().UpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_KILLED_BY_PLAYER, 1, this->ToPlayer()->GetTeam());
+    }
+
+    //Hook for OnPVPKill Event
+    if (this->GetTypeId() == TYPEID_PLAYER)
+    {
+        if (pVictim->GetTypeId() == TYPEID_PLAYER)
+        {
+            Player *killer = this->ToPlayer();
+            Player *killed = pVictim->ToPlayer();
+            sScriptMgr.OnPVPKill(killer, killed);
+        }
+        else if (pVictim->GetTypeId() == TYPEID_UNIT)
+        {
+            Player *killer = this->ToPlayer();
+            Creature *killed = pVictim->ToCreature();
+            sScriptMgr.OnCreatureKill(killer, killed);
+        }
+    }
+    else if (this->GetTypeId() == TYPEID_UNIT)
+    {
+        if (pVictim->GetTypeId() == TYPEID_PLAYER)
+        {
+            Creature *killer = this->ToCreature();
+            Player *killed = pVictim->ToPlayer();
+            sScriptMgr.OnPlayerKilledByCreature(killer, killed);
+        }
     }
 }
 

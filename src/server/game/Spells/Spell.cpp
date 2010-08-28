@@ -6292,6 +6292,7 @@ SpellCastResult Spell::CheckItems()
         switch (m_spellInfo->Effect[i])
         {
             case SPELL_EFFECT_CREATE_ITEM:
+            case SPELL_EFFECT_CREATE_ITEM_2:
             {
                 if (!m_IsTriggeredSpell && m_spellInfo->EffectItemType[i])
                 {
@@ -7365,7 +7366,7 @@ void Spell::InitEffectExecuteData(uint8 effIndex)
     ASSERT(effIndex < MAX_SPELL_EFFECTS);
     if (!m_effectExecuteData[effIndex])
     {
-        m_effectExecuteData[effIndex] = new ByteBuffer();
+        m_effectExecuteData[effIndex] = new ByteBuffer(0x20);
         // first dword - target counter
         *m_effectExecuteData[effIndex] << uint32(1);
     }
