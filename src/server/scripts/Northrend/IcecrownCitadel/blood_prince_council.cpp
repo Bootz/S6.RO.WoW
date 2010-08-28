@@ -192,8 +192,8 @@ public:
 			{
 				if (PhaseIntroTimer <= diff)
 				{
-					DoScriptText(Intro_2,pLanathel);
-					pLanathel->ForcedDespawn();
+					DoScriptText(Intro_2, pLanathel);
+					//pLanathel->ForcedDespawn();
 					PhaseIntro = 3;
 					PhaseIntroTimer = 15000;
 				}
