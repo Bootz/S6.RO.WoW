@@ -126,6 +126,7 @@ public:
 				pInstance->SetData(DATA_BLOOD_PRINCE_COUNCIL_EVENT, NOT_STARTED);
 			pLanathel = me->SummonCreature(Lanathel_Intro,4702.377930,2769.180908,364.086761,3.297119, TEMPSUMMON_CORPSE_DESPAWN);
 			pLanathel->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                        if me->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE)
 			me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
 			pKeleseth->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
 			pTaldaram->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
@@ -139,9 +140,8 @@ public:
 				if (PhaseIntro == 0)
 				{
 					if (pInstance)
-						pInstance->SetData(DATA_BLOOD_PRINCE_COUNCIL_EVENT, IN_PROGRESS);
+					pInstance->SetData(DATA_BLOOD_PRINCE_COUNCIL_EVENT, IN_PROGRESS);
 					DoScriptText(Intro_1, pLanathel);
-					DoScriptText(Intro_2, pLanathel);
 					DoStartMovement(pLanathel, 30.0f);
 					PhaseIntro = 1;
 				}
@@ -152,7 +152,7 @@ public:
 		{
 			KineticBombTimer = 45000;
 			VortexTimer = 30000;
-			InvocationTimer = urand(45000,60000);
+			InvocationTimer = 60000;
 			EmpoweredVortexTimer = 25000;
 			InvocationNumber = 0;
 			//pKeleseth->SetInCombatWithZone(); //These 2 lines cause a crash - Andu should fix them.
@@ -195,7 +195,6 @@ public:
 					DoScriptText(Intro_2, pLanathel);
 					//pLanathel->ForcedDespawn();
 					PhaseIntro = 3;
-					PhaseIntroTimer = 15000;
 				}
 				else PhaseIntroTimer -= diff;
 			}
@@ -237,7 +236,7 @@ public:
 				pKeleseth->RemoveAllAuras();
 				pTaldaram->RemoveAllAuras();
 				InvocationNumber = urand(1,3);
-				InvocationTimer = urand(45000,60000);
+				InvocationTimer = 60000;
 				if (InvocationNumber == 1) //Since only 1 of the bosses is attackable during the invocation
 				{
 					DoScriptText(Valanar_Invocation, me);
