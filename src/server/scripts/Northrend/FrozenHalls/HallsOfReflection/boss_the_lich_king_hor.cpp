@@ -104,7 +104,7 @@ public:
                     { 
                      pLider->CastSpell(pLider, SPELL_SILENCE, false);
                      //pLider->RemoveFlag(SPLINEFLAG_WALKING, MOVEMENTFLAG_WALKING);  //Questionible 
-    				 pLider->SendMonsterMove(pLider->GetPositionX(), pLider->GetPositionY(), pLider->GetPositionZ() + 4, VICTIMSTATE_NORMAL, pLider->isInCombat(), 3000); 
+    				 pLider->SendMonsterMove(pLider->GetPositionX(), pLider->GetPositionY(), pLider->GetPositionZ() + 4, VICTIMSTATE_HIT, pLider->isInCombat(), 3000); 
                     }
                     me->setActive(false);
                     break;
