@@ -914,7 +914,7 @@ bool Guardian::InitStatsForLevel(uint8 petlevel)
         SetCreateStat(STAT_SPIRIT, 27);
     }
 
-    m_bonusdamage = 0;
+    SetBonusDamage(0);
     switch (petType)
     {
         case SUMMON_PET:
