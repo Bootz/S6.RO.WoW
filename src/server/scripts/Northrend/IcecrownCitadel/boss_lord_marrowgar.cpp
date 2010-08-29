@@ -97,7 +97,7 @@ class boss_lord_marrowgar : public CreatureScript
                 events.Reset();
                 events.ScheduleEvent(EVENT_ENABLE_BONE_SLICE, 10000);
                 events.ScheduleEvent(EVENT_BONE_SPIKE_GRAVEYARD, urand(20000, 30000));
-                events.ScheduleEvent(EVENT_COLDFLAME, urand(10000, 15000));
+                events.ScheduleEvent(EVENT_COLDFLAME, urand(30000, 45000));
                 events.ScheduleEvent(EVENT_WARN_BONE_STORM, urand(35000, 50000));
                 events.ScheduleEvent(EVENT_ENRAGE, 600000);
                 if (pInstance)
@@ -168,7 +168,7 @@ class boss_lord_marrowgar : public CreatureScript
                                 DoCast(me, SPELL_COLDFLAME_NORMAL);
                             else
                                 DoCast(me, SPELL_COLDFLAME_BONE_STORM);
-                            events.ScheduleEvent(EVENT_COLDFLAME, urand(10000, 15000));
+                            events.ScheduleEvent(EVENT_COLDFLAME, urand(30000, 45000));
                             break;
                         case EVENT_WARN_BONE_STORM:
                             bBoneSlice = false;
@@ -285,7 +285,7 @@ class npc_coldflame : public CreatureScript
                     }
 
                     target->GetPosition(x, y, z);
-                    float scale = 70.0f / me->GetExactDist2d(x, y);
+                    float scale = 35.0f / me->GetExactDist2d(x, y);
                     x = me->GetPositionX() + (x - me->GetPositionX()) * scale;
                     y = me->GetPositionY() + (y - me->GetPositionY()) * scale;
                 }
@@ -295,8 +295,8 @@ class npc_coldflame : public CreatureScript
                     Position const* ownerPos = CAST_AI(boss_lord_marrowgar::boss_lord_marrowgarAI, owner->ToCreature()->AI())->GetLastColdflamePosition();
                     float ang = me->GetAngle(ownerPos) - static_cast<float>(M_PI);
                     MapManager::NormalizeOrientation(ang);
-                    x += 50.0f * cosf(ang);
-                    y += 50.0f * sinf(ang);
+                    x += 25.0f * cosf(ang);
+                    y += 25.0f * sinf(ang);
                 }
                 me->GetMotionMaster()->MovePoint(POINT_TARGET_COLDFLAME, x, y, z);
                 events.ScheduleEvent(EVENT_COLDFLAME_TRIGGER, 400);
