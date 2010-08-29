@@ -119,6 +119,13 @@ public:
                if(m_pInstance->GetData(TYPE_FALRIC) != IN_PROGRESS)
                  return; 
 
+             if (me->GetVisibility() == VISIBILITY_OFF)
+             me->SetVisibility(VISIBILITY_ON);
+             if (me->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE))
+             me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+             if (me->HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE))
+             me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+
              ScriptedAI::AttackStart(who);
         }
 
