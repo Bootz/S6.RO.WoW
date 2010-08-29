@@ -47,6 +47,18 @@ enum BG_IC_WorldStates
     IC_SHOW_A_SCORE                 = 3134,
 };
 
+enum Buffs
+{
+    OIL_REFINERY        = 68719,
+    QUARRY              = 68720
+};
+
+enum BG_IC_Objectives
+{
+    IC_OBJECTIVE_ASSAULT_BASE   = 245,
+    IC_OBJECTIVE_DEFEND_BASE    = 246
+};
+
 const uint32 BG_IC_OP_NODESTATES[5] =    {1767, 1782, 1772, 1792, 1787};
 
 const uint32 BG_IC_OP_NODEICONS[5]  =    {1842, 1846, 1845, 1844, 1843};
