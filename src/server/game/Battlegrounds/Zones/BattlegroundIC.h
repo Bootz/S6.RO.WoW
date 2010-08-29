@@ -334,6 +334,7 @@ class BattlegroundIC : public Battleground
         virtual void StartingEventOpenDoors();
         void RemovePlayer(Player *plr,uint64 guid);
         void HandleAreaTrigger(Player *Source, uint32 Trigger);
+        void SpawnLeader(uint32 teamid);
         Creature* AddICCreature(uint16 cinfoid, uint16 type);
         virtual bool SetupBattleground();
         const uint16 GetBonusHonor(uint8 kills);
