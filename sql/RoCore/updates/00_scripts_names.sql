@@ -257,7 +257,7 @@ UPDATE `creature_template` SET `ScriptName`='boss_blood_elf_keleset_icc' WHERE `
 UPDATE `creature_template` SET `ScriptName`='boss_blood_elf_taldaram_icc' WHERE `entry` = 37973;
 UPDATE `creature_template` SET `ScriptName`='boss_blood_council' WHERE (`entry`='37970');
 UPDATE `creature_template` SET `ScriptName`='boss_festergut' WHERE (`entry`='36626');
-UPDATE `creature_template` SET `ScriptName`='boss_saurfang' WHERE (`entry`='37813');
+UPDATE `creature_template` SET `ScriptName`='boss_deathbringer_saurfang' WHERE (`entry`='37813');
 UPDATE `creature_template` SET `ScriptName`='boss_professor_putricide' WHERE (`entry`='36678');
 UPDATE `creature_template` SET `ScriptName`='boss_sindragosa' WHERE (`entry`='36853');
 UPDATE `creature_template` SET `ScriptName`='boss_valithria' WHERE `entry` = 36789;
@@ -304,7 +304,9 @@ UPDATE `creature_template` SET `ScriptName`='npc_bomb_icc' WHERE `entry`=38454;
 UPDATE `creature_template` SET `ScriptName`='npc_vortex_icc' WHERE `entry`=38422;
 UPDATE `creature_template` SET `ScriptName`='npc_empfireball_icc' WHERE `entry`=38451;
 UPDATE `creature_template` SET `ScriptName`='npc_precious' WHERE (`entry`='37217');
-UPDATE `creature_template` SET `ScriptName`='npc_stinky' WHERE (`entry`='37025');
+UPDATE `creature_template` SET `ScriptName`='npc_stinky_icc' WHERE (`entry`='37025');
+UPDATE `creature_template` SET `ScriptName`='npc_coldflame' WHERE (`entry`='36672');
+UPDATE `creature_template` SET `ScriptName`='npc_precious_icc' WHERE (`entry`='37217');
 UPDATE `creature_template` SET `ScriptName`='npc_puddle_ooze' WHERE (`entry`='37690');
 UPDATE `creature_template` SET `ScriptName`='npc_malleable_goo' WHERE (`entry`='38556');
 UPDATE `creature_template` SET `ScriptName`='npc_abomination' WHERE (`entry`='37672');
@@ -326,7 +328,6 @@ UPDATE `creature_template` SET `ScriptName`='npc_flood_ooze' WHERE (`entry`='370
 UPDATE `creature_template` SET `ScriptName`='npc_shambling_horror' WHERE (`entry`='37698');
 
 -- Script_names segun TC
-UPDATE `creature_template` SET `ScriptName`='npc_cold_flame' WHERE `entry`=36672;
 UPDATE `creature_template` SET `ScriptName`='npc_bone_spike' WHERE `entry`=38711;
 UPDATE `creature_template` SET `ScriptName`='npc_cult_fanatic' WHERE `entry` IN (37890,38009,38135);
 UPDATE `creature_template` SET `ScriptName`='npc_cult_adherent' WHERE `entry` IN(37949,38010,38136);
