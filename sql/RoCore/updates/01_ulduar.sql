@@ -1103,18 +1103,22 @@ INSERT INTO `creature` (`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_
 (33412, 603, 1, 1, 0, 0, 1939.094, 42.534, 338.296, 5.321, 604800, 0, 0, 14433075, 0, 0, 0),
 (33413, 603, 1, 1, 0, 0, 2036.739, -73.705, 338.296, 2.435, 604800, 0, 0, 14433075, 0, 0, 0);
 
-
 UPDATE `creature_template` SET `modelid1` = 11686, `modelid2` = 0, `minlevel` = 80, `maxlevel` = 80, `unit_flags` = 33686018, `type_flags` = 0 WHERE `entry` = 33991;
 
+-- 8571_ulduar_ironconstruct
+-- Despawn Iron Construct (Ignis)
+DELETE FROM creature WHERE id = 33121;
 
-
--- script names faltantes
+-- 8588_xt002_vehicleid
 -- XT-002 vehicle id
 UPDATE `creature_template` SET `unit_flags` = 33554432, `type_flags` = 0, `VehicleId` = 335 WHERE `entry` = 33293;
+
+-- 8592_ulduar_colossus
 -- Ulduar Colossus
 DELETE FROM creature_template WHERE entry = 33240;
 DELETE FROM `creature` WHERE `id`=33237 AND `position_x` >= 367;
 
+-- 8594_ulduar_25_siege
 -- Creatures and Gameobjects 25 man spawn
 UPDATE `creature` SET `spawnMask` = 3 WHERE `map` = 603;
 UPDATE `gameobject` SET `spawnMask` = 3 WHERE `map` = 603;
@@ -1183,3 +1187,7 @@ DELETE FROM `gameobject` WHERE `id` IN (194307, 194308, 195046, 195047);
 -- ------------ --
 
 -- in progress...
+
+-- 8603_ulduar_chests
+-- Delete chests from db
+DELETE FROM `gameobject` WHERE `id` IN (194307, 194308, 195046, 195047);
