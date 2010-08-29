@@ -5,7 +5,7 @@
 
 DROP TABLE IF EXISTS `db_version`;
 CREATE TABLE `db_version` (
-  `required_529_world_quest_free_your_mind` bit(1) default NULL
+  `required_704_world_pool_quest` bit(1) default NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED COMMENT='Used DB version notes';
 
 --
