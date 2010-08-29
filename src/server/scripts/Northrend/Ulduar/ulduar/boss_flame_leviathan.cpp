@@ -598,6 +598,8 @@ public:
     {
         InstanceScript *data = pPlayer->GetInstanceScript();
         InstanceScript* pInstance = pCreature->GetInstanceScript();
+
+        pPlayer->PlayerTalkClass->ClearMenus();
         switch(uiAction)
         {
             case GOSSIP_ACTION_INFO_DEF:

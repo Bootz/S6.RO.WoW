@@ -153,6 +153,7 @@ public:
 
         if (!m_pInstance) return false;
 
+        pPlayer->PlayerTalkClass->ClearMenus();
         switch (uiAction)
         {
             case GOSSIP_ACTION_INFO_DEF+1:
@@ -673,6 +674,8 @@ public:
     bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
     {
         InstanceScript* m_pInstance = (InstanceScript*)pCreature->GetInstanceScript();
+
+        pPlayer->PlayerTalkClass->ClearMenus();
         switch (uiAction)
         {
             case GOSSIP_ACTION_INFO_DEF+1:

@@ -42,6 +42,7 @@ public:
         if(sender != GOSSIP_SENDER_MAIN) return true;
         if(!pPlayer->getAttackers().empty()) return true;
 
+        pPlayer->PlayerTalkClass->ClearMenus();
         switch(action)
         {
         case BASE_CAMP:

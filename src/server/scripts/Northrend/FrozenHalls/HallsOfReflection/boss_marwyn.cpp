@@ -234,7 +234,7 @@ public:
                             me->SetInCombatWithZone();
                        }
                        else CallFallSoldier();
-                       m_uiSummonTimer = 60000;
+                       m_uiSummonTimer = 30000;
                } else m_uiSummonTimer -= uiDiff;
             }
 
