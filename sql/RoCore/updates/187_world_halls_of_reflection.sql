@@ -78,7 +78,7 @@ INSERT INTO `gameobject` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `positi
 
 REPLACE INTO `script_texts` (`entry`,`content_default`,`content_loc8`,`sound`,`type`,`language`,`emote`,`comment`) VALUES
 # SCENE - Hall Of Reflection (Intro) - PreUther
-(-1594433, 'The chill of this place freezes the marrow of my bones!', '', 16631,0,0,1, '67234'),
+(-1594433, 'The chill of this place...I can feel my blood freezing!', '', 16631,0,0,1, '67234'),
 (-1594434, 'I... I don\'t believe it! Frostmourne stands before us, unguarded! Just as the Gnome claimed. Come, heroes!', '', 17049,0,0,1, '67234'),
 (-1594435, 'What is that? Up ahead! Could it be ... ? Heroes at my side!', '', 16632,1,0,1, '67234'),
 (-1594436, 'Frostmourne ... The blade that destroyed our kingdom ...', '', 16633,1,0,1, '67234'),
