@@ -1083,7 +1083,9 @@ UPDATE `creature_template` SET `faction_A` = 35, `faction_H` = 35, `npcflag` = 1
 -- razorscale yell fix
 UPDATE `script_texts` SET `content_default` = "Move! Quickly! She won't remain grounded for long.", `type` = 1  WHERE `entry` = -1603261;
 
-
+-- 8486
+-- Sanctum Sentry damage
+UPDATE `creature_template` SET `dmg_multiplier` = 45 WHERE `entry` = 34014;
 
 -- Thorim
 -- IA for Thorim
