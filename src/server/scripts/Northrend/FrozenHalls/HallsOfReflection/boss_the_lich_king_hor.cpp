@@ -103,8 +103,7 @@ public:
                     if(Creature* pLider = ((Creature*)Unit::GetUnit((*me), m_pInstance->GetData64(DATA_ESCAPE_LIDER))))
                     { 
                      pLider->CastSpell(pLider, SPELL_SILENCE, false);
-                     if (pLider->HasFlag(SPLINEFLAG_WALKING, MOVEMENTFLAG_WALKING))
-                     pLider->RemoveFlag(SPLINEFLAG_WALKING, MOVEMENTFLAG_WALKING);  //Questionible 
+                     //pLider->RemoveFlag(SPLINEFLAG_WALKING, MOVEMENTFLAG_WALKING);  //Questionible 
     			pLider->SendMonsterMove(pLider->GetPositionX(), pLider->GetPositionY(), pLider->GetPositionZ() + 4, VICTIMSTATE_HIT, pLider->isInCombat(), 3000); 
                     }
                     me->setActive(false);
