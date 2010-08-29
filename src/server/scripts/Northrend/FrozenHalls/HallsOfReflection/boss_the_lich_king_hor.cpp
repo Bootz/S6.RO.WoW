@@ -412,7 +412,7 @@ public:
             {
                if(EmergeTimer < diff)
                {
-                  me->RemoveFlag(SPLINEFLAG_WALKING | MOVEMENTFLAG_WALKING, true);
+                 // me->RemoveFlag(SPLINEFLAG_WALKING | MOVEMENTFLAG_WALKING, true);
                   Emerge = true;
                   m_uiLiderGUID = m_pInstance->GetData64(DATA_ESCAPE_LIDER);
                   if(Creature* pLider = ((Creature*)Unit::GetUnit((*me), m_uiLiderGUID)))

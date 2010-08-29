@@ -4487,13 +4487,23 @@ INSERT INTO `waypoint_data` (`id`, `point`, `position_x`, `position_y`, `positio
 (139111, 96, 7684.79, -1006.75, 943.092, 0, 0, 0, 100, 0);
 
 -- ALTER TABLE db_version CHANGE COLUMN required_117_proto_drake_path required_187_world_halls_of_reflection bit;
-UPDATE `gameobject_template` SET `ScriptName` = '' WHERE `entry` IN (202236,202302);
-DELETE FROM `creature` WHERE `map` = 668 AND `id` IN (38177,38176,38173,38172,38567,38175,36940,36941,37069);
-
+UPDATE `instance_template` SET `script` = 'instance_halls_of_reflection' WHERE map=668;
 UPDATE `gameobject_template` SET `faction` = '114' WHERE `entry` IN (197341, 201976);
 UPDATE `gameobject_template` SET `faction`='1375' WHERE `entry` IN (197341, 202302, 201385, 201596);
 
+UPDATE `creature_template` SET `AIName`='', `Scriptname`='npc_jaina_and_sylvana_HRintro' WHERE `entry` IN (37221, 37223);	
+UPDATE `creature_template` SET `AIName`='', `Scriptname`='boss_falric' WHERE `entry` IN (38112);
+UPDATE `creature_template` SET `AIName`='', `Scriptname`='boss_marwyn' WHERE `entry` IN (38113);
+UPDATE `creature_template` SET `AIName`='', `Scriptname`='npc_lich_king_hr' WHERE `entry` IN (36954);
+UPDATE `creature_template` SET `AIName`='', `Scriptname`='boss_lich_king_hor' WHERE `entry` IN (37226);
+UPDATE `creature_template` SET `AIName`='', `Scriptname`='npc_jaina_and_sylvana_HRextro' WHERE `entry` IN (36955, 37554);
+UPDATE `creature_template` SET `AIName`='', `Scriptname`='npc_frostworn_general' WHERE `entry`=36723;
+update `creature_template` set `AIName`='', `Scriptname`='npc_raging_gnoul' where `entry` in (36940);	
+update `creature_template` set `AIName`='', `Scriptname`='npc_risen_witch_doctor' where `entry` in (36941);
+update `creature_template` set `AIName`='', `Scriptname`='npc_abon' where `entry` in (37069);
+
 UPDATE `creature_template` SET `speed_walk`='1', `speed_run`='2.0' WHERE `entry` IN (36954, 37226);
+UPDATE `creature_template` SET `speed_walk`='2', `speed_run`='2.0' WHERE `entry` IN (36955, 37554);
 UPDATE `creature_template` SET `scale`='0.8', `equipment_id`='1221' WHERE `entry` IN (37221, 36955);
 UPDATE `creature_template` SET `equipment_id`='1290' WHERE `entry` IN (37223, 37554);
 UPDATE `creature_template` SET `equipment_id`='0' WHERE `entry`=36954;
@@ -4554,8 +4564,7 @@ DELETE FROM `gameobject` WHERE `guid` IN (972565);
 INSERT INTO `gameobject` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`, `rotation0`, `rotation1`, `rotation2`, `rotation3`, `spawntimesecs`, `animprogress`, `state`) VALUES
 (972565, 202079, 668, 3, 65535, 5250.959961, 1639.359985, 784.302, 0, 0, 0, 0, 0, -604800, 100, 1);
 
-DELETE FROM `script_texts` WHERE `entry` BETWEEN -1594540 AND -1594430;
-INSERT INTO `script_texts` (`entry`,`content_default`,`content_loc8`,`sound`,`type`,`language`,`emote`,`comment`) VALUES
+REPLACE INTO `script_texts` (`entry`,`content_default`,`content_loc8`,`sound`,`type`,`language`,`emote`,`comment`) VALUES
 # SCENE - Hall Of Reflection (Intro) - PreUther
 (-1594433, 'The chill of this place freezes the marrow of my bones!', '', 16631,0,0,1, '67234'),
 (-1594434, 'I... I don\'t believe it! Frostmourne stands before us, unguarded! Just as the Gnome claimed. Come, heroes!', '', 17049,0,0,1, '67234'),
@@ -4580,8 +4589,8 @@ INSERT INTO `script_texts` (`entry`,`content_default`,`content_loc8`,`sound`,`ty
 (-1594452, 'Jaina, listen to me. You must destroy the Lich King. You cannot reason with him. He will kill you and your allies and raise you all as powerful soldiers of the Scourge.', '', 16669,0,0,1, '67234'),
 (-1594453, 'Perhaps, but know this: there must always be a Lich King. Even if you were to strike down Arthas, another would have to take his place, for without the control of the Lich King, the Scourge would wash over this world like locusts, destroying all that they touched.', '', 16662,0,0,1, '67234'),
 (-1594454, 'Tell me how, Uther? How do I destroy my prince? My...', '', 16638,0,0,1, '67234'),
-(-1594455, 'Who could bear such a burden?', ', 17055,0,0,1, '67234'),
-(-1594456, 'Snap out of it, girl. You must destroy the Lich King at the place where he merged with Ner\'zhul - atop the spire, at the Frozen Throne. It is the only way.', '', 16670,0,0,1, '67234'),
+(-1594455, 'Who could bear such a burden?', '', 17055,0,0,1, '67234'),
+(-1594456, 'Snap out of it, girl. You must destroy the Lich King at the place where he merged with Ner\'zhul - atop the spire, at the Frozen Throne. It is the only way!', '', 16670,0,0,1, '67234'),
 (-1594457, 'I do not know, Banshee Queen. I suspect that the piece of Arthas that might be left inside the Lich King is all that holds the Scourge from annihilating Azeroth.', '', 16663,0,0,1, '67234'),
 (-1594458, 'You\'re right, Uther. Forgive me. I... I don\'t know what got a hold of me. We will deliver this information to the King and the knights that battle the Scourge within Icecrown Citadel.', '', 16639,0,0,1, '67234'),
 (-1594459, 'There is... something else that you should know about the Lich King. Control over the Scourge must never be lost. Even if you were to strike down the Lich King, another would have to take his place. For without the control of its master, the Scourge would run rampant across the world - destroying all living things.', '', 16671,0,0,1, '67234'),
@@ -4633,7 +4642,7 @@ INSERT INTO `script_texts` (`entry`,`content_default`,`content_loc8`,`sound`,`ty
 (-1594503, 'BLASTED DEAD END! So this is how it ends. Prepare yourselves, heroes, for today we make our final stand!', '', 17061,1,0,0, '67234'),
 (-1594504, 'Nowhere to run! You\'re mine now...', '', 17223,1,0,0, '67234'),
 (-1594505, 'Soldiers of Lordaeron, rise to meet your master\'s call!', '', 16714,1,0,0, '67234'),
-(-1594506, 'The master surveyed his kingdom and found it... lacking. His judgement was swift and without mercy. Death to all!', '!', 16738,1,0,0, '67234'),
+(-1594506, 'The master surveyed his kingdom and found it... lacking. His judgement was swift and without mercy. Death to all!', '', 16738,1,0,0, '67234'),
 
 #Falric
 (-1594507, 'Men, women and children... None were spared the master\'s wrath. Your death will be no different.', '', 16710,1,0,0, '67234'),
@@ -4747,7 +4756,6 @@ INSERT INTO script_waypoint VALUES
    (37226, 19, 5283.589,1703.755,784.176, 0, 'WP19'),
    (37226, 20, 5278.694,1697.912,785.692, 0, 'WP20'),
    (37226, 21, 5283.589,1703.755,784.176, 0, 'WP19');
-
 
 ALTER TABLE db_version CHANGE COLUMN required_187_world_halls_of_reflection required_295_world_forge_of_souls bit;
 
