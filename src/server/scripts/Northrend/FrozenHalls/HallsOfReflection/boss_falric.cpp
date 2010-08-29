@@ -86,10 +86,10 @@ public:
           m_uiStrikeTimer = 2000;
           m_uiSummonTimer = 11000;
           me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-    //      me->SetVisibility(VISIBILITY_OFF);
+          me->SetVisibility(VISIBILITY_OFF);
         }
 
-        void Aggro(Unit* pVictim)
+        void Aggro (Unit* pVictim)
         {
           //me->RemoveFlag(MOVEFLAG_WALK, NULL);
           DoScriptText(SAY_FALRIC_AGGRO, me);
@@ -171,6 +171,7 @@ public:
                     m_uiSummonGUID[i] = Summon->GetGUID();
                     Summon->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                     Summon->setFaction(974);
+                    Summon->SetReactState(REACT_PASSIVE);
                  }
                  m_uiLocNo++;
              }
@@ -184,6 +185,7 @@ public:
                 {
                    Summon->setFaction(14);
                    Summon->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+                   Summon->SetReactState(REACT_AGGRESSIVE);
                    Summon->SetInCombatWithZone();
                 }
                 m_uiCheckSummon++;
@@ -208,6 +210,7 @@ public:
                         if(SummonCount > 4) 
                         {
                             m_pInstance->SetData(TYPE_FALRIC, IN_PROGRESS);
+                            me->SetVisibility(VISIBILITY_ON);
                             me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                             me->SetInCombatWithZone();
                         }
