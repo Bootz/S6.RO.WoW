@@ -155,6 +155,7 @@ class npc_announcer_toc10 : public CreatureScript
 
             pPlayer->CLOSE_GOSSIP_MENU();
 
+            pPlayer->PlayerTalkClass->ClearMenus();
             switch(uiAction) {
                 case GOSSIP_ACTION_INFO_DEF+1:
                     if (m_pInstance->GetData(TYPE_BEASTS) != DONE)

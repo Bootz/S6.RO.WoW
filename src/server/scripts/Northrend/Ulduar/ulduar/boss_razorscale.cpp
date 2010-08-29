@@ -540,8 +540,9 @@ struct npc_expedition_commanderAI : public ScriptedAI
     }
 };
 
-    bool OnGossipSelect_commander_ulduar(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
     {
+        pPlayer->PlayerTalkClass->ClearMenus();
         switch(uiAction)
         {
             case GOSSIP_ACTION_INFO_DEF:
@@ -553,7 +554,7 @@ struct npc_expedition_commanderAI : public ScriptedAI
         return true;
     }
 
-    bool Expedition_commander_ulduar(Player* pPlayer, Creature* pCreature)
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
     {
         InstanceScript *data = pPlayer->GetInstanceScript();
         InstanceScript *pInstance = (InstanceScript *) pCreature->GetInstanceScript();

@@ -168,14 +168,15 @@ public:
         return new keeper_imageAI (pCreature);
     }
 
-    bool OnGossipSelect_keeper_image(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
     {
         InstanceScript *data = pPlayer->GetInstanceScript();
         InstanceScript* pInstance = pCreature->GetInstanceScript();
     
         if (pPlayer)
             pPlayer->CLOSE_GOSSIP_MENU();
-        
+
+        pPlayer->PlayerTalkClass->ClearMenus();
         switch (pCreature->GetEntry())
         {
             case NPC_IMAGE_OF_FREYA:
@@ -206,7 +207,7 @@ public:
         return true;
     }
 
-    bool OnGossipHello_keeper_image(Player* pPlayer, Creature* pCreature)
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
     {
         InstanceScript *data = pPlayer->GetInstanceScript();
         InstanceScript *pInstance = (InstanceScript *) pCreature->GetInstanceScript();

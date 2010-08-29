@@ -790,11 +790,10 @@ public:
                 case 3:
                     m_pInstance->SetData(TYPE_ICE_WALL_01, IN_PROGRESS);
                     if(GameObject* pGate = me->SummonGameObject(GO_ICE_WALL, 5540.39f, 2086.48f, 731.066f, 1.00057f, 0.0f, 0.0f, 0.0f, 0.0f, 0))
-                    {
+                       {
                        m_uiIceWallGUID = pGate->GetGUID();
-                       pGate->SetUInt32Value(GAMEOBJECT_LEVEL, 0);
                        pGate->SetGoState(GO_STATE_READY);
-                    }
+                       }
                     break;
                 case 4:
                     if(me->GetEntry() == NPC_JAINA_OUTRO)
@@ -1161,10 +1160,7 @@ public:
              me->InterruptNonMeleeSpells(false);
              SetEscortPaused(false);
              if(GameObject* pGate = m_pInstance->instance->GetGameObject(m_uiIceWallGUID))
-              {
-                pGate->SetUInt32Value(GAMEOBJECT_LEVEL, 0);
                 pGate->SetGoState(GO_STATE_ACTIVE); 
-              }
              ++Count;
              switch(Count)
              {
@@ -1174,7 +1170,6 @@ public:
                      if(pLichKing && pLichKing->isAlive())
                         DoScriptText(SAY_LICH_KING_WALL_02, pLichKing);
                      m_uiIceWallGUID = pGate->GetGUID();
-                     pGate->SetUInt32Value(GAMEOBJECT_LEVEL, 0);
                      pGate->SetGoState(GO_STATE_READY);
                   }
                   break;
@@ -1184,7 +1179,6 @@ public:
                      if(pLichKing && pLichKing->isAlive())
                         DoScriptText(SAY_LICH_KING_WALL_03, pLichKing);
                      m_uiIceWallGUID = pGate->GetGUID();
-                     pGate->SetUInt32Value(GAMEOBJECT_LEVEL, 0);
                      pGate->SetGoState(GO_STATE_READY);
                   }
                   break;
@@ -1194,7 +1188,6 @@ public:
                      if(pLichKing && pLichKing->isAlive())
                         DoScriptText(SAY_LICH_KING_WALL_04, pLichKing);
                      m_uiIceWallGUID = pGate->GetGUID();
-                     pGate->SetUInt32Value(GAMEOBJECT_LEVEL, 0);
                      pGate->SetGoState(GO_STATE_READY);
                   }
                   break;

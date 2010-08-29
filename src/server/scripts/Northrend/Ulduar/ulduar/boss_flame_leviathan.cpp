@@ -594,7 +594,7 @@ public:
         }
     };
 
-    bool OnGossipSelect_keeper_norgannon(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
     {
         InstanceScript *data = pPlayer->GetInstanceScript();
         InstanceScript* pInstance = pCreature->GetInstanceScript();
@@ -616,7 +616,7 @@ public:
         return true;
     }
 
-    bool OnGossipHello_keeper_norgannon(Player* pPlayer, Creature* pCreature)
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
     {
         InstanceScript *data = pPlayer->GetInstanceScript();
         InstanceScript *pInstance = (InstanceScript *) pCreature->GetInstanceScript();
@@ -633,6 +633,7 @@ public:
 
         return true;
     }
+
     CreatureAI* GetAI(Creature* pCreature) const
     {
         return new keeper_norgannonAI (pCreature);

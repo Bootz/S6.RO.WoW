@@ -119,8 +119,8 @@ REPLACE INTO `script_texts` (`entry`,`content_default`,`content_loc8`,`sound`,`t
 (-1594470, 'Falric. Marwyn. Bring their corpses to my chamber when you are through.', '', 17227,0,0,0, '67234'),
 (-1594471, 'You won\'t deny me this, Arthas! I must know... I must find out...', '', 16642,1,0,1, '67234'),
 (-1594472, 'You will not escape me that easily, Arthas! I will have my vengeance!', '', 17057,1,0,1, '67234'),
-(-1594473, '<need translate>', '!', 17229,1,0,0, '67234'),
-(-1594474, '<need translate>', '', 17228,1,0,0, '67234'),
+(-1594473, 'Foolish girl, you seek that which I\'ve killed long ago, he is mearly a ghost now, a faith echo in my mind!', '', 17229,1,0,0, '67234'),
+(-1594474, 'I will not make the same mistake again, Sylvanaas, this time there will be no escape. You failed to serve me in undeath, now all that remains for you is oblivion...', '', 17228,1,0,0, '67234'),
 (-1594475, 'As you wish, my lord.', '', 16717,1,0,0, '67234'),
 (-1594476, 'As you wish, my lord.', '', 16741,1,0,0, '67234'),
 # SCENE - Hall Of Reflection (Extro) - PreEscape
@@ -130,7 +130,7 @@ REPLACE INTO `script_texts` (`entry`,`content_default`,`content_loc8`,`sound`,`t
 (-1594480, 'He\'s too powerful! Heroes, quickly, come to me! We must leave this place immediately! I will do what I can do hold him in place while we flee.', '', 17058,0,0,1, '67234'),
 # SCENE - Hall Of Reflection (Extro) - Escape
 (-1594481, 'Death\'s cold embrace awaits.', '', 17221,1,0,0, '67234'),
-(-1594482, 'Rise minions, do not left them us!', '', 17216,1,0,0, '67234'),
+(-1594482, 'Rise minions, do not let them pass!', '', 17216,1,0,0, '67234'),
 (-1594483, 'Minions sees them. Bring their corpses back to me!', '', 17222,1,0,0, '67234'),
 (-1594484, 'No...', '', 17214,1,0,0, '67234'),
 (-1594485, 'All is lost!', '', 17215,1,0,0, '67234'),
