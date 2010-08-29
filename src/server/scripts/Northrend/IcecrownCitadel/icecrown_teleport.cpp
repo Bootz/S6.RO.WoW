@@ -42,6 +42,7 @@ public:
 		if(sender != GOSSIP_SENDER_MAIN) return true;
 		if(!pPlayer->getAttackers().empty()) return true;
 
+		pPlayer->PlayerTalkClass->ClearMenus();
 		switch(action)
 		{
 		case HAMMER:
@@ -116,7 +117,7 @@ public:
 
 		if(pInstance->GetData(DATA_DEATHWHISPER_EVENT) == DONE || pPlayer->isGameMaster())
 		{
-			pPlayer->ADD_GOSSIP_ITEM(0, "Teleport to the Rampart of Skulls", GOSSIP_SENDER_MAIN, RAMPART);
+			//pPlayer->ADD_GOSSIP_ITEM(0, "Teleport to the Rampart of Skulls", GOSSIP_SENDER_MAIN, RAMPART); // disabled since Gunship Battle is not scripted
 			pPlayer->ADD_GOSSIP_ITEM(0, "Teleport to Deathbringer's Rise", GOSSIP_SENDER_MAIN, SAURFANG);
 		}
 
