@@ -1161,8 +1161,10 @@ public:
              me->InterruptNonMeleeSpells(false);
              SetEscortPaused(false);
              if(GameObject* pGate = m_pInstance->instance->GetGameObject(m_uiIceWallGUID))
+              {
                 pGate->SetUInt32Value(GAMEOBJECT_LEVEL, 0);
                 pGate->SetGoState(GO_STATE_ACTIVE); 
+              }
              ++Count;
              switch(Count)
              {
@@ -1172,6 +1174,7 @@ public:
                      if(pLichKing && pLichKing->isAlive())
                         DoScriptText(SAY_LICH_KING_WALL_02, pLichKing);
                      m_uiIceWallGUID = pGate->GetGUID();
+                     pGate->SetUInt32Value(GAMEOBJECT_LEVEL, 0);
                      pGate->SetGoState(GO_STATE_READY);
                   }
                   break;
@@ -1181,6 +1184,7 @@ public:
                      if(pLichKing && pLichKing->isAlive())
                         DoScriptText(SAY_LICH_KING_WALL_03, pLichKing);
                      m_uiIceWallGUID = pGate->GetGUID();
+                     pGate->SetUInt32Value(GAMEOBJECT_LEVEL, 0);
                      pGate->SetGoState(GO_STATE_READY);
                   }
                   break;
@@ -1190,6 +1194,7 @@ public:
                      if(pLichKing && pLichKing->isAlive())
                         DoScriptText(SAY_LICH_KING_WALL_04, pLichKing);
                      m_uiIceWallGUID = pGate->GetGUID();
+                     pGate->SetUInt32Value(GAMEOBJECT_LEVEL, 0);
                      pGate->SetGoState(GO_STATE_READY);
                   }
                   break;
