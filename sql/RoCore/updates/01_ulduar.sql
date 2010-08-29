@@ -86,38 +86,6 @@ UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16 WHERE `entry` 
 DELETE FROM `creature_equip_template` WHERE entry = 2500;
 INSERT INTO `creature_equip_template` VALUES ('2500','45315','0','0');
 
-DELETE FROM `creature_addon` WHERE guid = 137496;
-INSERT INTO `creature_addon` VALUES ('137496','1033515','0','0','0','0','0');
-
-DELETE FROM `waypoint_data` WHERE id = 1033515;
-INSERT INTO `waypoint_data` (`id`, `point`, `position_x`, `position_y`, `position_z`, `delay`, `move_flag`, `action`, `action_chance`, `wpguid`) VALUES
-('1033515','1','1968.46','51.75','417.72','0','0','0','100','0'),
-('1033515','2','1956.75','49.22','411.35','0','0','0','100','0'),
-('1033515','3','1938.90','42.09','411.35','3000','0','0','100','0'),
-('1033515','4','1956.75','49.22','411.35','0','0','0','100','0'),
-('1033515','5','1968.46','51.75','417.72','0','0','0','100','0'),
-('1033515','6','2011.43','44.91','417.72','0','0','0','100','0'),
-('1033515','7','2022.65','37.74','411.36','0','0','0','100','0'),
-('1033515','8','2046.65','9.61','411.36','0','0','0','100','0'),
-('1033515','9','2053.4','-8.65','421.68','0','0','0','100','0'),
-('1033515','10','2053.14','-39.8','421.66','0','0','0','100','0'),
-('1033515','11','2046.26','-57.96','411.35','0','0','0','100','0'),
-('1033515','12','2022.42','-86.39','411.35','0','0','0','100','0'),
-('1033515','13','2011.26','-92.95','417.71','0','0','0','100','0'),
-('1033515','14','1969.43','-100.02','417.72','0','0','0','100','0'),
-('1033515','15','1956.66','-97.4','411.35','0','0','0','100','0'),
-('1033515','16','1939.18','-90.90','411.35','3000','0','0','100','0'),
-('1033515','17','1956.66','-97.4','411.35','0','0','0','100','0'),
-('1033515','18','1969.43','-100.02','417.72','0','0','0','100','0'),
-('1033515','19','2011.26','-92.95','417.71','0','0','0','100','0'),
-('1033515','20','2022.42','-86.39','411.35','0','0','0','100','0'),
-('1033515','21','2046.26','-57.96','411.35','0','0','0','100','0'),
-('1033515','22','2053.14','-39.8','421.66','0','0','0','100','0'),
-('1033515','23','2053.4','-8.65','421.68','0','0','0','100','0'),
-('1033515','24','2046.65','9.61','411.36','0','0','0','100','0'),
-('1033515','25','2022.65','37.74','411.36','0','0','0','100','0'),
-('1033515','26','2011.43','44.91','417.72','0','0','0','100','0');
-
 -- 9130_auriaya_fix
 UPDATE `creature` SET `MovementType` = 2 WHERE `id` = 33515;
 
@@ -191,7 +159,9 @@ INSERT INTO `spell_linked_spell` (`spell_trigger`, `spell_effect`, `type`, `comm
 -- 8178_boss_freya
 UPDATE `creature_template` SET `unit_flags` = 393220 WHERE `entry` =33228;
 UPDATE `creature_template` SET `modelid1` = 11686, `modelid2` = 0, `unit_flags` = 33685508 WHERE `entry` =34129;
-UPDATE `creature_template` SET `unit_class` = 2 WHERE `entry` =32918;
+-- ERROR: Creature (Entry: 32918, class 2) has different `unit_class` in difficulty 1 mode (Entry: 33399, class 1).
+-- Si pone un unit_class en normal debes ponerlo tambien en hero
+UPDATE `creature_template` SET `unit_class` = 2 WHERE `entry` IN (32918,33399);
 UPDATE `creature_template` SET `unit_flags` = 33686022 WHERE `entry` =33215;
 DELETE FROM `creature` WHERE `guid` = 136607;
 
@@ -216,9 +186,13 @@ UPDATE `creature_template` SET `modelid1` = 16925, `modelid2` = 0 WHERE `entry` 
 DELETE FROM `creature_template` WHERE `entry` = 33119;
 
 -- 8241_thorim_gate
+-- ERROR: Table `gameobject_scripts` has gameobject type (189980) non supported by command SCRIPT_COMMAND_OPEN_DOOR for script id 55194
+-- no es neesario, las puertas se abren sin ningun script
+/*
 DELETE FROM `gameobject_scripts` WHERE `id`=55194;
 INSERT INTO `gameobject_scripts` (`id`, `delay`, `command`, `datalong`, `datalong2`, `dataint`, `x`, `y`, `z`, `o`) VALUES 
 (55194, 0, 11, 34155, 15, '0', 0, 0, 0, 0);
+*/
 
 UPDATE `gameobject` SET `id` = 101855, `rotation2` = 1, `rotation3` = 0, `spawntimesecs` = 7200, `animprogress` = 100 WHERE `guid` = 55194;
 
@@ -565,7 +539,8 @@ INSERT INTO `creature_ai_scripts` VALUES
 (3408502, 34085, 0, 0, 100, 5, 8000, 12000, 10000, 15000, 11, 64719, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Forge Construct - Cast Charge 25'),
 (3408503, 34085, 0, 0, 100, 3, 2000, 6000, 6000, 9000, 11, 64720, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Forge Construct - Cast Flame Emission 10'),
 (3408504, 34085, 0, 0, 100, 5, 2000, 6000, 6000, 9000, 11, 64721, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Forge Construct - Cast Flame Emission 25');
-
+/*
+-- por trabajar
 -- XB-488 Disposalbot
 UPDATE `creature_template` SET `spell1` = 65080, `spell2` = 65084, `dmg_multiplier` = 20, `mingold` = 7100, `maxgold` = 7600, `AIName` = 'EventAI' WHERE `entry` = 34273;
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=34273);
@@ -574,7 +549,7 @@ INSERT INTO `creature_ai_scripts` VALUES
 (3427302, 34273, 2, 0, 100, 5, 30, 20, 0, 0, 11, 65084, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'XB-488 Disposalbot - Cast Self Destruct 25'),
 (3427303, 34273, 0, 0, 100, 3, 2000, 6000, 10000, 15000, 11, 65080, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'XB-488 Disposalbot - Cast Cut Scrap Metal 10'),
 (3427304, 34273, 0, 0, 100, 5, 2000, 6000, 10000, 15000, 11, 65104, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'XB-488 Disposalbot - Cast Cut Scrap Metal 25');
-
+*/
 -- Parts Recovery Technician
 UPDATE `creature_template` SET `spell1` = 65071, `spell2` = 65070, `dmg_multiplier` = 15, `mingold` = 7100, `maxgold` = 7600, `mechanic_immune_mask` = 33554432, `AIName` = 'EventAI' WHERE `entry` = 34267;
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=34267);
@@ -692,7 +667,8 @@ INSERT INTO `creature_ai_scripts` VALUES
 (3413502, 34135, 0, 0, 100, 5, 6000, 12000, 10000, 16000, 11, 64655, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Winter Rumbler - Cast Cone of Cold 25'),
 (3413503, 34135, 0, 0, 100, 3, 3000, 6000, 8000, 12000, 11, 64647, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Winter Rumbler - Cast Snow Blindness 10'),
 (3413504, 34135, 0, 0, 100, 5, 3000, 6000, 8000, 12000, 11, 64654, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Winter Rumbler - Cast Snow Blindness 25');
-
+/*
+-- por trabajar
 -- Guardian Lasher
 UPDATE `creature_template` SET `spell1` = 63007, `spell2` = 63047, `dmg_multiplier` = 25, `mingold` = 7100, `maxgold` = 7600, `mechanic_immune_mask` = 33554496, `AIName` = 'EventAI' WHERE `entry` = 33430;
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=33430);
@@ -701,7 +677,7 @@ INSERT INTO `creature_ai_scripts` VALUES
 (3343002, 33430, 4, 0, 100, 5, 0, 0, 0, 0, 11, 63007, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Guardian Lasher - Cast Guardian Pheromones 25'),
 (3343003, 33430, 0, 0, 100, 3, 3000, 6000, 10000, 14000, 11, 63047, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Guardian Lasher - Cast Guardian''s Lash 10'),
 (3343004, 33430, 0, 0, 100, 5, 3000, 6000, 10000, 14000, 11, 63550, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Guardian Lasher - Cast Guardian''s Lash 25');
-
+*/
 -- Forest Swarmer
 UPDATE `creature_template` SET `spell1` = 63059, `mingold` = 7100, `maxgold` = 7600, `AIName` = 'EventAI' WHERE `entry` = 33431;
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=33431);
@@ -839,7 +815,8 @@ INSERT INTO `creature_ai_scripts` VALUES
 UPDATE `creature_template` SET `mindmg` = 464, `maxdmg` = 604, `attackpower` = 708, `minrangedmg` = 353, `maxrangedmg` = 512, `rangedattackpower` = 112 WHERE `entry` IN (33818, 33822, 33823, 33824, 33772, 33819, 33820, 33838);
 UPDATE `creature_template` SET `equipment_id` = 1849 WHERE `entry` = 32885;
 UPDATE `creature_template` SET `equipment_id` = 1850 WHERE `entry` = 32908;
-
+/*
+-- por trabajar
 -- Faceless Horror
 UPDATE `creature_template` SET `spell1` = 64429, `spell2` = 63722, `spell3` = 63710, `spell4` = 63703, `mechanic_immune_mask` = 33554513, `dmg_multiplier` = 65, `mingold` = 7100, `maxgold` = 7600, `AIName` = 'EventAI' WHERE `entry` = 33772;
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=33772);
@@ -850,7 +827,7 @@ INSERT INTO `creature_ai_scripts` VALUES
 (3377204, 33772, 0, 0, 100, 5, 2000, 4000, 10000, 12000, 11, 63722, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Faceless Horror - Cast Shadow Crash 25'),
 (3377205, 33772, 4, 0, 100, 3, 0, 0, 0, 0, 11, 63703, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Faceless Horror - Cast Void Wave 10'),
 (3377206, 33772, 4, 0, 100, 5, 0, 0, 0, 0, 11, 63703, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Faceless Horror - Cast Void Wave 25');
-
+*/
 -- Twilight Frost Mage
 UPDATE `creature_template` SET `spell1` = 64663, `spell2` = 63758, `spell3` = 63912, `spell4` = 63913, `equipment_id` = 1849, `mechanic_immune_mask` = 33554513, `unit_class` = 2, `dmg_multiplier` = 20, `mingold` = 7100, `maxgold` = 7600, `AIName` = 'EventAI' WHERE `entry` = 33819;
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=33819);
@@ -874,7 +851,8 @@ INSERT INTO `creature_ai_scripts` VALUES
 (3382004, 33820, 0, 0, 100, 5, 1000, 2000, 6000, 8000, 11, 63789, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Twilight Pyromancer - Cast Fireball 25'),
 (3382005, 33820, 0, 0, 100, 3, 2000, 4000, 10000, 16000, 11, 63775, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Twilight Pyromancer - Cast Flamestrike 10'),
 (3382006, 33820, 0, 0, 100, 5, 2000, 4000, 10000, 16000, 11, 63775, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Twilight Pyromancer - Cast Flamestrike 25');
-
+/*
+-- por trabajar
 -- Enslaved Fire Elemental
 UPDATE `creature_template` SET `spell1` = 38064, `spell2` = 63778, `mechanic_immune_mask` = 33554513, `dmg_multiplier` = 15, `mingold` = 7100, `maxgold` = 7600, `AIName` = 'EventAI' WHERE `entry` = 33838;
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=33838);
@@ -883,7 +861,7 @@ INSERT INTO `creature_ai_scripts` VALUES
 (3383802, 33838, 0, 0, 100, 5, 4000, 8000, 12000, 14000, 11, 38064, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Enslaved Fire Elemental - Cast Blast Wave 25'),
 (3383803, 33838, 4, 0, 100, 3, 0, 0, 0, 0, 11, 63778, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Enslaved Fire Elemental - Cast Fire Shield 10'),
 (3383804, 33838, 4, 0, 100, 5, 0, 0, 0, 0, 11, 63778, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Enslaved Fire Elemental - Cast Fire Shield 25');
-
+*/
 
 
 -- Flame Leviathan
@@ -914,6 +892,9 @@ UPDATE `creature_template` SET `dmg_multiplier` = 60 WHERE `entry` = 32845;
 
 -- Auriaya
 UPDATE `creature_template` SET `dmg_multiplier` = 65, `unit_class` = 1, `mingold` = 1720000, `maxgold` = 1760000, `mechanic_immune_mask` = 617299803 WHERE `entry` = 33515;
+-- ERROR: Creature (Entry: 33515, class 1) has different `unit_class` in difficulty 1 mode (Entry: 34175, class 2).
+-- Lo mismo si pones un unit_class en normal o en hero las dos deben ser iguales
+UPDATE `creature_template` SET `unit_class` = 1 WHERE `entry` = 34175;
 UPDATE `creature_template` SET `speed_walk` = 2, `speed_run` = 2, `dmg_multiplier` = 3 WHERE `entry` = 34035;
 
 -- Freya
@@ -986,9 +967,12 @@ UPDATE `creature_template` SET `flags_extra` = 2 WHERE `entry` = 33779;
 DELETE FROM `creature_template` WHERE entry = 33115;
 DELETE FROM creature WHERE id = 33115;
 
+-- eliminado porque ctdb lo tiene bien
+/*
 -- Emblem of Valor
 UPDATE creature_loot_template SET item = 40753 WHERE entry IN (33113, 33186, 33118, 33293, 32927, 32857, 33515, 33271) AND item = 45624;
 UPDATE gameobject_loot_template SET item = 40753 WHERE entry IN (27061, 26963, 27078, 27081, 26955, 26946, 27068) AND item = 40752;
+*/
 
 -- Flame Leviathan
 UPDATE `creature_template` SET `mechanic_immune_mask` = 617299803 WHERE `entry` = 33113;
@@ -1020,32 +1004,80 @@ INSERT INTO `reference_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `
 
 -- Assembly of Iron Hardmode loot
 
-DELETE FROM `creature_loot_template` WHERE `entry` IN (32857, 32927, 32867);
-INSERT INTO `creature_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `lootmode`, `groupid`, `mincountOrRef`, `maxcount`) VALUES
-('32857','40753','100','1','0','1','1'),
-('32857','1','100','1','0','-34122','2'),
-('32927','40753','100','1','0','2','2'),
-('32927','1','100','1','0','-34122','3'),
-('32867','45624','100','1','0','1','1'),
-('32867','1','100','1','0','-34122','2'),
-('32867','45447','0','2','2','1','1'),
-('32867','45448','0','2','2','1','1'),
-('32867','45449','0','2','2','1','1'),
-('32867','45455','0','2','2','1','1'),
-('32867','45456','0','2','2','1','1');
+DELETE FROM `creature_loot_template` WHERE `entry` IN (32857, 33694, 32927, 33692, 32867, 33693);
 
-DELETE FROM `reference_loot_template` WHERE `entry`=34122;
+-- ERROR: Table 'creature_loot_template' entry 32857 isn't creature entry and not referenced from loot, and then useless.
+-- ERROR: Table 'creature_loot_template' entry 32927 isn't creature entry and not referenced from loot, and then useless.
+-- Reajustando los loots, hay que hacer el heroico y el normal
+INSERT INTO `creature_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `lootmode`, `groupid`, `mincountOrRef`, `maxcount`) VALUES
+('32867','45624','100','1','0','1','1'),
+('32867','45506','100','1','0','1','1'), -- Disco de datos de El Archivum
+('32867','45456','14.285','1','1','1','1'), -- Anillo del ágil
+('32867','45418','14.285','1','1','1','1'), -- Anillo de zafiros de Lady Maye
+('32867','45329','14.285','1','1','1','1'), -- Aro de visión verdadera
+('32867','45378','14.285','1','1','1','1'), -- Botas del bosque petrificado
+('32867','45322','14.285','1','1','1','1'), -- Capa del Consejo de Hierro
+('32867','45455','14.285','1','1','1','1'), -- Cinturón del árbol de cristal
+('32867','45333','14.285','1','1','1','1'), -- Cinturón del sirviente férreo
+('32867','45423','12.5','1','2','1','1'), -- Cubremuñecas de toquerruna
+('32867','45330','12.5','1','2','1','1'), -- Grebas de intensidad de hierro
+('32867','45331','12.5','1','2','1','1'), -- Hoja de la noche con grabados de runas
+('32867','45449','12.5','1','2','1','1'), -- La Picadora
+('32867','45324','12.5','1','2','1','1'), -- Leotardos de reflejos prestos
+('32867','45448','12.5','1','2','1','1'), -- Mordedura azarosa
+('32867','45447','12.5','1','2','1','1'), -- Ojo atento del destino
+('32867','45332','12.5','1','2','1','1'); -- 45332
+
+-- Heroic
+INSERT INTO `creature_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `lootmode`, `groupid`, `mincountOrRef`, `maxcount`) VALUES
+('33693','45624','100','1','0','1','1'),
+('33693','45038','25','1','0','1','1'),-- Fragmento de Val'anyr
+('33693','45857','100','1','0','1','1'), -- Disco de datos de El Archivum
+('33693','45225','10','1','1','1','1'), -- Abrazo de Rompeacero
+('33693','45243','10','1','1','1','1'), -- Amuleto de zafiros de renovación
+('33693','45329','10','1','1','1','1'), -- Botas de pielférrea rúnica
+('33693','45241','10','1','1','1','1'), -- Cinturón de ira colosal
+('33693','45607','10','1','1','1','1'), -- Colmillo de olvido
+('33693','45234','10','1','1','1','1'), -- Éxtasis
+('33693','45193','10','1','1','1','1'), -- Fervor infranqueable
+('33693','45233','10','1','1','1','1'),  -- Filo Runatormenta
+('33693','45244','10','1','1','1','1'), -- Grebas de venganza presta
+('33693','45239','10','1','2','1','1'), -- Guantes de creador de runas
+('33693','45245','9.090','1','2','1','1'), -- Hombreras del intruso
+('33693','45238','9.090','1','2','1','1'), -- Leotardos de sobrecarga
+('33693','45228','9.090','1','2','1','1'), -- Manoplas del enclave
+('33693','45227','9.090','1','2','1','1'), -- Manto con remaches de hierro
+('33693','45242','9.090','1','2','1','1'), -- Mantón de caída mortal
+('33693','45224','9.090','1','2','1','1'), -- Mantón del ágil
+('33693','45226','9.090','1','2','1','1'), -- Morrión de hierro antiguo
+('33693','45236','9.090','1','2','1','1'), -- Ojo que no pestañea
+('33693','45235','9.090','1','2','1','1'), -- Sello radiante
+('33693','45240','9.090','1','2','1','1'), -- Vestiduras del Consejo de Hierro
+('33693','45237','9.090','1','2','1','1'), -- Vestimentas de la semilla floreciente de Phaelia
+('33693','1','2.5','1','0','-33693','2'); -- Referencia para las recetas
+
+DELETE FROM `reference_loot_template` WHERE `entry`=33693;
 INSERT INTO `reference_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `lootmode`, `groupid`, `mincountOrRef`, `maxcount`) VALUES
-('34122','45322','0','1','1','1','1'),
-('34122','45324','0','1','1','1','1'),
-('34122','45329','0','1','1','1','1'),
-('34122','45330','0','1','1','1','1'),
-('34122','45331','0','1','1','1','1'),
-('34122','45332','0','1','1','1','1'),
-('34122','45333','0','1','1','1','1'),
-('34122','45378','0','1','1','1','1'),
-('34122','45418','0','1','1','1','1'),
-('34122','45423','0','1','1','1','1');
+('33693','45089','1.4','1','1','1','1'), -- Diseño: botas de placas de señor de batalla
+('33693','45091','1.4','1','1','1','1'), -- Diseño: botines de destino
+('33693','45088','1.4','1','1','1','1'), -- Diseño: cinturón de los titanes
+('33693','45090','1.4','1','1','1','1'), -- Diseño: faja de placas de honradez
+('33693','45092','1.4','1','1','1','1'), -- Diseño: faja de placas indestructible
+('33693','45093','1.4','1','1','1','1'), -- Diseño: mortíferos claveteados
+('33693','46027','1.4','1','1','1','1'), -- Fórmula: encantar arma: amparo de hojas
+('33693','46348','1.4','1','1','1','1'), -- Fórmula: encantar arma: drenador de sangre
+('33693','45095','1.4','1','1','1','1'), -- Patrón: botas de escama viva
+('33693','45097','1.4','1','1','1','1'), -- Patrón: botas de relámpagos con toma de tierra
+('33693','45101','1.4','1','1','1','1'), -- Patrón: botas de robustez invernal
+('33693','45098','1.4','1','1','1','1'), -- Patrón: cinturón caldeado de muerte
+('33693','45096','1.4','1','1','1','1'), -- Patrón: cinturón de caos azul
+('33693','45094','1.4','1','1','1','1'), -- Patrón: cinturón de dragones
+('33693','45100','1.4','1','1','1','1'), -- Patrón: cinturón de vida yerta
+('33693','45104','1.4','1','1','1','1'), -- Patrón: cordón del alba blanca
+('33693','45099','1.4','1','1','1','1'), -- Patrón: escarpines de silencio
+('33693','45102','1.4','1','1','1','1'), -- Patrón: fajín de Poder ancestral
+('33693','45103','1.4','1','1','1','1'), -- Patrón: zapatillas de lanzahechizos
+('33693','45105','1.4','1','1','1','1');  -- Patrón: zapatillas de salvador
 
 -- Freya Hardmode loot
 
@@ -1261,7 +1293,7 @@ UPDATE `creature_template` SET flags_extra = 257 WHERE entry IN (33113, 33271);
 UPDATE `creature_template` SET flags_extra = 1 WHERE entry IN (32867, 32927, 32857, 32930, 33515, 32906, 32845, 33350, 33432, 33651, 33670, 32865, 33288);
 
 -- 8441_achievement_keepers
-DELETE FROM `achievement_criteria_data` WHERE `criteria_id` IN (10598, 10599, 10559, 10444, 10563, 10455, 10558, 10438, 10561, 10454, 10408, 10560, 10453, 10562);
+DELETE FROM `achievement_criteria_data` WHERE `criteria_id` IN (10559, 10444, 10563, 10455, 10558, 10438, 10561, 10454, 10408, 10560, 10453, 10562);
 INSERT INTO `achievement_criteria_data` (`criteria_id`,`type`,`value1`,`value2`) VALUES
 -- Freya
 (10559, 12, 0, 0),
