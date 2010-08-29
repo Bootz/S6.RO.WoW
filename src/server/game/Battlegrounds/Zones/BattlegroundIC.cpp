@@ -94,19 +94,27 @@ void BattlegroundIC::Update(uint32 diff)
     }
 }
 
+void BattlegroundIC::SpawnLeader(uint32 teamid)
+{
+    if (teamid == ALLIANCE)
+        AddCreature(34924, 0, ALLIANCE, 307.03f, -833.04f, 48.91f, 6.23f, 10*MINUTE);
+    else
+        AddCreature(34922, 1, HORDE, 1264.42f, -766.80f, 48.91f, 3.28f, 10*MINUTE);
+}
+
+
 void BattlegroundIC::HandleKillUnit(Creature *unit, Player *killer)
 {
-    sLog.outDebug("bg_ic HandleKillUnit %i",unit->GetEntry());
     if(GetStatus() != STATUS_IN_PROGRESS)
         return;
     uint32 entry = unit->GetEntry();
 
-    if(entry == BG_IC_StaticCreatureInfo[IC_NPC_A_BOSS][0])
+    if(entry == 34924)
     {
         RewardHonorToTeam(GetBonusHonor(BG_IC_KILL_BOSS),HORDE);
         EndBattleground(HORDE);
     }
-	else if ( entry == BG_IC_StaticCreatureInfo[IC_NPC_H_BOSS][0] )
+	else if (entry == 34922)
     {
         RewardHonorToTeam(GetBonusHonor(BG_IC_KILL_BOSS),ALLIANCE);
         EndBattleground(ALLIANCE);
