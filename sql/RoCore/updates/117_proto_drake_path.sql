@@ -1,14 +1,13 @@
--- ALTER TABLE db_version CHANGE COLUMN required_3_world_icecrown_citadel required_117_proto_drake_path bit;
-
+-- this patch only make the drake fly in the same way point
 -- Path time-lost protodrake
 DELETE FROM `creature` WHERE `id`=32491;
 INSERT INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `modelid`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `spawndist`, `currentwaypoint`, `curhealth`, `curmana`, `DeathState`, `MovementType`) VALUES 
-(15636, 32491, 571, 1, 1, 0, 0, 7537.36, -854.089, 982.299, 3.19715, 86400, 0, 0, 18900, 0, 0, 2); -- respawn 24h
+(98440, 32491, 571, 1, 1, 0, 0, 7537.36, -854.089, 982.299, 3.19715, 86400, 0, 0, 18900, 0, 0, 2); -- respawn 24h
 
 UPDATE `creature_template` SET `speed_walk`=2, `speed_run`=2 where `entry`=32491;
 
-DELETE FROM `creature_addon` WHERE `guid`=15636;
-INSERT INTO `creature_addon` (`guid`,`path_id`) VALUES (15636,139111);
+DELETE FROM `creature_addon` WHERE `guid`=98440;
+INSERT INTO `creature_addon` (`guid`,`path_id`) VALUES (98440,139111);
 
 DELETE FROM `waypoint_data` WHERE `id`=139111; 
 INSERT INTO `waypoint_data` (`id`, `point`, `position_x`, `position_y`, `position_z`, `delay`, `move_flag`, `action`, `action_chance`, `wpguid`) VALUES 
@@ -108,3 +107,6 @@ INSERT INTO `waypoint_data` (`id`, `point`, `position_x`, `position_y`, `positio
 (139111, 94, 7651.48, -1148.31, 961.578, 0, 0, 0, 100, 0),
 (139111, 95, 7675.21, -1088.75, 947.033, 0, 0, 0, 100, 0),
 (139111, 96, 7684.79, -1006.75, 943.092, 0, 0, 0, 100, 0);
+
+-- delete `pool_creature` if not there are many consol error base in the creature spawn system of ytdb
+DELETE FROM `pool_creature` WHERE `guid` IN (90994, 91002, 91001, 90993, 15693, 90992, 90999, 91061, 91060, 91000, 54550, 54551, 54548, 54549, 51772, 15636, 90998, 90995, 90996, 90997);
