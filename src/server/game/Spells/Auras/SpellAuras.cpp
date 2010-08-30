@@ -1059,8 +1059,6 @@ void Aura::HandleAuraSpecificMods(AuraApplication const * aurApp, Unit * caster,
                     }
                 }
                 break;
-        }
-    }
 
             case SPELLFAMILY_SHAMAN:
                 if (!caster)
@@ -1072,6 +1070,8 @@ void Aura::HandleAuraSpecificMods(AuraApplication const * aurApp, Unit * caster,
                         target->CastSpell(target,63283,true);
                 }
                 break;
+        }
+    }
 
     // mods at aura remove
     else
