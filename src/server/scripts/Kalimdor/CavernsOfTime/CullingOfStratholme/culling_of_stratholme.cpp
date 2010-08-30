@@ -218,6 +218,11 @@ float RiftAndSpawnsLocations[ENCOUNTER_CHRONO_SPAWNS][5]=
     {NPC_EPOCH, 2451.809326f, 1112.901245f, 149.220459f, 3.363617f}
 };
 
+class npc_arthas : public CreatureScript
+{	
+public: 	
+    npc_arthas() : CreatureScript("npc_arthas") { }
+
     struct npc_arthasAI : public npc_escortAI
     {
         npc_arthasAI(Creature *pCreature) : npc_escortAI(pCreature)
