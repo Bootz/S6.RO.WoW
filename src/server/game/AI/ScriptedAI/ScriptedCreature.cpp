@@ -117,7 +117,6 @@ void ScriptedAI::addItem(Player* player, uint32 itemid, uint8 amount, bool recei
     player->SendNewItem(pItem, amount, received, created, broadcast);
 }
 
-// Entfernung (in yards / 3D) Überprüfen und nach hause gehen wenn zu weit vom Spawnpunkt.
 void ScriptedAI::CheckDistance(float dist, const uint32 uiDiff)
 {
     if (!me->isInCombat())
@@ -140,7 +139,6 @@ void ScriptedAI::CheckDistance(float dist, const uint32 uiDiff)
         EnterEvadeMode();
 }
 
-// Überprüft auf freundliche NPCs in der ThreatList, und geht bei leerer Liste nach Hause
 void ScriptedAI::CheckThreatList(const uint32 uiDiff)
 {
     if (!me->isInCombat())
@@ -169,7 +167,6 @@ void ScriptedAI::CheckThreatList(const uint32 uiDiff)
         EnterEvadeMode();
 }
 
-// Despawned ein Add
 bool ScriptedAI::DespawnAdd(uint64 guid)
 {
     if (!guid)
@@ -193,7 +190,6 @@ bool ScriptedAI::DespawnAdd(uint64 guid)
     return true;
 }
 
-// Gibt einen random Player in range in einer Instanz zurück
 Player* ScriptedAI::SelectRandomPlayer(float range)
 {
     Map* map = me->GetMap();
