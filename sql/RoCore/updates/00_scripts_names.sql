@@ -314,7 +314,7 @@ UPDATE `creature_template` SET `ScriptName`='npc_spinestalker' WHERE (`entry`='3
 UPDATE `creature_template` SET `ScriptName`='npc_rimefang' WHERE (`entry`='37533');
 UPDATE `creature_template` SET `ScriptName`='npc_ice_tomb' WHERE (`entry`='36980');
 UPDATE `creature_template` SET `ScriptName`='npc_frost_bomb' WHERE (`entry`='37186');
-UPDATE `creature_template` SET `ScriptName`='npc_shambling_horror_icc' WHERE (`entry`='37698');
+UPDATE `creature_template` SET `ScriptName`='npc_shambling_horror' WHERE (`entry`='37698');
 UPDATE `creature_template` SET `ScriptName`='npc_terenas_menethil' WHERE (`entry`='36823');
 UPDATE `creature_template` SET `ScriptName`='npc_spirit_warden' WHERE (`entry`='36824');
 UPDATE `creature_template` SET `ScriptName`='npc_sister_svalna' WHERE `entry` = '37126';
@@ -325,7 +325,6 @@ UPDATE `creature_template` SET `vehicleId`=533 WHERE `entry`=36619;
 UPDATE `creature_template` SET `ScriptName`='npc_choke_bomb' WHERE (`entry`='38159');
 UPDATE `creature_template` SET `ScriptName`='npc_sticky_ooze' WHERE (`entry`='37006');
 UPDATE `creature_template` SET `ScriptName`='npc_flood_ooze' WHERE (`entry`='37013');
-UPDATE `creature_template` SET `ScriptName`='npc_shambling_horror' WHERE (`entry`='37698');
 
 -- Script_names segun TC
 UPDATE `creature_template` SET `ScriptName`='npc_bone_spike' WHERE `entry`=38711;

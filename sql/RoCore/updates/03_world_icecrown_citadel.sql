@@ -10,7 +10,7 @@ DELETE FROM `creature` WHERE `id`=38995;
 -- These npc need to be like this for icc script to work
 DELETE  FROM `creature_template` WHERE `entry` IN (37006, 37013, 38068, 34606, 38159, 38332, 38451, 38004, 38422, 38454, 37985,  37690, 38285, 38556, 38458);
 INSERT INTO `creature_template` VALUES
-('34606','0','0','0','0','0','25144','25144','25144','25144','Frost Sphere','','','0','80','80','2','15','15','0','1','1.14286','1','0','420','630','0','157','1','2000','2000','1','0','0','0','0','0','0','0','336','504','126','8','64','0','0','0','0','0','0','0','0','0','66193','67855','0','0','0','0','0','0','0','0','0','0','','0','3','0.238095','1','1','0','0','0','0','0','0','0','721','1','0','536961024','0','frost_sphere','1'),
+('34606','0','0','0','0','0','25144','25144','25144','25144','Frost Sphere','','','0','80','80','2','15','15','0','1','1.14286','1','0','420','630','0','157','1','2000','2000','1','0','0','0','0','0','0','0','336','504','126','8','64','0','0','0','0','0','0','0','0','0','66193','67855','0','0','0','0','0','0','0','0','0','0','','0','3','0.238095','1','1','0','0','0','0','0','0','0','721','1','0','536961024','0','mob_frost_sphere','1'),
 ('37006','0','0','0','0','0','11686','11686','11686','0','Sticky Ooze','','','0','80','80','0','16','16','0','1','1.14286','1','0','2','2','0','24','1','2000','2000','1','33554432','8','0','0','0','0','0','1','1','0','10','2','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','','0','3','4','1','1','0','0','0','0','0','0','0','0','1','0','201786289','0','npc_sticky_ooze','1'),
 ('37013','0','0','0','0','0','11686','11686','11686','0','Puddle Stalker','','','0','1','1','0','14','14','0','1','1.14286','1','0','2','2','0','24','1','2000','2000','1','33554432','8','0','0','0','0','0','1','1','100','10','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','','0','3','20','1','1','0','0','0','0','0','0','0','0','1','0','2067619643','0','npc_flood_ooze','1'),
 ('37690','0','0','0','0','0','24719','24719','24719','0','Growing Ooze Puddle','','','0','80','80','0','16','16','0','1','1.14286','1','0','1','2','0','0','1','2000','2000','1','262146','8','0','0','0','0','0','1','2','0','10','2','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','','0','3','0.238095','1','1','0','0','0','0','0','0','0','0','1','0','2304','0','npc_puddle_ooze','1'),
@@ -25,6 +25,7 @@ INSERT INTO `creature_template` VALUES
 ('38454','0','0','0','0','0','19725','19725','19725','0','Kinetic Bomb','','','0','82','82','2','14','14','0','1','1.14286','1','1','452','678','0','169','17.6','2000','2000','1','2','8','0','0','0','0','0','362','542','135','10','0','0','0','0','0','0','0','0','0','0','72800','0','0','0','0','0','0','0','0','0','0','0','','0','3','0.074179','1','1','0','0','0','0','0','0','0','64','1','0','805306367','0','npc_bomb_icc','1'),
 ('38458','0','0','0','0','0','19725','19725','19725','19725','Kinetic Bomb Target','','','0','80','80','2','14','14','0','1','1.14286','1','0','1','2','0','0','1','2000','2000','1','2','8','0','0','0','0','0','1','2','0','10','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','','0','3','50','1','1','0','0','0','0','0','0','0','0','1','0','439306935','128','','1'),
 ('38556','0','0','0','0','0','12349','12349','12349','0','Malleable Ooze Stalker','','','0','81','81','2','14','14','0','1','1.14286','1','0','436','654','0','163','1','2000','2000','1','262146','8','0','0','0','0','0','349','523','130','10','16777218','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','','0','3','2','1','1','0','0','0','0','0','0','0','0','1','0','0','0','npc_malleable_goo','1');
+UPDATE `creature_template` SET `unit_class`='1' WHERE `entry`='38285';
 
 DELETE FROM `creature_template` WHERE `entry` IN (36823, 36824, 37672);
 INSERT INTO `creature_template` VALUES
@@ -48,14 +49,15 @@ UPDATE `gameobject_template` SET `ScriptName` = 'icecrown_teleporter' WHERE `ent
 UPDATE `gameobject_template` SET `flags` = 32 WHERE `entry` = 202223;
 UPDATE `gameobject_template` SET `flags` = 32 WHERE `entry` = 202242;
 
+-- This is working for me with any SQL support, seem is working nice using core script any way is working on Core Revision: 682 but we have problems to use it on another revs, core problem? any way this SQL is not need it for the table
+/*
 -- Putricide table
-
 DELETE FROM `gameobject_scripts` WHERE `id`=201584;
 REPLACE INTO `gameobject_scripts` (`id`, `delay`, `command`, `datalong`, `datalong2`, `dataint`) VALUES
 (201584, 0, 15, 70308, 0, '0'), -- transformation
 (201584, 5000, 15, 70311, 0, '0'), -- transformation end
 (201584, 5000, 13, 201584, 0, '0'); -- spawn
-
+*/
 
 -- Halion Flame Ring
 DELETE FROM `gameobject` WHERE `id`=203624;
@@ -64,17 +66,20 @@ INSERT INTO `gameobject` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`position_x`
 
 REPLACE INTO `gameobject_template` (`entry`, `type`, `displayId`, `name`, `IconName`, `castBarCaption`, `unk1`, `faction`, `flags`, `size`, `questItem1`, `questItem2`, `questItem3`, `questItem4`, `questItem5`, `questItem6`, `data0`, `data1`, `data2`, `data3`, `data4`, `data5`, `data6`, `data7`, `data8`, `data9`, `data10`, `data11`, `data12`, `data13`, `data14`, `data15`, `data16`, `data17`, `data18`, `data19`, `data20`, `data21`, `data22`, `data23`, `ScriptName`) VALUES (202796, 10, 1327, 'Twilight Portal', '', '', '', 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 74812, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '');
 
+-- this is not necessary, is already implemented in ytdb 562
+/*
 -- Icc Platform Positions
 DELETE FROM `gameobject_template` WHERE (`entry`=202078);
 INSERT INTO `gameobject_template` VALUES (202078, 14, 9256, 'Arthas Precipice', '', '', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 3000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', 11723);
 DELETE FROM `gameobject_template` WHERE (`entry`=202161);
--- INSERT INTO `gameobject_template` VALUES (202161, 14, 9276, 'Arthas Platform',  '', '', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 3000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', 11723);
-
+INSERT INTO `gameobject_template` VALUES (202161, 14, 9276, 'Arthas Platform',  '', '', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 3000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', 11723);
+*/
 
 -- Some creature_ai_scripts
+-- Some events cant be repetables set to 0 to can be repeteable
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=34606);
 INSERT INTO `creature_ai_scripts` VALUES 
-(270000, 34606, 6, 0, 100, 7, 0, 0, 0, 0, 11, 66193, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Force Cast');
+(270000, 34606, 0, 0, 100, 7, 0, 0, 0, 0, 11, 66193, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Force Cast');
 
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=38879);
 INSERT INTO `creature_ai_scripts` VALUES 
@@ -114,10 +119,13 @@ UPDATE `creature_template` SET `flags_extra` = 2, `faction_A` = 35, `faction_H` 
 UPDATE `creature_template` SET `flags_extra` = 2 WHERE `entry` = 30282;
 UPDATE `creature_template` SET `mechanic_immune_mask` = 634339327 WHERE `entry` = 36855;
 UPDATE `creature_ai_scripts` SET `action1_param1` = 71258 WHERE `id` = 26021102;
+
+-- creatures not existing in db (not make changes
+/*
 DELETE FROM `creature_template_addon` where `entry` IN (5542668,5542667);
 INSERT INTO `creature_template_addon` (`entry`,`mount`,`bytes2`) VALUES ('5542668', '36476', '4097');
 INSERT INTO `creature_template_addon` (`entry`,`mount`,`bytes2`) VALUES ('5542667', '36661', '4097');
-
+*/
 -- where is the npc 500202 to use creature_ai_scripts?....
 /*
 UPDATE `creature_template` SET `baseattacktime` = 3000, `Health_mod` = 100, `Mana_mod` = 100 WHERE `entry` = 500202;
@@ -342,7 +350,7 @@ UPDATE `creature_template` SET `ScriptName`='npc_spinestalker' WHERE (`entry`='3
 UPDATE `creature_template` SET `ScriptName`='npc_rimefang' WHERE (`entry`='37533');
 UPDATE `creature_template` SET `ScriptName`='npc_ice_tomb' WHERE (`entry`='36980');
 UPDATE `creature_template` SET `ScriptName`='npc_frost_bomb' WHERE (`entry`='37186');
-UPDATE `creature_template` SET `ScriptName`='npc_shambling_horror_icc' WHERE (`entry`='37698');
+UPDATE `creature_template` SET `ScriptName`='npc_shambling_horror' WHERE (`entry`='37698');
 UPDATE `creature_template` SET `ScriptName`='npc_terenas_menethil' WHERE (`entry`='36823');
 UPDATE `creature_template` SET `ScriptName`='npc_spirit_warden' WHERE (`entry`='36824');
 UPDATE `creature_template` SET `ScriptName`='npc_sister_svalna' WHERE (`entry` = '37126');
@@ -381,13 +389,15 @@ INSERT INTO `creature` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equ
 
 UPDATE `creature` SET `spawnMask`='3' where `id`='37985' and `map`='631';
 
+-- Why if this is ths update of ICC you are spawning 2 creatures in map 658 <--- NOT ICC MAP, is PoS
+/*
 DELETE FROM `creature` WHERE `id`=36658;
 INSERT INTO `creature` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`DeathState`,`MovementType`) VALUES
-(5543011, 36658, 658, 15, 3, 0, 2013, 969.309, 180.069, 628.156, 5.95328, 300, 0, 0, 653829, 0, 0, 0);
-
+(5543011, 36658, 658 <--- NOT ICC MAP, 15, 3, 0, 2013, 969.309, 180.069, 628.156, 5.95328, 300, 0, 0, 653829, 0, 0, 0);
 DELETE FROM `creature` WHERE `id`=36661;
 INSERT INTO `creature` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`DeathState`,`MovementType`) VALUES
-(5543609, 36661, 658, 1, 3, 0, 0, 967.121, 181.192, 639.719, 5.84175, 300, 0, 0, 3235440, 41690, 0, 0);
+(5543609, 36661, 658 <--- NOT ICC MAP, 1, 3, 0, 0, 967.121, 181.192, 639.719, 5.84175, 300, 0, 0, 3235440, 41690, 0, 0);
+*/
 
 DELETE FROM `creature` WHERE `id`=36823;
 INSERT INTO `creature` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`DeathState`,`MovementType`) VALUES
@@ -488,7 +498,7 @@ INSERT INTO `script_texts`(`npc_entry`,`entry`,`content_default`,`content_loc1`,
 (0,-1666034,'Bad news, everyone! I don''t think I''m going to make it.',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,17117,1,0,0,'');
 
 # 8
-DELETE FROM `script_texts` where `entry` IN (-2500000);
+DELETE FROM `script_texts` where `entry` IN (-1999926);
 INSERT INTO `script_texts`(`npc_entry`,`entry`,`content_default`,`content_loc1`,`content_loc2`,`content_loc3`,`content_loc4`,`content_loc5`,`content_loc6`,`content_loc7`,`content_loc8`,`sound`,`type`,`language`,`emote`,`comment`) VALUES
 (0,-1666035,'Foolish mortals. You thought us defeated so easily? The San''layn are the Lich King''s immortal soldiers! Now you shall face their might combined!',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16795,1,0,0,''),
 (0,-1666036,'Rise up, brothers, and destroy our enemies.',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16797,1,0,0,''),
@@ -505,7 +515,10 @@ INSERT INTO `script_texts`(`npc_entry`,`entry`,`content_default`,`content_loc1`,
 (0,-1666047,'Prince Taldaram laughs.',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16856,2,0,0,''),
 (0,-1666048,'Prince Taldaram gurgles and dies.',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16855,2,0,0,''),
 (0,-1666049,'Naxxanar was merely a setback! With the power of the orb, Valanar will have his vengeance!',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16685,1,0,0,''),
-(0,-2500000,'My cup runneth over.',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16686,1,0,0,''),
+-- Really dont know, the max number you an set on a entry text is -1999999 an now is set (how you can see) -250000 I set in the last free npc_entry
+-- (0,-2500000,'My cup runneth over.',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16686,1,0,0,''),
+-- Also need core support but I did the fix.
+(0,-1999926,'My cup runneth over.',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16686,1,0,0,''),
 (0,-1666050,'Dinner... is served.',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16681,1,0,0,''),
 (0,-1666051,'Do you see NOW the power of the Darkfallen?',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16682,1,0,0,''),
 (0,-1666052,'BOW DOWN BEFORE THE SAN''LAYN!',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16684,1,0,0,''),
@@ -822,7 +835,8 @@ INSERT INTO `creature` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equ
 UPDATE `gameobject_template` SET `ScriptName` = 'icecrown_teleporter' WHERE `entry` IN (202223,202235,202242,202243,202244,202245,202246);
 UPDATE `gameobject_template` SET `flags` = 32 WHERE `entry` IN (202235,202242,202243,202244,202245,202246);
 UPDATE `gameobject_template` SET `flags` = 52 WHERE `entry` = 202223;
-UPDATE `gameobject_template` SET `ScriptName` = '', `data10` = 70308 WHERE `entry` = 201584;
+-- This game object is handle by core and work nice
+-- UPDATE `gameobject_template` SET `ScriptName` = '', `data10` = 70308 WHERE `entry` = 201584;
 UPDATE `gameobject` SET `phaseMask` = '1' WHERE `id` IN (202242,202243,202244,202245,202235,202223,202246);
 
 # Other

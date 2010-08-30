@@ -76,7 +76,7 @@
 #define Taldaram_Berserk                   -1666047
 #define Taldaram_Die                       -1666048
 #define Valanar_Invocation                 -1666049
-#define Valanar_Special                    -2500000
+#define Valanar_Special                    -1999926
 #define Valanar_Slay_1                     -1666050
 #define Valanar_Slay_2                     -1666051
 #define Valanar_Berserk                    -1666052
