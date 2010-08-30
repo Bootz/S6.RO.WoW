@@ -167,7 +167,7 @@ class boss_lord_marrowgar : public CreatureScript
                             if (!me->HasAura(SPELL_BONE_STORM))
                                 DoCast(me, SPELL_COLDFLAME_NORMAL);
                             else
-                                DoCast(me, SPELL_COLDFLAME_BONE_STORM);
+                               // DoCast(me, SPELL_COLDFLAME_BONE_STORM); // temp disable to make it less OP
                             events.ScheduleEvent(EVENT_COLDFLAME, urand(30000, 45000));
                             break;
                         case EVENT_WARN_BONE_STORM:

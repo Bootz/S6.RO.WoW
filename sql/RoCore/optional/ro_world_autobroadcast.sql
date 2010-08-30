@@ -2,7 +2,7 @@
 
 -- I don't like autobroadcast message colors so this will change it:
 
-UPDATE `trinity_string` SET `content_default`='|c00077766[Autobroadcast]:|cffffff00 %s' WHERE (`entry`='11000');
+UPDATE `trinity_string` SET `content_default`='|cff00ffff[Autobroadcast]:|cffffff00 %s' WHERE (`entry`='11000');
 
 SET FOREIGN_KEY_CHECKS=0;
 -- ----------------------------

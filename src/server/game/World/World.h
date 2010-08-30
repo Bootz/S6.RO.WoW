@@ -456,13 +456,7 @@ enum WorldStates
 {
     WS_BG_DAILY_RESET_TIME  = 20003,    // Next daily BG reset time
     WS_NEXT_TIME_DAILY      = 90101,    // Daily quest last time entries within the worldstates table
-    WS_NEXT_TIME_WEEKLY     = 90102,     // Weekly quest last time entries within the worldstates table
-
-    WORLD_STATE_TIMER              = 3932,
-    WORLD_STATE_TIME_COUNTER       = 3931,
-    WORLD_STATE_WAVES              = 3504,
-    WORLD_STATE_CRATES             = 3479,
-    WORLD_STATE_CRATES_2           = 3480
+    WS_NEXT_TIME_WEEKLY     = 90102     // Weekly quest last time entries within the worldstates table
 };
 
 // DB scripting commands

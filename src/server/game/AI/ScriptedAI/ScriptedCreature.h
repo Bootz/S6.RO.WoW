@@ -49,6 +49,21 @@ struct ScriptedAI : public CreatureAI
     //CreatureAI Functions
     //*************
 
+    // Add items to a player
+    void addItem(Player* player, uint32 itemid, uint8 amount = 1, bool received = true, bool created = false, bool broadcast = false);
+
+    // Entfernung Überprüfen und nach hause gehen, wenn zu weit...
+    void CheckDistance(float dist, const uint32 uiDiff);
+
+    // Überprüft auf freundliche NPCs in der ThreatList, und geht bei leerer Liste nach Hause
+    void CheckThreatList(const uint32 uiDiff);
+
+    // Gibt einen random Player in range in einer Instanz zurück
+    Player* SelectRandomPlayer(float range = 0.0f);
+
+    // Despawned ein Add
+    bool DespawnAdd(uint64 guid = 0);
+
     void AttackStartNoMove(Unit *pTarget);
 
     // Called at any Damage from any attacker (before damage apply)
@@ -233,7 +248,17 @@ struct ScriptedAI : public CreatureAI
         return heroic25;
     }
 
+
+    bool FirstTime;
+
+    float MaxDistance;
+
     private:
+
+        uint32 CheckDistanceTimer;
+
+        uint32 CheckThreatListTimer;
+
         bool m_bCombatMovement;
         uint32 m_uiEvadeCheckCooldown;
 

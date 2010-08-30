@@ -50,6 +50,8 @@ public:
         }
 
         InstanceScript* pInstance;
+    uint32 uiCorruptingBlight;
+    uint32 uiVoidStrike;
 
         void Reset()
         {
