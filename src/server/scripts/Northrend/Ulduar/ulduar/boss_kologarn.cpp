@@ -97,9 +97,8 @@ enum Yells
 #define ACHIEVEMENT_WITH_OPEN_ARMS            RAID_MODE(2951, 2952)
 #define MAX_DISARMED_TIME                     12000
 
-uint32 GripTargetGUID;
+uint32 GripTargetGUID[3];
 
-// Positiones
 const Position RubbleRight = {1781.814, -3.716, 448.808, 4.211};
 const Position RubbleLeft  = {1781.814, -45.07, 448.808, 2.260};
 
@@ -125,7 +124,7 @@ public:
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_STUNNED);
             me->SetStandState(UNIT_STAND_STATE_SUBMERGED);
             me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);
-            me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true); // Death Grip jump effect
+        me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true);  // Death Grip
             emerged = false;
         }
 
@@ -195,9 +194,11 @@ public:
         {
             DoScriptText(SAY_AGGRO, me);
             _EnterCombat();
+        
             RubbleCount = 0;
-            GripTargetGUID = NULL;
             Gripped = false;
+        for (uint32 n = 0; n < RAID_MODE(1, 3); ++n)
+            GripTargetGUID[n] = NULL;
         
             if (Creature *LeftArm = CAST_CRE(me->GetVehicleKit()->GetPassenger(0)))
                 LeftArm->AI()->DoZoneInCombat();
@@ -242,7 +243,7 @@ public:
             if (me->hasUnitState(UNIT_STAT_CASTING))
                 return;
                         
-            if (events.GetTimer() > 15000 && !me->IsWithinMeleeRange(me->getVictim()))
+        if (events.GetTimer() > 15000 && !IsInRange())
                 DoCastAOE(SPELL_PETRIFY_BREATH, true);
         
             if (!left && !right)
@@ -268,13 +269,17 @@ public:
                 case EVENT_GRIP:
                     if (right)
                     {
-                        if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 1, 100, true))
-                        {
                             me->MonsterTextEmote(EMOTE_STONE, 0, true);
                             DoScriptText(SAY_GRAB_PLAYER, me);
-                            GripTargetGUID = pTarget->GetGUID();
+
+                    for (uint32 n = 0; n < RAID_MODE(1, 3); ++n)
+                    {
+                        if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 1, 100, true))
+                            GripTargetGUID[n] = pTarget->GetGUID();
+                    }
                         
                             if (pInstance)
+                    {
                                 if (Creature* RightArm = me->GetCreature(*me, pInstance->GetData64(DATA_RIGHT_ARM)))
                                     if (RightArm->AI())
                                         RightArm->AI()->DoAction(ACTION_GRIP);
@@ -350,6 +355,22 @@ public:
                     break;
             }
         }
+    
+    bool IsInRange()
+    {
+        std::list<HostileReference*> ThreatList = me->getThreatManager().getThreatList();
+        for (std::list<HostileReference*>::const_iterator itr = ThreatList.begin(); itr != ThreatList.end(); ++itr)
+        {
+            Unit* pTarget = Unit::GetUnit(*me, (*itr)->getUnitGuid());
+                        
+            if (!pTarget)
+                continue;
+                           
+            if (me->IsWithinMeleeRange(pTarget))
+                return true;
+        }
+        return false;
+    }
     };
 
     CreatureAI* GetAI(Creature* pCreature) const
@@ -435,8 +456,11 @@ public:
             {
                 if (SqueezeTimer <= diff)
                 {
-                    if (me->GetVehicleKit()->GetPassenger(0) && me->GetVehicleKit()->GetPassenger(0)->isAlive())
-                        me->Kill(me->GetVehicleKit()->GetPassenger(0), true);
+                for (uint32 n = 0; n < RAID_MODE(1, 3); ++n)
+                {
+                    if (me->GetVehicleKit()->GetPassenger(n) && me->GetVehicleKit()->GetPassenger(n)->isAlive())
+                        me->Kill(me->GetVehicleKit()->GetPassenger(n), true);
+                }
                     Gripped = false;
                 }
                 else SqueezeTimer -= diff;
@@ -477,19 +501,22 @@ public:
             switch (action)
             {
                 case ACTION_GRIP:
-                    if (Unit* GripTarget = Unit::GetUnit(*me, GripTargetGUID))
+                for (uint32 n = 0; n < RAID_MODE(1, 3); ++n)
+                {
+                    if (Unit* GripTarget = Unit::GetUnit(*me, GripTargetGUID[n]))
                     {
                         if (GripTarget && GripTarget->isAlive())
                         {
-                            GripTarget->EnterVehicle(me, 0);
+                            GripTarget->EnterVehicle(me, n);
                             me->AddAura(SPELL_STONE_GRIP, GripTarget);
                             me->AddAura(SPELL_STONE_GRIP_STUN, GripTarget);
-                            ArmDamage = 0;
-                            SqueezeTimer = 16000;
-                            GripTargetGUID = NULL;
-                            Gripped = true;
+                            GripTargetGUID[n] = NULL;
                         }
                     }
+                }  
+                            ArmDamage = 0;
+                            SqueezeTimer = 16000;
+                            Gripped = true;
                     break;
             }
         }
@@ -501,9 +528,11 @@ public:
                 ArmDamage += damage;
                 int dmg = RAID_MODE(100000, 480000);
             
-                if (ArmDamage > dmg || damage >= me->GetHealth())
+            if (ArmDamage >= dmg || damage >= me->GetHealth())
+            {
+                for (uint32 n = 0; n < RAID_MODE(1, 3); ++n)
                 {
-                    Unit* pGripTarget = me->GetVehicleKit()->GetPassenger(0);
+                    Unit* pGripTarget = me->GetVehicleKit()->GetPassenger(n);
                     if (pGripTarget && pGripTarget->isAlive())
                     {
                         pGripTarget->RemoveAurasDueToSpell(SPELL_STONE_GRIP);
@@ -511,7 +540,7 @@ public:
                         pGripTarget->ExitVehicle();
                         pGripTarget->GetMotionMaster()->MoveJump(1767.80, -18.38, 448.808, 10, 10);
                     }
-                    pGripTarget = 0;
+                }
                     Gripped = false;
                 }
             }
