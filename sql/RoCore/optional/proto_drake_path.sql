@@ -1,3 +1,4 @@
+-- this is move to optional because ytdb use `pool_creature` metod wich it make spawn the creature randonly
 -- this patch only make the drake fly in the same way point
 -- Path time-lost protodrake
 DELETE FROM `creature` WHERE `id`=32491;
