@@ -39,6 +39,7 @@
 #include "AchievementMgr.h"
 #include "AuctionHouseMgr.h"
 #include "ObjectMgr.h"
+#include "TicketMgr.h"
 #include "CreatureEventAIMgr.h"
 #include "SpellMgr.h"
 #include "Chat.h"
@@ -887,6 +888,7 @@ void World::LoadConfigSettings(bool reload)
     m_bool_configs[CONFIG_ALLOW_GM_FRIEND]      = sConfig.GetBoolDefault("GM.AllowFriend", false);
     m_bool_configs[CONFIG_GM_LOWER_SECURITY] = sConfig.GetBoolDefault("GM.LowerSecurity", false);
     m_bool_configs[CONFIG_GM_ALLOW_ACHIEVEMENT_GAINS] = sConfig.GetBoolDefault("GM.AllowAchievementGain", true);
+    m_float_configs[CONFIG_CHANCE_OF_GM_SURVEY] = sConfig.GetFloatDefault("GM.TicketSystem.ChanceOfGMSurvey", 50.0f);
 
     m_int_configs[CONFIG_GROUP_VISIBILITY] = sConfig.GetIntDefault("Visibility.GroupMode", 1);
 
@@ -1248,13 +1250,14 @@ void World::SetInitialWorldSettings()
 
     ///- Check the existence of the map files for all races' startup areas.
     if (!MapManager::ExistMapAndVMap(0,-6240.32f, 331.033f)
-        ||!MapManager::ExistMapAndVMap(0,-8949.95f,-132.493f)
-        ||!MapManager::ExistMapAndVMap(1,-618.518f,-4251.67f)
-        ||!MapManager::ExistMapAndVMap(0, 1676.35f, 1677.45f)
-        ||!MapManager::ExistMapAndVMap(1, 10311.3f, 832.463f)
-        ||!MapManager::ExistMapAndVMap(1,-2917.58f,-257.98f)
-        ||m_int_configs[CONFIG_EXPANSION] && (
-        !MapManager::ExistMapAndVMap(530,10349.6f,-6357.29f) || !MapManager::ExistMapAndVMap(530,-3961.64f,-13931.2f)))
+        || !MapManager::ExistMapAndVMap(0,-8949.95f,-132.493f)
+        || !MapManager::ExistMapAndVMap(1,-618.518f,-4251.67f)
+        || !MapManager::ExistMapAndVMap(0, 1676.35f, 1677.45f)
+        || !MapManager::ExistMapAndVMap(1, 10311.3f, 832.463f)
+        || !MapManager::ExistMapAndVMap(1,-2917.58f,-257.98f)
+        || (m_int_configs[CONFIG_EXPANSION] && (
+            !MapManager::ExistMapAndVMap(530,10349.6f,-6357.29f) || 
+            !MapManager::ExistMapAndVMap(530,-3961.64f,-13931.2f))))
     {
         sLog.outError("Correct *.map files not found in path '%smaps' or *.vmtree/*.vmtile files in '%svmaps'. Please place *.map/*.vmtree/*.vmtile files in appropriate directories or correct the DataDir value in the worldserver.conf file.",m_dataPath.c_str(),m_dataPath.c_str());
         exit(1);
@@ -1270,7 +1273,11 @@ void World::SetInitialWorldSettings()
     //No SQL injection as values are treated as integers
 
     // not send custom type REALM_FFA_PVP to realm list
-    uint32 server_type = IsFFAPvPRealm() ? REALM_TYPE_PVP : getIntConfig(CONFIG_GAME_TYPE);
+    uint32 server_type;
+    if (IsFFAPvPRealm())
+        server_type = REALM_TYPE_PVP;
+    else
+        server_type = getIntConfig(CONFIG_GAME_TYPE);
     uint32 realm_zone = getIntConfig(CONFIG_REALM_ZONE);
     LoginDatabase.PExecute("UPDATE realmlist SET icon = %u, timezone = %u WHERE id = '%d'", server_type, realm_zone, realmID);
 
@@ -1582,7 +1589,10 @@ void World::SetInitialWorldSettings()
     sConditionMgr.LoadConditions();
 
     sLog.outString("Loading GM tickets...");
-    sObjectMgr.LoadGMTickets();
+    sTicketMgr.LoadGMTickets();
+
+    sLog.outString("Loading GM surveys...");
+    sTicketMgr.LoadGMSurveys();
 
     sLog.outString("Loading client addons...");
     sAddonMgr.LoadFromDB();

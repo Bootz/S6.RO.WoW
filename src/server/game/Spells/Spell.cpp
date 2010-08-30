@@ -2795,7 +2795,7 @@ void Spell::SelectEffectTargets(uint32 i, uint32 cur)
 
             if (maxSize && power != -1)
             {
-                if (power == POWER_HEALTH)
+                if (Powers(power) == POWER_HEALTH)
                 {
                     if (unitList.size() > maxSize)
                     {
@@ -4217,7 +4217,7 @@ void Spell::ExecuteLogEffectInterruptCast(uint8 effIndex, Unit * victim, uint32 
     *m_effectExecuteData[effIndex] << uint32(spellId);
 }
 
-void Spell::ExecuteLogEffectDurabilityDamage(uint8 effIndex, Unit * victim, uint32 itemslot, uint32 damage)
+void Spell::ExecuteLogEffectDurabilityDamage(uint8 effIndex, Unit * victim, uint32 /*itemslot*/, uint32 damage)
 {
     InitEffectExecuteData(effIndex);
     m_effectExecuteData[effIndex]->append(victim->GetPackGUID());
@@ -5343,7 +5343,7 @@ SpellCastResult Spell::CheckCast(bool strict)
                 // Can be area effect, Check only for players and not check if target - caster (spell can have multiply drain/burn effects)
                 if (m_caster->GetTypeId() == TYPEID_PLAYER)
                     if (Unit* target = m_targets.getUnitTarget())
-                        if (target != m_caster && target->getPowerType() != m_spellInfo->EffectMiscValue[i])
+                        if (target != m_caster && target->getPowerType() != Powers(m_spellInfo->EffectMiscValue[i]))
                             return SPELL_FAILED_BAD_TARGETS;
                 break;
             }
@@ -6150,7 +6150,7 @@ SpellCastResult Spell::CheckItems()
                 // Mana Potion, Rage Potion, Thistle Tea(Rogue), ...
                 if (m_spellInfo->Effect[i] == SPELL_EFFECT_ENERGIZE)
                 {
-                    if (m_spellInfo->EffectMiscValue[i] < 0 || m_spellInfo->EffectMiscValue[i] >= MAX_POWERS)
+                    if (m_spellInfo->EffectMiscValue[i] < 0 || m_spellInfo->EffectMiscValue[i] >= int8(MAX_POWERS))
                     {
                         failReason = SPELL_FAILED_ALREADY_AT_FULL_POWER;
                         continue;
@@ -7078,7 +7078,7 @@ void Spell::CalculateDamageDoneForAllTargets()
     }
 }
 
-int32 Spell::CalculateDamageDone(Unit *unit, const uint32 effectMask, float *multiplier)
+int32 Spell::CalculateDamageDone(Unit *unit, const uint32 effectMask, float * /*multiplier*/)
 {
     int32 damageDone = 0;
     unitTarget = unit;

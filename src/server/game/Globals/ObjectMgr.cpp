@@ -848,7 +848,7 @@ void ObjectMgr::CheckCreatureTemplate(CreatureInfo const* cInfo)
 
     if (cInfo->expansion > (MAX_CREATURE_BASE_HP - 1))
     {
-        sLog.outErrorDb("Table `creature_template` lists creature (Entry: %u) with expansion %u. Ignored and set to 0.", cInfo->expansion);
+        sLog.outErrorDb("Table `creature_template` lists creature (Entry: %u) with expansion %u. Ignored and set to 0.", cInfo->Entry, cInfo->expansion);
         const_cast<CreatureInfo*>(cInfo)->expansion = 0;
     }
 
@@ -1186,7 +1186,7 @@ void ObjectMgr::LoadCreatureLinkedRespawn()
 
         bar.step();
 
-        sLog.outString("");
+        sLog.outString();
         sLog.outErrorDb(">> Loaded 0 linked respawns. DB table `creature_linked_respawn` is empty.");
         return;
     }
@@ -1207,7 +1207,7 @@ void ObjectMgr::LoadCreatureLinkedRespawn()
     } while (result->NextRow());
 
     sLog.outString();
-    sLog.outString(">> Loaded %u linked respawns", mCreatureLinkedRespawnMap.size());
+    sLog.outString(">> Loaded " UI64FMTD " linked respawns", uint64(mCreatureLinkedRespawnMap.size()));
 }
 
 bool ObjectMgr::SetCreatureLinkedRespawn(uint32 guid, uint32 linkedGuid)
@@ -2447,7 +2447,7 @@ void ObjectMgr::LoadItemSetNameLocales()
     } while (result->NextRow());
 
     sLog.outString();
-    sLog.outString(">> Loaded %lu Item set name locale strings", (uint32)mItemSetNameLocaleMap.size());
+    sLog.outString(">> Loaded " UI64FMTD " Item set name locale strings", uint64(mItemSetNameLocaleMap.size()));
 }
 
 void ObjectMgr::LoadItemSetNames()
@@ -2764,7 +2764,7 @@ void ObjectMgr::PlayerCreateInfoAddItemHelper(uint32 race_, uint32 class_, uint3
                     bool found = false;
                     for (uint8 x = 0; x < MAX_OUTFIT_ITEMS; ++x)
                     {
-                        if (entry->ItemId[x] == itemId)
+                        if (entry->ItemId[x] > 0 && uint32(entry->ItemId[x]) == itemId)
                         {
                             found = true;
                             const_cast<CharStartOutfitEntry*>(entry)->ItemId[x] = 0;
@@ -3103,16 +3103,11 @@ void ObjectMgr::LoadPlayerInfo()
                 continue;
             }
 
-            uint8 current_level = fields[1].GetUInt8();
+            uint8 current_level = fields[1].GetUInt8();      // Can't be > than STRONG_MAX_LEVEL (hardcoded level maximum) due to var type
             if (current_level > sWorld.getIntConfig(CONFIG_MAX_PLAYER_LEVEL))
             {
-                if (current_level > STRONG_MAX_LEVEL)        // hardcoded level maximum
-                    sLog.outErrorDb("Wrong (> %u) level %u in `player_classlevelstats` table, ignoring.",STRONG_MAX_LEVEL,current_level);
-                else
-                {
-                    sLog.outDetail("Unused (> MaxPlayerLevel in worldserver.conf) level %u in `player_classlevelstats` table, ignoring.",current_level);
-                    ++count;                                // make result loading percent "expected" correct in case disabled detail mode for example.
-                }
+                sLog.outDetail("Unused (> MaxPlayerLevel in worldserver.conf) level %u in `player_classlevelstats` table, ignoring.",current_level);
+                ++count;                                    // make result loading percent "expected" correct in case disabled detail mode for example.
                 continue;
             }
 
@@ -5148,7 +5143,7 @@ void ObjectMgr::LoadSpellScriptNames()
 
         if (allRanks)
         {
-            if (sSpellMgr.GetFirstSpellInChain(spellId) != spellId)
+            if (sSpellMgr.GetFirstSpellInChain(spellId) != uint32(spellId))
             {
                 sLog.outErrorDb("Scriptname:`%s` spell (spell_id:%d) is not first rank of spell.",scriptName,fields[0].GetInt32());
                 continue;
@@ -5266,7 +5261,7 @@ void ObjectMgr::LoadPageTexts()
                     ss << *itr << " ";
                 ss << "create(s) a circular reference, which can cause the server to freeze. Changing Next_Page of page "
                     << pageItr->Page_ID <<" to 0";
-                sLog.outErrorDb(ss.str().c_str());
+                sLog.outErrorDb("%s", ss.str().c_str());
                 const_cast<PageText*>(pageItr)->Next_Page = 0;
                 break;
             }
@@ -7174,7 +7169,7 @@ void ObjectMgr::LoadReputationSpilloverTemplate()
 void ObjectMgr::LoadPointsOfInterest()
 {
     mPointsOfInterest.clear();                              // need for reload case
-	
+    
     uint32 count = 0;
 
     //                                                0      1  2  3      4     5     6
@@ -7226,7 +7221,7 @@ void ObjectMgr::LoadPointsOfInterest()
 void ObjectMgr::LoadQuestPOI()
 {
     mQuestPOIMap.clear();                              // need for reload case
-	
+    
     uint32 count = 0;
 
     // 0 1 2 3
@@ -9050,129 +9045,6 @@ Quest const* GetQuestTemplateStore(uint32 entry)
     return sObjectMgr.GetQuestTemplate(entry);
 }
 
-uint64 ObjectMgr::GenerateGMTicketId()
-{
-    return ++m_GMticketid;
-}
-
-void ObjectMgr::LoadGMTickets()
-{
-    if (!m_GMTicketList.empty())
-    {
-        for (GmTicketList::const_iterator itr = m_GMTicketList.begin(); itr != m_GMTicketList.end(); ++itr)
-            delete *itr;
-    }
-    m_GMTicketList.clear();
-    m_GMticketid = 0;
-
-    QueryResult_AutoPtr result = CharacterDatabase.Query("SELECT guid, playerGuid, name, message, createtime, map, posX, posY, posZ, timestamp, closed, assignedto, comment FROM gm_tickets");
-
-    if (!result)
-    {
-        barGoLink bar(1);
-        bar.step();
-        sLog.outString();
-        sLog.outString(">> GM Tickets table is empty, no tickets were loaded.");
-        return;
-    }
-
-    uint16 count = 0;
-    barGoLink bar ((*result).GetRowCount());
-    GM_Ticket *ticket;
-    do
-    {
-        Field *fields = result->Fetch();
-        ticket = new GM_Ticket;
-        ticket->guid = fields[0].GetUInt64();
-        ticket->playerGuid = fields[1].GetUInt64();
-        ticket->name = fields[2].GetCppString();
-        ticket->message = fields[3].GetCppString();
-        ticket->createtime = fields[4].GetUInt64();
-        ticket->map = fields[5].GetUInt32();
-        ticket->pos_x = fields[6].GetFloat();
-        ticket->pos_y = fields[7].GetFloat();
-        ticket->pos_z = fields[8].GetFloat();
-        ticket->timestamp = fields[9].GetUInt64();
-        ticket->closed = fields[10].GetUInt64();
-        ticket->assignedToGM = fields[11].GetUInt64();
-        ticket->comment = fields[12].GetCppString();
-        ++count;
-        bar.step();
-
-        m_GMTicketList.push_back(ticket);
-
-    } while (result->NextRow());
-
-    result = CharacterDatabase.Query("SELECT MAX(guid) from gm_tickets");
-
-    if (result)
-    {
-        Field *fields = result->Fetch();
-        m_GMticketid = fields[0].GetUInt64();
-    }
-
-    sLog.outString(">> Loaded %u GM Tickets from the database.", count);
-}
-
-void ObjectMgr::AddOrUpdateGMTicket(GM_Ticket &ticket, bool create)
-{
-    if (create)
-        m_GMTicketList.push_back(&ticket);
-
-    _AddOrUpdateGMTicket(ticket);
-}
-
-void ObjectMgr::_AddOrUpdateGMTicket(GM_Ticket &ticket)
-{
-    std::string msg(ticket.message), name(ticket.name), comment(ticket.comment);
-    CharacterDatabase.escape_string(msg);
-    CharacterDatabase.escape_string(name);
-    CharacterDatabase.escape_string(comment);
-    std::ostringstream ss;
-    ss << "REPLACE INTO gm_tickets (guid, playerGuid, name, message, createtime, map, posX, posY, posZ, timestamp, closed, assignedto, comment) VALUES('";
-    ss << ticket.guid << "', '";
-    ss << ticket.playerGuid << "', '";
-    ss << name << "', '";
-    ss << msg << "', '" ;
-    ss << ticket.createtime << "', '";
-    ss << ticket.map << "', '";
-    ss << ticket.pos_x << "', '";
-    ss << ticket.pos_y << "', '";
-    ss << ticket.pos_z << "', '";
-    ss << ticket.timestamp << "', '";
-    ss << ticket.closed << "', '";
-    ss << ticket.assignedToGM << "', '";
-    ss << comment << "');";
-    
-    SQLTransaction trans = CharacterDatabase.BeginTransaction();
-    trans->Append(ss.str().c_str());
-    CharacterDatabase.CommitTransaction(trans);
-}
-
-void ObjectMgr::RemoveGMTicket(GM_Ticket *ticket, int64 source, bool permanently)
-{
-    for (GmTicketList::iterator i = m_GMTicketList.begin(); i != m_GMTicketList.end(); ++i)
-        if ((*i)->guid == ticket->guid)
-        {
-            if (permanently)
-            {
-                CharacterDatabase.PExecute("DELETE FROM gm_tickets WHERE guid = '%u'", ticket->guid);
-                i = m_GMTicketList.erase(i);
-                ticket = NULL;
-                return;
-            }
-            (*i)->closed = source;
-            _AddOrUpdateGMTicket(*(*i));
-        }
-}
-
-void ObjectMgr::RemoveGMTicket(uint64 ticketGuid, int64 source, bool permanently)
-{
-    GM_Ticket *ticket = GetGMTicket(ticketGuid);
-    ASSERT(ticket);
-    RemoveGMTicket(ticket, source, permanently);
-}
-
 CreatureBaseStats const* ObjectMgr::GetCreatureBaseStats(uint8 level, uint8 unitClass)
 {
     CreatureBaseStatsMap::const_iterator it = m_creatureBaseStatsMap.find(MAKE_PAIR16(level,unitClass));
@@ -9214,7 +9086,7 @@ void ObjectMgr::LoadCreatureClassLevelStats()
     {
         Field *fields = result->Fetch();
 
-        uint8 Level = fields[0].GetUInt32();
+        uint8 Level = fields[0].GetUInt8();
         uint8 Class = fields[1].GetUInt8();
 
         CreatureBaseStats stats;
@@ -9223,13 +9095,14 @@ void ObjectMgr::LoadCreatureClassLevelStats()
         stats.BaseMana = fields[5].GetUInt32();
         stats.BaseArmor = fields[6].GetUInt32();
 
+/* With uint8 Level can't be greater than STRONG_MAX_LEVEL
         if (Level > STRONG_MAX_LEVEL)
         {
             sLog.outErrorDb("Creature base stats for class %u has invalid level %u (max is %u) - set to %u",
                 Class, Level, STRONG_MAX_LEVEL, STRONG_MAX_LEVEL);
             Level = STRONG_MAX_LEVEL;
         }
-
+*/
         if (!Class || ((1 << (Class - 1)) & CLASSMASK_ALL_CREATURES) == 0)
             sLog.outErrorDb("Creature base stats for level %u has invalid class %u",
                 Level, Class);
