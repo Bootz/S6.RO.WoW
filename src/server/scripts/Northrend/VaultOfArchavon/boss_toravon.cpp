@@ -15,92 +15,153 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*** SQL START ***
-UPDATE `creature_template` SET `ScriptName`='boss_toravon' WHERE `entry`='38433';
-UPDATE `creature_template` SET `ScriptName`='mob_frost_warder' WHERE `entry`='38482';
-UPDATE `creature_template` SET `ScriptName`='mob_frozen_orb_stalker' WHERE `entry`='38461';
-UPDATE `creature_template` SET `ScriptName`='mob_frozen_orb' WHERE `entry`='38456';
-*** SQL END ***/
 
 #include "ScriptPCH.h"
 #include "vault_of_archavon.h"
 
+#define SPELL_FREEZING_GROUND   RAID_MODE(72090,72104)
+#define SPELL_FROZEN_ORB        RAID_MODE(72091,72095)  // Triggert 72092 - Spawnt die Stalker
+#define SPELL_WHITEOUT          RAID_MODE(72034,72096)  // Every 38 sec. cast.
+#define SPELL_FROST_BLAST       RAID_MODE(72123,72124)  // don't know cd... using 20 secs.
+
+enum ToravonSpells
+{
 // Spells Toravon
-#define SPELL_FREEZING_GROUND   RAID_MODE(72090,72104)  // don't know cd... using 20 secs.
-#define SPELL_FROZEN_ORB        RAID_MODE(72091,72095)
-#define SPELL_WHITEOUT          RAID_MODE(72034,72096)  // Every 38 sec. cast. (after SPELL_FROZEN_ORB)
-#define SPELL_FROZEN_MALLET     71993
-
+    SPELL_FROZEN_MALLET     = 71993,
 // Spells Frost Warder
-#define SPELL_FROST_BLAST   RAID_MODE(72123,72124)      // don't know cd... using 20 secs.
-#define SPELL_FROZEN_MALLET_2 72122
-
+    SPELL_FROZEN_MALLET_2   = 72122,
 // Spell Frozen Orb
-#define SPELL_FROZEN_ORB_DMG    72081   // priodic dmg aura
-#define SPELL_FROZEN_ORB_AURA   72067   // make visible
-
+    SPELL_FROZEN_ORB_DMG    = 72081,    // periodic dmg aura
+    SPELL_FROZEN_ORB_AURA   = 72067,    // make visible
 // Spell Frozen Orb Stalker
-#define SPELL_FROZEN_ORB_SUMMON 72093   // summon orb
+    SPELL_FROZEN_ORB_SUMMON = 72094     // Groundeffect + Summon of Orb
+};
 
+enum ToravonEvents
+{
 // Events boss
-#define EVENT_FREEZING_GROUND   1
-#define EVENT_FROZEN_ORB        2
-#define EVENT_WHITEOUT          3
-
+    EVENT_FREEZING_GROUND = 1,
+    EVENT_FROZEN_ORB,
+    EVENT_WHITEOUT,
 // Events mob
-#define EVENT_FROST_BLAST   4
+    EVENT_FROST_BLAST
+};
 
+enum ToravonCreatures
+{
 // Mob Frozen Orb
-#define MOB_FROZEN_ORB 38456    // 1 in 10 mode and 3 in 25 mode
+    MOB_FROZEN_ORB          = 38456,    // 1 in 10 mode and 3 in 25 mode
+    MOB_FROZEN_ORB_STALKER  = 38461     // 1 of them is spawned for each player (through SPELL_FROZEN_ORB which triggers 72092)!
+};
 
+// Mob Frozen Orb Stalker
+class mob_frozen_orb_stalker : public CreatureScript
+{
+public:
+    mob_frozen_orb_stalker() : CreatureScript("mob_frozen_orb_stalker") { }
+
+    struct mob_frozen_orb_stalkerAI : public Scripted_NoMovementAI
+    {
+        mob_frozen_orb_stalkerAI(Creature* c) : Scripted_NoMovementAI(c)
+        {
+            summon_done = false;
+            can_start = false;
+        }
+
+        bool summon_done,
+            can_start;
+
+        void UpdateAI(const uint32 diff)
+        {
+            if (can_start && !summon_done)
+            {
+                DoCast(me, SPELL_FROZEN_ORB_SUMMON);
+                summon_done = true;
+            }
+        }
+    };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_frozen_orb_stalkerAI (pCreature);
+    }
+};
+
+// Boss Toravon
 class boss_toravon : public CreatureScript
 {
 public:
     boss_toravon() : CreatureScript("boss_toravon") { }
-
-    CreatureAI* GetAI(Creature* pCreature) const
-    {
-        return new boss_toravonAI (pCreature);
-    }
 
     struct boss_toravonAI : public ScriptedAI
     {
         boss_toravonAI(Creature *c) : ScriptedAI(c)
         {
             pInstance = c->GetInstanceScript();
+            num_orbs = RAID_MODE(1,3);
         }
 
         InstanceScript *pInstance;
         EventMap events;
+        uint32 spawntimer;
+        uint8 num_orbs;
 
         void Reset()
         {
+            // Only for orbs because the stalker despawns automatic
+            std::list<Creature*> OrbList;
+            GetCreatureListWithEntryInGrid(OrbList, me, MOB_FROZEN_ORB, 150.0f);
+            for (std::list<Creature*>::iterator iter = OrbList.begin(); iter != OrbList.end(); ++iter)
+                if ((*iter) && iter != OrbList.end())
+                    CAST_CRE((*iter))->ForcedDespawn();
+
             events.Reset();
+
+            spawntimer = 0;
 
             if (pInstance)
                 pInstance->SetData(DATA_TORAVON_EVENT, NOT_STARTED);
         }
 
-        void KilledUnit(Unit* /*Victim*/) {}
-
-        void JustDied(Unit* /*Killer*/)
+        void JustDied(Unit* Killer)
         {
             if (pInstance)
                 pInstance->SetData(DATA_TORAVON_EVENT, DONE);
         }
 
-        void EnterCombat(Unit * /*who*/)
+        void EnterCombat(Unit *who)
         {
             DoZoneInCombat();
 
             DoCast(me, SPELL_FROZEN_MALLET);
 
-            events.ScheduleEvent(EVENT_FROZEN_ORB, 11000);
-            events.ScheduleEvent(EVENT_WHITEOUT, 13000);
-            events.ScheduleEvent(EVENT_FREEZING_GROUND, 15000);
+            events.ScheduleEvent(EVENT_FROZEN_ORB, 38000);
+            events.ScheduleEvent(EVENT_WHITEOUT, 18000);
+            events.ScheduleEvent(EVENT_FREEZING_GROUND, 28000);
 
             if (pInstance)
                 pInstance->SetData(DATA_TORAVON_EVENT, IN_PROGRESS);
+        }
+
+        void StartSummonOrb()
+        {
+            uint8 cnt = 0;
+            std::list<Creature*> StalkerList;
+            GetCreatureListWithEntryInGrid(StalkerList, me, MOB_FROZEN_ORB_STALKER, 100.0f);
+            for (std::list<Creature*>::iterator iter = StalkerList.begin(); iter != StalkerList.end(); ++iter)
+            {
+                if ((*iter) && iter != StalkerList.end())
+                {
+                    if (cnt < num_orbs)
+                    {
+                        CAST_AI(mob_frozen_orb_stalker::mob_frozen_orb_stalkerAI, (*iter)->AI())->can_start = true;
+                        ++cnt;
+                    }
+                    else
+                        break;
+                }
+            }
+            spawntimer = 0;
         }
 
         void UpdateAI(const uint32 diff)
@@ -110,6 +171,12 @@ public:
 
             events.Update(diff);
 
+            if (spawntimer && spawntimer <= diff)
+                StartSummonOrb();
+            else
+                if (spawntimer)
+                    spawntimer -= diff;
+
             if (me->hasUnitState(UNIT_STAT_CASTING))
                 return;
 
@@ -118,8 +185,9 @@ public:
                 switch(eventId)
                 {
                     case EVENT_FROZEN_ORB:
+                        spawntimer = 2000;
                         DoCast(me, SPELL_FROZEN_ORB);
-                        events.ScheduleEvent(EVENT_FROZEN_ORB, 38000);
+                        events.ScheduleEvent(EVENT_FROZEN_ORB, 32000);
                         return;
                     case EVENT_WHITEOUT:
                         DoCast(me, SPELL_WHITEOUT);
@@ -128,7 +196,7 @@ public:
                     case EVENT_FREEZING_GROUND:
                         if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
                             DoCast(pTarget, SPELL_FREEZING_GROUND);
-                        events.ScheduleEvent(EVENT_FREEZING_GROUND, 20000);
+                        events.ScheduleEvent(EVENT_FREEZING_GROUND, 28000);
                         return;
                 }
             }
@@ -136,20 +204,17 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_toravonAI (pCreature);
+    }
 };
 
-/*######
-##  Mob Frost Warder
-######*/
+// Mob Frost Warder
 class mob_frost_warder : public CreatureScript
 {
 public:
     mob_frost_warder() : CreatureScript("mob_frost_warder") { }
-
-    CreatureAI* GetAI(Creature* pCreature) const
-    {
-        return new mob_frost_warderAI (pCreature);
-    }
 
     struct mob_frost_warderAI : public ScriptedAI
     {
@@ -162,7 +227,7 @@ public:
             events.Reset();
         }
 
-        void EnterCombat(Unit * /*who*/)
+        void EnterCombat(Unit *who)
         {
             DoZoneInCombat();
 
@@ -192,36 +257,33 @@ public:
         }
     };
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_frost_warderAI (pCreature);
+    }
 };
 
-
-/*######
-##  Mob Frozen Orb
-######*/
+// Mob Frozen Orb
 class mob_frozen_orb : public CreatureScript
 {
 public:
     mob_frozen_orb() : CreatureScript("mob_frozen_orb") { }
 
-    CreatureAI* GetAI(Creature* pCreature) const
-    {
-        return new mob_frozen_orbAI (pCreature);
-    }
-
     struct mob_frozen_orbAI : public ScriptedAI
     {
-        mob_frozen_orbAI(Creature *c) : ScriptedAI(c) {}
-
-        bool done;
-        uint32 killtimer;
-
-        void Reset()
+        mob_frozen_orbAI(Creature *c) : ScriptedAI(c)
         {
+            pInstance = c->GetInstanceScript();
             done = false;
-            killtimer = 60000; // if after this time there is no victim -> destroy!
         }
 
-        void EnterCombat(Unit * /*who*/)
+        InstanceScript *pInstance;
+
+        bool done;
+
+        void Reset() {}
+
+        void EnterCombat(Unit *who)
         {
             DoZoneInCombat();
         }
@@ -235,76 +297,24 @@ public:
                 done = true;
             }
 
-            if (killtimer <= diff)
+            if (!UpdateVictim() && pInstance)
             {
-                if (!UpdateVictim())
-                    me->ForcedDespawn();
-                killtimer = 10000;
+                Unit* pToravon = me->GetMap()->GetCreature(pInstance->GetData64(DATA_TORAVON));
+                if (pToravon)
+                {
+                    Unit* pTarget = pToravon->SelectNearbyTarget(50);
+                    if (pTarget)
+                        me->AI()->AttackStart(pTarget);
+                }
             }
-            else
-                killtimer -= diff;
         }
     };
-
-};
-
-/*######
-##  Mob Frozen Orb Stalker
-######*/
-class mob_frozen_orb_stalker : public CreatureScript
-{
-public:
-    mob_frozen_orb_stalker() : CreatureScript("mob_frozen_orb_stalker") { }
 
     CreatureAI* GetAI(Creature* pCreature) const
     {
-        return new mob_frozen_orb_stalkerAI (pCreature);
-    }
-
-    struct mob_frozen_orb_stalkerAI : public Scripted_NoMovementAI
-    {
-        mob_frozen_orb_stalkerAI(Creature* c) : Scripted_NoMovementAI(c)
-        {
-            c->SetVisibility(VISIBILITY_OFF);
-            c->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE|UNIT_FLAG_NON_ATTACKABLE|UNIT_FLAG_DISABLE_MOVE);
-            c->SetReactState(REACT_PASSIVE);
-
-            pInstance = c->GetInstanceScript();
-            spawned = false;
-        }
-
-        InstanceScript *pInstance;
-        bool spawned;
-
-        void UpdateAI(const uint32 /*diff*/)
-        {
-            if (spawned)
-                return;
-
-            spawned = true;
-            if (!pInstance)
-                return;
-
-            Unit* pToravon = me->GetCreature(*me, pInstance->GetData64(DATA_TORAVON));
-            if (!pToravon)
-                return;
-
-            uint8 num_orbs = RAID_MODE(1, 3);
-            for (uint8 i=0; i<num_orbs; ++i)
-            {
-                Position pos;
-                me->GetNearPoint(pToravon, pos.m_positionX, pos.m_positionY, pos.m_positionZ, 0.0f, 10.0f, 0.0f);
-                me->SetPosition(pos, true);
-                DoCast(me, SPELL_FROZEN_ORB_SUMMON);
-            }
+        return new mob_frozen_orbAI (pCreature);
         }
     };
-
-};
-
-
-
-
 
 void AddSC_boss_toravon()
 {

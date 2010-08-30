@@ -42,7 +42,7 @@
 #define EVENT_SHOCK                 5
 
 //Creatures
-#define MOB_TEMPEST_MINION          33998
+#define MOB_TEMPEST_MINION          34049
 
 #define MAX_TEMPEST_MINIONS         4
 
