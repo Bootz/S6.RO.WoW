@@ -5064,6 +5064,8 @@ INSERT INTO spell_linked_spell VALUES (45438, -33786, 2, 'Iceblock immune to cyc
 REPLACE INTO `spell_linked_spell` VALUES (1856, 1784, 0, 'Vanish rk1 -> Stealth');
 REPLACE INTO `spell_linked_spell` VALUES (1857, 1784, 0, 'Vanish rk2 -> Stealth');
 REPLACE INTO `spell_linked_spell` VALUES (26889, 1784, 0, 'Vanish rk3 -> Stealth');
+#Fixed Psychic Horror piercing through Anti-Magic Shell
+REPLACE INTO `spell_linked_spell` VALUES (48707, -64044, 2, 'Anti-Magic Shell immune to Psychic Horror');
 
 ALTER TABLE db_version CHANGE COLUMN required_370_world_north_quest required_423_world_isle_of_conquest bit;
 
