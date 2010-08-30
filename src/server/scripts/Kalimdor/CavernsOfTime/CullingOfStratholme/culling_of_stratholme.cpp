@@ -218,107 +218,6 @@ float RiftAndSpawnsLocations[ENCOUNTER_CHRONO_SPAWNS][5]=
     {NPC_EPOCH, 2451.809326f, 1112.901245f, 149.220459f, 3.363617f}
 };
 
-#define GOSSIP_ITEM_ARTHAS_0 "I'm ready to start Culling of Stratholme."
-#define GOSSIP_ITEM_ARTHAS_1 "Yes, my Prince. We're ready."
-#define GOSSIP_ITEM_ARTHAS_2 "We're only doing what is best for Loarderon your Highness."
-#define GOSSIP_ITEM_ARTHAS_3 "I'm ready."
-#define GOSSIP_ITEM_ARTHAS_4 "For Lordaeron!"
-#define GOSSIP_ITEM_ARTHAS_5 "I'm ready to battle the dreadlord, sire."
-
-class npc_arthas : public CreatureScript
-{
-public:
-    npc_arthas() : CreatureScript("npc_arthas") { }
-
-    bool OnGossipSelect(Player *pPlayer, Creature *pCreature, uint32 /*sender*/, uint32 action)
-    {
-        pPlayer->PlayerTalkClass->ClearMenus();
-        npc_arthasAI* pAI = CAST_AI(npc_arthas::npc_arthasAI,pCreature->AI());
-
-        if (!pAI)
-            return false;
-
-        switch (action)
-        {
-            case GOSSIP_ACTION_INFO_DEF:
-                pAI->Start(true,true,pPlayer->GetGUID(),0,false,false);
-                pAI->SetDespawnAtEnd(false);
-                pAI->bStepping = false;
-                pAI->uiStep = 1;
-                break;
-            case GOSSIP_ACTION_INFO_DEF+1:
-                pAI->bStepping = true;
-                pAI->uiStep = 24;
-                break;
-            case GOSSIP_ACTION_INFO_DEF+2:
-                pAI->SetHoldState(false);
-                pAI->bStepping = false;
-                pAI->uiStep = 61;
-                break;
-            case GOSSIP_ACTION_INFO_DEF+3:
-                pAI->SetHoldState(false);
-                break;
-            case GOSSIP_ACTION_INFO_DEF+4:
-                pAI->bStepping = true;
-                pAI->uiStep = 84;
-                break;
-            case GOSSIP_ACTION_INFO_DEF+5:
-                pAI->bStepping = true;
-                pAI->uiStep = 85;
-                break;
-        }
-        pPlayer->CLOSE_GOSSIP_MENU();
-        pAI->SetDespawnAtFar(true);
-        pCreature->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
-        return true;
-    }
-
-    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
-    {
-        npc_arthasAI* pAI = CAST_AI(npc_arthas::npc_arthasAI,pCreature->AI());
-
-        if (pAI && pAI->bStepping == false)
-        {
-            switch (pAI->uiGossipStep)
-            {
-                case 0: //This one is a workaround since the very beggining of the script is wrong.
-                    if (pPlayer->GetQuestStatus(13149) != QUEST_STATUS_COMPLETE)
-                        return false;
-                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_ARTHAS_0, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
-                    pPlayer->SEND_GOSSIP_MENU(907, pCreature->GetGUID());
-                    break;
-                case 1:
-                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_ARTHAS_1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-                    pPlayer->SEND_GOSSIP_MENU(GOSSIP_MENU_ARTHAS_1, pCreature->GetGUID());
-                    break;
-                case 2:
-                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_ARTHAS_2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
-                    pPlayer->SEND_GOSSIP_MENU(GOSSIP_MENU_ARTHAS_2, pCreature->GetGUID());
-                    break;
-                case 3:
-                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_ARTHAS_3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
-                    pPlayer->SEND_GOSSIP_MENU(GOSSIP_MENU_ARTHAS_3, pCreature->GetGUID());
-                    break;
-                case 4:
-                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_ARTHAS_4, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+4);
-                    pPlayer->SEND_GOSSIP_MENU(GOSSIP_MENU_ARTHAS_4, pCreature->GetGUID());
-                    break;
-                case 5:
-                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_ARTHAS_5, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+5);
-                    pPlayer->SEND_GOSSIP_MENU(GOSSIP_MENU_ARTHAS_5, pCreature->GetGUID());
-                    break;
-                default:
-                    return false;
-            }
-        }
-        return true;
-    }
-
-    CreatureAI* GetAI(Creature* pCreature) const
-    {
-        return new npc_arthasAI(pCreature);
-    }
-
     struct npc_arthasAI : public npc_escortAI
     {
         npc_arthasAI(Creature *pCreature) : npc_escortAI(pCreature)
@@ -1208,9 +1107,105 @@ public:
         }
     };
 
+#define GOSSIP_ITEM_ARTHAS_0 "I'm ready to start Culling of Stratholme."
+#define GOSSIP_ITEM_ARTHAS_1 "Yes, my Prince. We're ready."
+#define GOSSIP_ITEM_ARTHAS_2 "We're only doing what is best for Loarderon your Highness."
+#define GOSSIP_ITEM_ARTHAS_3 "I'm ready."
+#define GOSSIP_ITEM_ARTHAS_4 "For Lordaeron!"
+#define GOSSIP_ITEM_ARTHAS_5 "I'm ready to battle the dreadlord, sire."
+
+bool OnGossipHello(Player* pPlayer, Creature* pCreature)
+{
+    npc_arthasAI* pAI = CAST_AI(npc_arthasAI,pCreature->AI());
+
+    if (pAI && pAI->bStepping == false)
+    {
+        switch (pAI->uiGossipStep)
+        {
+            case 0: //This one is a workaround since the very beggining of the script is wrong.
+                if (pPlayer->GetQuestStatus(13149) != QUEST_STATUS_COMPLETE)
+                    return false;
+                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_ARTHAS_0, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
+                pPlayer->SEND_GOSSIP_MENU(907, pCreature->GetGUID());
+                break;
+            case 1:
+                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_ARTHAS_1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+                pPlayer->SEND_GOSSIP_MENU(GOSSIP_MENU_ARTHAS_1, pCreature->GetGUID());
+                break;
+            case 2:
+                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_ARTHAS_2, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
+                pPlayer->SEND_GOSSIP_MENU(GOSSIP_MENU_ARTHAS_2, pCreature->GetGUID());
+                break;
+            case 3:
+                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_ARTHAS_3, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
+                pPlayer->SEND_GOSSIP_MENU(GOSSIP_MENU_ARTHAS_3, pCreature->GetGUID());
+                break;
+            case 4:
+                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_ARTHAS_4, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+4);
+                pPlayer->SEND_GOSSIP_MENU(GOSSIP_MENU_ARTHAS_4, pCreature->GetGUID());
+                break;
+            case 5:
+                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_ARTHAS_5, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+5);
+                pPlayer->SEND_GOSSIP_MENU(GOSSIP_MENU_ARTHAS_5, pCreature->GetGUID());
+                break;
+            default:
+                return false;
+        }
+    }
+    return true;
+}
+
+
+bool OnGossipSelect(Player *pPlayer, Creature *pCreature, uint32 sender, uint32 action)
+{
+    npc_arthasAI* pAI = CAST_AI(npc_arthasAI,pCreature->AI());
+
+    if (!pAI)
+        return false;
+
+    pPlayer->PlayerTalkClass->ClearMenus();
+    switch (action)
+    {
+        case GOSSIP_ACTION_INFO_DEF:
+            pAI->Start(true,true,pPlayer->GetGUID(),0,false,false);
+            pAI->SetDespawnAtEnd(false);
+            pAI->bStepping = false;
+            pAI->uiStep = 1;
+            break;
+        case GOSSIP_ACTION_INFO_DEF+1:
+            pAI->bStepping = true;
+            pAI->uiStep = 24;
+            break;
+        case GOSSIP_ACTION_INFO_DEF+2:
+            pAI->SetHoldState(false);
+            pAI->bStepping = false;
+            pAI->uiStep = 61;
+            break;
+        case GOSSIP_ACTION_INFO_DEF+3:
+            pAI->SetHoldState(false);
+            break;
+        case GOSSIP_ACTION_INFO_DEF+4:
+            pAI->bStepping = true;
+            pAI->uiStep = 84;
+            break;
+        case GOSSIP_ACTION_INFO_DEF+5:
+            pAI->bStepping = true;
+            pAI->uiStep = 85;
+            break;
+    }
+    pPlayer->CLOSE_GOSSIP_MENU();
+    pAI->SetDespawnAtFar(true);
+    pCreature->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
+    return true;
+}
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_arthasAI(pCreature);
+    }
 };
 
 void AddSC_culling_of_stratholme()
 {
-    new npc_arthas();
+    new npc_arthas;
 }
