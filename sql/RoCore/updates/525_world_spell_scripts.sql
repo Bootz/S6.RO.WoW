@@ -1,4 +1,4 @@
--- ALTER TABLE db_version CHANGE COLUMN required_507_world_wintergrasp required_525_world_spell_scripts bit;
+ALTER TABLE db_version CHANGE COLUMN required_507_world_wintergrasp required_525_world_spell_scripts bit;
 
 DELETE FROM `spell_scripts` WHERE id IN (44997,45030,49625,49634,53343,53341);
 INSERT INTO `spell_scripts`(`id`,`effIndex`,`delay`,`command`,`datalong`,`datalong2`,`dataint`,`x`,`y`,`z`,`o`) VALUES 

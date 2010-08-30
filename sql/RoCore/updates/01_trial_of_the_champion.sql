@@ -579,3 +579,10 @@ DELETE FROM `creature_loot_template` WHERE (`entry`=35305);
 INSERT INTO `creature_loot_template` VALUES 
 (35305, 47172, 20, 1, 0, 1, 7),
 (35305, 47170, 14, 1, 0, 1, 1);
+
+-- Thunder Bluff Champion
+-- Some one, a very nice person, delete this lines for give to us a double work :P
+DELETE FROM `creature_loot_template` WHERE (`entry`=35325);
+INSERT INTO `creature_loot_template` VALUES 
+(35325, 47172, 33, 1, 0, 1, 2),
+(35325, 47170, 25, 1, 0, 1, 1);

@@ -1,1 +1,0 @@
--- ALTER TABLE db_version CHANGE COLUMN required_525_world_spell_scripts required_529_world_quest_free_your_mind bit;

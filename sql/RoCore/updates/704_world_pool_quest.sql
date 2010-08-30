@@ -1,4 +1,4 @@
--- ALTER TABLE db_version CHANGE COLUMN required_529_world_quest_free_your_mind required_704_world_pool_quest bit;
+ALTER TABLE db_version CHANGE COLUMN required_507_world_wintergrasp required_704_world_pool_quest bit;
 
 -- THIS TABLE REALLY NEEDS DB-SUPPORT! :-)
 DROP TABLE IF EXISTS `pool_quest`;

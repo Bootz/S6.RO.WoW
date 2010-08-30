@@ -1,4 +1,4 @@
--- ALTER TABLE db_version CHANGE COLUMN required_117_proto_drake_path required_187_world_halls_of_reflection bit;
+ALTER TABLE db_version CHANGE COLUMN required_3_world_icecrown_citadel required_187_world_halls_of_reflection bit;
 UPDATE `instance_template` SET `script` = 'instance_halls_of_reflection' WHERE map=668;
 UPDATE `gameobject_template` SET `faction` = '114' WHERE `entry` IN (197341, 201976);
 UPDATE `gameobject_template` SET `faction`='1375' WHERE `entry` IN (197341, 202302, 201385, 201596);

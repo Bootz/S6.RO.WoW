@@ -1,6 +1,6 @@
 -- Icecrown Citadel
 -- Db version requirement
--- ALTER TABLE db_version CHANGE COLUMN required_31_world_db_version required_3_world_icecrown_citadel bit;
+ALTER TABLE db_version CHANGE COLUMN required_31_world_db_version required_3_world_icecrown_citadel bit;
 
 -- Cleaning scripts names for npc and bosses
 UPDATE `creature_template` SET `ScriptName`='' WHERE `entry` IN (38508,36626,36678,37697,36853,36597,38995,36633,36609,37695,38757,36701,36725,37011,36724,37012,37007,36811,36807,36829,36844,36808,36627,36897,36899,37973,37970,37972,36789,38429,38068,38369,38332,38454,38422,38451);

@@ -1,4 +1,4 @@
--- ALTER TABLE db_version CHANGE COLUMN required_423_world_isle_of_conquest required_424_argent_quests bit;
+ALTER TABLE db_version CHANGE COLUMN required_423_world_isle_of_conquest required_424_argent_quests bit;
 
 -- Horde
 -- The argent tournament Premier
