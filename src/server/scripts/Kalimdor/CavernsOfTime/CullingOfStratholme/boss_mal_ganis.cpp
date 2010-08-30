@@ -23,9 +23,6 @@ SDComment: TODO: Intro & outro
 SDCategory:
 Script Data End */
 
-/*** SQL START ***
-update creature_template set scriptname = 'boss_mal_ganis' where entry = '';
-*** SQL END ***/
 #include "ScriptPCH.h"
 #include "culling_of_stratholme.h"
 
@@ -114,7 +111,7 @@ public:
                  pInstance->SetData(DATA_MAL_GANIS_EVENT, NOT_STARTED);
         }
 
-        void EnterCombat(Unit* /*who*/)
+    void EnterCombat(Unit* who)
         {
             DoScriptText(SAY_AGGRO, me);
             if (pInstance)
@@ -234,7 +231,7 @@ public:
             }
         }
 
-        void JustDied(Unit* /*killer*/)
+    void JustDied(Unit* killer)
         {
             if (pInstance)
             {
@@ -260,5 +257,5 @@ public:
 
 void AddSC_boss_mal_ganis()
 {
-    new boss_mal_ganis();
+    new boss_mal_ganis;
 }

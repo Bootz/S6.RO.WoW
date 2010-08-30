@@ -89,7 +89,7 @@ public:
                 pInstance->SetData(DATA_EPOCH_EVENT, NOT_STARTED);
         }
 
-        void EnterCombat(Unit* /*who*/)
+    void EnterCombat(Unit* who)
         {
             DoScriptText(SAY_AGGRO, me);
 
@@ -132,7 +132,7 @@ public:
             DoMeleeAttackIfReady();
         }
 
-        void JustDied(Unit* /*killer*/)
+    void JustDied(Unit* killer)
         {
             DoScriptText(SAY_DEATH, me);
 

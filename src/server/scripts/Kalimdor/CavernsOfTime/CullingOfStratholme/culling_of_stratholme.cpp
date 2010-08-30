@@ -336,6 +336,7 @@ public:
         uint32 uiPlayerFaction;
         uint32 uiBossEvent;
         uint32 uiWave;
+    uint32 WavesCounter;
 
         uint64 uiUtherGUID;
         uint64 uiJainaGUID;
@@ -370,6 +371,7 @@ public:
             uiEpochGUID = 0;
             uiMalganisGUID = 0;
             uiInfiniteGUID = 0;
+        WavesCounter = 0;
 
             if (pInstance) {
                 pInstance->SetData(DATA_ARTHAS_EVENT, NOT_STARTED);
@@ -389,12 +391,12 @@ public:
             }
         }
 
-        void EnterCombat(Unit* /*who*/)
+    void EnterCombat(Unit* who)
         {
             DoCast(me, SPELL_ARTHAS_AURA);
         }
 
-        void JustDied(Unit * /*killer*/)
+    void JustDied(Unit *killer)
         {
             if (pInstance)
                 pInstance->SetData(DATA_ARTHAS_EVENT, FAIL);
@@ -532,8 +534,10 @@ public:
                     break;
                 case 36:
                     if (pInstance)
-                        if (GameObject* pGate = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_SHKAF_GATE)))
+                {
+                    GameObject* pGate = pInstance->instance->GetGameObject(pInstance->GetData64(DATA_SHKAF_GATE));
                             pGate->SetGoState(GO_STATE_ACTIVE);
+                }
                     break;
                 case 45:
                     SetRun(true);
@@ -726,8 +730,11 @@ public:
                         case 24:
                             if (Unit* pStalker = me->SummonCreature(NPC_INVIS_TARGET,2026.469f,1287.088f,143.596f,1.37f,TEMPSUMMON_TIMED_DESPAWN,14000))
                             {
+                            pInstance->DoUpdateWorldState(WORLD_STATE_WAVES, 0);
                                 uiStalkerGUID = pStalker->GetGUID();
-                                me->SetUInt64Value(UNIT_FIELD_TARGET, uiStalkerGUID);
+                            if (IsHeroic())
+                                me->SummonCreature(NPC_INFINITE, 2335.47f, 1262.04f, 132.921, 1.42079f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 87000);
+                            me->SetUInt64Value(UNIT_FIELD_TARGET, uiStalkerGUID);
                             }
                             JumpToNextStep(1000);
                             break;
@@ -875,6 +882,8 @@ public:
                             {
                                 SpawnWaveGroup(uiWave, uiWaveGUID);
                                 uiWave++;
+                            WavesCounter++;
+                            pInstance->DoUpdateWorldState(WORLD_STATE_WAVES, WavesCounter);
                             }
                             JumpToNextStep(500);
                             break;
@@ -912,6 +921,8 @@ public:
                         case 59:
                             if (pInstance->GetData(uiBossEvent) != DONE)
                             {
+                            WavesCounter++;
+                            pInstance->DoUpdateWorldState(WORLD_STATE_WAVES, WavesCounter);
                                 uint32 uiBossID = 0;
                                 if (uiBossEvent == DATA_MEATHOOK_EVENT)
                                     uiBossID = NPC_MEATHOOK;

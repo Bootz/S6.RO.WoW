@@ -55,26 +55,42 @@ public:
         {
             if (pInstance)
                 pInstance->SetData(DATA_INFINITE_EVENT, NOT_STARTED);
+
+        uiCorruptingBlight = 7000;
+        uiVoidStrike = 5000;
         }
 
-        void EnterCombat(Unit* /*who*/)
+    void EnterCombat(Unit* who)
         {
             if (pInstance)
                 pInstance->SetData(DATA_INFINITE_EVENT, IN_PROGRESS);
         }
 
-        void AttackStart(Unit* /*who*/) {}
-        void MoveInLineOfSight(Unit* /*who*/) {}
-        void UpdateAI(const uint32 /*diff*/)
+    void AttackStart(Unit* who) {}
+    void MoveInLineOfSight(Unit* who) {}
+    void UpdateAI(const uint32 diff)
         {
             //Return since we have no target
             if (!UpdateVictim())
                 return;
 
+        if (uiCorruptingBlight <= diff)
+        {
+            if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM,0))
+                DoCast(pTarget, SPELL_CORRUPTING_BLIGHT);
+            uiCorruptingBlight = 17000;
+        } else uiCorruptingBlight -= diff;
+
+        if (uiVoidStrike <= diff)
+        {
+            DoCast(me->getVictim(), SPELL_VOID_STRIKE);
+            uiVoidStrike = 5000;
+        } else uiVoidStrike -= diff;
+
             DoMeleeAttackIfReady();
         }
 
-        void JustDied(Unit* /*killer*/)
+    void JustDied(Unit* killer)
         {
             if (pInstance)
                 pInstance->SetData(DATA_INFINITE_EVENT, DONE);
@@ -86,5 +102,5 @@ public:
 
 void AddSC_boss_infinite_corruptor()
 {
-    new boss_infinite_corruptor();
+    new boss_infinite_corruptor;
 }

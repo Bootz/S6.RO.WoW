@@ -54,6 +54,8 @@ public:
         uint64 uiMalGanisGate2;
         uint64 uiExitGate;
         uint64 uiMalGanisChest;
+    uint32 EventTimer;
+    uint32 LastTimer;
 
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         std::string str_data;
@@ -66,7 +68,18 @@ public:
             return false;
         }
 
-        void OnCreatureCreate(Creature* pCreature, bool /*add*/)
+    void Inizialize()
+    {
+        DoUpdateWorldState(WORLD_STATE_TIMER, 0);
+        DoUpdateWorldState(WORLD_STATE_TIME_COUNTER, 0);
+        DoUpdateWorldState(WORLD_STATE_WAVES, 0);
+        DoUpdateWorldState(WORLD_STATE_CRATES, 0);
+        DoUpdateWorldState(WORLD_STATE_CRATES_2, 0);
+
+        EventTimer = 1500000;
+        LastTimer = 1500000;
+    }
+    void OnCreatureCreate(Creature* pCreature, bool add)
         {
             switch(pCreature->GetEntry())
             {
@@ -87,11 +100,13 @@ public:
                     break;
                 case NPC_INFINITE:
                     uiInfinite = pCreature->GetGUID();
+                DoUpdateWorldState(WORLD_STATE_TIMER, 1);
+                DoUpdateWorldState(WORLD_STATE_TIME_COUNTER, 25);
                     break;
             }
         }
 
-        void OnGameObjectCreate(GameObject* pGo, bool /*add*/)
+    void OnGameObjectCreate(GameObject* pGo, bool add)
         {
             switch(pGo->GetEntry())
             {
@@ -143,6 +158,7 @@ public:
                             HandleGameObject(uiMalGanisGate2,false);
                             break;
                         case DONE:
+                        HandleGameObject(uiMalGanisGate2,true);
                             HandleGameObject(uiExitGate, true);
                             if (GameObject *pGo = instance->GetGameObject(uiMalGanisChest))
                                 pGo->RemoveFlag(GAMEOBJECT_FLAGS,GO_FLAG_INTERACT_COND);
@@ -151,6 +167,11 @@ public:
                     break;
                 case DATA_INFINITE_EVENT:
                     m_auiEncounter[4] = data;
+                if (data == DONE)
+                {
+                    DoUpdateWorldState(WORLD_STATE_TIMER, 0);
+                    DoUpdateWorldState(WORLD_STATE_TIME_COUNTER, 0);
+                }
                     break;
             }
 
@@ -189,6 +210,24 @@ public:
             }
             return 0;
         }
+
+    void Update(uint32 diff)
+    {        
+       if(EventTimer < diff)
+       {
+           m_auiEncounter[4] == FAIL;
+           DoUpdateWorldState(WORLD_STATE_TIMER, 0);             
+       }else EventTimer -= diff;
+
+       if(EventTimer < LastTimer - 60000)
+       {
+          LastTimer = EventTimer;
+          uint32 tMinutes = EventTimer / 60000;
+          DoUpdateWorldState(WORLD_STATE_TIME_COUNTER, tMinutes);
+       }
+       return;
+    }
+         
 
         std::string GetSaveData()
         {
