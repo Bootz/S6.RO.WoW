@@ -284,21 +284,34 @@ public:
                 if (m_uiSpellHitCount >= 3)
                 {
                     Phase = SKADI;
-                    me->SetFlying(false);
+
                     me->Unmount();
+                    me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NON_ATTACKABLE);
+
                     if(Creature* pGrauf = me->SummonCreature(CREATURE_GRAUF, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ(), 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 3*IN_MILLISECONDS))
                     {
                         pGrauf->GetMotionMaster()->MoveFall(0);
                         pGrauf->HandleEmoteCommand(EMOTE_ONESHOT_FLYDEATH);
-                    }
-                    sLog.outBasic("[Skadi] Fly off");
-                    me->GetMotionMaster()->MoveJump(Location[4].GetPositionX(), Location[4].GetPositionY(), Location[4].GetPositionZ(), 5.0f, 10.0f);
-                    me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NON_ATTACKABLE);
+
                     DoScriptText(SAY_DRAKE_DEATH, me);
+                    }
+
+                    me->SetFlying(false);
+
+                    me->GetMotionMaster()->Clear();
+                    me->GetMotionMaster()->MoveIdle();
+                    me->GetMotionMaster()->MoveJump(Location[4].GetPositionX(), Location[4].GetPositionY(), Location[4].GetPositionZ(), 5.0f, 10.0f);
+
+                    Unit *target = SelectTarget(SELECT_TARGET_RANDOM);
+                    if (target)
+                    {
+                        me->GetMotionMaster()->MoveChase(target);
+                        me->Attack(target, true);
+                    }
+
                     m_uiCrushTimer = 8000;
                     m_uiPoisonedSpearTimer = 10000;
                     m_uiWhirlwindTimer = 20000;
-                    me->AI()->AttackStart(SelectTarget(SELECT_TARGET_RANDOM));
                 }
             }
         }
@@ -450,7 +463,14 @@ public:
                     break;
             }
             for(uint32 i = iStart; i < iEnd; ++i)
-                me->SummonCreature(CREATURE_TRIGGER,Location[i]);
+            {
+                Creature *cr = me->SummonCreature(CREATURE_TRIGGER, Location[i], TEMPSUMMON_TIMED_DESPAWN, 5000);
+                if (cr)
+                {
+                    cr->SetVisibility(VISIBILITY_OFF);
+                    cr->setFaction(35);
+                }
+            }
         }
     };
 
