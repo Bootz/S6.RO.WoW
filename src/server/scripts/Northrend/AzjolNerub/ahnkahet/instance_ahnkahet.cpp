@@ -140,6 +140,8 @@ public:
             {
                 case DATA_ADD_JEDOGA_OPFER: JedogaSacrifices = guid; break;
                 case DATA_PL_JEDOGA_TARGET: JedogaTarget = guid; break;
+                case DATA_SPHERE1: Prince_TaldaramSpheres[0] = guid; break;
+                case DATA_SPHERE2: Prince_TaldaramSpheres[1] = guid; break;
             }
         }
 

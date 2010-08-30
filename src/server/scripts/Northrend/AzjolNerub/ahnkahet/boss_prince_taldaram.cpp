@@ -82,8 +82,6 @@ public:
         boss_taldaramAI(Creature *c) : ScriptedAI(c)
         {
             pInstance = c->GetInstanceScript();
-            me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
-            me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
         }
 
         uint32 uiBloodthirstTimer;
@@ -112,6 +110,11 @@ public:
             uiEmbraceTarget = 0;
             if (pInstance)
                 pInstance->SetData(DATA_PRINCE_TALDARAM_EVENT, NOT_STARTED);
+            if (!CheckSpheres())
+            {
+                me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
+                me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+            }
         }
 
         void EnterCombat(Unit* /*who*/)
@@ -389,21 +392,29 @@ public:
     {
         InstanceScript *pInstance = pGO->GetInstanceScript();
 
-        Creature *pPrinceTaldaram = Unit::GetCreature(*pGO, pInstance ? pInstance->GetData64(DATA_PRINCE_TALDARAM) : 0);
-        if (pPrinceTaldaram && pPrinceTaldaram->isAlive())
+        pGO->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
+        pGO->SetGoState(GO_STATE_ACTIVE);
+
+        if (pInstance)
         {
-            // maybe these are hacks :(
-            pGO->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_UNK1);
-            pGO->SetGoState(GO_STATE_ACTIVE);
 
             switch(pGO->GetEntry())
             {
-                case GO_SPHERE1: pInstance->SetData(DATA_SPHERE1_EVENT,IN_PROGRESS); break;
-                case GO_SPHERE2: pInstance->SetData(DATA_SPHERE2_EVENT,IN_PROGRESS); break;
+                case GO_SPHERE1:
+                    pInstance->SetData(DATA_SPHERE1_EVENT, IN_PROGRESS);
+                    pInstance->SetData64(DATA_SPHERE1, pGO->GetGUID());
+                    break;
+                case GO_SPHERE2:
+                    pInstance->SetData(DATA_SPHERE2_EVENT, IN_PROGRESS);
+                    pInstance->SetData64(DATA_SPHERE2, pGO->GetGUID());
+                    break;
             }
 
-            CAST_AI(boss_taldaram::boss_taldaramAI, pPrinceTaldaram->AI())->CheckSpheres();
         }
+
+        Creature *pPrinceTaldaram = Unit::GetCreature(*pGO, pInstance ? pInstance->GetData64(DATA_PRINCE_TALDARAM) : 0);
+        if (pPrinceTaldaram && pPrinceTaldaram->isAlive())
+            CAST_AI(boss_taldaram::boss_taldaramAI, pPrinceTaldaram->AI())->CheckSpheres();
         return true;
     }
 };
