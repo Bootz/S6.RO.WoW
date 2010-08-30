@@ -96,11 +96,7 @@ public:
             {
                 case GO_BJARNGRIM_DOOR:
                     m_uiBjarngrimDoorGUID = pGo->GetGUID();
-                    if (m_auiEncounter[0] == DONE)
-                        pGo->SetGoState(GO_STATE_ACTIVE);
-                    else
-                        pGo->SetGoState(GO_STATE_READY);
-                    break;
+                     pGo->SetGoState(GO_STATE_ACTIVE);
                 case GO_VOLKHAN_DOOR:
                     m_uiVolkhanDoorGUID = pGo->GetGUID();
                     if (m_auiEncounter[1] == DONE)
