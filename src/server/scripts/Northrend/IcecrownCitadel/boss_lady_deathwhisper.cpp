@@ -45,19 +45,12 @@ enum DeathwhisperSpells
 	SPELL_SUMMON_SHADE                 =    71363,
 	SPELL_INSIGNIFICANCE               =    71204,
 	SPELL_ROOT                         =    42716,
-	SPELL_BERSERK                      =    47008,
 	SPELL_BLAST_10_NORMAL              =    72011,
 	SPELL_BLAST_10_HEROIC              =    72010,
 	SPELL_BLAST_25_NORMAL              =    72010,
 	SPELL_BLAST_25_HEROIC              =    72012,
 	SPELL_PORT_VISUAL                  =    41236,
 	//SPELL_ANIMATED_DEAD                =    ?????,
-};
-enum Summons
-{
-	NPC_CULT_ADHERENT          = 37949,
-	NPC_CULT_FANATIC           = 37890,
-	NPC_VENGEFUL_SHADE         = 38222,
 };
 
 enum Yells
@@ -375,7 +368,7 @@ public:
 
 				if ((me->GetPower(POWER_MANA)*100 / me->GetMaxPower(POWER_MANA)) < 1)
 				{
-					me->MonsterTextEmote(EMOTE_MANA_BARRIER,NULL);
+					DoScriptText(SAY_PHASE_2_EMOTE, me);
 					DoScriptText(SAY_PHASE_2, me);
 					DoResetThreat();
 					m_uiPhase = 2;

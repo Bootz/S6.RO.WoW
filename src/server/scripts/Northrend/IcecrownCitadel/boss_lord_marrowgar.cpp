@@ -57,7 +57,6 @@ enum Spells
     SPELL_BONE_STORM_10_HEROIC           =  70835,
     SPELL_BONE_STORM_25_HEROIC           =  70836,
     SPELL_BONE_SHIELD                    =  70207,
-    SPELL_BERSERK                        =  26662,
 };
 
 enum NPC
@@ -74,7 +73,7 @@ public:
 
     struct npc_bone_spikeAI : public Scripted_NoMovementAI
     {
-        npc_bone_spikeAI(Creature *pCreature) : Scripted_NoMovementAI(pCreature)), vehicle(pCreature->GetVehicleKit())
+        npc_bone_spikeAI(Creature *pCreature) : Scripted_NoMovementAI(pCreature), vehicle(pCreature->GetVehicleKit())
 
         {
             assert(vehicle);
@@ -111,7 +110,6 @@ public:
             if (pVictim && pVictim->GetGUID() != me->GetGUID())
                 {
                 Unit* Bone = Unit::GetUnit((*me), BoneSpikeGUID);
-                {
                     if (Bone)
                         Bone->RemoveAurasDueToSpell(SPELL_BONE_SPIKE_IMPALING);
                 }
