@@ -3856,6 +3856,12 @@ ALTER TABLE db_version CHANGE COLUMN required_31_world_db_version required_3_wor
 -- Cleaning scripts names for npc and bosses
 UPDATE `creature_template` SET `ScriptName`='' WHERE `entry` IN (38508,36626,36678,37697,36853,36597,38995,36633,36609,37695,38757,36701,36725,37011,36724,37012,37007,36811,36807,36829,36844,36808,36627,36897,36899,37973,37970,37972,36789,38429,38068,38369,38332,38454,38422,38451);
 UPDATE `gameobject_template` SET `ScriptName`='' WHERE `entry` IN (202235,202242,202244,202243,202245,202246,202182,202181);
+DELETE FROM `spell_script_names` WHERE `spell_id`=69057 AND `ScriptName`='spell_marrowgar_bone_spike_graveyard';
+DELETE FROM `spell_script_names` WHERE `spell_id` IN (69140,72705) AND `ScriptName`='spell_marrowgar_coldflame';
+DELETE FROM `spell_script_names` WHERE `spell_id`=69147 AND `ScriptName`='spell_marrowgar_coldflame_trigger';
+DELETE FROM `spell_script_names` WHERE `spell_id` IN (69075,70834,70835,70836) AND `ScriptName`='spell_marrowgar_bone_storm';
+DELETE FROM `spell_script_names` WHERE `spell_id` IN (70903,71236) AND `ScriptName`='spell_cultist_dark_martyrdom';
+
 DELETE FROM `creature` WHERE `id`=38995;
 
 -- These npc need to be like this for icc script to work

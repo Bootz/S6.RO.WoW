@@ -7,6 +7,12 @@ UPDATE `creature_template` SET `ScriptName`='' WHERE `entry` IN (38508,36626,366
 UPDATE `gameobject_template` SET `ScriptName`='' WHERE `entry` IN (202235,202242,202244,202243,202245,202246,202182,202181);
 DELETE FROM `creature` WHERE `id`=38995;
 
+DELETE FROM `spell_script_names` WHERE `spell_id`=69057 AND `ScriptName`='spell_marrowgar_bone_spike_graveyard';
+DELETE FROM `spell_script_names` WHERE `spell_id` IN (69140,72705) AND `ScriptName`='spell_marrowgar_coldflame';
+DELETE FROM `spell_script_names` WHERE `spell_id`=69147 AND `ScriptName`='spell_marrowgar_coldflame_trigger';
+DELETE FROM `spell_script_names` WHERE `spell_id` IN (69075,70834,70835,70836) AND `ScriptName`='spell_marrowgar_bone_storm';
+DELETE FROM `spell_script_names` WHERE `spell_id` IN (70903,71236) AND `ScriptName`='spell_cultist_dark_martyrdom';
+
 -- These npc need to be like this for icc script to work
 DELETE  FROM `creature_template` WHERE `entry` IN (37006, 37013, 38068, 34606, 38159, 38332, 38451, 38004, 38422, 38454, 37985,  37690, 38285, 38556, 38458);
 INSERT INTO `creature_template` VALUES

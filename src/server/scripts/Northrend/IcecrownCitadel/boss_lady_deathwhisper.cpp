@@ -82,14 +82,14 @@ enum Yells
 	SAY_DEATH              =    -1631028,
 };
 
-class boss_lady_deathwisper : public CreatureScript
+class boss_lady_deathwhisper : public CreatureScript
 {
 public:
-	boss_lady_deathwisper() : CreatureScript("boss_lady_deathwisper") { }
+	boss_lady_deathwhisper() : CreatureScript("boss_lady_deathwhisper") { }
 
-	struct boss_lady_deathwisperAI : public ScriptedAI
+	struct boss_lady_deathwhisperAI : public ScriptedAI
 	{
-		boss_lady_deathwisperAI(Creature *pCreature) : ScriptedAI(pCreature)
+		boss_lady_deathwhisperAI(Creature *pCreature) : ScriptedAI(pCreature)
 		{
 			m_pInstance = pCreature->GetInstanceScript();
 		}
@@ -444,7 +444,7 @@ public:
 
 	CreatureAI* GetAI(Creature* pCreature) const
 	{
-		return new boss_lady_deathwisperAI(pCreature);
+		return new boss_lady_deathwhisperAI(pCreature);
 	}
 
 };
@@ -516,8 +516,8 @@ public:
 
 
 
-void AddSC_boss_lady_deahtwisper()
+void AddSC_boss_lady_deathwhisper()
 {
-	new boss_lady_deathwisper;
+	new boss_lady_deathwhisper;
 	new npc_vengeful_shade;
 }
