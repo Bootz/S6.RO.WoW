@@ -10,3 +10,7 @@ INSERT INTO `spell_bonus_data`(`entry`, `direct_bonus`, `dot_bonus`, `ap_bonus`,
 -- Fixed Psychic Horror piercing through Anti-Magic Shell
 DELETE FROM `spell_linked_spell` WHERE `spell_trigger`= 48707;
 INSERT INTO `spell_linked_spell` VALUES (48707, -64044, 2, 'Anti-Magic Shell immune to Psychic Horror');
+
+-- Paladins should now be immune to Cyclone when they are affected by Divine Shield
+DELETE FROM `spell_linked_spell` WHERE `spell_trigger`= 642;
+INSERT INTO `spell_linked_spell` VALUES (642, -33786, 2, 'Divine Shield immune to Cyclone');
