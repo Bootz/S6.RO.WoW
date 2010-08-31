@@ -128,7 +128,7 @@ static SpiritInfoStruct SpiritInfo[] =
 struct TransformStruct
 {
     uint32 sound;
-    char* text;
+    const char* text;
     uint32 spell, unaura;
 };
 

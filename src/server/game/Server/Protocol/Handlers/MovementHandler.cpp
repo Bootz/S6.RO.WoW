@@ -157,9 +157,9 @@ void WorldSession::HandleMoveWorldportAckOpcode()
         {
             if (mapDiff->resetTime)
             {
-                if (uint32 timeReset = sInstanceSaveMgr.GetResetTimeFor(mEntry->MapID,diff))
+                if (time_t timeReset = sInstanceSaveMgr.GetResetTimeFor(mEntry->MapID,diff))
                 {
-                    uint32 timeleft = timeReset - time(NULL);
+                    uint32 timeleft = uint32(timeReset - time(NULL));
                     GetPlayer()->SendInstanceResetWarning(mEntry->MapID, diff, timeleft);
                 }
             }
@@ -528,7 +528,7 @@ void WorldSession::HandleMoveNotActiveMover(WorldPacket &recv_data)
 
     /*if (_player->m_mover->GetGUID() == old_mover_guid)
     {
-        sLog.outError("HandleMoveNotActiveMover: incorrect mover guid: mover is " I64FMT " and should be " I64FMT " instead of " I64FMT, _player->m_mover->GetGUID(), _player->GetGUID(), old_mover_guid);
+        sLog.outError("HandleMoveNotActiveMover: incorrect mover guid: mover is " UI64FMTD " and should be " UI64FMTD " instead of " UI64FMTD, _player->m_mover->GetGUID(), _player->GetGUID(), old_mover_guid);
         recv_data.rpos(recv_data.wpos());                   // prevent warnings spam
         return;
     }*/

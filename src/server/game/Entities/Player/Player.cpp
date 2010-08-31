@@ -4084,6 +4084,7 @@ bool Player::resetTalents(bool no_cost)
     }
 
     SQLTransaction trans = CharacterDatabase.BeginTransaction();
+    _SaveTalents(trans);
     _SaveSpells(trans);
     CharacterDatabase.CommitTransaction(trans);
 
@@ -18132,7 +18133,6 @@ void Player::_SaveSpells(SQLTransaction& trans)
             itr->second->state = PLAYERSPELL_UNCHANGED;
             ++itr;
         }
-
     }
 }
 
