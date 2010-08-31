@@ -1,0 +1,12 @@
+-- HERE WILL BE ADD ALL LITTLE SPELL FIXES FOR ROCORE JUST NOT TO HAVE MANY FILES IN UPDATE FOLDER
+
+UPDATE spell_proc_event SET procFlags = 20, procEx = 2 WHERE entry IN (53486, 53488);
+DELETE FROM `spell_bonus_data` where entry=50444;
+INSERT INTO `spell_bonus_data`(`entry`, `direct_bonus`, `dot_bonus`, `ap_bonus`, `comments`) VALUES (50444, 0, 0, 0.105, "Death Knight - Corpse Explosion Triggered");
+
+
+-- DK's should now be immune to Psychic Horror when they are affected by Anti-Magic Shell.
+-- by Andu
+-- Fixed Psychic Horror piercing through Anti-Magic Shell
+DELETE FROM `spell_linked_spell` WHERE `spell_trigger`= 48707;
+INSERT INTO `spell_linked_spell` VALUES (48707, -64044, 2, 'Anti-Magic Shell immune to Psychic Horror');
