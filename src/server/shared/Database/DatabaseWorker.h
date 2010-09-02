@@ -23,7 +23,6 @@
 
 #include <ace/Task.h>
 #include <ace/Activation_Queue.h>
-#include "SQLOperation.h"
 
 class MySQLConnection;
 

@@ -7914,7 +7914,7 @@ void ObjectMgr::LoadGameObjectForQuests()
     sLog.outString(">> Loaded %u GameObjects for quests", count);
 }
 
-bool ObjectMgr::LoadTrinityStrings(DatabaseType& db, char const* table, int32 min_value, int32 max_value)
+bool ObjectMgr::LoadTrinityStrings(char const* table, int32 min_value, int32 max_value)
 {
     int32 start_value = min_value;
     int32 end_value   = max_value;
@@ -7950,7 +7950,7 @@ bool ObjectMgr::LoadTrinityStrings(DatabaseType& db, char const* table, int32 mi
             ++itr;
     }
 
-    QueryResult_AutoPtr result = db.PQuery("SELECT entry,content_default,content_loc1,content_loc2,content_loc3,content_loc4,content_loc5,content_loc6,content_loc7,content_loc8 FROM %s",table);
+    QueryResult_AutoPtr result = WorldDatabase.PQuery("SELECT entry,content_default,content_loc1,content_loc2,content_loc3,content_loc4,content_loc5,content_loc6,content_loc7,content_loc8 FROM %s",table);
 
     if (!result)
     {
@@ -8984,7 +8984,7 @@ void ObjectMgr::CheckScripts(ScriptsType type, std::set<int32>& ids)
 
 void ObjectMgr::LoadDbScriptStrings()
 {
-    LoadTrinityStrings(WorldDatabase,"db_script_string",MIN_DB_SCRIPT_STRING_ID,MAX_DB_SCRIPT_STRING_ID);
+    LoadTrinityStrings("db_script_string", MIN_DB_SCRIPT_STRING_ID, MAX_DB_SCRIPT_STRING_ID);
 
     std::set<int32> ids;
 
@@ -9005,7 +9005,7 @@ uint32 GetAreaTriggerScriptId(uint32 trigger_id)
     return sObjectMgr.GetAreaTriggerScriptId(trigger_id);
 }
 
-bool LoadTrinityStrings(DatabaseType& db, char const* table,int32 start_value, int32 end_value)
+bool LoadTrinityStrings(char const* table, int32 start_value, int32 end_value)
 {
     // MAX_DB_SCRIPT_STRING_ID is max allowed negative value for scripts (scrpts can use only more deep negative values
     // start/end reversed for negative values
@@ -9015,7 +9015,7 @@ bool LoadTrinityStrings(DatabaseType& db, char const* table,int32 start_value, i
         return false;
     }
 
-    return sObjectMgr.LoadTrinityStrings(db,table,start_value,end_value);
+    return sObjectMgr.LoadTrinityStrings(table, start_value, end_value);
 }
 
 uint32  GetScriptId(const char *name)
