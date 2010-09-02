@@ -273,7 +273,7 @@ public:
             }
         }
 
-        void boneStormDamage()
+        /*void boneStormDamage()
         {
                 uint32 absorb = 0;
                 uint32 resist = 0;
@@ -323,7 +323,7 @@ public:
                 }
                         }
                 }
-        }
+        }*/
 
 
         void UpdateAI(const uint32 uiDiff)
@@ -422,7 +422,7 @@ public:
                 {
                     DoCastAOE(RAID_MODE(SPELL_BONE_STORM_10_NORMAL,SPELL_BONE_STORM_25_NORMAL,SPELL_BONE_STORM_10_HEROIC,SPELL_BONE_STORM_25_HEROIC));
                     m_uiBoneStormTimer = 1500;
-                    boneStormDamage()
+                  //  boneStormDamage()
                 } else m_uiBoneStormTimer -= uiDiff;
 
                 if (m_uiBoneStormRemoveTimer <= uiDiff)
