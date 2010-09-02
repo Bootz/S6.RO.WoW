@@ -57,6 +57,7 @@ enum Spells
     SPELL_BONE_STORM_10_HEROIC           =  70835,
     SPELL_BONE_STORM_25_HEROIC           =  70836,
     SPELL_BONE_SHIELD                    =  70207,
+    SPELL_SPIKE_IMPALING                  = 69065,
 };
 
 enum NPC
@@ -82,6 +83,7 @@ public:
         }
 
         uint64 BoneSpikeGUID;
+        uint64 achtimer;
         Vehicle* vehicle;
 
         void SetPrisoner(Unit* pPrisoner)
@@ -273,59 +275,6 @@ public:
             }
         }
 
-        /*void boneStormDamage()
-        {
-                uint32 absorb = 0;
-                uint32 resist = 0;
-                uint32 damage = 0;
-
-                Map* pMap = me->GetMap();
-                if (pMap && pMap->IsDungeon())
-                {
-                        Map::PlayerList const &PlayerList = pMap->GetPlayers();
-                        for (Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
-                        {
-                //check if target is allive
-                                if (i->getSource() && i->getSource()->isAlive())
-                {
-                    //target is closer than 4 yards
-                    if (i->getSource()->GetDistance2d(me) <= 4)
-                         damage = RAID_MODE(8000, 12000, 10500, 14000);
-                    
-                    //target is closer than 10 yards but at least 6 yards away
-                    if (i->getSource()->GetDistance2d(me) <= 9 && i->getSource()->GetDistance2d(me) > 5)
-                         damage = RAID_MODE(7000, 10000, 9500, 12000);
-                    
-                    //target is closer than 14 yards but at least 9 yards away
-                    if (i->getSource()->GetDistance2d(me) <= 14 && i->getSource()->GetDistance2d(me) > 9)
-                         damage = RAID_MODE(6000, 8000, 7500, 10000);
-                }
-                
-                //checking if damage should be deald
-                if (!i->getSource()->GetDistance2d(me) > 14)
-                {                
-                    //calculating the amount of absorbed and rested damage
-                    i->getSource()->CalcAbsorbResist(i->getSource(),SPELL_SCHOOL_MASK_NORMAL, SPELL_DIRECT_DAMAGE, damage, &absorb, &resist);
-                    //generating new amount of damage that should be given to target
-                    damage -= (absorb + resist);
-                    /*check if damage is less than 1 
-                    ( but i think this is not correct, 
-                    becouse it should be possible to doge / parry, 
-                    so it must be possible to get 0 damage even if you are in the 4 yard range)
-                    needs more test and review
-                    */
-                    if (damage <= 1)
-                        damage = 1;
-
-                    //deal damage to target
-                    me->DealDamage(i->getSource(), damage, NULL, SPELL_DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
-                    me->SpellNonMeleeDamageLog(i->getSource(), SPELL_BONE_STORM, damage);
-                }
-                        }
-                }
-        }*/
-
-
         void UpdateAI(const uint32 uiDiff)
         {
             if (!UpdateVictim())
@@ -422,7 +371,7 @@ public:
                 {
                     DoCastAOE(RAID_MODE(SPELL_BONE_STORM_10_NORMAL,SPELL_BONE_STORM_25_NORMAL,SPELL_BONE_STORM_10_HEROIC,SPELL_BONE_STORM_25_HEROIC));
                     m_uiBoneStormTimer = 1500;
-                  //  boneStormDamage()
+
                 } else m_uiBoneStormTimer -= uiDiff;
 
                 if (m_uiBoneStormRemoveTimer <= uiDiff)

@@ -6722,14 +6722,6 @@ bool Unit::HandleDummyAuraProc(Unit *pVictim, uint32 damage, AuraEffect* trigger
                     triggered_spell_id = 28742;
                     break;
                 }
-                // Item - Druid T10 Balance 4P Bonus
-                case 70723:
-                {
-                    basepoints0 = int32(triggerAmount * damage / 100);
-                    basepoints0 = int32(basepoints0 / 2);
-                    triggered_spell_id = 71023;
-                    break;
-                }
                 // Glyph of Rejuvenation
                 case 54754:
                 {

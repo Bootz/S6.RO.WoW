@@ -354,8 +354,8 @@ bool StartDB()
         sLog.outError("Cannot connect to database");
         return false;
     }
-   if(!LoginDatabase.CheckRequiredField("realmd_db_version",REVISION_DB_REALMD))
-        return false;
+/*   if(!LoginDatabase.CheckRequiredField("realmd_db_version",REVISION_DB_REALMD))
+        return false;*/
 
     MySQL::Thread_Init();
 

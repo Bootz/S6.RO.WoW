@@ -111,6 +111,8 @@ enum GameObjects
     GO_GASVALVE                     = 201616,
     GO_PROFDOORORANGE               = 201613,
     GO_PROFDOORGREEN                = 201614,
+    GO_SAURFANG_S_DOOR              = 201825,
+    GO_SCOURGE_TRANSPORTER_SAURFANG = 202244,
 };
 
 enum eAchievementCriteria

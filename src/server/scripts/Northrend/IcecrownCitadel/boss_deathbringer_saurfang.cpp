@@ -232,7 +232,7 @@ class boss_deathbringer_saurfang : public CreatureScript
 
         struct boss_deathbringer_saurfangAI : public BossAI
         {
-            boss_deathbringer_saurfangAI(Creature* pCreature) : BossAI(pCreature, DATA_DEATHBRINGER_SAURFANG)
+            boss_deathbringer_saurfangAI(Creature* pCreature) : BossAI(pCreature, DATA_SAURFANG_EVENT)
             {
                 ASSERT(instance);
                 ASSERT(pCreature->GetVehicleKit()); // we dont actually use it, just check if exists
@@ -254,7 +254,7 @@ class boss_deathbringer_saurfang : public CreatureScript
                 me->RemoveAurasDueToSpell(SPELL_FRENZY);
                 me->RemoveAurasDueToSpell(SPELL_BLOOD_POWER);
                 summons.DespawnAll();
-                instance->SetBossState(DATA_DEATHBRINGER_SAURFANG, NOT_STARTED);
+                instance->SetBossState(DATA_SAURFANG_EVENT, NOT_STARTED);
             }
 
             void EnterCombat(Unit* /*who*/)
@@ -267,7 +267,7 @@ class boss_deathbringer_saurfang : public CreatureScript
                 events.ScheduleEvent(EVENT_RUNE_OF_BLOOD, 20000, 0, PHASE_COMBAT);
 
                 uiFallenChampionCount = 0;
-                instance->SetBossState(DATA_DEATHBRINGER_SAURFANG, IN_PROGRESS);
+                instance->SetBossState(DATA_SAURFANG_EVENT, IN_PROGRESS);
             }
 
             void JustDied(Unit* /*killer*/)
@@ -276,7 +276,7 @@ class boss_deathbringer_saurfang : public CreatureScript
                 DoScriptText(SAY_DEATH, me);
 
                 instance->DoRemoveAurasDueToSpellOnPlayers(SPELL_MARK_OF_THE_FALLEN_CHAMPION);
-                instance->SetBossState(DATA_DEATHBRINGER_SAURFANG, DONE);
+                instance->SetBossState(DATA_SAURFANG_EVENT, DONE);
                 if (Creature* creature = ObjectAccessor::GetCreature(*me, instance->GetData64(DATA_SAURFANG_EVENT_NPC)))
                     creature->AI()->DoAction(ACTION_START_OUTRO);
             }
@@ -303,7 +303,7 @@ class boss_deathbringer_saurfang : public CreatureScript
 
             void JustReachedHome()
             {
-                instance->SetBossState(DATA_DEATHBRINGER_SAURFANG, FAIL);
+                instance->SetBossState(DATA_SAURFANG_EVENT, FAIL);
             }
 
             void KilledUnit(Unit *victim)
@@ -549,7 +549,7 @@ class npc_high_overlord_saurfang_icc : public CreatureScript
                     events.ScheduleEvent(EVENT_INTRO_HORDE_3, 18500, 0, PHASE_INTRO_H);
                     if (pInstance)
                     {
-                        uiDeathbringerSaurfangGUID = pInstance->GetData64(DATA_DEATHBRINGER_SAURFANG);
+                        uiDeathbringerSaurfangGUID = pInstance->GetData64(DATA_SAURFANG_EVENT);
                         pInstance->HandleGameObject(pInstance->GetData64(GO_SAURFANG_S_DOOR), true);
                     }
                     if (Creature* deathbringer = ObjectAccessor::GetCreature(*me, uiDeathbringerSaurfangGUID))
@@ -686,7 +686,7 @@ class npc_high_overlord_saurfang_icc : public CreatureScript
                 return false;
 
             InstanceScript* pInstance = pCreature->GetInstanceScript();
-            if (pInstance && pInstance->GetBossState(DATA_DEATHBRINGER_SAURFANG) != DONE)
+            if (pInstance && pInstance->GetBossState(DATA_SAURFANG_EVENT) != DONE)
             {
                 pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Let it begin...", 631, -ACTION_START_EVENT);
                 pPlayer->SEND_GOSSIP_MENU(DEFAULT_GOSSIP_MESSAGE, pCreature->GetGUID());
@@ -742,7 +742,7 @@ class npc_muradin_bronzebeard_icc : public CreatureScript
                     events.SetPhase(PHASE_INTRO_A);
                     if (pInstance)
                     {
-                        uiDeathbringerSaurfangGUID = pInstance->GetData64(DATA_DEATHBRINGER_SAURFANG);
+                        uiDeathbringerSaurfangGUID = pInstance->GetData64(DATA_SAURFANG_EVENT);
                         pInstance->HandleGameObject(pInstance->GetData64(GO_SAURFANG_S_DOOR), true);
                     }
                     if (Creature* deathbringer = ObjectAccessor::GetCreature(*me, uiDeathbringerSaurfangGUID))
@@ -816,7 +816,7 @@ class npc_muradin_bronzebeard_icc : public CreatureScript
                 return false;
 
             InstanceScript* pInstance = pCreature->GetInstanceScript();
-            if (pInstance && pInstance->GetBossState(DATA_DEATHBRINGER_SAURFANG) != DONE)
+            if (pInstance && pInstance->GetBossState(DATA_SAURFANG_EVENT) != DONE)
             {
                 pPlayer->ADD_GOSSIP_ITEM(0, "Let it begin...", 631, -ACTION_START_EVENT+1);
                 pPlayer->SEND_GOSSIP_MENU(DEFAULT_GOSSIP_MESSAGE, pCreature->GetGUID());

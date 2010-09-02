@@ -238,7 +238,7 @@ public:
         case 202220:
             uiLadyDeathwisperTransporter = pGo->GetGUID();
             break;
-        case 201825:
+        case GO_SAURFANG_S_DOOR:
             uiSaurfangDoor = pGo->GetGUID();
             if (auiEncounter[3] == NOT_STARTED)
                 HandleGameObject(NULL,false,pGo);
@@ -352,7 +352,7 @@ public:
             if (auiEncounter[0] == NOT_STARTED)
                 HandleGameObject(NULL,false,pGo);
             break;
-        case 202244:
+        case GO_SCOURGE_TRANSPORTER_SAURFANG:
             uiFlightWarTp = pGo->GetGUID();
             if (auiEncounter[2] == NOT_STARTED)
                 HandleGameObject(NULL,false,pGo);
