@@ -8,12 +8,12 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
 
@@ -25,7 +25,7 @@
 #include <mysql.h>
 
 #include "MySQLConnection.h"
-#include "MYSQLThreading.h"
+#include "MySQLThreading.h"
 #include "QueryResult.h"
 #include "SQLOperation.h"
 #include "PreparedStatement.h"
@@ -85,7 +85,7 @@ bool MySQLConnection::Open(const std::string& infoString)
     if (iter != tokens.end())
         password = *iter++;
     if (iter != tokens.end())
-       database = *iter++;
+        database = *iter++;
 
     mysql_options(mysqlInit, MYSQL_SET_CHARSET_NAME, "utf8");
     #ifdef _WIN32
@@ -191,6 +191,7 @@ bool MySQLConnection::Execute(PreparedStatement* stmt)
 
     uint32 index = stmt->m_index;
     MySQLPreparedStatement* m_mStmt = GetPreparedStatement(index);
+    ASSERT(m_mStmt);            // Can only be null if preparation failed, server side error or bad query
     m_mStmt->m_stmt = stmt;     // Cross reference them for debug output
     stmt->m_stmt = m_mStmt;
 
