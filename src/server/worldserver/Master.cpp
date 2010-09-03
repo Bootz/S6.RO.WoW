@@ -34,6 +34,7 @@
 #include "WorldSocketMgr.h"
 #include "Configuration/Config.h"
 #include "Database/DatabaseEnv.h"
+#include "Database/DatabaseWorkerPool.h"
 
 #include "CliRunnable.h"
 #include "Log.h"
@@ -136,9 +137,7 @@ public:
         {
             loopCounter = 0;
             sLog.outDetail ("Ping MySQL to keep connection alive");
-            WorldDatabase.Query ("SELECT 1 FROM command LIMIT 1");
             LoginDatabase.Query ("SELECT 1 FROM realmlist LIMIT 1");
-            CharacterDatabase.Query ("SELECT 1 FROM bugreport LIMIT 1");
         }
     }
 
@@ -165,6 +164,14 @@ public:
 
                 sLog.outString ("Starting Remote access listner on port %d on %s", raport, stringip.c_str ());
             }
+            bool needInit = true;
+            if ((LoginDatabase.GetBundleMask() & MYSQL_BUNDLE_RA))
+            {
+                LoginDatabase.Init_MySQL_Connection();
+                needInit = false;
+            }
+            if (needInit)
+                MySQL::Thread_Init();
         }
 
         // Socket Selet time is in microseconds , not miliseconds!!
@@ -178,13 +185,18 @@ public:
                 h.Select (0, socketSelecttime);
                 checkping ();
             }
+
+            if (!needInit)
+                LoginDatabase.End_MySQL_Connection();
+            else
+                MySQL::Thread_End();
         }
         else
         {
             while (!World::IsStopped())
             {
                 ACE_Based::Thread::Sleep(static_cast<unsigned long> (socketSelecttime / 1000));
-                checkping ();
+                // checkping (); -- What?
             }
         }
     }
@@ -442,6 +454,7 @@ bool Master::_StartDB()
     sLog.SetLogDB(false);
     std::string dbstring;
     uint8 num_threads;
+    int32 mask;
 
     dbstring = sConfig.GetStringDefault("WorldDatabaseInfo", "");
     if (dbstring.empty())
@@ -458,8 +471,10 @@ bool Master::_StartDB()
         return false;
     }
 
+    mask = sConfig.GetIntDefault("WorldDatabase.ThreadBundleMask", MYSQL_BUNDLE_ALL);    
+
     ///- Initialise the world database
-    if (!WorldDatabase.Open(dbstring, num_threads))
+    if (!WorldDatabase.Open(dbstring, num_threads, MySQLThreadBundle(mask)))
     {
         sLog.outError("Cannot connect to world database %s",dbstring.c_str());
         return false;
@@ -484,8 +499,10 @@ bool Master::_StartDB()
         return false;
     }
 
+    mask = sConfig.GetIntDefault("CharacterDatabase.ThreadBundleMask", MYSQL_BUNDLE_ALL);
+
     ///- Initialise the Character database
-    if (!CharacterDatabase.Open(dbstring, num_threads))
+    if (!CharacterDatabase.Open(dbstring, num_threads, MySQLThreadBundle(mask)))
     {
         sLog.outError("Cannot connect to Character database %s",dbstring.c_str());
         return false;
@@ -511,8 +528,10 @@ bool Master::_StartDB()
         return false;
     }
 
+    mask = sConfig.GetIntDefault("LoginDatabase.ThreadBundleMask", MYSQL_BUNDLE_ALL);    
+
     ///- Initialise the login database
-    if (!LoginDatabase.Open(dbstring, num_threads))
+    if (!LoginDatabase.Open(dbstring, num_threads, MySQLThreadBundle(mask)))
     {
         sLog.outError("Cannot connect to login database %s",dbstring.c_str());
         return false;
