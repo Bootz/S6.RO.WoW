@@ -118,9 +118,8 @@ public:
         boss_kologarnAI(Creature *pCreature) : BossAI(pCreature, BOSS_KOLOGARN), vehicle(me->GetVehicleKit()),
             left(false), right(false)
         {
-            assert(vehicle);
             pInstance = pCreature->GetInstanceScript();
-            me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+            me->SetFlying(true);
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_STUNNED);
             me->SetStandState(UNIT_STAND_STATE_SUBMERGED);
             me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);
@@ -136,8 +135,6 @@ public:
         bool emerged;
     
         Creature* EyeBeam[2];
-        Creature* RightArm;
-        Creature* LeftArm;
     
         uint32 RubbleCount;
 
@@ -149,7 +146,7 @@ public:
         void MoveInLineOfSight(Unit *who)
         {
             // Birth animation
-            if (!emerged && me->IsWithinDistInMap(who, 35.0f) && who->GetTypeId() == TYPEID_PLAYER)
+        if (!emerged && me->IsWithinDistInMap(who, 40.0f) && who->GetTypeId() == TYPEID_PLAYER)
             {
                 me->SetStandState(UNIT_STAND_STATE_STAND);
                 me->HandleEmoteCommand(EMOTE_ONESHOT_EMERGE);
@@ -200,9 +197,9 @@ public:
         for (uint32 n = 0; n < RAID_MODE(1, 3); ++n)
             GripTargetGUID[n] = NULL;
         
-            if (Creature *LeftArm = CAST_CRE(me->GetVehicleKit()->GetPassenger(0)))
+        if (Creature *LeftArm = CAST_CRE(vehicle->GetPassenger(0)))
                 LeftArm->AI()->DoZoneInCombat();
-            if (Creature *RightArm = CAST_CRE(me->GetVehicleKit()->GetPassenger(1)))
+        if (Creature *RightArm = CAST_CRE(vehicle->GetPassenger(1)))
                 RightArm->AI()->DoZoneInCombat();
         
             events.ScheduleEvent(EVENT_SMASH, 5000);
@@ -220,15 +217,15 @@ public:
     
         void Reset()
         {
-            if (RightArm = me->GetCreature(*me, pInstance->GetData64(DATA_RIGHT_ARM)))
+        if (Creature* LeftArm = CAST_CRE(vehicle->GetPassenger(0)))
+        {
+            LeftArm->Respawn(true);
+            LeftArm->EnterVehicle(vehicle, 0);
+        }        
+        if (Creature* RightArm = CAST_CRE(vehicle->GetPassenger(1)))
             {
                 RightArm->Respawn(true);
                 RightArm->EnterVehicle(vehicle, 1);
-            }
-            if (LeftArm = me->GetCreature(*me, pInstance->GetData64(DATA_LEFT_ARM)))
-            {
-                LeftArm->Respawn(true);
-                LeftArm->EnterVehicle(vehicle, 0);
             }
             _Reset();
         }
@@ -280,7 +277,7 @@ public:
                         
                             if (pInstance)
                     {
-                                if (Creature* RightArm = me->GetCreature(*me, pInstance->GetData64(DATA_RIGHT_ARM)))
+                        if (Creature* RightArm = CAST_CRE(vehicle->GetPassenger(1)))
                                     if (RightArm->AI())
                                         RightArm->AI()->DoAction(ACTION_GRIP);
                         }
@@ -312,26 +309,24 @@ public:
                     }
                     events.RescheduleEvent(EVENT_EYEBEAM, 20000);
                     break;
+            case EVENT_LEFT:
+                if (Creature* LeftArm = me->SummonCreature(NPC_LEFT_ARM, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ()))
+                {
+                    LeftArm->EnterVehicle(vehicle, 0);
+                    DoCast(me, SPELL_ARM_RESPAWN, true);
+                    me->MonsterTextEmote(EMOTE_LEFT, 0, true);
+                }
+                events.CancelEvent(EVENT_LEFT);
+                break;                
                 case EVENT_RIGHT:
-                    if (RightArm = me->GetCreature(*me, pInstance->GetData64(DATA_RIGHT_ARM)))
+                if (Creature* RightArm = me->SummonCreature(NPC_RIGHT_ARM, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ()))
                     {
-                        RightArm->Respawn(true);
                         RightArm->EnterVehicle(vehicle, 1);
                         DoCast(me, SPELL_ARM_RESPAWN, true);
                         me->MonsterTextEmote(EMOTE_RIGHT, 0, true);
                     }
                     events.CancelEvent(EVENT_RIGHT);
                     break;
-                case EVENT_LEFT:
-                    if (LeftArm = me->GetCreature(*me, pInstance->GetData64(DATA_LEFT_ARM)))
-                    {
-                        LeftArm->Respawn(true);
-                        LeftArm->EnterVehicle(vehicle, 0);
-                        DoCast(me, SPELL_ARM_RESPAWN, true);
-                        me->MonsterTextEmote(EMOTE_LEFT, 0, true);
-                    }
-                    events.CancelEvent(EVENT_LEFT);
-                    break;            
             }
 
             DoMeleeAttackIfReady();
@@ -341,17 +336,17 @@ public:
         {
             switch (action)
             {
+            case ACTION_RESPAWN_LEFT:
+                DoScriptText(SAY_LEFT_ARM_GONE, me);
+                me->DealDamage(me, ARM_DEAD_DAMAGE); // decreases Kologarn's health by 15%
+                ++RubbleCount;
+                events.ScheduleEvent(EVENT_LEFT, 30000);
+                break;
                 case ACTION_RESPAWN_RIGHT:
                     DoScriptText(SAY_RIGHT_ARM_GONE, me);
                     me->DealDamage(me, ARM_DEAD_DAMAGE); // decreases Kologarn's health by 15%
                     ++RubbleCount;
                     events.ScheduleEvent(EVENT_RIGHT, 30000);
-                    break;
-                case ACTION_RESPAWN_LEFT:
-                    DoScriptText(SAY_LEFT_ARM_GONE, me);
-                    me->DealDamage(me, ARM_DEAD_DAMAGE); // decreases Kologarn's health by 15%
-                    ++RubbleCount;
-                    events.ScheduleEvent(EVENT_LEFT, 30000);
                     break;
             }
         }

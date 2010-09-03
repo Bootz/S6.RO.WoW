@@ -18,7 +18,7 @@
 /* ScriptData
 SDName: Hodir
 SDAuthor: PrinceCreed
-SD%Complete: 95
+SD%Complete: 100
 SDComments:
 EndScriptData */
 
@@ -32,7 +32,7 @@ enum Spells
     SPELL_FROZEN_BLOWS_25                     = 63512,
     SPELL_FLASH_FREEZE                        = 61968,
     SPELL_FLASH_FREEZE_VISUAL                 = 62148,
-    SPELL_BITING_COLD                         = 48094, //62038
+    SPELL_BITING_COLD                         = 62038,
     SPELL_BITING_COLD_TRIGGERED               = 48095,
     SPELL_FREEZE                              = 62469,
     SPELL_ICICLE                              = 62234,
@@ -128,6 +128,26 @@ enum HodirChests
     CACHE_OF_WINTER_25                          = 194308
 };
 
+struct SummonLocation
+{
+    float x,y,z,o;
+    uint32 entry;
+};
+
+SummonLocation addLocations[]=
+{
+    {1983.75, -243.36, 432.767, 1.57, 32897}, // Priest 1
+    {1999.90, -230.49, 432.767, 1.57, 33325}, // Druid 1
+    {2010.06, -243.45, 432.767, 1.57, 33328}, // Shaman 1
+    {2021.12, -236.65, 432.767, 1.57, 32893}, // Mage 1
+    {2028.10, -244.66, 432.767, 1.57, 33326}, // Priest 2
+    {2014.18, -232.80, 432.767, 1.57, 32901}, // Druid 2
+    {1992.90, -237.54, 432.767, 1.57, 32900}, // Shaman 2
+    {1976.60, -233.53, 432.767, 1.57, 33327}  // Mage 2
+};
+#define NORMAL_COUNT 4
+#define RAID_COUNT 8
+
 class boss_hodir : public CreatureScript
 {
 public:
@@ -139,7 +159,8 @@ struct boss_hodir_AI : public BossAI
     {
         pInstance = pCreature->GetInstanceScript();
         me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);
-        me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true); // Death Grip jump effect
+        me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true);  // Death Grip
+        me->ApplySpellImmune(0, IMMUNITY_ID, 65280, true);  // Singed
     }
     
     InstanceScript* pInstance;
@@ -156,56 +177,13 @@ struct boss_hodir_AI : public BossAI
         me->SetReactState(REACT_PASSIVE);
         
         // Spawn NPC Helpers
-        if (Helper[0] = me->SummonCreature(NPC_FIELD_MEDIC_PENNY, 1983.75, -243.36, 432.767, 1.57, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 3000))
-            if (Creature *pIceBlock = me->SummonCreature(NPC_FLASH_FREEZE, Helper[0]->GetPositionX(), Helper[0]->GetPositionY(), Helper[0]->GetPositionZ(), 0, TEMPSUMMON_CORPSE_DESPAWN))
-            {
-                pIceBlock->CastSpell(Helper[0], SPELL_BLOCK_OF_ICE, true);
-                Helper[0]->AddThreat(me, 100);
-            }
-        if (Helper[1] = me->SummonCreature(NPC_EIVI_NIGHTFEATHER, 1999.90, -230.49, 432.767, 1.57, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 3000))
-            if (Creature *pIceBlock = me->SummonCreature(NPC_FLASH_FREEZE, Helper[1]->GetPositionX(), Helper[1]->GetPositionY(), Helper[1]->GetPositionZ(), 0, TEMPSUMMON_CORPSE_DESPAWN))
-            {
-                pIceBlock->CastSpell(Helper[1], SPELL_BLOCK_OF_ICE, true);
-                Helper[1]->AddThreat(me, 100);
-            }
-        if (Helper[2] = me->SummonCreature(NPC_ELEMENTALIST_MAHFUUN, 2010.06, -243.45, 432.767, 1.57, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 3000))
-            if (Creature *pIceBlock = me->SummonCreature(NPC_FLASH_FREEZE, Helper[2]->GetPositionX(), Helper[2]->GetPositionY(), Helper[2]->GetPositionZ(), 0, TEMPSUMMON_CORPSE_DESPAWN))
-            {
-                pIceBlock->CastSpell(Helper[2], SPELL_BLOCK_OF_ICE, true);
-                Helper[2]->AddThreat(me, 100);
-            }
-        if (Helper[3] = me->SummonCreature(NPC_MISSY_FLAMECUFFS, 2021.12, -236.65, 432.767, 1.57, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 3000))
-            if (Creature *pIceBlock = me->SummonCreature(NPC_FLASH_FREEZE, Helper[3]->GetPositionX(), Helper[3]->GetPositionY(), Helper[3]->GetPositionZ(), 0, TEMPSUMMON_CORPSE_DESPAWN))
-            {
-                pIceBlock->CastSpell(Helper[3], SPELL_BLOCK_OF_ICE, true);
-                Helper[3]->AddThreat(me, 100);
-            }
-                
-        if (getDifficulty() == RAID_DIFFICULTY_25MAN_NORMAL)
+        for (uint32 i = 0; i < RAID_MODE(NORMAL_COUNT, RAID_COUNT); i++)
         {
-            if (Helper[4] = me->SummonCreature(NPC_FIELD_MEDIC_JESSY, 1976.60, -233.53, 432.767, 1.57, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 3000))
-                if (Creature *pIceBlock = me->SummonCreature(NPC_FLASH_FREEZE, Helper[4]->GetPositionX(), Helper[4]->GetPositionY(), Helper[4]->GetPositionZ(), 0, TEMPSUMMON_CORPSE_DESPAWN))
+            if (Creature* pHelper = me->SummonCreature(addLocations[i].entry,addLocations[i].x,addLocations[i].y,addLocations[i].z,addLocations[i].o))
+                if (Creature *pIceBlock = me->SummonCreature(NPC_FLASH_FREEZE,addLocations[i].x,addLocations[i].y,addLocations[i].z,addLocations[i].o))
                 {
-                    pIceBlock->CastSpell(Helper[4], SPELL_BLOCK_OF_ICE, true);
-                    Helper[4]->AddThreat(me, 100);
-                }            
-            if (Helper[5] = me->SummonCreature(NPC_ELLIE_NIGHTFEATHER, 1992.90, -237.54, 432.767, 1.57, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 3000))
-                if (Creature *pIceBlock = me->SummonCreature(NPC_FLASH_FREEZE, Helper[5]->GetPositionX(), Helper[5]->GetPositionY(), Helper[5]->GetPositionZ(), 0, TEMPSUMMON_CORPSE_DESPAWN))
-                {
-                    pIceBlock->CastSpell(Helper[5], SPELL_BLOCK_OF_ICE, true);
-                    Helper[5]->AddThreat(me, 100);
-                }            
-            if (Helper[6] = me->SummonCreature(NPC_ELEMENTALIST_AVUUN, 2014.18, -232.80, 432.767, 1.57, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 3000))
-                if (Creature *pIceBlock = me->SummonCreature(NPC_FLASH_FREEZE, Helper[6]->GetPositionX(), Helper[6]->GetPositionY(), Helper[6]->GetPositionZ(), 0, TEMPSUMMON_CORPSE_DESPAWN))
-                {
-                    pIceBlock->CastSpell(Helper[6], SPELL_BLOCK_OF_ICE, true);
-                    Helper[6]->AddThreat(me, 100);
-                }            
-            if (Helper[7] = me->SummonCreature(NPC_SISSY_FLAMECUFFS, 2028.10, -244.66, 432.767, 1.57, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 3000))
-                if (Creature *pIceBlock = me->SummonCreature(NPC_FLASH_FREEZE, Helper[7]->GetPositionX(), Helper[7]->GetPositionY(), Helper[7]->GetPositionZ(), 0, TEMPSUMMON_CORPSE_DESPAWN))
-                {
-                    pIceBlock->CastSpell(Helper[7], SPELL_BLOCK_OF_ICE, true);
-                    Helper[7]->AddThreat(me, 100);
+                    pIceBlock->CastSpell(pHelper, SPELL_BLOCK_OF_ICE, true);
+                    pHelper->AddThreat(me, 100);
                 }            
         }
     }
@@ -215,8 +193,7 @@ struct boss_hodir_AI : public BossAI
         _EnterCombat();
         DoScriptText(SAY_AGGRO, me);
         me->SetReactState(REACT_AGGRESSIVE);
-        DoZoneInCombat();
-        DoCast(me, SPELL_BITING_COLD);
+        DoCast(me, SPELL_BITING_COLD, true);
         events.ScheduleEvent(EVENT_ICICLE, 2000);
         events.ScheduleEvent(EVENT_FREEZE, 25000);
         events.ScheduleEvent(EVENT_BLOWS, urand(60000, 65000));
@@ -356,7 +333,6 @@ struct boss_hodir_AI : public BossAI
                 {
                     DoCast(pTarget, SPELL_FROZEN_KILL);
                     continue;
-                    
                 }
                else
                 {
@@ -453,6 +429,42 @@ public:
     }
 
 };
+class mob_snowpacked_icicle : public CreatureScript
+{
+public:
+    mob_snowpacked_icicle() : CreatureScript("mob_snowpacked_icicle") { }
+struct mob_snowpacked_icicleAI : public ScriptedAI
+{
+    mob_snowpacked_icicleAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE | UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_PACIFIED);
+        me->SetReactState(REACT_PASSIVE);
+    }
+    
+    int32 DespawnTimer;
+    
+    void UpdateAI(const uint32 diff)
+    {
+        if (DespawnTimer <= diff)
+        {
+            if(GameObject *pSnowdrift = me->FindNearestGameObject(194173,2))
+                pSnowdrift->Delete();
+            me->ForcedDespawn();
+        }
+        else DespawnTimer -= diff;
+    }
+    
+    void Reset()
+    {
+        DespawnTimer = 12000;
+    }
+};
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_snowpacked_icicleAI(pCreature);
+    }
+};
+
 
 
 class mob_hodir_priest : public CreatureScript
@@ -470,10 +482,12 @@ public:
 
         InstanceScript* pInstance;
         int32 HealTimer;
+    int32 DispelTimer;
 
         void Reset()
         {
             HealTimer = urand(4000, 8000);
+        DispelTimer = urand(20000, 30000);
         }
     
         void AttackStart(Unit *who)
@@ -483,18 +497,40 @@ public:
 
         void UpdateAI(const uint32 uiDiff)
         {
-            if (!UpdateVictim())
+        if (!UpdateVictim() || me->HasAura(SPELL_BLOCK_OF_ICE))
                 return;
             
             if (HealthBelowPct(35))
-                DoCastAOE(SPELL_GREATER_HEAL);
+            DoCastAOE(SPELL_GREATER_HEAL, true);
 
             if (HealTimer <= uiDiff)
             {
-                DoCastAOE(SPELL_GREATER_HEAL);
+            DoCastAOE(SPELL_GREATER_HEAL, true);
                 HealTimer = urand(12000, 14000);
             }
             else HealTimer -= uiDiff;
+
+        if (DispelTimer < uiDiff)
+        {
+            std::list<Player*> players;
+            Trinity::AnyPlayerInObjectRangeCheck checker(me, 30);
+            Trinity::PlayerListSearcher<Trinity::AnyPlayerInObjectRangeCheck> searcher(me, players, checker);
+            me->VisitNearbyWorldObject(30, searcher);
+            if (!players.empty())
+            {
+                for (std::list<Player*>::iterator iter = players.begin(); iter != players.end(); ++iter)
+                {
+                    if((*iter)->HasAura(SPELL_FREEZE))
+                    {
+                        DoCast((*iter),SPELL_DISPEL_MAGIC, true);
+                        DispelTimer = urand(25000,30000);
+                        return;
+                    }
+                }
+            }
+            DispelTimer = 5000;
+        }
+        else DispelTimer -= uiDiff;
 
             DoSpellAttackIfReady(SPELL_SMITE);
         }
@@ -536,13 +572,21 @@ public:
 
         void UpdateAI(const uint32 uiDiff)
         {
-            if (!UpdateVictim())
+        if (!UpdateVictim() || me->HasAura(SPELL_BLOCK_OF_ICE))
                 return;
             
             if (StormTimer <= uiDiff)
             {
-                DoCast(me, RAID_MODE(SPELL_STORM_CLOUD_10, SPELL_STORM_CLOUD_25));
-                StormTimer = urand(25000, 30000);
+            std::list<Player*> players;
+            Trinity::AnyPlayerInObjectRangeCheck checker(me, 30);
+            Trinity::PlayerListSearcher<Trinity::AnyPlayerInObjectRangeCheck> searcher(me, players, checker);
+            me->VisitNearbyWorldObject(30, searcher);
+            if (!players.empty())
+            {
+                std::list<Player*>::iterator iter = players.begin(); 
+                DoCast((*iter), RAID_MODE(SPELL_STORM_CLOUD_10, SPELL_STORM_CLOUD_25), true);
+            }
+            StormTimer = urand(15000, 20000);
             }
             else StormTimer -= uiDiff;
 
@@ -586,13 +630,13 @@ public:
 
         void UpdateAI(const uint32 uiDiff)
         {
-            if (!UpdateVictim())
+        if (!UpdateVictim() || me->HasAura(SPELL_BLOCK_OF_ICE))
                 return;
             
             if (StarlightTimer <= uiDiff)
             {
-                DoCast(me, SPELL_STARLIGHT);
-                StarlightTimer = urand(25000, 35000);
+            DoCast(me, SPELL_STARLIGHT, true);
+            StarlightTimer = urand(20000, 25000);
             }
             else StarlightTimer -= uiDiff;
 
@@ -623,10 +667,12 @@ public:
 
         InstanceScript* pInstance;
         int32 FireTimer;
+    int32 MeltIceTimer;
 
         void Reset()
         {
-            FireTimer = urand(25000, 30000);
+        FireTimer = urand(15000, 20000);
+        MeltIceTimer = 5000;
         }
     
         void AttackStart(Unit *who)
@@ -636,15 +682,26 @@ public:
 
         void UpdateAI(const uint32 uiDiff)
         {
-            if (!UpdateVictim())
+        if (!UpdateVictim() || me->HasAura(SPELL_BLOCK_OF_ICE))
                 return;
             
             if (FireTimer <= uiDiff)
             {
-                DoCast(me, SPELL_CONJURE_FIRE);
-                FireTimer = urand(25000, 35000);
+            DoCast(me, SPELL_CONJURE_FIRE, true);
+            FireTimer = urand(25000, 30000);
             }
             else FireTimer -= uiDiff;
+
+        if (MeltIceTimer < uiDiff)
+        {
+            if (Creature *pShard = me->FindNearestCreature(NPC_FLASH_FREEZE,50,true))
+            {
+                DoCast(pShard, SPELL_MELT_ICE, true);
+                MeltIceTimer = urand(5000,10000);
+            }
+            MeltIceTimer = 5000;
+        }
+        else MeltIceTimer -= uiDiff;
 
             DoSpellAttackIfReady(SPELL_FIREBALL);
         }
@@ -668,11 +725,23 @@ public:
         toasty_fireAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISABLE_MOVE | UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_PACIFIED);
+        me->SetReactState(REACT_PASSIVE);
+    }
+    
+    void SpellHit(Unit* caster, const SpellEntry *spell) 
+    {
+        // Toasty fire can be extinguished by falling ice or Flash Freeze
+        if(spell->Id == SPELL_BLOCK_OF_ICE || spell->Id == 62457 || spell->Id == 65370)
+        {
+            if(GameObject *pFire = me->FindNearestGameObject(194300,2))
+                pFire->Delete();
+            me->ForcedDespawn();
+        }
         }
     
         void Reset()
         {
-            DoCast(me, SPELL_SINGED);
+        DoCast(me, SPELL_SINGED, true);
         }
     };
 
@@ -687,7 +756,8 @@ void AddSC_boss_hodir()
 {
     new boss_hodir;
     new mob_icicle;
-    new mob_icicle_snowdrift;
+    new mob_icicle_snowdrift;  
+	new mob_snowpacked_icicle;
     new mob_hodir_priest;
     new mob_hodir_shaman;
     new mob_hodir_druid;

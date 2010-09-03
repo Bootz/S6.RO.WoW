@@ -215,7 +215,7 @@ public:
     {        
        if(EventTimer < diff)
        {
-           m_auiEncounter[4] == FAIL;
+           m_auiEncounter[4] = FAIL;
            DoUpdateWorldState(WORLD_STATE_TIMER, 0);             
        }else EventTimer -= diff;
 

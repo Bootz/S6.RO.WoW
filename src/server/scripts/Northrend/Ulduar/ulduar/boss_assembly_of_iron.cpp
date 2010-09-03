@@ -98,9 +98,6 @@ enum Actions
 #define ACHIEVEMENT_CHOOSE_MOLGEIM            RAID_MODE(2939, 2942)
 #define ACHIEVEMENT_CHOOSE_BRUNDIR            RAID_MODE(2940, 2943)
 
-//if (me->GetPower(POWER_MANA) == me->GetMaxPower(POWER_MANA)) Useful for this Achievement
-//    pInstance->DoCompleteAchievement(ACHIEVEMENT_CANT_WHILE_STUNNED);
-
 #define EMOTE_OVERLOAD    "Stormcaller Brundir begins to Overload!"
 
 enum Yells
@@ -132,7 +129,7 @@ enum Yells
     SAY_BRUNDIR_BERSERK                         = -1603047,
 };
 
-bool IsEncounterComplete(InstanceScript* pInstance, Creature* me)
+bool IsEncounterComplete(ScriptedInstance* pInstance, Creature* me)
 {
    if (!pInstance || !me)
         return false;
@@ -157,7 +154,7 @@ bool IsEncounterComplete(InstanceScript* pInstance, Creature* me)
 }
 
 // Avoid killing bosses one to one
-void CallBosses(InstanceScript *pInstance, uint32 caller, Unit *who) {
+void CallBosses(ScriptedInstance *pInstance, uint32 caller, Unit *who) {
     
     // Respawn if dead
     if(Creature* Steelbreaker = Unit::GetCreature(*who, pInstance ? pInstance->GetData64(DATA_STEELBREAKER) : 0))
@@ -197,18 +194,13 @@ void CallBosses(InstanceScript *pInstance, uint32 caller, Unit *who) {
     }
 }
 
-class boss_steelbreaker : public CreatureScript
-{
-public:
-    boss_steelbreaker() : CreatureScript("boss_steelbreaker") { }
-
     struct boss_steelbreakerAI : public ScriptedAI
     {
         boss_steelbreakerAI(Creature *c) : ScriptedAI(c)
         {
             pInstance = c->GetInstanceScript();
             me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);
-            me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true); // Death Grip jump effect
+        me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true);  // Death Grip
         }
 
         void Reset()
@@ -357,7 +349,7 @@ public:
         {
             pInstance = c->GetInstanceScript();
             me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);
-            me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true); // Death Grip jump effect
+        me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true);  // Death Grip
         }
 
         void Reset()
@@ -532,7 +524,7 @@ public:
             pInstance = c->GetInstanceScript();
             me->SetReactState(REACT_PASSIVE);
             me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);
-            me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true); // Death Grip jump effect
+        me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true);  // Death Grip
         }
 
         void Reset()
@@ -628,12 +620,12 @@ public:
                     case EVENT_OVERLOAD:
                         me->MonsterTextEmote(EMOTE_OVERLOAD, 0, true);
                         DoScriptText(SAY_BRUNDIR_SPECIAL, me);
-                        me->GetMotionMaster()->Clear(true);
+                    me->GetMotionMaster()->Initialize();
                         DoCast(SPELL_OVERLOAD);
                         events.ScheduleEvent(EVENT_OVERLOAD, urand(60000, 120000));
                     break;
                     case EVENT_LIGHTNING_WHIRL:
-                        me->GetMotionMaster()->Clear(true);
+                    me->GetMotionMaster()->Initialize();
                         DoCast(SPELL_LIGHTNING_WHIRL);
                         events.ScheduleEvent(EVENT_LIGHTNING_WHIRL, urand(15000, 20000));
                     break;
@@ -643,7 +635,7 @@ public:
                         me->AttackStop();
                         me->AddUnitMovementFlag(MOVEMENTFLAG_LEVITATING);
                         DoCast(SPELL_LIGHTNING_TENDRILS_SELF_VISUAL);
-                        me->GetMotionMaster()->Clear(true);
+                    me->GetMotionMaster()->Initialize();
                         me->GetMotionMaster()->MovePoint(0, me->GetPositionX(), me->GetPositionY(), 440);
                         events.DelayEvents(35000);
                         events.ScheduleEvent(EVENT_FLIGHT, 2500);
@@ -656,14 +648,14 @@ public:
                         events.ScheduleEvent(EVENT_FLIGHT, 6000);
                     break;
                     case EVENT_ENDFLIGHT:
-                        me->GetMotionMaster()->Clear(true);
+                    me->GetMotionMaster()->Initialize();
                         me->GetMotionMaster()->MovePoint(0, 1586.920166, 119.848984, 440);
                         events.CancelEvent(EVENT_FLIGHT);
                         events.CancelEvent(EVENT_ENDFLIGHT);
                         events.ScheduleEvent(EVENT_LAND, 4000);
                     break;
                     case EVENT_LAND:
-                        me->GetMotionMaster()->Clear(true);
+                    me->GetMotionMaster()->Initialize();
                         me->GetMotionMaster()->MovePoint(0, me->GetPositionX(), me->GetPositionY(), 427.28);
                         events.CancelEvent(EVENT_LAND);
                         events.ScheduleEvent(EVENT_GROUND, 2500);

@@ -73,8 +73,6 @@ public:
         uint64 uiMolgeim;
         uint64 uiBrundir;
         uint64 uiKologarn;
-        uint64 uiRightArm;
-        uint64 uiLeftArm;
         uint64 uiKologarnBridge;
         uint64 uiAuriaya;
         uint64 uiBrightleaf;
@@ -149,8 +147,6 @@ public:
                 case 32927: uiMolgeim = pCreature->GetGUID(); return;
                 case 32857: uiBrundir = pCreature->GetGUID(); return;
                 case 32930: uiKologarn = pCreature->GetGUID(); return;
-                case 32934: uiRightArm = pCreature->GetGUID(); return;
-                case 32933: uiLeftArm = pCreature->GetGUID(); return;
                 case 33515: uiAuriaya = pCreature->GetGUID(); return;
                 case 32915: uiBrightleaf = pCreature->GetGUID(); return;
                 case 32913: uiIronbranch = pCreature->GetGUID(); return;
@@ -246,10 +242,6 @@ public:
                     return uiBrundir;
                 case DATA_KOLOGARN:
                     return uiKologarn;
-                case DATA_RIGHT_ARM:
-                    return uiRightArm;
-                case DATA_LEFT_ARM:
-                    return uiLeftArm;
                 case DATA_AURIAYA:
                     return uiAuriaya;
                 case DATA_BRIGHTLEAF:

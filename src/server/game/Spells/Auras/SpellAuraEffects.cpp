@@ -1186,7 +1186,21 @@ void AuraEffect::UpdatePeriodic(Unit * caster)
                                     newAmount = -100;
                                 slow->ChangeAmount(newAmount);
                             }
-                            break;
+                            break; 
+                        case 62038: // Biting Cold
+                            UnitList targetList;
+                            GetTargetList(targetList);
+                            for (UnitList::iterator target = targetList.begin(); target != targetList.end(); ++target)
+                            {
+                                if ((*target)->GetTypeId() != TYPEID_PLAYER)
+                                    break;
+                                    
+                                if ((*target)->ToPlayer()->isMoving())
+                                    m_amount = 4; // DoT stacks when the target remains stationary for 4 seconds
+                                else
+                                    --m_amount;
+                            }					
+                            break;									
                         default:
                             break;
                     }
@@ -1991,6 +2005,57 @@ void AuraEffect::PeriodicDummyTick(Unit * target, Unit * caster) const
                 // Heal
                 caster->CastCustomSpell(caster, 66125, &lifeLeeched, 0, 0, false);
                 break;
+            case 63276: // Mark of the Faceless
+                if (caster) {
+                    uint32 count = 0;
+                    Position *pos = target;
+                    std::list<Unit*> unitList;
+                    Trinity::SpellNotifierCreatureAndPlayer notifier(caster, unitList, 15, PUSH_DST_CENTER, SPELL_TARGETS_ENEMY, pos, 0);
+                    caster->GetMap()->VisitAll(pos->m_positionX, pos->m_positionY, 15, notifier);
+                    int32 bp = GetAmount();
+                    for (std::list<Unit*>::iterator itr = unitList.begin(); itr != unitList.end(); ++itr)
+                    {
+                        if (*itr == target)
+                            continue;
+                        caster->CastCustomSpell(*itr, 63278, NULL, &bp, NULL, true, NULL);
+                        count++;
+                    }
+                    if (count > 0 && caster->isAlive()) // prevent healing after death
+                        caster->DealHeal(caster, bp * 20, GetSpellProto());
+                }
+                break;
+            case 67039: // argent squire mount
+                if (caster && caster->GetOwner())
+                {
+                    if (caster->GetOwner()->IsMounted())
+                    {
+                        if (!caster->IsMounted())
+                            caster->Mount(29736);
+                    }
+                    else caster->Unmount();
+                }
+                break;
+            case 63382: // Rapid Burst
+                {
+                    caster->CastSpell(target, (target->GetMap()->IsHeroic() ? (urand(0,1) ? 64531 : 64532) : (urand(0,1) ? 63387 : 64019)), true);
+                }
+                break;
+            case 62038: // Biting Cold
+                if (target->GetTypeId() == TYPEID_PLAYER)
+                {
+                    if (GetAmount() < 1 || !target->GetAura(62039))
+                        target->AddAura(62039, target);
+                    else if (target->GetAura(62039)->GetStackAmount() > 1 && target->isMoving())
+                        target->RemoveAuraFromStack(62039);
+                }
+                break;
+            case 62039: // Biting Cold damage
+            {
+                uint8 stackAmount = target->GetAura(62039)->GetStackAmount();
+                int32 damage = (int32)(200 * pow(2.0f,stackAmount));
+                target->CastCustomSpell(target,62188,&damage,0,0,true);
+                break;
+            }
         }
         break;
         case SPELLFAMILY_MAGE:

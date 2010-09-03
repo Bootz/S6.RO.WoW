@@ -1797,3 +1797,11 @@ INSERT INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `modelid`
 
 DELETE FROM `creature` WHERE `guid`='94390';
 INSERT INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `modelid`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `spawndist`, `currentwaypoint`, `curhealth`, `curmana`, `DeathState`, `MovementType`) VALUES ('94390','32857','603','3','65535','0','0','1596.37','134.229','427.271','5.65217','604800','0','0','2998175','212900','0','0');
+
+UPDATE `creature_template` SET `difficulty_entry_1` = 33909, `unit_flags` = 0 WHERE `entry` = 32930;
+UPDATE `creature_template` SET `ScriptName` = 'mob_snowpacked_icicle' WHERE `entry` = 33174;
+-- toasty fire immunities
+DELETE FROM spell_linked_spell WHERE spell_trigger=65280;
+INSERT INTO spell_linked_spell VALUES
+(65280,-62469,2,'Toasty fire - Freeze imunity'),
+(65280,-62039,2,'Toasty fire - Biting cold imunity');
