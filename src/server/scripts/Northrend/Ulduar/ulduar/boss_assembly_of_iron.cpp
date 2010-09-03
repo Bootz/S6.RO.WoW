@@ -129,7 +129,7 @@ enum Yells
     SAY_BRUNDIR_BERSERK                         = -1603047,
 };
 
-bool IsEncounterComplete(ScriptedInstance* pInstance, Creature* me)
+bool IsEncounterComplete(InstanceScript* pInstance, Creature* me)
 {
    if (!pInstance || !me)
         return false;
@@ -154,7 +154,7 @@ bool IsEncounterComplete(ScriptedInstance* pInstance, Creature* me)
 }
 
 // Avoid killing bosses one to one
-void CallBosses(ScriptedInstance *pInstance, uint32 caller, Unit *who) {
+void CallBosses(InstanceScript *pInstance, uint32 caller, Unit *who) {
     
     // Respawn if dead
     if(Creature* Steelbreaker = Unit::GetCreature(*who, pInstance ? pInstance->GetData64(DATA_STEELBREAKER) : 0))
@@ -193,6 +193,11 @@ void CallBosses(ScriptedInstance *pInstance, uint32 caller, Unit *who) {
         }
     }
 }
+
+class boss_steelbreaker : public CreatureScript
+{
+public:
+    boss_steelbreaker() : CreatureScript("boss_steelbreaker") { }
 
     struct boss_steelbreakerAI : public ScriptedAI
     {
