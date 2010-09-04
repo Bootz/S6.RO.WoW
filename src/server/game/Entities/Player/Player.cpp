@@ -19000,6 +19000,12 @@ void Player::RemoveSpellMods(Spell * spell)
             spell->m_appliedMods.erase(aura);
             if (aura->DropCharge())
                 itr = auraList.begin();
+            //Fingers of Frost hack so the visible dummy aura is synched with the real aura
+            else if (aura->GetSpellProto()->SpellFamilyName == SPELLFAMILY_MAGE)
+            {
+                if (Aura * aur = GetAura(74396))
+                    aur->ModStackAmount(-1);
+            }
         }
     }
 

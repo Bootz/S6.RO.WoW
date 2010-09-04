@@ -5640,6 +5640,13 @@ DELETE FROM `spell_proc_event` WHERE `entry` IN ('63280');
 INSERT INTO `spell_proc_event` (`entry`, `SchoolMask`, `SpellFamilyName`, `SpellFamilyMask0`, `SpellFamilyMask1`, `SpellFamilyMask2`, `procFlags`, `procEx`, `ppmRate`, `CustomChance`, `Cooldown`) VALUES
 ('63280','0','11','536870912','0','0','0','0','0','0','0');
 
+-- Fingers of Frost
+
+DELETE FROM `spell_linked_spell` WHERE `spell_trigger` IN ('44544', '-44544');
+INSERT INTO `spell_linked_spell` (`spell_trigger`, `spell_effect`, `type`, `comment`) VALUES
+('44544','74396','0','Fingers of Frost (ADD)'),
+('-44544','-74396','0','Fingers of Frost (REMOVE)');
+
 
 -- -------------------------------- --
 -- SCRIPT NAMES OF ALL SINGLE FILES --

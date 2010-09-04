@@ -1,4 +1,4 @@
-/*
+caster->CastCustomSpell(28836, SPELLVALUE_BASE_POINT0, damage, target);/*
  * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
  *
  * Copyright (C) 2008-2010 Trinity <http://www.trinitycore.org/>
@@ -5898,10 +5898,14 @@ void AuraEffect::HandleAuraDummy(AuraApplication const * aurApp, uint8 mode, boo
                     }
                     break;
 
-				case 71563: // Deadly Precision
-						for (int i = 0; i < 5; ++i)
-							caster->CastSpell(caster, 71564, true, NULL, this);
-						break;
+                case 71563: // Deadly Precision
+                    for (int i = 0; i < 5; ++i)
+                        caster->CastSpell(caster, 71564, true, NULL, this);
+                    break;
+                case 74396: // Fingers of Frost
+                    if (SpellEntry const * spell = sSpellStore.LookupEntry(44544))
+                        GetBase()->SetStackAmount(spell->procCharges);
+                    break;
             }
         }
         // AT REMOVE
