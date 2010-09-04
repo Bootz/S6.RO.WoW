@@ -3828,7 +3828,7 @@ INSERT INTO `gameobject_loot_template` VALUES
 (195047, 45265, 20, 1, 3, 1, 1);
 
 -- ----------------------------------------------
--- DELETING OLD AND WORNGs REFERENCES FROM YTDB
+-- DELETING OLD AND WRONG REFERENCES FROM YTDB
 -- ----------------------------------------------
 DELETE FROM `reference_loot_template` WHERE `entry` IN (45636,45658);
 
@@ -4024,20 +4024,8 @@ DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=500208);
 INSERT INTO `creature_ai_scripts` VALUES 
 (50020801, 500208, 0, 0, 100, 7, 10000, 10000, 10000, 15000, 11, 17012, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Devour Magic');
 */
--- Fix a procedure
-DROP PROCEDURE IF EXISTS `sp_get_go_lootid`;
 
--- Temporarily change the delimiter
-DELIMITER ||
-CREATE PROCEDURE `sp_get_go_lootid`(IN gobjID MEDIUMINT(6),OUT gobjLootID INT(10))
-BEGIN
-CALL `sp_error_entry`('GO',gobjID);
-SELECT `data1` FROM `gameobject_template` WHERE `entry`=gobjID AND `type`=3 INTO gobjLootID;
-END||
-
--- Restore delimiter
-DELIMITER ;
-
+-- info for tc 9607 Deathbringer Saurfang  
 -- Deathbringer Saurfang
 SET @NPCSaurfang10N := 37813;
 SET @NPCSaurfang25N := 38402;
@@ -4124,23 +4112,10 @@ INSERT INTO `creature_template` (`entry`,`difficulty_entry_1`,`difficulty_entry_
 (@NPCOverlord10H,0,0,0,0,0,30583,0,0,0, 'High Overlord Saurfang (2)', '', '',0,83,83,2,1735,1735,1,1,1.14286,1,3,509,683,0,805,35,0,0,1,33600,8,0,0,0,0,0,371,535,135,7,12,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,599,0,0, '',0,3,300,1,1,0,0,0,0,0,0,0,164,1,0,0,0, '',1),
 (@NPCOverlord25H,0,0,0,0,0,30583,0,0,0, 'High Overlord Saurfang (3)', '', '',0,83,83,2,1735,1735,1,1,1.14286,1,3,509,683,0,805,35,0,0,1,33600,8,0,0,0,0,0,371,535,135,7,12,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,599,0,0, '',0,3,300,1,1,0,0,0,0,0,0,0,164,1,0,0,0, '',1);
 
--- later I will add the right procedure not to have error in this querie (maybe not necessay but I will check)
-/*
--- Insert temporary loot (emblems only) to stop startup errors, rest comes with UP34
--- Setup variables
-SET @emblem := 49426; -- Emblem of Frost
-CALL `sp_get_go_lootid`(@DeathbringerCache10N, @Saurfang10N);
-CALL `sp_get_go_lootid`(@DeathbringerCache25N, @Saurfang25N);
-CALL `sp_get_go_lootid`(@DeathbringerCache10H, @Saurfang10H);
-CALL `sp_get_go_lootid`(@DeathbringerCache25H, @Saurfang25H);
--- Delete previous loot if exists (only emblems)
-DELETE FROM `gameobject_loot_template` WHERE `entry` IN (@Saurfang10N,@Saurfang25N,@Saurfang10H,@Saurfang25H) AND `item`=@emblem;
-INSERT INTO `gameobject_loot_template` (`entry`,`item`,`ChanceOrQuestChance`,`groupid`,`mincountOrRef`,`maxcount`) VALUES
-(@Saurfang10N,@emblem,100,0,2,2), -- Deathbringer Cache emblems 10N
-(@Saurfang25N,@emblem,100,0,2,2), -- Deathbringer Cache emblems 25N
-(@Saurfang10H,@emblem,100,0,2,2), -- Deathbringer Cache emblems 10H
-(@Saurfang25H,@emblem,100,0,2,2); -- Deathbringer Cache emblems 25H
-*/
+-- info for tc 9607 Deathbringer Saurfang - additional data missed in previous topic
+DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId`=13 AND `SourceEntry`=72260;
+INSERT INTO `conditions` (`SourceTypeOrReferenceId`,`SourceGroup`,`SourceEntry`,`ElseGroup`,`ConditionTypeOrReference`,`ConditionValue1`,`ConditionValue2`,`ConditionValue3`,`ErrorTextId`,`ScriptName`,`Comment`) VALUES
+(13,0,72260,0,18,1,37920,0,0, '', 'Deathbringer Saurfang - Mark of the Fallen Champion heal')
 
 -- Equip templates
 DELETE FROM `creature_equip_template` WHERE (`entry`=500207);
