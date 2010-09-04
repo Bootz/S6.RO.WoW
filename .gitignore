@@ -22,7 +22,7 @@ src/tools/vmap3_extractor/VC90/*/
 *.*-*
 .hgignore
 .hgtags
-
+*.patch
 # use regexp syntax.
 syntax: regexp
 

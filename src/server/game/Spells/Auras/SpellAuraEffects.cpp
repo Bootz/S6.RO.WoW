@@ -1187,7 +1187,7 @@ void AuraEffect::UpdatePeriodic(Unit * caster)
                                 slow->ChangeAmount(newAmount);
                             }
                             break; 
-                        case 62038: // Biting Cold
+                       /* case 62038: // Biting Cold
                             UnitList targetList;
                             GetTargetList(targetList);
                             for (UnitList::iterator target = targetList.begin(); target != targetList.end(); ++target)
@@ -1200,7 +1200,7 @@ void AuraEffect::UpdatePeriodic(Unit * caster)
                                 else
                                     --m_amount;
                             }					
-                            break;									
+                            break;*/								
                         default:
                             break;
                     }
@@ -2005,7 +2005,7 @@ void AuraEffect::PeriodicDummyTick(Unit * target, Unit * caster) const
                 // Heal
                 caster->CastCustomSpell(caster, 66125, &lifeLeeched, 0, 0, false);
                 break;
-            case 63276: // Mark of the Faceless
+          /*  case 63276: // Mark of the Faceless
                 if (caster) {
                     uint32 count = 0;
                     Position *pos = target;
@@ -2055,7 +2055,7 @@ void AuraEffect::PeriodicDummyTick(Unit * target, Unit * caster) const
                 int32 damage = (int32)(200 * pow(2.0f,stackAmount));
                 target->CastCustomSpell(target,62188,&damage,0,0,true);
                 break;
-            }
+            }*/
         }
         break;
         case SPELLFAMILY_MAGE:
