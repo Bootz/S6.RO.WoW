@@ -25,7 +25,7 @@
 
 #include "ScriptPCH.h"
 #include "ScriptedEscortAI.h"
-#include "def_hall_of_reflection.h"
+#include "halls_of_reflection.h"
 
 enum
 {

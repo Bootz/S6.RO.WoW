@@ -24,7 +24,7 @@ SDAuthor: /dev/rsa, modified by MaxXx2021 aka Mioka
 EndScriptData */
 
 #include "ScriptPCH.h"
-#include "def_hall_of_reflection.h"
+#include "halls_of_reflection.h"
 #include "World.h"
 
 class instance_halls_of_reflection : public InstanceMapScript

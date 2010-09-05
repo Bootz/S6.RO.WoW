@@ -38,6 +38,7 @@ set(scripts_STAT_SRCS
   Northrend/FrozenHalls/HallsOfReflection/instance_halls_of_reflection.cpp
   Northrend/FrozenHalls/HallsOfReflection/halls_of_reflection.cpp
   Northrend/FrozenHalls/HallsOfReflection/boss_marwyn.cpp
+  Northrend/FrozenHalls/HallsOfReflection/boss_the_lich_king.cpp
   Northrend/FrozenHalls/PitOfSaron/boss_forgemaster_garfrost.cpp
   Northrend/FrozenHalls/PitOfSaron/boss_krickandick.cpp
   Northrend/FrozenHalls/PitOfSaron/pit_of_saron.cpp
@@ -147,9 +148,23 @@ set(scripts_STAT_SRCS
   Northrend/IcecrownCitadel/boss_lady_deathwhisper.cpp
   Northrend/IcecrownCitadel/boss_professor_putricide.cpp
   Northrend/IcecrownCitadel/icecrown_citadel.h
-  Northrend/IcecrownCitadel/icecrown_citadel_teleport.cpp
+  Northrend/IcecrownCitadel/icecrown_teleport.cpp
   Northrend/IcecrownCitadel/boss_festergut.cpp
   Northrend/IcecrownCitadel/boss_lord_marrowgar.cpp
+  Northrend/IcecrownCitadel/blood_prince_council.cpp
+  Northrend/IcecrownCitadel/boss_blood_queen_lanathel.cpp
+  Northrend/IcecrownCitadel/boss_rotface.cpp
+  Northrend/IcecrownCitadel/boss_sindragosa.cpp
+  Northrend/IcecrownCitadel/boss_the_lich_king.cpp
+  Northrend/IcecrownCitadel/boss_valithria_dreamwalker.cpp
+  Northrend/IcecrownCitadel/gunship_battle.cpp
+  Northrend/IcecrownCitadel/icecrown_citadel.cpp
+  Northrend/RubySanctum/boss_baltharus.cpp
+  Northrend/RubySanctum/boss_halion.cpp
+  Northrend/RubySanctum/boss_ragefire.cpp
+  Northrend/RubySanctum/boss_zarithian.cpp
+  Northrend/RubySanctum/instance_ruby_sanctum.cpp
+  Northrend/RubySanctum/ruby_sanctum.h
   Northrend/zuldrak.cpp
   Northrend/icecrown.cpp
   Northrend/Gundrak/boss_slad_ran.cpp
