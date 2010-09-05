@@ -950,46 +950,6 @@ void Spell::EffectDummy(SpellEffIndex effIndex)
                     }
                     return;
                 }
-                case 14537:                                 // Six Demon Bag
-                {
-                    if( !unitTarget || !unitTarget->isAlive()) return;
-
-                    uint32 ClearSpellId[6] =
-                    {
-                        15662,   // Fireball
-                        11538,   // Frostball
-                        21179,   // Chain Lightning
-                        14621,   // Polymorph
-                        25189,   // Enveloping Winds
-                        14642    // Summon Felhund minion
-                    };
-
-                    uint32 effect = 0;
-                    uint32 rand = urand(0, 100);
-
-                    if (rand < 25)                      // Fireball (25% chance)
-                        effect = ClearSpellId[0];
-                    else if (rand < 50)                 // Frostball (25% chance)
-                        effect = ClearSpellId[1];
-                    else if (rand < 70)                 // Chain Lighting (25% chance)
-                        effect = ClearSpellId[2];
-                    else if (rand < 80)                 // Polymorph (10% chance)
-                    {
-                        effect = ClearSpellId[3];
-                        if (urand(0, 100) <= 30)        // 30% chance to self-cast
-                            unitTarget = m_caster;
-                    }
-                    else if (rand < 95)                 // Enveloping Winds (15% chance)
-                         effect = ClearSpellId[4];
-                    else                                // Summon Felhund minion (5% chance)
-                    {
-                         effect = ClearSpellId[5];
-                         unitTarget = m_caster;
-                    }
-
-                    m_caster->CastSpell(unitTarget, effect, true);
-                    return;
-                }
                 case 15998:                                 // Capture Worg Pup
                 case 29435:                                 // Capture Female Kaliri Hatchling
                 {
@@ -1028,18 +988,6 @@ void Spell::EffectDummy(SpellEffIndex effIndex)
                     }
                     return;
                 }
-                case 17271:                                 // Test Fetid Skull
-                {
-                    if (!itemTarget && m_caster->GetTypeId() != TYPEID_PLAYER)
-                        return;
-
-                    uint32 spell_id = roll_chance_i(50)
-                        ? 17269                             // Create Resonating Skull
-                        : 17270;                            // Create Bone Dust
-
-                    m_caster->CastSpell(m_caster, spell_id, true, NULL);
-                    return;
-                }
                 case 20577:                                 // Cannibalize
                     if (unitTarget)
                         m_caster->CastSpell(m_caster, 20578, false, NULL);
@@ -1051,29 +999,13 @@ void Spell::EffectDummy(SpellEffIndex effIndex)
 
                     Creature* creatureTarget = unitTarget->ToCreature();
 
-                    m_caster->SummonGameObject(179644, creatureTarget->GetPositionX(), creatureTarget->GetPositionY(), creatureTarget->GetPositionZ(), creatureTarget->GetOrientation(), 0, 0, 0, 0, creatureTarget->GetRespawnTime()-time(NULL));
+                    m_caster->SummonGameObject(179644, creatureTarget->GetPositionX(), creatureTarget->GetPositionY(), creatureTarget->GetPositionZ(), creatureTarget->GetOrientation(), 0, 0, 0, 0, uint32(creatureTarget->GetRespawnTime()-time(NULL)));
                     sLog.outDebug("SummonGameObject at SpellEfects.cpp EffectDummy for Spell 23019");
 
                     creatureTarget->ForcedDespawn();
 
                     return;
                 }
-                case 23074:                                 // Arcanite Dragonling
-                    if (!m_CastItem) return;
-                    m_caster->CastSpell(m_caster, 19804, true, m_CastItem);
-                    return;
-                case 23075:                                 // Mithril Mechanical Dragonling
-                    if (!m_CastItem) return;
-                    m_caster->CastSpell(m_caster, 12749, true, m_CastItem);
-                    return;
-                case 23076:                                 // Mechanical Dragonling
-                    if (!m_CastItem) return;
-                    m_caster->CastSpell(m_caster, 4073, true, m_CastItem);
-                    return;
-                case 23133:                                 // Gnomish Battle Chicken
-                    if (!m_CastItem) return;
-                    m_caster->CastSpell(m_caster, 13166, true, m_CastItem);
-                    return;
                 case 23448:                                 // Transporter Arrival - Ultrasafe Transporter: Gadgetzan - backfires
                 {
                     int32 r = irand(0, 119);
@@ -1183,20 +1115,6 @@ void Spell::EffectDummy(SpellEffIndex effIndex)
                     m_caster->CastSpell(m_caster, spell_id, true, NULL);
                     return;
                 }
-                case 34665:                                 //Administer Antidote
-                {
-                    if (!unitTarget || unitTarget->GetTypeId() != TYPEID_UNIT
-                        || unitTarget->GetEntry() != 16880 || unitTarget->ToCreature()->isPet())
-                        return;
-
-                    unitTarget->ToCreature()->UpdateEntry(16992);
-                    m_caster->ToPlayer()->RewardPlayerAndGroupAtEvent(16992, unitTarget);
-
-                    if (unitTarget->IsAIEnabled)
-                        unitTarget->ToCreature()->AI()->AttackStart(m_caster);
-
-                    return;
-                }
                 case 35745:                                 // Socrethar's Stone
                 {
                     uint32 spell_id;
@@ -1217,39 +1135,6 @@ void Spell::EffectDummy(SpellEffIndex effIndex)
 
                     int32 basepoints0 = 100;
                     m_caster->CastCustomSpell(unitTarget, 37675, &basepoints0, NULL, NULL, true);
-                    return;
-                }
-                case 40802:                                 // Mingo's Fortune Generator (Mingo's Fortune Giblets)
-                {
-                    // selecting one from Bloodstained Fortune item
-                    uint32 newitemid;
-                    switch(urand(1, 20))
-                    {
-                        case 1:  newitemid = 32688; break;
-                        case 2:  newitemid = 32689; break;
-                        case 3:  newitemid = 32690; break;
-                        case 4:  newitemid = 32691; break;
-                        case 5:  newitemid = 32692; break;
-                        case 6:  newitemid = 32693; break;
-                        case 7:  newitemid = 32700; break;
-                        case 8:  newitemid = 32701; break;
-                        case 9:  newitemid = 32702; break;
-                        case 10: newitemid = 32703; break;
-                        case 11: newitemid = 32704; break;
-                        case 12: newitemid = 32705; break;
-                        case 13: newitemid = 32706; break;
-                        case 14: newitemid = 32707; break;
-                        case 15: newitemid = 32708; break;
-                        case 16: newitemid = 32709; break;
-                        case 17: newitemid = 32710; break;
-                        case 18: newitemid = 32711; break;
-                        case 19: newitemid = 32712; break;
-                        case 20: newitemid = 32713; break;
-                        default:
-                            return;
-                    }
-
-                    DoCreateItem(effIndex, newitemid);
                     return;
                 }
                 // Wrath of the Astromancer
@@ -1532,39 +1417,30 @@ void Spell::EffectDummy(SpellEffIndex effIndex)
                 return;
             }
             // Execute
-            if (m_spellInfo->SpellFamilyFlags[0] & SPELLFAMILYFLAG_WARRIOR_EXECUTE)
+            if (m_spellInfo->SpellFamilyFlags[EFFECT_0] & SPELLFAMILYFLAG_WARRIOR_EXECUTE)
             {
                 if (!unitTarget)
                     return;
 
-                uint32 rage = m_caster->GetPower(POWER_RAGE);
-
-                // Glyph of Execution bonus
-                if (AuraEffect *aura = m_caster->GetAuraEffect(58367, 0))
-                    rage += aura->GetAmount();
-
                 spell_id = 20647;
 
-                // Sudden death cost modifier
-                if (Aura * aur = m_caster->GetAura(52437))
+                int32 rageUsed = std::min<int32>(300 - m_powerCost, m_caster->GetPower(POWER_RAGE));
+                int32 newRage = std::max<int32>(0, m_caster->GetPower(POWER_RAGE) - rageUsed);
+
+                // Sudden Death rage save
+                if (AuraEffect * aurEff = m_caster->GetAuraEffect(SPELL_AURA_PROC_TRIGGER_SPELL, SPELLFAMILY_GENERIC, 1989, EFFECT_0))
                 {
-                    rage += m_powerCost;
-                    m_caster->ModifyPower(POWER_RAGE, -m_powerCost);
-                    if (m_caster->GetPower(POWER_RAGE) < 100)
-                        m_caster->SetPower(POWER_RAGE, 100);
-                    m_caster->RemoveAura(aur);
-                }
-                else
-                {
-                    rage += m_powerCost;
-                    m_caster->ModifyPower(POWER_RAGE, -m_powerCost);
+                    int32 ragesave = SpellMgr::CalculateSpellEffectAmount(aurEff->GetSpellProto(), EFFECT_1) * 10;
+                    newRage = std::max(newRage, ragesave);
                 }
 
-                if (rage > 300)
-                    rage = 300;
+                m_caster->SetPower(POWER_RAGE, uint32(newRage));
 
-                bp = damage+int32(rage * m_spellInfo->EffectDamageMultiplier[effIndex] +
-                    m_caster->GetTotalAttackPowerValue(BASE_ATTACK)*0.2f);
+                // Glyph of Execution bonus
+                if (AuraEffect * aurEff = m_caster->GetAuraEffect(58367, EFFECT_0))
+                    rageUsed += aurEff->GetAmount() * 10;
+
+                bp = damage + int32(rageUsed * m_spellInfo->EffectDamageMultiplier[effIndex] + m_caster->GetTotalAttackPowerValue(BASE_ATTACK) * 0.2f);
                 break;
             }
             // Concussion Blow
@@ -1802,7 +1678,7 @@ void Spell::EffectDummy(SpellEffIndex effIndex)
             if (m_spellInfo->SpellFamilyFlags[0] & SPELLFAMILYFLAG_DK_DEATH_STRIKE)
             {
                 uint32 count = unitTarget->GetDiseasesByCaster(m_caster->GetGUID());
-                int32 bp = int32(count * m_caster->CountPctFromMaxHealth(m_spellInfo->EffectDamageMultiplier[0]));
+                int32 bp = int32(count * m_caster->CountPctFromMaxHealth(int32(m_spellInfo->EffectDamageMultiplier[0])));
                 // Improved Death Strike
                 if (AuraEffect const * aurEff = m_caster->GetAuraEffect(SPELL_AURA_ADD_PCT_MODIFIER, SPELLFAMILY_DEATHKNIGHT, 2751, 0))
                     bp = int32(bp * (m_caster->CalculateSpellDamage(m_caster, aurEff->GetSpellProto(), 2) + 100.0f) / 100.0f);
@@ -4892,12 +4768,9 @@ void Spell::EffectScriptEffect(SpellEffIndex effIndex)
                 }
                 // Escape artist
                 case 20589:
-                {
-                    if (!unitTarget)
-                        return;
-                    unitTarget->RemoveMovementImpairingAuras();
+                m_caster->RemoveMovementImpairingAuras();
                     return;
-                }
+
                 // Decimate
                 case 28374:
                 case 54426:

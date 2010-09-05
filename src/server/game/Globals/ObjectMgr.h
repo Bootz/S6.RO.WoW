@@ -1012,6 +1012,7 @@ class ObjectMgr
         uint32 m_hiDoGuid;
         uint32 m_hiCorpseGuid;
         uint32 m_hiGroupGuid;
+        uint32 m_hiMoTransGuid;
 
         QuestMap            mQuestTemplates;
 

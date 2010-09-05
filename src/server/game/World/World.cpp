@@ -334,7 +334,7 @@ void World::AddQueuedPlayer(WorldSession* sess)
     m_QueuedPlayer.push_back(sess);
 
     // The 1st SMSG_AUTH_RESPONSE needs to contain other info too.
-    WorldPacket packet(SMSG_AUTH_RESPONSE, 1+4+1+4+1);
+    WorldPacket packet(SMSG_AUTH_RESPONSE, 1+4+1+4+1+4+1);
     packet << uint8(AUTH_WAIT_QUEUE);
     packet << uint32(0);                                    // BillingTimeRemaining
     packet << uint8(0);                                     // BillingPlanFlags
@@ -1225,6 +1225,11 @@ void World::LoadConfigSettings(bool reload)
     // Dungeon finder
     m_bool_configs[CONFIG_DUNGEON_FINDER_ENABLE] = sConfig.GetBoolDefault("DungeonFinder.Enable", false);
 
+    // AutoBroadcast
+    m_bool_configs[CONFIG_AUTOBROADCAST] = sConfig.GetBoolDefault("AutoBroadcast.On", false);
+    m_int_configs[CONFIG_AUTOBROADCAST_CENTER] = sConfig.GetIntDefault("AutoBroadcast.Center", 0);
+    m_int_configs[CONFIG_AUTOBROADCAST_INTERVAL] = sConfig.GetIntDefault("AutoBroadcast.Timer", 60000);
+
     sScriptMgr.OnConfigLoad(reload);
 }
 
@@ -1443,6 +1448,12 @@ void World::SetInitialWorldSettings()
     sLog.outString("Loading Quests Relations...");
     sObjectMgr.LoadQuestRelations();                            // must be after quest load
 
+    sLog.outString("Loading Dungeon boss data...");
+    sLFGMgr.LoadDungeonEncounters();
+
+    sLog.outString("Loading LFG rewards...");
+    sLFGMgr.LoadRewards();
+
     sLog.outString("Loading UNIT_NPC_FLAG_SPELLCLICK Data...");
     sObjectMgr.LoadNPCSpellClickSpells();
 
@@ -1648,8 +1659,6 @@ void World::SetInitialWorldSettings()
     LoginDatabase.PExecute("INSERT INTO uptime (realmid, starttime, startstring, uptime, revision) VALUES('%u', " UI64FMTD ", '%s', 0, '%s')",
         realmID, uint64(m_startTime), isoDate, _FULLVERSION);
 
-    static uint32 abtimer = 0;
-    abtimer = sConfig.GetIntDefault("AutoBroadcast.Timer", 60000);
     m_timers[WUPDATE_OBJECTS].SetInterval(IN_MILLISECONDS/2);
     m_timers[WUPDATE_SESSIONS].SetInterval(0);
     m_timers[WUPDATE_WEATHERS].SetInterval(1*IN_MILLISECONDS);
@@ -1660,7 +1669,7 @@ void World::SetInitialWorldSettings()
                                                             //erase corpses every 20 minutes
     m_timers[WUPDATE_CLEANDB].SetInterval(m_int_configs[CONFIG_LOGDB_CLEARINTERVAL]*MINUTE*IN_MILLISECONDS);
                                                             // clean logs table every 14 days by default
-    m_timers[WUPDATE_AUTOBROADCAST].SetInterval(abtimer);
+    m_timers[WUPDATE_AUTOBROADCAST].SetInterval(getIntConfig(CONFIG_AUTOBROADCAST_INTERVAL));
     m_timers[WUPDATE_DELETECHARS].SetInterval(DAY*IN_MILLISECONDS); // check for chars to delete every day
 
     //to set mailtimer to return mails every day between 4 and 5 am
@@ -1911,13 +1920,13 @@ void World::Update(uint32 diff)
     if (m_timers[WUPDATE_WEATHERS].Passed())
     {
         m_timers[WUPDATE_WEATHERS].Reset();
-        sWeatherMgr.Update(m_timers[WUPDATE_WEATHERS].GetInterval());
+        sWeatherMgr.Update(uint32(m_timers[WUPDATE_WEATHERS].GetInterval()));
     }
 
     /// <li> Update uptime table
     if (m_timers[WUPDATE_UPTIME].Passed())
     {
-        uint32 tmpDiff = (m_gameTime - m_startTime);
+        uint32 tmpDiff = uint32(m_gameTime - m_startTime);
         uint32 maxClientsNum = GetMaxActiveSessionCount();
 
         m_timers[WUPDATE_UPTIME].Reset();
@@ -1942,15 +1951,13 @@ void World::Update(uint32 diff)
     ///- Update objects when the timer has passed (maps, transport, creatures,...)
     sMapMgr.Update(diff);                // As interval = 0
 
-    static uint32 autobroadcaston = 0;
-    autobroadcaston = sConfig.GetIntDefault("AutoBroadcast.On", 0);
-    if (autobroadcaston == 1)
+    if (sWorld.getBoolConfig(CONFIG_AUTOBROADCAST))
     {
-       if (m_timers[WUPDATE_AUTOBROADCAST].Passed())
-       {
-          m_timers[WUPDATE_AUTOBROADCAST].Reset();
-          SendRNDBroadcast();
-       }
+        if (m_timers[WUPDATE_AUTOBROADCAST].Passed())
+        {
+            m_timers[WUPDATE_AUTOBROADCAST].Reset();
+            SendAutoBroadcast();
+        }
     }
 
     sBattlegroundMgr.Update(diff);
@@ -2452,7 +2459,7 @@ void World::ProcessCliCommands()
     }
 }
 
-void World::SendRNDBroadcast()
+void World::SendAutoBroadcast()
 {
     if (m_Autobroadcasts.empty())
         return;
@@ -2463,8 +2470,7 @@ void World::SendRNDBroadcast()
     std::advance(itr, rand() % m_Autobroadcasts.size());
     msg = *itr;
 
-    static uint32 abcenter = 0;
-    abcenter = sConfig.GetIntDefault("AutoBroadcast.Center", 0);
+    uint32 abcenter = sWorld.getIntConfig(CONFIG_AUTOBROADCAST_CENTER);
     if (abcenter == 0)
     {
         sWorld.SendWorldText(LANG_AUTO_BROADCAST, msg.c_str());

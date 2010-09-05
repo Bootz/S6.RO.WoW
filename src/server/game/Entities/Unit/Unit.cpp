@@ -93,13 +93,20 @@ static bool isAlwaysTriggeredAura[TOTAL_AURAS];
 // Prepare lists
 static bool procPrepared = InitTriggerAuraData();
 
+// we can disable this warning for this since it only 
+// causes undefined behavior when passed to the base class constructor
+#ifdef _MSC_VER
+#pragma warning(disable:4355)
+#endif
 Unit::Unit(): WorldObject(),
 m_movedPlayer(NULL), IsAIEnabled(false), NeedChangeAI(false), 
 m_ControlledByPlayer(false), i_AI(NULL), i_disabledAI(NULL), m_procDeep(0), 
-m_removedAurasCount(0), i_motionMaster(this), m_ThreatManager(this), 
-m_vehicle(NULL), m_vehicleKit(NULL), m_unitTypeMask(UNIT_MASK_NONE),
-m_HostileRefManager(this)
+m_removedAurasCount(0),  m_vehicle(NULL), m_vehicleKit(NULL), m_unitTypeMask(UNIT_MASK_NONE),
+m_ThreatManager(this), i_motionMaster(this), m_HostileRefManager(this)
 {
+#ifdef _MSC_VER
+#pragma warning(default:4355)
+#endif
     m_objectType |= TYPEMASK_UNIT;
     m_objectTypeId = TYPEID_UNIT;
 
@@ -8231,6 +8238,16 @@ bool Unit::HandleAuraProc(Unit * pVictim, uint32 damage, Aura * triggeredByAura,
 
     switch(dummySpell->SpellFamilyName)
     {
+        case SPELLFAMILY_GENERIC:
+            switch (dummySpell->Id)
+            {
+                // Nevermelting Ice Crystal
+                case 71564:
+                    RemoveAuraFromStack(71564);
+                    *handled = true;
+                    break;
+            }
+            break;
         case SPELLFAMILY_PALADIN:
         {
             // Infusion of Light
@@ -8658,6 +8675,24 @@ bool Unit::HandleProcTriggerSpell(Unit *pVictim, uint32 damage, AuraEffect* trig
 
                         RemoveAurasDueToSpell(54842);
                         trigger_spell_id = 54843;
+                        target = pVictim;
+                        break;
+                    }
+                    //Item - Coliseum 25 Normal Caster Trinket
+                    case 67712:
+                    {
+                        if(!pVictim || !pVictim->isAlive())
+                            return false;
+                        // stacking
+                        CastSpell(this, 67713, true, NULL, triggeredByAura);
+
+                        Aura * dummy = GetAura(67713);
+                        // release at 3 aura in stack (cont contain in basepoint of trigger aura)
+                        if(!dummy || dummy->GetStackAmount() < triggerAmount)
+                            return false;
+
+                        RemoveAurasDueToSpell(67713);
+                        trigger_spell_id = 67714;
                         target = pVictim;
                         break;
                     }
@@ -10502,6 +10537,12 @@ uint32 Unit::SpellDamageBonus(Unit *pVictim, SpellEntry const *spellProto, uint3
         if (creatureTypeMask & uint32((*i)->GetMiscValue()))
             DoneTotalMod *= ((*i)->GetAmount()+100.0f)/100.0f;
 
+    // bonus against aurastate
+    AuraEffectList const &mDamageDoneVersusAurastate = GetAuraEffectsByType(SPELL_AURA_MOD_DAMAGE_DONE_VERSUS_AURASTATE);
+    for (AuraEffectList::const_iterator i = mDamageDoneVersusAurastate.begin(); i != mDamageDoneVersusAurastate.end(); ++i)
+        if (pVictim->HasAuraState(AuraState((*i)->GetMiscValue())))
+            DoneTotalMod *= ((*i)->GetAmount() + 100.0f) / 100.0f;
+
     // done scripted mod (take it from owner)
     Unit *owner = GetOwner() ? GetOwner() : this;
     AuraEffectList const &mOverrideClassScript= owner->GetAuraEffectsByType(SPELL_AURA_OVERRIDE_CLASS_SCRIPTS);
@@ -11803,6 +11844,12 @@ void Unit::MeleeDamageBonus(Unit *pVictim, uint32 *pdamage, WeaponAttackType att
     for (AuraEffectList::const_iterator i = mDamageDoneVersus.begin(); i != mDamageDoneVersus.end(); ++i)
         if (creatureTypeMask & uint32((*i)->GetMiscValue()))
             DoneTotalMod *= ((*i)->GetAmount()+100.0f)/100.0f;
+
+    // bonus against aurastate
+    AuraEffectList const &mDamageDoneVersusAurastate = GetAuraEffectsByType(SPELL_AURA_MOD_DAMAGE_DONE_VERSUS_AURASTATE);
+    for (AuraEffectList::const_iterator i = mDamageDoneVersusAurastate.begin(); i != mDamageDoneVersusAurastate.end(); ++i)
+        if (pVictim->HasAuraState(AuraState((*i)->GetMiscValue())))
+            DoneTotalMod *= ((*i)->GetAmount() + 100.0f) / 100.0f;
 
     // done scripted mod (take it from owner)
     Unit *owner = GetOwner() ? GetOwner() : this;
@@ -15940,7 +15987,7 @@ bool Unit::SetCharmedBy(Unit* charmer, CharmType type)
                             GetCharmInfo()->SetPetNumber(sObjectMgr.GeneratePetNumber(), true);
 
                         //if charmed two demons the same session, the 2nd gets the 1st one's name
-                        SetUInt32Value(UNIT_FIELD_PET_NAME_TIMESTAMP, time(NULL));
+                        SetUInt32Value(UNIT_FIELD_PET_NAME_TIMESTAMP, uint32(time(NULL))); // cast can't be helped
                     }
                 }
                 charmer->ToPlayer()->CharmSpellInitialize();

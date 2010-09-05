@@ -162,6 +162,7 @@ enum WorldBoolConfigs
     CONFIG_CHATLOG_ADDON,
     CONFIG_CHATLOG_BGROUND,
     CONFIG_DUNGEON_FINDER_ENABLE,
+    CONFIG_AUTOBROADCAST,
     CONFIG_OUTDOORPVP_WINTERGRASP_ENABLED,
     BOOL_CONFIG_VALUE_COUNT
 };
@@ -311,6 +312,8 @@ enum WorldIntConfigs
     CONFIG_CHARDELETE_KEEP_DAYS,
     CONFIG_CHARDELETE_METHOD,
     CONFIG_CHARDELETE_MIN_LEVEL,
+    CONFIG_AUTOBROADCAST_CENTER,
+    CONFIG_AUTOBROADCAST_INTERVAL,
     INT_CONFIG_VALUE_COUNT
 };
 
@@ -525,7 +528,7 @@ class World
         WorldSession* FindSession(uint32 id) const;
         void SendWintergraspState();
         void AddSession(WorldSession *s);
-        void SendRNDBroadcast();
+        void SendAutoBroadcast();
         bool RemoveSession(uint32 id);
         /// Get the number of current active sessions
         void UpdateMaxSessionCounters();
@@ -777,8 +780,8 @@ class World
         time_t m_startTime;
         time_t m_gameTime;
         IntervalTimer m_timers[WUPDATE_COUNT];
-        uint32 mail_timer;
-        uint32 mail_timer_expires;
+        time_t mail_timer;
+        time_t mail_timer_expires;
         uint32 m_updateTime, m_updateTimeSum;
         uint32 m_updateTimeCount;
         uint32 m_currentTime;
