@@ -1594,6 +1594,18 @@ void World::SetInitialWorldSettings()
     sLog.outString("Loading Conditions...");
     sConditionMgr.LoadConditions();
 
+    sLog.outString("Loading faction change achievement pairs...");
+    sObjectMgr.LoadFactionChangeAchievements();
+
+    sLog.outString("Loading faction change spell pairs...");
+    sObjectMgr.LoadFactionChangeSpells();
+
+    sLog.outString("Loading faction change item pairs...");
+    sObjectMgr.LoadFactionChangeItems();
+
+    sLog.outString("Loading faction change reputation pairs...");
+    sObjectMgr.LoadFactionChangeReputations();
+
     sLog.outString("Loading GM tickets...");
     sTicketMgr.LoadGMTickets();
 
@@ -1700,10 +1712,6 @@ void World::SetInitialWorldSettings()
 
     sLog.outString("Loading World States...");              // must be loaded before battleground and outdoor PvP
     LoadWorldStates();
-
-    ///- Initialize Looking For Group
-    sLog.outString("Starting Looking For Group System");
-    sLFGMgr.InitLFG();
 
     ///- Initialize Battlegrounds
     sLog.outString("Starting Battleground System");
