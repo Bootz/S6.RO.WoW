@@ -32,8 +32,6 @@ enum BG_WS_TimerOrScore
     BG_WS_SPELL_BRUTAL_TIME = 900000
 };
 
-#define BG_WS_TIME_LIMIT          (25*MINUTE*IN_MILLISECONDS)
-
 enum BG_WS_Sound
 {
     BG_WS_SOUND_FLAG_CAPTURED_ALLIANCE  = 8173,
@@ -42,9 +40,7 @@ enum BG_WS_Sound
     BG_WS_SOUND_FLAG_RETURNED           = 8192,
     BG_WS_SOUND_HORDE_FLAG_PICKED_UP    = 8212,
     BG_WS_SOUND_ALLIANCE_FLAG_PICKED_UP = 8174,
-    BG_WS_SOUND_FLAGS_RESPAWNED         = 8232,
-    BG_WS_UNK1                    = 4247,                   // Show time limit?
-    BG_WS_TIME_REMAINING          = 4248
+    BG_WS_SOUND_FLAGS_RESPAWNED         = 8232
 };
 
 enum BG_WS_SpellId
@@ -203,7 +199,6 @@ class BattlegroundWS : public Battleground
         virtual void Reset();
         void EndBattleground(uint32 winner);
         virtual WorldSafeLocsEntry const* GetClosestGraveYard(Player* player);
-        uint32 GetRemainingTimeInMinutes() { return m_EndTimer ? (m_EndTimer-1) / (MINUTE * IN_MILLISECONDS) + 1 : 0; }
 
         void UpdateFlagState(uint32 team, uint32 value);
         void SetLastFlagCapture(uint32 team)                { m_LastFlagCaptureTeam = team; }
@@ -229,8 +224,6 @@ class BattlegroundWS : public Battleground
         uint32 m_ReputationCapture;
         uint32 m_HonorWinKills;
         uint32 m_HonorEndKills;
-        uint32 m_EndTimer;
-        uint32 m_LastCapturedFlagTeam;
         int32 m_FlagSpellForceTimer;
         bool m_BothFlagsKept;
         uint8 m_FlagDebuffState;                            // 0 - no debuffs, 1 - focused assault, 2 - brutal assault
