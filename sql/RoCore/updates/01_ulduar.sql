@@ -669,7 +669,6 @@ INSERT INTO `creature_ai_scripts` VALUES
 -- Guardian Lasher
 UPDATE `creature_template` SET `spell1` = 63007, `spell2` = 63047, `dmg_multiplier` = 25, `mingold` = 7100, `maxgold` = 7600, `mechanic_immune_mask` = 33554496, `AIName` = 'EventAI' WHERE `entry` = 33430;
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=33430);
-DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=33430);
 INSERT INTO `creature_ai_scripts` VALUES
 (3343001, 33430, 4, 0, 100, 30, 0, 0, 0, 0, 11, 63007, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Guardian Lasher - Cast Guardian Pheromones 10 and 25'),
 (3343003, 33430, 0, 0, 100, 31, 3000, 6000, 10000, 14000, 11, 63047, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Guardian Lasher - Cast Guardian''s Lash 10 and 25');
@@ -1768,7 +1767,7 @@ INSERT INTO `gameobject_loot_template` VALUES
 (195047, 45265, 20, 1, 3, 1, 1);
 
 -- ----------------------------------------------
--- DELETING OLD AND WORNGs REFERENCES FROM YTDB
+-- DELETING OLD AND WRONG REFERENCES FROM YTDB
 -- ----------------------------------------------
 DELETE FROM `reference_loot_template` WHERE `entry` IN (45636,45658);
 
@@ -1786,6 +1785,7 @@ INSERT INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `modelid`
 DELETE FROM `creature` WHERE `guid`='94390';
 INSERT INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `modelid`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `spawndist`, `currentwaypoint`, `curhealth`, `curmana`, `DeathState`, `MovementType`) VALUES ('94390','32857','603','3','65535','0','0','1596.37','134.229','427.271','5.65217','604800','0','0','2998175','212900','0','0');
 
+-- 8642_ulduar_hodir
 UPDATE `creature_template` SET `difficulty_entry_1` = 33909, `unit_flags` = 0 WHERE `entry` = 32930;
 UPDATE `creature_template` SET `ScriptName` = 'mob_snowpacked_icicle' WHERE `entry` = 33174;
 -- toasty fire immunities
@@ -1794,9 +1794,11 @@ INSERT INTO spell_linked_spell VALUES
 (65280,-62469,2,'Toasty fire - Freeze imunity'),
 (65280,-62039,2,'Toasty fire - Biting cold imunity');
 
+-- 8650_mimiron_hardmode
 -- Mimiron Flames
 UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `modelid1` = 11686, `ScriptName` = 'mob_mimiron_flame_spread' WHERE `entry` = 34121;
 
+-- 8655_ulduar_25_stats
 -- Magma Rager
 UPDATE `creature_template` SET `mechanic_immune_mask` = 131072 WHERE `entry` IN (34086, 34201);
 -- Robots
