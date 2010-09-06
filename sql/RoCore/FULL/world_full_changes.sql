@@ -5595,13 +5595,6 @@ INSERT INTO `spell_linked_spell` VALUES (48707, -64044, 2, 'Anti-Magic Shell imm
 DELETE FROM `spell_linked_spell` WHERE `spell_trigger`= 642;
 INSERT INTO `spell_linked_spell` VALUES (642, -33786, 2, 'Divine Shield immune to Cyclone');
 
--- Glyph of Totem of Wrath
-
-DELETE FROM `spell_group` WHERE `spell_id` IN ('63283');
-DELETE FROM `spell_proc_event` WHERE `entry` IN ('63280');
-INSERT INTO `spell_proc_event` (`entry`, `SchoolMask`, `SpellFamilyName`, `SpellFamilyMask0`, `SpellFamilyMask1`, `SpellFamilyMask2`, `procFlags`, `procEx`, `ppmRate`, `CustomChance`, `Cooldown`) VALUES
-('63280','0','11','536870912','0','0','0','0','0','0','0');
-
 -- Fingers of Frost
 
 DELETE FROM `spell_linked_spell` WHERE `spell_trigger` IN ('44544', '-44544');
