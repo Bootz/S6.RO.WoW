@@ -218,12 +218,11 @@ bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint3
         }
         return true;
     }
-};
-CreatureAI* GetAI(Creature* pCreature) const
-{
-    return new keeper_imageAI (pCreature);
-}
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new keeper_imageAI(pCreature);
+    }
 };
 
 class npc_ys_freya : public CreatureScript

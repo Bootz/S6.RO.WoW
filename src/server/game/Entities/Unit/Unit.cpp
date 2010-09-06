@@ -7588,6 +7588,7 @@ bool Unit::HandleDummyAuraProc(Unit *pVictim, uint32 damage, AuraEffect* trigger
                     return false;
                 }
                 break;
+            }
             // Frozen Power
             if (dummySpell->SpellIconID == 3780)
             {

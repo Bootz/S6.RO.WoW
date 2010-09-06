@@ -1686,10 +1686,10 @@ struct mob_mimiron_flame_spreadAI : public ScriptedAI
         me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_PACIFIED);
         me->SetReactState(REACT_PASSIVE);
         DoCast(me, SPELL_FLAME, true);
-        pInstance = pCreature->GetInstanceData();
+        pInstance = pCreature->GetInstanceScript();
     }
     
-    ScriptedInstance* pInstance;
+    InstanceScript* pInstance;
     
     void UpdateAI(const uint32 uiDiff)
     {
