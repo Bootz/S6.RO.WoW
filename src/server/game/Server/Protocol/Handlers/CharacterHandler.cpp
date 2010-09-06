@@ -177,7 +177,7 @@ void WorldSession::HandleCharCreateOpcode(WorldPacket & recv_data)
 
     if (GetSecurity() == SEC_PLAYER)
     {
-        if (uint32 mask = sWorld.getIntConfig(CONFIG_CHARACTERS_CREATING_DISABLED))
+        if (uint32 mask = sWorld.getIntConfig(CONFIG_CHARACTER_CREATING_DISABLED))
         {
             bool disabled = false;
 
@@ -224,6 +224,25 @@ void WorldSession::HandleCharCreateOpcode(WorldPacket & recv_data)
         sLog.outError("Expansion %u account:[%d] tried to Create character with expansion %u class (%u)",Expansion(),GetAccountId(),classEntry->expansion,class_);
         SendPacket(&data);
         return;
+    }
+
+    if (GetSecurity() == SEC_PLAYER)
+    {
+        uint32 raceMaskDisabled = sWorld.getIntConfig(CONFIG_CHARACTER_CREATING_DISABLED_RACEMASK);
+        if ((1 << (race_ - 1)) & raceMaskDisabled)
+        {
+            data << uint8(CHAR_CREATE_DISABLED);
+            SendPacket(&data);
+            return;
+        }
+
+        uint32 classMaskDisabled = sWorld.getIntConfig(CONFIG_CHARACTER_CREATING_DISABLED_CLASSMASK);
+        if ((1 << (class_ - 1)) & classMaskDisabled)
+        {
+            data << uint8(CHAR_CREATE_DISABLED);
+            SendPacket(&data);
+            return;
+        }
     }
 
     // prevent character creating with invalid name
@@ -297,7 +316,7 @@ void WorldSession::HandleCharCreateOpcode(WorldPacket & recv_data)
     }
 
     // speedup check for heroic class disabled case
-    uint32 req_level_for_heroic = sWorld.getIntConfig(CONFIG_MIN_LEVEL_FOR_HEROIC_CHARACTER_CREATING);
+    uint32 req_level_for_heroic = sWorld.getIntConfig(CONFIG_CHARACTER_CREATING_MIN_LEVEL_FOR_HEROIC_CHARACTER);
     if (GetSecurity() == SEC_PLAYER && class_ == CLASS_DEATH_KNIGHT && req_level_for_heroic > sWorld.getIntConfig(CONFIG_MAX_PLAYER_LEVEL))
     {
         data << (uint8)CHAR_CREATE_LEVEL_REQUIREMENT;
@@ -1384,6 +1403,18 @@ void WorldSession::HandleCharFactionOrRaceChange(WorldPacket& recv_data)
         data << uint8(CHAR_CREATE_ERROR);
         SendPacket( &data );
         return;
+    }
+    
+    if (GetSecurity() == SEC_PLAYER)
+    {
+        uint32 raceMaskDisabled = sWorld.getIntConfig(CONFIG_CHARACTER_CREATING_DISABLED_RACEMASK);
+        if ((1 << (race - 1)) & raceMaskDisabled)
+        {
+            WorldPacket data(SMSG_CHAR_FACTION_CHANGE, 1);
+            data << uint8(CHAR_CREATE_ERROR);
+            SendPacket( &data );
+            return;
+        }
     }
 
     // prevent character rename to invalid name
