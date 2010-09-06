@@ -384,7 +384,7 @@ public:
                 if (m_uiMove <= uiDiff)
                 {
                     Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
-                    me->GetMotionMaster()->MovePoint(0, pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ());
+                    me->GetMotionMaster()->MovePoint(pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ(), 0);
                     m_uiMove = 9500;
                 } else m_uiMove -= uiDiff;
             }
