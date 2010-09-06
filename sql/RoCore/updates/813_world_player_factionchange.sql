@@ -75,7 +75,7 @@ INSERT INTO `player_factionchange_reputations` (`alliance_id`, `horde_id`) VALUE
 ('72','76'),
 ('509','510'),
 ('730','729'),
-('890','899'),
+('890','889'),
 ('930','911'),
 ('946','947'),
 ('978','941'),
