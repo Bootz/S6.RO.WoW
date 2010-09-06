@@ -330,7 +330,7 @@ public:
                     if(phase >= 3)
                     events.RescheduleEvent(EVENT_OVERWHELMING_POWER, urand(2000, 5000));
                     // Add HardMode Loot
-                    me->AddLootMode(LOOT_MODE_HARD_MODE_1);
+                me->AddLootMode(LOOT_MODE_HARD_MODE_2);
                     break;
             }
         }
@@ -362,6 +362,7 @@ public:
             if(pInstance)
                 pInstance->SetBossState(BOSS_ASSEMBLY, NOT_STARTED);
             events.Reset();
+        me->ResetLootMode();
             me->RemoveAllAuras();
             phase = 0;
         
@@ -505,6 +506,8 @@ public:
                         events.RescheduleEvent(EVENT_RUNE_OF_DEATH, 35000);
                     if(phase >= 3)
                         events.RescheduleEvent(EVENT_RUNE_OF_SUMMONING, 40000);
+                // Add HardMode Loot
+                me->AddLootMode(LOOT_MODE_HARD_MODE_1);
                     break;
             }
         }

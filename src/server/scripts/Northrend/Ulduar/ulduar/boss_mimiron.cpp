@@ -161,6 +161,7 @@ enum Npcs
     NPC_BOOM_BOT            = 33836,
     NPC_EMERGENCY_BOT       = 34147,
     NPC_FLAME               = 34363,
+    NPC_FLAME_SPREAD                            = 34121,
     NPC_FROST_BOMB          = 34149
 };
 
@@ -203,8 +204,8 @@ public:
         {
             pInstance = pCreature->GetInstanceScript();
             me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);
-            me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true); // Death Grip jump effect
-            me->ApplySpellImmune(0, IMMUNITY_ID, 63041, true); // Rocket Strike immunity
+        me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true);  // Death Grip
+        me->ApplySpellImmune(0, IMMUNITY_ID, 63041, true);  // Rocket Strike
             me->SetReactState(REACT_PASSIVE);
         }
         InstanceScript *pInstance;
@@ -214,8 +215,8 @@ public:
         uint32 EnrageTimer;
         uint32 FlameTimer;
         uint32 uiBotTimer;
+    bool checkBotAlive;
         bool Enraged;
-        bool checkBotAlive;
 
         Phases phase;
 
@@ -262,9 +263,9 @@ public:
             uiStep = 0;
             uiPhase_timer = -1;
             uiBotTimer = 0;
+        MimironHardMode = false;
             checkBotAlive = true;
             Enraged = false;
-            MimironHardMode = false;
             DespawnCreatures(34362, 100);
             DespawnCreatures(34050, 100);
         }
@@ -295,11 +296,11 @@ public:
             _EnterCombat();
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
             phase = PHASE_INTRO;
+        FlameTimer = 30000;
             if (MimironHardMode)
                 EnrageTimer = 8*60*1000; // Enrage in 8 min
             else
                 EnrageTimer = 15*60*1000; // Enrage in 15 min
-            FlameTimer = 30000;
             JumpToNextStep(100);
         }
 
@@ -694,8 +695,8 @@ public:
         {
             pInstance = pCreature->GetInstanceScript();
             me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);
-            me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true); // Death Grip jump effect
-            me->ApplySpellImmune(0, IMMUNITY_ID, 63041, true); // Rocket Strike immunity
+        me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true);  // Death Grip
+        me->ApplySpellImmune(0, IMMUNITY_ID, 63041, true);  // Rocket Strike
         }
         InstanceScript *pInstance;
         Phases phase;
@@ -846,11 +847,19 @@ public:
                             break;
                         case EVENT_FLAME_SUPPRESSANT:
                             DoCastAOE(SPELL_FLAME_SUPPRESSANT_1);
+                        for (int8 n = 0; n < 2; n++)
+                        {
+                            uint32 npc;
+                            if (n == 0)
+                                npc = NPC_FLAME;
+                            else 
+                                npc = NPC_FLAME_SPREAD;
                             std::list<Creature*> m_pCreatures;
-                            GetCreatureListWithEntryInGrid(m_pCreatures, me, NPC_FLAME, 100);
+                            GetCreatureListWithEntryInGrid(m_pCreatures, me, npc, 100);
                             if (!m_pCreatures.empty())
                                 for(std::list<Creature*>::iterator iter = m_pCreatures.begin(); iter != m_pCreatures.end(); ++iter)
                                     (*iter)->ForcedDespawn(3000);
+                        }
                             events.CancelEvent(EVENT_FLAME_SUPPRESSANT);
                             break;
                     }
@@ -984,8 +993,8 @@ public:
         {
             pInstance = pCreature->GetInstanceScript();
             me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);
-            me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true); // Death Grip jump effect
-            me->ApplySpellImmune(0, IMMUNITY_ID, 63041, true); // Rocket Strike immunity
+        me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true);  // Death Grip
+        me->ApplySpellImmune(0, IMMUNITY_ID, 63041, true);  // Rocket Strike
         }
         InstanceScript *pInstance;
         Phases phase;
@@ -1206,8 +1215,8 @@ public:
         {
             pInstance = pCreature->GetInstanceScript();
             me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);
-            me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true); // Death Grip jump effect
-            me->ApplySpellImmune(0, IMMUNITY_ID, 63041, true); // Rocket Strike immunity
+        me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true);  // Death Grip
+        me->ApplySpellImmune(0, IMMUNITY_ID, 63041, true);  // Rocket Strike
         }
         InstanceScript *pInstance;
         Phases phase;
@@ -1581,11 +1590,19 @@ public:
             if (uiSprayTimer <= diff)
             {
                 DoCast(SPELL_WATER_SPRAY);
+            for (int8 n = 0; n < 2; n++)
+            {
+                uint32 npc;
+                if (n == 0)
+                    npc = NPC_FLAME;
+                else 
+                    npc = NPC_FLAME_SPREAD;
                 std::list<Creature*> m_pCreatures;
-                GetCreatureListWithEntryInGrid(m_pCreatures, me, NPC_FLAME, 12);
+                GetCreatureListWithEntryInGrid(m_pCreatures, me, npc, 12);
                 if (!m_pCreatures.empty())
                     for(std::list<Creature*>::iterator iter = m_pCreatures.begin(); iter != m_pCreatures.end(); ++iter)
                         (*iter)->ForcedDespawn();
+            }
                 uiSprayTimer = 5000;
             }
             else uiSprayTimer -= diff;
@@ -1631,9 +1648,22 @@ public:
     {
         mob_mimiron_flameAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
+        me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_PACIFIED);
             me->SetReactState(REACT_PASSIVE);
-            me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_PACIFIED);
-            DoCast(me, SPELL_FLAME);
+        DoCast(me, SPELL_FLAME, true);
+        uiFlameTimer = 9000;
+    }
+    
+    uint32 uiFlameTimer;
+    
+    void UpdateAI(const uint32 diff)
+    {
+        if (uiFlameTimer <= diff)
+        {
+            me->SummonCreature(NPC_FLAME_SPREAD, me->GetPositionX(), me->GetPositionY(), me->GetPositionZ());
+            uiFlameTimer = 9000;
+        }
+        else uiFlameTimer -= diff;
         }
     };
 
@@ -1641,9 +1671,38 @@ public:
     {
         return new mob_mimiron_flameAI(pCreature);
     }
-
 };
 
+class mob_mimiron_flame_spread : public CreatureScript
+{
+public:
+    mob_mimiron_flame_spread() : CreatureScript("mob_mimiron_flame_spread") { }
+
+
+struct mob_mimiron_flame_spreadAI : public ScriptedAI
+{
+    mob_mimiron_flame_spreadAI(Creature* pCreature) : ScriptedAI(pCreature)
+    {
+        me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_PACIFIED);
+        me->SetReactState(REACT_PASSIVE);
+        DoCast(me, SPELL_FLAME, true);
+        pInstance = pCreature->GetInstanceData();
+    }
+    
+    ScriptedInstance* pInstance;
+    
+    void UpdateAI(const uint32 uiDiff)
+    {
+        if (pInstance && pInstance->GetBossState(BOSS_MIMIRON) != IN_PROGRESS)
+            me->ForcedDespawn();
+    }
+};
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new mob_mimiron_flame_spreadAI(pCreature);
+    }
+};
 
 class mob_frost_bomb : public CreatureScript
 {
@@ -1667,12 +1726,19 @@ public:
             if (uiFrostTimer <= diff)
             {
                 DoCastAOE(SPELL_FLAME_SUPPRESSANT_2);
+            for (int8 n = 0; n < 2; n++)
+            {
+                uint32 npc;
+                if (n == 0)
+                    npc = NPC_FLAME;
+                else 
+                    npc = NPC_FLAME_SPREAD;
                 std::list<Creature*> m_pCreatures;
-                GetCreatureListWithEntryInGrid(m_pCreatures, me, NPC_FLAME, 25);
+                GetCreatureListWithEntryInGrid(m_pCreatures, me, npc, 25);
                 if (!m_pCreatures.empty())
                     for(std::list<Creature*>::iterator iter = m_pCreatures.begin(); iter != m_pCreatures.end(); ++iter)
-                        (*iter)->ForcedDespawn();
-                me->ForcedDespawn(1000);
+                        (*iter)->ForcedDespawn(1000);
+            }
                 uiFrostTimer = 10000;
             }
             else uiFrostTimer -= diff;
@@ -1703,5 +1769,6 @@ void AddSC_boss_mimiron()
     new mob_emergency_bot;
     new not_push_button;
     new mob_mimiron_flame;
+	new mob_mimiron_flame_spread;
     new mob_frost_bomb;
 }

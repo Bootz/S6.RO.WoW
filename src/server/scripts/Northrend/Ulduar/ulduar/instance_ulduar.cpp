@@ -41,7 +41,8 @@ enum eGameObjects
 {
     GO_Leviathan_DOOR       = 194630,
     GO_Kologarn_BRIDGE      = 194232,
-    GO_Hodir_Rare_CHEST     = 194200,
+    GO_Hodir_Rare_CHEST_10  = 194200,
+    GO_Hodir_Rare_CHEST_25  = 194201,
     GO_Runic_DOOR           = 194557,
     GO_Stone_DOOR           = 194558,
     GO_Thorim_LEVER         = 194265,
@@ -107,7 +108,8 @@ public:
             {
                 case GO_Leviathan_DOOR: pLeviathanDoor = add ? pGo : NULL; break;
                 case GO_Kologarn_BRIDGE: uiKologarnBridge = pGo->GetGUID(); HandleGameObject(NULL, true, pGo); break;
-                case GO_Hodir_Rare_CHEST: HodirRareChest = add ? pGo : NULL; break;
+            case GO_Hodir_Rare_CHEST_10: HodirRareChest = add ? pGo : NULL; break;
+            case GO_Hodir_Rare_CHEST_25: HodirRareChest = add ? pGo : NULL; break;
                 case GO_Runic_DOOR: pRunicDoor = add ? pGo : NULL; break;
                 case GO_Stone_DOOR: pStoneDoor = add ? pGo : NULL; break;
                 case GO_Thorim_LEVER: pThorimLever = add ? pGo : NULL; break;

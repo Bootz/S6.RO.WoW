@@ -3841,6 +3841,174 @@ INSERT INTO spell_linked_spell VALUES
 (65280,-62469,2,'Toasty fire - Freeze imunity'),
 (65280,-62039,2,'Toasty fire - Biting cold imunity');
 
+-- Mimiron Flames
+UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `modelid1` = 11686, `ScriptName` = 'mob_mimiron_flame_spread' WHERE `entry` = 34121;
+
+-- Magma Rager
+UPDATE `creature_template` SET `mechanic_immune_mask` = 131072 WHERE `entry` IN (34086, 34201);
+-- Robots
+UPDATE `creature_template` SET `mechanic_immune_mask` = 8405008 WHERE `entry` IN (34085, 34186, 34274, 34268, 34272, 34270);
+-- Lightning charged dwarf
+UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `mindmg` = 488, `maxdmg` = 586, `attackpower` = 642, `dmg_multiplier` = 30, `mingold` = 14200, `maxgold` = 16200, `equipment_id` = 870, `mechanic_immune_mask` = 5 WHERE `entry` = 34237;
+UPDATE `creature_template` SET `equipment_id` = 870, `mechanic_immune_mask` = 5 WHERE `entry` = 34199;
+-- Hardened Iron Golem
+UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `mindmg` = 488, `maxdmg` = 642, `attackpower` = 782, `dmg_multiplier` = 35, `mingold` = 14200, `maxgold` = 16200, `mechanic_immune_mask` = 64 WHERE `entry` = 34229;
+UPDATE `creature_template` SET `mechanic_immune_mask` = 64 WHERE `entry` = 34190;
+-- Iron Mender
+UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `mindmg` = 463, `maxdmg` = 640, `attackpower` = 726, `dmg_multiplier` = 35, `mingold` = 14200, `maxgold` = 16200, `mechanic_immune_mask` = 1 WHERE `entry` = 34236;
+UPDATE `creature_template` SET `mechanic_immune_mask` = 1 WHERE `entry` = 34198;
+-- Runed Etched
+UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `mindmg` = 488, `maxdmg` = 642, `attackpower` = 782, `dmg_multiplier` = 30, `mingold` = 14200, `maxgold` = 16200, `mechanic_immune_mask` = 64 WHERE `entry` = 34245;
+UPDATE `creature_template` SET `mechanic_immune_mask` = 64 WHERE `entry` = 34196;
+-- Chamber Overseer
+UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `mindmg` = 488, `maxdmg` = 642, `attackpower` = 782, `dmg_multiplier` = 60, `mingold` = 14600, `maxgold` = 18200, `mechanic_immune_mask` = 33554496 WHERE `entry` = 34226;
+UPDATE `creature_template` SET `dmg_multiplier` = 45 WHERE `entry` = 34197;
+-- Steelbreaker
+UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `mindmg` = 509, `maxdmg` = 683, `attackpower` = 805, `dmg_multiplier` = 90, `baseattacktime` = 1500, `mechanic_immune_mask` = 650854235, `flags_extra` = 1 WHERE `entry` = 33693;
+-- Runemaster Molgeim
+UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `mindmg` = 496, `maxdmg` = 674, `attackpower` = 783, `dmg_multiplier` = 60, `mechanic_immune_mask` = 650854235, `flags_extra` = 1 WHERE `entry` = 33692;
+-- Brundir
+UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `mindmg` = 496, `maxdmg` = 674, `attackpower` = 783, `dmg_multiplier` = 50, `mechanic_immune_mask` = 617299547, `flags_extra` = 1 WHERE `entry` = 33694;
+UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16 WHERE `entry` IN (33689, 33691);
+-- Kologarn
+UPDATE `creature_template` SET `difficulty_entry_1` = 33909, `unit_flags` = 0 WHERE `entry` = 32930;
+UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `mindmg` = 509, `maxdmg` = 683, `attackpower` = 805, `dmg_multiplier` = 90, `baseattacktime` = 1800, `mechanic_immune_mask` = 650854235, `flags_extra` = 1, `minlevel` = 83, `maxlevel` = 83, `unit_flags` = 0, `unit_class` = 1 WHERE `entry` = 33909;
+UPDATE `creature_template` SET `mechanic_immune_mask` = 650854235 WHERE `entry` IN (32933, 32934);
+UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `mindmg` = 509, `maxdmg` = 683, `attackpower` = 805, `dmg_multiplier` = 45, `baseattacktime` = 1500, `mechanic_immune_mask` = 650854235, `flags_extra` = 1 WHERE `entry` IN (33910, 33911);
+UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `mindmg` = 464, `maxdmg` = 604, `attackpower` = 708, `dmg_multiplier` = 12 WHERE `entry` = 33908;
+-- Storm Tempered Keeper
+UPDATE `creature_template` SET `minlevel` = 82, `maxlevel` = 82, `faction_A` = 16, `faction_H` = 16, `speed_walk` = 3.2, `mindmg` = 463, `maxdmg` = 640, `attackpower` = 726, `dmg_multiplier` = 65, `mingold` = 71000, `maxgold` = 76000, `mechanic_immune_mask` = 545260304 WHERE `entry` IN (33700, 33723);
+-- Auriaya
+UPDATE `creature_template` SET `mechanic_immune_mask` = 617299807 WHERE `entry` = 33515;
+UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `speed_walk` = 1.66667, `mindmg` = 496, `maxdmg` = 674, `attackpower` = 783, `dmg_multiplier` = 90, `mingold` = 3460000, `maxgold` = 3520000, `equipment_id` = 2500, `mechanic_immune_mask` = 617299807, `flags_extra` = 1 WHERE `entry` = 34175;
+-- Sanctum Sentry
+UPDATE `creature_template` SET `speed_walk` = 1.66667 WHERE `entry` = 34014;
+UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `mindmg` = 509, `maxdmg` = 683, `attackpower` = 805, `dmg_multiplier` = 65, `baseattacktime` = 1500, `speed_walk` = 1.66667, `flags_extra` = 1 WHERE `entry` = 34166;
+-- Feral Defender
+UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `speed_walk` = 2, `mindmg` = 509, `maxdmg` = 683, `attackpower` = 805, `dmg_multiplier` = 5, `baseattacktime` = 1500 WHERE `entry` = 34171;
+UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `unit_flags` = 33554432, modelid1 = 11686, modelid2 = 0 WHERE `entry` = 34174;
+UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `mindmg` = 464, `maxdmg` = 604, `attackpower` = 708, `dmg_multiplier` = 1.5, `baseattacktime` = 1500 WHERE `entry` = 34169;
+-- Champion of Hodir
+UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `speed_walk` = 1.6, `mindmg` = 488, `maxdmg` = 642, `attackpower` = 782, `dmg_multiplier` = 75, `mingold` = 71000, `maxgold` = 76000, `mechanic_immune_mask` = 545267736 WHERE `entry` = 34139;
+-- Winter jorm
+UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `speed_walk` = 2.4, `mindmg` = 464, `maxdmg` = 604, `attackpower` = 708, `dmg_multiplier` = 15, `mingold` = 10500, `maxgold` = 12600 WHERE `entry` = 34140;
+-- Winter revenant
+UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `speed_walk` = 1.6, `mindmg` = 425, `maxdmg` = 602, `attackpower` = 670, `dmg_multiplier` = 40, `mingold` = 71000, `maxgold` = 76000, `mechanic_immune_mask` = 2128 WHERE `entry` = 34141;
+-- Winter Rumbler
+UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `speed_walk` = 1.6, `mindmg` = 425, `maxdmg` = 602, `attackpower` = 670, `dmg_multiplier` = 25, `mingold` = 10300, `maxgold` = 12000, `mechanic_immune_mask` = 33554432 WHERE `entry` = 34142;
+-- Hodir
+UPDATE `creature_template` SET `mechanic_immune_mask` = 650854239 WHERE `entry` = 32845;
+UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `speed_walk` = 1.6, `mindmg` = 509, `maxdmg` = 683, `attackpower` = 805, `dmg_multiplier` = 90, `equipment_id` = 1843, `mechanic_immune_mask` = 650854239, `flags_extra` = 1 WHERE `entry` = 32846;
+-- Arachnopod
+UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `speed_walk` = 1.6, `mindmg` = 422, `maxdmg` = 586, `attackpower` = 642, `dmg_multiplier` = 45, `unit_flags` = 64, `mingold` = 105000, `maxgold` = 125000, `mechanic_immune_mask` = 8405008 WHERE `entry` = 34214;
+-- Clockwork
+UPDATE `creature_template` SET `unit_flags` = 64, `mingold` = 17200, `maxgold` = 17600, `mechanic_immune_mask` = 8405008 WHERE `entry` = 34184;
+UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `mindmg` = 422, `maxdmg` = 586, `attackpower` = 642, `dmg_multiplier` = 32, `mingold` = 172000, `maxgold` = 176000, `mechanic_immune_mask` = 8405008 WHERE `entry` = 34219;
+-- Boomer XP-500
+UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `mindmg` = 422, `maxdmg` = 586, `attackpower` = 642, `dmg_multiplier` = 25, `mechanic_immune_mask` = 8405008 WHERE `entry` = 34216;
+-- Trash
+UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `baseattacktime` = 1500, `mechanic_immune_mask` = 8405008 WHERE `entry` = 34191;
+UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `mindmg` = 422, `maxdmg` = 586, `attackpower` = 642, `dmg_multiplier` = 15, `baseattacktime` = 1500, `mechanic_immune_mask` = 8405008 WHERE `entry` = 34217;
+-- Clockwork sapper
+UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `mindmg` = 464, `maxdmg` = 604, `attackpower` = 708, `dmg_multiplier` = 30, `mingold` = 17000, `maxgold` = 18200, `mechanic_immune_mask` = 8405008 WHERE `entry` = 34220;
+-- Mimiron
+UPDATE `creature_template` SET `difficulty_entry_1` = 34106, `exp` = 0 WHERE `entry` = 33432;
+UPDATE `creature_template` SET `difficulty_entry_1` = 34108 WHERE `entry` = 33651;
+UPDATE `creature_template` SET `difficulty_entry_1` = 34109 WHERE `entry` = 33670;
+DELETE FROM `creature_template` WHERE `entry` IN (34106, 34108, 34109);
+INSERT INTO `creature_template` (`entry`, `difficulty_entry_1`, `difficulty_entry_2`, `difficulty_entry_3`, `KillCredit1`, `KillCredit2`, `modelid1`, `modelid2`, `modelid3`, `modelid4`, `name`, `subname`, `IconName`, `gossip_menu_id`, `minlevel`, `maxlevel`, `exp`, `faction_A`, `faction_H`, `npcflag`, `speed_walk`, `speed_run`, `scale`, `rank`, `mindmg`, `maxdmg`, `dmgschool`, `attackpower`, `dmg_multiplier`, `baseattacktime`, `rangeattacktime`, `unit_class`, `unit_flags`, `dynamicflags`, `family`, `trainer_type`, `trainer_spell`, `trainer_class`, `trainer_race`, `minrangedmg`, `maxrangedmg`, `rangedattackpower`, `type`, `type_flags`, `lootid`, `pickpocketloot`, `skinloot`, `resistance1`, `resistance2`, `resistance3`, `resistance4`, `resistance5`, `resistance6`, `spell1`, `spell2`, `spell3`, `spell4`, `spell5`, `spell6`, `spell7`, `spell8`, `PetSpellDataId`, `VehicleId`, `mingold`, `maxgold`, `AIName`, `MovementType`, `InhabitType`, `Health_mod`, `Mana_mod`, `Armor_mod`, `RacialLeader`, `questItem1`, `questItem2`, `questItem3`, `questItem4`, `questItem5`, `questItem6`, `movementId`, `RegenHealth`, `equipment_id`, `mechanic_immune_mask`, `flags_extra`, `ScriptName`, `WDBVerified`) VALUES
+('34106','0','0','0','0','0','28831','0','0','0','Leviathan Mk II (1)','','','0','83','83','0','16','16','0','1','1.14286','1','3','464','604','0','708','100','2000','0','1','33554432','0','0','0','0','0','0','353','512','112','9','32876','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','370','0','0','','0','3','1200','1','1','0','0','0','0','0','0','0','541','1','0','650854235','1','boss_leviathan_mk','11159'),
+('34108','0','0','0','0','0','28841','0','0','0','VX-001 (1)','Anti-personnel Assault Cannon','','0','83','83','0','16','16','0','1','1.14286','1','3','0','0','0','0','1','2000','0','1','0','0','0','0','0','0','0','0','0','0','9','108','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','371','0','0','','0','3','1200','1','1','0','0','0','0','0','0','0','421','1','0','650854235','1','boss_vx_001','11159'),
+('34109','0','0','0','0','0','28979','0','0','0','Aerial Command Unit (1)','','','0','83','83','0','16','16','0','1','1.14286','1','3','0','0','0','0','1','2000','0','1','0','0','0','0','0','0','0','0','0','0','9','108','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','388','0','0','','0','3','800','1','1','0','0','0','0','0','0','0','188','1','0','650854235','1','boss_aerial_unit','11159');
+UPDATE `creature_template` SET `ScriptName` = 'mob_mimiron_flame_spread' WHERE `entry` = 34121;
+UPDATE `creature_template` SET `difficulty_entry_1` = 34114 WHERE `entry` = 33855;
+UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `mindmg` = 464, `maxdmg` = 604, `attackpower` = 708, `dmg_multiplier` = 10 WHERE `entry` = 34114;
+UPDATE `creature_template` SET `difficulty_entry_1` = 34115 WHERE `entry` = 34057;
+UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `mindmg` = 464, `maxdmg` = 604, `attackpower` = 708, `dmg_multiplier` = 20 WHERE `entry` = 34115;
+UPDATE `creature_template` SET `difficulty_entry_1` = 34218 WHERE `entry` = 33836;
+UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `mindmg` = 464, `maxdmg` = 604, `attackpower` = 708, `dmg_multiplier` = 15 WHERE `entry` = 34218;
+UPDATE `creature_template` SET `difficulty_entry_1` = 34148 WHERE `entry` = 34147;
+UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16 WHERE `entry` = 34148;
+-- Elders
+UPDATE `creature_template` SET `mingold` = 625000, `maxgold` = 665000 WHERE `entry` IN (32914, 32913);
+UPDATE `creature_template` SET `difficulty_entry_1` = 33391, `mingold` = 625000, `maxgold` = 665000 WHERE `entry` = 32915;
+UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `speed_walk` = 1.66666, `mindmg` = 509, `maxdmg` = 683, `attackpower` = 805, `dmg_multiplier` = 60, `mingold` = 1805000, `maxgold` = 1855000, `mechanic_immune_mask` = 650854235, `flags_extra` = 1 WHERE `entry` IN (33393, 33392, 33391);
+-- Freya trash
+UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `mindmg` = 464, `maxdmg` = 604, `attackpower` = 708, `dmg_multiplier` = 35, `mingold` = 625000, `maxgold` = 655000 WHERE `entry` = 33732;
+UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `mindmg` = 464, `maxdmg` = 604, `attackpower` = 708, `dmg_multiplier` = 10, `mingold` = 75000, `maxgold` = 95000 WHERE `entry` = 33731;
+UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `mindmg` = 464, `maxdmg` = 604, `attackpower` = 708, `dmg_multiplier` = 20, `mingold` = 125000, `maxgold` = 155000 WHERE `entry` IN (33733, 33734);
+UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `mindmg` = 425, `maxdmg` = 602, `attackpower` = 670, `dmg_multiplier` = 35, `mingold` = 125000, `maxgold` = 155000 WHERE `entry` IN (33741, 33729);
+UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `mindmg` = 425, `maxdmg` = 602, `attackpower` = 670, `dmg_multiplier` = 20, `mingold` = 125000, `maxgold` = 155000 WHERE `entry` IN (33735, 33737);
+-- Freya
+UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `speed_walk` = 1.6, `mindmg` = 496, `maxdmg` = 674, `attackpower` = 783, `dmg_multiplier` = 65, `baseattacktime` = 1500, `mechanic_immune_mask` = 650854235, `flags_extra` = 1 WHERE `entry` = 33360;
+UPDATE `creature_template` SET `difficulty_entry_1` = 33402 WHERE `entry` = 33170;
+UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `unit_flags` = 33685510 WHERE `entry` = 33402;
+UPDATE `creature_template` SET `difficulty_entry_1` = 33399, `flags_extra` = 256 WHERE `entry` = 32918;
+UPDATE `creature_template` SET `minlevel` = 81, `maxlevel` = 81, `faction_A` = 16, `faction_H` = 16, `flags_extra` = 256, `mindmg` = 464, `maxdmg` = 604, `attackpower` = 708, `dmg_multiplier` = 10 WHERE `entry` = 33399;
+UPDATE `creature_template` SET `difficulty_entry_1` = 33376, `minlevel` = 81, `maxlevel` = 81 WHERE `entry` = 33203;
+UPDATE `creature_template` SET `minlevel` = 81, `maxlevel` = 81, `faction_A` = 16, `faction_H` = 16, `mindmg` = 464, `maxdmg` = 604, `attackpower` = 708, `dmg_multiplier` = 55, `mechanic_immune_mask` = 650853979 WHERE `entry` = 33376;
+UPDATE `creature_template` SET `difficulty_entry_1` = 33398 WHERE `entry` = 33202;
+UPDATE `creature_template` SET `minlevel` = 81, `maxlevel` = 81, `faction_A` = 16, `faction_H` = 16, `mindmg` = 464, `maxdmg` = 604, `attackpower` = 708, `dmg_multiplier` = 35 WHERE `entry` = 33398;
+UPDATE `creature_template` SET `difficulty_entry_1` = 33401 WHERE `entry` = 32919;
+UPDATE `creature_template` SET `minlevel` = 81, `maxlevel` = 81, `faction_A` = 16, `faction_H` = 16, `mindmg` = 464, `maxdmg` = 604, `attackpower` = 708, `dmg_multiplier` = 15 WHERE `entry` = 33401;
+UPDATE `creature_template` SET `difficulty_entry_1` = 33400 WHERE `entry` = 32916;
+UPDATE `creature_template` SET `minlevel` = 81, `maxlevel` = 81, `faction_A` = 16, `faction_H` = 16, `mindmg` = 464, `maxdmg` = 604, `attackpower` = 708, `dmg_multiplier` = 60 WHERE `entry` = 33400;
+UPDATE `creature_template` SET `difficulty_entry_1` = 34153 WHERE `entry` = 34129;
+UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `unit_flags` = 33685508, `modelid1` = 23258, `modelid2` = 0 WHERE `entry` = 34153;
+UPDATE `creature_template` SET `difficulty_entry_1` = 33385 WHERE `entry` = 33228;
+UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `unit_flags` = 393220 WHERE `entry` = 33385;
+UPDATE `creature_template` SET `difficulty_entry_1` = 33395 WHERE `entry` = 33050;
+UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `unit_flags` = 33686022, `modelid1` = 23258, `modelid2` = 0 WHERE `entry` = 33395;
+-- Dark Rune Thunderer, Ravager
+UPDATE `creature_template` SET `baseattacktime` = 1500, `mechanic_immune_mask` = 545259541 WHERE `entry` IN (33754, 33755);
+UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `mindmg` = 488, `maxdmg` = 642, `attackpower` = 782, `dmg_multiplier` = 75, `baseattacktime` = 1500, `mingold` = 71000, `maxgold` = 76000, `equipment_id` = 870, `mechanic_immune_mask` = 545259541 WHERE `entry` = 33757;
+UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `mindmg` = 488, `maxdmg` = 642, `attackpower` = 782, `dmg_multiplier` = 75, `baseattacktime` = 1500, `mingold` = 71000, `maxgold` = 76000, `equipment_id` = 1862, `mechanic_immune_mask` = 545259541 WHERE `entry` = 33758;
+-- Pre Aggro adds (Thorim)
+UPDATE `creature_template` SET `faction_A` = 14, `faction_H` = 14, `mindmg` = 488, `maxdmg` = 642, `attackpower` = 782, `dmg_multiplier` = 45 WHERE `entry` = 33154;
+UPDATE `creature_template` SET `difficulty_entry_1` = 33153 WHERE `entry` = 32885;
+UPDATE `creature_template` SET `difficulty_entry_1` = 33152 WHERE `entry` = 32883;
+UPDATE `creature_template` SET `difficulty_entry_1` = 33150 WHERE `entry` = 32908;
+UPDATE `creature_template` SET `difficulty_entry_1` = 33151 WHERE `entry` = 32907;
+UPDATE `creature_template` SET `difficulty_entry_1` = 33161 WHERE `entry` = 33110;
+UPDATE `creature_template` SET `faction_A` = 14, `faction_H` = 14, `mindmg` = 417, `maxdmg` = 582, `attackpower` = 608, `dmg_multiplier` = 10, `equipment_id` = 1847 WHERE `entry` = 33152;
+UPDATE `creature_template` SET `faction_A` = 14, `faction_H` = 14, `mindmg` = 417, `maxdmg` = 582, `attackpower` = 608, `dmg_multiplier` = 10, `equipment_id` = 1849 WHERE `entry` = 33153;
+UPDATE `creature_template` SET `faction_A` = 14, `faction_H` = 14, `mindmg` = 417, `maxdmg` = 582, `attackpower` = 608, `dmg_multiplier` = 10, `equipment_id` = 1852 WHERE `entry` = 33151;
+UPDATE `creature_template` SET `faction_A` = 14, `faction_H` = 14, `mindmg` = 417, `maxdmg` = 582, `attackpower` = 608, `dmg_multiplier` = 10, `equipment_id` = 1850 WHERE `entry` = 33150;
+UPDATE `creature_template` SET `minlevel` = 82, `maxlevel` = 82, `faction_A` = 14, `faction_H` = 14, `mindmg` = 463, `maxdmg` = 640, `attackpower` = 726, `dmg_multiplier` = 20 WHERE `entry` = 33161;
+-- Phase 1 adds
+UPDATE `creature_template` SET `faction_A` = 14, `faction_H` = 14, `mindmg` = 488, `maxdmg` = 642, `attackpower` = 782, `dmg_multiplier` = 20, `equipment_id` = 849 WHERE `entry` = 33158;
+UPDATE `creature_template` SET `faction_A` = 14, `faction_H` = 14, `mindmg` = 422, `maxdmg` = 586, `attackpower` = 642, `dmg_multiplier` = 10 WHERE `entry` = 33157;
+UPDATE `creature_template` SET `faction_A` = 14, `faction_H` = 14, `mindmg` = 463, `maxdmg` = 640, `attackpower` = 726, `dmg_multiplier` = 15, `equipment_id` = 1003 WHERE `entry` = 33156;
+UPDATE `creature_template` SET `faction_A` = 14, `faction_H` = 14, `mindmg` = 463, `maxdmg` = 640, `attackpower` = 726, `dmg_multiplier` = 20, `baseattacktime` = 1667, `equipment_id` = 1846 WHERE `entry` = 33155;
+UPDATE `creature_template` SET `faction_A` = 14, `faction_H` = 14, `mindmg` = 464, `maxdmg` = 604, `attackpower` = 708, `dmg_multiplier` = 25, `equipment_id` = 627 WHERE `entry` = 33162;
+UPDATE `creature_template` SET `difficulty_entry_1` = 33163 WHERE `entry` = 32875;
+UPDATE `creature_template` SET `faction_A` = 14, `faction_H` = 14, `mindmg` = 464, `maxdmg` = 604, `attackpower` = 708, `dmg_multiplier` = 10, `equipment_id` = 1845 WHERE `entry` = 33163;
+UPDATE `creature_template` SET `mechanic_immune_mask` = 650854235 WHERE `entry` IN (32872, 32873);
+UPDATE `creature_template` SET `faction_A` = 14, `faction_H` = 14, `mindmg` = 488, `maxdmg` = 642, `attackpower` = 782, `dmg_multiplier` = 45, `mechanic_immune_mask` = 650854235 WHERE `entry` = 33149;
+UPDATE `creature_template` SET `faction_A` = 14, `faction_H` = 14, `speed_walk` = 0.888888, `mindmg` = 488, `maxdmg` = 642, `attackpower` = 782, `dmg_multiplier` = 45, `mechanic_immune_mask` = 650854235 WHERE `entry` = 33148;
+-- Thorim
+UPDATE `creature_template` SET `speed_walk` = 1.66667 WHERE `entry` = 32865;
+UPDATE `creature_template` SET `faction_A` = 14, `faction_H` = 16, `speed_walk` = 1.66667, `mindmg` = 496, `maxdmg` = 674, `attackpower` = 783, `dmg_multiplier` = 80, `baseattacktime` = 1500, `minrangedmg` = 365, `maxrangedmg` = 529, `rangedattackpower` = 98, `equipment_id` = 1844, `mechanic_immune_mask` = 650854239, `flags_extra` = 1 WHERE `entry` = 33147;
+-- Twilight mobs
+UPDATE `creature_template` SET `mechanic_immune_mask` = 570425425, `speed_walk` = 1.33334 WHERE `entry` IN (33818, 33822, 33824, 33823);
+UPDATE `creature_template` SET `minlevel` = 82, `maxlevel` = 82, `faction_A` = 16, `faction_H` = 16, `speed_walk` = 1.33334, `mindmg` = 464, `maxdmg` = 604, `attackpower` = 708, `dmg_multiplier` = 25, `mingold` = 72000, `maxgold` = 76000, `equipment_id` = 1848, `mechanic_immune_mask` = 570425425 WHERE `entry` = 33827;
+UPDATE `creature_template` SET `minlevel` = 82, `maxlevel` = 82, `faction_A` = 16, `faction_H` = 16, `speed_walk` = 1.33334, `mindmg` = 464, `maxdmg` = 604, `attackpower` = 708, `dmg_multiplier` = 55, `mingold` = 72000, `maxgold` = 76000, `equipment_id` = 1852, `mechanic_immune_mask` = 570425425 WHERE `entry` = 33828;
+UPDATE `creature_template` SET `minlevel` = 82, `maxlevel` = 82, `faction_A` = 16, `faction_H` = 16, `speed_walk` = 1.33334, `mindmg` = 464, `maxdmg` = 604, `attackpower` = 708, `dmg_multiplier` = 30, `baseattacktime` = 1000, `mingold` = 72000, `maxgold` = 76000, `equipment_id` = 1862, `mechanic_immune_mask` = 570425425 WHERE `entry` = 33831;
+UPDATE `creature_template` SET `name` = 'Twilight Slayer (1)', `minlevel` = 82, `maxlevel` = 82, `faction_A` = 16, `faction_H` = 16, `speed_walk` = 1.33334, `mindmg` = 464, `maxdmg` = 604, `attackpower` = 708, `dmg_multiplier` = 65, `mingold` = 72000, `maxgold` = 76000, `equipment_id` = 1847, `mechanic_immune_mask` = 570425425 WHERE `entry` = 33832;
+UPDATE `creature_template` SET `difficulty_entry_1` = 33773 WHERE `entry` = 33772;
+UPDATE `creature_template` SET `name` = 'Faceless Horror (1)', `minlevel` = 82, `maxlevel` = 82, `faction_A` = 16, `faction_H` = 16, `mindmg` = 464, `maxdmg` = 604, `attackpower` = 708, `dmg_multiplier` = 85, `mingold` = 76000, `maxgold` = 79000, `mechanic_immune_mask` = 33554512 WHERE `entry` = 33773;
+UPDATE `creature_template` SET `name` = 'Twilight Pyromancer (1)', `minlevel` = 82, `maxlevel` = 82, `faction_A` = 16, `faction_H` = 16, `mindmg` = 464, `maxdmg` = 604, `attackpower` = 708, `dmg_multiplier` = 25, `mingold` = 72000, `maxgold` = 76000, `equipment_id` = 1848, `mechanic_immune_mask` = 8388625 WHERE `entry` = 33830;
+UPDATE `creature_template` SET `minlevel` = 82, `maxlevel` = 82, `faction_A` = 16, `faction_H` = 16, `mindmg` = 464, `maxdmg` = 604, `attackpower` = 708, `dmg_multiplier` = 25, `mingold` = 72000, `maxgold` = 76000, `equipment_id` = 1849, `mechanic_immune_mask` = 8388625 WHERE `entry` = 33829;
+UPDATE `creature_template` SET `difficulty_entry_1` = 33839 WHERE `entry` = 33838;
+UPDATE `creature_template` SET `minlevel` = 82, `maxlevel` = 82, `faction_A` = 16, `faction_H` = 16, `mindmg` = 464, `maxdmg` = 604, `attackpower` = 708, `dmg_multiplier` = 20, `mingold` = 41000, `maxgold` = 46000, `mechanic_immune_mask` = 8519697 WHERE `entry` = 33839;
+-- General Vezax
+UPDATE `creature_template` SET `mindmg` = 502, `maxdmg` = 674, `attackpower` = 853, `Health_mod` = 450 WHERE `entry` = 33271;
+UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `mindmg` = 502, `maxdmg` = 674, `attackpower` = 853, `dmg_multiplier` = 60, `baseattacktime` = 1800, `mingold` = 3450000, `maxgold` = 3750000, `Health_mod` = 1650, `mechanic_immune_mask` = 617299803, `flags_extra` = 257 WHERE `entry` = 33449;
+UPDATE `creature_template` SET `difficulty_entry_1` = 33789 WHERE `entry` = 33488;
+UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `mechanic_immune_mask` = 650854235 WHERE `entry` = 33789;
+UPDATE `creature_template` SET `difficulty_entry_1` = 34152, `minlevel` = 83, `maxlevel` = 83, `faction_A` = 16, `faction_H` = 16, `Health_mod` = 113, `flags_extra` = 256 WHERE `entry` = 33524;
+UPDATE `creature_template` SET `minlevel` = 83, `maxlevel` = 83, `faction_A` = 16, `faction_H` = 16, `mindmg` = 464, `maxdmg` = 604, `attackpower` = 708, `dmg_multiplier` = 35, `Health_mod` = 675, `mechanic_immune_mask` = 650854235, `flags_extra` = 256 WHERE `entry` = 34152;
+
 
 -- 03_world_icecrown_citadel
 -- Icecrown Citadel

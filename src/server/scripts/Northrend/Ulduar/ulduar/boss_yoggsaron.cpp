@@ -157,26 +157,38 @@ public:
     {
         keeper_imageAI(Creature *c) : ScriptedAI(c)
         {
+            me->SetReactState(REACT_PASSIVE);
             pInstance = c->GetInstanceScript();
         }
 
         InstanceScript* pInstance;
     };
 
-    CreatureAI* GetAI(Creature* pCreature) const
+bool OnGossipHello(Player* pPlayer, Creature* pCreature)
+{
+    InstanceScript *data = pPlayer->GetInstanceScript();
+    InstanceScript *pInstance = (InstanceScript *) pCreature->GetInstanceScript();
+    
+    if (pInstance && pPlayer)
     {
-        return new keeper_imageAI (pCreature);
+        if (!pCreature->HasAura(SPELL_KEEPER_ACTIVE))
+        {
+            pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_KEEPER_HELP, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
+            pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
+        }
     }
+    return true;
+}
 
-    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
-    {
-        InstanceScript *data = pPlayer->GetInstanceScript();
-        InstanceScript* pInstance = pCreature->GetInstanceScript();
+bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
+{
+    InstanceScript *data = pPlayer->GetInstanceScript();
+    InstanceScript* pInstance = pCreature->GetInstanceScript();
     
         if (pPlayer)
             pPlayer->CLOSE_GOSSIP_MENU();
 
-        pPlayer->PlayerTalkClass->ClearMenus();
         switch (pCreature->GetEntry())
         {
             case NPC_IMAGE_OF_FREYA:
@@ -206,23 +218,11 @@ public:
         }
         return true;
     }
-
-    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
-    {
-        InstanceScript *data = pPlayer->GetInstanceScript();
-        InstanceScript *pInstance = (InstanceScript *) pCreature->GetInstanceScript();
-    
-        if (pInstance && pPlayer)
-        {
-            if (!pCreature->HasAura(SPELL_KEEPER_ACTIVE))
-           {
-                pPlayer->PrepareQuestMenu(pCreature->GetGUID());
-                pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_KEEPER_HELP, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
-                pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
-            }
-        }
-        return true;
-    }
+};
+CreatureAI* GetAI(Creature* pCreature) const
+{
+    return new keeper_imageAI (pCreature);
+}
 
 };
 

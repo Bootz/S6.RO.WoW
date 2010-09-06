@@ -109,7 +109,7 @@ public:
         {
             pInstance = pCreature->GetInstanceScript();
             me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);
-            me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true); // Death Grip jump effect
+        me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true);  // Death Grip
         }
  
         InstanceScript *pInstance;
@@ -305,10 +305,7 @@ public:
                 me->SetStandState(UNIT_STAND_STATE_DEAD);
                 DoCast(me, SPELL_SARONITE_VAPOR);
                 if (Creature* Vezax = me->GetCreature(*me, pInstance->GetData64(DATA_VEZAX)))
-	         {
                     Vezax->AI()->DoAction(ACTION_VAPOR_DEAD);
-                    Vezax->AI()->DoAction(ACTION_ANIMUS_DEAD);
-	         }
             }
         }
     };
@@ -332,7 +329,7 @@ public:
         {
             pInstance = pCreature->GetInstanceScript();
             me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);
-            me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true); // Death Grip jump effect
+        me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true);  // Death Grip
         }
     
         InstanceScript* pInstance;
@@ -342,7 +339,10 @@ public:
         void JustDied(Unit * killer)
         {
             if (Creature* Vezax = me->GetCreature(*me, pInstance->GetData64(DATA_VEZAX)))
+        {
                 Vezax->RemoveAurasDueToSpell(SPELL_SARONITE_BARRIER);
+            Vezax->AI()->DoAction(ACTION_ANIMUS_DEAD);
+        }
         }
 
         void EnterCombat(Unit* pWho){}

@@ -214,7 +214,7 @@ public:
         {
             pInstance = pCreature->GetInstanceScript();
             me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);
-            me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true); // Death Grip jump effect
+        me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true);  // Death Grip
         }
     
        InstanceScript* pInstance;
@@ -230,6 +230,7 @@ public:
         {
             _Reset();
         
+        me->UpdateMaxHealth();
             spawnedAdds = 0;
             EldersCount = 0;
             checkElementalAlive = true;
@@ -269,7 +270,6 @@ public:
         
             // Hard mode chest
             uint32 chest;
-
             switch (EldersCount)
             {
                 case 0:
@@ -334,7 +334,12 @@ public:
             if (EldersCount == 0)
                 DoScriptText(SAY_AGGRO, me);
             else
+        {
                 DoScriptText(SAY_AGGRO_WITH_ELDER, me);
+            // each Elder left up will increase the health of both Freya and her adds. (20% per Elder)
+            me->SetMaxHealth(me->GetMaxHealth() + (uint32)(me->GetMaxHealth() * EldersCount * 20 / 100));
+            me->SetHealth(me->GetMaxHealth());
+        }
         }
 
         void UpdateAI(const uint32 diff)
@@ -1096,7 +1101,9 @@ public:
                     Position pos;
                     me->GetRandomNearPosition(pos, 25);
                     me->SummonCreature(NPC_HEALTHY_SPORE, pos, TEMPSUMMON_TIMED_DESPAWN, 20000);
-                }            uiSpawnHealthySporeTimer = 2000;
+            }
+            healthySporesSpawned += 2;
+            uiSpawnHealthySporeTimer = 2000;
             }
             else uiSpawnHealthySporeTimer -= diff;
 

@@ -37,6 +37,7 @@ enum Spells
     SPELL_CHAIN_LIGHTNING_10                    = 62131,
     SPELL_CHAIN_LIGHTNING_25                    = 64390,
     SPELL_LIGHTNING_CHARGE                      = 62279,
+    SPELL_LIGHTNING_DESTRUCTION                 = 62393,
     SPELL_LIGHTNING_RELEASE                     = 62466,
     SPELL_UNBALANCING_STRIKE                    = 62130,
     SPELL_BERSERK                               = 62560
@@ -224,7 +225,7 @@ public:
         {
             pInstance = pCreature->GetInstanceScript();
             me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);
-            me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true); // Death Grip jump effect
+        me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true);  // Death Grip
             FirstTime = true;
         }
     
@@ -352,7 +353,6 @@ public:
                             DoCastAOE(SPELL_CHARGE_ORB);
                             events.ScheduleEvent(EVENT_CHARGE_ORB, urand(15000, 20000), 0, PHASE_1);
                             break;
-
                         case EVENT_SUMMON_ADDS:
                             spawnAdd();
                             events.ScheduleEvent(EVENT_SUMMON_ADDS, 10000, 0, PHASE_1);
