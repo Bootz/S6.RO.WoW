@@ -1,6 +1,6 @@
 -- All information for 9784 (rev. 2f4c54a93b).
 -- RoCore rev. 813
--- wolrd_plater_factionchange_tc9784
+-- world_player_factionchange_tc9784
 DROP TABLE IF EXISTS `player_factionchange_achievement`;
 CREATE TABLE `player_factionchange_achievement` (
  `alliance_id` int(8) NOT NULL,
