@@ -101,8 +101,8 @@ static bool procPrepared = InitTriggerAuraData();
 Unit::Unit(): WorldObject(),
 m_movedPlayer(NULL), IsAIEnabled(false), NeedChangeAI(false), 
 m_ControlledByPlayer(false), i_AI(NULL), i_disabledAI(NULL), m_procDeep(0), 
-m_removedAurasCount(0),  m_vehicle(NULL), m_vehicleKit(NULL), m_unitTypeMask(UNIT_MASK_NONE),
-m_ThreatManager(this), i_motionMaster(this), m_HostileRefManager(this)
+m_removedAurasCount(0),  m_vehicle(NULL), i_motionMaster(this), m_vehicleKit(NULL),
+m_ThreatManager(this), m_unitTypeMask(UNIT_MASK_NONE), m_HostileRefManager(this)
 {
 #ifdef _MSC_VER
 #pragma warning(default:4355)
@@ -7294,6 +7294,46 @@ bool Unit::HandleDummyAuraProc(Unit *pVictim, uint32 damage, AuraEffect* trigger
                 {
                     triggered_spell_id = 54968;
                     basepoints0 = triggerAmount*damage/100;
+                    break;
+                }
+                case 71406: // Tiny Abomination in a Jar
+                {
+                    if (!pVictim || !pVictim->isAlive())
+                        return false;
+
+                    CastSpell(this, 71432, true, NULL, triggeredByAura);
+
+                    Aura const* dummy = GetAura(71432);
+                    if (!dummy || dummy->GetStackAmount() < 8)
+                        return false;
+
+                    RemoveAurasDueToSpell(71432);
+                    triggered_spell_id = 71433;  // default main hand attack
+                    // roll if offhand
+                    if (Player const* player = ToPlayer())
+                        if (player->GetWeaponForAttack(OFF_ATTACK, true) && urand(0, 1))
+                            triggered_spell_id = 71434;
+                    target = pVictim;
+                    break;
+                }
+                case 71545: // Tiny Abomination in a Jar (Heroic)
+                {
+                    if (!pVictim || !pVictim->isAlive())
+                        return false;
+
+                    CastSpell(this, 71432, true, NULL, triggeredByAura);
+
+                    Aura const* dummy = GetAura(71432);
+                    if (!dummy || dummy->GetStackAmount() < 7)
+                        return false;
+
+                    RemoveAurasDueToSpell(71432);
+                    triggered_spell_id = 71433;  // default main hand attack
+                    // roll if offhand
+                    if (Player const* player = ToPlayer())
+                        if (player->GetWeaponForAttack(OFF_ATTACK, true) && urand(0, 1))
+                            triggered_spell_id = 71434;
+                    target = pVictim;
                     break;
                 }
             }
@@ -15484,10 +15524,9 @@ void Unit::Kill(Unit *pVictim, bool durabilityLoss)
 
     // Do KILL and KILLED procs. KILL proc is called only for the unit who landed the killing blow (and its owner - for pets and totems) regardless of who tapped the victim
     if (isPet() || isTotem())
-    {
         if (Unit *owner = GetOwner())
             owner->ProcDamageAndSpell(pVictim, PROC_FLAG_KILL, PROC_FLAG_NONE, PROC_EX_NONE, 0);
-    }
+
     ProcDamageAndSpell(pVictim, PROC_FLAG_KILL, PROC_FLAG_KILLED, PROC_EX_NONE, 0);
 
     // Proc auras on death - must be before aura/combat remove
