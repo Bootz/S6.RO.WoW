@@ -3833,6 +3833,7 @@ INSERT INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `modelid`
 DELETE FROM `creature` WHERE `guid`='94390';
 INSERT INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `modelid`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `spawndist`, `currentwaypoint`, `curhealth`, `curmana`, `DeathState`, `MovementType`) VALUES ('94390','32857','603','3','65535','0','0','1596.37','134.229','427.271','5.65217','604800','0','0','2998175','212900','0','0');
 
+-- 8642_ulduar_hodir
 UPDATE `creature_template` SET `difficulty_entry_1` = 33909, `unit_flags` = 0 WHERE `entry` = 32930;
 UPDATE `creature_template` SET `ScriptName` = 'mob_snowpacked_icicle' WHERE `entry` = 33174;
 -- toasty fire immunities
@@ -3841,9 +3842,11 @@ INSERT INTO spell_linked_spell VALUES
 (65280,-62469,2,'Toasty fire - Freeze imunity'),
 (65280,-62039,2,'Toasty fire - Biting cold imunity');
 
+-- 8650_mimiron_hardmode
 -- Mimiron Flames
 UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `modelid1` = 11686, `ScriptName` = 'mob_mimiron_flame_spread' WHERE `entry` = 34121;
 
+-- 8655_ulduar_25_stats
 -- Magma Rager
 UPDATE `creature_template` SET `mechanic_immune_mask` = 131072 WHERE `entry` IN (34086, 34201);
 -- Robots
@@ -5824,7 +5827,7 @@ INSERT INTO `player_factionchange_reputations` (`alliance_id`, `horde_id`) VALUE
 ('72','76'),
 ('509','510'),
 ('730','729'),
-('890','899'),
+('890','889'),
 ('930','911'),
 ('946','947'),
 ('978','941'),
