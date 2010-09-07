@@ -6670,6 +6670,13 @@ INSERT INTO `spell_linked_spell` (`spell_trigger`, `spell_effect`, `type`, `comm
 ('44544','74396','0','Fingers of Frost (ADD)'),
 ('-44544','-74396','0','Fingers of Frost (REMOVE)');
 
+-- Vanish
+
+DELETE FROM `spell_linked_spell` WHERE `spell_trigger` = -1784;
+INSERT INTO `spell_linked_spell` (`spell_trigger`, `spell_effect`, `type`, `comment`) VALUES
+(-1784, -11327, 0, 'Vanish - Rank 1'),
+(-1784, -11329, 0, 'Vanish - Rank 2'),
+(-1784, -26888, 0, 'Vanish - Rank 3');
 
 -- -------------------------------- --
 -- SCRIPT NAMES OF ALL SINGLE FILES --
