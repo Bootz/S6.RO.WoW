@@ -10,6 +10,9 @@ DELETE FROM `spell_script_names` WHERE `spell_id` IN (69140,72705) AND `ScriptNa
 DELETE FROM `spell_script_names` WHERE `spell_id`=69147 AND `ScriptName`='spell_marrowgar_coldflame_trigger';
 DELETE FROM `spell_script_names` WHERE `spell_id` IN (69075,70834,70835,70836) AND `ScriptName`='spell_marrowgar_bone_storm';
 DELETE FROM `spell_script_names` WHERE `spell_id` IN (70903,71236) AND `ScriptName`='spell_cultist_dark_martyrdom';
+INSERT INTO `spell_script_names` (`spell_id`,`ScriptName`) VALUES
+(70903,'spell_cultist_dark_martyrdom'),
+(71236,'spell_cultist_dark_martyrdom');
 
 DELETE FROM `creature` WHERE `id`=38995;
 

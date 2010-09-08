@@ -16,8 +16,6 @@
 * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 */
 
-// Scripted by Lavi & Andu - WoW-Romania Team http://www.wow-romania.ro (if you use this script, do not remove this seal, no matter what other modification you apply to script).
-
 #include "ScriptPCH.h"
 #include "icecrown_citadel.h"
 
@@ -329,7 +327,6 @@ public:
 					Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
 				          if (!pTarget)
 					        pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
-				          if (pTarget)
 					if (pTarget && !pTarget->HasAura(71289))
 					{
 						DoCast(pTarget, SPELL_DOMINATE_MIND);
@@ -519,10 +516,78 @@ public:
 
 };
 
+class spell_deathwhisper_mana_barrier : public SpellScriptLoader
+{
+    public:
+        spell_deathwhisper_mana_barrier() : SpellScriptLoader("spell_deathwhisper_mana_barrier") { }
 
+        class spell_deathwhisper_mana_barrier_AuraScript : public AuraScript
+        {
+            void HandlePeriodicTick(AuraEffect const * /*aurEff*/, AuraApplication const * /*aurApp*/)
+            {
+                Unit* caster = GetCaster();
+                int32 missingHealth = caster->GetMaxHealth() - caster->GetHealth();
+                caster->ModifyHealth(missingHealth);
+                caster->ModifyPower(POWER_MANA, -missingHealth);
+            }
+
+            void Register()
+            {
+                PreventDefaultEffect(EFFECT_0);
+                OnEffectPeriodic += AuraEffectPeriodicFn(spell_deathwhisper_mana_barrier_AuraScript::HandlePeriodicTick, EFFECT_0, SPELL_AURA_PERIODIC_TRIGGER_SPELL);
+            }
+        };
+
+        AuraScript* GetAuraScript() const
+        {
+            return new spell_deathwhisper_mana_barrier_AuraScript();
+        }
+};
+
+class spell_cultist_dark_martyrdom : public SpellScriptLoader
+{
+    public:
+        spell_cultist_dark_martyrdom() : SpellScriptLoader("spell_cultist_dark_martyrdom") { }
+
+        class spell_cultist_dark_martyrdom_SpellScript : public SpellScript
+        {
+            bool Validate(SpellEntry const* /*spellEntry*/)
+            {
+                if (uint32 scriptId = sObjectMgr.GetScriptId("boss_lady_deathwhisper"))
+                    if (CreatureInfo const* creInfo = ObjectMgr::GetCreatureTemplate(CREATURE_DEATHWHISPER))
+                        if (creInfo->ScriptID == scriptId)
+                            return true;
+
+                return false;
+            }
+
+            void HandleEffect(SpellEffIndex /*effIndex*/)
+            {
+                if (GetCaster()->isSummon())
+                    if (Unit* owner = GetCaster()->ToTempSummon()->GetSummoner())
+                        if (owner->GetEntry() == CREATURE_DEATHWHISPER)
+                            CAST_AI(boss_lady_deathwhisper::boss_lady_deathwhisperAI, owner->ToCreature()->AI())->AddToReanimationQueue(GetCaster());
+
+                GetCaster()->Kill(GetCaster());
+                GetCaster()->SetDisplayId(GetCaster()->GetEntry() == NPC_CULT_FANATIC ? 38009 : 38010);
+            }
+
+            void Register()
+            {
+                OnEffect += SpellEffectFn(spell_cultist_dark_martyrdom_SpellScript::HandleEffect, EFFECT_2, SPELL_EFFECT_FORCE_DESELECT);
+            }
+        };
+
+        SpellScript* GetSpellScript() const
+        {
+            return new spell_cultist_dark_martyrdom_SpellScript();
+        }
+};
 
 void AddSC_boss_lady_deathwhisper()
 {
-	new boss_lady_deathwhisper;
-	new npc_vengeful_shade;
+    new boss_lady_deathwhisper;
+    new npc_vengeful_shade;
+    new spell_deathwhisper_mana_barrier();
+    new spell_cultist_dark_martyrdom();
 }

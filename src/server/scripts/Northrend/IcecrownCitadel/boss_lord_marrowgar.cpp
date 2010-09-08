@@ -285,7 +285,7 @@ public:
 						uint32 count = RAID_MODE(1,3,1,3);
 						for (uint8 i = 1; i <= count; i++)
 						{
-							Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 200, true);
+							Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 200.0f, true);
 							if (pTarget && !pTarget->HasAura(SPELL_BONE_SPIKE_IMPALING))
 							{
 								Creature* Bone = me->SummonCreature(CREATURE_BONE_SPIKE, pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 999999);
