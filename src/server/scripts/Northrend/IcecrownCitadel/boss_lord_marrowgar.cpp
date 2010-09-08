@@ -293,7 +293,7 @@ public:
 								Bone->CastSpell(pTarget, SPELL_BONE_SPIKE_IMPALING, true);
 							}
 						}
-						m_uiBoneSpikeGraveyardTimer = 15000;
+						m_uiBoneSpikeGraveyardTimer = urand(25000, 35000);
 					} else m_uiBoneSpikeGraveyardTimer -= uiDiff;
 
 					if (m_uiColdFlameTimer <= uiDiff)
@@ -323,7 +323,7 @@ public:
 							Bone->CastSpell(pTarget, SPELL_BONE_SPIKE_IMPALING, true);
 						}
 					}
-					m_uiBoneSpikeGraveyardTimer = 15000;
+					m_uiBoneSpikeGraveyardTimer = urand(25000, 35000);
 				} else m_uiBoneSpikeGraveyardTimer -= uiDiff;
 			}
 
