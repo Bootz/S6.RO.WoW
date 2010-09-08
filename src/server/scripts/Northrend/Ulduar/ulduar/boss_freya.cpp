@@ -304,30 +304,36 @@ public:
             events.ScheduleEvent(EVENT_BERSERK, 600000);
         
             // Freya hard mode can be triggered simply by letting the elders alive
-            if(Creature* Brightleaf = Unit::GetCreature(*me, pInstance ? pInstance->GetData64(DATA_BRIGHTLEAF) : 0))
-                if(Brightleaf->isAlive())
+            if (Creature* Brightleaf = Unit::GetCreature(*me, pInstance ? pInstance->GetData64(DATA_BRIGHTLEAF) : 0))
+                if (Brightleaf->isAlive())
                 {
                     EldersCount++;
-                    DoCast(SPELL_BRIGHTLEAFS_ESSENCE);
-                    me->AddAura(SPELL_BRIGHTLEAFS_ESSENCE, me);
+                    Brightleaf->SetInCombatWithZone();
+                    Brightleaf->CastSpell(Brightleaf, SPELL_BRIGHTLEAFS_ESSENCE, true);
+                    Brightleaf->AddAura(SPELL_BRIGHTLEAFS_ESSENCE, Brightleaf);
+                    Brightleaf->AddAura(SPELL_DRAINED_OF_POWER, Brightleaf);
                     events.ScheduleEvent(EVENT_BRIGHTLEAF, urand(15000, 30000));
                 }
             
-            if(Creature* Ironbranch = Unit::GetCreature(*me, pInstance ? pInstance->GetData64(DATA_IRONBRANCH) : 0))
-                if(Ironbranch->isAlive())
+            if (Creature* Ironbranch = Unit::GetCreature(*me, pInstance ? pInstance->GetData64(DATA_IRONBRANCH) : 0))
+                if (Ironbranch->isAlive())
                 {
                     EldersCount++;
-                    DoCast(SPELL_IRONBRANCHS_ESSENCE);
-                    me->AddAura(SPELL_IRONBRANCHS_ESSENCE, me);
+                    Ironbranch->SetInCombatWithZone();
+                    Ironbranch->CastSpell(Ironbranch, SPELL_IRONBRANCHS_ESSENCE, true);
+                    Ironbranch->AddAura(SPELL_IRONBRANCHS_ESSENCE, Ironbranch);
+                    Ironbranch->AddAura(SPELL_DRAINED_OF_POWER, Ironbranch);
                     events.ScheduleEvent(EVENT_IRONBRANCH, urand(45000, 60000));
                 }
             
-            if(Creature* Stonebark = Unit::GetCreature(*me, pInstance ? pInstance->GetData64(DATA_STONEBARK) : 0))
-                if(Stonebark->isAlive())
+            if (Creature* Stonebark = Unit::GetCreature(*me, pInstance ? pInstance->GetData64(DATA_STONEBARK) : 0))
+                if (Stonebark->isAlive())
                 {
                     EldersCount++;
-                    DoCast(SPELL_STONEBARKS_ESSENCE);
                     me->AddAura(SPELL_STONEBARKS_ESSENCE, me);
+                    Stonebark->SetInCombatWithZone();
+                    Stonebark->CastSpell(Stonebark, SPELL_STONEBARKS_ESSENCE, true);
+                    Stonebark->AddAura(SPELL_DRAINED_OF_POWER, Stonebark);
                     events.ScheduleEvent(EVENT_STONEBARK, urand(35000, 45000));
                 }
             
@@ -418,8 +424,11 @@ public:
                         break;
                     case EVENT_BRIGHTLEAF:
                         for (int8 n = 0; n < 3; n++)
-                            if (Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
-                                DoCast(pTarget, SPELL_SUN_BEAM_SUMMON);
+                            {
+                            Position pos;
+                            me->GetRandomNearPosition(pos, 30);
+                            me->SummonCreature(NPC_SUN_BEAM, pos, TEMPSUMMON_TIMED_DESPAWN, 10000);
+                            }
                         events.ScheduleEvent(EVENT_BRIGHTLEAF, urand(35000, 45000));
                         break;
                     case EVENT_IRONBRANCH:
@@ -1137,6 +1146,7 @@ public:
         creature_healthy_sporeAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature)
         {
             m_pInstance = pCreature->GetInstanceScript();
+            me->SetInCombatWithZone();
             DoCast(me, SPELL_HEALTHY_SPORE_VISUAL);
             DoCast(me, SPELL_POTENT_PHEROMONES);
             DoCast(me, SPELL_GROW);

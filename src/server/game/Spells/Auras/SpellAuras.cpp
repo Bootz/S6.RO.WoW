@@ -1104,10 +1104,16 @@ void Aura::HandleAuraSpecificMods(AuraApplication const * aurApp, Unit * caster,
                         if (target->HasAura(61988) && !target->HasAura(25771))
                             target->RemoveAura(61988);
                         break;
-					case 57350: // Darkmoon Card: Illusion
-						if (target->getPowerType() == POWER_MANA)
-							target->CastSpell(target, 60242, true);
-						break;
+	                // Hodir Flash Freeze immunity remove
+                    case 61969:
+                    case 61990:
+                         if removeMode == AURA_REMOVE_BY_DEATH)
+                            target->RemoveAura(7940);
+                        break;
+                    case 57350: // Darkmoon Card: Illusion
+                         if (target->getPowerType() == POWER_MANA)
+                         target->CastSpell(target, 60242, true);
+			break;
                     case 72368: // Shared Suffering
                     case 72369:
                         if (caster)

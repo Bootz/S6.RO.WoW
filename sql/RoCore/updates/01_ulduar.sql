@@ -1956,3 +1956,62 @@ UPDATE `creature_template` SET `difficulty_entry_1` = 33789 WHERE `entry` = 3348
 UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `mechanic_immune_mask` = 650854235 WHERE `entry` = 33789;
 UPDATE `creature_template` SET `difficulty_entry_1` = 34152, `minlevel` = 83, `maxlevel` = 83, `faction_A` = 16, `faction_H` = 16, `Health_mod` = 113, `flags_extra` = 256 WHERE `entry` = 33524;
 UPDATE `creature_template` SET `minlevel` = 83, `maxlevel` = 83, `faction_A` = 16, `faction_H` = 16, `mindmg` = 464, `maxdmg` = 604, `attackpower` = 708, `dmg_multiplier` = 35, `Health_mod` = 675, `mechanic_immune_mask` = 650854235, `flags_extra` = 256 WHERE `entry` = 34152;
+
+-- Sif
+UPDATE `creature_template` SET `faction_A` = 14, `faction_H` = 14, `unit_flags` = 33554434 WHERE `entry` IN (33196, 33234);
+-- Kel Thuzad immunity
+UPDATE `creature_template` SET `mechanic_immune_mask` = 617299839 WHERE `entry` IN (15990, 30061);
+
+-- Archivum Data Disc drop
+DELETE FROM `creature_loot_template` WHERE entry IN (32927, 32867) AND item = 45506;
+INSERT INTO `creature_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `lootmode`, `groupid`, `mincountOrRef`, `maxcount`, `lootcondition`, `condition_value1`, `condition_value2`) VALUES
+('32927','45506','100','1','0','1','1','0','0','0'),
+('32867','45506','100','1','0','1','1','0','0','0');
+
+-- Runed Orb ai keepers
+DELETE FROM `gameobject_loot_template` WHERE entry IN (27085, 27086, 27068, 27073,27074) AND item = 45087;
+INSERT INTO `gameobject_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `lootmode`, `groupid`, `mincountOrRef`, `maxcount`, `lootcondition`, `condition_value1`, `condition_value2`) VALUES
+('27085','45087','75','1','0','1','1','0','0','0'),
+('27086','45087','75','1','0','1','1','0','0','0'),
+('27068','45087','75','1','0','1','1','0','0','0'),
+('27073','45087','75','1','0','1','1','0','0','0'),
+('27074','45087','75','1','0','1','1','0','0','0');
+
+-- Hodir Flash Freeze
+UPDATE `creature_template` SET `difficulty_entry_1` = 33352, `modelid1` = 25865, `modelid2` = 0, `mechanic_immune_mask` = 612597599, `flags_extra` = 0, `ScriptName` = 'npc_flash_freeze_pre' WHERE `entry` = 32926;
+UPDATE `creature_template` SET `difficulty_entry_1` = 33353, `mechanic_immune_mask` = 612597599 WHERE `entry` = 32938;
+UPDATE `creature_template` SET `modelid1` = 25865, `modelid2` = 0, `faction_A` = 14, `faction_H` = 14, `unit_flags` = 393220, `mechanic_immune_mask` = 612597599, `flags_extra` = 0 WHERE `entry` IN (33352, 33353);
+
+DELETE FROM `spell_linked_spell` WHERE `spell_trigger` IN (61969, 61990);
+INSERT INTO `spell_linked_spell` VALUES
+(61969, 7940, 2, "Hodir Flash Freeze immunity"),
+(61990, 7940, 2, "Hodir Flash Freeze immunity");
+
+-- Ulduar chain
+DELETE FROM reference_loot_template WHERE entry = 34111 AND item = 45538;
+
+DELETE FROM gameobject WHERE id = 194555;
+INSERT INTO gameobject VALUES (NULL, 194555, 603, 3, 1, 1435.56, 118.954, 423.641, 0, 0, 0, 0, 1, 300, 0, 1);
+DELETE FROM creature WHERE id = 33956;
+INSERT INTO creature VALUES (NULL, 33956, 603, 3, 1, 0, 0, 1443.61, 119.143, 423.641, 3.1675, 300, 0, 0, 75600, 0, 0, 0);
+
+DELETE FROM `gameobject_loot_template` WHERE entry IN (27074, 27086) AND item IN (45784, 45787);
+INSERT INTO `gameobject_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `lootmode`, `groupid`, `mincountOrRef`, `maxcount`, `lootcondition`, `condition_value1`, `condition_value2`) VALUES
+('27074','45784','-100','1','0','1','1','9','13610','0'),
+('27086','45787','-100','1','0','1','1','9','13611','0');
+
+UPDATE `quest_template` SET `PrevQuestId` = 13607, `NextQuestId` = 13614, `ExclusiveGroup` = -13606, `NextQuestInChain` = 0, `QuestFlags` = 192 WHERE `entry` IN (13606, 13609, 13611, 13610);
+UPDATE `quest_template` SET `PrevQuestId` = 13604, `SpecialFlags` = 2 WHERE `entry` = 13607;
+DELETE FROM `areatrigger_involvedrelation` WHERE `quest` = 13607;
+INSERT INTO `areatrigger_involvedrelation` (`id`, `quest`) VALUES (5400, 13607);
+
+DELETE FROM `item_loot_template` WHERE entry = 45875;
+INSERT INTO `item_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `lootmode`, `groupid`, `mincountOrRef`, `maxcount`, `lootcondition`, `condition_value1`, `condition_value2`) VALUES
+('45875','45087','100','1','0','1','1','0','0','0'),
+('45875','45624','100','1','0','5','5','0','0','0');
+
+-- Archivum Data Disc drop
+DELETE FROM `creature_loot_template` WHERE entry IN (33692, 33693) AND item = 45857;
+INSERT INTO `creature_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `lootmode`, `groupid`, `mincountOrRef`, `maxcount`, `lootcondition`, `condition_value1`, `condition_value2`) VALUES
+('33692','45857','100','1','0','1','1','0','0','0'),
+('33693','45857','100','1','0','1','1','0','0','0');
