@@ -41,6 +41,8 @@ enum eStillbladeData
     SPELL_REVIVE_SELF           = 32343,
 };
 
+#define NPC_BLOOD_KNIGHT_STILLBLADE     17768
+
 class npc_blood_knight_stillblade : public CreatureScript
 {
 public:

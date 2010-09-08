@@ -386,7 +386,7 @@ public:
 
             if (m_uiDecimateTimer <= diff)
             {
-                DoCastVictom(SPELL_DECIMATE);
+                DoCastVictim(SPELL_DECIMATE);
                 m_uiDecimateTimer = urand(20000, 25000);
             } else m_uiDecimateTimer -= diff;
 
