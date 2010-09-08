@@ -362,11 +362,11 @@ public:
         uint64 uiFestergut;
         void Reset()
         {
-            m_uiMortalWoundTimer          = 1500;
-            m_uiDecimateTimer             = 23000;
-            m_uiPlagueStench              = 46000;
+            m_uiMortalWoundTimer          = urand(3000, 7000);
+            m_uiDecimateTimer             = urand(20000, 25000);
             uiFestergut = 0;
 
+            DoCast(me, SPELL_PLAGUE_STENCH);
         }
 
         void EnterCombat(Unit* who)
@@ -380,23 +380,15 @@ public:
 
             if (m_uiMortalWoundTimer <= diff)
             {
-                Unit *pTarget = SelectUnit(SELECT_TARGET_TOPAGGRO, 0);
-                DoCast(pTarget, SPELL_MORTAL_WOUND);
-                m_uiMortalWoundTimer = 10000;
+                DoCastVictim(SPELL_MORTAL_WOUND);
+                m_uiMortalWoundTimer = urand(10000, 12500);
             } else m_uiMortalWoundTimer -= diff;
 
             if (m_uiDecimateTimer <= diff)
             {
-                Unit *pTarget = SelectUnit(SELECT_TARGET_TOPAGGRO, 0);
-                DoCast(pTarget, SPELL_DECIMATE);
-                m_uiDecimateTimer = 17800;
+                DoCastVictom(SPELL_DECIMATE);
+                m_uiDecimateTimer = urand(20000, 25000);
             } else m_uiDecimateTimer -= diff;
-
-            if (m_uiPlagueStench<= diff)
-            {
-                DoCastAOE(SPELL_PLAGUE_STENCH);
-                m_uiPlagueStench = 12000;
-            } else m_uiPlagueStench -= diff;
 
             DoMeleeAttackIfReady();
         }

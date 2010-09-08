@@ -245,7 +245,7 @@ public:
 		}
 
 
-		void DamageTaken(Unit *done_by, uint32 &damage)
+		void DamageTaken(Unit* done_by, uint32 &damage)
 		{
 			if (me->HasAura(SPELL_MANA_BARRIER))
 			{
@@ -298,7 +298,10 @@ public:
 
 			if (m_uiDeathandDecayTimer < uiDiff)
 			{
-				Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
+				Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
+				      if (!pTarget)
+					        pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
+				      if (pTarget)
 				DoCast(pTarget, RAID_MODE(SPELL_DEATH_AND_DECAY_10_NORMAL,SPELL_DEATH_AND_DECAY_25_NORMAL,SPELL_DEATH_AND_DECAY_10_HEROIC,SPELL_DEATH_AND_DECAY_25_HEROIC));
 				m_uiDeathandDecayTimer = 11000;
 			} else m_uiDeathandDecayTimer -= uiDiff;
@@ -323,7 +326,10 @@ public:
 				uint32 count = RAID_MODE(0,1,1,3);
 				for (uint8 i = 1; i <= count; i++)
 				{
-					Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
+					Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
+				          if (!pTarget)
+					        pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
+				          if (pTarget)
 					if (pTarget && !pTarget->HasAura(71289))
 					{
 						DoCast(pTarget, SPELL_DOMINATE_MIND);
@@ -342,7 +348,10 @@ public:
 
 				if (m_uiShadowBoltTimer < uiDiff)
 				{
-					Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
+					Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
+				      if (!pTarget)
+					        pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
+				      if (pTarget)
 					DoCast(pTarget, RAID_MODE(SPELL_SHADOW_BOLT_10_NORMAL,SPELL_SHADOW_BOLT_25_NORMAL,SPELL_SHADOW_BOLT_10_HEROIC,SPELL_SHADOW_BOLT_25_HEROIC));
 					m_uiShadowBoltTimer = 5000;
 				} else m_uiShadowBoltTimer -= uiDiff;
@@ -424,7 +433,10 @@ public:
 					uint32 count = RAID_MODE(0,1,1,1);
 					for (uint8 i = 1; i <= count; i++)
 					{
-						Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
+						Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
+				      if (!pTarget)
+					        pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
+				      if (pTarget)
 						DoCast(pTarget, SPELL_SUMMON_SHADE);
 						m_uiShadeTimer = 15000;
 					}
@@ -479,7 +491,7 @@ public:
 		{
 		}
 
-		void KilledUnit(Unit *victim)
+		void KilledUnit(Unit* victim)
 		{
 		}
 

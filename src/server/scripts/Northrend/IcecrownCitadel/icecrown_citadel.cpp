@@ -756,6 +756,36 @@ public:
 
 };
 
+// Stinky and Precious spell, it's here because its used for both (Festergut and Rotface "pet")
+class spell_stinky_precious_decimate : public SpellScriptLoader
+{
+    public:
+        spell_stinky_precious_decimate() : SpellScriptLoader("spell_stinky_precious_decimate") { }
+
+        class spell_stinky_precious_decimate_SpellScript : public SpellScript
+        {
+            void HandleScript(SpellEffIndex /*effIndex*/)
+            {
+                if (GetHitUnit()->GetHealthPct() > float(GetEffectValue()))
+                {
+                    uint32 newHealth = GetHitUnit()->GetMaxHealth() * uint32(GetEffectValue()) / 100;
+                    if (GetHitUnit()->GetMaxHealth() >= newHealth)
+                        GetHitUnit()->SetHealth(newHealth);
+                }
+            }
+
+            void Register()
+            {
+                OnEffect += SpellEffectFn(spell_stinky_precious_decimate_SpellScript::HandleScript, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
+            }
+        };
+
+        SpellScript* GetSpellScript() const
+        {
+            return new spell_stinky_precious_decimate_SpellScript();
+        }
+};
+
 void AddSC_icecrown_citadel_trash()
 {
 	new npc_nerubar_brood_keeper;
@@ -770,4 +800,5 @@ void AddSC_icecrown_citadel_trash()
 	new npc_death_speaker_zealot;
 	new npc_cult_adherent;
 	new npc_cult_fanatic;
+	new spell_stinky_precious_decimate();
 }

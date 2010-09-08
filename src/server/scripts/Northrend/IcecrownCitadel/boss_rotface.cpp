@@ -599,8 +599,8 @@ public:
 		uint64 uiRotface;
 		void Reset()
 		{
-			m_uiMortalWoundTimer          = 1500;
-			m_uiDecimateTimer             = 23000;
+			m_uiMortalWoundTimer          = urand(3000, 7000);
+			m_uiDecimateTimer             = urand(20000, 25000);
 			m_uiAwakenPlaguedZomiesTimer  = 46000;
 			uiRotface = 0;
 
@@ -618,16 +618,16 @@ public:
 			if (m_uiMortalWoundTimer <= diff)
 			{
 				Unit *pTarget = SelectUnit(SELECT_TARGET_TOPAGGRO, 0);
-				DoCast(pTarget, SPELL_MORTAL_WOUND);
-				m_uiMortalWoundTimer = 20000;
+				DoCastVictim(SPELL_MORTAL_WOUND);
+				m_uiMortalWoundTimer = urand(10000, 12500);
 			} else m_uiMortalWoundTimer -= diff;
 
 			if (m_uiDecimateTimer <= diff)
 			{
 				me->MonsterTextEmote(EMOTE_DECIMATE, 0, true);
 				Unit *pTarget = SelectUnit(SELECT_TARGET_TOPAGGRO, 0);
-				DoCast(pTarget, SPELL_DECIMATE);
-				m_uiDecimateTimer = 30000;
+				DoCastVictim(SPELL_DECIMATE);
+				m_uiDecimateTimer = urand(20000, 25000);
 			} else m_uiDecimateTimer -= diff;
 
 			if (m_uiAwakenPlaguedZomiesTimer<= diff)
