@@ -1,4 +1,4 @@
-/* Copyright (C) 2010 /dev/rsa for ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+/* Copyright (C) 2010 Easy for TrinityCore <http://trinity-core.ru/>
 * This program is free software; you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation; either version 2 of the License, or
@@ -17,440 +17,345 @@
 #include "ScriptPCH.h"
 #include "ruby_sanctum.h"
 
-enum eTexts
+enum eScriptTexts
 {
-	SAY_AGGRO = -1752001,
-	SAY_SLAY1 = -1752002,
-	SAY_SLAY2 = -1752003,
-	SAY_DEATH = -1752004,
-	SAY_SPECIAL = -1752005,
-	SAY_YELL = -1752006,
-	SAY_ATTACK = -1752007,
+    SAY_AGGRO           = -1752001,
+    SAY_SLAY1           = -1752002,
+	SAY_SLAY2           = -1752003,
+    SAY_DEATH           = -1752004,
+    SAY_SUMMON_CLONE    = -1752005,
 
-	XERESTRASZA_HELP = -1752008,
-	XERESTRASZA_THX = -1752009,
-	XERESTRASZA_1 = -1752010,
-	XERESTRASZA_2 = -1752011,
-	XERESTRASZA_3 = -1752012,
-	XERESTRASZA_4 = -1752013,
-	XERESTRASZA_5 = -1752014,
-	XERESTRASZA_6 = -1752015,
-	XERESTRASZA_7 = -1752016
+    SAY_XERESTRASZA_1  = -1752008,
+	SAY_XERESTRASZA_2  = -1752009,
+	SAY_XERESTRASZA_3  = -1752010,
+	SAY_XERESTRASZA_4  = -1752011,
+	SAY_XERESTRASZA_5  = -1752012,
+	SAY_XERESTRASZA_6  = -1752013,
+	SAY_XERESTRASZA_7  = -1752014,
+	SAY_XERESTRASZA_8  = -1752015,
+	SAY_XERESTRASZA_9  = -1752016
 };
 
-enum eBaltharusSpells
+enum eSpells
 {
-	SPELL_BLADE_TEMPEST = 75125,
-	SPELL_BLADE_TEMPEST_25 = 75126,
-	SPELL_CLEAVE = 40504,
-	SPELL_CLEAVE_25 = 40505,
-	SPELL_ENERVATING_BRAND = 74502,
-	SPELL_ENERVATING_BRAND_25 = 74505,
-	SPELL_ENERVATING_BRAND_BUFF = 74507,
-	SPELL_RESPELLING_WAVE = 74509,
-	SPELL_SUMMON_CLONE = 74511
+    SPELL_CLEAVE            = 40504,
+    SPELL_REPELLING_WAVE    = 74509,
+    SPELL_ENERVATING_BRAND  = 74502,
+    SPELL_BLADE_TEMPEST     = 75125,
+    SPELL_SUMMON_CLONE      = 74511
+};
+
+enum eEvents
+{
+    EVENT_CAST_CLEAVE           = 1,
+    EVENT_CAST_REPELLING_WAVE   = 2,
+    EVENT_CAST_ENERVATING_BRAND = 3,
+    EVENT_CAST_BLADE_TEMPEST    = 4,
+    EVENT_CAST_SUMMON_CLONE     = 5,
+    
+    ACTION_START_EVENT          = 6,
+    EVENT_XERESTRASZA_3         = 7,
+    EVENT_XERESTRASZA_4         = 8,
+    EVENT_XERESTRASZA_5         = 9,
+    EVENT_XERESTRASZA_6         = 10,
+    EVENT_XERESTRASZA_7         = 11,
+    EVENT_XERESTRASZA_8         = 12,
+    EVENT_XERESTRASZA_9         = 13
 };
 
 class boss_baltharus : public CreatureScript
 {
-public:
-    boss_baltharus() : CreatureScript("boss_baltharus") { }
+    public:
+        boss_baltharus() : CreatureScript("boss_baltharus") { }
 
-    struct boss_baltharusAI : public ScriptedAI
-    {
-    	boss_baltharusAI(Creature* pCreature) : ScriptedAI(pCreature)
-    	{
-    		pInstance = me->GetInstanceScript();
-    	}
+        struct boss_baltharusAI : public BossAI
+        {
+            boss_baltharusAI(Creature* pCreature) : BossAI(pCreature, DATA_BALTHARUS)
+    	    {
+                ASSERT(instance);
+    	    }
 
-    	InstanceScript* pInstance;
+    	    void Reset()
+    	    {
+                instance->SetBossState(DATA_BALTHARUS, NOT_STARTED);
+                bClone = false;
+                events.Reset();
+                events.ScheduleEvent(EVENT_CAST_CLEAVE, urand(2000,3000));
+                events.ScheduleEvent(EVENT_CAST_REPELLING_WAVE, urand(20000,30000));
+                events.ScheduleEvent(EVENT_CAST_ENERVATING_BRAND, urand(30000,45000));
+                events.ScheduleEvent(EVENT_CAST_BLADE_TEMPEST, urand(7000,7500));
+    	    }
 
-    	uint32 uiBladeTempestTimer;
-    	uint32 uiCleaveTimer;
-    	uint32 uiEnervatingBrandTimer;
-    	uint32 uiRespellingWaveTimer;
+    	    void EnterCombat(Unit*)
+    	    {
+                instance->SetBossState(DATA_BALTHARUS, IN_PROGRESS);
+                DoScriptText(SAY_AGGRO, me);
+    	    }
 
-    	uint64 uiClone1GUID;
-    	uint64 uiClone2GUID;
-    	uint64 uiClone3GUID;
+    	    void UpdateAI(const uint32 diff)
+    	    {
+    		    if (!UpdateVictim() || !CheckInRoom())
+                    return;
 
-    	bool isMode25; // Used for Clone Summoning( 10-Players: Summon at 50%, 25-Players: Summon at 75%, 50% and 25%)
-    	bool bClone1;
-    	bool bClone2;
-    	bool bClone3;
+                if (me->hasUnitState(UNIT_STAT_CASTING))
+                    return;
 
-    	void Reset()
-    	{
-    		uiBladeTempestTimer = 5000;
-    		uiCleaveTimer = 2000;
-    		uiEnervatingBrandTimer = 30000;// 30000-45000
-    		uiRespellingWaveTimer = 20000;// 20000-30000
+                events.Update(diff);
 
-    		uiClone1GUID = 0;
-    		uiClone2GUID = 0;
-    		uiClone3GUID = 0;
+                while (uint32 eventId = events.ExecuteEvent())
+                {
+                    switch (eventId)
+                    {
+                        case EVENT_CAST_CLEAVE:
+                            DoCastVictim(SPELL_CLEAVE);
+                            events.ScheduleEvent(EVENT_CAST_CLEAVE, urand(2000,3000));
+                            break;
+                        case EVENT_CAST_REPELLING_WAVE:
+                            DoCast(SPELL_REPELLING_WAVE);
+                            events.ScheduleEvent(EVENT_CAST_REPELLING_WAVE, urand(20000,30000));
+                            break;
+                        case EVENT_CAST_ENERVATING_BRAND:
+                            DoCastVictim(SPELL_ENERVATING_BRAND);
+                            events.ScheduleEvent(EVENT_CAST_ENERVATING_BRAND, urand(30000,45000));
+                            break;
+                        case EVENT_CAST_BLADE_TEMPEST:
+                            DoCast(SPELL_BLADE_TEMPEST);
+                            events.ScheduleEvent(EVENT_CAST_BLADE_TEMPEST, urand(30000,45000));
+                            break;
+                    }
+                }
 
-    		if(pInstance->instance->GetDifficulty() == RAID_DIFFICULTY_10MAN_NORMAL)
-    			isMode25 = false;
-    		else
-    			isMode25 = true;
-    		bClone1 = false;
-    		bClone2 = false;
-    		bClone3 = false;
-    	}
+                if(!bClone)
+                {
+                    if(me->GetHealth() <= ((me->GetMaxHealth() / 100) * 50))
+				    {
+					    bClone = true;
+					    DoCast(SPELL_SUMMON_CLONE);
+					    DoScriptText(SAY_SUMMON_CLONE, me);
+				    }
+                }
 
-    	void EnterCombat(Unit* )
-    	{
-    		DoScriptText(SAY_AGGRO, me);
-    		pInstance->SetData(DATA_BALTHARUS_EVENT, IN_PROGRESS);
-    	}
+    		    DoMeleeAttackIfReady();
+    	    }
 
-    	void UpdateAI(const uint32 diff)
-    	{
-    		if(!UpdateVictim())
-    			return;
+            void JustSummoned(Creature *summon)
+            {
+                summons.Summon(summon);
+            }
 
-    		if (uiBladeTempestTimer <= diff)
-    		{
-    			DoCast(pInstance->instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_NORMAL ? SPELL_BLADE_TEMPEST_25 : SPELL_BLADE_TEMPEST);
-    			uiBladeTempestTimer = urand(7000,7500);
-    		} else uiBladeTempestTimer -= diff;
+    	    void KilledUnit(Unit *victim)
+    	    {
+                DoScriptText(RAND(SAY_SLAY1,SAY_SLAY2), me);
+    	    }
 
-    		if (uiCleaveTimer <= diff)
-    		{
-    			DoCastVictim(pInstance->instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_NORMAL ? SPELL_CLEAVE_25 : SPELL_CLEAVE);
-    			uiCleaveTimer = urand(2000,2500);
-    		} else uiCleaveTimer -= diff;
+            void JustReachedHome()
+            {
+                summons.DespawnAll();
+                instance->SetData(DATA_BALTHARUS, FAIL);
+            }
 
-    		if (uiEnervatingBrandTimer <= diff)
-    		{
-    			DoCastVictim(pInstance->instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_NORMAL ? SPELL_ENERVATING_BRAND_25 : SPELL_ENERVATING_BRAND);
-    			DoCast(me, SPELL_ENERVATING_BRAND_BUFF);
-    			uiEnervatingBrandTimer = urand(30000,45000);
-    			DoScriptText(SAY_YELL, me);
-    		} else uiEnervatingBrandTimer -= diff;
+    	    void JustDied(Unit*)
+    	    {
+                DoScriptText(SAY_DEATH, me);
+                _JustDied();
+    	    }
 
-    		if (uiRespellingWaveTimer <= diff)
-    		{
-    			DoCast(SPELL_RESPELLING_WAVE);
-    			uiRespellingWaveTimer = urand(20000,30000);
-    		} else uiRespellingWaveTimer -= diff;
+        private:
+            bool bClone;
+        };
 
-    		if(isMode25)
-    		{
-    			if(!bClone1)
-    			{
-    				if(me->GetHealth() <= ((me->GetMaxHealth() / 100) * 75))
-    				{
-    					bClone1 = true;
-    					DoCast(SPELL_SUMMON_CLONE);
-    					DoScriptText(SAY_SPECIAL, me);
-    				}
-    			}
-    			else if(!bClone2)
-    			{
-    				if(me->GetHealth() <= ((me->GetMaxHealth() / 100) * 50))
-    				{
-    					bClone2 = true;
-    					DoCast(SPELL_SUMMON_CLONE);
-    					DoScriptText(SAY_SPECIAL, me);
-    				}
-    			}
-    			else if(!bClone3)
-    			{
-    				if(me->GetHealth() <= ((me->GetMaxHealth() / 100) * 25))
-    				{
-    					bClone3 = true;
-    					DoCast(SPELL_SUMMON_CLONE);
-    					DoScriptText(SAY_SPECIAL, me);
-    				}
-    			}
-    		}
-    		else
-    		{
-    			if(!bClone1)
-    			{
-    				if(me->GetHealth() <= ((me->GetMaxHealth() / 100) * 50))
-    				{
-    					bClone1 = true;
-    					DoCast(SPELL_SUMMON_CLONE);
-    					DoScriptText(SAY_SPECIAL, me);
-    				}
-    			}
-    		}
-
-    		DoMeleeAttackIfReady();
-    	}
-
-    	void JustDied(Unit*)
-    	{
-    		DoScriptText(SAY_DEATH, me);
-    		if(isMode25)
-    		{
-    			if(Creature *Clone1 = pInstance->instance->GetCreature(uiClone1GUID))
-    				if(Clone1->isAlive())
-    					Clone1->DisappearAndDie();
-    			if(Creature *Clone2 = pInstance->instance->GetCreature(uiClone2GUID))
-    				if(Clone2->isAlive())
-    					Clone2->DisappearAndDie();
-    			if(Creature *Clone3 = pInstance->instance->GetCreature(uiClone3GUID))
-    				if(Clone3->isAlive())
-    					Clone3->DisappearAndDie();
-    		}
-    		else
-    		{
-    			if(Creature *Clone1 = pInstance->instance->GetCreature(uiClone1GUID))
-    				if(Clone1->isAlive())
-    					Clone1->DisappearAndDie();
-    		}
-
-    		if(pInstance) pInstance->SetData(DATA_BALTHARUS_EVENT, DONE);
-    	}
-
-    	void KilledUnit(Unit* victim)
-    	{
-    		if(victim == me)
-    			return;
-    		DoScriptText(RAND(SAY_SLAY1,SAY_SLAY2), me);
-    	}
-
-    	void JustSummoned(Creature* pSummon)
-    	{
-    		if(!isMode25)
-    		{
-    			uiClone1GUID = pSummon->GetGUID();
-    		}
-    		else
-    		{
-    			if(uiClone1GUID == 0)
-    				uiClone1GUID = pSummon->GetGUID();
-    			else if(uiClone2GUID == 0)
-    				uiClone2GUID = pSummon->GetGUID();
-    			else if(uiClone3GUID == 0)
-    				uiClone3GUID = pSummon->GetGUID();
-    		}
-    	}
-    };
-
-    CreatureAI* GetAI(Creature *pCreature) const
-    {
-    	return new boss_baltharusAI(pCreature);
-    }
+        CreatureAI* GetAI(Creature *pCreature) const
+        {
+    	    return new boss_baltharusAI(pCreature);
+        }
 
 };
 
-
-class boss_baltharus_clone : public CreatureScript
+class boss_baltharus_summon : public CreatureScript
 {
-public:
-    boss_baltharus_clone() : CreatureScript("boss_baltharus_clone") { }
+    public:
+        boss_baltharus_summon() : CreatureScript("boss_baltharus_summon") { }
 
-    struct boss_baltharus_cloneAI : public ScriptedAI
-    {
-    	boss_baltharus_cloneAI(Creature* pCreature) : ScriptedAI(pCreature)
-    	{
-    		pInstance = me->GetInstanceScript();
-    	}
+        struct boss_baltharus_summonAI : public ScriptedAI
+        {
+            boss_baltharus_summonAI(Creature* pCreature) : ScriptedAI(pCreature)
+    	    {
+                pInstance = me->GetInstanceScript();
+    	    }
 
-    	InstanceScript* pInstance;
+    	    void Reset()
+    	    {
+                events.Reset();
+                events.ScheduleEvent(EVENT_CAST_CLEAVE, urand(2000,3000));
+                events.ScheduleEvent(EVENT_CAST_ENERVATING_BRAND, urand(30000,45000));
+                events.ScheduleEvent(EVENT_CAST_BLADE_TEMPEST, urand(7000,7500));
+    	    }
 
-    	uint32 uiBladeTempestTimer;
-    	uint32 uiCleaveTimer;
-    	uint32 uiEnervatingBrandTimer;
+    	    void UpdateAI(const uint32 diff)
+    	    {
+    		    if (!UpdateVictim())
+                    return;
 
-    	void Reset()
-    	{
-    		uiBladeTempestTimer = 5000;
-    		uiCleaveTimer = 2000;
-    		uiEnervatingBrandTimer = 30000;// 30000-45000
-    	}
+                if (me->hasUnitState(UNIT_STAT_CASTING))
+                    return;
 
-    	void UpdateAI(const uint32 diff)
-    	{
-    		if(!UpdateVictim())
-    			return;
+                events.Update(diff);
 
-    		if (uiBladeTempestTimer <= diff)
-    		{
-    			DoCast(pInstance->instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_NORMAL? SPELL_BLADE_TEMPEST_25 : SPELL_BLADE_TEMPEST);
-    			uiBladeTempestTimer = urand(7000,7500);
-    		} else uiBladeTempestTimer -= diff;
+                while (uint32 eventId = events.ExecuteEvent())
+                {
+                    switch (eventId)
+                    {
+                        case EVENT_CAST_CLEAVE:
+                            DoCastVictim(SPELL_CLEAVE);
+                            events.ScheduleEvent(EVENT_CAST_CLEAVE, urand(2000,3000));
+                            break;
+                        case EVENT_CAST_ENERVATING_BRAND:
+                            DoCastVictim(SPELL_ENERVATING_BRAND);
+                            events.ScheduleEvent(EVENT_CAST_ENERVATING_BRAND, urand(30000,45000));
+                            break;
+                        case EVENT_CAST_BLADE_TEMPEST:
+                            DoCast(SPELL_BLADE_TEMPEST);
+                            events.ScheduleEvent(EVENT_CAST_BLADE_TEMPEST, urand(30000,45000));
+                            break;
+                    }
+                }
 
-    		if (uiCleaveTimer <= diff)
-    		{
-    			DoCastVictim(pInstance->instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_NORMAL ? SPELL_CLEAVE_25 : SPELL_CLEAVE);
-    			uiCleaveTimer = urand(2000,2500);
-    		} else uiCleaveTimer -= diff;
+    		    DoMeleeAttackIfReady();
+    	    }
 
-    		if (uiEnervatingBrandTimer <= diff)
-    		{
-    			DoCastVictim(pInstance->instance->GetDifficulty() == RAID_DIFFICULTY_25MAN_NORMAL ? SPELL_ENERVATING_BRAND_25 : SPELL_ENERVATING_BRAND);
-    			DoCast(me, SPELL_ENERVATING_BRAND_BUFF);
-    			uiEnervatingBrandTimer = urand(30000,45000);
-    		} else uiEnervatingBrandTimer -= diff;
+        private:
+            EventMap events;
+            InstanceScript* pInstance;
 
-    		DoMeleeAttackIfReady();
-    	}
-    };
+        };
 
-    CreatureAI* GetAI(Creature *pCreature) const
-    {
-    	return new boss_baltharus_cloneAI(pCreature);
-    }
+        CreatureAI* GetAI(Creature *pCreature) const
+        {
+    	    return new boss_baltharus_summonAI(pCreature);
+        }
 
 };
-
 
 class npc_xerestrasza : public CreatureScript
 {
-public:
-    npc_xerestrasza() : CreatureScript("npc_xerestrasza") { }
+    public:
+        npc_xerestrasza() : CreatureScript("npc_xerestrasza") { }
 
-    struct npc_xerestraszaAI : public ScriptedAI
-    {
-    	npc_xerestraszaAI(Creature *pCreature) : ScriptedAI(pCreature)
-    	{
-    		pInstance = me->GetInstanceScript();
-    	}
+        struct npc_xerestraszaAI : public ScriptedAI
+        {
+    	    npc_xerestraszaAI(Creature *pCreature) : ScriptedAI(pCreature)
+    	    {
+    		    pInstance = me->GetInstanceScript();
+    	    }
 
-    	InstanceScript* pInstance;
-    	uint32 Timer;
-    	uint32 Counter;
+            void Reset()
+            {
+                events.Reset();
+                bIntro = false;
+                pInstance->SetData(DATA_XERESTRASZA,NOT_STARTED);
+            }
 
-    	bool bThx;
-    	bool bHelp;
+            void MoveInLineOfSight(Unit*)
+    	    {
+    		    if(!bIntro)
+    		    {
+    			    DoScriptText(SAY_XERESTRASZA_1, me);
+                    pInstance->SetData(DATA_XERESTRASZA,NOT_STARTED);
+                    me->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
+    			    bIntro = true;
+    		    }
+    	    }
 
-    	void Reset()
-    	{
-    		Timer = 9000;
-    		Counter = 0;
-    		bThx = false;
-    		bHelp = false;
-    	}
+            void DoAction(const int32 action)
+            {
+                if (action == ACTION_START_EVENT)
+                {
+                    me->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
+                    pInstance->SetData(DATA_XERESTRASZA,IN_PROGRESS);
+                    DoScriptText(SAY_XERESTRASZA_2, me);
+                    events.ScheduleEvent(EVENT_XERESTRASZA_3,9000); 
+                    events.ScheduleEvent(EVENT_XERESTRASZA_4,20000); 
+                    events.ScheduleEvent(EVENT_XERESTRASZA_5,31000); 
+                    events.ScheduleEvent(EVENT_XERESTRASZA_6,42000); 
+                    events.ScheduleEvent(EVENT_XERESTRASZA_7,53000); 
+                    events.ScheduleEvent(EVENT_XERESTRASZA_8,64000); 
+                    events.ScheduleEvent(EVENT_XERESTRASZA_9,75000); 
+                }
+            }
 
-    	void MoveInLineOfSight(Unit*)
-    	{
-    		if(!bHelp)
-    		{
-    			DoScriptText(XERESTRASZA_HELP, pInstance->instance->GetCreature(pInstance->GetData64(DATA_XERESTRASZA)));
-    			bHelp = true;
-    		}
-    	}
+            void UpdateAI(const uint32 diff)
+            {
+                events.Update(diff);
+                while (uint32 eventId = events.ExecuteEvent())
+                {
+                    switch (eventId)
+                    {
+                        case EVENT_XERESTRASZA_3:
+                            DoScriptText(SAY_XERESTRASZA_3, me);
+                            break;
+                        case EVENT_XERESTRASZA_4:
+                            DoScriptText(SAY_XERESTRASZA_4, me);
+                            break;
+                        case EVENT_XERESTRASZA_5:
+                            DoScriptText(SAY_XERESTRASZA_5, me);
+                            break;
+                        case EVENT_XERESTRASZA_6:
+                            DoScriptText(SAY_XERESTRASZA_6, me);
+                            break;
+                        case EVENT_XERESTRASZA_7:
+                            DoScriptText(SAY_XERESTRASZA_7, me);
+                            break;
+                        case EVENT_XERESTRASZA_8:
+                            DoScriptText(SAY_XERESTRASZA_8, me);
+                            break;
+                        case EVENT_XERESTRASZA_9:
+                            DoScriptText(SAY_XERESTRASZA_9, me);
+                            pInstance->SetData(DATA_XERESTRASZA,DONE);
+                            break;
+                    }
+                }
+            }
 
-    	void UpdateAI(const uint32 diff)
-    	{
-    		if(!bThx)
-    			if(pInstance->GetData(DATA_XERESTRASZA_EVENT) == NOT_STARTED)
-    			{
-    				DoScriptText(XERESTRASZA_THX, pInstance->instance->GetCreature(pInstance->GetData64(DATA_XERESTRASZA)));
-    				bThx = true;
-    			}
+    	private:
+            bool bIntro;
+            EventMap events;
+            InstanceScript* pInstance;
+        };
 
-    			if(pInstance->GetData(DATA_XERESTRASZA_EVENT) == IN_PROGRESS)
-    			{
-    				switch(Counter)
-    				{
-    				case 0:
-    					DoScriptText(XERESTRASZA_1, me);
-    					Counter++;
-    					break;
-    				case 1:
-    					if (Timer <= diff)
-    					{
-    						DoScriptText(XERESTRASZA_2, me);
-    						Timer = 11000;
-    						Counter++;
-    					} else Timer -= diff;
-    					break;
-    				case 2:
-    					if (Timer <= diff)
-    					{
-    						DoScriptText(XERESTRASZA_3, me);
-    						Timer = 11000;
-    						Counter++;
-    					} else Timer -= diff;
-    					break;
-    				case 3:
-    					if (Timer <= diff)
-    					{
-    						DoScriptText(XERESTRASZA_4, me);
-    						Timer = 11000;
-    						Counter++;
-    					} else Timer -= diff;
-    					break;
-    				case 4:
-    					if (Timer <= diff)
-    					{
-    						DoScriptText(XERESTRASZA_5, me);
-    						Timer = 11000;
-    						Counter++;
-    					} else Timer -= diff;
-    					break;
-    				case 5:
-    					if (Timer <= diff)
-    					{
-    						DoScriptText(XERESTRASZA_6, me);
-    						Timer = 11000;
-    						Counter++;
-    					} else Timer -= diff;
-    					break;
-    				case 6:
-    					if (Timer <= diff)
-    					{
-    						DoScriptText(XERESTRASZA_7, me);
-    						pInstance->SetData(DATA_XERESTRASZA_EVENT, DONE);
-    					} else Timer -= diff;
-    					break;
-    				}
-    			}
-    	}
-    };
+        bool OnGossipSelect(Player* player, Creature* pCreature, uint32 /*sender*/, uint32 action)
+        {
+            player->CLOSE_GOSSIP_MENU();
+            if (action == 1)
+                pCreature->AI()->DoAction(ACTION_START_EVENT);
 
-    CreatureAI* GetAI(Creature *pCreature) const
-    {
-    	return new npc_xerestraszaAI(pCreature);
-    }
+            return true;
+        }
 
+        bool OnGossipHello(Player* pPlayer, Creature* pCreature)
+        {
+            InstanceScript* pInstance = pCreature->GetInstanceScript();
+            if (pInstance && pInstance->GetBossState(DATA_BALTHARUS) != DONE)
+                return false;
+
+            if (pInstance->GetData(DATA_XERESTRASZA)!=NOT_STARTED)
+                return false;
+
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Hello...", GOSSIP_SENDER_MAIN, 1);
+            pPlayer->SEND_GOSSIP_MENU(DEFAULT_GOSSIP_MESSAGE, pCreature->GetGUID());
+
+            return true;
+        }
+        
+        CreatureAI* GetAI(Creature *pCreature) const
+        {
+    	    return new npc_xerestraszaAI(pCreature);
+        }
 };
 
-
-
-
-class go_firefield : public GameObjectScript
-{
-public:
-
-    bool OnGossipSelect(Player *pPlayer, Creature *pCreature, uint32, uint32 uiAction)
-    {
-    	if(uiAction == GOSSIP_ACTION_INFO_DEF+1)
-    		pCreature->GetInstanceScript()->SetData(DATA_XERESTRASZA_EVENT, IN_PROGRESS);
-    	pPlayer->PlayerTalkClass->CloseGossip();
-    	return true;
-    }
-
-    bool OnGossipHello(Player *pPlayer, Creature *pCreature)
-    {
-    	if(pCreature->GetInstanceScript()->GetData(DATA_XERESTRASZA_EVENT) == NOT_STARTED)
-    		pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Was ist hier vorgefallen?", GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-    	pPlayer->PlayerTalkClass->SendGossipMenu(1, pCreature->GetGUID());
-    	return true;
-    }
-
-    go_firefield() : GameObjectScript("go_firefield") { }
-
-    bool GOHello(Player *pPlayer, GameObject *pGO)
-    {
-    	pGO->SetGoState(GO_STATE_ACTIVE);
-    	pGO->GetInstanceScript()->SetData(DATA_XERESTRASZA_EVENT, NOT_STARTED);
-    	return true;
-    }
-
-};
 
 void AddSC_boss_baltharus()
 {
     new boss_baltharus;
-    new boss_baltharus_clone;
+    new boss_baltharus_summon;
     new npc_xerestrasza;
-    new go_firefield;
 }

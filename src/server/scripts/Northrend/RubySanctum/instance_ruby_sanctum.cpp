@@ -1,4 +1,4 @@
-/* Copyright (C) 2010 /dev/rsa for ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+/* Copyright (C) 2010 Easy for TrinityCore <http://trinity-core.ru/>
 * This program is free software; you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation; either version 2 of the License, or
@@ -17,214 +17,198 @@
 #include "ScriptPCH.h"
 #include "ruby_sanctum.h"
 
-#define MAX_ENCOUNTER 4
+static const DoorData doorData[8] =
+{
+    {GO_FIRE_FIELD,   DATA_BALTHARUS,   DOOR_TYPE_PASSAGE, BOUNDARY_NONE},
+    {GO_FLAME_WALLS,  DATA_BALTHARUS,   DOOR_TYPE_PASSAGE, BOUNDARY_NONE},
+    {GO_FLAME_WALLS,  DATA_RAGEFIRE,    DOOR_TYPE_PASSAGE, BOUNDARY_NONE},
+    {GO_FLAME_WALLS2, DATA_HALION,      DOOR_TYPE_ROOM,    BOUNDARY_NONE},
+    {0,               0,                DOOR_TYPE_ROOM,    BOUNDARY_NONE}
+};
 
 class instance_ruby_sanctum : public InstanceMapScript
 {
-public:
-    instance_ruby_sanctum() : InstanceMapScript("instance_ruby_sanctum", 724) { }
+    public:
+        instance_ruby_sanctum() : InstanceMapScript("instance_ruby_sanctum", 724) { }
 
-    struct instance_ruby_sanctum_InstanceMapScript : public InstanceScript
-    {
-    	instance_ruby_sanctum_InstanceMapScript(Map *pMap) : InstanceScript(pMap) {Initialize();};
+        struct instance_ruby_sanctum_InstanceMapScript : public InstanceScript
+        {
+            instance_ruby_sanctum_InstanceMapScript(Map *pMap) : InstanceScript(pMap)
+            {
+                SetBossNumber(MAX_ENCOUNTER);
+                LoadDoorData(doorData);
 
-    	uint8 m_auiEncounter[MAX_ENCOUNTER];
-    	std::string str_data;
+                m_uiXerestrasza = 0;
 
-    	uint32 m_uiXerestrasza;
-    	uint32 m_uiBossCounter;
+                m_uiBaltharusGUID = 0;
+                m_uiZarithrianGUID = 0;
+                m_uiRagefireGUID = 0;
+                m_uiHalionGUID = 0;
+                m_uiXerestraszaGUID = 0;
+            }
 
-    	uint64 m_uiBaltharusGUID;
-    	uint64 m_uiZarithrianGUID;
-    	uint64 m_uiRagefireGUID;
-    	uint64 m_uiHalionGUID;
-    	uint64 m_uiXerestraszaGUID;
+            void OnCreatureCreate(Creature *pCreature, bool  /*add*/)
+            {
+                switch(pCreature->GetEntry())
+                {
+                    case NPC_BALTHARUS:     m_uiBaltharusGUID = pCreature->GetGUID();   break;
+                    case NPC_RAGEFIRE:      m_uiRagefireGUID = pCreature->GetGUID();    break;
+                    case NPC_XERESTRASZA:   m_uiXerestraszaGUID = pCreature->GetGUID(); break;
+                    case NPC_ZARITHRIAN:
+                        m_uiZarithrianGUID = pCreature->GetGUID();
+                        pCreature->SetReactState(REACT_PASSIVE);
+                        pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+                        break;
+                    case NPC_HALION:        
+                        m_uiHalionGUID = pCreature->GetGUID();
+                        pCreature->SetVisibility(VISIBILITY_OFF);
+                        pCreature->SetReactState(REACT_PASSIVE);
+                        pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+                        break;
+                }
+            }
 
-    	void Initialize()
-    	{
-    		memset(m_auiEncounter, 0, sizeof(m_auiEncounter));
-    		m_uiXerestrasza = NOT_STARTED;
-    		m_uiBossCounter = 0;
+            void OnGameObjectCreate(GameObject* pGo, bool add)
+            {
+                switch (pGo->GetEntry())
+                {
+                    case GO_FIRE_FIELD:
+                    case GO_FLAME_WALLS:
+                    case GO_FLAME_WALLS2:
+                        AddDoor(pGo, add);
+                        break;
+                    default: break;
+                }
+            }
 
-    		m_uiBaltharusGUID = 0;
-    		m_uiZarithrianGUID = 0;
-    		m_uiRagefireGUID = 0;
-    		m_uiHalionGUID = 0;
-    		m_uiXerestraszaGUID = 0;
-    	}
+            void SetData(uint32 uiType, uint32 uiData)
+            {
+                switch(uiType)
+    		    {
+                    case DATA_XERESTRASZA: m_uiXerestrasza = uiData; break;
+                }
+            }
 
-    	void OnCreatureCreate(Creature *pCreature, bool )
-    	{
-    		switch(pCreature->GetEntry())
-    		{
-    		case NPC_BALTHARUS:
-    			m_uiBaltharusGUID = pCreature->GetGUID();
-    			break;
-    		case NPC_ZARITHRIAN:
-    			m_uiZarithrianGUID = pCreature->GetGUID();
-    			break;
-    		case NPC_RAGEFIRE:
-    			m_uiRagefireGUID = pCreature->GetGUID();
-    			break;
-    		case NPC_HALION:
-    			m_uiHalionGUID = pCreature->GetGUID();
-    			if(instance->GetDifficulty() != RAID_DIFFICULTY_10MAN_HEROIC || instance->GetDifficulty() != RAID_DIFFICULTY_25MAN_HEROIC)
-    			{
-    				pCreature->SetReactState(REACT_PASSIVE);
-    				pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-    				pCreature->SetVisibility(VISIBILITY_ON);
-    			}
-    			break;
-    		case NPC_XERESTRASZA:
-    			m_uiXerestraszaGUID = pCreature->GetGUID();
-    			break;
-    		}
-    	}
+            uint32 GetData(uint32 uiType)
+    	    {
+    		    switch(uiType)
+                {
+    			    case DATA_XERESTRASZA: return m_uiXerestrasza; break;
+                }
+                return 0;
+    	    }
 
-    	void SetData(uint32 uiType, uint32 uiData)
-    	{
-    		switch(uiType)
-    		{
-    		case DATA_BALTHARUS_EVENT:
-    			m_auiEncounter[0] = uiData;
-    			if(uiData == DONE)
-    				m_uiBossCounter++;
-    			if(m_uiBossCounter == 3)
-    			{
-    				Creature *pCreature = instance->GetCreature(GetData64(DATA_HALION));
-    				pCreature->SetReactState(REACT_AGGRESSIVE);
-    				pCreature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-    				pCreature->SetVisibility(VISIBILITY_ON);
-    			}
-    			break;
-    		case DATA_ZARITHRIAN_EVENT:
-    			m_auiEncounter[1] = uiData;
-    			if(uiData == DONE)
-    				m_uiBossCounter++;
-    			if(m_uiBossCounter == 3)
-    			{
-    				Creature *pCreature = instance->GetCreature(GetData64(DATA_HALION));
-    				pCreature->SetReactState(REACT_AGGRESSIVE);
-    				pCreature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-    				pCreature->SetVisibility(VISIBILITY_ON);
-    			}
-    			break;
-    		case DATA_RAGEFIRE_EVENT:
-    			m_auiEncounter[2] = uiData;
-    			if(uiData == DONE)
-    				m_uiBossCounter++;
-    			if(m_uiBossCounter == 3)
-    			{
-    				Creature *pCreature = instance->GetCreature(GetData64(DATA_HALION));
-    				pCreature->SetReactState(REACT_AGGRESSIVE);
-    				pCreature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-    				pCreature->SetVisibility(VISIBILITY_ON);
-    			}
-    			break;
-    		case DATA_HALION_EVENT:
-    			m_auiEncounter[3] = uiData;
-    			if(uiData == DONE)
-    			{
-    				switch(instance->GetDifficulty())
-    				{
-    				case RAID_DIFFICULTY_10MAN_NORMAL:
-    					DoCompleteAchievement(4817);
-    				case RAID_DIFFICULTY_10MAN_HEROIC:
-    					DoCompleteAchievement(4818);
-    				case RAID_DIFFICULTY_25MAN_NORMAL:
-    					DoCompleteAchievement(4815);
-    				case RAID_DIFFICULTY_25MAN_HEROIC:
-    					DoCompleteAchievement(4816);
-    				}
-    			}
-    		case DATA_XERESTRASZA_EVENT:
-    			m_uiXerestrasza = uiData;
-    		}
-    	}
+            void BossZarithrian()
+            {
+                if (Creature* Zarithrian = instance->GetCreature(GetData64(DATA_ZARITHRIAN)))
+                {
+                    Zarithrian->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+                    Zarithrian->SetReactState(REACT_AGGRESSIVE);
+                }
+            }
 
-    	uint32 GetData(uint32 uiType)
-    	{
-    		if(uiType == DATA_BALTHARUS_EVENT)
-    			return m_auiEncounter[0];
-    		if(uiType == DATA_ZARITHRIAN_EVENT)
-    			return m_auiEncounter[1];
-    		if(uiType == DATA_RAGEFIRE_EVENT)
-    			return m_auiEncounter[2];
-    		if(uiType == DATA_HALION_EVENT)
-    			return m_auiEncounter[3];
-    		if(uiType == DATA_XERESTRASZA_EVENT)
-    			return m_uiXerestrasza;
-                            return 0;
-    	}
+            bool SetBossState(uint32 type, EncounterState state)
+            {
+                if (!InstanceScript::SetBossState(type, state))
+                    return false;
 
-    	uint64 GetData64(uint32 uiType)
-    	{
-    		if(uiType == DATA_BALTHARUS)
-    			return m_uiBaltharusGUID;
-    		if(uiType == DATA_ZARITHRIAN)
-    			return m_uiZarithrianGUID;
-    		if(uiType == DATA_RAGEFIRE)
-    			return m_uiRagefireGUID;
-    		if(uiType == DATA_HALION)
-    			return m_uiHalionGUID;
-    		if(uiType == DATA_XERESTRASZA)
-    			return m_uiXerestraszaGUID;
-                            return 0;
-    	}
+                switch (type)
+                {
+                    case DATA_BALTHARUS:
+                        if(state==DONE)
+                        {
+                            if(GetBossState(DATA_RAGEFIRE)==DONE)
+                            {
+                                BossZarithrian();
+                            }
+                        }
+                        break;
+                    case DATA_RAGEFIRE: 
+                        if(state==DONE)
+                        {
+                            if(GetBossState(DATA_BALTHARUS)==DONE)
+                            {
+                                BossZarithrian();
+                            }
+                        }
+                        break;
+                    case DATA_ZARITHRIAN:
+                        if(GetBossState(DATA_BALTHARUS)==DONE && GetBossState(DATA_RAGEFIRE)==DONE)
+                        {
+                            if(state==DONE)
+                            {
+                                if (Creature* halion = instance->GetCreature(GetData64(DATA_HALION)))
+                                {
+                                    halion->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+                                    halion->SetVisibility(VISIBILITY_ON);
+                                    halion->SetReactState(REACT_AGGRESSIVE);
+                                }
+                            }
+                        }
+                        break;
+                    case DATA_HALION: break;
+                }
 
-    	std::string GetSaveData()
-    	{
-    		OUT_SAVE_INST_DATA;
+                return true;
+            }
 
-    		std::ostringstream saveStream;
-    		// "C"hamber of Aspects, "R"uby Sanctum
-    		saveStream << "C R " << m_auiEncounter[0] << " " << m_auiEncounter[1] << " " << m_auiEncounter[2] << " " << m_auiEncounter[3] << " " << m_uiXerestrasza;
+    	    uint64 GetData64(uint32 uiData)
+            {
+                switch(uiData)
+                {
+                    case DATA_BALTHARUS:     return m_uiBaltharusGUID;   break;
+                    case DATA_ZARITHRIAN:    return m_uiZarithrianGUID;  break;
+                    case DATA_RAGEFIRE:      return m_uiRagefireGUID;    break;
+                    case DATA_HALION:        return m_uiHalionGUID;      break;
+                    case DATA_XERESTRASZA:   return m_uiXerestraszaGUID; break;
+                    default: break;
+                }
+                return 0;
+    	    }
 
-    		str_data = saveStream.str();
+            std::string GetSaveData()
+            {
+                std::ostringstream saveStream;
+                saveStream << GetBossSaveData() << " " << m_uiXerestrasza;
+                return saveStream.str();
+            }
 
-    		OUT_SAVE_INST_DATA_COMPLETE;
-    		return str_data;
-    	}
+            void Load(const char* strIn)
+            {
+                if (!strIn)
+                {
+                    return;
+                }
 
-    	void Load(const char* in)
-    	{
-    		if (!in)
-    		{
-    			OUT_LOAD_INST_DATA_FAIL;
-    			return;
-    		}
+                std::istringstream loadStream(strIn);
 
-    		OUT_LOAD_INST_DATA(in);
+                uint32 tmpState;
+                
+                for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
+                {
+                    loadStream >> tmpState;
+                    if (tmpState == IN_PROGRESS || tmpState > SPECIAL)
+                        tmpState = NOT_STARTED;
+                    SetBossState(i, EncounterState(tmpState));
+                }
 
-    		char dataHead1, dataHead2;
-    		uint16 data0, data1, data2, data3, data4;
+                loadStream >> m_uiXerestrasza;
+            }
 
-    		std::istringstream loadStream(in);
-    		loadStream >> dataHead1 >> dataHead2 >> data0 >> data1 >> data2 >> data3 >> data4;
+            private:
+                uint32 m_uiXerestrasza;
 
-    		if (dataHead1 == 'C' && dataHead2 == 'R')
-    		{
-    			m_auiEncounter[0] = data0;
-    			m_auiEncounter[1] = data1;
-    			m_auiEncounter[2] = data2;
-    			m_auiEncounter[3] = data3;
-    			m_uiXerestrasza = data4;
-
-    			for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
-    				if (m_auiEncounter[i] == IN_PROGRESS)
-    					m_auiEncounter[i] = NOT_STARTED;
-
-    		} else OUT_LOAD_INST_DATA_FAIL;
-
-    		OUT_LOAD_INST_DATA_COMPLETE;
-    	}
-    };
-
-    InstanceScript* GetInstanceScript (InstanceMap *pMap) const
-    {
-    	return new instance_ruby_sanctum_InstanceMapScript(pMap);
-    }
-
+                uint64 m_uiBaltharusGUID;
+                uint64 m_uiZarithrianGUID;
+                uint64 m_uiRagefireGUID;
+                uint64 m_uiHalionGUID;
+                uint64 m_uiXerestraszaGUID;
+        };
+        
+        InstanceScript* GetInstanceScript (InstanceMap *pMap) const
+        {
+            return new instance_ruby_sanctum_InstanceMapScript(pMap);
+        }
 };
 
 

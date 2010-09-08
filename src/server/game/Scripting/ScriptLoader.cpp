@@ -1166,7 +1166,7 @@ void AddNorthrendScripts()
     AddSC_icecrown();
     AddSC_sholazar_basin();
     AddSC_storm_peaks();
-     AddSC_wintergrasp();
+    AddSC_wintergrasp();
     AddSC_zuldrak();
     AddSC_crystalsong_forest();
 #endif

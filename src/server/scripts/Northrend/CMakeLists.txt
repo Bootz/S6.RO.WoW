@@ -162,7 +162,7 @@ set(scripts_STAT_SRCS
   Northrend/RubySanctum/boss_baltharus.cpp
   Northrend/RubySanctum/boss_halion.cpp
   Northrend/RubySanctum/boss_ragefire.cpp
-  Northrend/RubySanctum/boss_zarithian.cpp
+  Northrend/RubySanctum/boss_zarithrian.cpp
   Northrend/RubySanctum/instance_ruby_sanctum.cpp
   Northrend/RubySanctum/ruby_sanctum.h
   Northrend/zuldrak.cpp

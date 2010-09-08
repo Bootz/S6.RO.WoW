@@ -1,4 +1,4 @@
-/* Copyright (C) 2010 /dev/rsa for ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+/* Copyright (C) 2010 Easy for TrinityCore <http://trinity-core.ru/>
 * This program is free software; you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation; either version 2 of the License, or
@@ -17,33 +17,40 @@
 #ifndef DEF_RUBY_SANCTUM_H
 #define DEF_RUBY_SANCTUM_H
 
-enum Data
+enum eData
 {
-	DATA_BALTHARUS_EVENT = 1,
-	DATA_ZARITHRIAN_EVENT = 2,
-	DATA_RAGEFIRE_EVENT = 3,
-	DATA_HALION_EVENT = 4,
-	DATA_XERESTRASZA_EVENT = 5
+    DATA_BALTHARUS      = 0,
+    DATA_RAGEFIRE       = 1,
+    DATA_ZARITHRIAN     = 2,
+    DATA_HALION         = 3,
+    MAX_ENCOUNTER       = 4,
+    DATA_XERESTRASZA    = 5
 };
 
-enum Data64
+enum eAchievementData
 {
-	DATA_BALTHARUS = 1,
-	DATA_ZARITHRIAN = 2,
-	DATA_RAGEFIRE = 3,
-	DATA_HALION = 4,
-	DATA_XERESTRASZA = 5
+    TWILIGHT_DESTROYER_NORMAL_10    = 4817,
+    TWILIGHT_DESTROYER_NORMAL_25    = 4815,
+    TWILIGHT_DESTROYER_HEROIC_10    = 4818,
+    TWILIGHT_DESTROYER_HEROIC_25    = 4816
 };
 
-enum Npcs
+enum eCreature
 {
-	NPC_BALTHARUS = 39751,
-	NPC_ZARITHRIAN = 39746,
-	NPC_RAGEFIRE = 39747,
-	NPC_HALION = 39863,
-	NPC_XERESTRASZA = 40429,
-	NPC_ZARITHRIAN_SPAWN_STALKER = 39794,
-	NPC_TWILIGHT_HALION = 40142
+	NPC_BALTHARUS        = 39751,
+    NPC_BALTHARUS_SUMMON = 39899,
+	NPC_ZARITHRIAN       = 39746,
+	NPC_RAGEFIRE         = 39747,
+	NPC_HALION           = 39863,
+	NPC_XERESTRASZA      = 40429,
+};
+
+enum eGameObject
+{
+    GO_FIRE_FIELD      = 203005,
+    GO_FLAME_WALLS     = 203006,
+    GO_FLAME_WALLS2    = 203007
 };
 
 #endif
+
