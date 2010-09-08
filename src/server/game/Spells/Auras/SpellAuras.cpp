@@ -1107,7 +1107,7 @@ void Aura::HandleAuraSpecificMods(AuraApplication const * aurApp, Unit * caster,
 	                // Hodir Flash Freeze immunity remove
                     case 61969:
                     case 61990:
-                         if removeMode == AURA_REMOVE_BY_DEATH)
+                         if (removeMode == AURA_REMOVE_BY_DEATH)
                             target->RemoveAura(7940);
                         break;
                     case 57350: // Darkmoon Card: Illusion
