@@ -4747,6 +4747,11 @@ void Spell::HandleEffects(Unit *pUnitTarget,Item *pItemTarget,GameObject *pGOTar
 SpellCastResult Spell::CheckCast(bool strict)
 {
 	OutdoorPvPWG *pvpWG = (OutdoorPvPWG*)sOutdoorPvPMgr.GetOutdoorPvPToZoneId(4197);
+
+    // check death state
+    if (!m_caster->isAlive() && !(m_spellInfo->Attributes & SPELL_ATTR_PASSIVE) && !(m_spellInfo->Attributes & SPELL_ATTR_CASTABLE_WHILE_DEAD))
+        return SPELL_FAILED_CASTER_DEAD;
+
     // check cooldowns to prevent cheating
     if (m_caster->GetTypeId() == TYPEID_PLAYER && !(m_spellInfo->Attributes & SPELL_ATTR_PASSIVE))
     {
@@ -5806,6 +5811,17 @@ SpellCastResult Spell::CheckCast(bool strict)
                 return SPELL_FAILED_ITEM_ALREADY_ENCHANTED;
     }
 
+    // check if caster has at least 1 combo point for spells that require combo points
+    if (m_needComboPoints && m_caster->ToPlayer() && !m_caster->ToPlayer()->GetComboPoints())
+        return SPELL_FAILED_NO_COMBO_POINTS;
+
+    // don't allow channeled spells / spells with cast time to be casted while moving
+    // (even if they are interrupted on moving, spells with almost immediate effect get to have their effect processed before movement interrupter kicks in)
+    if ((IsChanneledSpell(m_spellInfo) || GetSpellCastTime(m_spellInfo, this))
+        && m_caster->GetTypeId() == TYPEID_PLAYER && m_caster->isMoving()
+        && m_spellInfo->InterruptFlags & SPELL_INTERRUPT_FLAG_MOVEMENT)
+        return SPELL_FAILED_MOVING;
+
     // all ok
     return SPELL_CAST_OK;
 }
@@ -6521,7 +6537,10 @@ SpellCastResult Spell::CheckItems()
                         }
 
                         if (!m_caster->ToPlayer()->HasItemCount(ammo, 1))
+                        {
+                           m_caster->ToPlayer()->SetUInt32Value(PLAYER_AMMO_ID, 0);
                             return SPELL_FAILED_NO_AMMO;
+                        }
                     };  break;
                     case ITEM_SUBCLASS_WEAPON_WAND:
                         break;
