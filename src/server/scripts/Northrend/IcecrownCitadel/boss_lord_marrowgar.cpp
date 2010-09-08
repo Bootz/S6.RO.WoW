@@ -33,7 +33,7 @@ enum Yells
 	SAY_KILL_2           =    -1631007,
 	SAY_DEATH            =    -1631008,
 	SAY_BERSERK          =    -1631009,
-       SAY_BONE_STORM_EMOTE = -1631010
+       SAY_BONE_STORM_EMOTE =    -1631010
 };
 
 enum Spells
