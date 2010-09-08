@@ -23,16 +23,17 @@
 
 enum Yells
 {
-	SAY_ENTER_ZONE       =    -1665892,
-	SAY_AGGRO            =    -1665893,
-	SAY_BONE_STORM       =    -1665894,
-	SAY_BONESPIKE_1      =    -1665895,
-	SAY_BONESPIKE_2      =    -1665896,
-	SAY_BONESPIKE_3      =    -1665897,
-	SAY_KILL_1           =    -1665898,
-	SAY_KILL_2           =    -1665899,
-	SAY_DEATH            =    -1665900,
-	SAY_BERSERK          =    -1665901,
+	SAY_ENTER_ZONE       =    -1631000,
+	SAY_AGGRO            =    -1631001,
+	SAY_BONE_STORM       =    -1631002,
+	SAY_BONESPIKE_1      =    -1631003,
+	SAY_BONESPIKE_2      =    -1631004,
+	SAY_BONESPIKE_3      =    -1631005,
+	SAY_KILL_1           =    -1631006,
+	SAY_KILL_2           =    -1631007,
+	SAY_DEATH            =    -1631008,
+	SAY_BERSERK          =    -1631009,
+       SAY_BONE_STORM_EMOTE = -1631010
 };
 
 enum Spells
@@ -335,6 +336,7 @@ public:
 					me->SetSpeed(MOVE_RUN, 0.6f, true);
 					DoCast(SPELL_BONE_STORM_CHANNEL);
 					DoScriptText(SAY_BONE_STORM, me);
+                                   DoScriptText(SAY_BONE_STORM_EMOTE, me)
 					m_uiBoneStormChanelTimer = 45000;
 					m_uiMove = 4000;
 				} else m_uiBoneStormChanelTimer -= uiDiff;
@@ -351,8 +353,11 @@ public:
 				{
 					if (m_uiMove <= uiDiff)
 					{
-						Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
-						me->GetMotionMaster()->MovePoint(0, pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ());
+						Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
+					           if (!pTarget)
+						        pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
+					           if (pTarget)
+						me->GetMotionMaster()->MovePoint(36612631, pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ());
 						m_uiMove = 9500;
 					}
 				} else m_uiMove -= uiDiff;
