@@ -57,7 +57,6 @@ enum Spells
 	SPELL_BONE_STORM_10_HEROIC           =  70835,
 	SPELL_BONE_STORM_25_HEROIC           =  70836,
 	SPELL_BONE_SHIELD                    =  70207,
-	SPELL_BERSERK                        =  26662,
 };
 
 enum NPC
@@ -336,7 +335,7 @@ public:
 					me->SetSpeed(MOVE_RUN, 0.6f, true);
 					DoCast(SPELL_BONE_STORM_CHANNEL);
 					DoScriptText(SAY_BONE_STORM, me);
-                                   DoScriptText(SAY_BONE_STORM_EMOTE, me)
+                                   DoScriptText(SAY_BONE_STORM_EMOTE, me);
 					m_uiBoneStormChanelTimer = 45000;
 					m_uiMove = 4000;
 				} else m_uiBoneStormChanelTimer -= uiDiff;
