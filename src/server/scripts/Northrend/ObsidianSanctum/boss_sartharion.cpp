@@ -1292,7 +1292,7 @@ public:
                 {
                     Creature* Shadron = pInstance->instance->GetCreature(pInstance->GetData64(DATA_SHADRON));
                     if(Shadron)
-                    ((mob_shadronAI*)Shadron->AI())->m_bHasPortalOpen = false;                
+                    ((mob_shadron::mob_shadronAI*)Shadron->AI())->m_bHasPortalOpen = false;                
                 
                 pInstance->DoRemoveAurasDueToSpellOnPlayers(SPELL_TWILIGHT_SHIFT);
                 pInstance->DoRemoveAurasDueToSpellOnPlayers(SPELL_TWILIGHT_SHIFT_ENTER);                
@@ -1389,7 +1389,7 @@ public:
             {
                 Creature* pVesperon = pInstance->instance->GetCreature(pInstance->GetData64(DATA_VESPERON));
                 if (pVesperon)
-                ((mob_vesperonAI*)pVesperon->AI())->m_bHasPortalOpen = false;
+                ((mob_vesperon::mob_vesperonAI*)pVesperon->AI())->m_bHasPortalOpen = false;
 
                 if (pInstance->GetData(TYPE_SARTHARION_EVENT) == IN_PROGRESS)
                 {
@@ -1400,7 +1400,7 @@ public:
                 {
                     Creature* Shadron = pInstance->instance->GetCreature(pInstance->GetData64(DATA_SHADRON));
                     if(Shadron)
-                    ((mob_shadronAI*)Shadron->AI())->m_bHasPortalOpen = false;
+                    ((mob_shadron::mob_shadronAI*)Shadron->AI())->m_bHasPortalOpen = false;
 
                 pInstance->DoRemoveAurasDueToSpellOnPlayers(57935);
                 pInstance->DoRemoveAurasDueToSpellOnPlayers(SPELL_TWILIGHT_TORMENT_VESP);
@@ -1491,7 +1491,7 @@ public:
             {
                 Creature* Tenebron = pInstance->instance->GetCreature(pInstance->GetData64(DATA_TENEBRON));
                 if(Tenebron)
-                ((mob_tenebronAI*)Tenebron->AI())->m_bHasPortalOpen = false;
+                ((mob_tenebron::mob_tenebronAI*)Tenebron->AI())->m_bHasPortalOpen = false;
                 SpawnWhelps();
             }
             else
