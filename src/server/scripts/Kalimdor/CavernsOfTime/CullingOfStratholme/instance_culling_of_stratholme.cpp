@@ -56,6 +56,8 @@ public:
         uint64 uiMalGanisChest;
     uint32 EventTimer;
     uint32 LastTimer;
+    uint32 Minute;
+    uint32 tMinutes;
 
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         std::string str_data;
@@ -78,6 +80,8 @@ public:
 
         EventTimer = 1500000;
         LastTimer = 1500000;
+        Minute = 60000;
+        tMinutes = 0;
     }
     void OnCreatureCreate(Creature* pCreature, bool add)
         {
@@ -213,18 +217,25 @@ public:
 
     void Update(uint32 diff)
     {        
-       if(EventTimer < diff)
+       if(tMinutes == 25)
        {
            m_auiEncounter[4] = FAIL;
+           if (Creature *pInfinite = instance->GetCreature(uiInfinite))
+           {
+               pInfinite->DisappearAndDie();
+               pInfinite->SetLootRecipient(NULL);
+           }
            DoUpdateWorldState(WORLD_STATE_TIMER, 0);             
-       }else EventTimer -= diff;
+       }
 
-       if(EventTimer < LastTimer - 60000)
+       if(Minute <= diff)
        {
           LastTimer = EventTimer;
-          uint32 tMinutes = EventTimer / 60000;
-          DoUpdateWorldState(WORLD_STATE_TIME_COUNTER, tMinutes);
+          tMinutes++;
+          DoUpdateWorldState(WORLD_STATE_TIME_COUNTER, 25 - tMinutes);
+          Minute = 60000;
        }
+       else Minute -= diff;
        return;
     }
          
