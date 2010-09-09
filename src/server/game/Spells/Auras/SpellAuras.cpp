@@ -1128,7 +1128,7 @@ void Aura::HandleAuraSpecificMods(AuraApplication const * aurApp, Unit * caster,
                     case 69290:
                         if(target)
                             target->CastSpell(target, 69291, true); //Gaseous spore
-                        break
+                        break;
                     case 72368: // Shared Suffering
                     case 72369:
                         if (caster)
