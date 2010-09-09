@@ -12,14 +12,11 @@ enum eTypes
     DATA_TENEBRON               = 11,
     DATA_SHADRON                = 12,
     DATA_VESPERON               = 13,
-    DATA_DISCIPLE_OF_VESPERON   = 14,    
 
     NPC_SARTHARION              = 28860,
     NPC_TENEBRON                = 30452,
     NPC_SHADRON                 = 30451,
     NPC_VESPERON                = 30449,
-    NPC_DISCIPLE_OF_VESPERON    = 30858,
     GO_TWILIGHT_PORTAL          = 193988
 };
-
 #endif

@@ -80,6 +80,7 @@ enum eEnums
     SPELL_POWER_OF_VESPERON                     = 61251,    // Vesperon's presence decreases the maximum health of all enemies by 25%.
     SPELL_TWILIGHT_TORMENT_VESP                 = 57948,    // (Shadow only) trigger 57935 then 57988
     SPELL_TWILIGHT_TORMENT_VESP_ACO             = 58853,    // (Fire and Shadow) trigger 58835 then 57988
+    SPELL_TWILIGHT_TORMENT_STACKS               = 57935,
 
     //Shadron
     //In portal is a disciple, when disciple killed remove Power_of_vesperon, portal open multiple times
@@ -239,6 +240,9 @@ public:
             if (instance)
                 instance->SetData(TYPE_SARTHARION_EVENT, NOT_STARTED);
             RespawnDrakes();
+        DespawnCreatures(NPC_SHARTHARION_TWILIGHT_WHELP, 100);
+        DespawnCreatures(NPC_TWILIGHT_WHELP, 100);
+        DespawnCreatures(NPC_LAVA_BLAZE, 100);
 
             m_bIsBerserk = false;
             m_bIsSoftEnraged = false;
@@ -278,6 +282,18 @@ public:
                     break;
             }
         }
+
+    void DespawnCreatures(uint32 entry, float distance, bool discs = false)
+    {
+        std::list<Creature*> m_pCreatures;
+        GetCreatureListWithEntryInGrid(m_pCreatures, me, entry, distance);
+
+        if (m_pCreatures.empty())
+            return;
+
+        for(std::list<Creature*>::iterator iter = m_pCreatures.begin(); iter != m_pCreatures.end(); ++iter)
+            (*iter)->ForcedDespawn();
+    }
 
         void JustDied(Unit* pKiller)
         {
@@ -524,25 +540,8 @@ public:
             {
                 if (instance)
                 {          
-                    Map *map = me->GetMap();
-                    if (map->IsDungeon())
-                    {
-                        Map::PlayerList const &PlayerList = map->GetPlayers();
-
-                        if (PlayerList.isEmpty())
-                            return;
-
-                        for (Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
-                        {
-                            if (i->getSource()->isAlive() && i->getSource()->HasAura(SPELL_TWILIGHT_SHIFT,0) && !i->getSource()->getVictim())
-                            {
-                                i->getSource()->CastSpell(i->getSource(),SPELL_TWILIGHT_SHIFT_REMOVAL_ALL,true);
-                                i->getSource()->CastSpell(i->getSource(),SPELL_TWILIGHT_RESIDUE,true);
-                                i->getSource()->RemoveAurasDueToSpell(SPELL_TWILIGHT_SHIFT);
-                                i->getSource()->RemoveAurasDueToSpell(SPELL_TWILIGHT_SHIFT_ENTER);
-                            }
-                        }
-                    }
+                instance->DoRemoveAurasDueToSpellOnPlayers(SPELL_TWILIGHT_SHIFT);
+                instance->DoRemoveAurasDueToSpellOnPlayers(SPELL_TWILIGHT_SHIFT_ENTER);
                 }
             }
 
@@ -679,40 +678,6 @@ enum VespText
 #define ACTION_TELEPORT_BACK                20
 #define SHIELD_ON_SHADRON                   30
 #define SHIELD_ON_SARTHARION                40
-#define VESPERON_PORTAL_EVENT               50
-#define ACOLYTE_DEBUFF                      60
-
-class npc_disciple_of_vesperon : public CreatureScript
-{
-public:
-    npc_disciple_of_vesperon() : CreatureScript("npc_disciple_of_vesperon") { }
-
-    struct npc_disciple_of_vesperonAI : public TriggerAI
-    {
-        npc_disciple_of_vesperonAI(Creature *pCreature) : TriggerAI(pCreature)
-        {    
-            me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-            me->SetVisibility(VISIBILITY_OFF);
-        }
-        void DoAction(const int32 action)
-        {
-            switch(action)
-            {
-                case VESPERON_PORTAL_EVENT:
-                    DoCast(SPELL_TWILIGHT_TORMENT_VESP);
-                        break;
-                case ACOLYTE_DEBUFF:
-                    DoCast(SPELL_TWILIGHT_TORMENT_VESP_ACO);
-                        break;
-            }
-        }
-    };
-
-    CreatureAI* GetAI(Creature* pCreature) const
-    {
-        return new npc_disciple_of_vesperonAI(pCreature);
-    }
-};
 
 //to control each dragons common abilities
 struct dummy_dragonAI : public ScriptedAI
@@ -798,7 +763,7 @@ struct dummy_dragonAI : public ScriptedAI
     void OpenPortal()
     {
         int32 iTextId = 0;
-        GameObject * pPortal = GetClosestGameObjectWithEntry(me,GO_TWILIGHT_PORTAL,50.0f);
+        GameObject* pPortal = me->FindNearestGameObject(GO_TWILIGHT_PORTAL,50.0f);
          if (pPortal && !pPortal->isSpawned())
             pPortal->SetRespawnTime(m_iPortalRespawnTime);
 
@@ -822,6 +787,7 @@ struct dummy_dragonAI : public ScriptedAI
             case NPC_SHADRON:
             {
                 iTextId = WHISPER_OPEN_PORTAL;
+                DoRaidWhisper(WHISPER_SHADRON_DICIPLE);
                 if (pInstance && !pInstance->GetData(TYPE_SARTHARION_EVENT) == IN_PROGRESS)
                     me->SummonCreature(NPC_ACOLYTE_OF_SHADRON, AcolyteofShadron, TEMPSUMMON_CORPSE_TIMED_DESPAWN,5000);
                 else
@@ -831,14 +797,12 @@ struct dummy_dragonAI : public ScriptedAI
             }
             case NPC_VESPERON:
             {
+                DoRaidWhisper(WHISPER_VESPERON_DICIPLE);
                 if (pInstance && !pInstance->GetData(TYPE_SARTHARION_EVENT) == IN_PROGRESS)
                     me->SummonCreature(NPC_ACOLYTE_OF_VESPERON, AcolyteofVesperon, TEMPSUMMON_CORPSE_TIMED_DESPAWN,20000);
                 else
                     me->SummonCreature(NPC_ACOLYTE_OF_VESPERON, AcolyteofVesperon2, TEMPSUMMON_CORPSE_TIMED_DESPAWN,20000);
 
-                me->SummonCreature(NPC_DISCIPLE_OF_VESPERON, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN, 7000);
-                if (Creature* pDisciple = pInstance->instance->GetCreature(pInstance->GetData64(DATA_DISCIPLE_OF_VESPERON)))
-                    pDisciple->AI()->DoAction(VESPERON_PORTAL_EVENT);
 
                 iTextId = WHISPER_OPEN_PORTAL;
                 break;
@@ -846,6 +810,12 @@ struct dummy_dragonAI : public ScriptedAI
         }
 
         DoRaidWhisper(iTextId);
+    }
+
+    void TeleportBack()
+    {
+        pInstance->DoRemoveAurasDueToSpellOnPlayers(SPELL_TWILIGHT_SHIFT);
+        pInstance->DoRemoveAurasDueToSpellOnPlayers(SPELL_TWILIGHT_SHIFT_ENTER);
     }
 
     void JustDied(Unit* pKiller)
@@ -936,7 +906,7 @@ public:
             m_bHasPortalOpen = false;
         }
 
-        void EnterCombat(Unit* pWho)
+    void Aggro(Unit* pWho)
         {
             DoScriptText(SAY_TENEBRON_AGGRO, me);
             DoZoneInCombat();
@@ -969,25 +939,8 @@ public:
             {
                 if (pInstance)
                 {
-                    Map *map = me->GetMap();
-                    if (map->IsDungeon())
-                    {
-                        Map::PlayerList const &PlayerList = map->GetPlayers();
-
-                        if (PlayerList.isEmpty())
-                            return;
-
-                        for (Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
-                        {
-                            if (i->getSource()->isAlive() && i->getSource()->HasAura(SPELL_TWILIGHT_SHIFT,0) && !i->getSource()->getVictim())
-                            {
-                                i->getSource()->CastSpell(i->getSource(),SPELL_TWILIGHT_SHIFT_REMOVAL_ALL,true);
-                                i->getSource()->CastSpell(i->getSource(),SPELL_TWILIGHT_RESIDUE,true);
-                                i->getSource()->RemoveAurasDueToSpell(SPELL_TWILIGHT_SHIFT);
-                                i->getSource()->RemoveAurasDueToSpell(SPELL_TWILIGHT_SHIFT_ENTER);
-                            }
-                        }
-                    }
+                pInstance->DoRemoveAurasDueToSpellOnPlayers(SPELL_TWILIGHT_SHIFT);
+                pInstance->DoRemoveAurasDueToSpellOnPlayers(SPELL_TWILIGHT_SHIFT_ENTER);
                 }
             }
             //if no target, update dummy and return
@@ -1078,12 +1031,21 @@ public:
                 me->RemoveAurasDueToSpell(SPELL_GIFT_OF_TWILIGTH_SHA);
         }
 
-        void EnterCombat(Unit* pWho)
+    void Aggro(Unit* pWho)
         {
             DoScriptText(SAY_SHADRON_AGGRO,me);
             DoZoneInCombat();
             DoCast(me, SPELL_POWER_OF_SHADRON);
         }
+
+    void JustDied(Unit* pKiller)
+    {
+        if (pInstance && !pInstance->GetData(TYPE_SARTHARION_EVENT) == IN_PROGRESS)
+        {
+            TeleportBack();
+            lSummons.DespawnAll();
+        }
+    }
 
         void JustSummoned(Creature *summon)
         {
@@ -1137,7 +1099,7 @@ public:
             if (m_uiAcolyteShadronTimer <= uiDiff)
             {
                 if(m_bHasPortalOpen)
-                    m_uiAcolyteShadronTimer = 10000;
+                return;
                 else
                 {
                     if (me->HasAura(SPELL_GIFT_OF_TWILIGTH_SHA))
@@ -1200,11 +1162,25 @@ public:
             m_bHasPortalOpen = false;    
         }
 
-        void EnterCombat(Unit* pWho)
+    void Aggro(Unit* pWho)
         {
             DoScriptText(SAY_VESPERON_AGGRO,me);
             DoZoneInCombat();
             DoCast(me, SPELL_POWER_OF_VESPERON);
+    }
+
+    void JustDied(Unit* pKiller)
+    {
+        if (pInstance && !pInstance->GetData(TYPE_SARTHARION_EVENT) == IN_PROGRESS)
+        {
+            TeleportBack();
+            lSummons.DespawnAll();
+        }
+        else
+        {
+            pInstance->DoRemoveAurasDueToSpellOnPlayers(SPELL_TWILIGHT_TORMENT_STACKS);
+            pInstance->DoRemoveAurasDueToSpellOnPlayers(SPELL_TWILIGHT_TORMENT_VESP);
+        }
         }
 
         void KilledUnit(Unit* pVictim)
@@ -1225,7 +1201,6 @@ public:
                 dummy_dragonAI::UpdateAI(uiDiff);
                 return;
             }
-
             // shadow fissure
             if (m_uiShadowFissureTimer <= uiDiff)
             {
@@ -1241,9 +1216,10 @@ public:
             if (m_uiAcolyteVesperonTimer <= uiDiff)
             {
                 if(m_bHasPortalOpen)
-                    m_uiAcolyteVesperonTimer = 10000;
+                return;
                 else
                 {
+                DoCast(me->getVictim(), SPELL_TWILIGHT_TORMENT_VESP, true);
                     OpenPortal();
                     m_bHasPortalOpen = true;
                     m_uiAcolyteVesperonTimer = urand(60000,70000);
@@ -1316,27 +1292,10 @@ public:
                 {
                     Creature* Shadron = pInstance->instance->GetCreature(pInstance->GetData64(DATA_SHADRON));
                     if(Shadron)
-                        ((mob_shadron::mob_shadronAI*)Shadron->AI())->m_bHasPortalOpen = false;            
+                    ((mob_shadronAI*)Shadron->AI())->m_bHasPortalOpen = false;                
                 
-                    Map *map = me->GetMap();
-                    if (map->IsDungeon())
-                    {
-                        Map::PlayerList const &PlayerList = map->GetPlayers();
-
-                        if (PlayerList.isEmpty())
-                            return;
-
-                        for (Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
-                        {
-                            if (i->getSource()->isAlive() && i->getSource()->HasAura(SPELL_TWILIGHT_SHIFT,0) && !i->getSource()->getVictim())
-                            {
-                                i->getSource()->CastSpell(i->getSource(),SPELL_TWILIGHT_SHIFT_REMOVAL_ALL,true);
-                                i->getSource()->CastSpell(i->getSource(),SPELL_TWILIGHT_RESIDUE,true);
-                                i->getSource()->RemoveAurasDueToSpell(SPELL_TWILIGHT_SHIFT);
-                                i->getSource()->RemoveAurasDueToSpell(SPELL_TWILIGHT_SHIFT_ENTER);
-                            }
-                        }
-                    }
+                pInstance->DoRemoveAurasDueToSpellOnPlayers(SPELL_TWILIGHT_SHIFT);
+                pInstance->DoRemoveAurasDueToSpellOnPlayers(SPELL_TWILIGHT_SHIFT_ENTER);                
                 }
 
                 Creature* pDebuffTarget = NULL;
@@ -1407,24 +1366,21 @@ public:
         }
 
         InstanceScript* pInstance;
+    bool ToInterrupt;
+    uint32 CheckForInterrupt;
 
         void Reset()
         {
             if (pInstance)
             {
                 me->AddAura(SPELL_TWILIGHT_SHIFT_ENTER,me);
-            }
-        }
-    
-        void EnterCombat(Unit* who)
-        {
-            if(pInstance)
-            {
-                me->SummonCreature(NPC_DISCIPLE_OF_VESPERON, 0.0f, 0.0f, 0.0f, 0.0f, TEMPSUMMON_TIMED_DESPAWN, 7000);
-                if (Creature* pDisciple = pInstance->instance->GetCreature(pInstance->GetData64(DATA_DISCIPLE_OF_VESPERON)))
-                    pDisciple->AI()->DoAction(VESPERON_PORTAL_EVENT);
-            }
-        }
+       }
+
+        ToInterrupt = true;
+        CheckForInterrupt = 2000;
+    }
+
+    void EnterCombat(Unit* who){}
 
         void JustDied(Unit* pKiller)
         {
@@ -1433,10 +1389,7 @@ public:
             {
                 Creature* pVesperon = pInstance->instance->GetCreature(pInstance->GetData64(DATA_VESPERON));
                 if (pVesperon)
-                    ((mob_vesperon::mob_vesperonAI*)pVesperon->AI())->m_bHasPortalOpen = false;
-
-                if (pVesperon && pVesperon->isAlive() && pVesperon->HasAura(SPELL_TWILIGHT_TORMENT_VESP))
-                    pVesperon->RemoveAurasDueToSpell(SPELL_TWILIGHT_TORMENT_VESP);
+                ((mob_vesperonAI*)pVesperon->AI())->m_bHasPortalOpen = false;
 
                 if (pInstance->GetData(TYPE_SARTHARION_EVENT) == IN_PROGRESS)
                 {
@@ -1447,33 +1400,32 @@ public:
                 {
                     Creature* Shadron = pInstance->instance->GetCreature(pInstance->GetData64(DATA_SHADRON));
                     if(Shadron)
-                        ((mob_shadron::mob_shadronAI*)Shadron->AI())->m_bHasPortalOpen = false;            
-                
-                    Map *map = me->GetMap();
-                    if (map->IsDungeon())
-                    {
-                        Map::PlayerList const &PlayerList = map->GetPlayers();
+                    ((mob_shadronAI*)Shadron->AI())->m_bHasPortalOpen = false;
 
-                        if (PlayerList.isEmpty())
-                            return;
-
-                        for (Map::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
-                        {
-                            if (i->getSource()->isAlive() && i->getSource()->HasAura(SPELL_TWILIGHT_SHIFT,0) && !i->getSource()->getVictim())
-                            {
-                                i->getSource()->CastSpell(i->getSource(),SPELL_TWILIGHT_SHIFT_REMOVAL_ALL,true);
-                                i->getSource()->CastSpell(i->getSource(),SPELL_TWILIGHT_RESIDUE,true);
-                                i->getSource()->RemoveAurasDueToSpell(SPELL_TWILIGHT_SHIFT);
-                                i->getSource()->RemoveAurasDueToSpell(SPELL_TWILIGHT_SHIFT_ENTER);
-                            }
-                        }
-                    }
+                pInstance->DoRemoveAurasDueToSpellOnPlayers(57935);
+                pInstance->DoRemoveAurasDueToSpellOnPlayers(SPELL_TWILIGHT_TORMENT_VESP);
+                pInstance->DoRemoveAurasDueToSpellOnPlayers(SPELL_TWILIGHT_SHIFT_ENTER);
+                pInstance->DoRemoveAurasDueToSpellOnPlayers(SPELL_TWILIGHT_SHIFT);                
                 }
             }
         }
 
         void UpdateAI(const uint32 uiDiff)
         {    
+        // This is needed for interrupt Vesperon.
+        if (ToInterrupt && CheckForInterrupt <= uiDiff)
+        {
+            Creature* pTarget = pInstance->instance->GetCreature(pInstance->GetData64(DATA_VESPERON));
+            if (pTarget)
+            {
+                pTarget->InterruptNonMeleeSpells(true, 0, true);
+                ToInterrupt = false;
+                CheckForInterrupt = 5000;
+            }
+        }
+        else
+            CheckForInterrupt -= uiDiff;
+        
             if (!UpdateVictim())
                 return;
 
@@ -1539,7 +1491,7 @@ public:
             {
                 Creature* Tenebron = pInstance->instance->GetCreature(pInstance->GetData64(DATA_TENEBRON));
                 if(Tenebron)
-                    (CAST_AI(mob_tenebron::mob_tenebronAI,Tenebron->AI()))->m_bHasPortalOpen = false;
+                ((mob_tenebronAI*)Tenebron->AI())->m_bHasPortalOpen = false;
                 SpawnWhelps();
             }
             else
@@ -1576,6 +1528,7 @@ public:
         {
             me->AddAura(SPELL_FLAME_TSUNAMI, me);    
             me->SetFlying(true);
+        me->SetSpeed(MOVE_FLIGHT, 2.1f, true);
         }
 
         uint32 uiStartMove;
@@ -1713,7 +1666,6 @@ public:
 void AddSC_boss_sartharion()
 {
     new boss_sartharion;
-    new npc_disciple_of_vesperon;
     new mob_vesperon;
     new mob_shadron;
     new mob_tenebron;

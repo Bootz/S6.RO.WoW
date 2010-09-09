@@ -22,16 +22,6 @@ INSERT INTO gameobject (id, map, spawnMask, phaseMask, position_x, position_y, p
 UPDATE creature_template SET flags_extra = flags_extra | 2 WHERE entry = 31103; -- Twilight Egg (Cosmetic)
 UPDATE creature_template SET unit_flags = unit_flags | 4, faction_A = 103, faction_H = 103, flags_extra = 2 WHERE entry = 30648; -- Fire Cyclone
 
--- esta linea produce un error:
--- ERROR: Table `creature` have creature (GUID: 123400 Entry: 30648) with `MovementType`=1 (random movement) but with `spawndist`=0, replace by idle movement type (0).
--- ERROR: Table `creature` have creature (GUID: 123401 Entry: 30648) with `MovementType`=1 (random movement) but with `spawndist`=0, replace by idle movement type (0).
--- ERROR: Table `creature` have creature (GUID: 123402 Entry: 30648) with `MovementType`=1 (random movement) but with `spawndist`=0, replace by idle movement type (0).
--- ERROR: Table `creature` have creature (GUID: 123403 Entry: 30648) with `MovementType`=1 (random movement) but with `spawndist`=0, replace by idle movement type (0).
--- ERROR: Table `creature` have creature (GUID: 123404 Entry: 30648) with `MovementType`=1 (random movement) but with `spawndist`=0, replace by idle movement type (0).
--- porque le cambia el spawndist a "0" y si haces un SELECT * FROM creature WHERE id=30648; veras que esta en "5", no sesi es correcto ya que este querie se hiso para TDB
-/*
-UPDATE creature SET spawndist = 0 WHERE id = 30648; -- Fire Cyclone
-*/
 UPDATE creature_template SET faction_A = 103, faction_H = 103, minlevel = 81, maxlevel = 81, mindmg = 1857, maxdmg = 2703 WHERE entry IN (30890, 31214);
 UPDATE creature_template SET faction_A = 103, faction_H = 103, minlevel = 81, maxlevel = 81, mindmg = 3032, maxdmg = 5194 WHERE entry IN (31540, 31548);
 UPDATE creature_template SET faction_A = 103, faction_H = 103, minlevel = 81, maxlevel = 81 WHERE entry IN (30882, 31539); -- Twilight Egg

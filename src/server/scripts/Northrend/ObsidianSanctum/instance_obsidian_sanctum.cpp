@@ -21,7 +21,6 @@ public:
         uint64 m_uiTenebronGUID;
         uint64 m_uiShadronGUID;
         uint64 m_uiVesperonGUID;
-        uint64 m_uiDiscipleOfVesperonGUID;
 
         bool m_bTenebronKilled;
         bool m_bShadronKilled;
@@ -64,10 +63,6 @@ public:
                     m_uiVesperonGUID = pCreature->GetGUID();
                     pCreature->setActive(true);
                     break;
-                case NPC_DISCIPLE_OF_VESPERON:
-                    m_uiDiscipleOfVesperonGUID = pCreature->GetGUID();
-                    pCreature->setActive(true);
-                    break;
             }
         }
 
@@ -97,8 +92,6 @@ public:
                     return m_uiShadronGUID;
                 case DATA_VESPERON:
                     return m_uiVesperonGUID;
-                case DATA_DISCIPLE_OF_VESPERON:
-                    return m_uiDiscipleOfVesperonGUID;
             }
             return 0;
         }
