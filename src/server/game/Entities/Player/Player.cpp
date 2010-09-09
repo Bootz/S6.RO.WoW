@@ -11474,7 +11474,8 @@ Item* Player::StoreNewItem(ItemPosCountVec const& dest, uint32 item, bool update
         if (pItem->GetProto()->Quality >= 4 && (pItem->GetProto()->ItemLevel >= 200 || (pItem->GetProto()->Class == ITEM_CLASS_MISC && pItem->GetProto()->ItemLevel >= 80)))
             CharacterDatabase.PExecute("INSERT INTO character_itemlog (`date`, `guid`, `name`, `item`) VALUES (NOW(), '%u', '%s', '%u');", GetGUIDLow(), m_name.c_str(), pItem->GetProto()->ItemId);
     }
-    return pItem;}
+    return pItem;
+}
 
 Item* Player::StoreItem(ItemPosCountVec const& dest, Item* pItem, bool update)
 {
