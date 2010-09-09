@@ -745,7 +745,7 @@ public:
 
             void UpdateAI(const uint32 uiDiff)
             {
-                if(m_uiIntroTimer <= uiDiff && bIntro)
+                if(bIntro && m_uiIntroTimer <= uiDiff)
 			{
 				switch( m_uiIntroPhase )
 				{
