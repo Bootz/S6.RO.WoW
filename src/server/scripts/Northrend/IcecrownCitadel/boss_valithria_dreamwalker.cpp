@@ -78,18 +78,8 @@ const Position Pos[] =
 };
 enum Creatures
 {
-	CREATURE_WORM                       = 37907,
-	CREATURE_PORTAL                     = 37945,
-	CREATURE_CLOUD                      = 37985,
-	CREATURE_VOID                       = 38068,
-	CREATURE_ABOMINATION                = 37886,
-	CREATURE_SKELETON                   = 36791,
-	CREATURE_ARCHMAGE                   = 37868,
-	CREATURE_SUPPRESSER                 = 37863,
-	CREATURE_ZOMBIE                     = 37934,
-	CREATURE_COMBAT_TRIGGER             = 38752,
 	CREATURE_IMPALING_SPEAR 	        = 38248,
-	CREATURE_SVALNA 		            = 37126,
+	CREATURE_SVALNA 		        = 37126,
 };
 
 Unit* pValithria;

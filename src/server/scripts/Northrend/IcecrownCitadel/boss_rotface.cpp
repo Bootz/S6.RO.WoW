@@ -39,13 +39,11 @@ enum Yells
 enum Creatures
 {
 	CREATURE_OOZE_BIG             = 36899,
-	CREATURE_LITTLE_OOZE          = 36897,
 	CREATURE_PROFFESOR_PUTRICIDE  = 36678,
 	CREATURE_PLAGUE_ZOMBIE        = 38104,
 };
 enum Summons
 {
-	CREATURE_PUDDLE_STALKER       = 37013,
 	NPC_STICKY_OOZE          = 37006,
 };
 

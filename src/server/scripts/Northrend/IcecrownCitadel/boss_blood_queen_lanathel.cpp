@@ -55,17 +55,6 @@ enum BloodQuennSpells
     SPELL_PACT_OF_DARKFALLEN            =    71336,
 };
 
-enum Creatures
-{
-    CREATURE_SWARMING_SHADOWS    =    38163,
-};
-
-enum Achievments
-{
-    ACHIEVMENT_ONCE_BITTEN_TWICE_SHY_10    =    4539,
-    ACHIEVMENT_ONCE_BITTEN_TWICE_SHY_25    =    4618,
-};
-
 const Position Phase2Position = { 4595.640137, 2769.195557, 400.137054};
 const Position FlyPosition = { 4595.904785, 2769.315918, 421.838623};
 

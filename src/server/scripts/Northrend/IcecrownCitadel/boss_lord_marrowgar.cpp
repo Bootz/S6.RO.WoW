@@ -59,13 +59,6 @@ enum Spells
 	SPELL_BONE_SHIELD                    =  70207,
 };
 
-enum NPC
-{
-	CREATURE_BONE_SPIKE    =    38711,
-	CREATURE_COLD_FLAME    =    36672,
-};
-
-
 class npc_bone_spike : public CreatureScript
 {
 public:
