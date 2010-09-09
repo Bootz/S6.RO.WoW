@@ -10,6 +10,8 @@
 
 add_subdirectory(server)
 
+add_subdirectory(git_id)
+
 if(TOOLS)
   add_subdirectory(tools)
 endif(TOOLS)
