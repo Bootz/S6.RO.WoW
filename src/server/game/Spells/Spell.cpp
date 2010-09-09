@@ -4749,7 +4749,7 @@ SpellCastResult Spell::CheckCast(bool strict)
 	OutdoorPvPWG *pvpWG = (OutdoorPvPWG*)sOutdoorPvPMgr.GetOutdoorPvPToZoneId(4197);
 
     // check death state
-    if (!m_caster->isAlive() && !(m_spellInfo->Attributes & SPELL_ATTR_PASSIVE) && !(m_spellInfo->Attributes & SPELL_ATTR_CASTABLE_WHILE_DEAD))
+    if (!m_IsTriggeredSpell && !m_caster->isAlive() && !(m_spellInfo->Attributes & SPELL_ATTR_PASSIVE) && !(m_spellInfo->Attributes & SPELL_ATTR_CASTABLE_WHILE_DEAD))
         return SPELL_FAILED_CASTER_DEAD;
 
     // check cooldowns to prevent cheating
