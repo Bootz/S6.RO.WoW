@@ -1,5 +1,5 @@
 -- ---------------------------------------------------- --
--- FULL UPDATE TO INSERT IN YTDB CTDB_0.1.4 OR YTDB_562 --
+-- FULL UPDATE TO INSERT IN YTDB CTDB_0.1.4 OR YTDB_563 --
 -- ---------------------------------------------------- --
 -- THIS FILE WILL BE KEEP BY BURNHAM AND MISIMOUSE
 -- ANY NEW CORE VERSION WE WILL KEEP EYE ON IT JUST TO CHECK FOR NO CONSOLE ERRORS
@@ -1251,15 +1251,6 @@ INSERT INTO script_texts (`entry`, `content_default`, `npc_entry`, `content_loc3
 (-1752034, 'Beware the shadow!',NULL,NULL,17506,0,0),
 (-1752035, 'You will find only suffering within the realm of twilight! Enter if you dare!',NULL,NULL,17507,0,0),
 (-1752036, 'I am the light and the darkness! Cower, mortals, before the herald of Deathwing!',NULL,NULL,17508,0,0);
-
-UPDATE `instance_template` SET `script`='instance_ruby_sanctum' WHERE (`map`='724');
-UPDATE `creature_template` SET `ScriptName` = 'boss_baltharus' WHERE `entry` = '39751';
-UPDATE `creature_template` SET `ScriptName` = 'boss_baltharus_summon' WHERE `entry` = '39899';
-UPDATE `creature_template` SET `ScriptName` = 'npc_xerestrasza' WHERE `entry` = '40429';
-UPDATE `creature_template` SET `ScriptName` = 'boss_zarithrian' WHERE `entry` = '39746';
-UPDATE `creature_template` SET `ScriptName` = 'boss_ragefire' WHERE `entry` = '39747';
-UPDATE `creature_template` SET `ScriptName` = 'boss_halion' WHERE `entry`= '39863';
-
 
 DELETE FROM `spell_linked_spell` WHERE (`spell_trigger`='-74562') AND (`spell_effect`='74610');
 DELETE FROM `spell_linked_spell` WHERE (`spell_trigger`='-74792') AND (`spell_effect`='74800');
@@ -4025,64 +4016,74 @@ UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `mechanic_imm
 UPDATE `creature_template` SET `difficulty_entry_1` = 34152, `minlevel` = 83, `maxlevel` = 83, `faction_A` = 16, `faction_H` = 16, `Health_mod` = 113, `flags_extra` = 256 WHERE `entry` = 33524;
 UPDATE `creature_template` SET `minlevel` = 83, `maxlevel` = 83, `faction_A` = 16, `faction_H` = 16, `mindmg` = 464, `maxdmg` = 604, `attackpower` = 708, `dmg_multiplier` = 35, `Health_mod` = 675, `mechanic_immune_mask` = 650854235, `flags_extra` = 256 WHERE `entry` = 34152;
 
--- Sif
-UPDATE `creature_template` SET `faction_A` = 14, `faction_H` = 14, `unit_flags` = 33554434 WHERE `entry` IN (33196, 33234);
--- Kel Thuzad immunity
-UPDATE `creature_template` SET `mechanic_immune_mask` = 617299839 WHERE `entry` IN (15990, 30061);
-
+-- 8663_archivum_drop
+-- This drop is already asign to one of the 3 npc in the encounter, any way Misimouse will have a look
+/*
 -- Archivum Data Disc drop
+UPDATE `creature_template` SET `lootid` = 32927 WHERE `entry` = 32927;
 DELETE FROM `creature_loot_template` WHERE entry IN (32927, 32867) AND item = 45506;
-INSERT INTO `creature_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `lootmode`, `groupid`, `mincountOrRef`, `maxcount`, `lootcondition`, `condition_value1`, `condition_value2`) VALUES
-('32927','45506','100','1','0','1','1','0','0','0'),
-('32867','45506','100','1','0','1','1','0','0','0');
-
+INSERT INTO `creature_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `lootmode`, `groupid`, `mincountOrRef`, `maxcount`) VALUES
+(32927, 45506, 100, 1, 0, 1, 1),
+(32867, 45506, 100, 1, 0, 1, 1);
+*/
+-- 8665_runed_orb_ulduar
+-- This objects own to tdb not to ytdb or ctdb, lest see if misimouse adapt it.
+-- Any way I will check it because I am shure that ytdb has this drop properly.
+/*
 -- Runed Orb ai keepers
 DELETE FROM `gameobject_loot_template` WHERE entry IN (27085, 27086, 27068, 27073,27074) AND item = 45087;
 INSERT INTO `gameobject_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `lootmode`, `groupid`, `mincountOrRef`, `maxcount`, `lootcondition`, `condition_value1`, `condition_value2`) VALUES
-('27085','45087','75','1','0','1','1','0','0','0'),
-('27086','45087','75','1','0','1','1','0','0','0'),
-('27068','45087','75','1','0','1','1','0','0','0'),
-('27073','45087','75','1','0','1','1','0','0','0'),
-('27074','45087','75','1','0','1','1','0','0','0');
+(27085,45087,'75','1','0','1','1'),
+('27086','45087','75','1','0','1','1'),
+('27068','45087','75','1','0','1','1'),
+('27073','45087','75','1','0','1','1'),
+('27074','45087','75','1','0','1','1');
+*/	
 
+-- 8666_hodir_flashfreeze
 -- Hodir Flash Freeze
 UPDATE `creature_template` SET `difficulty_entry_1` = 33352, `modelid1` = 25865, `modelid2` = 0, `mechanic_immune_mask` = 612597599, `flags_extra` = 0, `ScriptName` = 'npc_flash_freeze_pre' WHERE `entry` = 32926;
 UPDATE `creature_template` SET `difficulty_entry_1` = 33353, `mechanic_immune_mask` = 612597599 WHERE `entry` = 32938;
 UPDATE `creature_template` SET `modelid1` = 25865, `modelid2` = 0, `faction_A` = 14, `faction_H` = 14, `unit_flags` = 393220, `mechanic_immune_mask` = 612597599, `flags_extra` = 0 WHERE `entry` IN (33352, 33353);
-
 DELETE FROM `spell_linked_spell` WHERE `spell_trigger` IN (61969, 61990);
 INSERT INTO `spell_linked_spell` VALUES
 (61969, 7940, 2, "Hodir Flash Freeze immunity"),
 (61990, 7940, 2, "Hodir Flash Freeze immunity");
 
+-- 8667_ulduar_hm_chain
 -- Ulduar chain
-DELETE FROM reference_loot_template WHERE entry = 34111 AND item = 45538;
-
+-- MISI REVISA ESO POR FAVOR, IGUAL NO HACE NADA
+-- DELETE FROM reference_loot_template WHERE entry = 34111 AND item = 45538;
+-- This creature and game object are good in ytdb, I leave it here just in case are necessary to change (do not delete)
+/*
+-- phaseMask here is set in "1" but in ytdb is in "65535", IT NEED TESTING. 
 DELETE FROM gameobject WHERE id = 194555;
-INSERT INTO gameobject VALUES (NULL, 194555, 603, 3, 1, 1435.56, 118.954, 423.641, 0, 0, 0, 0, 1, 300, 0, 1);
+-- phaseMask here is set in "1" but in ytdb is in "65535", IT NEED TESTING. (same case)
+/*
+INSERT INTO gameobject VALUES (21680, 194555, 603, 3, 1, 1435.56, 118.954, 423.641, 0, 0, 0, 0, 1, 300, 0, 1);
 DELETE FROM creature WHERE id = 33956;
-INSERT INTO creature VALUES (NULL, 33956, 603, 3, 1, 0, 0, 1443.61, 119.143, 423.641, 3.1675, 300, 0, 0, 75600, 0, 0, 0);
-
+INSERT INTO creature VALUES (129497, 33956, 603, 3, 1, 0, 0, 1443.61, 119.143, 423.641, 3.1675, 300, 0, 0, 75600, 0, 0, 0);
+*/
+-- este drop tiene una referencia que ya se cambio a la tabla conditions: POR REVISAR MISIMOUSE
+/*
 DELETE FROM `gameobject_loot_template` WHERE entry IN (27074, 27086) AND item IN (45784, 45787);
 INSERT INTO `gameobject_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `lootmode`, `groupid`, `mincountOrRef`, `maxcount`, `lootcondition`, `condition_value1`, `condition_value2`) VALUES
 ('27074','45784','-100','1','0','1','1','9','13610','0'),
 ('27086','45787','-100','1','0','1','1','9','13611','0');
-
+*/
 UPDATE `quest_template` SET `PrevQuestId` = 13607, `NextQuestId` = 13614, `ExclusiveGroup` = -13606, `NextQuestInChain` = 0, `QuestFlags` = 192 WHERE `entry` IN (13606, 13609, 13611, 13610);
-UPDATE `quest_template` SET `PrevQuestId` = 13604, `SpecialFlags` = 2 WHERE `entry` = 13607;
-DELETE FROM `areatrigger_involvedrelation` WHERE `quest` = 13607;
+-- NOTE: ytdb is ussing areatrigger_involvedrelatio id "5401" for quest "13607" and id  "5400" is ussing quest 13816
+-- Both are the same name quest. I leave this comment just in case to use like it was.
+DELETE FROM `areatrigger_involvedrelation` WHERE `id` = 5400;
 INSERT INTO `areatrigger_involvedrelation` (`id`, `quest`) VALUES (5400, 13607);
-
+-- This drop is ok, any way... Misimouse will have a look.
+/*
 DELETE FROM `item_loot_template` WHERE entry = 45875;
 INSERT INTO `item_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `lootmode`, `groupid`, `mincountOrRef`, `maxcount`, `lootcondition`, `condition_value1`, `condition_value2`) VALUES
-('45875','45087','100','1','0','1','1','0','0','0'),
-('45875','45624','100','1','0','5','5','0','0','0');
-
--- Archivum Data Disc drop
-DELETE FROM `creature_loot_template` WHERE entry IN (33692, 33693) AND item = 45857;
-INSERT INTO `creature_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `lootmode`, `groupid`, `mincountOrRef`, `maxcount`, `lootcondition`, `condition_value1`, `condition_value2`) VALUES
-('33692','45857','100','1','0','1','1','0','0','0'),
-('33693','45857','100','1','0','1','1','0','0','0');
+('45875','45087','100','1','0','1','1'),
+('45875','45624','100','1','0','5','5');
+*/
+ 
 
 -- 03_world_icecrown_citadel
 -- Icecrown Citadel
@@ -6724,8 +6725,8 @@ INSERT IGNORE INTO `player_factionchange_items` (`race_A`, `alliance_id`, `comme
 
 
 
--- ro_world_spell_fixes
--- HERE WILL BE ADD ALL LITTLE SPELL FIXES FOR ROCORE JUST NOT TO HAVE MANY FILES IN UPDATE FOLDER
+-- ro_world_extra_fixes
+-- HERE WILL BE ADD ALL LITTLE SPELL FIXES AND EXTRA FIXES FOR ROCORE JUST NOT TO HAVE MANY FILES IN UPDATE FOLDER
 
 UPDATE spell_proc_event SET procFlags = 20, procEx = 2 WHERE entry IN (53486, 53488);
 DELETE FROM `spell_bonus_data` where entry=50444;
@@ -6742,19 +6743,22 @@ DELETE FROM `spell_linked_spell` WHERE `spell_trigger`= 642;
 INSERT INTO `spell_linked_spell` VALUES (642, -33786, 2, 'Divine Shield immune to Cyclone');
 
 -- Fingers of Frost
-
 DELETE FROM `spell_linked_spell` WHERE `spell_trigger` IN ('44544', '-44544');
 INSERT INTO `spell_linked_spell` (`spell_trigger`, `spell_effect`, `type`, `comment`) VALUES
 ('44544','74396','0','Fingers of Frost (ADD)'),
 ('-44544','-74396','0','Fingers of Frost (REMOVE)');
 
 -- Vanish
-
 DELETE FROM `spell_linked_spell` WHERE `spell_trigger` = -1784;
 INSERT INTO `spell_linked_spell` (`spell_trigger`, `spell_effect`, `type`, `comment`) VALUES
 (-1784, -11327, 0, 'Vanish - Rank 1'),
 (-1784, -11329, 0, 'Vanish - Rank 2'),
 (-1784, -26888, 0, 'Vanish - Rank 3');
+										  
+-- Sif http://www.wowhead.com/npc=33196
+UPDATE `creature_template` SET `faction_A` = 14, `faction_H` = 14, `unit_flags` = 33554434 WHERE `entry` IN (33196, 33234);
+-- Kel Thuzad immunity http://www.wowhead.com/npc=15990
+UPDATE `creature_template` SET `mechanic_immune_mask` = 617299839 WHERE `entry` IN (15990, 30061);
 
 -- -------------------------------- --
 -- SCRIPT NAMES OF ALL SINGLE FILES --
@@ -6809,7 +6813,7 @@ UPDATE `creature_template` SET `ScriptName`= 'npc_planar_anomaly' WHERE entry = 
 
 -- Ruby Sanctum
 UPDATE `creature_template` SET `ScriptName` = 'boss_baltharus' WHERE `entry` = '39751';
-UPDATE `creature_template` SET `ScriptName` = 'boss_baltharus_clone' WHERE `entry` = '39899';
+UPDATE `creature_template` SET `ScriptName` = 'boss_baltharus_summon' WHERE `entry` = '39899';
 UPDATE `creature_template` SET `ScriptName` = 'npc_xerestrasza' WHERE `entry` = '40429';
 UPDATE `creature_template` SET `ScriptName` = 'boss_zarithrian' WHERE `entry` = '39746';
 UPDATE `creature_template` SET `ScriptName` = 'boss_ragefire' WHERE `entry` = '39747';
@@ -6820,6 +6824,7 @@ UPDATE `creature_template` SET `ScriptName` = 'npc_meteor_strike' WHERE `entry` 
 UPDATE `creature_template` SET `ScriptName` = 'npc_combustion' WHERE `entry` = '40001';
 UPDATE `creature_template` SET `ScriptName` = 'npc_consumption' WHERE `entry` = '40135';
 UPDATE `creature_template` SET `ScriptName` = 'npc_meteor_flame' WHERE `entry` = '40044';
+
 
 -- Anuncios al comienzo del evento.
 -- Here does not exist the NPC, the we fix the script_name in this way
