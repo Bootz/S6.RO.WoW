@@ -260,10 +260,6 @@ public:
 			if (me->hasUnitState(UNIT_STAT_CASTING))
 				return;
 
-			if (m_uiIntroText == 1 || m_uiIntroText == 2 ||
-				m_uiIntroText == 3 || m_uiIntroText == 4 ||
-				m_uiIntroText == 5 || m_uiIntroText == 6)
-			{
 				if (m_uiIntroTextTimer < uiDiff)
 				{
 					switch(m_uiIntroText)
@@ -278,7 +274,6 @@ public:
 					m_uiIntroText++;
 					m_uiIntroTextTimer = 10500;
 				} else m_uiIntroTextTimer -= uiDiff;
-			}
 
 			if (m_uiResetTimer <= uiDiff)
 			{
@@ -319,6 +314,8 @@ public:
 				m_uiDarkEmpoweredTimer = 20000;
 			} else m_uiDarkEmpoweredTimer -= uiDiff;
 
+			if (getDifficulty() == RAID_DIFFICULTY_25MAN_NORMAL || getDifficulty() == RAID_DIFFICULTY_25MAN_HEROIC)
+			{
 			if (m_uiDominateMindTimer < uiDiff)
 			{
 				uint32 count = RAID_MODE(0,1,1,3);
@@ -333,8 +330,9 @@ public:
 						DoScriptText(SAY_DOMINATE_MIND, me);
 					}
 				}
-				m_uiDominateMindTimer = 12000;
+				m_uiDominateMindTimer = urand(18000, 22000);
 			} else m_uiDominateMindTimer -= uiDiff;
+			}
 
 			if (m_uiPhase == 1)
 			{
