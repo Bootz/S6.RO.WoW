@@ -338,7 +338,7 @@ public:
 					if (!Plagued->IsWithinDistInMap((*itr),10))
 						HorrorList.remove(*itr);
 			uint8 total = targets.size() + HorrorList.size();
-			uint32 rnd = rand()%total;
+			uint8 rnd = rand()%total;
 			if (rnd)
 			{
 				if (rnd <= targets.size())
