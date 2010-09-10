@@ -206,17 +206,20 @@ public:
 			{
 				if (Player* pPlayer = i->getSource())
 				{
-                        if(pPlayer)
-                        {
+                               if(pPlayer)
+                                {
 					pPlayer->SendMovieStart(16);
-				}
-			}
-                }
+				    }
+			       }
+                     }
 
                 if(pInstance)
                     pInstance->SetData(DATA_LICH_KING_EVENT, DONE);
 
                 summons.DespawnAll();
+
+                if (pTirion->HasAura(SPELL_ICEBLOCK_TRIGGER))
+                pTirion->RemoveAurasDueToSpell(SPELL_ICEBLOCK_TRIGGER);
 		}
 
 		void JustReachedHome()
@@ -728,7 +731,7 @@ public:
 
 		void Reset()
 		{
-
+			me->RemoveAllAuras();
 			me->SetReactState(REACT_PASSIVE);
 			me->SetSpeed(MOVE_RUN, 1.8f);
 			me->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
@@ -829,9 +832,6 @@ public:
 		  {
                     if (pInstance->GetData(DATA_LICH_KING_EVENT) != NOT_STARTED)
 					me->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
-
-                    else
-					me->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
                 }
              }
 
