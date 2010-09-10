@@ -852,6 +852,7 @@ public:
 
         bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
         {
+            pPlayer->PlayerTalkClass->ClearMenus();
             if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
             {
                 CAST_AI(npc_tirion_icc::npc_tirion_iccAI, pCreature->AI())->StartEvent();
@@ -1255,5 +1256,5 @@ void AddSC_boss_lichking()
 	new npc_ghoul_icc;
 	new npc_defile_icc;
 	new npc_raging_spirit_icc;
-	new npc_shambling_horror;
+	new npc_shambling_horror_icc;
 }
