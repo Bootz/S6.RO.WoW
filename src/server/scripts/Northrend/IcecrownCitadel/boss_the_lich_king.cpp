@@ -318,7 +318,7 @@ public:
 			++m_uiEndingPhase;
 		}
 
-		void NecroticJump()
+		/*void NecroticJump()
 		{
 			DoCast(me, SPELL_PLAGUE_SIPHON);
 			Plagued->RemoveAura(SPELL_NECROTIC_PLAGUE);
@@ -363,9 +363,9 @@ public:
 			}
 			targets.clear();
 			HorrorList.clear();
-		}
+		}*/
 
-		void Frostmourn()
+		void Frostmourne()
 		{
 			Map* pMap = me->GetMap();
 			Map::PlayerList const &PlayerList = pMap->GetPlayers();
@@ -458,7 +458,7 @@ public:
 					m_uiNecroticPlagueTimer = 5000;
 				} else m_uiNecroticPlagueTimer -= uiDiff;
 
-				if (Plagued)
+				/*if (Plagued)
 					if (!Plagued->isAlive())
 					{
 						necroticstack++;
@@ -477,7 +477,7 @@ public:
 					{
 						necroticstack--;
 						NecroticJump();
-					}
+					}*/
 
 			}
 
@@ -623,7 +623,7 @@ public:
 						        pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
 					           if (pTarget)
 					DoCast(pTarget, SPELL_HARVEST_SOULS);
-					Frostmourn();
+					Frostmourne();
 					m_uiHarvestSoulTimer = 25000;
 				} else m_uiHarvestSoulTimer -= uiDiff;
 			}
