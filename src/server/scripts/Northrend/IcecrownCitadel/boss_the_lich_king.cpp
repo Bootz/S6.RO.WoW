@@ -852,7 +852,6 @@ public:
 
         bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
         {
-            pPlayer->PlayerTalkClass->ClearMenus();
             if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
             {
                 CAST_AI(npc_tirion_icc::npc_tirion_iccAI, pCreature->AI())->StartEvent();
