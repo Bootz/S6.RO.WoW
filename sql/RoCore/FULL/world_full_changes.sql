@@ -4401,6 +4401,7 @@ UPDATE `creature_template` SET `ScriptName`='npc_impaling_spear' WHERE (`entry` 
 UPDATE `creature_template` SET `ScriptName`='npc_gas_cloud' WHERE `entry` = '37562';
 UPDATE `creature_template` SET `ScriptName`='lanathel_intro' WHERE (`entry`='38004');
 UPDATE `creature_template` SET `vehicleId`=533 WHERE `entry`=36619;
+UPDATE `creature_template` SET `minlevel` = '80', `maxlevel` = '80', `faction_A` = '14', `faction_H` = '14', `unit_flags` = '0', `type_flags` = '0', `VehicleId` = '647' WHERE `entry` IN (38711,38970,38971,38972);
 
 -- Inserting NPC's on world
 DELETE FROM `creature` WHERE `id`=38004;

@@ -338,7 +338,7 @@ class npc_bloodbeast : public CreatureScript
                 Creature* Saurfang = me->GetCreature(*me, pInstance->GetData64(DATA_SAURFANG));
                 if (Saurfang && Saurfang->isAlive())
                 {
-                    Saurfang->ModifyHealth(uint32(Saurfang->GetMaxHealth() * 0.05));
+                    Saurfang->ModifyHealth(uint32(Saurfang->GetMaxHealth() * 0.02));
                 }
             }
 
