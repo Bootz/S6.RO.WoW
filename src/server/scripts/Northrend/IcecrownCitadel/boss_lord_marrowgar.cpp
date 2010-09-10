@@ -21,15 +21,15 @@
 enum Yells
 {
     SAY_INTRO     = -1631000,
-	SAY_AGGRO            =    -1631001,
+    SAY_AGGRO            =    -1631001,
     SAY_STORM     = -1631002,
     SAY_SPIKE_1   = -1631003,
     SAY_SPIKE_2   = -1631004,
     SAY_SPIKE_3   = -1631005,
-	SAY_KILL_1           =    -1631006,
-	SAY_KILL_2           =    -1631007,
-	SAY_DEATH            =    -1631008,
-	SAY_BERSERK          =    -1631009,
+    SAY_KILL_1           =    -1631006,
+    SAY_KILL_2           =    -1631007,
+    SAY_DEATH            =    -1631008,
+    SAY_BERSERK          =    -1631009,
     STORM_EMOTE   = -1631010
 };
 
@@ -40,7 +40,7 @@ enum Spells
     SPELL_BONE_SPIKE         = 73142,
     SPELL_SPIKE_IMPALING     = 69065,
     SPELL_BONE_STORM         = 69076,
-	SPELL_COLD_FLAME_SPAWN               =  69138,
+    SPELL_COLD_FLAME_SPAWN               =  69138,
     SPELL_COLD_FLAME_SPAWN_B = 72701
 };
 
@@ -53,8 +53,8 @@ public:
 	{
             npc_bone_spikeAI(Creature *pCreature) : Scripted_NoMovementAI(pCreature), vehicle(pCreature->GetVehicleKit())
             {
-                assert(vehicle);
-			BoneSpikeGUID = 0;
+                ASSERT(vehicle);
+                BoneSpikeGUID = 0;
                 pInstance = pCreature->GetInstanceScript();
             }
 
@@ -78,7 +78,7 @@ public:
 
             void KilledUnit(Unit* pVictim)
             {
-                Unit* pBoned = Unit::GetUnit((*me), BoneSpikeGUID);
+                Unit* pBoned = Unit::GetUnit(*me, BoneSpikeGUID);
                 if (pBoned)
                     pBoned->RemoveAurasDueToSpell(SPELL_SPIKE_IMPALING);
             }
@@ -88,7 +88,7 @@ public:
                 if (!BoneSpikeGUID)
                     return;
 
-                Unit* pBoned = Unit::GetUnit((*me), BoneSpikeGUID);
+                Unit* pBoned = Unit::GetUnit(*me, BoneSpikeGUID);
                 if ((pBoned && pBoned->isAlive() && !pBoned->HasAura(SPELL_SPIKE_IMPALING)) || !pBoned)
                     me->Kill(me);
             }
@@ -169,7 +169,7 @@ class npc_coldflame : public CreatureScript
                         me->SummonCreature(CREATURE_COLD_FLAME, x, y, me->GetPositionZ(), angle, TEMPSUMMON_TIMED_DESPAWN, 4000);
                     }
                     ++stage;
-                    m_uiColdFlameTimer = 1000;
+                    m_uiColdFlameTimer = urand(10000, 15000);
                 } else m_uiColdFlameTimer -= uiDiff;
             }
 
@@ -292,7 +292,7 @@ public:
 
                 for (uint8 i = 1; i <= m_uiBoneCount; i++)
                 {
-                    Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
+                    Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
                     if (pTarget && !pTarget->HasAura(SPELL_SPIKE_IMPALING))
                     {
                         Creature* pBone = me->SummonCreature(CREATURE_BONE_SPIKE, pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 999999);
@@ -324,7 +324,7 @@ public:
                 }
 
                 if (!me->HasAura(SPELL_BONE_STORM))
-			{
+                {
 				if (m_uiBoneStormTimer <= uiDiff)
 				{
                         DoCast(SPELL_BONE_STORM);
@@ -342,7 +342,7 @@ public:
                             pInstance->SetData(DATA_ANGLE, angle);
                             DoCast(pTarget, SPELL_COLD_FLAME_SPAWN);
                         }
-                        m_uiColdFlameTimer = 8000;
+                        m_uiColdFlameTimer = urand(10000, 15000);
                     } else m_uiColdFlameTimer -= uiDiff;
 
                     if (m_uiSaberSlashTimer <= uiDiff)
