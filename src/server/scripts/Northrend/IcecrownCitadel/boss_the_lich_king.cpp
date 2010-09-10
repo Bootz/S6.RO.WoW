@@ -728,10 +728,6 @@ public:
 
 		void Reset()
 		{
-                m_uiIntroTimer = 1000;
-                m_uiIntroPhase = 1;
-
-                bIntro = false;
 
 			me->SetReactState(REACT_PASSIVE);
 			me->SetSpeed(MOVE_RUN, 1.8f);
@@ -740,17 +736,18 @@ public:
 
 		void StartEvent()
 		{
-                bIntro = true;
-            }
+                m_uiIntroTimer = 1000;
+                m_uiIntroPhase = 1;
+                bIntro(); 
+		}
 
-            void UpdateAI(const uint32 uiDiff)
+            void bIntro()
             {
-                if(bIntro && m_uiIntroTimer <= uiDiff)
+                if(m_uiIntroTimer)
 			{
-				switch( m_uiIntroPhase )
+				switch(m_uiIntroPhase)
 				{
 				case 1:
-                        {
                             if(pInstance)
                                 pInstance->SetData(DATA_LICH_KING_EVENT, IN_PROGRESS);
 					pLichKing->SetStandState(UNIT_STAND_STATE_STAND);
@@ -760,7 +757,6 @@ public:
 					me->SetUInt32Value(UNIT_NPC_EMOTESTATE, 375);
                             m_uiIntroTimer = 3000;
                             ++m_uiIntroPhase;
-                        }
 					break;
 				case 2:
 					pLichKing->SetUInt32Value(UNIT_NPC_EMOTESTATE, 1);
@@ -820,27 +816,30 @@ public:
                         ++m_uiIntroPhase;
 					break;
 				}
-                } else m_uiIntroTimer -= uiDiff;
-
-                if(pInstance)
-		{
-                    if(pInstance->GetData(DATA_LICH_KING_EVENT) != NOT_STARTED)
-				{
-					me->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
-				}
-                    else
-                    {
-                        me->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
-                    }
-                }
+                    } 
             }
+
+		void UpdateAI(const uint32 uiDiff)
+		{
+                if (m_uiIntroTimer <= uiDiff)
+                    bIntro();
+                else m_uiIntroTimer -= uiDiff;
+
+                if (pInstance)
+		  {
+                    if (pInstance->GetData(DATA_LICH_KING_EVENT) != NOT_STARTED)
+					me->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
+
+                    else
+					me->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
+                }
+             }
+
         private:
             InstanceScript* pInstance;
 
             uint32 m_uiIntroTimer;
             uint32 m_uiIntroPhase;
-
-            bool bIntro;
 	};
 
         bool OnGossipHello(Player* pPlayer, Creature* pCreature)
