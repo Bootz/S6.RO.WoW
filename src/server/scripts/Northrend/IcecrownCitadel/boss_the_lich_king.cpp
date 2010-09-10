@@ -338,7 +338,7 @@ public:
 					if (!Plagued->IsWithinDistInMap((*itr),10))
 						HorrorList.remove(*itr);
 			uint8 total = targets.size() + HorrorList.size();
-			uint8 rnd = rand()%total;
+			uint32 rnd = rand()%total;
 			if (rnd)
 			{
 				if (rnd <= targets.size())
@@ -473,7 +473,7 @@ public:
 						}
 					}
 
-					if (Plagued->HasAura(SPELL_NECROTIC_PLAGUE) && Plagued->GetAura(SPELL_NECROTIC_PLAGUE)->GetStackAmount() < necroticstack)
+				if (Plagued && Plagued->HasAura(SPELL_NECROTIC_PLAGUE) && Plagued->GetAura(SPELL_NECROTIC_PLAGUE)->GetStackAmount() < necroticstack)
 					{
 						necroticstack--;
 						NecroticJump();
@@ -481,7 +481,7 @@ public:
 
 			}
 
-			if(m_uiPhase == 2)
+			if (m_uiPhase == 2)
 			{
 				if (m_uiRemorselesWinterTimer < uiDiff)
 				{
