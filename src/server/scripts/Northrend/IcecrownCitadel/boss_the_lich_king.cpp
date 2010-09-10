@@ -123,11 +123,11 @@ enum DefileDamage
 #define SPELL_LIGHT_FAVOR     69382
 #define SPELL RESTORE_SOUL    72595
 
-const Position MovePosition = {461.792633, -2125.855957, 1040.860107};
-const Position MoveEndingPosition = {503.156525, -2124.516602, 1040.860107};
-const Position MoveTirionFrostmourne = {490.110779, -2124.989014, 1040.860352};
-const Position MoveTirionAttack = {478.333466, -2124.618652, 1040.859863};
-const Position ValkyrMoveMent = {498.004486, 2201.573486, 1046.093872};
+const Position MovePosition = {461.792633f, -2125.855957f, 1040.860107f};
+const Position MoveEndingPosition = {503.156525f, -2124.516602f, 1040.860107f};
+const Position MoveTirionFrostmourne = {490.110779f, -2124.989014f, 1040.860352f};
+const Position MoveTirionAttack = {478.333466f, -2124.618652f, 1040.859863f};
+const Position ValkyrMoveMent = {498.004486f, 2201.573486f, 1046.093872f};
 
 struct Locations
 {
@@ -136,13 +136,13 @@ struct Locations
 
 static Locations TeleportPoint[]=
 {
-	{959.996, 212.576, 193.843},
-	{932.537, 231.813, 193.838},
-	{958.675, 254.767, 193.822},
-	{946.955, 201.316, 192.535},
-	{944.294, 149.676, 197.551},
-	{930.548, 284.888, 193.367},
-	{965.997, 278.398, 195.777}
+	{959.996f, 212.576f, 193.843f},
+	{932.537f, 231.813f, 193.838f},
+	{958.675f, 254.767f, 193.822f},
+	{946.955f, 201.316f, 192.535f},
+	{944.294f, 149.676f, 197.551f},
+	{930.548f, 284.888f, 193.367f},
+	{965.997f, 278.398f, 195.777f}
 };
 
 Creature* pLichKing;
@@ -289,10 +289,11 @@ public:
 		{
 			if (pSummoned->GetEntry() == CREATURE_ICE_SPHERE)
 
-				if(Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM,1))
-				{
+				if(Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1))
+					           if (!pTarget)
+						        pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
+					           if (pTarget)
 					pSummoned->AI()->AttackStart(pTarget);
-				}
 		}
 
 		void SetEnding()
@@ -406,7 +407,10 @@ public:
 			{
 				if (m_uiInfestTimer < uiDiff)
 				{
-					Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM,1);
+					Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
+					           if (!pTarget)
+						        pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
+					           if (pTarget)
 					DoCast(pTarget, RAID_MODE(SPELL_INFEST_10_NORMAL,SPELL_INFEST_25_NORMAL,SPELL_INFEST_10_HEROIC,SPELL_INFEST_25_HEROIC));
 					if (pTarget->GetHealth()*100 / pTarget->GetMaxHealth() < 90)
 					{
@@ -442,7 +446,10 @@ public:
 
 				if (m_uiNecroticPlagueTimer < uiDiff && !Plagued)
 				{
-					Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM,1);
+					Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
+					           if (!pTarget)
+						        pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
+					           if (pTarget)
 					DoCast(pTarget, SPELL_NECROTIC_PLAGUE);
 					Plagued = pTarget;
 					necroticstack = 1;
@@ -483,7 +490,10 @@ public:
 
 				if (m_uiSummonSpiritTimer < uiDiff)
 				{
-					Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM,1);
+					Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
+					           if (!pTarget)
+						        pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
+					           if (pTarget)
 					DoCast(pTarget, SPELL_SUMMON_RAGING_SPIRIT);
 					m_uiSummonSpiritTimer = 16000;
 				} else m_uiSummonSpiritTimer -= uiDiff;
@@ -497,6 +507,9 @@ public:
 				if (m_uiPainandSufferingTimer < uiDiff)
 				{
 					Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
+					           if (!pTarget)
+						        pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
+					           if (pTarget)
 					DoCast(pTarget, SPELL_PAIN_AND_SUFFERING);
 					m_uiPainandSufferingTimer = 2000;
 				} else m_uiPainandSufferingTimer -= uiDiff;
@@ -517,7 +530,10 @@ public:
 			{
 				if (m_uiDefileTimer < uiDiff)
 				{
-					Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM,1);
+					Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
+					           if (!pTarget)
+						        pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
+					           if (pTarget)
 					DoCast(pTarget, SPELL_SPAWN_DEFILE);
 					m_uiDefileTimer = 20000;
 				} else m_uiDefileTimer -= uiDiff;
@@ -554,7 +570,10 @@ public:
 
 				if (m_uiSummonSpiritTimer < uiDiff)
 				{
-					Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM,1);
+					Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
+					           if (!pTarget)
+						        pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
+					           if (pTarget)
 					DoCast(pTarget, SPELL_SUMMON_RAGING_SPIRIT);
 					m_uiSummonSpiritTimer = 16000;
 				} else m_uiSummonSpiritTimer -= uiDiff;
@@ -568,6 +587,9 @@ public:
 				if (m_uiPainandSufferingTimer < uiDiff)
 				{
 					Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
+					           if (!pTarget)
+						        pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
+					           if (pTarget)
 					DoCast(pTarget, SPELL_PAIN_AND_SUFFERING);
 					m_uiPainandSufferingTimer = 3000;
 				} else m_uiPainandSufferingTimer -= uiDiff;
@@ -595,6 +617,9 @@ public:
 				{
 					DoScriptText(SAY_HARVEST_SOUL, me);
 					Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
+					           if (!pTarget)
+						        pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
+					           if (pTarget)
 					DoCast(pTarget, SPELL_HARVEST_SOULS);
 					Frostmourn();
 					m_uiHarvestSoulTimer = 25000;
@@ -896,7 +921,7 @@ public:
 					KingIntro(4000);
 					break;
 				case 9:
-					me->CastSpell(pLichKing, SPELL_ICEBLOCK_TRIGGER, false);
+					DoCast(me, SPELL_ICEBLOCK_TRIGGER);
 					KingIntro(2000);
 					break;
 				case 10:
@@ -1055,6 +1080,9 @@ public:
 				if(!InVehicle)
 				{
 					if(Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1))
+					           if (!pTarget)
+						        pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
+					           if (pTarget)
 					{
 						pTarget->EnterVehicle(vehicle);
 						InVehicle = true;
@@ -1362,7 +1390,9 @@ public:
 			if (LightTimer <= uiDiff)
 		 {
 			 Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
-			 if (!pTarget->IsFriendlyTo(pWarden))
+					           if (!pTarget)
+						        pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
+					           if (pTarget && !pTarget->IsFriendlyTo(pWarden))
 			 {
 				 DoCast(pTarget, SPELL_HEAL);
 				 LightTimer = 20000;
