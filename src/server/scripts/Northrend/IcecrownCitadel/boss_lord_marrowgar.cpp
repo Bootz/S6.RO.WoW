@@ -1,62 +1,47 @@
 /*
-* Copyright (C) 2009 - 2010 TrinityCore <http://www.trinitycore.org/>
-*
-* This program is free software; you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
-* (at your option) any later version.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ * Copyright (C) 2008-2010 TrinityCore <http://www.trinitycore.org/>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 2 of the License, or (at your
+ * option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program. If not, see <http://www.gnu.org/licenses/>.
 */
-
-// Scripted by Lavi & Andu - WoW-Romania Team http://www.wow-romania.ro (if you use this script, do not remove this seal, no matter what other modification you apply to script).
 
 #include "ScriptPCH.h"
 #include "icecrown_citadel.h"
 
 enum Yells
 {
-	SAY_ENTER_ZONE       =    -1631000,
+    SAY_INTRO     = -1631000,
 	SAY_AGGRO            =    -1631001,
-	SAY_BONE_STORM       =    -1631002,
-	SAY_BONESPIKE_1      =    -1631003,
-	SAY_BONESPIKE_2      =    -1631004,
-	SAY_BONESPIKE_3      =    -1631005,
+    SAY_STORM     = -1631002,
+    SAY_SPIKE_1   = -1631003,
+    SAY_SPIKE_2   = -1631004,
+    SAY_SPIKE_3   = -1631005,
 	SAY_KILL_1           =    -1631006,
 	SAY_KILL_2           =    -1631007,
 	SAY_DEATH            =    -1631008,
 	SAY_BERSERK          =    -1631009,
-       SAY_BONE_STORM_EMOTE =    -1631010
+    STORM_EMOTE   = -1631010
 };
 
 enum Spells
 {
-	SPELL_SABER_SLASH_10_NORMAL          =  71021, //69055
-	SPELL_SABER_SLASH_25_NORMAL          =  40816, //70814
-	SPELL_SABER_SLASH_10_HEROIC          =  71021, //70814
-	SPELL_SABER_SLASH_25_HEROIC          =  70814, //70814
-	SPELL_COLD_FLAME_10_NORMAL           =  69145, //69146 - was the old spell - and it was the wrong one - or maybe not but lets try using this for the given situation
-	SPELL_COLD_FLAME_25_NORMAL           =  69145, //
-	SPELL_COLD_FLAME_10_HEROIC           =  69145,
-	SPELL_COLD_FLAME_25_HEROIC           =  69145,
-	SPELL_COLD_DESPAWN                   =  66346,
+    SPELL_SABER_SLASH        = 69055,
+    SPELL_COLD_FLAME         = 69146,
+    SPELL_BONE_SPIKE         = 73142,
+    SPELL_SPIKE_IMPALING     = 69065,
+    SPELL_BONE_STORM         = 69076,
 	SPELL_COLD_FLAME_SPAWN               =  69138,
-	SPELL_BONE_SPIKE_GRAVEYARD_10_NORMAL =  69057,
-	SPELL_BONE_SPIKE_GRAVEYARD_25_NORMAL =  70826,
-	SPELL_BONE_SPIKE_IMPALING            =  69065,
-	SPELL_BONE_STORM_CHANNEL             =  69076,
-	SPELL_BONE_STORM_10_NORMAL           =  69075,
-	SPELL_BONE_STORM_25_NORMAL           =  70834,
-	SPELL_BONE_STORM_10_HEROIC           =  70835,
-	SPELL_BONE_STORM_25_HEROIC           =  70836,
-	SPELL_BONE_SHIELD                    =  70207,
+    SPELL_COLD_FLAME_SPAWN_B = 72701
 };
 
 class npc_bone_spike : public CreatureScript
@@ -66,60 +51,142 @@ public:
 
 	struct npc_bone_spikeAI : public Scripted_NoMovementAI
 	{
-		npc_bone_spikeAI(Creature *pCreature) : Scripted_NoMovementAI(pCreature)
-		{
+            npc_bone_spikeAI(Creature *pCreature) : Scripted_NoMovementAI(pCreature), vehicle(pCreature->GetVehicleKit())
+            {
+                assert(vehicle);
 			BoneSpikeGUID = 0;
-		}
+                pInstance = pCreature->GetInstanceScript();
+            }
+
+            void SetPrisoner(Unit* pPrisoner)
+            {
+                BoneSpikeGUID = pPrisoner->GetGUID();
+                pPrisoner->EnterVehicle(vehicle, 0);
+            }
+
+            void Reset()
+            {
+                BoneSpikeGUID = 0;
+            }
+
+            void JustDied(Unit* pKiller)
+            {
+                Unit* pBoned = Unit::GetUnit((*me), BoneSpikeGUID);
+                if (pBoned)
+                    pBoned->RemoveAurasDueToSpell(SPELL_SPIKE_IMPALING);
+            }
+
+            void KilledUnit(Unit* pVictim)
+            {
+                Unit* pBoned = Unit::GetUnit((*me), BoneSpikeGUID);
+                if (pBoned)
+                    pBoned->RemoveAurasDueToSpell(SPELL_SPIKE_IMPALING);
+            }
+
+            void UpdateAI(const uint32 /*diff*/)
+            {
+                if (!BoneSpikeGUID)
+                    return;
+
+                Unit* pBoned = Unit::GetUnit((*me), BoneSpikeGUID);
+                if ((pBoned && pBoned->isAlive() && !pBoned->HasAura(SPELL_SPIKE_IMPALING)) || !pBoned)
+                    me->Kill(me);
+            }
+
+        private:
+            InstanceScript* pInstance;
 
 		uint64 BoneSpikeGUID;
-
-		void SetPrisoner(Unit* uPrisoner)
-		{
-			BoneSpikeGUID = uPrisoner->GetGUID();
-		}
-
-		void Reset()
-		{
-			BoneSpikeGUID = 0;
-		}
-
-		void JustDied(Unit *killer)
-		{
-			if (killer->GetGUID() != me->GetGUID())
-
-				if (BoneSpikeGUID)
-				{
-					Unit* Bone = Unit::GetUnit((*me), BoneSpikeGUID);
-					if (Bone)
-						Bone->RemoveAurasDueToSpell(SPELL_BONE_SPIKE_IMPALING);
-				}
-		}
-
-		void KilledUnit(Unit *pVictim)
-		{
-			if (pVictim->GetGUID() != me->GetGUID())
-
-				if (BoneSpikeGUID)
-				{
-					Unit* Bone = Unit::GetUnit((*me), BoneSpikeGUID);
-					if (Bone)
-						Bone->RemoveAurasDueToSpell(SPELL_BONE_SPIKE_IMPALING);
-				}
-		}
-
-		void UpdateAI(const uint32 diff)
-		{
-			Unit* temp = Unit::GetUnit((*me),BoneSpikeGUID);
-			if ((temp && temp->isAlive() && !temp->HasAura(SPELL_BONE_SPIKE_IMPALING)) || !temp)
-				me->DealDamage(me, me->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
-		}
+            Vehicle* vehicle;
 	};
 
 	CreatureAI* GetAI(Creature* pCreature) const
 	{
 		return new npc_bone_spikeAI(pCreature);
 	}
+};
 
+class npc_coldflame : public CreatureScript
+{
+    public:
+        npc_coldflame() : CreatureScript("npc_coldflame") { }
+
+        struct npc_coldflameAI : public ScriptedAI
+        {
+            npc_coldflameAI(Creature *pCreature) : ScriptedAI(pCreature)
+            {
+                pInstance = pCreature->GetInstanceScript();
+            }
+
+            void Reset()
+            {
+                m_uiColdFlameTimer = 2000;
+
+                DoCast(me, SPELL_COLD_FLAME);
+
+                me->SetVisibility(VISIBILITY_OFF);
+                DoStartNoMovement(me->getVictim());
+
+                stage = 1;
+                radius = 2;
+                ownerEntry = 0;
+            }
+
+            void IsSummonedBy(Unit* owner)
+            {
+                if(owner)
+                {
+                    if(owner->HasAura(SPELL_BONE_STORM))
+                        crossfire = true;
+                    else
+                        crossfire = false;
+
+                    ownerEntry = owner->GetEntry();
+                }
+            }
+
+            void UpdateAI(const uint32 uiDiff)
+            {
+                if(ownerEntry == CREATURE_MARROWGAR && m_uiColdFlameTimer <= uiDiff)
+                {
+                    if(crossfire)
+                    {
+                        float x, y;
+                        me->GetNearPoint2D(x, y, radius*stage, 0);
+                        me->SummonCreature(CREATURE_COLD_FLAME, x, y, me->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN, 4000);
+                        me->GetNearPoint2D(x, y, radius*stage, M_PI/2);
+                        me->SummonCreature(CREATURE_COLD_FLAME, x, y, me->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN, 4000);
+                        me->GetNearPoint2D(x, y, radius*stage, M_PI*(M_PI/2));
+                        me->SummonCreature(CREATURE_COLD_FLAME, x, y, me->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN, 4000);
+                        me->GetNearPoint2D(x, y, radius*stage, M_PI);
+                        me->SummonCreature(CREATURE_COLD_FLAME, x, y, me->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN, 4000);
+                    }
+                    else
+                    {
+                        float x, y;
+                        float angle = pInstance->GetData(DATA_ANGLE);
+                        me->GetNearPoint2D(x, y, radius*stage, angle);
+                        me->SummonCreature(CREATURE_COLD_FLAME, x, y, me->GetPositionZ(), angle, TEMPSUMMON_TIMED_DESPAWN, 4000);
+                    }
+                    ++stage;
+                    m_uiColdFlameTimer = 1000;
+                } else m_uiColdFlameTimer -= uiDiff;
+            }
+
+        private:
+            InstanceScript* pInstance;
+
+            uint32 m_uiColdFlameTimer;
+            uint8 radius;
+            uint8 stage;
+            uint32 ownerEntry;
+            bool crossfire;
+        };
+
+        CreatureAI* GetAI(Creature* pCreature) const
+        {
+            return new npc_coldflameAI(pCreature);
+        }
 };
 
 class boss_lord_marrowgar : public CreatureScript
@@ -127,81 +194,112 @@ class boss_lord_marrowgar : public CreatureScript
 public:
 	boss_lord_marrowgar() : CreatureScript("boss_lord_marrowgar") { }
 
-	struct boss_lord_marrowgarAI : public ScriptedAI
+        struct boss_lord_marrowgarAI : public BossAI
 	{
-		boss_lord_marrowgarAI(Creature *pCreature) : ScriptedAI(pCreature)
+            boss_lord_marrowgarAI(Creature* pCreature) : BossAI(pCreature, DATA_MARROWGAR), summons(me)
 		{
 			pInstance = pCreature->GetInstanceScript();
+                m_uiBoneCount = RAID_MODE(1,3,1,3);
+                fBaseSpeed = me->GetSpeedRate(MOVE_RUN);
+                bIntro = false;
 		}
-
-		InstanceScript* pInstance;
-
-		uint32 m_uiSaberSlashTimer;
-		uint32 m_uiBoneSpikeGraveyardTimer;
-		uint32 m_uiBoneStormChanelTimer;
-		uint32 m_uiBoneStormTimer;
-		uint32 m_uiBoneStormRemoveTimer;
-		uint32 m_uiColdFlameTimer;
-		uint32 m_uiBerserkTimer;
-		uint32 m_uiMove;
-
-		bool Intro;
 
 		void Reset()
 		{
 			m_uiSaberSlashTimer = 6000;
 			m_uiBoneSpikeGraveyardTimer  = 15000;
-			m_uiColdFlameTimer  = 15000;
-			m_uiBoneStormChanelTimer = 45000;
-			m_uiBoneStormTimer = 1500;
+                m_uiColdFlameTimer = 8000;
+                m_uiBoneStormTimer = 30000;
 			m_uiBoneStormRemoveTimer = 20000;
 			m_uiBerserkTimer = 600000;
+                m_uiMoveTimer = 5000;
+                angle = 0;
 
-			me->SetSpeed(MOVE_RUN, 2.5f, true);
-			me->SetSpeed(MOVE_WALK, 1.8f, true);
+                me->SetSpeed(MOVE_RUN, fBaseSpeed, true);
 
-			Intro = false;
-
-			if (pInstance)
+                if (pInstance && me->isAlive())
 				pInstance->SetData(DATA_MARROWGAR_EVENT, NOT_STARTED);
 		}
 
-		void EnterCombat(Unit* who)
+            void EnterCombat(Unit* /*pWho*/)
 		{
 			DoScriptText(SAY_AGGRO, me);
 
 			if (pInstance)
 				pInstance->SetData(DATA_MARROWGAR_EVENT, IN_PROGRESS);
-		}
 
-		void JustDied(Unit* killer)
+                summons.DespawnAll();
+            }
+
+            void JustSummoned(Creature* summon)
+            {
+                summons.Summon(summon);
+            }
+
+            void JustDied(Unit* /*pKiller*/)
 		{
 			DoScriptText(SAY_DEATH, me);
 
 			if (pInstance)
+                {
 				pInstance->SetData(DATA_MARROWGAR_EVENT, DONE);
+                    pInstance->DoRemoveAurasDueToSpellOnPlayers(SPELL_SPIKE_IMPALING);
+                }
+
+                summons.DespawnAll();
 		}
 
 		void JustReachedHome()
 		{
 			if(pInstance)
+                {
 				pInstance->SetData(DATA_MARROWGAR_EVENT, FAIL);
-		}
+                    pInstance->DoRemoveAurasDueToSpellOnPlayers(SPELL_SPIKE_IMPALING);
+                }
 
-		void KilledUnit(Unit *victim)
-		{
-			DoScriptText(RAND(SAY_KILL_1,SAY_KILL_2), me);
-		}
+                summons.DespawnAll();
+            }
 
-		void MoveInLineOfSight(Unit *who)
-		{
-			if (!Intro && me->IsWithinDistInMap(who,60.0f))
-			{
-				DoScriptText(SAY_ENTER_ZONE, me);
-				Intro = true;
-			}
+            void KilledUnit(Unit* pVictim)
+            {
+                if (pVictim->GetTypeId() == TYPEID_PLAYER)
+                {
+                    switch(rand()%1)
+                    {
+                        case 0: DoScriptText(SAY_KILL_1, me); break;
+                        case 1: DoScriptText(SAY_KILL_2, me); break;
+                    }
+                }
+            }
 
-			ScriptedAI::MoveInLineOfSight(who);
+            void MoveInLineOfSight(Unit* pWho)
+            {
+                if (!bIntro && me->IsWithinDistInMap(pWho, 90.0f, true))
+                {
+                    DoScriptText(SAY_INTRO, me);
+                    bIntro = true;
+                }
+            }
+
+            void BoneSpike()
+            {
+                switch(rand()%2)
+                {
+                    case 0: DoScriptText(SAY_SPIKE_1, me); break;
+                    case 1: DoScriptText(SAY_SPIKE_2, me); break;
+                    case 2: DoScriptText(SAY_SPIKE_3, me); break;
+                }
+
+                for (uint8 i = 1; i <= m_uiBoneCount; i++)
+                {
+                    Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
+                    if (pTarget && !pTarget->HasAura(SPELL_SPIKE_IMPALING))
+                    {
+                        Creature* pBone = me->SummonCreature(CREATURE_BONE_SPIKE, pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 999999);
+                        CAST_AI(npc_bone_spike::npc_bone_spikeAI, pBone->AI())->SetPrisoner(pTarget);
+                        pBone->CastSpell(pTarget, SPELL_SPIKE_IMPALING, true);
+                    }
+                }
 		}
 
 		void UpdateAI(const uint32 uiDiff)
@@ -216,166 +314,91 @@ public:
 				m_uiBerserkTimer = 600000;
 			} else m_uiBerserkTimer -= uiDiff;
 
-			if (getDifficulty() == RAID_DIFFICULTY_10MAN_NORMAL || getDifficulty() == RAID_DIFFICULTY_25MAN_NORMAL)
-			{
-				if (!me->HasAura(SPELL_BONE_STORM_CHANNEL))
+                if (IsHeroic() || !me->HasAura(SPELL_BONE_STORM))
 				{
 					if (m_uiBoneSpikeGraveyardTimer < uiDiff)
 					{
-						DoScriptText(RAND(SAY_BONESPIKE_1,SAY_BONESPIKE_2,SAY_BONESPIKE_3), me);
-						uint32 count = RAID_MODE(1,3,1,3);
-						for (uint8 i = 1; i <= count; i++)
-						{
-							Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM, 0, 200.0f, true);
-							if (pTarget && !pTarget->HasAura(SPELL_BONE_SPIKE_IMPALING))
-							{
-								Creature* Bone = me->SummonCreature(CREATURE_BONE_SPIKE, pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 999999);
-								CAST_AI(npc_bone_spike::npc_bone_spikeAI, Bone->AI())->SetPrisoner(pTarget);
-								Bone->CastSpell(pTarget, SPELL_BONE_SPIKE_IMPALING, true);
-							}
-						}
-						m_uiBoneSpikeGraveyardTimer = urand(25000, 35000);
+                        BoneSpike();
+                        m_uiBoneSpikeGraveyardTimer = 15000;
 					} else m_uiBoneSpikeGraveyardTimer -= uiDiff;
+                }
 
-					if (m_uiColdFlameTimer <= uiDiff)
-					{
-						me->SummonCreature(CREATURE_COLD_FLAME, me->GetPositionX()+20, me->GetPositionY()+20, me->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN, 8000);
-						me->SummonCreature(CREATURE_COLD_FLAME, me->GetPositionX()-20, me->GetPositionY()-20, me->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN, 8000);
-						me->SummonCreature(CREATURE_COLD_FLAME, me->GetPositionX()+20, me->GetPositionY()-20, me->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN, 8000);
-						me->SummonCreature(CREATURE_COLD_FLAME, me->GetPositionX()-20, me->GetPositionY()+20, me->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN, 8000);
-						m_uiColdFlameTimer = 15000;
-					} else m_uiColdFlameTimer -= uiDiff;
-				}
-			}
-
-			if (getDifficulty() == RAID_DIFFICULTY_10MAN_HEROIC || getDifficulty() == RAID_DIFFICULTY_25MAN_HEROIC)
-			{
-				if (m_uiBoneSpikeGraveyardTimer < uiDiff)
-				{
-					DoScriptText(RAND(SAY_BONESPIKE_1,SAY_BONESPIKE_2,SAY_BONESPIKE_3), me);
-					uint32 count = RAID_MODE(1,3,1,3);
-					for (uint8 i = 1; i <= count; i++)
-					{
-						Unit *pTarget = SelectTarget(SELECT_TARGET_RANDOM, 1, 200, true);
-						if (pTarget && !pTarget->HasAura(SPELL_BONE_SPIKE_IMPALING))
-						{
-							Creature* Bone = me->SummonCreature(CREATURE_BONE_SPIKE, pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 999999);
-							CAST_AI(npc_bone_spike::npc_bone_spikeAI, Bone->AI())->SetPrisoner(pTarget);
-							Bone->CastSpell(pTarget, SPELL_BONE_SPIKE_IMPALING, true);
-						}
-					}
-					m_uiBoneSpikeGraveyardTimer = urand(25000, 35000);
-				} else m_uiBoneSpikeGraveyardTimer -= uiDiff;
-			}
-
-			if (!me->HasAura(SPELL_BONE_STORM_CHANNEL))
-			{
-				if (m_uiBoneStormChanelTimer <= uiDiff)
-				{
-					me->SetSpeed(MOVE_WALK, 0.4f, true);
-					me->SetSpeed(MOVE_RUN, 0.6f, true);
-					DoCast(SPELL_BONE_STORM_CHANNEL);
-					DoScriptText(SAY_BONE_STORM, me);
-                                   DoScriptText(SAY_BONE_STORM_EMOTE, me);
-					m_uiBoneStormChanelTimer = 45000;
-					m_uiMove = 4000;
-				} else m_uiBoneStormChanelTimer -= uiDiff;
-
-				if (m_uiSaberSlashTimer <= uiDiff)
-				{
-					Unit* pTarget = SelectUnit(SELECT_TARGET_TOPAGGRO, 0);
-					me->CastCustomSpell(RAID_MODE(SPELL_SABER_SLASH_10_NORMAL,SPELL_SABER_SLASH_25_NORMAL,SPELL_SABER_SLASH_10_HEROIC,SPELL_SABER_SLASH_10_HEROIC) , SPELLVALUE_RADIUS_MOD, 20);
-					DoCast(pTarget, RAID_MODE(SPELL_SABER_SLASH_10_NORMAL,SPELL_SABER_SLASH_25_NORMAL,SPELL_SABER_SLASH_10_HEROIC,SPELL_SABER_SLASH_10_HEROIC));
-					m_uiSaberSlashTimer = 9000;
-				} else m_uiSaberSlashTimer -= uiDiff;
-
-				if (me->HasAura(SPELL_BONE_STORM_CHANNEL))
-				{
-					if (m_uiMove <= uiDiff)
-					{
-						Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
-					           if (!pTarget)
-						        pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
-					           if (pTarget)
-						me->GetMotionMaster()->MovePoint(36612631, pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ());
-						m_uiMove = 9500;
-					}
-				} else m_uiMove -= uiDiff;
-
-			}
-
-			if (me->HasAura(SPELL_BONE_STORM_CHANNEL))
+                if (!me->HasAura(SPELL_BONE_STORM))
 			{
 				if (m_uiBoneStormTimer <= uiDiff)
 				{
-					DoCastAOE(RAID_MODE(SPELL_BONE_STORM_10_NORMAL,SPELL_BONE_STORM_25_NORMAL,SPELL_BONE_STORM_10_HEROIC,SPELL_BONE_STORM_25_HEROIC));
-					m_uiBoneStormTimer = 1500;
+                        DoCast(SPELL_BONE_STORM);
+                        DoScriptText(SAY_STORM, me);
+                        DoScriptText(STORM_EMOTE, me);
+                        me->SetSpeed(MOVE_RUN, fBaseSpeed*3.0f, true);
+                        m_uiBoneStormTimer = 30000;
 				} else m_uiBoneStormTimer -= uiDiff;
 
+                    if (m_uiColdFlameTimer <= uiDiff)
+                    {
+                        if(Unit* pTarget = SelectUnit(SELECT_TARGET_NEAREST, 1))
+                        {
+                            angle = me->GetAngle(pTarget);
+                            pInstance->SetData(DATA_ANGLE, angle);
+                            DoCast(pTarget, SPELL_COLD_FLAME_SPAWN);
+                        }
+                        m_uiColdFlameTimer = 8000;
+                    } else m_uiColdFlameTimer -= uiDiff;
+
+                    if (m_uiSaberSlashTimer <= uiDiff)
+                    {
+                        DoCast(me->getVictim(), SPELL_SABER_SLASH);
+                        m_uiSaberSlashTimer = 5000;
+                    } else m_uiSaberSlashTimer -= uiDiff;
+                }
+                else
+                {
 				if (m_uiBoneStormRemoveTimer <= uiDiff)
 				{
-					me->RemoveAurasDueToSpell(SPELL_BONE_STORM_CHANNEL);
+                        me->RemoveAurasDueToSpell(SPELL_BONE_STORM);
+                        me->GetMotionMaster()->MovementExpired();
+                        me->SetSpeed(MOVE_RUN, fBaseSpeed, true);
 					m_uiBoneStormRemoveTimer = 20000;
 				} else m_uiBoneStormRemoveTimer -= uiDiff;
+
+                    if(m_uiMoveTimer <= uiDiff)
+                    {
+                        float x, y, z;
+                        Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
+                        if(pTarget && pTarget->GetTypeId() == TYPEID_PLAYER)
+                            pTarget->GetPosition(x, y, z);
+                            me->GetMotionMaster()->MovePoint(0, x, y, z);
+                        DoCast(SPELL_COLD_FLAME_SPAWN_B);
+                        m_uiMoveTimer = 5000;
+                    } else m_uiMoveTimer -= uiDiff;
 			}
 
 			DoMeleeAttackIfReady();
 		}
+
+        private:
+            InstanceScript* pInstance;
+
+            uint32 m_uiSaberSlashTimer;
+            uint32 m_uiBoneSpikeGraveyardTimer;
+            uint32 m_uiBoneStormTimer;
+            uint32 m_uiBoneStormRemoveTimer;
+            uint32 m_uiColdFlameTimer;
+            uint32 m_uiBerserkTimer;
+            uint32 m_uiResetTimer;
+            uint32 m_uiMoveTimer;
+            uint8 m_uiBoneCount;
+            float fBaseSpeed;
+            float angle;
+            bool bIntro;
+
+            SummonList summons;
 	};
 
 	CreatureAI* GetAI(Creature* pCreature) const
 	{
 		return new boss_lord_marrowgarAI(pCreature);
 	}
-
-};
-
-class npc_coldflame : public CreatureScript
-{
-public:
-	npc_coldflame() : CreatureScript("npc_coldflame") { }
-
-	struct npc_coldflameAI : public ScriptedAI
-	{
-		npc_coldflameAI(Creature *pCreature) : ScriptedAI(pCreature)
-		{
-			m_pInstance = pCreature->GetInstanceScript();
-		}
-		InstanceScript* m_pInstance;
-		uint32 m_uiColdFlameTimer;
-		uint32 m_uiColdDespawn;
-		void Reset()
-		{
-			float x, y, z;
-			me->GetNearPoint(me, x, y, z, 1, 50, M_PI*2*rand_norm());
-			me->GetMotionMaster()->MovePoint(0, x, y, z);
-			DoCast(me,RAID_MODE(SPELL_COLD_FLAME_10_NORMAL,SPELL_COLD_FLAME_25_NORMAL,SPELL_COLD_FLAME_10_HEROIC,SPELL_COLD_FLAME_25_HEROIC));
-			me->SetReactState(REACT_PASSIVE);
-			me->SetSpeed(MOVE_WALK, 0.7f, true);
-			m_uiColdDespawn    = RAID_MODE(4000,9000,4000,9000);
-			m_uiColdFlameTimer = 1000;
-		}
-		void UpdateAI(const uint32 uiDiff)
-		{
-			if(m_uiColdFlameTimer <= uiDiff)
-			{
-				DoCast(me,RAID_MODE(SPELL_COLD_FLAME_10_NORMAL,SPELL_COLD_FLAME_25_NORMAL,SPELL_COLD_FLAME_10_HEROIC,SPELL_COLD_FLAME_25_HEROIC));
-				m_uiColdFlameTimer = 1000;
-			} else m_uiColdFlameTimer -= uiDiff;
-
-			if(m_uiColdDespawn <= uiDiff)
-			{
-				DoCast(me, SPELL_COLD_DESPAWN);
-				me->ForcedDespawn();
-			} m_uiColdDespawn -= uiDiff;
-		}
-	};
-
-	CreatureAI* GetAI(Creature* pCreature) const
-	{
-		return new npc_coldflameAI(pCreature);
-	}
-
 };
 
 void AddSC_boss_lord_marrowgar()
