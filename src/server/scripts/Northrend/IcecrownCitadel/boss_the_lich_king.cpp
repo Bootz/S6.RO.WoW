@@ -290,10 +290,12 @@ public:
 			if (pSummoned->GetEntry() == CREATURE_ICE_SPHERE)
 
 				if(Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1))
+					         {
 					           if (!pTarget)
 						        pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
 					           if (pTarget)
 					pSummoned->AI()->AttackStart(pTarget);
+					         }
 		}
 
 		void SetEnding()
@@ -1080,6 +1082,7 @@ public:
 				if(!InVehicle)
 				{
 					if(Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1))
+					         {
 					           if (!pTarget)
 						        pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
 					           if (pTarget)
@@ -1087,6 +1090,7 @@ public:
 						pTarget->EnterVehicle(vehicle);
 						InVehicle = true;
 					}
+					         }
 				}
 				m_uiGrabTimer = 120000;
 			} else m_uiGrabTimer -= uiDiff;
