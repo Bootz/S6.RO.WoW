@@ -4085,6 +4085,7 @@ INSERT INTO `item_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `lootm
 */
  
 
+-- 03_world_icecrown_citadel
 -- Icecrown Citadel
 -- Db version requirement
 ALTER TABLE db_version CHANGE COLUMN required_31_world_db_version required_3_world_icecrown_citadel bit;
@@ -5005,8 +5006,8 @@ INSERT INTO `spell_linked_spell` (`spell_trigger`,`spell_effect`,`type`,`comment
 (72440,72202,0,'Blood Nova 25H'),
 (72409,72202,0,'Rune of Blood 25N'),
 (72447,72202,0,'Rune of Blood 10H'),
-(73448,72202,0,'Rune of Blood 25H'),
-(73449,72202,0,'Rune of Blood 25H'),
+-- (73448,72202,0,'Rune of Blood 25H'), -- ERROR: Spell 73448 listed in `spell_linked_spell` does not exist
+-- (73449,72202,0,'Rune of Blood 25H'), -- ERROR: Spell 73449 listed in `spell_linked_spell` does not exist
 (69195,69166,0,'Pungent Blight 10N'),
 (71279,69166,0,'Pungent Blight 25N'),
 (73031,69166,0,'Pungent Blight 10H'),
@@ -6889,7 +6890,7 @@ UPDATE `creature_template` SET `ScriptName` = 'npc_meteor_strike' WHERE `entry` 
 UPDATE `creature_template` SET `ScriptName` = 'npc_combustion' WHERE `entry` = '40001';
 UPDATE `creature_template` SET `ScriptName` = 'npc_consumption' WHERE `entry` = '40135';
 UPDATE `creature_template` SET `ScriptName` = 'npc_meteor_flame' WHERE `entry` = '40044';
-
+REPLACE `spell_script_names` SET `ScriptName` = 'spell_halion_portal', `spell_id`=74812;
 
 -- Anuncios al comienzo del evento.
 -- Here does not exist the NPC, the we fix the script_name in this way
@@ -7246,6 +7247,12 @@ INSERT INTO `outdoorpvp_template` (`TypeId`, `ScriptName`, `Comment`) VALUES (7,
 -- Clean error from started
 -- This delete was on Ulduar sql but i move here for start server with any error
 DELETE FROM `script_waypoint` WHERE `entry`=33370;
+-- provisional
+-- error: thorim_phase_trigger
+DELETE FROM `creature_template` WHERE entry=5555555;
+INSERT INTO `creature_template` (`entry`, `difficulty_entry_1`, `difficulty_entry_2`, `difficulty_entry_3`, `KillCredit1`, `KillCredit2`, `modelid1`, `modelid2`, `modelid3`, `modelid4`, `name`, `subname`, `IconName`, `gossip_menu_id`, `minlevel`, `maxlevel`, `exp`, `faction_A`, `faction_H`, `npcflag`, `speed_walk`, `speed_run`, `scale`, `rank`, `mindmg`, `maxdmg`, `dmgschool`, `attackpower`, `dmg_multiplier`, `baseattacktime`, `rangeattacktime`, `unit_class`, `unit_flags`, `dynamicflags`, `family`, `trainer_type`, `trainer_spell`, `trainer_class`, `trainer_race`, `minrangedmg`, `maxrangedmg`, `rangedattackpower`, `type`, `type_flags`, `lootid`, `pickpocketloot`, `skinloot`, `resistance1`, `resistance2`, `resistance3`, `resistance4`, `resistance5`, `resistance6`, `spell1`, `spell2`, `spell3`, `spell4`, `spell5`, `spell6`, `spell7`, `spell8`, `PetSpellDataId`, `VehicleId`, `mingold`, `maxgold`, `AIName`, `MovementType`, `InhabitType`, `Health_mod`, `Mana_mod`, `Armor_mod`, `RacialLeader`, `questItem1`, `questItem2`, `questItem3`, `questItem4`, `questItem5`, `questItem6`, `movementId`, `RegenHealth`, `equipment_id`, `mechanic_immune_mask`, `flags_extra`, `ScriptName`, `WDBVerified`) VALUES
+('5555555','0','0','0','0','0','169','16925','0','0','Thorim Event Bunny','','','0','80','80','2','14','14','0','1','1.14286','1','1','422','586','0','642','7.5','2000','0','1','33554432','8','0','0','0','0','0','345','509','103','10','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','','0','3','1','1','1','0','0','0','0','0','0','0','0','1','0','0','0','thorim_phase_trigger','11723');
+
 
 
 -- ------------------------------------------------------------------------------------------------------------------------------------------- --
