@@ -79,7 +79,7 @@ class boss_festergut : public CreatureScript
 
         struct boss_festergutAI : public BossAI
         {
-            boss_festergutAI(Creature* pCreature) : BossAI(pCreature, DATA_FESTERGUT)
+            boss_festergutAI(Creature* pCreature) : BossAI(pCreature, DATA_FESTERGURT_EVENT)
             {
                 ASSERT(instance);
                 uiMaxInoculatedStack = 0;
@@ -98,7 +98,7 @@ class boss_festergut : public CreatureScript
                 uiMaxInoculatedStack = 0;
                 uiInhaleCounter = 0;
                 me->RemoveAurasDueToSpell(SPELL_BERSERK2);
-                if (Creature* gasDummy = GetClosestCreatureWithEntry(me, NPC_GAS_DUMMY, 100.0f, true))
+                if (Creature* gasDummy = GetClosestCreatureWithEntry(me, CREATURE_GAS_DUMMY, 100.0f, true))
                 {
                     gasDummyGUID = gasDummy->GetGUID();
                     for (uint8 i = 0; i < 3; ++i)
@@ -108,15 +108,15 @@ class boss_festergut : public CreatureScript
                     }
                 }
 
-                instance->SetBossState(DATA_FESTERGUT, NOT_STARTED);
+                instance->SetBossState(DATA_FESTERGURT_EVENT, NOT_STARTED);
             }
 
             void EnterCombat(Unit* /*who*/)
             {
                 DoScriptText(SAY_AGGRO, me);
-                if (Creature* gasDummy = GetClosestCreatureWithEntry(me, NPC_GAS_DUMMY, 100.0f, true))
+                if (Creature* gasDummy = GetClosestCreatureWithEntry(me, CREATURE_GAS_DUMMY, 100.0f, true))
                     gasDummyGUID = gasDummy->GetGUID();
-                instance->SetBossState(DATA_FESTERGUT, IN_PROGRESS);
+                instance->SetBossState(DATA_FESTERGURT_EVENT, IN_PROGRESS);
                 if (Creature* professor = Unit::GetCreature(*me, instance->GetData64(DATA_PROFESSOR_PUTRICIDE)))
                     professor->AI()->DoAction(ACTION_FESTERGUT_COMBAT);
 
@@ -126,14 +126,14 @@ class boss_festergut : public CreatureScript
             void JustDied(Unit* /*killer*/)
             {
                 DoScriptText(SAY_DEATH, me);
-                instance->SetBossState(DATA_FESTERGUT, DONE);
+                instance->SetBossState(DATA_FESTERGURT_EVENT, DONE);
                 if (Creature* professor = Unit::GetCreature(*me, instance->GetData64(DATA_PROFESSOR_PUTRICIDE)))
                     professor->AI()->DoAction(ACTION_FESTERGUT_DEATH);
             }
 
             void JustReachedHome()
             {
-                instance->SetBossState(DATA_FESTERGUT, FAIL);
+                instance->SetBossState(DATA_FESTERGURT_EVENT, FAIL);
             }
 
             void EnterEvadeMode()
@@ -306,7 +306,7 @@ class npc_stinky_icc : public CreatureScript
 
             void JustDied(Unit* /*who*/)
             {
-                uint64 festergutGUID = pInstance ? pInstance->GetData64(DATA_FESTERGUT) : 0;
+                uint64 festergutGUID = pInstance ? pInstance->GetData64(DATA_FESTERGURT_EVENT) : 0;
                 if (Creature *festergut = me->GetCreature(*me, festergutGUID))
                     DoScriptText(SAY_STINKY_DEAD, festergut);
             }

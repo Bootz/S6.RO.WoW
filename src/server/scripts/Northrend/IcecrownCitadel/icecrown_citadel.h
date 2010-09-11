@@ -21,7 +21,8 @@
 
 enum eSharedSpells
 {
-    SPELL_BERSERK   = 26662
+    SPELL_BERSERK   = 26662,
+    SPELL_BERSERK2  = 47008
 };
 
 enum eEnums
@@ -149,7 +150,8 @@ enum eCreatures
     CREATURE_VALKYR                  = 36609,
     CREATURE_DEFILE                  = 38757,
     CREATURE_RAGING_SPIRIT           = 36701,
-    CREATURE_TRIGGER                 = 30494
+    CREATURE_TRIGGER                 = 30494,
+    CREATURE_GAS_DUMMY               = 36659,
 };
 
 enum eGameobjects
