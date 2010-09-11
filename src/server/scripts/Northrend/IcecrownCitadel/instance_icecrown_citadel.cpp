@@ -19,6 +19,8 @@
 #include "ScriptPCH.h"
 #include "icecrown_citadel.h"
 
+#define MAX_ENCOUNTER      12
+
 class instance_icecrown_citadel : public InstanceMapScript
 {
 public:
