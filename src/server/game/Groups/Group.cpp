@@ -162,24 +162,27 @@ bool Group::LoadGroupFromDB(const uint32 &groupGuid, QueryResult_AutoPtr result,
 
     uint32 diff = fields[13].GetUInt8();
     if (diff >= MAX_DUNGEON_DIFFICULTY)
-        diff = DUNGEON_DIFFICULTY_NORMAL;
-    m_dungeonDifficulty = Difficulty(diff);
+        m_dungeonDifficulty = DUNGEON_DIFFICULTY_NORMAL;
+    else
+        m_dungeonDifficulty = Difficulty(diff);
 
     uint32 r_diff = fields[14].GetUInt8();
     if (r_diff >= MAX_RAID_DIFFICULTY)
-        r_diff = RAID_DIFFICULTY_10MAN_NORMAL;
-    m_raidDifficulty = Difficulty(r_diff);
+       m_raidDifficulty = RAID_DIFFICULTY_10MAN_NORMAL;
+    else
+       m_raidDifficulty = Difficulty(r_diff);
 
     if (loadMembers)
     {
-        result = CharacterDatabase.PQuery("SELECT memberGuid, memberFlags, subgroup FROM group_member WHERE guid=%u", groupGuid);
+        //                                        0           1            2         3
+        result = CharacterDatabase.PQuery("SELECT memberGuid, memberFlags, subgroup, roles FROM group_member WHERE guid=%u", groupGuid);
         if (!result)
             return false;
 
         do
         {
             fields = result->Fetch();
-            LoadMemberFromDB(fields[0].GetUInt32(), fields[1].GetUInt8(), fields[2].GetUInt8());
+            LoadMemberFromDB(fields[0].GetUInt32(), fields[1].GetUInt8(), fields[2].GetUInt8(), fields[3].GetUInt8());
         } while (result->NextRow());
 
         if (GetMembersCount() < 2)                          // group too small
@@ -189,7 +192,7 @@ bool Group::LoadGroupFromDB(const uint32 &groupGuid, QueryResult_AutoPtr result,
     return true;
 }
 
-bool Group::LoadMemberFromDB(uint32 guidLow, uint8 memberFlags, uint8 subgroup)
+bool Group::LoadMemberFromDB(uint32 guidLow, uint8 memberFlags, uint8 subgroup, uint8 roles)
 {
     MemberSlot member;
     member.guid = MAKE_NEW_GUID(guidLow, 0, HIGHGUID_PLAYER);
@@ -203,7 +206,7 @@ bool Group::LoadMemberFromDB(uint32 guidLow, uint8 memberFlags, uint8 subgroup)
 
     member.group = subgroup;
     member.flags = memberFlags;
-    member.roles = 0;
+    member.roles = roles;
 
     m_memberSlots.push_back(member);
 
@@ -340,7 +343,7 @@ bool Group::AddMember(const uint64 &guid, const char* name)
         player->SetGroupUpdateFlag(GROUP_UPDATE_FULL);
         UpdatePlayerOutOfRange(player);
 
-        // quest related GO state dependent from raid memebership
+        // quest related GO state dependent from raid membership
         if (isRaidGroup())
             player->UpdateForQuestWorldObjects();
 
@@ -351,7 +354,7 @@ bool Group::AddMember(const uint64 &guid, const char* name)
     return true;
 }
 
-uint32 Group::RemoveMember(const uint64 &guid, const uint8 &method)
+uint32 Group::RemoveMember(const uint64 &guid, const RemoveMethod &method)
 {
     BroadcastGroupUpdate();
 
@@ -373,7 +376,7 @@ uint32 Group::RemoveMember(const uint64 &guid, const uint8 &method)
 
             WorldPacket data;
 
-            if (method == 1)
+            if (method == GROUP_REMOVEMETHOD_KICK)
             {
                 data.Initialize(SMSG_GROUP_UNINVITE, 0);
                 player->GetSession()->SendPacket(&data);
@@ -431,7 +434,7 @@ void Group::ChangeLeader(const uint64 &guid)
     SendUpdate();
 }
 
-void Group::Disband(bool hideDestroy)
+void Group::Disband(bool hideDestroy /* = false */)
 {
     Player *player;
 
@@ -1275,7 +1278,7 @@ bool Group::_addMember(const uint64 &guid, const char* name, uint8 group)
     if (!isBGGroup())
     {
         // insert into group table
-        CharacterDatabase.PExecute("INSERT INTO group_member(guid,memberGuid,memberFlags,subgroup) VALUES(%u,%u,%u,%u)", GUID_LOPART(m_guid), GUID_LOPART(member.guid), member.flags, member.group);
+        CharacterDatabase.PExecute("INSERT INTO group_member (guid, memberGuid, memberFlags, subgroup, roles) VALUES(%u, %u, %u, %u, %u)", GUID_LOPART(m_guid), GUID_LOPART(member.guid), member.flags, member.group, member.roles);
     }
 
     return true;

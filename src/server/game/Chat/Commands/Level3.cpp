@@ -193,7 +193,7 @@ bool ChatHandler::HandleReloadAllGossipsCommand(const char* args)
    HandleReloadNpcGossipCommand("a");
    HandleReloadPointsOfInterestCommand("a");
    return true;
-}	
+}
 
 bool ChatHandler::HandleReloadAllItemCommand(const char*)
 {
@@ -6839,11 +6839,11 @@ bool ChatHandler::HandleInstanceUnbindCommand(const char *args)
         diff = atoi(pDiff);
     uint16 counter = 0;
     int16 MapId = 0;
-	
+
     if (strcmp(pMap, "all"))
         if (!(MapId = atoi(pMap)))
             return false;
-	
+
     for(uint8 i = 0; i < MAX_DIFFICULTY; ++i)
     {
         Player::BoundInstancesMap &binds = player->GetBoundInstances(Difficulty(i));
@@ -7515,7 +7515,7 @@ bool ChatHandler::HandleGroupRemoveCommand(const char *args)
 
     if (GetPlayerGroupAndGUIDByName(cname, plr, group, guid, true))
         if (group)
-            group->RemoveMember(guid, 0);
+            group->RemoveMember(guid);
 
     return true;
 }

@@ -948,9 +948,9 @@ public:
 
 			if (m_pInstance)
 				if(m_pInstance->GetData(DATA_LICH_KING_EVENT) != NOT_STARTED)
-				{
 					me->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
-				}
+                     else
+					me->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
 		}
 	};
 

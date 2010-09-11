@@ -381,6 +381,8 @@ public:
 
 			if (m_uiPhase == 2)
 			{
+				me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_INTERRUPT_CAST, true);
+
 				if (me->HasAura(SPELL_MANA_BARRIER))
 					me->RemoveAurasDueToSpell(SPELL_MANA_BARRIER);
 
