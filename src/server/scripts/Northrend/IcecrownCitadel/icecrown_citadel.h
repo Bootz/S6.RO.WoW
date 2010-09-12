@@ -105,7 +105,7 @@ enum eCreatures
     CREATURE_REANIMATED_FANATIC      = 38009,    
     CREATURE_SHADE                   = 38222,
     CREATURE_GUNSHIP                 = 30343,
-    CREATURE_SAURFANG               = 37813,
+    CREATURE_SAURFANG                = 37813,
     CREATURE_FESTERGURT              = 36626,
     CREATURE_PUDDLE_STALKER          = 37013,
     CREATURE_ORANGE_GAS_STALKER      = 36659,

@@ -1832,7 +1832,7 @@ void World::LoadAutobroadcasts()
 {
     m_Autobroadcasts.clear();
 
-    QueryResult_AutoPtr result = WorldDatabase.Query("SELECT text FROM autobroadcast");
+    QueryResult result = WorldDatabase.Query("SELECT text FROM autobroadcast");
 
     if (!result)
     {
@@ -2232,7 +2232,7 @@ BanReturn World::BanAccount(BanMode mode, std::string nameOrIP, std::string dura
     LoginDatabase.escape_string(safe_author);
 
     uint32 duration_secs = TimeStringToSecs(duration);
-    QueryResult_AutoPtr resultAccounts = QueryResult_AutoPtr(NULL);                     //used for kicking
+    QueryResult resultAccounts = QueryResult(NULL);                     //used for kicking
 
     ///- Update the database with ban information
     switch(mode)
@@ -2518,7 +2518,7 @@ void World::UpdateRealmCharCount(uint32 accountId)
         );
 }
 
-void World::_UpdateRealmCharCount(QueryResult_AutoPtr resultCharCount, uint32 accountId)
+void World::_UpdateRealmCharCount(QueryResult resultCharCount, uint32 accountId)
 {
     if (resultCharCount)
     {
@@ -2630,7 +2630,7 @@ void World::ResetTimedQuests(bool daily)
 
 void World::LoadDBAllowedSecurityLevel()
 {
-    QueryResult_AutoPtr result = LoginDatabase.PQuery("SELECT allowedSecurityLevel from realmlist WHERE id = '%d'", realmID);
+    QueryResult result = LoginDatabase.PQuery("SELECT allowedSecurityLevel from realmlist WHERE id = '%d'", realmID);
     if (result)
         SetPlayerSecurityLimit(AccountTypes(result->Fetch()->GetUInt16()));
 }
@@ -2665,7 +2665,7 @@ void World::UpdateMaxSessionCounters()
 
 void World::LoadDBVersion()
 {
-    QueryResult_AutoPtr result = WorldDatabase.Query("SELECT db_version, script_version, cache_id FROM version LIMIT 1");
+    QueryResult result = WorldDatabase.Query("SELECT db_version, script_version, cache_id FROM version LIMIT 1");
     //QueryResult* result = WorldDatabase.Query("SELECT version, creature_ai_version, cache_id FROM db_version LIMIT 1");
     if (result)
     {
@@ -2708,7 +2708,7 @@ void World::UpdateAreaDependentAuras()
 
 void World::LoadWorldStates()
 {
-    QueryResult_AutoPtr result = CharacterDatabase.Query("SELECT entry, value FROM worldstates");
+    QueryResult result = CharacterDatabase.Query("SELECT entry, value FROM worldstates");
 
     if (!result)
     {
@@ -2754,7 +2754,7 @@ uint64 World::getWorldState(uint32 index) const
 
 void World::ProcessQueryCallbacks()
 {
-    QueryResult_AutoPtr result;
+    QueryResult result;
 
     //-UpdateRealmCharCount
     if (m_realmCharCallback.IsReady())

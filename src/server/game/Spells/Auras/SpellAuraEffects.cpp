@@ -377,7 +377,7 @@ pAuraEffectHandler AuraEffectHandler[TOTAL_AURAS]=
 AuraEffect::AuraEffect(Aura * base, uint8 effIndex, int32 *baseAmount, Unit * caster):
 m_base(base), m_spellProto(base->GetSpellProto()), m_effIndex(effIndex),
 m_baseAmount(baseAmount ? *baseAmount : m_spellProto->EffectBasePoints[m_effIndex]),
-m_canBeRecalculated(true), m_spellmod(NULL), m_isPeriodic(false), 
+m_canBeRecalculated(true), m_spellmod(NULL), m_isPeriodic(false),
 m_periodicTimer(0), m_tickNumber(0)
 {
     CalculatePeriodic(caster, true);
@@ -1377,15 +1377,9 @@ void AuraEffect::PeriodicTick(Unit * target, Unit * caster) const
             if (crit)
                 damage = caster->SpellCriticalDamageBonus(m_spellProto, damage, target);
 
-            // Reduce damage from resilience for players and pets only.
-            // As of patch 3.3 pets inherit 100% of master resilience.
-            if (caster->GetSpellModOwner())
-                if (Player* modOwner = target->GetSpellModOwner())
-                {
-                    if (crit)
-                        damage -= modOwner->GetSpellCritDamageReduction(damage);
-                        damage -= modOwner->GetSpellDamageReduction(damage);
-                }
+            int32 dmg = damage;
+            caster->ApplyResilience(target, NULL, &dmg, crit, CR_CRIT_TAKEN_SPELL);
+            damage = dmg;
 
             caster->CalcAbsorbResist(target, GetSpellSchoolMask(GetSpellProto()), DOT, damage, &absorb, &resist, m_spellProto);
 
@@ -1462,15 +1456,9 @@ void AuraEffect::PeriodicTick(Unit * target, Unit * caster) const
                 damage = damageReductedArmor;
             }
 
-            // Reduce damage from resilience for players and pets only.
-            // As of patch 3.3 pets inherit 100% of master resilience.
-            if (caster->GetSpellModOwner())
-                if (Player* modOwner = target->GetSpellModOwner())
-                {
-                    if (crit)
-                        damage -= modOwner->GetSpellCritDamageReduction(damage);
-                    damage -= modOwner->GetSpellDamageReduction(damage);
-                }
+            int32 dmg = damage;
+            caster->ApplyResilience(target, NULL, &dmg, crit, CR_CRIT_TAKEN_SPELL);
+            damage = dmg;
 
             caster->CalcAbsorbResist(target, GetSpellSchoolMask(GetSpellProto()), DOT, damage, &absorb, &resist, m_spellProto);
 
@@ -3018,7 +3006,7 @@ void AuraEffect::HandlePhase(AuraApplication const * aurApp, uint8 mode, bool ap
             else
                 target->SetPhaseMask(PHASEMASK_NORMAL, false);
         }
-        
+
         if (apply)
             target->ToPlayer()->GetSession()->SendSetPhaseShift(GetMiscValue());
         else
@@ -4185,7 +4173,7 @@ void AuraEffect::HandleModPossessPet(AuraApplication const * aurApp, uint8 mode,
 
         if (!pet->IsWithinDistInMap(caster, pet->GetMap()->GetVisibilityDistance()))
             pet->Remove(PET_SAVE_NOT_IN_SLOT, true);
-        else 
+        else
         {
             // Reinitialize the pet bar and make the pet come back to the owner
             caster->ToPlayer()->PetSpellInitialize();

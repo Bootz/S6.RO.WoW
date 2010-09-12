@@ -32,11 +32,11 @@
 #endif
 #include <mysql.h>
 
-class QueryResult
+class ResultSet
 {
     public:
-        QueryResult(MYSQL_RES *result, MYSQL_FIELD *fields, uint64 rowCount, uint32 fieldCount);
-        ~QueryResult();
+        ResultSet(MYSQL_RES *result, MYSQL_FIELD *fields, uint64 rowCount, uint32 fieldCount);
+        ~ResultSet();
 
         bool NextRow();
 
@@ -59,17 +59,17 @@ class QueryResult
 
 };
 
-typedef ACE_Refcounted_Auto_Ptr<QueryResult, ACE_Null_Mutex> QueryResult_AutoPtr;
+typedef ACE_Refcounted_Auto_Ptr<ResultSet, ACE_Null_Mutex> QueryResult;
 
 typedef std::vector<std::string> QueryFieldNames;
 
 class QueryNamedResult
 {
     public:
-        explicit QueryNamedResult(QueryResult* query, QueryFieldNames const& names) : mQuery(query), mFieldNames(names) {}
+        explicit QueryNamedResult(ResultSet* query, QueryFieldNames const& names) : mQuery(query), mFieldNames(names) {}
         ~QueryNamedResult() { delete mQuery; }
 
-        // compatible interface with QueryResult
+        // compatible interface with ResultSet
         bool NextRow() { return mQuery->NextRow(); }
         Field *Fetch() const { return mQuery->Fetch(); }
         uint32 GetFieldCount() const { return mQuery->GetFieldCount(); }
@@ -92,7 +92,7 @@ class QueryNamedResult
         }
 
     protected:
-        QueryResult *mQuery;
+        ResultSet *mQuery;
         QueryFieldNames mFieldNames;
 };
 
@@ -101,17 +101,20 @@ class ResultBind
     friend class PreparedResultSet;
     public:
 
-        ResultBind(MYSQL_STMT* stmt) : m_stmt(stmt), m_fieldCount(NULL), m_isNull(NULL), m_length(NULL), m_rBind(NULL) {}
+        ResultBind(MYSQL_STMT* stmt) : m_rBind(NULL), m_stmt(stmt), m_res(NULL), m_isNull(NULL), m_length(NULL), m_fieldCount(0) {}
+
         ~ResultBind()
         {
+            if (m_res)
+                mysql_free_result(m_res); // metadata
+
             if (!m_fieldCount)
                 return;
 
             CleanUp();  // Clean up buffer
-            mysql_stmt_free_result(m_stmt);
         }
 
-        void BindResult(uint32& num_rows);
+        void BindResult(uint64& num_rows);
 
     protected:
         MYSQL_BIND* m_rBind;
@@ -164,7 +167,7 @@ class ResultBind
                     return 64;
 
                 case MYSQL_TYPE_GEOMETRY:
-                /* 
+                /*
                 Following types are not sent over the wire:
                 MYSQL_TYPE_ENUM:
                 MYSQL_TYPE_SET:
@@ -184,8 +187,10 @@ class PreparedResultSet
 {
     template<class T> friend class DatabaseWorkerPool;
     public:
-        PreparedResultSet(MYSQL_STMT* stmt) : num_rows(0), row_position(0)
+        PreparedResultSet(MYSQL_STMT* stmt)
         {
+            num_rows = 0;
+            row_position = 0;
             rbind = new ResultBind(stmt);
             rbind->BindResult(num_rows);
         }
@@ -202,32 +207,20 @@ class PreparedResultSet
         int16 GetInt16(uint32 index);
         uint32 GetUInt32(uint32 index);
         int32 GetInt32(uint32 index);
+        uint64 GetUInt64(uint32 index);
+        int64 GetInt64(uint32 index);
         float GetFloat(uint32 index);
         std::string GetString(uint32 index);
+        const char* GetCString(uint32 index);
 
-        bool NextRow()
-        {
-            if (row_position >= num_rows)
-                return false;
-
-            int retval = mysql_stmt_fetch( rbind->m_stmt );
-                
-            if (!retval || retval == MYSQL_DATA_TRUNCATED)
-                retval = true;
-
-            if (retval == MYSQL_NO_DATA)
-                retval = false;
-
-            ++row_position;
-            return retval;
-        }
+        bool NextRow();
 
     private:
         bool CheckFieldIndex(uint32 index)  const
-        {   
+        {
             if (!rbind->IsValidIndex(index))
                 return false;
-        
+
             if (rbind->m_isNull[index])
                 return false;
 
@@ -235,9 +228,11 @@ class PreparedResultSet
         }
 
         ResultBind* rbind;
-        uint32 row_position;
-        uint32 num_rows;
+        uint64 row_position;
+        uint64 num_rows;
 };
+
+typedef ACE_Refcounted_Auto_Ptr<PreparedResultSet, ACE_Null_Mutex> PreparedQueryResult;
 
 #endif
 

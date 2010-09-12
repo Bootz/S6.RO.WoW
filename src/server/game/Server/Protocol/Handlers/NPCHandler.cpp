@@ -38,7 +38,7 @@
 #include "Guild.h"
 #include "ScriptMgr.h"
 
-enum StableResultCode    
+enum StableResultCode
 {
     STABLE_ERR_MONEY        = 0x01,                         // "you don't have enough money"
     STABLE_ERR_STABLE       = 0x06,                         // currently used in most fail cases
@@ -524,7 +524,7 @@ void WorldSession::SendStablePet(uint64 guid)
         );
 }
 
-void WorldSession::SendStablePetCallback(QueryResult_AutoPtr result, uint64 guid)
+void WorldSession::SendStablePetCallback(QueryResult result, uint64 guid)
 {
     if (!GetPlayer())
         return;
@@ -554,7 +554,7 @@ void WorldSession::SendStablePetCallback(QueryResult_AutoPtr result, uint64 guid
         data << uint8(1);                                   // 1 = current, 2/3 = in stable (any from 4,5,... create problems with proper show)
         ++num;
     }
-    
+
     if (result)
     {
         do
@@ -618,10 +618,10 @@ void WorldSession::HandleStablePet(WorldPacket & recv_data)
 
     m_stablePetCallback = CharacterDatabase.AsyncPQuery("SELECT owner,slot,id FROM character_pet WHERE owner = '%u'  AND slot >= '%u' AND slot <= '%u' ORDER BY slot ",
         _player->GetGUIDLow(),PET_SAVE_FIRST_STABLE_SLOT,PET_SAVE_LAST_STABLE_SLOT);
-    
+
 }
 
-void WorldSession::HandleStablePetCallback(QueryResult_AutoPtr result)
+void WorldSession::HandleStablePetCallback(QueryResult result)
 {
     if (!GetPlayer())
         return;
@@ -680,7 +680,7 @@ void WorldSession::HandleUnstablePet(WorldPacket & recv_data)
             );
 }
 
-void WorldSession::HandleUnstablePetCallback(QueryResult_AutoPtr result, uint32 petnumber)
+void WorldSession::HandleUnstablePetCallback(QueryResult result, uint32 petnumber)
 {
     if (!GetPlayer())
         return;
@@ -797,14 +797,14 @@ void WorldSession::HandleStableSwapPet(WorldPacket & recv_data)
     }
 
     // find swapped pet slot in stable
-    m_stableSwapCallback.SetParam(pet_number);        
+    m_stableSwapCallback.SetParam(pet_number);
     m_stableSwapCallback.SetFutureResult(
             CharacterDatabase.PQuery("SELECT slot,entry FROM character_pet WHERE owner = '%u' AND id = '%u'",
                 _player->GetGUIDLow(), pet_number)
             );
 }
 
-void WorldSession::HandleStableSwapPetCallback(QueryResult_AutoPtr result, uint32 petnumber)
+void WorldSession::HandleStableSwapPetCallback(QueryResult result, uint32 petnumber)
 {
     if (!GetPlayer())
         return;

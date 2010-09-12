@@ -22,6 +22,7 @@
 #include "DatabaseWorker.h"
 #include "SQLOperation.h"
 #include "MySQLConnection.h"
+#include "MySQLThreading.h"
 
 DatabaseWorker::DatabaseWorker(ACE_Activation_Queue* new_queue, MySQLConnection* con) :
 m_queue(new_queue),
@@ -36,6 +37,8 @@ int DatabaseWorker::svc()
     if (!m_queue)
         return -1;
 
+    MySQL::Thread_Init();
+
     SQLOperation *request = NULL;
     while (1)
     {
@@ -49,6 +52,7 @@ int DatabaseWorker::svc()
         delete request;
     }
 
+    MySQL::Thread_End();
     delete m_conn;
     return 0;
 }

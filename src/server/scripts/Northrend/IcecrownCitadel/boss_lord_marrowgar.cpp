@@ -21,15 +21,15 @@
 enum Yells
 {
     SAY_INTRO     = -1631000,
-    SAY_AGGRO            =    -1631001,
+    SAY_AGGRO     = -1631001,
     SAY_STORM     = -1631002,
     SAY_SPIKE_1   = -1631003,
     SAY_SPIKE_2   = -1631004,
     SAY_SPIKE_3   = -1631005,
-    SAY_KILL_1           =    -1631006,
-    SAY_KILL_2           =    -1631007,
-    SAY_DEATH            =    -1631008,
-    SAY_BERSERK          =    -1631009,
+    SAY_KILL_1    = -1631006,
+    SAY_KILL_2    = -1631007,
+    SAY_DEATH     = -1631008,
+    SAY_BERSERK   = -1631009,
     STORM_EMOTE   = -1631010
 };
 
@@ -37,10 +37,10 @@ enum Spells
 {
     SPELL_SABER_SLASH        = 69055,
     SPELL_COLD_FLAME         = 69146,
-    SPELL_BONE_SPIKE         = 73142,
+    SPELL_BONE_SPIKE         = 69057,
     SPELL_SPIKE_IMPALING     = 69065,
     SPELL_BONE_STORM         = 69076,
-    SPELL_COLD_FLAME_SPAWN               =  69138,
+    SPELL_COLD_FLAME_SPAWN   = 69138,
     SPELL_COLD_FLAME_SPAWN_B = 72701
 };
 
@@ -58,12 +58,6 @@ public:
                 pInstance = pCreature->GetInstanceScript();
             }
 
-            void SetPrisoner(Unit* pPrisoner)
-            {
-                BoneSpikeGUID = pPrisoner->GetGUID();
-                pPrisoner->EnterVehicle(vehicle, 0);
-            }
-
             void Reset()
             {
                 BoneSpikeGUID = 0;
@@ -78,9 +72,7 @@ public:
 
             void KilledUnit(Unit* pVictim)
             {
-                Unit* pBoned = Unit::GetUnit(*me, BoneSpikeGUID);
-                if (pBoned)
-                    pBoned->RemoveAurasDueToSpell(SPELL_SPIKE_IMPALING);
+                me->Kill(me);
             }
 
             void UpdateAI(const uint32 /*diff*/)
@@ -91,6 +83,20 @@ public:
                 Unit* pBoned = Unit::GetUnit(*me, BoneSpikeGUID);
                 if ((pBoned && pBoned->isAlive() && !pBoned->HasAura(SPELL_SPIKE_IMPALING)) || !pBoned)
                     me->Kill(me);
+            }
+
+            void SetPrisoner(Unit* pPrisoner)
+            {
+                pPrisoner->EnterVehicle(vehicle, 0);
+                BoneSpikeGUID = pPrisoner->GetGUID();
+            }
+
+            void PassengerBoarded(Unit * pPrisoner, int8 /*seatId*/, bool apply)
+            {
+                if (!apply)
+                    return;
+
+                me->AddAura(SPELL_SPIKE_IMPALING, pPrisoner);
             }
 
         private:
@@ -401,9 +407,58 @@ public:
 	}
 };
 
+class spell_marrowgar_bone_spike_graveyard : public SpellScriptLoader
+{
+    public:
+        spell_marrowgar_bone_spike_graveyard() : SpellScriptLoader("spell_marrowgar_bone_spike_graveyard") { }
+
+        class spell_marrowgar_bone_spike_graveyard_SpellScript : public SpellScript
+        {
+            void HandleApplyAura(SpellEffIndex /*effIndex*/)
+            {
+                CreatureAI* marrowgarAI = GetCaster()->ToCreature()->AI();
+                uint8 boneSpikeCount = GetCaster()->GetMap()->GetSpawnMode() & 1 ? 3 : 1;
+                for (uint8 i = 0; i < boneSpikeCount; ++i)
+                {
+                    // select any unit but not the tank
+                    Unit* target = marrowgarAI->SelectTarget(SELECT_TARGET_RANDOM, 1, 100.0f, true, -SPELL_SPIKE_IMPALING);
+                    if (!target && !i)
+                        target = marrowgarAI->SelectTarget(SELECT_TARGET_RANDOM, 0, 100.0f, true, -SPELL_SPIKE_IMPALING);
+                    if (!target)
+                        break;
+                    //marrowgarAI->DoCast(*itr, SPELL_IMPALE);    // this is the proper spell but if we use it we dont have any way to assign a victim to it
+                    Creature* pBone = GetCaster()->SummonCreature(CREATURE_BONE_SPIKE, target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0, TEMPSUMMON_CORPSE_DESPAWN);
+                    CAST_AI(npc_bone_spike::npc_bone_spikeAI, pBone->AI())->SetPrisoner(target);
+                }
+            }
+
+            void Register()
+            {
+                OnEffect += SpellEffectFn(spell_marrowgar_bone_spike_graveyard_SpellScript::HandleApplyAura, EFFECT_1, SPELL_EFFECT_APPLY_AURA);
+            }
+
+            bool Load()
+            {
+                if (GetCaster()->GetEntry() != CREATURE_MARROWGAR)
+                    return false;
+                return true;
+            }
+        };
+
+        SpellScript* GetSpellScript() const
+        {
+            return new spell_marrowgar_bone_spike_graveyard_SpellScript();
+        }
+};
+
 void AddSC_boss_lord_marrowgar()
 {
     new boss_lord_marrowgar;
     new npc_coldflame;
     new npc_bone_spike;
+    new spell_marrowgar_bone_spike_graveyard;
+
+    // has to be done or else players threat will be wiped for impaled player and he will absorb all damage
+    if (VehicleSeatEntry* vehSeat = const_cast<VehicleSeatEntry*>(sVehicleSeatStore.LookupEntry(6206)))
+        vehSeat->m_flags |= 0x400;
 }
