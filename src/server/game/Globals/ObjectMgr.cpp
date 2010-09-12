@@ -4419,7 +4419,7 @@ void ObjectMgr::LoadQuestPool(bool reset, bool daily)
 
     mDisabledQuestPoolMap.clear();
 
-    QueryResult_AutoPtr result;
+    QueryResult result;
 
     // Create a list with all disabled entries for the relations load...
     // Must be splitted - else we get a problem to set the new random quests in ResetQuestPool()!

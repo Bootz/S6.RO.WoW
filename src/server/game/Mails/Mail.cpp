@@ -257,7 +257,7 @@ void WorldSession::SendExternalMails()
 {
     SQLTransaction trans = CharacterDatabase.BeginTransaction();
     sLog.outString("EXTERNAL MAIL> Sending mails in queue...");
-    QueryResult_AutoPtr result = CharacterDatabase.Query("SELECT id,receiver,subject,message,money,item,item_count FROM mail_external WHERE sent = 0 ORDER BY id;");
+    QueryResult result = CharacterDatabase.Query("SELECT id,receiver,subject,message,money,item,item_count FROM mail_external WHERE sent = 0 ORDER BY id;");
     if(!result)
     {
         sLog.outString("EXTERNAL MAIL> No mails in queue...");
