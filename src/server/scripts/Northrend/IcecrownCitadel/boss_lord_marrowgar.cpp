@@ -80,7 +80,7 @@ public:
                 if (!BoneSpikeGUID)
                     return;
 
-                Unit* pBoned = Unit::GetUnit(*me, BoneSpikeGUID);
+                Unit* pBoned = Unit::GetUnit((*me), BoneSpikeGUID);
                 if ((pBoned && pBoned->isAlive() && !pBoned->HasAura(SPELL_SPIKE_IMPALING)) || !pBoned)
                     me->Kill(me);
             }
@@ -126,7 +126,7 @@ class npc_coldflame : public CreatureScript
 
             void Reset()
             {
-                m_uiColdFlameTimer = 2000;
+                m_uiColdFlameTimer = 900;
 
                 DoCast(me, SPELL_COLD_FLAME);
 
@@ -230,6 +230,7 @@ public:
             void EnterCombat(Unit* /*pWho*/)
 		{
 			DoScriptText(SAY_AGGRO, me);
+                DoStartNoMovement(me->getVictim());
 
 			if (pInstance)
 				pInstance->SetData(DATA_MARROWGAR_EVENT, IN_PROGRESS);
@@ -298,7 +299,7 @@ public:
 
                 for (uint8 i = 1; i <= m_uiBoneCount; i++)
                 {
-                    Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0);
+                    Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1);
                     if (pTarget && !pTarget->HasAura(SPELL_SPIKE_IMPALING))
                     {
                         Creature* pBone = me->SummonCreature(CREATURE_BONE_SPIKE, pTarget->GetPositionX(), pTarget->GetPositionY(), pTarget->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 999999);
@@ -310,7 +311,7 @@ public:
 
 		void UpdateAI(const uint32 uiDiff)
 		{
-			if (!UpdateVictim())
+                if (!UpdateVictim() || me->HasAura(SPELL_BONE_STORM))
 				return;
 
 			if (m_uiBerserkTimer <= uiDiff)

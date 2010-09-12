@@ -103,7 +103,10 @@ public:
             bool IsEncounterInProgress() const
             {
                 for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
-                    if (uiEncounter[i] == IN_PROGRESS) return true;
+                {
+                    if (uiEncounter[i] == IN_PROGRESS)
+                        return true;
+                }
 
                 return false;
             }
@@ -435,9 +438,13 @@ public:
                                 HandleGameObject(uiIceWall2, false);
                                 HandleGameObject(uiMarrowgarEntrance, true);
                                 if (GameObject* FirstTp = instance->GetGameObject(uiFirstTp))
+                                {
                                     FirstTp->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_INTERACT_COND);
+                                }
                                 if (GameObject* MarrowgarTp = instance->GetGameObject(uiMarrowgarTp))
+                                {
                                     MarrowgarTp->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_INTERACT_COND);
+                                }
                                 break;
                             case IN_PROGRESS:
                                 HandleGameObject(uiMarrowgarEntrance, false);
@@ -472,14 +479,17 @@ public:
                             case NOT_STARTED:
                                 HandleGameObject(uiOratoryDoor, true);
                                 if (GameObject* FlightWarTp = instance->GetGameObject(uiFlightWarTp))
+                                {
                                     FlightWarTp->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_INTERACT_COND);
+                                }
                                 if (GameObject* SaurfangTp = instance->GetGameObject(uiSaurfangTp))
+                                {
                                     SaurfangTp->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_INTERACT_COND);
+                                }
                                 break;
                         }
                         uiEncounter[1] = data;
                         break;
-
                     /*case DATA_GUNSHIP_BATTLE_EVENT:
                         switch(data)
                         {
@@ -495,7 +505,9 @@ public:
                         {
                             case DONE:
                                 if (GameObject* pChest = instance->GetGameObject(m_uiSaurfangCacheGUID))
+                                {
                                         pChest->SetRespawnTime(pChest->GetRespawnDelay());
+                                }
                                 if (GameObject* CitadelTp = instance->GetGameObject(uiCitadelTp))
                                 {
                                     CitadelTp->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_INTERACT_COND);
@@ -510,7 +522,9 @@ public:
                                 HandleGameObject(uiBloodwingDoor, false);
                                 HandleGameObject(uiFrostwingDoor, false);
                                 if (GameObject* CitadelTp = instance->GetGameObject(uiCitadelTp))
+                                {
                                     CitadelTp->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_INTERACT_COND);
+                                }
                                 break;
                             case IN_PROGRESS:
                                 HandleGameObject(uiSaurfangDoor, false);

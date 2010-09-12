@@ -469,8 +469,7 @@ void AddSC_boss_rotface();
 void AddSC_boss_sindragosa();
 void AddSC_boss_lichking();
 void AddSC_boss_valithria();
-void AddSC_icecrown_citadel_trash();
-void AddSC_icecrown_teleporter();
+void AddSC_icecrown_citadel();
 void AddSC_instance_icecrown_citadel();
 
 void AddSC_dalaran();
@@ -1154,8 +1153,7 @@ void AddNorthrendScripts()
     AddSC_boss_sindragosa();
     AddSC_boss_lichking();
     AddSC_boss_valithria();
-    AddSC_icecrown_citadel_trash();
-    AddSC_icecrown_teleporter();
+    AddSC_icecrown_citadel()
     AddSC_instance_icecrown_citadel();
 
     AddSC_dalaran();

@@ -251,7 +251,7 @@ class boss_deathbringer_saurfang : public CreatureScript
                 {
                     if(Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1))
                     {
-                        if(pTarget && !pTarget->HasAura(SPELL_FALLEN_CHAMPION))
+                        if(!pTarget->HasAura(SPELL_FALLEN_CHAMPION))
                         {
                             DoCast(pTarget, SPELL_FALLEN_CHAMPION);
                             DoScriptText(SAY_MARK_OF_THE_FALLEN_CHAMPION, me);
@@ -296,7 +296,6 @@ class boss_deathbringer_saurfang : public CreatureScript
             uint32 m_uiRuneOfBloodTimer;
             uint32 m_uiSummonBloodBeastTimer;
             uint32 m_uiBerserkTimer;
-            uint32 m_uiResetTimer;
 
             uint8 MessCount;
             uint8 AchievementCount;

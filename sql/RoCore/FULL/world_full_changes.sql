@@ -4269,19 +4269,8 @@ UPDATE `creature` SET `MovementType`='1'WHERE `guid`='54575';
 UPDATE `instance_template` SET `script`='instance_icecrown_citadel' WHERE (`map`='631');
 
 -- Some gameobjet for ICC (teleporters)
-UPDATE `gameobject_template` SET `ScriptName` = 'icecrown_teleporter' WHERE `entry` IN (202223,202235,202242,202243,202244,202245,202246);
 UPDATE `gameobject_template` SET `flags` = 32 WHERE `entry` = 202223;
 UPDATE `gameobject_template` SET `flags` = 32 WHERE `entry` = 202242;
-
--- This is working for me with any SQL support, seem is working nice using core script any way is working on Core Revision: 682 but we have problems to use it on another revs, core problem? any way this SQL is not need it for the table
-/*
--- Putricide table
-DELETE FROM `gameobject_scripts` WHERE `id`=201584;
-REPLACE INTO `gameobject_scripts` (`id`, `delay`, `command`, `datalong`, `datalong2`, `dataint`) VALUES
-(201584, 0, 15, 70308, 0, '0'), -- transformation
-(201584, 5000, 15, 70311, 0, '0'), -- transformation end
-(201584, 5000, 13, 201584, 0, '0'); -- spawn
-*/
 
 -- Halion Flame Ring
 DELETE FROM `gameobject` WHERE `id`=203624;
@@ -4532,7 +4521,6 @@ UPDATE `creature_template` SET `ScriptName`='npc_impaling_spear' WHERE (`entry` 
 UPDATE `creature_template` SET `ScriptName`='npc_gas_cloud' WHERE `entry` = '37562';
 UPDATE `creature_template` SET `ScriptName`='lanathel_intro' WHERE (`entry`='38004');
 UPDATE `creature_template` SET `vehicleId`=533 WHERE `entry`=36619;
-UPDATE `creature_template` SET `minlevel` = '80', `maxlevel` = '80', `faction_A` = '14', `faction_H` = '14', `unit_flags` = '0', `type_flags` = '0', `VehicleId` = '647' WHERE `entry` IN (38711,38970,38971,38972);
 
 -- Inserting NPC's on world
 DELETE FROM `creature` WHERE `id`=38004;
@@ -5007,8 +4995,6 @@ INSERT INTO `creature` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equ
 (5683368, 25462, 609, 1, 64, 0, 0, 2310.21, -5741.9, 161.147, 0.561972, 300, 0, 0, 17964000, 0, 0, 0);
 
 # GameObject
-UPDATE `gameobject_template` SET `ScriptName` = 'icecrown_teleporter' WHERE `entry` IN (202223,202235,202242,202243,202244,202245,202246);
-UPDATE `gameobject_template` SET `flags` = 32 WHERE `entry` IN (202235,202242,202243,202244,202245,202246);
 UPDATE `gameobject_template` SET `flags` = 52 WHERE `entry` = 202223;
 -- This game object is handle by core and work nice
 -- UPDATE `gameobject_template` SET `ScriptName` = '', `data10` = 70308 WHERE `entry` = 201584;
@@ -5136,8 +5122,8 @@ INSERT INTO `spell_linked_spell` (`spell_trigger`,`spell_effect`,`type`,`comment
 (72440,72202,0,'Blood Nova 25H'),
 (72409,72202,0,'Rune of Blood 25N'),
 (72447,72202,0,'Rune of Blood 10H'),
--- (73448,72202,0,'Rune of Blood 25H'), -- ERROR: Spell 73448 listed in `spell_linked_spell` does not exist
--- (73449,72202,0,'Rune of Blood 25H'), -- ERROR: Spell 73449 listed in `spell_linked_spell` does not exist
+(73448,72202,0,'Rune of Blood 25H'),
+(73449,72202,0,'Rune of Blood 25H'),
 (69195,69166,0,'Pungent Blight 10N'),
 (71279,69166,0,'Pungent Blight 25N'),
 (73031,69166,0,'Pungent Blight 10H'),
@@ -5168,6 +5154,11 @@ REPLACE INTO `spell_linked_spell` VALUES (-74326, 73655, 0, 'LichKing: Frostmour
 REPLACE INTO `spell_linked_spell` VALUES (-74086, 68090, 0, 'Soul Rip damage!');
 
 UPDATE `creature_template` SET `vehicleId` = 318 WHERE `entry` IN (36609,39120,39121,39122);
+UPDATE `creature_template` SET `minlevel` = '80', `maxlevel` = '80', `faction_A` = '14', `faction_H` = '14', `unit_flags` = '0', `type_flags` = '0', `VehicleId` = '647' WHERE `entry` IN (38711,38970,38971,38972);
+
+UPDATE `creature_template` SET `ScriptName`='npc_cult_fanatic_and_adherent' WHERE `entry` IN (37949,38010,38136,37890,38009,38135);
+UPDATE `gameobject_template` SET `ScriptName` = 'go_icecrown_teleporter' WHERE `entry` IN (202223,202235,202242,202243,202244,202245,202246);
+
 
 -- 187_world_halls_of_reflection
 ALTER TABLE db_version CHANGE COLUMN required_3_world_icecrown_citadel required_187_world_halls_of_reflection bit;
