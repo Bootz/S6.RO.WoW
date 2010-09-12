@@ -33,13 +33,13 @@ EndContentData */
 #define GOSSIP_START_EVENT1     "I'm ready to start challenge."
 #define GOSSIP_START_EVENT2     "I'm ready for the next challenge."
 
-#define ORIENTATION             4.714
+#define ORIENTATION             4.714f
 
 /*######
 ## npc_announcer_toc5
 ######*/
 
-const Position SpawnPosition = {746.843, 695.68, 412.339, 4.70776};
+const Position SpawnPosition = {746.843f, 695.68f, 412.339f, 4.70776f};
 	
 enum eEnums
 {
@@ -81,15 +81,17 @@ class npc_anstart : public CreatureScript
 public:
     npc_anstart() : CreatureScript("npc_anstart") { }
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_anstartAI (pCreature);
+    }
+	
     struct npc_anstartAI : public ScriptedAI
     {
-        npc_anstartAI(Creature *c) : ScriptedAI(c)
+        npc_anstartAI(Creature *pCreature) : ScriptedAI(pCreature)
     	
         {
-            pInstance = c->GetInstanceScript();
-    		
-    	me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE|UNIT_FLAG_NOT_SELECTABLE);
-
+        pInstance = (InstanceScript*)pCreature->GetInstanceScript();	
         }
 
         uint32 uiIntroTimer;
@@ -110,6 +112,7 @@ public:
     	
         void Reset()
         {
+		    me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE|UNIT_FLAG_NOT_SELECTABLE);
             Phase = IDLE;
             uiIntroTimer = 0;
             uiIntroPhase = 0;
@@ -129,27 +132,27 @@ public:
                 Phase = INTRO;
                 me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
 
-                if (pTrall = me->SummonCreature(CREATURE_TRALL, 685.569, 615.103, 435.396, 6.23544, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 20000))
+                if (pTrall = me->SummonCreature(CREATURE_TRALL, 685.569f, 615.103f, 435.396f, 6.23544f, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 20000))
                 {
     			    pTrall->SetReactState(REACT_PASSIVE);	
                     pTrall->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                 }
-                if (pGarrosh = me->SummonCreature(CREATURE_GARROSH, 685.7, 621.134, 435.396, 6.259, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 20000))
+                if (pGarrosh = me->SummonCreature(CREATURE_GARROSH, 685.7f, 621.134f, 435.396f, 6.259f, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 20000))
                 {
     			    pGarrosh->SetReactState(REACT_PASSIVE);	
                     pGarrosh->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                 }
-                if (pKing = me->SummonCreature(CREATURE_KING, 807.724, 617.9, 435.396, 3.18416, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 20000))
+                if (pKing = me->SummonCreature(CREATURE_KING, 807.724f, 617.9f, 435.396f, 3.18416f, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 20000))
                 {
     			    pKing->SetReactState(REACT_PASSIVE);	
                     pKing->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                 }
-                if (pLady = me->SummonCreature(CREATURE_LADY, 807.401, 613.667, 435.397, 3.0585, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 20000))
+                if (pLady = me->SummonCreature(CREATURE_LADY, 807.401f, 613.667f, 435.397f, 3.0585f, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 20000))
                 {
     			    pLady->SetReactState(REACT_PASSIVE);	
                     pLady->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                 }
-                if (pHighlord = me->SummonCreature(CREATURE_HIGHLORD, 746.482, 556.857, 435.396, 1.5898, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 20000))
+                if (pHighlord = me->SummonCreature(CREATURE_HIGHLORD, 746.482f, 556.857f, 435.396f, 1.5898f, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 20000))
                 {
     			    pHighlord->SetReactState(REACT_PASSIVE);	
                     pHighlord->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
@@ -225,7 +228,7 @@ public:
                         uiIntroTimer = 4000;
                         break;							
                     case 9:
-                        if (Creature* pAnnouncertoc5 = me->SummonCreature(CREATURE_ANNOUNCER, 746.626, 618.54, 411.09, 4.63158, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 60000))
+                        if (Creature* pAnnouncertoc5 = me->SummonCreature(CREATURE_ANNOUNCER, 746.626f, 618.54f, 411.09f, 4.63158f, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 60000))
                         {	
     						me->DisappearAndDie();         
            					pAnnouncertoc5->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
@@ -240,11 +243,6 @@ public:
             } else uiIntroTimer -= diff;
         }
     };
-
-    CreatureAI* GetAI(Creature* pCreature) const
-    {
-        return new npc_anstartAI (pCreature);
-    }
 };
 
 class npc_announcer_toc5 : public CreatureScript
@@ -252,9 +250,13 @@ class npc_announcer_toc5 : public CreatureScript
 public:
     npc_announcer_toc5() : CreatureScript("npc_announcer_toc5") { }
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_announcer_toc5AI(pCreature);
+    }
+	
     bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
     {
-        pPlayer->PlayerTalkClass->ClearMenus();
         if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
         {
             pPlayer->CLOSE_GOSSIP_MENU();
@@ -266,7 +268,7 @@ public:
 
     bool OnGossipHello(Player* pPlayer, Creature* pCreature)
     {
-        InstanceScript* pInstance = pCreature->GetInstanceScript();
+        InstanceScript* pInstance = (InstanceScript*)pCreature->GetInstanceScript(); 
 
         if (pInstance &&
             pInstance->GetData(BOSS_GRAND_CHAMPIONS) == DONE &&
@@ -294,7 +296,7 @@ public:
     {
         npc_announcer_toc5AI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceScript();
+            pInstance = (InstanceScript*)pCreature->GetInstanceScript();
 
             uiSummonTimes = 0;
             uiPosition = 0;
@@ -374,7 +376,7 @@ public:
                     break;
                 case DATA_IN_POSITION: //movement done.		
     		        me->SetUnitMovementFlags(MOVEMENTFLAG_WALKING);			
-                    me->GetMotionMaster()->MovePoint(1,735.898, 651.961, 411.93);
+                    me->GetMotionMaster()->MovePoint(1,735.898f, 651.961f, 411.93f);
     				DoScriptText(SAY_START2, me);
                     if (GameObject* pGO = GameObject::GetGameObject(*me, pInstance->GetData64(DATA_MAIN_GATE)))
                         pInstance->HandleGameObject(pGO->GetGUID(),false);
@@ -628,7 +630,7 @@ public:
                    pInstance->GetData(BOSS_ARGENT_CHALLENGE_E) == DONE ||
                    pInstance->GetData(BOSS_ARGENT_CHALLENGE_P) == DONE)
                 {
-                   if (Unit* pBlackKnight = me->SummonCreature(VEHICLE_BLACK_KNIGHT,801.369507, 640.574280, 469.314362, 3.97124,TEMPSUMMON_DEAD_DESPAWN,180000))
+                   if (Unit* pBlackKnight = me->SummonCreature(VEHICLE_BLACK_KNIGHT,801.369507f, 640.574280f, 469.314362f, 3.97124f,TEMPSUMMON_DEAD_DESPAWN,180000))
     			    {
     			                uiBlackKnightGUID = pBlackKnight->GetGUID();
     							pBlackKnight->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
@@ -738,11 +740,6 @@ public:
             }
         }
     };
-
-    CreatureAI* GetAI(Creature* pCreature) const
-    {
-        return new npc_announcer_toc5AI(pCreature);
-    }
 
 };
 

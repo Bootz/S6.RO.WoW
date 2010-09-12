@@ -88,9 +88,9 @@ struct Point
 
 const Point MovementPoint[] =
 {
-  {746.84,623.15,411.41},
-  {747.96,620.29,411.09},
-  {750.23,618.35,411.09}
+  {746.84f,623.15f,411.41f},
+  {747.96f,620.29f,411.09f},
+  {750.23f,618.35f,411.09f}
 };
 
 void AggroAllPlayers(Creature* pTemp)
@@ -151,17 +151,19 @@ class generic_vehicleAI_toc5 : public CreatureScript
 public:
     generic_vehicleAI_toc5() : CreatureScript("generic_vehicleAI_toc5") { }
 
+	    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new generic_vehicleAI_toc5AI(pCreature);
+    }
+
     struct generic_vehicleAI_toc5AI : public npc_escortAI
     {
         generic_vehicleAI_toc5AI(Creature* pCreature) : npc_escortAI(pCreature)
         {
             SetDespawnAtEnd(false);
             uiWaypointPath = 0;
-
-            pInstance = pCreature->GetInstanceScript();
+            pInstance = (InstanceScript*)pCreature->GetInstanceScript();
         }
-
-
 
         InstanceScript* pInstance;
 
@@ -181,32 +183,32 @@ public:
             switch(uiType)
             {
                 case 1:
-                    AddWaypoint(0,746.45,647.03,411.57);
-                    AddWaypoint(1,771.434, 642.606, 411.9);
-                    AddWaypoint(2,779.807, 617.535, 411.716);
-                    AddWaypoint(3,771.098, 594.635, 411.625);
-    				AddWaypoint(4,746.887, 583.425, 411.668);
-    				AddWaypoint(5,715.176, 583.782, 412.394);
-    				AddWaypoint(6,720.719, 591.141, 411.737);
+                    AddWaypoint(0,746.45f,647.03f,411.57f);
+                    AddWaypoint(1,771.434f, 642.606f, 411.9f);
+                    AddWaypoint(2,779.807f, 617.535f, 411.716f);
+                    AddWaypoint(3,771.098f, 594.635f, 411.625f);
+    				AddWaypoint(4,746.887f, 583.425f, 411.668f);
+    				AddWaypoint(5,715.176f, 583.782f, 412.394f);
+    				AddWaypoint(6,720.719f, 591.141f, 411.737f);
                     uiWaypointPath = 1;
                     break;
                 case 2:
-                    AddWaypoint(0,746.45,647.03,411.57);
-                    AddWaypoint(1,771.434, 642.606, 411.9);
-                    AddWaypoint(2,779.807, 617.535, 411.716);
-                    AddWaypoint(3,771.098, 594.635, 411.625);
-    				AddWaypoint(4,746.887, 583.425, 411.668);
-    				AddWaypoint(5,746.16, 571.678, 412.389);
-    				AddWaypoint(6,746.887, 583.425, 411.668);
+                    AddWaypoint(0,746.45f,647.03f,411.57f);
+                    AddWaypoint(1,771.434f, 642.606f, 411.9f);
+                    AddWaypoint(2,779.807f, 617.535f, 411.716f);
+                    AddWaypoint(3,771.098f, 594.635f, 411.625f);
+    				AddWaypoint(4,746.887f, 583.425f, 411.668f);
+    				AddWaypoint(5,746.16f, 571.678f, 412.389f);
+    				AddWaypoint(6,746.887f, 583.425f, 411.668f);
                     uiWaypointPath = 2;
                     break;
                 case 3:
-                    AddWaypoint(0,746.45,647.03,411.57);
-                    AddWaypoint(1,771.434, 642.606, 411.9);
-                    AddWaypoint(2,779.807, 617.535, 411.716);
-                    AddWaypoint(3,771.098, 594.635, 411.625);
-    				AddWaypoint(4,777.759, 584.577, 412.393);
-    				AddWaypoint(5,772.48, 592.99, 411.68);
+                    AddWaypoint(0,746.45f,647.03f,411.57f);
+                    AddWaypoint(1,771.434f, 642.606f, 411.9f);
+                    AddWaypoint(2,779.807f, 617.535f, 411.716f);
+                    AddWaypoint(3,771.098f, 594.635f, 411.625f);
+    				AddWaypoint(4,777.759f, 584.577f, 412.393f);
+    				AddWaypoint(5,772.48f, 592.99f, 411.68f);
                     uiWaypointPath = 3;
                     break;
             }
@@ -220,7 +222,7 @@ public:
             switch(i)
             {
                 case 2:
-                    if ((pInstance && uiWaypointPath == 3) || uiWaypointPath == 2)
+                    if (pInstance && uiWaypointPath == 3 || uiWaypointPath == 2)
                         pInstance->SetData(DATA_MOVEMENT_DONE, pInstance->GetData(DATA_MOVEMENT_DONE)+1);
                     break;
                 case 3:
@@ -286,11 +288,6 @@ public:
             DoMeleeAttackIfReady();
         }
     };
-
-    CreatureAI* GetAI(Creature* pCreature) const
-    {
-        return new generic_vehicleAI_toc5AI(pCreature);
-    }
 };
 
 
@@ -300,11 +297,17 @@ class boss_warrior_toc5 : public CreatureScript
 public:
     boss_warrior_toc5() : CreatureScript("boss_warrior_toc5") { }
 
+	CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_warrior_toc5AI(pCreature);
+    }
+	
     struct boss_warrior_toc5AI : public ScriptedAI
     {
+
         boss_warrior_toc5AI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceScript();
+            pInstance = (InstanceScript*)pCreature->GetInstanceScript();
 
             bDone = false;
             bHome = false;
@@ -359,11 +362,11 @@ public:
      		DoScriptText(SAY_START_2, me);	
 
                 if (pInstance && me->GetGUID() == pInstance->GetData64(DATA_GRAND_CHAMPION_1))
-                    me->SetHomePosition(739.678,662.541,412.393,4.49);
+                    me->SetHomePosition(739.678f,662.541f,412.393f,4.49f);
                 else if (pInstance && me->GetGUID() == pInstance->GetData64(DATA_GRAND_CHAMPION_2))
-                    me->SetHomePosition(746.71,661.02,411.69,4.6);
+                    me->SetHomePosition(746.71f,661.02f,411.69f,4.6f);
                 else if (pInstance && me->GetGUID() == pInstance->GetData64(DATA_GRAND_CHAMPION_3))
-                    me->SetHomePosition(754.34,660.70,412.39,4.79);
+                    me->SetHomePosition(754.34f,660.70f,412.39f,4.79f);
 
                 EnterEvadeMode();
                 bHome = true;
@@ -424,11 +427,6 @@ public:
     		
         }
     };
-
-    CreatureAI* GetAI(Creature* pCreature) const
-    {
-        return new boss_warrior_toc5AI(pCreature);
-    }
 };
 
 
@@ -438,11 +436,17 @@ class boss_mage_toc5 : public CreatureScript
 public:
     boss_mage_toc5() : CreatureScript("boss_mage_toc5") { }
 
+		CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_mage_toc5AI(pCreature);
+    }
+	
     struct boss_mage_toc5AI : public ScriptedAI
     {
+
         boss_mage_toc5AI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceScript();
+            pInstance = (InstanceScript*)pCreature->GetInstanceScript();
 
             bDone = false;
             bHome = false;
@@ -495,11 +499,11 @@ public:
                 bDone = true;
 
                 if (pInstance && me->GetGUID() == pInstance->GetData64(DATA_GRAND_CHAMPION_1))
-                    me->SetHomePosition(739.678,662.541,412.393,4.49);
+                    me->SetHomePosition(739.678f,662.541f,412.393f,4.49f);
                 else if (pInstance && me->GetGUID() == pInstance->GetData64(DATA_GRAND_CHAMPION_2))
-                    me->SetHomePosition(746.71,661.02,411.69,4.6);
+                    me->SetHomePosition(746.71f,661.02f,411.69f,4.6f);
                 else if (pInstance && me->GetGUID() == pInstance->GetData64(DATA_GRAND_CHAMPION_3))
-                    me->SetHomePosition(754.34,660.70,412.39,4.79);
+                    me->SetHomePosition(754.34f,660.70f,412.39f,4.79f);
 
                 if (pInstance)
                     pInstance->SetData(BOSS_GRAND_CHAMPIONS, IN_PROGRESS);
@@ -558,11 +562,6 @@ public:
     		
         }
     };
-
-    CreatureAI* GetAI(Creature* pCreature) const
-    {
-        return new boss_mage_toc5AI(pCreature);
-    }
 };
 
 
@@ -572,11 +571,16 @@ class boss_shaman_toc5 : public CreatureScript
 public:
     boss_shaman_toc5() : CreatureScript("boss_shaman_toc5") { }
 
+	    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_shaman_toc5AI(pCreature);
+    }
+
     struct boss_shaman_toc5AI : public ScriptedAI
     {
         boss_shaman_toc5AI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceScript();
+            pInstance = (InstanceScript*)pCreature->GetInstanceScript();
 
             bDone = false;
             bHome = false;
@@ -635,11 +639,11 @@ public:
                 bDone = true;
 
                 if (pInstance && me->GetGUID() == pInstance->GetData64(DATA_GRAND_CHAMPION_1))
-                    me->SetHomePosition(739.678,662.541,412.393,4.49);
+                    me->SetHomePosition(739.678f,662.541f,412.393f,4.49f);
                 else if (pInstance && me->GetGUID() == pInstance->GetData64(DATA_GRAND_CHAMPION_2))
-                    me->SetHomePosition(746.71,661.02,411.69,4.6);
+                    me->SetHomePosition(746.71f,661.02f,411.69f,4.6f);
                 else if (pInstance && me->GetGUID() == pInstance->GetData64(DATA_GRAND_CHAMPION_3))
-                    me->SetHomePosition(754.34,660.70,412.39,4.79);
+                    me->SetHomePosition(754.34f,660.70f,412.39f,4.79f);
 
                 if (pInstance)
                     pInstance->SetData(BOSS_GRAND_CHAMPIONS, IN_PROGRESS);
@@ -707,11 +711,6 @@ public:
     		
         }
     };
-
-    CreatureAI* GetAI(Creature* pCreature) const
-    {
-        return new boss_shaman_toc5AI(pCreature);
-    }
 };
 
 
@@ -721,11 +720,16 @@ class boss_hunter_toc5 : public CreatureScript
 public:
     boss_hunter_toc5() : CreatureScript("boss_hunter_toc5") { }
 
+	    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_hunter_toc5AI(pCreature);
+    }
+
     struct boss_hunter_toc5AI : public ScriptedAI
     {
         boss_hunter_toc5AI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceScript();
+            pInstance = (InstanceScript*)pCreature->GetInstanceScript();
 
             bDone = false;
             bHome = false;
@@ -785,11 +789,11 @@ public:
                 bDone = true;
 
                 if (pInstance && me->GetGUID() == pInstance->GetData64(DATA_GRAND_CHAMPION_1))
-                    me->SetHomePosition(739.678,662.541,412.393,4.49);
+                    me->SetHomePosition(739.678f,662.541f,412.393f,4.49f);
                 else if (pInstance && me->GetGUID() == pInstance->GetData64(DATA_GRAND_CHAMPION_2))
-                    me->SetHomePosition(746.71,661.02,411.69,4.6);
+                    me->SetHomePosition(746.71f,661.02f,411.69f,4.6f);
                 else if (pInstance && me->GetGUID() == pInstance->GetData64(DATA_GRAND_CHAMPION_3))
-                    me->SetHomePosition(754.34,660.70,412.39,4.79);
+                    me->SetHomePosition(754.34f,660.70f,412.39f,4.79f);
 
                 if (pInstance)
                     pInstance->SetData(BOSS_GRAND_CHAMPIONS, IN_PROGRESS);
@@ -880,11 +884,6 @@ public:
         }
  
     };
-
-    CreatureAI* GetAI(Creature* pCreature) const
-    {
-        return new boss_hunter_toc5AI(pCreature);
-    }
 };
 
 
@@ -894,11 +893,16 @@ class boss_rouge_toc5 : public CreatureScript
 public:
     boss_rouge_toc5() : CreatureScript("boss_rouge_toc5") { }
 
+	    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_rouge_toc5AI(pCreature);
+    }
+
     struct boss_rouge_toc5AI : public ScriptedAI
     {
         boss_rouge_toc5AI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceScript();
+            pInstance = (InstanceScript*)pCreature->GetInstanceScript();
 
             bDone = false;
             bHome = false;
@@ -948,11 +952,11 @@ public:
                 bDone = true;
 
                 if (pInstance && me->GetGUID() == pInstance->GetData64(DATA_GRAND_CHAMPION_1))
-                    me->SetHomePosition(739.678,662.541,412.393,4.49);
+                    me->SetHomePosition(739.678f,662.541f,412.393f,4.49f);
                 else if (pInstance && me->GetGUID() == pInstance->GetData64(DATA_GRAND_CHAMPION_2))
-                    me->SetHomePosition(746.71,661.02,411.69,4.6);
+                    me->SetHomePosition(746.71f,661.02f,411.69f,4.6f);
                 else if (pInstance && me->GetGUID() == pInstance->GetData64(DATA_GRAND_CHAMPION_3))
-                    me->SetHomePosition(754.34,660.70,412.39,4.79);
+                    me->SetHomePosition(754.34f,660.70f,412.39f,4.79f);
 
                 if (pInstance)
                     pInstance->SetData(BOSS_GRAND_CHAMPIONS, IN_PROGRESS);
@@ -1003,12 +1007,6 @@ public:
     		
         }
     };
-
-    CreatureAI* GetAI(Creature* pCreature) const
-    {
-        return new boss_rouge_toc5AI(pCreature);
-    }
-
 };
 
 

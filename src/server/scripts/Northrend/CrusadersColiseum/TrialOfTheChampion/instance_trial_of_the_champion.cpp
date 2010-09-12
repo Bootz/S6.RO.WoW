@@ -41,6 +41,11 @@ class instance_trial_of_the_champion : public InstanceMapScript
 public:
     instance_trial_of_the_champion() : InstanceMapScript("instance_trial_of_the_champion", 650) { }
 
+	InstanceScript* GetInstanceScript(InstanceMap* pMap) const
+    {
+        return new instance_trial_of_the_champion_InstanceMapScript(pMap);
+    }
+	
     struct instance_trial_of_the_champion_InstanceMapScript : public InstanceScript
     {
         instance_trial_of_the_champion_InstanceMapScript(Map* pMap) : InstanceScript(pMap) {Initialize();}
@@ -49,8 +54,8 @@ public:
 
         uint8 uiBlackKnightEvent;
     	uint8 uiBlackKnightEvent2;
-        uint8 uiMovementDone;
-        uint8 uiGrandChampionsDeaths;
+        uint16 uiMovementDone;
+        uint16 uiGrandChampionsDeaths;
         uint8 uiArgentSoldierDeaths;
 
         uint64 uiAnnouncerGUID;
@@ -275,7 +280,7 @@ public:
 				{
 				    if (Creature* pBlackKnight =  instance->GetCreature(uiBlackKnightGUID))
 					{
-        		        pBlackKnight->SetOrientation(4.714);						
+        		        pBlackKnight->SetOrientation(4.714f);						
 					}
 				
                 }else if (uiData == IN_PROGRESS)
@@ -300,7 +305,7 @@ public:
                         if (Creature* pAnnouncer =  instance->GetCreature(uiAnnouncerGUID))
                         {
 	                    	pAnnouncer->DisappearAndDie();
-                            if (Creature* pGhoul = pAnnouncer->SummonCreature(NPC_RISEN_JAEREN,704.965, 633.617, 412.392, 6.27148))
+                            if (Creature* pGhoul = pAnnouncer->SummonCreature(NPC_RISEN_JAEREN,pAnnouncer->GetPositionX(),pAnnouncer->GetPositionY(),pAnnouncer->GetPositionZ(),pAnnouncer->GetOrientation()))
                             {
                                 pGhoul->setFaction(14);							
 		                        AggroAllPlayers(pGhoul);
@@ -333,7 +338,7 @@ public:
                         {
 							DoScriptText(SAY_START_1, pAnnouncer);
                             pAnnouncer->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
-                            pAnnouncer->SummonGameObject(instance->IsHeroic()? GO_CHAMPIONS_LOOT_H : GO_CHAMPIONS_LOOT,746.59,618.49,411.09,1.42,0, 0, 0, 0,90000000);
+                            pAnnouncer->SummonGameObject(instance->IsHeroic()? GO_CHAMPIONS_LOOT_H : GO_CHAMPIONS_LOOT,746.59f,618.49f,411.09f,1.42f,0, 0, 0, 0,90000000);
 						}
                     }
                 }
@@ -373,8 +378,8 @@ public:
          			DoScriptText(SAY_START_1, pAnnouncer);
 
                     pAnnouncer->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
-					pAnnouncer->GetMotionMaster()->MovePoint(0,740.755, 636.509, 411.575);
-                    pAnnouncer->SummonGameObject(instance->IsHeroic()? GO_EADRIC_LOOT_H : GO_EADRIC_LOOT,746.59,618.49,411.09,1.42,0, 0, 0, 0,90000000);
+					pAnnouncer->GetMotionMaster()->MovePoint(0,740.755f, 636.509f, 411.575f);
+                    pAnnouncer->SummonGameObject(instance->IsHeroic()? GO_EADRIC_LOOT_H : GO_EADRIC_LOOT,746.59f,618.49f,411.09f,1.42f,0, 0, 0, 0,90000000);
                 }
                 break;
             case BOSS_ARGENT_CHALLENGE_P:
@@ -389,8 +394,8 @@ public:
                 {
          			DoScriptText(SAY_START_1, pAnnouncer);
                     pAnnouncer->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
-					pAnnouncer->GetMotionMaster()->MovePoint(0,740.755, 636.509, 411.575);
-                    pAnnouncer->SummonGameObject(instance->IsHeroic()? GO_PALETRESS_LOOT_H : GO_PALETRESS_LOOT,746.59,618.49,411.09,1.42,0, 0, 0, 0,90000000);
+					pAnnouncer->GetMotionMaster()->MovePoint(0,740.755f, 636.509f, 411.575f);
+                    pAnnouncer->SummonGameObject(instance->IsHeroic()? GO_PALETRESS_LOOT_H : GO_PALETRESS_LOOT,746.59f,618.49f,411.09f,1.42f,0, 0, 0, 0,90000000);
                 }
                 break;
         }
@@ -476,13 +481,17 @@ public:
             return;
         }
 
+
         OUT_LOAD_INST_DATA(in);
+
 
         char dataHead1, dataHead2;
         uint16 data0, data1, data2, data3, data4, data5;
 
+
         std::istringstream loadStream(in);
         loadStream >> dataHead1 >> dataHead2 >> data0 >> data1 >> data2 >> data3 >> data4 >> data5;
+
 
         if (dataHead1 == 'T' && dataHead2 == 'C')
         {
@@ -491,22 +500,20 @@ public:
             m_auiEncounter[2] = data2;
             m_auiEncounter[3] = data3;
 			
+
             for (uint8 i = 0; i < MAX_ENCOUNTER; ++i)
                 if (m_auiEncounter[i] == IN_PROGRESS)
                     m_auiEncounter[i] = NOT_STARTED;
 					
+
             uiGrandChampionsDeaths = data4;
             uiMovementDone = data5;
         } else OUT_LOAD_INST_DATA_FAIL;
 
+
         OUT_LOAD_INST_DATA_COMPLETE;
     }
 	};
-
-    InstanceScript* GetInstanceScript(InstanceMap* pMap) const
-    {
-        return new instance_trial_of_the_champion_InstanceMapScript(pMap);
-    }
 };
 
 

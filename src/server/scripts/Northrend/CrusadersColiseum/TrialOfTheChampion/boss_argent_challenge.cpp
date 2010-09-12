@@ -86,11 +86,16 @@ class boss_eadric : public CreatureScript
 public:
     boss_eadric() : CreatureScript("boss_eadric") { }
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_eadricAI(pCreature);
+    }
+	
     struct boss_eadricAI : public ScriptedAI
     {
         boss_eadricAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceScript();
+            pInstance = (InstanceScript*)pCreature->GetInstanceScript();	
             pCreature->SetReactState(REACT_PASSIVE);
             pCreature->SetFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_NON_ATTACKABLE);
     		pCreature->SetFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_NOT_SELECTABLE);
@@ -111,8 +116,8 @@ public:
             uiRadianceTimer = 16000;
             uiHammerJusticeTimer = 25000;
             uiResetTimer = 5000;
-    		me->GetMotionMaster()->MovePoint(1,746.71,661.02,411.69);
-    		me->SetOrientation(4.714);
+    		me->GetMotionMaster()->MovePoint(1,746.71f,661.02f,411.69f);
+    		me->SetOrientation(4.714f);
 
             bDone = false;
         }
@@ -147,7 +152,7 @@ public:
         {
             if (bDone && uiResetTimer <= uiDiff)
             {
-                me->GetMotionMaster()->MovePoint(0,746.843, 695.68, 412.339);
+                me->GetMotionMaster()->MovePoint(0,746.843f, 695.68f, 412.339f);
                 bDone = false;
     			if (GameObject* pGO = GameObject::GetGameObject(*me, pInstance->GetData64(DATA_MAIN_GATE)))
                         pInstance->HandleGameObject(pGO->GetGUID(),true);
@@ -188,11 +193,6 @@ public:
             DoMeleeAttackIfReady();
         }
     };
-
-    CreatureAI* GetAI(Creature* pCreature) const
-    {
-        return new boss_eadricAI(pCreature);
-    }
 };
 
 
@@ -201,11 +201,16 @@ class boss_paletress : public CreatureScript
 public:
     boss_paletress() : CreatureScript("boss_paletress") { }
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new boss_paletressAI(pCreature);
+    }
+	
     struct boss_paletressAI : public ScriptedAI
     {
         boss_paletressAI(Creature* pCreature) : ScriptedAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceScript();
+            pInstance = (InstanceScript*)pCreature->GetInstanceScript();	
 
             MemoryGUID = 0;
             pCreature->SetReactState(REACT_PASSIVE);
@@ -237,8 +242,8 @@ public:
 
             uiResetTimer        = 7000;
     		
-    		me->GetMotionMaster()->MovePoint(1,746.71,661.02,411.69);
-    		me->SetOrientation(4.714);
+    		me->GetMotionMaster()->MovePoint(1,746.71f,661.02f,411.69f);
+    		me->SetOrientation(4.714f);
 
             bHealth = false;
             bDone = false;
@@ -285,7 +290,7 @@ public:
         {
             if (bDone && uiResetTimer <= uiDiff)
             {
-                me->GetMotionMaster()->MovePoint(0,746.843, 695.68, 412.339);
+                me->GetMotionMaster()->MovePoint(0,746.843f, 695.68f, 412.339f);
                 bDone = false;
     			if (GameObject* pGO = GameObject::GetGameObject(*me, pInstance->GetData64(DATA_MAIN_GATE)))
                         pInstance->HandleGameObject(pGO->GetGUID(),true);	
@@ -321,7 +326,6 @@ public:
             } else uiHolySmiteTimer -= uiDiff;
 
             if (me->HasAura(SPELL_SHIELD))
-            {
                 if (uiRenewTimer <= uiDiff)
                 {
                     me->InterruptNonMeleeSpells(true);
@@ -339,7 +343,7 @@ public:
                     }
                     uiRenewTimer = urand(15000,17000);
                 } else uiRenewTimer -= uiDiff;
-            }
+
 
             if (!bHealth && me->GetHealth()*100 / me->GetMaxHealth() <= 35)
             {
@@ -414,11 +418,6 @@ public:
             MemoryGUID = pSummon->GetGUID();
         }
     };
-
-    CreatureAI* GetAI(Creature* pCreature) const
-    {
-        return new boss_paletressAI(pCreature);
-    }
 };
 
 
@@ -427,9 +426,16 @@ class npc_memory : public CreatureScript
 public:
     npc_memory() : CreatureScript("npc_memory") { }
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_memoryAI(pCreature);
+    }
+	
     struct npc_memoryAI : public ScriptedAI
     {
-        npc_memoryAI(Creature* pCreature) : ScriptedAI(pCreature) {}
+        npc_memoryAI(Creature* pCreature) : ScriptedAI(pCreature) 
+		{
+		}
 
         uint32 uiOldWoundsTimer;
         uint32 uiShadowsPastTimer;
@@ -488,11 +494,6 @@ public:
             }
         }
     };
-
-    CreatureAI* GetAI(Creature* pCreature) const
-    {
-        return new npc_memoryAI(pCreature);
-    }
 };
 
 
@@ -502,11 +503,16 @@ class npc_argent_soldier : public CreatureScript
 public:
     npc_argent_soldier() : CreatureScript("npc_argent_soldier") { }
 
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_argent_soldierAI(pCreature);
+    }
+	
     struct npc_argent_soldierAI : public npc_escortAI
     {
         npc_argent_soldierAI(Creature* pCreature) : npc_escortAI(pCreature)
         {
-            pInstance = pCreature->GetInstanceScript();
+            pInstance = (InstanceScript*)pCreature->GetInstanceScript();	
             me->SetReactState(REACT_DEFENSIVE);
             me->SetFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_NON_ATTACKABLE);
             me->SetFlag(UNIT_FIELD_FLAGS,UNIT_FLAG_NOT_SELECTABLE);
@@ -558,7 +564,7 @@ public:
                 switch(uiWaypoint)
                 {
                     case 1:
-                        me->SetOrientation(4.60);
+                        me->SetOrientation(4.60f);
     			        me->SetReactState(REACT_AGGRESSIVE);					
                         me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE|UNIT_FLAG_NOT_SELECTABLE);
                         break;				
@@ -570,12 +576,12 @@ public:
                 switch(uiWaypoint)
                 {
                     case 0:
-                        me->SetOrientation(5.81);
+                        me->SetOrientation(5.81f);
     			        me->SetReactState(REACT_AGGRESSIVE);
                         me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE|UNIT_FLAG_NOT_SELECTABLE);
                         break;
                     case 2:
-                        me->SetOrientation(3.39);
+                        me->SetOrientation(3.39f);
     			        me->SetReactState(REACT_AGGRESSIVE);					
                         me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE|UNIT_FLAG_NOT_SELECTABLE);
                     if (GameObject* pGO = GameObject::GetGameObject(*me, pInstance->GetData64(DATA_MAIN_GATE)))
@@ -596,15 +602,15 @@ public:
                     switch(uiType)
                     {
                         case 0:
-    					    AddWaypoint(0,737.14,655.42,412.88);
-                            AddWaypoint(1,712.14,628.42,411.88);
+    					    AddWaypoint(0,737.14f,655.42f,412.88f);
+                            AddWaypoint(1,712.14f,628.42f,411.88f);
                             break;
                         case 1:
-                            AddWaypoint(0,742.44,650.29,411.79);
+                            AddWaypoint(0,742.44f,650.29f,411.79f);
                             break;
                         case 2:
-    					    AddWaypoint(0,756.14,655.42,411.88);
-                            AddWaypoint(1,781.626, 629.383, 411.892);
+    					    AddWaypoint(0,756.14f,655.42f,411.88f);
+                            AddWaypoint(1,781.626f, 629.383f, 411.892f);
                             break;
                     }
                     break;
@@ -612,15 +618,15 @@ public:
                     switch(uiType)
                     {
                         case 0:
-    					    AddWaypoint(0,737.14,655.42,412.88);
-                            AddWaypoint(1,713.12,632.97,411.90);
+    					    AddWaypoint(0,737.14f,655.42f,412.88f);
+                            AddWaypoint(1,713.12f,632.97f,411.90f);
                             break;
                         case 1:
-                            AddWaypoint(0,746.73,650.24,411.56);
+                            AddWaypoint(0,746.73f,650.24f,411.56f);
                             break;
                         case 2:
-    					    AddWaypoint(0,756.14,655.42,411.88);
-                            AddWaypoint(1,781.351, 633.146, 411.907);
+    					    AddWaypoint(0,756.14f,655.42f,411.88f);
+                            AddWaypoint(1,781.351f, 633.146f, 411.907f);
                             break;
                     }
                     break;
@@ -628,15 +634,15 @@ public:
                     switch(uiType)
                     {
                         case 0:
-    					    AddWaypoint(0,737.14,655.42,412.88);
-                            AddWaypoint(1,715.06,637.07,411.91);
+    					    AddWaypoint(0,737.14f,655.42f,412.88f);
+                            AddWaypoint(1,715.06f,637.07f,411.91f);
                             break;
                         case 1:
-                            AddWaypoint(0,750.72,650.20,411.77);
+                            AddWaypoint(0,750.72f,650.20f,411.77f);
                             break;
                         case 2:
-    					    AddWaypoint(0,756.14,655.42,411.88);
-                            AddWaypoint(1,780.439, 636.681, 411.918);
+    					    AddWaypoint(0,756.14f,655.42f,411.88f);
+                            AddWaypoint(1,780.439f, 636.681f, 411.918f);
                             break;
                     }
                     break;
@@ -748,11 +754,6 @@ public:
     		
         }
     };
-
-    CreatureAI* GetAI(Creature* pCreature) const
-    {
-        return new npc_argent_soldierAI(pCreature);
-    }
 };
 
 
