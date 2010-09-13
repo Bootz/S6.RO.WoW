@@ -4497,8 +4497,6 @@ UPDATE `creature_template` SET `ScriptName`='npc_sister_svalna' WHERE (`entry` =
 UPDATE `creature_template` SET `ScriptName`='npc_impaling_spear' WHERE (`entry` = '38248');
 UPDATE `creature_template` SET `ScriptName`='npc_gas_cloud_icc' WHERE `entry` = 37562;
 UPDATE `creature_template` SET `ScriptName`='lanathel_intro' WHERE (`entry`='38004');
-UPDATE `creature_template` SET `vehicleId`=533 WHERE `entry`=36619;
-
 -- Inserting NPC's on world
 DELETE FROM `creature` WHERE `id`=38004;
 INSERT INTO `creature` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`DeathState`,`MovementType`) VALUES
@@ -4853,8 +4851,6 @@ INSERT INTO `creature_ai_scripts` VALUES  (3887900, 38879, 9, 0, 100, 6, 1, 30, 
 
 -- OTHER
 UPDATE `creature_template` SET `flags_extra`=`flags_extra`|128,minlevel=80,maxlevel=80 WHERE `entry`=36672;
-UPDATE `creature_template` SET `vehicleId`=533 WHERE `entry`=36619;
-
 -- Empowered Adherent
 SET @eAdN := 38136;
 SET @eAd1 := 38396;
@@ -5131,7 +5127,6 @@ REPLACE INTO `spell_linked_spell` VALUES (-74326, 73655, 0, 'LichKing: Frostmour
 REPLACE INTO `spell_linked_spell` VALUES (-74086, 68090, 0, 'Soul Rip damage!');
 
 UPDATE `creature_template` SET `vehicleId` = 318 WHERE `entry` IN (36609,39120,39121,39122);
-UPDATE `creature_template` SET `minlevel` = '80', `maxlevel` = '80', `faction_A` = '14', `faction_H` = '14', `unit_flags` = '0', `type_flags` = '0', `VehicleId` = '647' WHERE `entry` IN (38711,38970,38971,38972);
 
 UPDATE `creature_template` SET `ScriptName`='npc_cult_fanatic_and_adherent' WHERE `entry` IN (37949,38010,38136,37890,38009,38135);
 UPDATE `gameobject_template` SET `ScriptName` = 'go_icecrown_teleporter' WHERE `entry` IN (202223,202235,202242,202243,202244,202245,202246);
@@ -7256,16 +7251,9 @@ UPDATE `creature_template` SET `ScriptName`='npc_sister_svalna' WHERE `entry` = 
 UPDATE `creature_template` SET `ScriptName` = 'npc_impaling_spear' WHERE `entry` = '38248';
 UPDATE `creature_template` SET `ScriptName` = 'npc_gas_cloud' WHERE `entry` = '37562';
 UPDATE `creature_template` SET `ScriptName`='lanathel_intro' WHERE (`entry`='38004');
-UPDATE `creature_template` SET `vehicleId`=533 WHERE `entry`=36619;
 UPDATE `creature_template` SET `ScriptName`='npc_choke_bomb' WHERE (`entry`='38159');
 UPDATE `creature_template` SET `ScriptName`='npc_sticky_ooze' WHERE (`entry`='37006');
 UPDATE `creature_template` SET `ScriptName`='npc_flood_ooze' WHERE (`entry`='37013');
-
--- Script_names segun TC
-UPDATE `creature_template` SET `ScriptName`='npc_bone_spike' WHERE `entry`=38711;
-UPDATE `creature_template` SET `ScriptName`='npc_cult_fanatic' WHERE `entry` IN (37890,38009,38135);
-UPDATE `creature_template` SET `ScriptName`='npc_cult_adherent' WHERE `entry` IN(37949,38010,38136);
-UPDATE `creature_template` SET `ScriptName`='npc_vengeful_shade' WHERE `entry`=38222;
 
 -- Halls of Reflection
 -- Cleanup first

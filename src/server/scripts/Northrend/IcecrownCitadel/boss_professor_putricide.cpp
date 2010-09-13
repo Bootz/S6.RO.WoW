@@ -683,14 +683,14 @@ class npc_gas_cloud_icc : public CreatureScript
         }
 };
 
-class npc_bomb_icc : public CreatureScript
+class npc_choking_gas_bomb : public CreatureScript
 {
     public:
-        npc_bomb_icc() : CreatureScript("npc_bomb_icc") { }
+        npc_choking_gas_bomb() : CreatureScript("npc_choking_gas_bomb") { }
 
-        struct npc_bomb_iccAI : public ScriptedAI
+        struct npc_choking_gas_bombAI : public ScriptedAI
         {
-            npc_bomb_iccAI(Creature* pCreature) : ScriptedAI(pCreature)
+            npc_choking_gas_bombAI(Creature* pCreature) : ScriptedAI(pCreature)
             {
                 pInstance = pCreature->GetInstanceScript();
             }
@@ -733,7 +733,7 @@ class npc_bomb_icc : public CreatureScript
 
         CreatureAI* GetAI(Creature* pCreature) const
         {
-            return new npc_bomb_iccAI(pCreature);
+            return new npc_choking_gas_bombAI(pCreature);
         }
 };
 
@@ -791,6 +791,6 @@ void AddSC_boss_professor_putricide()
     new boss_professor_putricide;
     new npc_volatile_ooze;
     new npc_gas_cloud_icc;
-    new npc_bomb_icc;
+    new npc_choking_gas_bomb;
     new npc_abomination;
 }

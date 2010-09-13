@@ -260,7 +260,6 @@ UPDATE `creature_template` SET `ScriptName`='npc_dreamcloud_icc' WHERE `entry` =
 UPDATE `creature_template` SET `ScriptName`='npc_dreamportal_icc' WHERE `entry` = 37945;
 UPDATE `creature_template` SET `ScriptName`='npc_nucleus_icc' WHERE `entry`=38369;
 UPDATE `creature_template` SET `ScriptName`='npc_fireball_icc' WHERE `entry`=38332;
-UPDATE `creature_template` SET `ScriptName`='npc_bomb_icc' WHERE `entry`=38454;
 UPDATE `creature_template` SET `ScriptName`='npc_vortex_icc' WHERE `entry`=38422;
 UPDATE `creature_template` SET `ScriptName`='npc_empfireball_icc' WHERE `entry`=38451;
 UPDATE `creature_template` SET `ScriptName`='npc_precious_icc' WHERE (`entry`='37217');
@@ -279,7 +278,6 @@ UPDATE `creature_template` SET `ScriptName`='npc_sister_svalna' WHERE (`entry` =
 UPDATE `creature_template` SET `ScriptName`='npc_impaling_spear' WHERE (`entry` = '38248');
 UPDATE `creature_template` SET `ScriptName`='npc_gas_cloud_icc' WHERE `entry` = 37562;
 UPDATE `creature_template` SET `ScriptName`='lanathel_intro' WHERE (`entry`='38004');
-UPDATE `creature_template` SET `vehicleId`=533 WHERE `entry`=36619;
 
 -- Inserting NPC's on world
 DELETE FROM `creature` WHERE `id`=38004;
@@ -635,7 +633,6 @@ INSERT INTO `creature_ai_scripts` VALUES  (3887900, 38879, 9, 0, 100, 6, 1, 30, 
 
 -- OTHER
 UPDATE `creature_template` SET `flags_extra`=`flags_extra`|128,minlevel=80,maxlevel=80 WHERE `entry`=36672;
-UPDATE `creature_template` SET `vehicleId`=533 WHERE `entry`=36619;
 
 -- Empowered Adherent
 SET @eAdN := 38136;
@@ -913,11 +910,11 @@ REPLACE INTO `spell_linked_spell` VALUES (-74326, 73655, 0, 'LichKing: Frostmour
 REPLACE INTO `spell_linked_spell` VALUES (-74086, 68090, 0, 'Soul Rip damage!');
 
 UPDATE `creature_template` SET `vehicleId` = 318 WHERE `entry` IN (36609,39120,39121,39122);
-UPDATE `creature_template` SET `minlevel` = '80', `maxlevel` = '80', `faction_A` = '14', `faction_H` = '14', `unit_flags` = '0', `type_flags` = '0', `VehicleId` = '647' WHERE `entry` IN (38711,38970,38971,38972);
 
 UPDATE `creature_template` SET `ScriptName`='npc_cult_fanatic_and_adherent' WHERE `entry` IN (37949,38010,38136,37890,38009,38135);
 UPDATE `gameobject_template` SET `ScriptName` = 'go_icecrown_teleporter' WHERE `entry` IN (202223,202235,202242,202243,202244,202245,202246);
 
 UPDATE `creature_template` SET `spell1` = 70360, `spell2` = 70539, `spell3` = 70542, `VehicleId` = 591 WHERE `entry` IN (37672,38605,38786,38787);
 
-UPDATE `creature_template` SET `ScriptName`='npc_bomb_icc' WHERE `entry` = 38159;
+UPDATE `creature_template` SET `ScriptName`='npc_choking_gas_bomb' WHERE `entry` = 38159;
+UPDATE `creature_template` SET `ScriptName`='npc_bomb_icc' WHERE `entry`=38454;
