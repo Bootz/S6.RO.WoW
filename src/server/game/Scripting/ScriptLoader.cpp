@@ -1153,7 +1153,7 @@ void AddNorthrendScripts()
     AddSC_boss_sindragosa();
     AddSC_boss_lichking();
     AddSC_boss_valithria();
-    AddSC_icecrown_citadel()
+    AddSC_icecrown_citadel();
     AddSC_instance_icecrown_citadel();
 
     AddSC_dalaran();
