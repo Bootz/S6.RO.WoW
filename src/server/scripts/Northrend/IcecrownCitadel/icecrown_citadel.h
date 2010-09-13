@@ -94,7 +94,7 @@ enum Data64
 enum eCreatures
 {
     CREATURE_MARROWGAR               = 36612,
-    CREATURE_BONE_SPIKE              = 38711,
+    CREATURE_BONE_SPIKE              = 36619,
     CREATURE_COLD_FLAME              = 36672,
     CREATURE_DEATHWHISPER            = 36855,
     CREATURE_ADHERENT                = 37949,
