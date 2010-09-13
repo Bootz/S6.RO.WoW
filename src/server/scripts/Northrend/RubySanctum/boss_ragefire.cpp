@@ -21,17 +21,17 @@ enum eScriptTexts
 {
     SAY_AGGRO           = -1752022,
     SAY_SLAY1           = -1752023,
-	SAY_SLAY2           = -1752024,
+    SAY_SLAY2           = -1752024,
     SAY_DEATH           = -1752025
 };
 
 enum eSpells
 {
-	SPELL_CONFLAGRATION     = 74456,
+    SPELL_CONFLAGRATION     = 74456,
     SPELL_ENRAGE            = 78722,
-	SPELL_FLAME_BREATH_10   = 74403,
-	SPELL_FLAME_BREATH_25   = 74404,
-	SPELL_FLAME_BEACON      = 74453
+    SPELL_FLAME_BREATH_10   = 74403,
+    SPELL_FLAME_BREATH_25   = 74404,
+    SPELL_FLAME_BEACON      = 74453
 };
 
 enum eEvents
@@ -44,7 +44,8 @@ enum eEvents
     EVENT_CAST_CONFLAGRATION_CAST = 6
 };
 
-#define MAX_TARGETS  5
+#define TARGETS_10 2
+#define TARGETS_25 5
 
 class boss_ragefire : public CreatureScript
 {
@@ -54,26 +55,26 @@ class boss_ragefire : public CreatureScript
         struct boss_ragefireAI : public BossAI
         {
             boss_ragefireAI(Creature *pCreature) : BossAI(pCreature, DATA_RAGEFIRE)
-    	    {
+            {
                 ASSERT(instance);
                 me->SetUnitMovementFlags(MOVEMENTFLAG_CAN_FLY);
-    	    }
+            }
 
-    	    void Reset()
-    	    {
+            void Reset()
+            {
                 instance->SetBossState(DATA_RAGEFIRE, NOT_STARTED);
-                memset(targets,0,sizeof(targets));
+                playerList.clear();
                 bConflagration = false;
                 events.Reset();
                 events.ScheduleEvent(EVENT_CAST_CONFLAGRATION, urand(45000,55000));
                 events.ScheduleEvent(EVENT_CAST_ENRAGE, urand(25000,35000));
                 events.ScheduleEvent(EVENT_CAST_FLAME_BREATH, urand(10000,15000));
-    	    }
+            }
 
-    	    void UpdateAI(const uint32 diff)
-    	    {
-                if(!UpdateVictim() || !CheckInRoom())
-    			    return;
+            void UpdateAI(const uint32 diff)
+            {
+                if (!UpdateVictim() || !CheckInRoom())
+                    return;
 
                 if (me->hasUnitState(UNIT_STAT_CASTING))
                     return;
@@ -109,18 +110,21 @@ class boss_ragefire : public CreatureScript
                         {
                             case EVENT_CAST_CONFLAGRATION_FLY:
                                 me->GetMotionMaster()->MovePoint(1, (float)3159.04, (float)676.08, (float)103.05);
-                                for(uint8 i = 0; i < RAID_MODE(2,MAX_TARGETS,2,MAX_TARGETS); ++i)
+                                SelectTargetList(playerList, RAID_MODE(TARGETS_10,TARGETS_25,TARGETS_10,TARGETS_25), SELECT_TARGET_RANDOM, 0, true);
+                                for (std::list<Unit*>::const_iterator itr = playerList.begin(); itr != playerList.end(); ++itr)
                                 {
-                                    targets[i] = Unit::GetPlayer(*me, SelectUnit(SELECT_TARGET_RANDOM, 0)->GetGUID());
-                                    me->CastSpell(targets[i], SPELL_FLAME_BEACON, true);
+                                    Unit *pTemp = (*itr);
+                                    me->CastSpell(pTemp, SPELL_FLAME_BEACON, true);
                                 }
                                 events.ScheduleEvent(EVENT_CAST_CONFLAGRATION_CAST, 5000);
                                 break;
                             case EVENT_CAST_CONFLAGRATION_CAST:
-                                for(uint8 i = 0; i < RAID_MODE(2,MAX_TARGETS,2,MAX_TARGETS); ++i)
+                                for (std::list<Unit*>::const_iterator itr = playerList.begin(); itr != playerList.end(); ++itr)
                                 {
-                                    me->CastSpell(targets[i], SPELL_CONFLAGRATION, true);
+                                    Unit *pTemp = (*itr);
+                                    me->CastSpell(pTemp, SPELL_CONFLAGRATION, true);
                                 }
+                                playerList.clear();
                                 me->GetMotionMaster()->MoveTargetedHome();
                                 bConflagration = false;
                                 events.ScheduleEvent(EVENT_CAST_CONFLAGRATION, urand(45000,55000));
@@ -129,36 +133,36 @@ class boss_ragefire : public CreatureScript
                     }
                 }
 
-    		    DoMeleeAttackIfReady();
-    	    }
+                DoMeleeAttackIfReady();
+            }
 
-    	    void EnterCombat(Unit*)
-    	    {
+            void EnterCombat(Unit*)
+            {
                 instance->SetBossState(DATA_RAGEFIRE, IN_PROGRESS);
                 DoScriptText(SAY_AGGRO, me);
-    	    }
+            }
 
-    	    void KilledUnit(Unit *victim)
-    	    {
-    		    DoScriptText(RAND(SAY_SLAY1,SAY_SLAY2), me);
-    	    }
+            void KilledUnit(Unit* /*victim*/)
+            {
+                DoScriptText(RAND(SAY_SLAY1,SAY_SLAY2), me);
+            }
 
-    	    void JustDied(Unit*)
-    	    {
+            void JustDied(Unit*)
+            {
                 _JustDied();
-        		DoScriptText(SAY_DEATH, me);
+                DoScriptText(SAY_DEATH, me);
                 instance->SetBossState(DATA_RAGEFIRE, DONE);
-    	    }
+            }
 
         private:
             bool bConflagration;
-            Unit* targets[MAX_TARGETS];
+            std::list<Unit *> playerList;
 
         };
 
         CreatureAI* GetAI(Creature *pCreature) const
         {
-    	    return new boss_ragefireAI(pCreature);
+            return new boss_ragefireAI(pCreature);
         }
 
 };

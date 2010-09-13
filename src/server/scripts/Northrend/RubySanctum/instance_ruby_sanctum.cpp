@@ -17,13 +17,13 @@
 #include "ScriptPCH.h"
 #include "ruby_sanctum.h"
 
-static const DoorData doorData[8] =
+static const DoorData doorData[5] =
 {
-    {GO_FIRE_FIELD,   DATA_BALTHARUS,   DOOR_TYPE_PASSAGE, BOUNDARY_NONE},
-    {GO_FLAME_WALLS,  DATA_BALTHARUS,   DOOR_TYPE_PASSAGE, BOUNDARY_NONE},
-    {GO_FLAME_WALLS,  DATA_RAGEFIRE,    DOOR_TYPE_PASSAGE, BOUNDARY_NONE},
-    {GO_FLAME_WALLS2, DATA_HALION,      DOOR_TYPE_ROOM,    BOUNDARY_NONE},
-    {0,               0,                DOOR_TYPE_ROOM,    BOUNDARY_NONE}
+    {GO_FIRE_FIELD,   DATA_BALTHARUS,       DOOR_TYPE_PASSAGE, BOUNDARY_NONE},
+    {GO_FLAME_WALLS,  DATA_BALTHARUS,       DOOR_TYPE_PASSAGE, BOUNDARY_NONE},
+    {GO_FLAME_WALLS,  DATA_RAGEFIRE,        DOOR_TYPE_PASSAGE, BOUNDARY_NONE},
+    {GO_FLAME_WALLS,  DATA_ZARITHRIAN,      DOOR_TYPE_ROOM,    BOUNDARY_N   },
+    {0,               0,                    DOOR_TYPE_ROOM,    BOUNDARY_NONE}
 };
 
 class instance_ruby_sanctum : public InstanceMapScript
@@ -38,13 +38,19 @@ class instance_ruby_sanctum : public InstanceMapScript
                 SetBossNumber(MAX_ENCOUNTER);
                 LoadDoorData(doorData);
 
-                m_uiXerestrasza = 0;
+                m_uiDataDamage = 0;
 
+                m_uiXerestrasza = 0;
+                m_uiTwilightHalion = 0;
+
+                m_uiHalionPortalGUID = 0;
+                m_uiTwilightPortalGUID = 0;
                 m_uiBaltharusGUID = 0;
                 m_uiZarithrianGUID = 0;
                 m_uiRagefireGUID = 0;
                 m_uiHalionGUID = 0;
                 m_uiXerestraszaGUID = 0;
+                m_uiTwilightHalionGUID = 0;
             }
 
             void OnCreatureCreate(Creature *pCreature, bool  /*add*/)
@@ -56,15 +62,33 @@ class instance_ruby_sanctum : public InstanceMapScript
                     case NPC_XERESTRASZA:   m_uiXerestraszaGUID = pCreature->GetGUID(); break;
                     case NPC_ZARITHRIAN:
                         m_uiZarithrianGUID = pCreature->GetGUID();
-                        pCreature->SetReactState(REACT_PASSIVE);
-                        pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+                        if (GetBossState(DATA_RAGEFIRE)==DONE && GetBossState(DATA_BALTHARUS)==DONE)
+                        {
+                            pCreature->SetReactState(REACT_AGGRESSIVE);
+                            pCreature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+                        }
+                        else
+                        {
+                            pCreature->SetReactState(REACT_PASSIVE);
+                            pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+                        }
                         break;
                     case NPC_HALION:        
                         m_uiHalionGUID = pCreature->GetGUID();
-                        pCreature->SetVisibility(VISIBILITY_OFF);
-                        pCreature->SetReactState(REACT_PASSIVE);
-                        pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+                        if (GetBossState(DATA_ZARITHRIAN)==DONE && GetBossState(DATA_RAGEFIRE)==DONE && GetBossState(DATA_BALTHARUS)==DONE)
+                        {
+                            pCreature->SetVisibility(VISIBILITY_ON);
+                            pCreature->SetReactState(REACT_AGGRESSIVE);
+                            pCreature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+                        }
+                        else
+                        {
+                            pCreature->SetVisibility(VISIBILITY_OFF);
+                            pCreature->SetReactState(REACT_PASSIVE);
+                            pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+                        }
                         break;
+                    case NPC_TWILIGHT_HALION: m_uiTwilightHalionGUID = pCreature->GetGUID(); break;
                 }
             }
 
@@ -74,9 +98,11 @@ class instance_ruby_sanctum : public InstanceMapScript
                 {
                     case GO_FIRE_FIELD:
                     case GO_FLAME_WALLS:
-                    case GO_FLAME_WALLS2:
+                    //case GO_FLAME_WALLS2:
                         AddDoor(pGo, add);
                         break;
+                    case GO_TWILIGHT_PORTAL1: m_uiHalionPortalGUID = pGo->GetGUID(); break;
+                    case GO_TWILIGHT_PORTAL2: m_uiTwilightPortalGUID = pGo->GetGUID(); break;
                     default: break;
                 }
             }
@@ -84,19 +110,23 @@ class instance_ruby_sanctum : public InstanceMapScript
             void SetData(uint32 uiType, uint32 uiData)
             {
                 switch(uiType)
-    		    {
-                    case DATA_XERESTRASZA: m_uiXerestrasza = uiData; break;
+                {
+                    case DATA_XERESTRASZA:     m_uiXerestrasza    = uiData; break;
+                    case DATA_TWILIGHT_HALION: m_uiTwilightHalion = uiData; break;
+                    case DATA_DAMAGE:          m_uiDataDamage     = uiData; break;   
                 }
             }
 
             uint32 GetData(uint32 uiType)
-    	    {
-    		    switch(uiType)
+            {
+                switch(uiType)
                 {
-    			    case DATA_XERESTRASZA: return m_uiXerestrasza; break;
+                    case DATA_XERESTRASZA:     return m_uiXerestrasza;    break;
+                    case DATA_TWILIGHT_HALION: return m_uiTwilightHalion; break;
+                    case DATA_DAMAGE:          return m_uiDataDamage;     break;
                 }
                 return 0;
-    	    }
+            }
 
             void BossZarithrian()
             {
@@ -115,27 +145,27 @@ class instance_ruby_sanctum : public InstanceMapScript
                 switch (type)
                 {
                     case DATA_BALTHARUS:
-                        if(state==DONE)
+                        if (state==DONE)
                         {
-                            if(GetBossState(DATA_RAGEFIRE)==DONE)
+                            if (GetBossState(DATA_RAGEFIRE)==DONE)
                             {
                                 BossZarithrian();
                             }
                         }
                         break;
                     case DATA_RAGEFIRE: 
-                        if(state==DONE)
+                        if (state==DONE)
                         {
-                            if(GetBossState(DATA_BALTHARUS)==DONE)
+                            if (GetBossState(DATA_BALTHARUS)==DONE)
                             {
                                 BossZarithrian();
                             }
                         }
                         break;
                     case DATA_ZARITHRIAN:
-                        if(GetBossState(DATA_BALTHARUS)==DONE && GetBossState(DATA_RAGEFIRE)==DONE)
+                        if (GetBossState(DATA_BALTHARUS)==DONE && GetBossState(DATA_RAGEFIRE)==DONE)
                         {
-                            if(state==DONE)
+                            if (state==DONE)
                             {
                                 if (Creature* halion = instance->GetCreature(GetData64(DATA_HALION)))
                                 {
@@ -152,19 +182,22 @@ class instance_ruby_sanctum : public InstanceMapScript
                 return true;
             }
 
-    	    uint64 GetData64(uint32 uiData)
+            uint64 GetData64(uint32 uiData)
             {
                 switch(uiData)
                 {
-                    case DATA_BALTHARUS:     return m_uiBaltharusGUID;   break;
-                    case DATA_ZARITHRIAN:    return m_uiZarithrianGUID;  break;
-                    case DATA_RAGEFIRE:      return m_uiRagefireGUID;    break;
-                    case DATA_HALION:        return m_uiHalionGUID;      break;
-                    case DATA_XERESTRASZA:   return m_uiXerestraszaGUID; break;
+                    case DATA_BALTHARUS:       return m_uiBaltharusGUID;      break;
+                    case DATA_ZARITHRIAN:      return m_uiZarithrianGUID;     break;
+                    case DATA_RAGEFIRE:        return m_uiRagefireGUID;       break;
+                    case DATA_HALION:          return m_uiHalionGUID;         break;
+                    case DATA_TWILIGHT_HALION: return m_uiTwilightHalionGUID; break;
+                    case DATA_XERESTRASZA:     return m_uiXerestraszaGUID;    break;
+                    case GO_TWILIGHT_PORTAL1:  return m_uiHalionPortalGUID;   break;
+                    case GO_TWILIGHT_PORTAL2:  return m_uiTwilightPortalGUID;   break;
                     default: break;
                 }
                 return 0;
-    	    }
+            }
 
             std::string GetSaveData()
             {
@@ -197,12 +230,17 @@ class instance_ruby_sanctum : public InstanceMapScript
 
             private:
                 uint32 m_uiXerestrasza;
+                uint32 m_uiTwilightHalion;
+                uint32 m_uiDataDamage;
 
                 uint64 m_uiBaltharusGUID;
                 uint64 m_uiZarithrianGUID;
                 uint64 m_uiRagefireGUID;
                 uint64 m_uiHalionGUID;
                 uint64 m_uiXerestraszaGUID;
+                uint64 m_uiTwilightHalionGUID;
+                uint64 m_uiHalionPortalGUID;
+                uint64 m_uiTwilightPortalGUID;
         };
         
         InstanceScript* GetInstanceScript (InstanceMap *pMap) const

@@ -21,19 +21,19 @@ enum eScriptTexts
 {
     SAY_AGGRO           = -1752001,
     SAY_SLAY1           = -1752002,
-	SAY_SLAY2           = -1752003,
+    SAY_SLAY2           = -1752003,
     SAY_DEATH           = -1752004,
     SAY_SUMMON_CLONE    = -1752005,
 
     SAY_XERESTRASZA_1  = -1752008,
-	SAY_XERESTRASZA_2  = -1752009,
-	SAY_XERESTRASZA_3  = -1752010,
-	SAY_XERESTRASZA_4  = -1752011,
-	SAY_XERESTRASZA_5  = -1752012,
-	SAY_XERESTRASZA_6  = -1752013,
-	SAY_XERESTRASZA_7  = -1752014,
-	SAY_XERESTRASZA_8  = -1752015,
-	SAY_XERESTRASZA_9  = -1752016
+    SAY_XERESTRASZA_2  = -1752009,
+    SAY_XERESTRASZA_3  = -1752010,
+    SAY_XERESTRASZA_4  = -1752011,
+    SAY_XERESTRASZA_5  = -1752012,
+    SAY_XERESTRASZA_6  = -1752013,
+    SAY_XERESTRASZA_7  = -1752014,
+    SAY_XERESTRASZA_8  = -1752015,
+    SAY_XERESTRASZA_9  = -1752016
 };
 
 enum eSpells
@@ -60,8 +60,22 @@ enum eEvents
     EVENT_XERESTRASZA_6         = 10,
     EVENT_XERESTRASZA_7         = 11,
     EVENT_XERESTRASZA_8         = 12,
-    EVENT_XERESTRASZA_9         = 13
+    EVENT_XERESTRASZA_9         = 13,
+
+    EVENT_START_PHASE_TWO       = 14
 };
+
+enum ePhases
+{
+    PHASE_ALL = 0,
+    PHASE_1   = 1,
+    PHASE_2   = 2,
+
+    PHASE_1_MASK  = 1 << PHASE_1,
+    PHASE_2_MASK  = 1 << PHASE_2
+};
+
+Creature* pXerestrasza;
 
 class boss_baltharus : public CreatureScript
 {
@@ -71,30 +85,29 @@ class boss_baltharus : public CreatureScript
         struct boss_baltharusAI : public BossAI
         {
             boss_baltharusAI(Creature* pCreature) : BossAI(pCreature, DATA_BALTHARUS)
-    	    {
+            {
                 ASSERT(instance);
-    	    }
+            }
 
-    	    void Reset()
-    	    {
+            void Reset()
+            {
                 instance->SetBossState(DATA_BALTHARUS, NOT_STARTED);
-                bClone = false;
                 events.Reset();
+                events.SetPhase(PHASE_1);
                 events.ScheduleEvent(EVENT_CAST_CLEAVE, urand(2000,3000));
-                events.ScheduleEvent(EVENT_CAST_REPELLING_WAVE, urand(20000,30000));
                 events.ScheduleEvent(EVENT_CAST_ENERVATING_BRAND, urand(30000,45000));
                 events.ScheduleEvent(EVENT_CAST_BLADE_TEMPEST, urand(7000,7500));
-    	    }
+            }
 
-    	    void EnterCombat(Unit*)
-    	    {
+            void EnterCombat(Unit*)
+            {
                 instance->SetBossState(DATA_BALTHARUS, IN_PROGRESS);
                 DoScriptText(SAY_AGGRO, me);
-    	    }
+            }
 
-    	    void UpdateAI(const uint32 diff)
-    	    {
-    		    if (!UpdateVictim() || !CheckInRoom())
+            void UpdateAI(const uint32 diff)
+            {
+                if (!UpdateVictim() || !CheckInRoom())
                     return;
 
                 if (me->hasUnitState(UNIT_STAT_CASTING))
@@ -110,43 +123,43 @@ class boss_baltharus : public CreatureScript
                             DoCastVictim(SPELL_CLEAVE);
                             events.ScheduleEvent(EVENT_CAST_CLEAVE, urand(2000,3000));
                             break;
-                        case EVENT_CAST_REPELLING_WAVE:
-                            DoCast(SPELL_REPELLING_WAVE);
-                            events.ScheduleEvent(EVENT_CAST_REPELLING_WAVE, urand(20000,30000));
+                        case EVENT_START_PHASE_TWO:
+                            DoScriptText(SAY_SUMMON_CLONE, me);
+                            DoCast(SPELL_SUMMON_CLONE);
+                            DoCastAOE(SPELL_REPELLING_WAVE,true);
                             break;
                         case EVENT_CAST_ENERVATING_BRAND:
-                            DoCastVictim(SPELL_ENERVATING_BRAND);
+                            DoCastVictim(SPELL_ENERVATING_BRAND, true);
                             events.ScheduleEvent(EVENT_CAST_ENERVATING_BRAND, urand(30000,45000));
                             break;
                         case EVENT_CAST_BLADE_TEMPEST:
-                            DoCast(SPELL_BLADE_TEMPEST);
-                            events.ScheduleEvent(EVENT_CAST_BLADE_TEMPEST, urand(30000,45000));
+                            DoCastAOE(SPELL_BLADE_TEMPEST);
+                            events.ScheduleEvent(EVENT_CAST_BLADE_TEMPEST, urand(30000,35000));
                             break;
                     }
                 }
 
-                if(!bClone)
+                if (!(events.GetPhaseMask() & PHASE_2_MASK))
                 {
-                    if(me->GetHealth() <= ((me->GetMaxHealth() / 100) * 50))
-				    {
-					    bClone = true;
-					    DoCast(SPELL_SUMMON_CLONE);
-					    DoScriptText(SAY_SUMMON_CLONE, me);
-				    }
+                    if (me->GetHealth() <= ((me->GetMaxHealth() / 100) * 50))
+                    {
+                        events.SetPhase(PHASE_2);
+                        events.ScheduleEvent(EVENT_START_PHASE_TWO, 1000,0,PHASE_2);
+                    }
                 }
 
-    		    DoMeleeAttackIfReady();
-    	    }
+                DoMeleeAttackIfReady();
+            }
 
             void JustSummoned(Creature *summon)
             {
                 summons.Summon(summon);
             }
 
-    	    void KilledUnit(Unit *victim)
-    	    {
+            void KilledUnit(Unit* /*victim*/)
+            {
                 DoScriptText(RAND(SAY_SLAY1,SAY_SLAY2), me);
-    	    }
+            }
 
             void JustReachedHome()
             {
@@ -154,19 +167,18 @@ class boss_baltharus : public CreatureScript
                 instance->SetData(DATA_BALTHARUS, FAIL);
             }
 
-    	    void JustDied(Unit*)
-    	    {
+            void JustDied(Unit*)
+            {
                 DoScriptText(SAY_DEATH, me);
+                pXerestrasza->AI()->DoAction(ACTION_START_EVENT);
                 _JustDied();
-    	    }
+            }
 
-        private:
-            bool bClone;
         };
 
         CreatureAI* GetAI(Creature *pCreature) const
         {
-    	    return new boss_baltharusAI(pCreature);
+            return new boss_baltharusAI(pCreature);
         }
 
 };
@@ -179,21 +191,21 @@ class boss_baltharus_summon : public CreatureScript
         struct boss_baltharus_summonAI : public ScriptedAI
         {
             boss_baltharus_summonAI(Creature* pCreature) : ScriptedAI(pCreature)
-    	    {
+            {
                 pInstance = me->GetInstanceScript();
-    	    }
+            }
 
-    	    void Reset()
-    	    {
+            void Reset()
+            {
                 events.Reset();
                 events.ScheduleEvent(EVENT_CAST_CLEAVE, urand(2000,3000));
                 events.ScheduleEvent(EVENT_CAST_ENERVATING_BRAND, urand(30000,45000));
-                events.ScheduleEvent(EVENT_CAST_BLADE_TEMPEST, urand(7000,7500));
-    	    }
+                events.ScheduleEvent(EVENT_CAST_BLADE_TEMPEST, urand(20000,25000));
+            }
 
-    	    void UpdateAI(const uint32 diff)
-    	    {
-    		    if (!UpdateVictim())
+            void UpdateAI(const uint32 diff)
+            {
+                if (!UpdateVictim())
                     return;
 
                 if (me->hasUnitState(UNIT_STAT_CASTING))
@@ -220,8 +232,8 @@ class boss_baltharus_summon : public CreatureScript
                     }
                 }
 
-    		    DoMeleeAttackIfReady();
-    	    }
+                DoMeleeAttackIfReady();
+            }
 
         private:
             EventMap events;
@@ -231,7 +243,7 @@ class boss_baltharus_summon : public CreatureScript
 
         CreatureAI* GetAI(Creature *pCreature) const
         {
-    	    return new boss_baltharus_summonAI(pCreature);
+            return new boss_baltharus_summonAI(pCreature);
         }
 
 };
@@ -243,10 +255,11 @@ class npc_xerestrasza : public CreatureScript
 
         struct npc_xerestraszaAI : public ScriptedAI
         {
-    	    npc_xerestraszaAI(Creature *pCreature) : ScriptedAI(pCreature)
-    	    {
-    		    pInstance = me->GetInstanceScript();
-    	    }
+            npc_xerestraszaAI(Creature *pCreature) : ScriptedAI(pCreature)
+            {
+                pInstance = me->GetInstanceScript();
+                pXerestrasza = me;
+            }
 
             void Reset()
             {
@@ -256,21 +269,20 @@ class npc_xerestrasza : public CreatureScript
             }
 
             void MoveInLineOfSight(Unit*)
-    	    {
-    		    if(!bIntro)
-    		    {
-    			    DoScriptText(SAY_XERESTRASZA_1, me);
+            {
+                if (!bIntro)
+                {
+                    DoScriptText(SAY_XERESTRASZA_1, me);
                     pInstance->SetData(DATA_XERESTRASZA,NOT_STARTED);
-                    me->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
-    			    bIntro = true;
-    		    }
-    	    }
+                    bIntro = true;
+                }
+            }
 
             void DoAction(const int32 action)
             {
                 if (action == ACTION_START_EVENT)
                 {
-                    me->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
+                    me->GetMotionMaster()->MovePoint(1, 3153.5490f, 385.53f, 86.33f);
                     pInstance->SetData(DATA_XERESTRASZA,IN_PROGRESS);
                     DoScriptText(SAY_XERESTRASZA_2, me);
                     events.ScheduleEvent(EVENT_XERESTRASZA_3,9000); 
@@ -316,39 +328,15 @@ class npc_xerestrasza : public CreatureScript
                 }
             }
 
-    	private:
+        private:
             bool bIntro;
             EventMap events;
             InstanceScript* pInstance;
         };
-
-        bool OnGossipSelect(Player* player, Creature* pCreature, uint32 /*sender*/, uint32 action)
-        {
-            player->CLOSE_GOSSIP_MENU();
-            if (action == 1)
-                pCreature->AI()->DoAction(ACTION_START_EVENT);
-
-            return true;
-        }
-
-        bool OnGossipHello(Player* pPlayer, Creature* pCreature)
-        {
-            InstanceScript* pInstance = pCreature->GetInstanceScript();
-            if (pInstance && pInstance->GetBossState(DATA_BALTHARUS) != DONE)
-                return false;
-
-            if (pInstance->GetData(DATA_XERESTRASZA)!=NOT_STARTED)
-                return false;
-
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Hello...", GOSSIP_SENDER_MAIN, 1);
-            pPlayer->SEND_GOSSIP_MENU(DEFAULT_GOSSIP_MESSAGE, pCreature->GetGUID());
-
-            return true;
-        }
         
         CreatureAI* GetAI(Creature *pCreature) const
         {
-    	    return new npc_xerestraszaAI(pCreature);
+            return new npc_xerestraszaAI(pCreature);
         }
 };
 
