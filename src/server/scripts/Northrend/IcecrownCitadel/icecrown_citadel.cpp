@@ -213,25 +213,25 @@ class go_icecrown_teleporter : public GameObjectScript
 
             if(pInstance)
             {
-                if(pInstance->GetData(DATA_MARROWGAR_EVENT) == DONE)
+                if (pInstance->GetData(DATA_MARROWGAR_EVENT) == DONE || pPlayer->isGameMaster())
                 {
                     pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Teleport to Light's Hammer.", GOSSIP_SENDER_MAIN, HAMMER);
                     pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Teleport to the Oratory of the Damned.", GOSSIP_SENDER_MAIN, ORATORY);
                 }
-                if(pInstance->GetData(DATA_DEATHWHISPER_EVENT) == DONE)
-                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Teleport to the Rampart of Skulls.", GOSSIP_SENDER_MAIN, RAMPART);
-                if(pInstance->GetData(DATA_GUNSHIP_BATTLE_EVENT) == DONE)
+                if (pInstance->GetData(DATA_DEATHWHISPER_EVENT) == DONE || pPlayer->isGameMaster())
+                  /*  pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Teleport to the Rampart of Skulls.", GOSSIP_SENDER_MAIN, RAMPART);
+                if (pInstance->GetData(DATA_GUNSHIP_BATTLE_EVENT) == DONE || pPlayer->isGameMaster())*/
                     pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Teleport to the Deathbringer's Rise.", GOSSIP_SENDER_MAIN, SAURFANG);
-                if(pInstance->GetData(DATA_SAURFANG_EVENT) == DONE)
+                if (pInstance->GetData(DATA_SAURFANG_EVENT) == DONE || pPlayer->isGameMaster())
                     pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Teleport to the Upper Spire.", GOSSIP_SENDER_MAIN, UPPER_SPIRE);
-                if(pInstance->GetData(DATA_PROFESSOR_PUTRICIDE_EVENT) == DONE)
-                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Teleport to the Plagueworks", GOSSIP_SENDER_MAIN, PLAGUEWORKS);
-                if(pInstance->GetData(DATA_BLOOD_QUEEN_LANATHEL_EVENT) == DONE)
-                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Teleport to the Crimson Halls", GOSSIP_SENDER_MAIN, CRIMSONHALL);
-                if(pInstance->GetData(DATA_VALITHRIA_DREAMWALKER_EVENT) == DONE)
-                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Teleport to the Sindragosa's Lair", GOSSIP_SENDER_MAIN, QUEEN);
-                if(pInstance->GetData(DATA_SINDRAGOSA_EVENT) == DONE)
-                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Teleport to the Frostwing Halls", GOSSIP_SENDER_MAIN, FWHALLS);
+                if (pInstance->GetData(DATA_PROFESSOR_PUTRICIDE_EVENT) == DONE || pPlayer->isGameMaster())
+                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Teleport to the Plagueworks.", GOSSIP_SENDER_MAIN, PLAGUEWORKS);
+                if (pInstance->GetData(DATA_BLOOD_QUEEN_LANATHEL_EVENT) == DONE || pPlayer->isGameMaster())
+                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Teleport to the Crimson Halls.", GOSSIP_SENDER_MAIN, CRIMSONHALL);
+                if (pInstance->GetData(DATA_VALITHRIA_DREAMWALKER_EVENT) == DONE || pPlayer->isGameMaster())
+                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Teleport to the Sindragosa's Lair.", GOSSIP_SENDER_MAIN, QUEEN);
+                if (pInstance->GetData(DATA_SINDRAGOSA_EVENT) == DONE || pPlayer->isGameMaster())
+                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Teleport to the Frostwing Halls.", GOSSIP_SENDER_MAIN, FWHALLS);
             }
 
             pPlayer->SEND_GOSSIP_MENU(DEFAULT_GOSSIP_MESSAGE, pGO->GetGUID());
@@ -240,10 +240,10 @@ class go_icecrown_teleporter : public GameObjectScript
 
         bool OnGossipSelect(Player* pPlayer, GameObject* /*pGO*/, uint32 /*uiSender*/, uint32 uiAction)
         {
-            //pPlayer->PlayerTalkClass->ClearMenus();
             if(!pPlayer->getAttackers().empty())
                 return true;
 
+            pPlayer->PlayerTalkClass->ClearMenus();
             switch(uiAction)
             {
                 case HAMMER:
