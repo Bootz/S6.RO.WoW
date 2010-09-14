@@ -31,3 +31,12 @@ INSERT INTO `spell_linked_spell` (`spell_trigger`, `spell_effect`, `type`, `comm
 UPDATE `creature_template` SET `faction_A` = 14, `faction_H` = 14, `unit_flags` = 33554434 WHERE `entry` IN (33196, 33234);
 -- Kel Thuzad immunity http://www.wowhead.com/npc=15990
 UPDATE `creature_template` SET `mechanic_immune_mask` = 617299839 WHERE `entry` IN (15990, 30061);
+
+-- ----------------- --
+-- Utgarde Pinnacle. --
+-- ----------------- --
+-- Delete doble spawn Grauf, it is summon by core.
+delete from `creature` where `guid`= 81815;
+-- Svala respawn (provisional).
+delete from `creature` where `id`= 26668;
+insert into `creature` (`id`, `map`, `spawnMask`, `phaseMask`, `modelid`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `spawndist`, `currentwaypoint`, `curhealth`, `curmana`, `DeathState`, `MovementType`) values('26668','575','2','1','0','685','296.679','-346.313','90.5481','1.57858','300','0','0','431392','0','0','0');
