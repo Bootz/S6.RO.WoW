@@ -35,8 +35,11 @@ UPDATE `creature_template` SET `mechanic_immune_mask` = 617299839 WHERE `entry` 
 -- ----------------- --
 -- Utgarde Pinnacle. --
 -- ----------------- --
--- Delete doble spawn Grauf, it is summon by core.
-delete from `creature` where `guid`= 81815;
+-- Utgarde Pinnacle.
+-- Delete double spawn Grauf, it is summon by core.
+DELETE FROM `creature` WHERE `guid`= 81815;
+
 -- Svala respawn (provisional).
-delete from `creature` where `id`= 26668;
-insert into `creature` (`id`, `map`, `spawnMask`, `phaseMask`, `modelid`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `spawndist`, `currentwaypoint`, `curhealth`, `curmana`, `DeathState`, `MovementType`) values('26668','575','2','1','0','685','296.679','-346.313','90.5481','1.57858','300','0','0','431392','0','0','0');
+DELETE FROM `creature` WHERE `id`= 26668;
+INSERT INTO `creature` (`id`, `map`, `spawnMask`, `phaseMask`, `modelid`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `spawndist`, `currentwaypoint`, `curhealth`, `curmana`, `DeathState`, `MovementType`) VALUES 
+('26668','575','2','1','0','685','296.679','-346.313','90.5481','1.57858','300','0','0','431392','0','0','0');
