@@ -683,29 +683,6 @@ uint32 Unit::DealDamage(Unit *pVictim, uint32 damage, CleanDamage const* cleanDa
         return 0;
     }
 
-    // no xp,health if type 8 /critters/
-    if (pVictim->GetTypeId() != TYPEID_PLAYER && pVictim->GetCreatureType() == CREATURE_TYPE_CRITTER)
-    {
-        // allow loot only if has loot_id in creature_template
-        if (damage >= pVictim->GetHealth())
-        {
-            pVictim->setDeathState(JUST_DIED);
-
-            CreatureInfo const* cInfo = pVictim->ToCreature()->GetCreatureInfo();
-            if (cInfo && cInfo->lootid)
-                pVictim->SetFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE);
-
-            // some critters required for quests (need normal entry instead possible heroic in any cases)
-            if (GetTypeId() == TYPEID_PLAYER)
-                if (CreatureInfo const* normalInfo = sObjectMgr.GetCreatureTemplate(pVictim->GetEntry()))
-                    this->ToPlayer()->KilledMonster(normalInfo,pVictim->GetGUID());
-        }
-        else
-            pVictim->ModifyHealth(- (int32)damage);
-
-        return damage;
-    }
-
     sLog.outStaticDebug("DealDamageStart");
 
     uint32 health = pVictim->GetHealth();
@@ -15311,7 +15288,6 @@ bool Unit::HandleAuraRaidProcFromChargeWithValue(AuraEffect *triggeredByAura)
                 CastCustomSpell(target, spellProto->Id, &heal, NULL, NULL, true, NULL, triggeredByAura, caster_guid);
                 if (Aura * aura = target->GetAura(spellProto->Id, caster->GetGUID()))
                     aura->SetCharges(jumps);
-                heal = caster->SpellHealingBonus(this, spellProto, heal, HEAL);
             }
         }
     }
@@ -15480,7 +15456,8 @@ void Unit::Kill(Unit *pVictim, bool durabilityLoss)
         if (Unit *owner = GetOwner())
             owner->ProcDamageAndSpell(pVictim, PROC_FLAG_KILL, PROC_FLAG_NONE, PROC_EX_NONE, 0);
 
-    ProcDamageAndSpell(pVictim, PROC_FLAG_KILL, PROC_FLAG_KILLED, PROC_EX_NONE, 0);
+    if (pVictim->GetCreatureType() != CREATURE_TYPE_CRITTER)
+        ProcDamageAndSpell(pVictim, PROC_FLAG_KILL, PROC_FLAG_KILLED, PROC_EX_NONE, 0);
 
     // Proc auras on death - must be before aura/combat remove
     pVictim->ProcDamageAndSpell(NULL, PROC_FLAG_DEATH, PROC_FLAG_NONE, PROC_EX_NONE, 0, BASE_ATTACK, 0);

@@ -8474,13 +8474,10 @@ void Player::SendLoot(uint64 guid, LootType loot_type)
         }
         else
         {
-            // the player whose group may loot the corpse
             Player *recipient = creature->GetLootRecipient();
+
             if (!recipient)
-            {
-                creature->SetLootRecipient(this);
-                recipient = this;
-            }
+                return;
 
             if (!creature->lootForBody)
             {
@@ -13825,17 +13822,15 @@ uint32 Player::GetDefaultGossipMenuForSource(WorldObject *pSource)
 
 void Player::PrepareQuestMenu(uint64 guid)
 {
-    Object *pObject;
-    QuestRelations* pObjectQR;
-    QuestRelations* pObjectQIR;
+    QuestRelationBounds pObjectQR;
+    QuestRelationBounds pObjectQIR;
 
     // pets also can have quests
     Creature *pCreature = ObjectAccessor::GetCreatureOrPetOrVehicle(*this, guid);
     if (pCreature)
     {
-        pObject = (Object*)pCreature;
-        pObjectQR  = &sObjectMgr.mCreatureQuestRelations;
-        pObjectQIR = &sObjectMgr.mCreatureQuestInvolvedRelations;
+        pObjectQR  = sObjectMgr.GetCreatureQuestRelationBounds(pCreature->GetEntry());
+        pObjectQIR = sObjectMgr.GetCreatureQuestInvolvedRelationBounds(pCreature->GetEntry());
     }
     else
     {
@@ -13846,9 +13841,8 @@ void Player::PrepareQuestMenu(uint64 guid)
         GameObject *pGameObject = _map->GetGameObject(guid);
         if (pGameObject)
         {
-            pObject = (Object*)pGameObject;
-            pObjectQR  = &sObjectMgr.mGOQuestRelations;
-            pObjectQIR = &sObjectMgr.mGOQuestInvolvedRelations;
+            pObjectQR  = sObjectMgr.GetGOQuestRelationBounds(pGameObject->GetEntry());
+            pObjectQIR = sObjectMgr.GetGOQuestInvolvedRelationBounds(pGameObject->GetEntry());
         }
         else
             return;
@@ -13857,7 +13851,7 @@ void Player::PrepareQuestMenu(uint64 guid)
     QuestMenu &qm = PlayerTalkClass->GetQuestMenu();
     qm.ClearMenu();
 
-    for (QuestRelations::const_iterator i = pObjectQIR->lower_bound(pObject->GetEntry()); i != pObjectQIR->upper_bound(pObject->GetEntry()); ++i)
+    for (QuestRelations::const_iterator i = pObjectQIR.first; i != pObjectQIR.second; ++i)
     {
         uint32 quest_id = i->second;
         QuestStatus status = GetQuestStatus(quest_id);
@@ -13869,7 +13863,7 @@ void Player::PrepareQuestMenu(uint64 guid)
         //    qm.AddMenuItem(quest_id, 2);
     }
 
-    for (QuestRelations::const_iterator i = pObjectQR->lower_bound(pObject->GetEntry()); i != pObjectQR->upper_bound(pObject->GetEntry()); ++i)
+    for (QuestRelations::const_iterator i = pObjectQR.first; i != pObjectQR.second; ++i)
     {
         uint32 quest_id = i->second;
         Quest const* pQuest = sObjectMgr.GetQuestTemplate(quest_id);
@@ -13989,17 +13983,11 @@ bool Player::IsActiveQuest(uint32 quest_id) const
 
 Quest const * Player::GetNextQuest(uint64 guid, Quest const *pQuest)
 {
-    Object *pObject;
-    QuestRelations* pObjectQR;
-    QuestRelations* pObjectQIR;
+    QuestRelationBounds pObjectQR;
 
     Creature *pCreature = ObjectAccessor::GetCreatureOrPetOrVehicle(*this,guid);
     if (pCreature)
-    {
-        pObject = (Object*)pCreature;
-        pObjectQR  = &sObjectMgr.mCreatureQuestRelations;
-        pObjectQIR = &sObjectMgr.mCreatureQuestInvolvedRelations;
-    }
+        pObjectQR  = sObjectMgr.GetCreatureQuestRelationBounds(pCreature->GetEntry());
     else
     {
         //we should obtain map pointer from GetMap() in 99% of cases. Special case
@@ -14008,17 +13996,13 @@ Quest const * Player::GetNextQuest(uint64 guid, Quest const *pQuest)
         ASSERT(_map);
         GameObject *pGameObject = _map->GetGameObject(guid);
         if (pGameObject)
-        {
-            pObject = (Object*)pGameObject;
-            pObjectQR  = &sObjectMgr.mGOQuestRelations;
-            pObjectQIR = &sObjectMgr.mGOQuestInvolvedRelations;
-        }
+            pObjectQR  = sObjectMgr.GetGOQuestRelationBounds(pGameObject->GetEntry());
         else
             return NULL;
     }
 
     uint32 nextQuestID = pQuest->GetNextQuestInChain();
-    for (QuestRelations::const_iterator itr = pObjectQR->lower_bound(pObject->GetEntry()); itr != pObjectQR->upper_bound(pObject->GetEntry()); ++itr)
+    for (QuestRelations::const_iterator itr = pObjectQR.first; itr != pObjectQR.second; ++itr)
     {
         if (itr->second == nextQuestID)
             return sObjectMgr.GetQuestTemplate(nextQuestID);
@@ -16547,8 +16531,7 @@ bool Player::isAllowedToLoot(const Creature* creature)
 
     Player* recipient = creature->GetLootRecipient();
     if (!recipient)
-        // prevent other players from looting if the recipient got disconnected
-        return !creature->hasLootRecipient();
+        return false;
 
     Group* recipientGroup = recipient->GetGroup();
     if (!recipientGroup)

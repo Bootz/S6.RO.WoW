@@ -966,6 +966,9 @@ void Creature::SetLootRecipient(Unit *unit)
         return;
     }
 
+    if (unit->GetTypeId() != TYPEID_PLAYER && !unit->IsVehicle())
+        return;
+
     Player* player = unit->GetCharmerOrOwnerPlayerOrPlayerItself();
     if (!player)                                             // normal creature, no player involved
         return;
@@ -1315,8 +1318,8 @@ void Creature::LoadEquipment(uint32 equip_entry, bool force)
 
 bool Creature::hasQuest(uint32 quest_id) const
 {
-    QuestRelations const& qr = sObjectMgr.mCreatureQuestRelations;
-    for (QuestRelations::const_iterator itr = qr.lower_bound(GetEntry()); itr != qr.upper_bound(GetEntry()); ++itr)
+    QuestRelationBounds qr = sObjectMgr.GetCreatureQuestRelationBounds(GetEntry());
+    for (QuestRelations::const_iterator itr = qr.first; itr != qr.second; ++itr)
     {
         if (itr->second == quest_id)
             return true;
@@ -1326,8 +1329,8 @@ bool Creature::hasQuest(uint32 quest_id) const
 
 bool Creature::hasInvolvedQuest(uint32 quest_id) const
 {
-    QuestRelations const& qr = sObjectMgr.mCreatureQuestInvolvedRelations;
-    for (QuestRelations::const_iterator itr = qr.lower_bound(GetEntry()); itr != qr.upper_bound(GetEntry()); ++itr)
+    QuestRelationBounds qir = sObjectMgr.GetCreatureQuestInvolvedRelationBounds(GetEntry());
+    for (QuestRelations::const_iterator itr = qir.first; itr != qir.second; ++itr)
     {
         if (itr->second == quest_id)
             return true;
@@ -1768,16 +1771,13 @@ bool Creature::IsVisibleInGridForPlayer(Player const* pl) const
         return (isAlive() || m_deathTimer > 0 || (m_isDeadByDefault && m_deathState == CORPSE));
     }
 
-    // Dead player see live creatures near own corpse
-    if (isAlive())
+    // Dead player see creatures near own corpse
+    Corpse *corpse = pl->GetCorpse();
+    if (corpse)
     {
-        Corpse *corpse = pl->GetCorpse();
-        if (corpse)
-        {
-            // 20 - aggro distance for same level, 25 - max additional distance if player level less that creature level
-            if (corpse->IsWithinDistInMap(this,(20+25)*sWorld.getRate(RATE_CREATURE_AGGRO)))
-                return true;
-        }
+        // 20 - aggro distance for same level, 25 - max additional distance if player level less that creature level
+        if (corpse->IsWithinDistInMap(this,(20+25)*sWorld.getRate(RATE_CREATURE_AGGRO)))
+            return true;
     }
 
     // Dead player see Spirit Healer or Spirit Guide
