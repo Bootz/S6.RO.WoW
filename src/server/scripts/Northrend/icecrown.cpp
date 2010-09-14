@@ -715,7 +715,7 @@ public:
         if (pCreature->isQuestGiver())
     	{	
     		Object *pObject = (Object*)pCreature;
-    		QQuestRelations* GetCreatureQuestRelationMap(pObjectQR);
+    		QuestRelations* pObjectQR = &sObjectMgr.mCreatureQuestRelations;
     		QuestRelations* pObjectQIR = &sObjectMgr.mCreatureQuestInvolvedRelations;
 
     		QuestMenu &qm = pPlayer->PlayerTalkClass->GetQuestMenu();
@@ -1210,8 +1210,8 @@ public:
 
 };*/
 
-* Npc Jeran Lockwood (33973)
-*/
+// Npc Jeran Lockwood (33973)
+
 #define JERAN_DEFAULT_TEXTID 14453
 #define JERAN_QUEST_TEXTID 14431
 #define JERAN_RP_TEXTID 14434
