@@ -38,7 +38,7 @@ UPDATE creature_template SET  flags_extra =  flags_extra | 0x2 WHERE entry = 312
 
 -- script_texts
 DELETE FROM script_texts WHERE entry BETWEEN -1616034 AND -1616000;
-INSERT INTO script_texts (npc_entry, entry, content_default, sound, type, language, emote, comment) VALUES
+REPLACE INTO script_texts (npc_entry, entry, content_default, sound, type, language, emote, comment) VALUES
 (28859, -1616000, 'Lesser beings, intruding here! A shame that your excess courage does not compensate for your stupidity!', 14512, 1, 0, 0, 'Malygos INTRO 1'),
 (28859, -1616001, 'None but the blue dragonflight are welcome here! Perhaps this is the work of Alexstrasza? Well then, she has sent you to your deaths.', 14513, 1, 0, 0, 'Malygos INTRO 2'),
 (28859, -1616002, 'What could you hope to accomplish, to storm brazenly into my domain? To employ MAGIC? Against ME?', 14514, 1, 0, 0, 'Malygos INTRO 3'),
@@ -75,7 +75,7 @@ INSERT INTO script_texts (npc_entry, entry, content_default, sound, type, langua
 
 -- Some text corrections seems
 DELETE FROM script_texts WHERE entry = -1616035;
-INSERT INTO script_texts (npc_entry, entry, content_default, TYPE, COMMENT) VALUE
+REPLACE INTO script_texts (npc_entry, entry, content_default, TYPE, COMMENT) VALUE
 (28859, -1616035, "A Power Spark forms from a nearby rift!", 5, "Malygos WHISPER_POWER_SPARK");
 UPDATE script_texts SET content_default = "My patience has reached its limit. I will be rid of you!" WHERE entry = -1616005;
 
@@ -87,7 +87,7 @@ UPDATE script_texts SET content_default = "My patience has reached its limit. I 
 -- This also need to be include on CTDB 0.14
 -- Normal 10p
 DELETE FROM `gameobject_loot_template` WHERE `entry`='193905';
-INSERT INTO `gameobject_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `lootmode`, `groupid`, `mincountOrRef`, `maxcount`) VALUES
+REPLACE INTO `gameobject_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `lootmode`, `groupid`, `mincountOrRef`, `maxcount`) VALUES
 ('193905','47241','100','1','0','2','2'), -- Emblem of Triumph
 ('193905','43952','0.3','1','0','1','1'), -- Reins of the Azure Drake
 ('193905','40486','20','1','1','1','1'), -- Necklace of the Glittering Chamber
@@ -105,7 +105,7 @@ INSERT INTO `gameobject_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, 
 -- This also need to be include on CTDB 0.14
 -- Normal 25p
 DELETE FROM `gameobject_loot_template` WHERE `entry`='193967';
-INSERT INTO `gameobject_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `lootmode`, `groupid`, `mincountOrRef`, `maxcount`) VALUES
+REPLACE INTO `gameobject_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `lootmode`, `groupid`, `mincountOrRef`, `maxcount`) VALUES
 ('193967','44651','-100','1','0','1','1'), -- Heart of Magic (quest)
 ('193967','47241','100','1','0','2','2'), -- Emblem of Triumph
 ('193967','43952','0.6','1','0','1','1'), -- Reins of the Azure Drake

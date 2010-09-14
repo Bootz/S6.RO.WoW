@@ -1,2 +1,0 @@
--- script borean tundra
--- Script_names are in 00_scripts_names.sql

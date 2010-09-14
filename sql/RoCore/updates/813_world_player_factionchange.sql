@@ -32,7 +32,7 @@ CREATE TABLE `player_factionchange_spells` (
 
 
 -- data for wolrd_plater_factionchange_tc9784
-INSERT INTO `player_factionchange_achievement` (`alliance_id`, `horde_id`) VALUES
+REPLACE INTO `player_factionchange_achievement` (`alliance_id`, `horde_id`) VALUES
 ('33','1358'),
 ('34','1356'),
 ('37','1357'),
@@ -68,7 +68,7 @@ INSERT INTO `player_factionchange_achievement` (`alliance_id`, `horde_id`) VALUE
 ('2421','2420'),
 ('3556','3557');
 
-INSERT INTO `player_factionchange_reputations` (`alliance_id`, `horde_id`) VALUES
+REPLACE INTO `player_factionchange_reputations` (`alliance_id`, `horde_id`) VALUES
 ('47','530'),
 ('54','81'),
 ('69','68'),
@@ -84,7 +84,7 @@ INSERT INTO `player_factionchange_reputations` (`alliance_id`, `horde_id`) VALUE
 ('1068','1064'),
 ('1126','1067');
 
-INSERT INTO `player_factionchange_spells` (`alliance_id`, `horde_id`) values
+REPLACE INTO `player_factionchange_spells` (`alliance_id`, `horde_id`) values
 ('458','6654'),
 ('470','64658'),
 ('472','580'),

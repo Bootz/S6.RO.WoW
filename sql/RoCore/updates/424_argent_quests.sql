@@ -3,7 +3,7 @@ ALTER TABLE db_version CHANGE COLUMN required_423_world_isle_of_conquest require
 -- Horde
 -- The argent tournament Premier
 DELETE FROM `creature_questrelation` WHERE `quest`=13668;
-INSERT INTO `creature_questrelation` (`id`, `quest`) VALUES (33817, 13668);
+REPLACE INTO `creature_questrelation` (`id`, `quest`) VALUES (33817, 13668);
 -- Icone monture de la horde
 UPDATE `creature_template` SET IconName='vehichleCursor' WHERE entry IN (33842,33796,33798,33791,33792,33799);
 -- Vehicule id des monture 
@@ -17,7 +17,7 @@ UPDATE `creature_template` SET `mechanic_immune_mask` = `mechanic_immune_mask` |
 
 -- Ajouts des spellclick_spells pour les montures à l'écurie
 DELETE FROM `npc_spellclick_spells` WHERE npc_entry IN (33842,33796,33798,33791,33792,33799);
-INSERT INTO `npc_spellclick_spells` (`npc_entry`, `spell_id`, `quest_start`, `quest_start_active`, `quest_end`, `cast_flags`, `aura_required`, `aura_forbidden`, `user_type`) VALUES
+REPLACE INTO `npc_spellclick_spells` (`npc_entry`, `spell_id`, `quest_start`, `quest_start_active`, `quest_end`, `cast_flags`, `aura_required`, `aura_forbidden`, `user_type`) VALUES
 (33842, 63791, 13668, 1, 13680, 1, 0, 0, 0), -- Aspirant
 -- Orgrimmar
 (33799, 62783, 13726, 0, 0, 1, 0, 0, 0), -- Champion Of Orgrimmar
@@ -115,7 +115,7 @@ UPDATE `quest_template` SET `RequiredRaces`=690 WHERE `entry` IN (13736, 13737, 
 -- Alliance
 -- Premiere quete : Le tournoi d'argent
 DELETE FROM `creature_questrelation` WHERE `quest`=13667;
-INSERT INTO `creature_questrelation` (`id`, `quest`) VALUES (33817, 13667);
+REPLACE INTO `creature_questrelation` (`id`, `quest`) VALUES (33817, 13667);
 -- Icone monture de la horde
 UPDATE `creature_template` SET IconName='vehichleCursor' WHERE `entry` IN (33843,33794,33800,33793,33795,33790);
 -- Vehicule id des montures
@@ -130,7 +130,7 @@ UPDATE `creature_template` SET `mechanic_immune_mask` = `mechanic_immune_mask` |
 -- Ajouts des spellclick_spells pour les montures à l'écurie
 DELETE FROM `npc_spellclick_spells` WHERE npc_entry IN (33843,33800,33795,33790,33793,33794);
 
-INSERT INTO `npc_spellclick_spells` (`npc_entry`, `spell_id`, `quest_start`, `quest_start_active`, `quest_end`, `cast_flags`, `aura_required`, `aura_forbidden`, `user_type`) VALUES
+REPLACE INTO `npc_spellclick_spells` (`npc_entry`, `spell_id`, `quest_start`, `quest_start_active`, `quest_end`, `cast_flags`, `aura_required`, `aura_forbidden`, `user_type`) VALUES
 (33843, 63792, 13667, 1, 13679, 1, 0, 0, 0), -- Aspirant
 -- Darnassus
 (33794, 62782, 13725, 0, 0, 1, 0, 0, 0), -- Champion Of Darnassus
@@ -317,7 +317,7 @@ UPDATE `quest_template` SET `SkillOrClassMask`=-1503 WHERE `entry` IN (13794, 13
 
 -- Teleports Locations
 DELETE FROM `spell_target_position` WHERE `id` IN (63986,63987);
-INSERT INTO `spell_target_position` (`id`,`target_map`,`target_position_x`,`target_position_y`,`target_position_z`,`target_orientation`) VALUES
+REPLACE INTO `spell_target_position` (`id`,`target_map`,`target_position_x`,`target_position_y`,`target_position_z`,`target_orientation`) VALUES
 (63986,571,8574.87,700.595,547.29,5.48),
 (63987,571,8460,700,547.4,3.839);
 
@@ -338,25 +338,25 @@ UPDATE creature_template SET speed_walk = 1.6 WHERE entry = 33211;
 
 -- Quest : Le fil de l'hiver
 DELETE FROM creature WHERE guid = '336364';
-INSERT INTO creature VALUES  (336364,33289,571,1,1,0,0,5136.74,-83.3769,347.326,1.44434,300,0,0,12600,3994,0,0);
+REPLACE INTO creature VALUES  (336364,33289,571,1,1,0,0,5136.74,-83.3769,347.326,1.44434,300,0,0,12600,3994,0,0);
 DELETE FROM `creature_loot_template` WHERE `entry`=33289 AND `item`=45005;
-INSERT INTO `creature_loot_template` (`entry`, `item`, `ChanceOrQuestChance`) VALUES (33289, 45005, -100);
+REPLACE INTO `creature_loot_template` (`entry`, `item`, `ChanceOrQuestChance`) VALUES (33289, 45005, -100);
 
 -- Quete : Une arme remarquable
 DELETE FROM `script_texts` WHERE `entry` IN (-1850000,-1850001,-1850002,-1850003);
-INSERT INTO `script_texts` (`npc_entry`, `entry`, `content_default`, `content_loc2`,`comment`) VALUES
+REPLACE INTO `script_texts` (`npc_entry`, `entry`, `content_default`, `content_loc2`,`comment`) VALUES
 (0, -1850000, 'Oh, ce sont des jacinthes d\'hiver ? Pour moi ?', 'Oh, ce sont des jacinthes d\'hiver ? Pour moi ?',''),
 (0, -1850001, 'On ne m\'avait pas apporté de fleurs ici depuis si longtemps.', 'On ne m\'avait pas apporté de fleurs ici depuis si longtemps.',''),
 (0, -1850002, 'Le lac est un endroit bien solitaire depuis quelques années. Les voyageurs n\'y viennent plus, et le mal en a envahi les eaux.', 'Le lac est un endroit bien solitaire depuis quelques années. Les voyageurs n\'y viennent plus, et le mal en a envahi les eaux.',''),
 (0, -1850003, 'Votre cadeau révèle une rare bonté, voyageur. Je vous en prie, prenez cette lame en gage de ma gratitude. Il y a bien longtemps, c\'est un autre voyageur qui l\'avait laissée ici, mais je n\'en ai pas l\'utilité.', 'Votre cadeau révèle une rare bonté, voyageur. Je vous en prie, prenez cette lame en gage de ma gratitude. Il y a bien longtemps, c\'est un autre voyageur qui l\'avait laissée ici, mais je n\'en ai pas l\'utilité.','');
 DELETE FROM `event_scripts` WHERE `id`=20990;
-INSERT INTO `event_scripts` (`id`, `delay`, `command`, `datalong`, `datalong2`, `x`, `y`, `z`, `o`) VALUES (20990, 0, 10, 33273, 42000, 4602.977, -1600.141, 156.7834, 0.7504916);
+REPLACE INTO `event_scripts` (`id`, `delay`, `command`, `datalong`, `datalong2`, `x`, `y`, `z`, `o`) VALUES (20990, 0, 10, 33273, 42000, 4602.977, -1600.141, 156.7834, 0.7504916);
 DELETE FROM `creature_template_addon` WHERE `entry`=33273;
-INSERT INTO `creature_template_addon` (`entry`, `emote`) VALUES (33273, 13); -- 13 = EMOTE_STATE_SIT
+REPLACE INTO `creature_template_addon` (`entry`, `emote`) VALUES (33273, 13); -- 13 = EMOTE_STATE_SIT
 
 -- Quete Entrainement sur le terrain:
 UPDATE `creature_template` SET `faction_A`=16,`faction_H`=16 WHERE entry IN (29720,29719,29722);
-INSERT INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `modelid`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `spawndist`, `currentwaypoint`, `curhealth`, `curmana`, `DeathState`, `MovementType`) VALUES
+REPLACE INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `modelid`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `spawndist`, `currentwaypoint`, `curhealth`, `curmana`, `DeathState`, `MovementType`) VALUES
 (NULL, 29720, 571, 1, 1, 0, 0, 8562.48, 2771.93, 759.958, 6.10672, 300, 15, 0, 12175, 0, 0, 1),
 (NULL, 29720, 571, 1, 1, 0, 0, 8584.64, 2760.8, 759.958, 2.59599, 300, 15, 0, 12600, 0, 0, 1),
 (NULL, 29720, 571, 1, 1, 0, 0, 8617.49, 2735.11, 759.958, 2.32895, 300, 15, 0, 12175, 0, 0, 1),
@@ -372,22 +372,22 @@ INSERT INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `modelid`
 
 -- Quest : A Worthy Weapon
 DELETE FROM `script_texts` WHERE `entry` IN (-1850000,-1850001,-1850002,-1850003);
-INSERT INTO `script_texts` (`npc_entry`, `entry`, `content_default`, `content_loc2`,`comment`) VALUES
+REPLACE INTO `script_texts` (`npc_entry`, `entry`, `content_default`, `content_loc2`,`comment`) VALUES
 (0, -1850000, 'Oh, these are hyacinths \ winter? For me ?', 'Oh, these are hyacinths \ winter? For me  ?',''),
 (0, -1850001, 'We don\'t had not brought flowers here for so long.', 'We don\'t had not brought flowers here for so long.',''),
 (0, -1850002, 'The lake is a lonely spot some years. Travelers to come over, and evil has invaded the waters.', 'The lake is a lonely spot some years. Travelers to come over, and evil has invaded the waters.',''),
 (0, -1850003, 'Your gift shows a rare kindness, traveler. Please, take this blade as a token of my gratitude. There has long, is another traveler who had left here, but I do not need. ',' Your gift reveals a rare kindness, traveler. Please, take this blade as a token of my gratitude. Long ago, another passenger who had left here, but I have no use.','');
 DELETE FROM `event_scripts` WHERE `id`=20990;
-INSERT INTO `event_scripts` (`id`, `delay`, `command`, `datalong`, `datalong2`, `x`, `y`, `z`, `o`) VALUES (20990, 0, 10, 33273, 42000, 4602.977, -1600.141, 156.7834, 0.7504916);
+REPLACE INTO `event_scripts` (`id`, `delay`, `command`, `datalong`, `datalong2`, `x`, `y`, `z`, `o`) VALUES (20990, 0, 10, 33273, 42000, 4602.977, -1600.141, 156.7834, 0.7504916);
 
 DELETE FROM `creature_template_addon` WHERE `entry`=33273;
-INSERT INTO `creature_template_addon` (`entry`, `emote`) VALUES (33273, 13); -- 13 = EMOTE_STATE_SIT
+REPLACE INTO `creature_template_addon` (`entry`, `emote`) VALUES (33273, 13); -- 13 = EMOTE_STATE_SIT
 
 
 -- Text campioni
 -- Quest : A Worthy Weapon
 DELETE FROM `script_texts` WHERE `entry` IN (-1850000,-1850001,-1850002,-1850003);
-INSERT INTO `script_texts` (`npc_entry`, `entry`, `content_default`, `content_loc2`,`comment`) VALUES
+REPLACE INTO `script_texts` (`npc_entry`, `entry`, `content_default`, `content_loc2`,`comment`) VALUES
 (0, -1850004, 'Stand ready !', 'Stand ready !',''),
 (0, -1850005, 'Let the battle begins !', 'Let the battle begins !',''),
 (0, -1850006, 'Prepare your self !', 'Prepare your self! !',''),

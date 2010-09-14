@@ -19,7 +19,7 @@ CREATE TABLE `db_version` (
 
 LOCK TABLES `db_version` WRITE;
 /*!40000 ALTER TABLE `db_version` DISABLE KEYS */;
-INSERT INTO `db_version` VALUES
+REPLACE INTO `db_version` VALUES
 (NULL);
 /*!40000 ALTER TABLE `db_version` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -32,7 +32,7 @@ UPDATE gameobject SET state = 0 WHERE id = 194618; -- Lance Rack (I really dont 
 -- Why loot to a gameobject type 22?
 /*
 DELETE FROM `gameobject_loot_template` WHERE entry = 194618; -- http://www.wowhead.com/item=46070 why? I cant undestant why you put Horde Lance like drop? that's a spell just when you click on rack'
-INSERT INTO `gameobject_loot_template` VALUES
+REPLACE INTO `gameobject_loot_template` VALUES
 (194618, 46070, 100, 1, 0, 1, 1);
 */
 
@@ -96,7 +96,7 @@ UPDATE creature_template SET  flags_extra =  flags_extra | 0x2 WHERE entry = 312
 
 -- script_texts
 DELETE FROM script_texts WHERE entry BETWEEN -1616034 AND -1616000;
-INSERT INTO script_texts (npc_entry, entry, content_default, sound, type, language, emote, comment) VALUES
+REPLACE INTO script_texts (npc_entry, entry, content_default, sound, type, language, emote, comment) VALUES
 (28859, -1616000, 'Lesser beings, intruding here! A shame that your excess courage does not compensate for your stupidity!', 14512, 1, 0, 0, 'Malygos INTRO 1'),
 (28859, -1616001, 'None but the blue dragonflight are welcome here! Perhaps this is the work of Alexstrasza? Well then, she has sent you to your deaths.', 14513, 1, 0, 0, 'Malygos INTRO 2'),
 (28859, -1616002, 'What could you hope to accomplish, to storm brazenly into my domain? To employ MAGIC? Against ME?', 14514, 1, 0, 0, 'Malygos INTRO 3'),
@@ -133,7 +133,7 @@ INSERT INTO script_texts (npc_entry, entry, content_default, sound, type, langua
 
 -- Some text corrections seems
 DELETE FROM script_texts WHERE entry = -1616035;
-INSERT INTO script_texts (npc_entry, entry, content_default, TYPE, COMMENT) VALUE
+REPLACE INTO script_texts (npc_entry, entry, content_default, TYPE, COMMENT) VALUE
 (28859, -1616035, "A Power Spark forms from a nearby rift!", 5, "Malygos WHISPER_POWER_SPARK");
 UPDATE script_texts SET content_default = "My patience has reached its limit. I will be rid of you!" WHERE entry = -1616005;
 
@@ -145,7 +145,7 @@ UPDATE script_texts SET content_default = "My patience has reached its limit. I 
 -- This also need to be include on CTDB 0.14
 -- Normal 10p
 DELETE FROM `gameobject_loot_template` WHERE `entry`='193905';
-INSERT INTO `gameobject_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `lootmode`, `groupid`, `mincountOrRef`, `maxcount`) VALUES
+REPLACE INTO `gameobject_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `lootmode`, `groupid`, `mincountOrRef`, `maxcount`) VALUES
 ('193905','47241','100','1','0','2','2'), -- Emblem of Triumph
 ('193905','43952','0.3','1','0','1','1'), -- Reins of the Azure Drake
 ('193905','40486','20','1','1','1','1'), -- Necklace of the Glittering Chamber
@@ -163,7 +163,7 @@ INSERT INTO `gameobject_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, 
 -- This also need to be include on CTDB 0.14
 -- Normal 25p
 DELETE FROM `gameobject_loot_template` WHERE `entry`='193967';
-INSERT INTO `gameobject_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `lootmode`, `groupid`, `mincountOrRef`, `maxcount`) VALUES
+REPLACE INTO `gameobject_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `lootmode`, `groupid`, `mincountOrRef`, `maxcount`) VALUES
 ('193967','44651','-100','1','0','1','1'), -- Heart of Magic (quest)
 ('193967','47241','100','1','0','2','2'), -- Emblem of Triumph
 ('193967','43952','0.6','1','0','1','1'), -- Reins of the Azure Drake
@@ -201,7 +201,7 @@ INSERT INTO `gameobject_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, 
 -- some naxx loot and script_ai
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=16017);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (16017, 33470, 33, 1, 0, 2, 7),
 (16017, 43852, 17, 1, 0, 1, 1),
 (16017, 35947, 7, 1, 0, 1, 1),
@@ -209,7 +209,7 @@ INSERT INTO `creature_loot_template` VALUES
 (16017, 33447, 2, 1, 0, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=29347);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (29347, 33470, 33, 1, 0, 2, 7),
 (29347, 43852, 17, 1, 0, 1, 1),
 (29347, 35947, 7, 1, 0, 1, 1),
@@ -220,7 +220,7 @@ INSERT INTO `creature_loot_template` VALUES
 (29347, 40406, 1.5, 1, 1, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=16018);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (16018, 33470, 33, 1, 0, 2, 7),
 (16018, 43852, 17, 1, 0, 1, 1),
 (16018, 35947, 7, 1, 0, 1, 1),
@@ -229,7 +229,7 @@ INSERT INTO `creature_loot_template` VALUES
 (16018, 39470, 1.5, 1, 1, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=29353);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (29353, 33470, 33, 1, 0, 2, 7),
 (29353, 43852, 17, 1, 0, 1, 1),
 (29353, 35947, 7, 1, 0, 1, 1),
@@ -241,7 +241,7 @@ INSERT INTO `creature_loot_template` VALUES
 (29353, 40406, 1.5, 1, 1, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=16029);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (16029, 33470, 33, 1, 0, 2, 7),
 (16029, 43852, 17, 1, 0, 1, 1),
 (16029, 35947, 7, 1, 0, 1, 1),
@@ -249,7 +249,7 @@ INSERT INTO `creature_loot_template` VALUES
 (16029, 33447, 2, 1, 0, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=29356);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (29356, 33470, 33, 1, 0, 2, 7),
 (29356, 43852, 17, 1, 0, 1, 1),
 (29356, 35947, 7, 1, 0, 1, 1),
@@ -261,7 +261,7 @@ INSERT INTO `creature_loot_template` VALUES
 (29356, 40410, 1.5, 1, 1, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=16020);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (16020, 33470, 33, 1, 0, 2, 7),
 (16020, 43852, 17, 1, 0, 1, 1),
 (16020, 35947, 7, 1, 0, 1, 1),
@@ -269,7 +269,7 @@ INSERT INTO `creature_loot_template` VALUES
 (16020, 33447, 2, 1, 0, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=29362);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (29362, 33470, 33, 1, 0, 2, 7),
 (29362, 43852, 17, 1, 0, 1, 1),
 (29362, 35947, 7, 1, 0, 1, 1),
@@ -282,7 +282,7 @@ INSERT INTO `creature_loot_template` VALUES
 (29362, 40410, 1.5, 1, 1, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=16022);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (16022, 33470, 33, 1, 0, 2, 7),
 (16022, 43852, 17, 1, 0, 1, 1),
 (16022, 35947, 7, 1, 0, 1, 1),
@@ -290,7 +290,7 @@ INSERT INTO `creature_loot_template` VALUES
 (16022, 33447, 2, 1, 0, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=29363);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (29363, 33470, 33, 1, 0, 2, 7),
 (29363, 43852, 17, 1, 0, 1, 1),
 (29363, 35947, 7, 1, 0, 1, 1),
@@ -298,7 +298,7 @@ INSERT INTO `creature_loot_template` VALUES
 (29363, 33447, 2, 1, 0, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=16021);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (16021, 33470, 33, 1, 0, 2, 7),
 (16021, 43852, 17, 1, 0, 1, 1),
 (16021, 35947, 7, 1, 0, 1, 1),
@@ -306,7 +306,7 @@ INSERT INTO `creature_loot_template` VALUES
 (16021, 33447, 2, 1, 0, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=29359);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (29359, 33470, 33, 1, 0, 2, 7),
 (29359, 43852, 17, 1, 0, 1, 1),
 (29359, 35947, 7, 1, 0, 1, 1),
@@ -319,7 +319,7 @@ INSERT INTO `creature_loot_template` VALUES
 
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=16025);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (16025, 33470, 33, 1, 0, 2, 7),
 (16025, 43852, 17, 1, 0, 1, 1),
 (16025, 35947, 7, 1, 0, 1, 1),
@@ -327,7 +327,7 @@ INSERT INTO `creature_loot_template` VALUES
 (16025, 33447, 2, 1, 0, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=29371);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (29371, 33470, 33, 1, 0, 2, 7),
 (29371, 43852, 17, 1, 0, 1, 1),
 (29371, 35947, 7, 1, 0, 1, 1),
@@ -336,7 +336,7 @@ INSERT INTO `creature_loot_template` VALUES
 (29371, 40409, 1.5, 1, 1, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=30071);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (30071, 33470, 33, 1, 0, 2, 7),
 (30071, 43852, 17, 1, 0, 1, 1),
 (30071, 35947, 7, 1, 0, 1, 1),
@@ -345,7 +345,7 @@ INSERT INTO `creature_loot_template` VALUES
 (30071, 40409, 1.5, 1, 1, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=30075);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (30075, 33470, 33, 1, 0, 2, 7),
 (30075, 43852, 17, 1, 0, 1, 1),
 (30075, 35947, 7, 1, 0, 1, 1),
@@ -357,7 +357,7 @@ INSERT INTO `creature_loot_template` VALUES
 (30075, 40410, 1.5, 1, 1, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=16146);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (16146, 33470, 33, 1, 0, 2, 7),
 (16146, 43852, 17, 1, 0, 1, 1),
 (16146, 35947, 7, 1, 0, 1, 1),
@@ -366,7 +366,7 @@ INSERT INTO `creature_loot_template` VALUES
 (16146, 40409, 1.5, 1, 1, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=29823);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (29823, 33470, 33, 1, 0, 2, 7),
 (29823, 43852, 17, 1, 0, 1, 1),
 (29823, 35947, 7, 1, 0, 1, 1),
@@ -378,7 +378,7 @@ INSERT INTO `creature_loot_template` VALUES
 (29823, 40409, 1.5, 1, 2, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=16165);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (16165, 33470, 33, 1, 0, 2, 7),
 (16165, 43852, 17, 1, 0, 1, 1),
 (16165, 35947, 7, 1, 0, 1, 1),
@@ -387,7 +387,7 @@ INSERT INTO `creature_loot_template` VALUES
 (16165, 40409, 1.5, 1, 1, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=29828);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (29828, 33470, 33, 1, 0, 2, 7),
 (29828, 43852, 17, 1, 0, 1, 1),
 (29828, 35947, 7, 1, 0, 1, 1),
@@ -399,7 +399,7 @@ INSERT INTO `creature_loot_template` VALUES
 (29828, 40407, 1.5, 1, 2, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=16164);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (16164, 33470, 33, 1, 0, 2, 7),
 (16164, 43852, 17, 1, 0, 1, 1),
 (16164, 35947, 7, 1, 0, 1, 1),
@@ -408,7 +408,7 @@ INSERT INTO `creature_loot_template` VALUES
 (16164, 40409, 1.5, 1, 1, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=29825);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (29825, 33470, 33, 1, 0, 2, 7),
 (29825, 43852, 17, 1, 0, 1, 1),
 (29825, 35947, 7, 1, 0, 1, 1),
@@ -417,7 +417,7 @@ INSERT INTO `creature_loot_template` VALUES
 (29825, 40409, 1.5, 1, 1, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=16145);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (16145, 33470, 33, 1, 0, 2, 7),
 (16145, 43852, 17, 1, 0, 1, 1),
 (16145, 35947, 7, 1, 0, 1, 1),
@@ -426,7 +426,7 @@ INSERT INTO `creature_loot_template` VALUES
 (16145, 40409, 1.5, 1, 1, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=29824);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (29824, 33470, 33, 1, 0, 2, 7),
 (29824, 43852, 17, 1, 0, 1, 1),
 (29824, 35947, 7, 1, 0, 1, 1),
@@ -439,7 +439,7 @@ INSERT INTO `creature_loot_template` VALUES
 (29824, 40407, 1.5, 1, 2, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=16167);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (16167, 33470, 33, 1, 0, 2, 7),
 (16167, 43852, 17, 1, 0, 1, 1),
 (16167, 35947, 7, 1, 0, 1, 1),
@@ -449,7 +449,7 @@ INSERT INTO `creature_loot_template` VALUES
 (16167, 39427, 1.1, 1, 1, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=29835);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (29835, 33470, 33, 1, 0, 2, 7),
 (29835, 43852, 17, 1, 0, 1, 1),
 (29835, 35947, 7, 1, 0, 1, 1),
@@ -463,7 +463,7 @@ INSERT INTO `creature_loot_template` VALUES
 (29835, 39152, 1.1, 1, 1, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=16193);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (16193, 33470, 33, 1, 0, 2, 7),
 (16193, 43852, 17, 1, 0, 1, 1),
 (16193, 35947, 7, 1, 0, 1, 1),
@@ -472,7 +472,7 @@ INSERT INTO `creature_loot_template` VALUES
 (16193, 40409, 1.5, 1, 1, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=29837);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (29837, 33470, 33, 1, 0, 2, 7),
 (29837, 43852, 17, 1, 0, 1, 1),
 (29837, 35947, 7, 1, 0, 1, 1),
@@ -485,7 +485,7 @@ INSERT INTO `creature_loot_template` VALUES
 (29837, 40407, 1.5, 1, 2, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=16163);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (16163, 33470, 33, 1, 0, 2, 7),
 (16163, 43852, 17, 1, 0, 1, 1),
 (16163, 35947, 7, 1, 0, 1, 1),
@@ -493,7 +493,7 @@ INSERT INTO `creature_loot_template` VALUES
 (16163, 33447, 2, 1, 0, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=29842);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (29842, 33470, 33, 1, 0, 2, 7),
 (29842, 43852, 17, 1, 0, 1, 1),
 (29842, 35947, 7, 1, 0, 1, 1),
@@ -506,7 +506,7 @@ INSERT INTO `creature_loot_template` VALUES
 (29842, 40407, 1.5, 1, 2, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=16067);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (16067, 33470, 33, 1, 0, 2, 7),
 (16067, 43852, 17, 1, 0, 1, 1),
 (16067, 35947, 7, 1, 0, 1, 1),
@@ -515,7 +515,7 @@ INSERT INTO `creature_loot_template` VALUES
 (16067, 33447, 2, 1, 0, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=29852);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (29852, 33470, 33, 1, 0, 2, 7),
 (29852, 43852, 17, 1, 0, 1, 1),
 (29852, 35947, 7, 1, 0, 1, 1),
@@ -524,7 +524,7 @@ INSERT INTO `creature_loot_template` VALUES
 (29852, 33447, 2, 1, 0, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=16154);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (16154, 33470, 33, 1, 0, 2, 7),
 (16154, 43852, 17, 1, 0, 1, 1),
 (16154, 35947, 7, 1, 0, 1, 1),
@@ -534,7 +534,7 @@ INSERT INTO `creature_loot_template` VALUES
 (16154, 33447, 2, 1, 0, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=29831);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (29831, 33470, 33, 1, 0, 2, 7),
 (29831, 43852, 17, 1, 0, 1, 1),
 (29831, 35947, 7, 1, 0, 1, 1),
@@ -544,7 +544,7 @@ INSERT INTO `creature_loot_template` VALUES
 (29831, 40410, 1.5, 1, 1, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=16194);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (16194, 33470, 33, 1, 0, 2, 7),
 (16194, 43852, 17, 1, 0, 1, 1),
 (16194, 35947, 7, 1, 0, 1, 1),
@@ -552,7 +552,7 @@ INSERT INTO `creature_loot_template` VALUES
 (16194, 33447, 2, 1, 0, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=29898);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (29898, 33470, 33, 1, 0, 2, 7),
 (29898, 43852, 17, 1, 0, 1, 1),
 (29898, 35947, 7, 1, 0, 1, 1),
@@ -560,7 +560,7 @@ INSERT INTO `creature_loot_template` VALUES
 (29898, 33447, 2, 1, 0, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=16215);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (16215, 33470, 33, 1, 0, 2, 7),
 (16215, 43852, 17, 1, 0, 1, 1),
 (16215, 35947, 7, 1, 0, 1, 1),
@@ -568,7 +568,7 @@ INSERT INTO `creature_loot_template` VALUES
 (16215, 33447, 2, 1, 0, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=29899);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (29899, 33470, 33, 1, 0, 2, 7),
 (29899, 43852, 17, 1, 0, 1, 1),
 (29899, 35947, 7, 1, 0, 1, 1),
@@ -576,7 +576,7 @@ INSERT INTO `creature_loot_template` VALUES
 (29899, 33447, 2, 1, 0, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=16216);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (16216, 33470, 33, 1, 0, 2, 7),
 (16216, 43852, 17, 1, 0, 1, 1),
 (16216, 35947, 7, 1, 0, 1, 1),
@@ -584,7 +584,7 @@ INSERT INTO `creature_loot_template` VALUES
 (16216, 33447, 2, 1, 0, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=29900);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (29900, 33470, 33, 1, 0, 2, 7),
 (29900, 43852, 17, 1, 0, 1, 1),
 (29900, 35947, 7, 1, 0, 1, 1),
@@ -592,53 +592,53 @@ INSERT INTO `creature_loot_template` VALUES
 (29900, 33447, 2, 1, 0, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=15974);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (15974, 44758, 70, 1, 0, 2, 4),
 (15974, 42253, 30, 1, 1, 1, 3),
 (15974, 44759, 15, 1, 0, 2, 3);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=29242);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (29242, 44758, 70, 1, 0, 2, 4),
 (29242, 42253, 30, 1, 1, 1, 3),
 (29242, 44759, 15, 1, 0, 2, 3);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=15975);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (15975, 44758, 70, 1, 0, 2, 4),
 (15975, 42253, 30, 1, 1, 1, 3),
 (15975, 44759, 15, 1, 0, 2, 3);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=29241);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (29241, 44758, 70, 1, 0, 2, 4),
 (29241, 42253, 30, 1, 1, 1, 3),
 (29241, 44759, 15, 1, 0, 2, 3);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=15976);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (15976, 44758, 70, 1, 0, 2, 4),
 (15976, 42253, 30, 1, 1, 1, 3),
 (15976, 44759, 15, 1, 0, 2, 3);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=29243);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (29243, 44758, 70, 1, 0, 2, 4),
 (29243, 42253, 30, 1, 1, 1, 3),
 (29243, 44759, 15, 1, 0, 2, 3);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=15978);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (15978, 44758, 70, 1, 0, 2, 4),
 (15978, 44759, 15, 1, 0, 2, 3);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=30389);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (30389, 44758, 70, 1, 0, 2, 4),
 (30389, 44759, 15, 1, 0, 2, 3);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=15980);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (15980, 33470, 40, 1, 0, 2, 7),
 (15980, 43852, 17, 1, 0, 1, 1),
 (15980, 35947, 7, 1, 0, 1, 1),
@@ -647,7 +647,7 @@ INSERT INTO `creature_loot_template` VALUES
 (15980, 39470, 1.5, 1, 1, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=29247);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (29247, 33470, 40, 1, 0, 2, 7),
 (29247, 43852, 17, 1, 0, 1, 1),
 (29247, 35947, 7, 1, 0, 1, 1),
@@ -656,7 +656,7 @@ INSERT INTO `creature_loot_template` VALUES
 (29247, 39470, 1.5, 1, 1, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=15981);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (15981, 33470, 40, 1, 0, 2, 7),
 (15981, 43852, 17, 1, 0, 1, 1),
 (15981, 35947, 7, 1, 0, 1, 1),
@@ -665,7 +665,7 @@ INSERT INTO `creature_loot_template` VALUES
 (15981, 39470, 1.5, 1, 1, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=29248);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (29248, 33470, 40, 1, 0, 2, 7),
 (29248, 43852, 17, 1, 0, 1, 1),
 (29248, 35947, 7, 1, 0, 1, 1),
@@ -674,17 +674,17 @@ INSERT INTO `creature_loot_template` VALUES
 (29248, 39470, 1.5, 1, 1, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=15979);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (15979, 44758, 70, 1, 0, 2, 4),
 (15979, 44759, 15, 1, 0, 2, 3);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=29286);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (29286, 44758, 70, 1, 0, 2, 4),
 (29286, 44759, 15, 1, 0, 2, 3);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=16244);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (16244, 33470, 40, 1, 0, 2, 7),
 (16244, 43852, 17, 1, 0, 1, 1),
 (16244, 35947, 7, 1, 0, 1, 1),
@@ -693,7 +693,7 @@ INSERT INTO `creature_loot_template` VALUES
 (16244, 39470, 1.5, 1, 1, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=29574);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (29574, 33470, 33, 1, 0, 2, 7),
 (29574, 43852, 17, 1, 0, 1, 1),
 (29574, 35947, 7, 1, 0, 1, 1),
@@ -705,7 +705,7 @@ INSERT INTO `creature_loot_template` VALUES
 (29574, 40406, 1.5, 1, 1, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=16243);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (16243, 33470, 40, 1, 0, 2, 7),
 (16243, 43852, 17, 1, 0, 1, 1),
 (16243, 35947, 7, 1, 0, 1, 1),
@@ -714,7 +714,7 @@ INSERT INTO `creature_loot_template` VALUES
 (16243, 39470, 1.5, 1, 1, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=29575);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (29575, 33470, 33, 1, 0, 2, 7),
 (29575, 43852, 17, 1, 0, 1, 1),
 (29575, 35947, 7, 1, 0, 1, 1),
@@ -726,7 +726,7 @@ INSERT INTO `creature_loot_template` VALUES
 (29575, 40406, 1.5, 1, 1, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=16168);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (16168, 33470, 40, 1, 0, 2, 7),
 (16168, 43852, 17, 1, 0, 1, 1),
 (16168, 35947, 7, 1, 0, 1, 1),
@@ -735,7 +735,7 @@ INSERT INTO `creature_loot_template` VALUES
 (16168, 39470, 1.5, 1, 1, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=29576);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (29576, 33470, 33, 1, 0, 2, 7),
 (29576, 43852, 17, 1, 0, 1, 1),
 (29576, 35947, 7, 1, 0, 1, 1),
@@ -747,7 +747,7 @@ INSERT INTO `creature_loot_template` VALUES
 (29576, 40406, 1.5, 1, 1, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=16297);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (16297, 33470, 40, 1, 0, 2, 7),
 (16297, 43852, 17, 1, 0, 1, 1),
 (16297, 35947, 7, 1, 0, 1, 1),
@@ -756,7 +756,7 @@ INSERT INTO `creature_loot_template` VALUES
 (16297, 39470, 1.5, 1, 1, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=29601);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (29601, 33470, 33, 1, 0, 2, 7),
 (29601, 43852, 17, 1, 0, 1, 1),
 (29601, 35947, 7, 1, 0, 1, 1),
@@ -768,7 +768,7 @@ INSERT INTO `creature_loot_template` VALUES
 (29601, 40406, 1.5, 1, 1, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=16036);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (16036, 33470, 40, 1, 0, 2, 7),
 (16036, 43852, 17, 1, 0, 1, 1),
 (16036, 35947, 7, 1, 0, 1, 1),
@@ -777,7 +777,7 @@ INSERT INTO `creature_loot_template` VALUES
 (16036, 39470, 1.5, 1, 1, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=29608);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (29608, 33470, 33, 1, 0, 2, 7),
 (29608, 43852, 17, 1, 0, 1, 1),
 (29608, 35947, 7, 1, 0, 1, 1),
@@ -789,7 +789,7 @@ INSERT INTO `creature_loot_template` VALUES
 (29608, 40406, 1.5, 1, 1, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=16034);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (16034, 33470, 40, 1, 0, 2, 7),
 (16034, 43852, 17, 1, 0, 1, 1),
 (16034, 35947, 7, 1, 0, 1, 1),
@@ -798,21 +798,21 @@ INSERT INTO `creature_loot_template` VALUES
 (16034, 39470, 1.5, 1, 1, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=29609);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (29609, 33470, 33, 1, 0, 2, 7),
 (29609, 43852, 17, 1, 0, 1, 1),
 (29609, 35947, 7, 1, 0, 1, 1),
 (29609, 33445, 4, 1, 0, 1, 1);
 
 DELETE FROM `creature_ai_scripts` WHERE (`id`=16427020);
-INSERT INTO `creature_ai_scripts` VALUES 
+REPLACE INTO `creature_ai_scripts` VALUES 
 (16427020, 16236, 0, 0, 100, 3, 1000, 3000, 3000, 6000, 11, 29407, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Spell N');
 DELETE FROM `creature_ai_scripts` WHERE (`id`=16427021);
-INSERT INTO `creature_ai_scripts` VALUES 
+REPLACE INTO `creature_ai_scripts` VALUES 
 (16427021, 16236, 0, 0, 100, 5, 1000, 3000, 3000, 6000, 11, 54805, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Spell H');
 
 DELETE FROM `creature_loot_template` WHERE `item` IN (39467, 39472, 39470, 39427, 39468, 39473);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (16017, 39467, 1.5, 1, 1, 1, 1),
 (16017, 39472, 1.5, 1, 1, 1, 1),
 (16017, 39470, 1.5, 1, 1, 1, 1),
@@ -1016,7 +1016,7 @@ UPDATE `creature_template` SET `unit_flags` = 131074 WHERE `entry` = 16211;
 
 -- some scripts_ai
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=29256);
-INSERT INTO `creature_ai_scripts` VALUES 
+REPLACE INTO `creature_ai_scripts` VALUES 
 ( 100000100, 29256, 0, 0, 100, 2, 0, 0, 0, 0, 11, 28969, 4, 32, 0, 0, 0, 0, 0, 0, 0, 0, 'Crypt Guard (Normal) - Cast Acid Spit on Aggro'),
 ( 100000101, 29256, 0, 0, 100, 4, 0, 0, 0, 0, 11, 56098, 4, 32, 0, 0, 0, 0, 0, 0, 0, 0, 'Crypt Guard (Heroic) - Cast Acid Spit on Aggro'),
 ( 100000102, 29256, 0, 0, 100, 3, 4000, 6000, 4000, 7000, 11, 28969, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Crypt Guard (Normal) - Cast Acid Spit'),
@@ -1027,14 +1027,14 @@ INSERT INTO `creature_ai_scripts` VALUES
 
 UPDATE `creature_template` SET `spell1` = 55765, `AIName` = 'EventAI' WHERE `entry` = 16429;
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=16429);
-INSERT INTO `creature_ai_scripts` VALUES 
+REPLACE INTO `creature_ai_scripts` VALUES 
 (100000108, 16429, 9, 0, 100, 3, 0, 3, 500, 1000, 11, 55765, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Wail of Souls - Normal'),
 (100000109, 16429, 9, 0, 100, 5, 0, 3, 500, 1000, 11, 55765, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Wail of Souls - Hero');
 
 
 UPDATE `creature_template` SET `spell1` = 28457, `AIName` = 'EventAI', `spell2` = 55714 WHERE `entry` = 16427;
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=16427);
-INSERT INTO `creature_ai_scripts` VALUES 
+REPLACE INTO `creature_ai_scripts` VALUES 
 (100000110, 16427, 9, 0, 100, 3, 0, 3, 0, 0, 11, 28457, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Explode - Normal'),
 (100000111, 16427, 9, 0, 100, 5, 0, 3, 0, 0, 11, 55714, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Explode - Hero');
 
@@ -1055,7 +1055,7 @@ UPDATE `gameobject_template` SET `flags` = 4 WHERE `entry` = 181247;
 
 -- Add Twilight Portals
 DELETE FROM gameobject WHERE id=193988;
-INSERT INTO gameobject (id, map, spawnMask, phaseMask, position_x, position_y, position_z, orientation, rotation0, rotation1, rotation2, rotation3, spawntimesecs, animprogress, state) VALUES
+REPLACE INTO gameobject (id, map, spawnMask, phaseMask, position_x, position_y, position_z, orientation, rotation0, rotation1, rotation2, rotation3, spawntimesecs, animprogress, state) VALUES
 (193988, 615, 3, 1, 3137.26, 501.08, 87.9118, 0.846795, 0, 0, 0.41086, 0.911698, -30, 0, 1),
 (193988, 615, 3, 1, 3238.37, 518.595, 58.9057, 0.739184, 0, 0, 0.361235, 0.932475, -30, 0, 1),
 (193988, 615, 3, 1, 3362.01, 553.726, 95.7068, 4.56818, 0, 0, 0.756211, -0.654328, -30, 0, 1),
@@ -1113,44 +1113,44 @@ UPDATE creature_template SET minlevel = 80, maxlevel = 80, mindmg = 422, maxdmg 
 
 -- Drakos the Interrogator
 DELETE FROM `script_texts` WHERE npc_entry='27654';
-INSERT INTO `script_texts` VALUES ('27654', -1578000, 'The prisoners shall not go free. The word of Malygos is law!','', '', '', '', '', '', '', '', 13594,1,0,0, 'drakos SAY_AGGRO');
-INSERT INTO `script_texts` VALUES ('27654', -1578001, 'A fitting punishment!','', '', '', '', '', '', '', '', 13602, 1,0,0, 'drakos SAY_KILL_1');
-INSERT INTO `script_texts` VALUES ('27654', -1578002, 'Sentence: executed!','', '', '', '', '', '', '', '', 13603,1,0,0, 'drakos SAY_KILL_2');
-INSERT INTO `script_texts` VALUES ('27654', -1578003, 'Another casualty of war!','', '', '', '', '', '', '', '', 13604, 1,0,0, 'drakos SAY_KILL_3');
-INSERT INTO `script_texts` VALUES ('27654', -1578004, 'The war... goes on.','', '', '', '', '', '', '', '', 13605,1,0,0,  'drakos SPELL_DEATH');
-INSERT INTO `script_texts` VALUES ('27654', -1578005, 'It is too late to run!','', '', '', '', '', '', '', '', 13598, 1,0,0, 'drakos SAY_PULL_1');
-INSERT INTO `script_texts` VALUES ('27654', -1578006, 'Gather \'round! ','', '', '', '', '', '', '', '', 13599, 1,0,0, 'drakos SAY_PULL_2');
-INSERT INTO `script_texts` VALUES ('27654', -1578007, 'None shall escape!','', '', '', '', '', '', '', '', 13600, 1,0,0, 'drakos SAY_PULL_3');
-INSERT INTO `script_texts` VALUES ('27654', -1578008, 'I condemn you to death!','', '', '', '', '', '', '', '', 13601,1,0,0,  'drakos SAY_PULL_4');
-INSERT INTO `script_texts` VALUES ('27654', -1578009, 'Tremble, worms!','', '', '', '', '', '', '', '', 13595,1,0,0,  'drakos SAY_STOMP_1');
-INSERT INTO `script_texts` VALUES ('27654', -1578010, 'I will crush you!', '', '', '', '', '', '', '', '', 13596, 1,0,0, 'drakos SAY_STOMP_2');
-INSERT INTO `script_texts` VALUES ('27654', -1578011, 'Can you fly?', '', '', '', '', '', '', '', '', 13597, 1,0,0, 'drakos SAY_STOMP_3');
+REPLACE INTO `script_texts` VALUES ('27654', -1578000, 'The prisoners shall not go free. The word of Malygos is law!','', '', '', '', '', '', '', '', 13594,1,0,0, 'drakos SAY_AGGRO');
+REPLACE INTO `script_texts` VALUES ('27654', -1578001, 'A fitting punishment!','', '', '', '', '', '', '', '', 13602, 1,0,0, 'drakos SAY_KILL_1');
+REPLACE INTO `script_texts` VALUES ('27654', -1578002, 'Sentence: executed!','', '', '', '', '', '', '', '', 13603,1,0,0, 'drakos SAY_KILL_2');
+REPLACE INTO `script_texts` VALUES ('27654', -1578003, 'Another casualty of war!','', '', '', '', '', '', '', '', 13604, 1,0,0, 'drakos SAY_KILL_3');
+REPLACE INTO `script_texts` VALUES ('27654', -1578004, 'The war... goes on.','', '', '', '', '', '', '', '', 13605,1,0,0,  'drakos SPELL_DEATH');
+REPLACE INTO `script_texts` VALUES ('27654', -1578005, 'It is too late to run!','', '', '', '', '', '', '', '', 13598, 1,0,0, 'drakos SAY_PULL_1');
+REPLACE INTO `script_texts` VALUES ('27654', -1578006, 'Gather \'round! ','', '', '', '', '', '', '', '', 13599, 1,0,0, 'drakos SAY_PULL_2');
+REPLACE INTO `script_texts` VALUES ('27654', -1578007, 'None shall escape!','', '', '', '', '', '', '', '', 13600, 1,0,0, 'drakos SAY_PULL_3');
+REPLACE INTO `script_texts` VALUES ('27654', -1578008, 'I condemn you to death!','', '', '', '', '', '', '', '', 13601,1,0,0,  'drakos SAY_PULL_4');
+REPLACE INTO `script_texts` VALUES ('27654', -1578009, 'Tremble, worms!','', '', '', '', '', '', '', '', 13595,1,0,0,  'drakos SAY_STOMP_1');
+REPLACE INTO `script_texts` VALUES ('27654', -1578010, 'I will crush you!', '', '', '', '', '', '', '', '', 13596, 1,0,0, 'drakos SAY_STOMP_2');
+REPLACE INTO `script_texts` VALUES ('27654', -1578011, 'Can you fly?', '', '', '', '', '', '', '', '', 13597, 1,0,0, 'drakos SAY_STOMP_3');
 
 -- Mage-Lord Urom
 DELETE FROM `script_texts` WHERE npc_entry= '27655';
-INSERT INTO `script_texts` VALUES ('27655', -1578012, 'Poor blind fools!','', '', '', '', '', '', '', '', 13638,1,0,0, 'urom SAY_AGGRO');
-INSERT INTO `script_texts` VALUES ('27655', -1578013, 'If only you understood!','', '', '', '', '', '', '', '', 13641,1,0,0, 'urom SAY_KILL_1');
-INSERT INTO `script_texts` VALUES ('27655', -1578014, 'Now, do you see? DO YOU?!','', '', '', '', '', '', '', '', 13642,1,0,0, 'urom SAY_KILL_2');
-INSERT INTO `script_texts` VALUES ('27655', -1578015, 'Unfortunate, but necessary.','', '', '', '', '', '', '', '', 13643,1,0,0, 'urom SAY_KILL_3');
-INSERT INTO `script_texts` VALUES ('27655', -1578016, 'Everything I\'ve done... has been for Azeroth...','', '', '', '', '', '', '', '', 13644,1,0,0, 'urom SAY_DEATH');
-INSERT INTO `script_texts` VALUES ('27655', -1578017, 'A taste... just a small taste... of the Spell-Weaver\'s power!','', '', '', '', '', '', '', '', 13639,1,0,0, 'urom SAY_EXPLOSION_1');
-INSERT INTO `script_texts` VALUES ('27655', -1578018, 'So much unstable energy... but worth the risk to destroy you!','', '', '', '', '', '', '', '', 13640,1,0,0, 'urom SAY_EXPLOSION_2');
-INSERT INTO `script_texts` VALUES ('27655', -1578019, 'What do we have here... those would defy the Spell-Weaver? Those without foresight or understanding. How could I make you see? Malygos is saving the world from itself! Bah! You are hardly worth my time!','', '', '', '', '', '', '', '', 13635,1,0,0, 'urom SAY_SUMMON_1');
-INSERT INTO `script_texts` VALUES ('27655', -1578020, 'Clearly my pets failed. Perhaps another demonstration is in order.','', '', '', '', '', '', '', '', 13636,1,0,0, 'urom SAY_SUMMON_2');
-INSERT INTO `script_texts` VALUES ('27655', -1578021, 'Still you fight. Still you cling to misguided principles. If you survive, you\'ll find me in the center ring.','', '', '', '', '', '', '', '', 13637,1,0,0, 'urom SAY_SUMMON_3');
+REPLACE INTO `script_texts` VALUES ('27655', -1578012, 'Poor blind fools!','', '', '', '', '', '', '', '', 13638,1,0,0, 'urom SAY_AGGRO');
+REPLACE INTO `script_texts` VALUES ('27655', -1578013, 'If only you understood!','', '', '', '', '', '', '', '', 13641,1,0,0, 'urom SAY_KILL_1');
+REPLACE INTO `script_texts` VALUES ('27655', -1578014, 'Now, do you see? DO YOU?!','', '', '', '', '', '', '', '', 13642,1,0,0, 'urom SAY_KILL_2');
+REPLACE INTO `script_texts` VALUES ('27655', -1578015, 'Unfortunate, but necessary.','', '', '', '', '', '', '', '', 13643,1,0,0, 'urom SAY_KILL_3');
+REPLACE INTO `script_texts` VALUES ('27655', -1578016, 'Everything I\'ve done... has been for Azeroth...','', '', '', '', '', '', '', '', 13644,1,0,0, 'urom SAY_DEATH');
+REPLACE INTO `script_texts` VALUES ('27655', -1578017, 'A taste... just a small taste... of the Spell-Weaver\'s power!','', '', '', '', '', '', '', '', 13639,1,0,0, 'urom SAY_EXPLOSION_1');
+REPLACE INTO `script_texts` VALUES ('27655', -1578018, 'So much unstable energy... but worth the risk to destroy you!','', '', '', '', '', '', '', '', 13640,1,0,0, 'urom SAY_EXPLOSION_2');
+REPLACE INTO `script_texts` VALUES ('27655', -1578019, 'What do we have here... those would defy the Spell-Weaver? Those without foresight or understanding. How could I make you see? Malygos is saving the world from itself! Bah! You are hardly worth my time!','', '', '', '', '', '', '', '', 13635,1,0,0, 'urom SAY_SUMMON_1');
+REPLACE INTO `script_texts` VALUES ('27655', -1578020, 'Clearly my pets failed. Perhaps another demonstration is in order.','', '', '', '', '', '', '', '', 13636,1,0,0, 'urom SAY_SUMMON_2');
+REPLACE INTO `script_texts` VALUES ('27655', -1578021, 'Still you fight. Still you cling to misguided principles. If you survive, you\'ll find me in the center ring.','', '', '', '', '', '', '', '', 13637,1,0,0, 'urom SAY_SUMMON_3');
 
 -- Varos Cloudstrider
 DELETE FROM `script_texts` WHERE npc_entry = '27447';
-INSERT INTO `script_texts` VALUES ('27447', -1578022, 'There will be no mercy!','', '', '', '', '', '', '', '', 13649,1,0,0, 'varos SAY_AGGRO');
-INSERT INTO `script_texts` VALUES ('27447', -1578023, 'You were warned.','', '', '', '', '', '', '', '', 13653,1,0,0, 'varos SAY_KILL_1');
-INSERT INTO `script_texts` VALUES ('27447', -1578024, 'The Oculus is ours.','', '', '', '', '', '', '', '', 13654,1,0,0, 'varos SAY_KILL_2');
-INSERT INTO `script_texts` VALUES ('27447', -1578025, 'They are... too strong! Underestimated their... fortitude.','', '', '', '', '', '', '', '', 13655,1,0,0, 'varos SAY_DEATH');
-INSERT INTO `script_texts` VALUES ('27447', -1578026, 'Blast them! Destroy them!','', '', '', '', '', '', '', '', 13650,1,0,0, 'varos SAY_STRIKE_1');
-INSERT INTO `script_texts` VALUES ('27447', -1578027, 'Take no prisoners! Attack!','', '', '', '', '', '', '', '', 13651,1,0,0, 'varos SAY_STRIKE_2');
-INSERT INTO `script_texts` VALUES ('27447', -1578028, 'Strike now! Obliterate them!','', '', '', '', '', '', '', '', 13652,1,0,0, 'varos SAY_STRIKE_3');
+REPLACE INTO `script_texts` VALUES ('27447', -1578022, 'There will be no mercy!','', '', '', '', '', '', '', '', 13649,1,0,0, 'varos SAY_AGGRO');
+REPLACE INTO `script_texts` VALUES ('27447', -1578023, 'You were warned.','', '', '', '', '', '', '', '', 13653,1,0,0, 'varos SAY_KILL_1');
+REPLACE INTO `script_texts` VALUES ('27447', -1578024, 'The Oculus is ours.','', '', '', '', '', '', '', '', 13654,1,0,0, 'varos SAY_KILL_2');
+REPLACE INTO `script_texts` VALUES ('27447', -1578025, 'They are... too strong! Underestimated their... fortitude.','', '', '', '', '', '', '', '', 13655,1,0,0, 'varos SAY_DEATH');
+REPLACE INTO `script_texts` VALUES ('27447', -1578026, 'Blast them! Destroy them!','', '', '', '', '', '', '', '', 13650,1,0,0, 'varos SAY_STRIKE_1');
+REPLACE INTO `script_texts` VALUES ('27447', -1578027, 'Take no prisoners! Attack!','', '', '', '', '', '', '', '', 13651,1,0,0, 'varos SAY_STRIKE_2');
+REPLACE INTO `script_texts` VALUES ('27447', -1578028, 'Strike now! Obliterate them!','', '', '', '', '', '', '', '', 13652,1,0,0, 'varos SAY_STRIKE_3');
 
 -- Varos says when Drakos dies
-INSERT INTO `script_texts` VALUES ('27447', -1578029, 'Intruders, your victory will be short-lived. I am Commander Varos Cloudstrider. My drakes control the skies and protest this conduit. I will see to it personally that the Oculus does not fall into your hands!','', '', '', '', '', '', '', '', 13648,1,0,0, 'varos SAY_SPAWN');
+REPLACE INTO `script_texts` VALUES ('27447', -1578029, 'Intruders, your victory will be short-lived. I am Commander Varos Cloudstrider. My drakes control the skies and protest this conduit. I will see to it personally that the Oculus does not fall into your hands!','', '', '', '', '', '', '', '', 13648,1,0,0, 'varos SAY_SPAWN');
 
 
 UPDATE gameobject_template SET flags=4 where entry IN (189986,193995);
@@ -1171,7 +1171,7 @@ UPDATE gameobject_template set data17 = 0 where entry = 193908;
 -- 8380
 -- Reputazione a Oculus
 DELETE FROM `creature_onkill_reputation` WHERE creature_id IN (27654, 27656, 27655, 27447, 27633, 27636, 28236, 27638, 27635, 27641, 28276, 27650, 27645, 27651, 27642, 27649, 27648, 27647, 27653, 27644, 30879, 27640, 27639, 28153);
-INSERT INTO `creature_onkill_reputation` (`creature_id`, `RewOnKillRepFaction1`, `RewOnKillRepFaction2`, `MaxStanding1`, `IsTeamAward1`, `RewOnKillRepValue1`, `MaxStanding2`, `IsTeamAward2`, `RewOnKillRepValue2`, `TeamDependent`) VALUES 
+REPLACE INTO `creature_onkill_reputation` (`creature_id`, `RewOnKillRepFaction1`, `RewOnKillRepFaction2`, `MaxStanding1`, `IsTeamAward1`, `RewOnKillRepValue1`, `MaxStanding2`, `IsTeamAward2`, `RewOnKillRepValue2`, `TeamDependent`) VALUES 
 (27654, 1037, 1052, 7, 0, 250, 7, 0, 250, 1), -- Drakos the interrogator
 (27656, 1037, 1052, 7, 0, 250, 7, 0, 250, 1), -- Ley Guardian Eregos
 (27655, 1037, 1052, 7, 0, 250, 7, 0, 250, 1), -- Mage lord urom
@@ -1211,7 +1211,7 @@ DELETE FROM script_texts where `entry` <= -1752008 AND `entry` >= -1752016;
 DELETE FROM script_texts where `entry` <= -1752001 AND `entry` >= -1752006;
 DELETE FROM script_texts where `entry` <= -1752017 AND `entry` >= -1752036;
 
-INSERT INTO script_texts (`entry`, `content_default`, `npc_entry`, `content_loc3`, `sound`, `type`, `language`) VALUES
+REPLACE INTO script_texts (`entry`, `content_default`, `npc_entry`, `content_loc3`, `sound`, `type`, `language`) VALUES
 ('-1752008', 'Help! I am trapped within this tree! I require aid!', '0', '', '17490', '1', '0'),	 	
 ('-1752009', 'Thank you! I could not have held out for much longer.... A terrible thing has happened here.', '0', '', '17491', '1', '0'),	 	
 ('-1752010', 'We believed the Sanctum was well-fortified, but we were not prepared for the nature of this assault.', '0', '', '17492', '0', '0'),	 	
@@ -1254,11 +1254,11 @@ INSERT INTO script_texts (`entry`, `content_default`, `npc_entry`, `content_loc3
 
 DELETE FROM `spell_linked_spell` WHERE (`spell_trigger`='-74562') AND (`spell_effect`='74610');
 DELETE FROM `spell_linked_spell` WHERE (`spell_trigger`='-74792') AND (`spell_effect`='74800');
-INSERT INTO spell_linked_spell VALUES (-74562, 74610, 0, 'Fiery Combustion removed -> Combustion');
-INSERT INTO spell_linked_spell VALUES (-74792, 74800, 0, 'Soul Consumption removed -> Consumption');
+REPLACE INTO spell_linked_spell VALUES (-74562, 74610, 0, 'Fiery Combustion removed -> Combustion');
+REPLACE INTO spell_linked_spell VALUES (-74792, 74800, 0, 'Soul Consumption removed -> Consumption');
 
 DELETE FROM creature WHERE `id`=39863 and `map`=724;
-INSERT INTO creature VALUES (null,39863,724,15,1,0,0,3144.93,527.233,72.8887,0.110395,300,0,0,11156000,0,0,0);
+REPLACE INTO creature VALUES (null,39863,724,15,1,0,0,3144.93,527.233,72.8887,0.110395,300,0,0,11156000,0,0,0);
 
 UPDATE `gameobject_template` SET `data10`=74807 WHERE `entry`=202794;
 UPDATE `gameobject_template` SET `data10`=74812 WHERE `entry`=202796;
@@ -1266,7 +1266,7 @@ UPDATE `gameobject_template` SET `data10`=74812 WHERE `entry`=202796;
 -- 01_trial_of_the_champion
 -- Moturas
 DELETE FROM `vehicle_accessory` WHERE `entry` in (35491,33299,33418,33409,33300,33408,33301,33414,33297,33416,33298);
-INSERT INTO `vehicle_accessory` (`entry`,`accessory_entry`,`seat_id`,`minion`,`description`) VALUES
+REPLACE INTO `vehicle_accessory` (`entry`,`accessory_entry`,`seat_id`,`minion`,`description`) VALUES
 (35491,35451,0,0, 'Black Knight'),
 (33299,35323,0,1, 'Darkspear Raptor'),
 (33418,35326,0,1, 'Silvermoon Hawkstrider'),
@@ -1283,7 +1283,7 @@ INSERT INTO `vehicle_accessory` (`entry`,`accessory_entry`,`seat_id`,`minion`,`d
 -- Addons
 -- Argent
 DELETE FROM `creature_template_addon` WHERE `entry` IN (35309, 35310, 35305, 35306, 35307, 35308, 35119, 35518, 34928, 35517);
-INSERT INTO `creature_template_addon` (`entry`,`bytes2`,`auras`) VALUES 
+REPLACE INTO `creature_template_addon` (`entry`,`bytes2`,`auras`) VALUES 
 (35309, 1, '63501 0'),
 (35310, 1, '63501 0'),
 (35305, 1, '63501 0'),
@@ -1296,7 +1296,7 @@ INSERT INTO `creature_template_addon` (`entry`,`bytes2`,`auras`) VALUES
 (35517, 1, '63501 0');
 -- Faction_champ
 DELETE FROM `creature_template_addon` WHERE `entry` IN (34701, 34657, 34705, 35570, 35569, 35332,35330,33299,35328,35327,35331,35329,35325,35314,35326,35323, 35572, 35571, 34703, 34702, 35617);
-INSERT INTO `creature_template_addon` (`entry`,`bytes2`,`auras`) VALUES 
+REPLACE INTO `creature_template_addon` (`entry`,`bytes2`,`auras`) VALUES 
 (35323, 1, '63399 0 62852 0 64723 0'),
 (35570, 1, '63399 0 62852 0 64723 0'),
 (35326, 1, '63403 0 62852 0 64723 0'),
@@ -1320,7 +1320,7 @@ INSERT INTO `creature_template_addon` (`entry`,`bytes2`,`auras`) VALUES
 
 -- Textos originales.
 DELETE FROM `script_texts` WHERE `entry` <= -1999926 and `entry` >= -1999956;
-INSERT INTO `script_texts` (`npc_entry`,`entry`,`content_default`,`sound`,`type`,`language`,`emote`,`comment`) VALUES
+REPLACE INTO `script_texts` (`npc_entry`,`entry`,`content_default`,`sound`,`type`,`language`,`emote`,`comment`) VALUES
 (0,-1999926, 'Coming out of the gate Grand Champions other faction.  ' ,0,0,0,1, 'SAY_START' ),
 (0,-1999927, 'Good work! You can get your award from Crusader\'s Coliseum chest!.  ' ,0,1,0,1, 'Win' ),
 (0,-1999928, 'You spoiled my grand entrance. Rat.' ,16256,1,0,5, 'SAY_AGGRO' ),
@@ -1366,7 +1366,7 @@ DELETE FROM `creature_template` WHERE `entry` IN
 35636, 35637, 35638, 35640, 35641, 35644, 35717, 35768, 36082, 36083, 36084, 36085, 36086, 36087, 36088, 36089, 36090, 36091, 36558);
 
 
-INSERT INTO `creature_template` (`entry`, `difficulty_entry_1`, `difficulty_entry_2`, `difficulty_entry_3`, `KillCredit1`, `KillCredit2`, `modelid1`, `modelid2`, `modelid3`, `modelid4`, `name`, `subname`, `IconName`, `gossip_menu_id`, `minlevel`, `maxlevel`, `exp`, `faction_A`, `faction_H`, `npcflag`, `speed_walk`, `speed_run`, `scale`, `rank`, `mindmg`, `maxdmg`, `dmgschool`, `attackpower`, `dmg_multiplier`, `baseattacktime`, `rangeattacktime`, `unit_class`, `unit_flags`, `dynamicflags`, `family`, `trainer_type`, `trainer_spell`, `trainer_class`, `trainer_race`, `minrangedmg`, `maxrangedmg`, `rangedattackpower`, `type`, `type_flags`, `lootid`, `pickpocketloot`, `skinloot`, `resistance1`, `resistance2`, `resistance3`, `resistance4`, `resistance5`, `resistance6`, `spell1`, `spell2`, `spell3`, `spell4`, `spell5`, `spell6`, `spell7`, `spell8`, `PetSpellDataId`, `VehicleId`, `mingold`, `maxgold`, `AIName`, `MovementType`, `InhabitType`, `Health_mod`, `Mana_mod`, `Armor_mod`, `RacialLeader`, `questItem1`, `questItem2`, `questItem3`, `questItem4`, `questItem5`, `questItem6`, `movementId`, `RegenHealth`, `equipment_id`, `mechanic_immune_mask`, `flags_extra`, `ScriptName`, `WDBVerified`) VALUES 
+REPLACE INTO `creature_template` (`entry`, `difficulty_entry_1`, `difficulty_entry_2`, `difficulty_entry_3`, `KillCredit1`, `KillCredit2`, `modelid1`, `modelid2`, `modelid3`, `modelid4`, `name`, `subname`, `IconName`, `gossip_menu_id`, `minlevel`, `maxlevel`, `exp`, `faction_A`, `faction_H`, `npcflag`, `speed_walk`, `speed_run`, `scale`, `rank`, `mindmg`, `maxdmg`, `dmgschool`, `attackpower`, `dmg_multiplier`, `baseattacktime`, `rangeattacktime`, `unit_class`, `unit_flags`, `dynamicflags`, `family`, `trainer_type`, `trainer_spell`, `trainer_class`, `trainer_race`, `minrangedmg`, `maxrangedmg`, `rangedattackpower`, `type`, `type_flags`, `lootid`, `pickpocketloot`, `skinloot`, `resistance1`, `resistance2`, `resistance3`, `resistance4`, `resistance5`, `resistance6`, `spell1`, `spell2`, `spell3`, `spell4`, `spell5`, `spell6`, `spell7`, `spell8`, `PetSpellDataId`, `VehicleId`, `mingold`, `maxgold`, `AIName`, `MovementType`, `InhabitType`, `Health_mod`, `Mana_mod`, `Armor_mod`, `RacialLeader`, `questItem1`, `questItem2`, `questItem3`, `questItem4`, `questItem5`, `questItem6`, `movementId`, `RegenHealth`, `equipment_id`, `mechanic_immune_mask`, `flags_extra`, `ScriptName`, `WDBVerified`) VALUES 
 ('33297','0','0','0','0','0','28912','0','0','0','Stormwind Steed','','','0','80','80','0','14','14','0','1','1.14286','1','0','20000','30000','0','24','1','2000','0','1','0','8','0','0','0','0','0','1','1','0','1','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','486','0','0','','0','3','10','1','1','0','0','0','0','0','0','0','140','1','0','0','0','generic_vehicleAI_toc5','1'),
 ('33298','0','0','0','0','0','29256','0','0','0','Darnassian Nightsaber','','','0','80','80','0','14','14','0','1','1.14286','1','0','20000','30000','0','24','1','2000','0','1','0','8','0','0','0','0','0','1','1','0','1','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','486','0','0','','0','3','10','1','1','0','0','0','0','0','0','0','140','1','0','0','0','generic_vehicleAI_toc5','11723'),
 ('33299','0','0','0','0','0','29261','0','0','0','Darkspear Raptor','','','0','80','80','0','14','14','0','1','1.14286','1','0','20000','30000','0','24','1','2000','0','1','0','8','0','0','0','0','0','1','1','0','1','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','486','0','0','','0','3','10','1','1','0','0','0','0','0','0','0','140','1','0','0','0','generic_vehicleAI_toc5','11159'),
@@ -1510,23 +1510,23 @@ UPDATE `creature_template` SET `mechanic_immune_mask`=`mechanic_immune_mask`|107
 
 -- Anuncios al comienzo del evento.
 DELETE FROM `creature_template` WHERE `entry` in (35591,35592);
-INSERT INTO `creature_template` (`entry`, `difficulty_entry_1`, `difficulty_entry_2`, `difficulty_entry_3`, `KillCredit1`, `KillCredit2`, `modelid1`, `modelid2`, `modelid3`, `modelid4`, `name`, `subname`, `IconName`, `gossip_menu_id`, `minlevel`, `maxlevel`, `exp`, `faction_A`, `faction_H`, `npcflag`, `speed_run`, `scale`, `rank`, `mindmg`, `maxdmg`, `dmgschool`, `attackpower`, `dmg_multiplier`, `baseattacktime`, `rangeattacktime`, `unit_class`, `unit_flags`, `dynamicflags`, `family`, `trainer_type`, `trainer_spell`, `trainer_class`, `trainer_race`, `minrangedmg`, `maxrangedmg`, `rangedattackpower`, `type`, `type_flags`, `lootid`, `pickpocketloot`, `skinloot`, `resistance1`, `resistance2`, `resistance3`, `resistance4`, `resistance5`, `resistance6`, `spell1`, `spell2`, `spell3`, `spell4`, `spell5`, `spell6`, `spell7`, `spell8`, `PetSpellDataId`, `VehicleId`, `mingold`, `maxgold`, `AIName`, `MovementType`, `InhabitType`, `Health_mod`, `Mana_mod`, `RacialLeader`, `questItem1`, `questItem2`, `questItem3`, `questItem4`, `questItem5`, `questItem6`, `movementId`, `RegenHealth`, `equipment_id`, `mechanic_immune_mask`, `flags_extra`, `ScriptName`) VALUES 
+REPLACE INTO `creature_template` (`entry`, `difficulty_entry_1`, `difficulty_entry_2`, `difficulty_entry_3`, `KillCredit1`, `KillCredit2`, `modelid1`, `modelid2`, `modelid3`, `modelid4`, `name`, `subname`, `IconName`, `gossip_menu_id`, `minlevel`, `maxlevel`, `exp`, `faction_A`, `faction_H`, `npcflag`, `speed_run`, `scale`, `rank`, `mindmg`, `maxdmg`, `dmgschool`, `attackpower`, `dmg_multiplier`, `baseattacktime`, `rangeattacktime`, `unit_class`, `unit_flags`, `dynamicflags`, `family`, `trainer_type`, `trainer_spell`, `trainer_class`, `trainer_race`, `minrangedmg`, `maxrangedmg`, `rangedattackpower`, `type`, `type_flags`, `lootid`, `pickpocketloot`, `skinloot`, `resistance1`, `resistance2`, `resistance3`, `resistance4`, `resistance5`, `resistance6`, `spell1`, `spell2`, `spell3`, `spell4`, `spell5`, `spell6`, `spell7`, `spell8`, `PetSpellDataId`, `VehicleId`, `mingold`, `maxgold`, `AIName`, `MovementType`, `InhabitType`, `Health_mod`, `Mana_mod`, `RacialLeader`, `questItem1`, `questItem2`, `questItem3`, `questItem4`, `questItem5`, `questItem6`, `movementId`, `RegenHealth`, `equipment_id`, `mechanic_immune_mask`, `flags_extra`, `ScriptName`) VALUES 
 (35591, 0, 0, 0, 0, 0, 29894, 0, 0, 0, 'Jaeren Sunsworn', '', '', 0, 75, 75, 2, 14, 14, 0, 1, 1, 0, 0, 0, 0, 0, 1, 2000, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', 0, 3, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 'npc_anstart'),
 (35592, 0, 0, 0, 0, 0, 29893, 0, 0, 0, 'Arelas Brightstar', '', '', 0, 75, 75, 2, 14, 14, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 512, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', 0, 3, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 'npc_anstart');
 
 
 -- Fountain of Light
 DELETE FROM `creature_template` WHERE `entry`=35311;
-INSERT INTO `creature_template` (`entry`, `difficulty_entry_1`, `difficulty_entry_2`, `difficulty_entry_3`, `KillCredit1`, `KillCredit2`, `modelid1`, `modelid2`, `modelid3`, `modelid4`, `name`, `subname`, `IconName`, `gossip_menu_id`, `minlevel`, `maxlevel`, `exp`, `faction_A`, `faction_H`, `npcflag`, `scale`, `rank`, `mindmg`, `maxdmg`, `dmgschool`, `attackpower`, `dmg_multiplier`, `baseattacktime`, `rangeattacktime`, `unit_class`, `unit_flags`, `dynamicflags`, `family`, `trainer_type`, `trainer_spell`, `trainer_class`, `trainer_race`, `minrangedmg`, `maxrangedmg`, `rangedattackpower`, `type`, `type_flags`, `lootid`, `pickpocketloot`, `skinloot`, `resistance1`, `resistance2`, `resistance3`, `resistance4`, `resistance5`, `resistance6`, `spell1`, `spell2`, `spell3`, `spell4`, `spell5`, `spell6`, `spell7`, `spell8`, `PetSpellDataId`, `VehicleId`, `mingold`, `maxgold`, `AIName`, `MovementType`, `InhabitType`, `Health_mod`, `Mana_mod`, `RacialLeader`, `questItem1`, `questItem2`, `questItem3`, `questItem4`, `questItem5`, `questItem6`, `movementId`, `RegenHealth`, `equipment_id`, `mechanic_immune_mask`, `flags_extra`, `ScriptName`) VALUES 
+REPLACE INTO `creature_template` (`entry`, `difficulty_entry_1`, `difficulty_entry_2`, `difficulty_entry_3`, `KillCredit1`, `KillCredit2`, `modelid1`, `modelid2`, `modelid3`, `modelid4`, `name`, `subname`, `IconName`, `gossip_menu_id`, `minlevel`, `maxlevel`, `exp`, `faction_A`, `faction_H`, `npcflag`, `scale`, `rank`, `mindmg`, `maxdmg`, `dmgschool`, `attackpower`, `dmg_multiplier`, `baseattacktime`, `rangeattacktime`, `unit_class`, `unit_flags`, `dynamicflags`, `family`, `trainer_type`, `trainer_spell`, `trainer_class`, `trainer_race`, `minrangedmg`, `maxrangedmg`, `rangedattackpower`, `type`, `type_flags`, `lootid`, `pickpocketloot`, `skinloot`, `resistance1`, `resistance2`, `resistance3`, `resistance4`, `resistance5`, `resistance6`, `spell1`, `spell2`, `spell3`, `spell4`, `spell5`, `spell6`, `spell7`, `spell8`, `PetSpellDataId`, `VehicleId`, `mingold`, `maxgold`, `AIName`, `MovementType`, `InhabitType`, `Health_mod`, `Mana_mod`, `RacialLeader`, `questItem1`, `questItem2`, `questItem3`, `questItem4`, `questItem5`, `questItem6`, `movementId`, `RegenHealth`, `equipment_id`, `mechanic_immune_mask`, `flags_extra`, `ScriptName`) VALUES 
 (35311, 0, 0, 0, 0, 0, 27769, 0, 0, 0, 'Fountain of Light', '', '', 0, 79, 80, 0, 14, 14, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 1024, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', 0, 3, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, '');
 
 
 -- Grifo esquelйtico del Caballero Negro http://es.wowhead.com/npc=35491
 DELETE FROM `creature_template` WHERE `entry`=35491;
-INSERT INTO `creature_template` (`entry`, `difficulty_entry_1`, `difficulty_entry_2`, `difficulty_entry_3`, `KillCredit1`, `KillCredit2`, `modelid1`, `modelid2`, `modelid3`, `modelid4`, `name`, `subname`, `IconName`, `gossip_menu_id`, `minlevel`, `maxlevel`, `exp`, `faction_A`, `faction_H`, `npcflag`, `speed_run`, `scale`, `rank`, `mindmg`, `maxdmg`, `dmgschool`, `attackpower`, `dmg_multiplier`, `baseattacktime`, `rangeattacktime`, `unit_class`, `unit_flags`, `dynamicflags`, `family`, `trainer_type`, `trainer_spell`, `trainer_class`, `trainer_race`, `minrangedmg`, `maxrangedmg`, `rangedattackpower`, `type`, `type_flags`, `lootid`, `pickpocketloot`, `skinloot`, `resistance1`, `resistance2`, `resistance3`, `resistance4`, `resistance5`, `resistance6`, `spell1`, `spell2`, `spell3`, `spell4`, `spell5`, `spell6`, `spell7`, `spell8`, `PetSpellDataId`, `VehicleId`, `mingold`, `maxgold`, `AIName`, `MovementType`, `InhabitType`, `Health_mod`, `Mana_mod`, `RacialLeader`, `questItem1`, `questItem2`, `questItem3`, `questItem4`, `questItem5`, `questItem6`, `movementId`, `RegenHealth`, `equipment_id`, `mechanic_immune_mask`, `flags_extra`, `ScriptName`) VALUES 
+REPLACE INTO `creature_template` (`entry`, `difficulty_entry_1`, `difficulty_entry_2`, `difficulty_entry_3`, `KillCredit1`, `KillCredit2`, `modelid1`, `modelid2`, `modelid3`, `modelid4`, `name`, `subname`, `IconName`, `gossip_menu_id`, `minlevel`, `maxlevel`, `exp`, `faction_A`, `faction_H`, `npcflag`, `speed_run`, `scale`, `rank`, `mindmg`, `maxdmg`, `dmgschool`, `attackpower`, `dmg_multiplier`, `baseattacktime`, `rangeattacktime`, `unit_class`, `unit_flags`, `dynamicflags`, `family`, `trainer_type`, `trainer_spell`, `trainer_class`, `trainer_race`, `minrangedmg`, `maxrangedmg`, `rangedattackpower`, `type`, `type_flags`, `lootid`, `pickpocketloot`, `skinloot`, `resistance1`, `resistance2`, `resistance3`, `resistance4`, `resistance5`, `resistance6`, `spell1`, `spell2`, `spell3`, `spell4`, `spell5`, `spell6`, `spell7`, `spell8`, `PetSpellDataId`, `VehicleId`, `mingold`, `maxgold`, `AIName`, `MovementType`, `InhabitType`, `Health_mod`, `Mana_mod`, `RacialLeader`, `questItem1`, `questItem2`, `questItem3`, `questItem4`, `questItem5`, `questItem6`, `movementId`, `RegenHealth`, `equipment_id`, `mechanic_immune_mask`, `flags_extra`, `ScriptName`) VALUES 
 (35491, 0, 0, 0, 0, 0, 29842, 0, 0, 0, 'Black Knight\'s Skeletal Gryphon', '', '', 0, 80, 80, 2, 35, 35, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 1, 33554432, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 1048576, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 486, 0, 0, '', 0, 4, 15, 1, 0, 0, 0, 0, 0, 0, 0, 164, 1, 0, 0, 0, 'npc_black_knight_skeletal_gryphon');
 DELETE FROM `script_waypoint` WHERE `entry`=35491;
-INSERT INTO `script_waypoint` VALUES
+REPLACE INTO `script_waypoint` VALUES
 (35491,1,781.513062, 657.989624, 466.821472,0,''),
 (35491,2,759.004639, 665.142029, 462.540771,0,''),
 (35491,3,732.936646, 657.163879, 452.678284,0,''),
@@ -1542,10 +1542,10 @@ INSERT INTO `script_waypoint` VALUES
 (35491,13,744.841,634.505,411.575,0,'');
 -- Grifo esquelйtico del Caballero Negro antes de comenzar la batalla
 DELETE FROM `creature_template` WHERE `entry` in (35492);
-INSERT INTO `creature_template` (`entry`, `difficulty_entry_1`, `difficulty_entry_2`, `difficulty_entry_3`, `KillCredit1`, `KillCredit2`, `modelid1`, `modelid2`, `modelid3`, `modelid4`, `name`, `subname`, `IconName`, `gossip_menu_id`, `minlevel`, `maxlevel`, `exp`, `faction_A`, `faction_H`, `npcflag`, `speed_run`, `scale`, `rank`, `mindmg`, `maxdmg`, `dmgschool`, `attackpower`, `dmg_multiplier`, `baseattacktime`, `rangeattacktime`, `unit_class`, `unit_flags`, `dynamicflags`, `family`, `trainer_type`, `trainer_spell`, `trainer_class`, `trainer_race`, `minrangedmg`, `maxrangedmg`, `rangedattackpower`, `type`, `type_flags`, `lootid`, `pickpocketloot`, `skinloot`, `resistance1`, `resistance2`, `resistance3`, `resistance4`, `resistance5`, `resistance6`, `spell1`, `spell2`, `spell3`, `spell4`, `spell5`, `spell6`, `spell7`, `spell8`, `PetSpellDataId`, `VehicleId`, `mingold`, `maxgold`, `AIName`, `MovementType`, `InhabitType`, `Health_mod`, `Mana_mod`, `RacialLeader`, `questItem1`, `questItem2`, `questItem3`, `questItem4`, `questItem5`, `questItem6`, `movementId`, `RegenHealth`, `equipment_id`, `mechanic_immune_mask`, `flags_extra`, `ScriptName`) VALUES 
+REPLACE INTO `creature_template` (`entry`, `difficulty_entry_1`, `difficulty_entry_2`, `difficulty_entry_3`, `KillCredit1`, `KillCredit2`, `modelid1`, `modelid2`, `modelid3`, `modelid4`, `name`, `subname`, `IconName`, `gossip_menu_id`, `minlevel`, `maxlevel`, `exp`, `faction_A`, `faction_H`, `npcflag`, `speed_run`, `scale`, `rank`, `mindmg`, `maxdmg`, `dmgschool`, `attackpower`, `dmg_multiplier`, `baseattacktime`, `rangeattacktime`, `unit_class`, `unit_flags`, `dynamicflags`, `family`, `trainer_type`, `trainer_spell`, `trainer_class`, `trainer_race`, `minrangedmg`, `maxrangedmg`, `rangedattackpower`, `type`, `type_flags`, `lootid`, `pickpocketloot`, `skinloot`, `resistance1`, `resistance2`, `resistance3`, `resistance4`, `resistance5`, `resistance6`, `spell1`, `spell2`, `spell3`, `spell4`, `spell5`, `spell6`, `spell7`, `spell8`, `PetSpellDataId`, `VehicleId`, `mingold`, `maxgold`, `AIName`, `MovementType`, `InhabitType`, `Health_mod`, `Mana_mod`, `RacialLeader`, `questItem1`, `questItem2`, `questItem3`, `questItem4`, `questItem5`, `questItem6`, `movementId`, `RegenHealth`, `equipment_id`, `mechanic_immune_mask`, `flags_extra`, `ScriptName`) VALUES 
 (35492, 0, 0, 0, 0, 0, 29842, 0, 0, 0, 'Black Knight\'s Skeletal Gryphon', '', '', 0, 80, 80, 2, 35, 35, 0, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 1, 33554432, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 1048576, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 486, 0, 0, '', 0, 3, 15, 1, 0, 0, 0, 0, 0, 0, 0, 164, 1, 0, 0, 0, 'npc_gr');
 DELETE FROM `script_waypoint` WHERE `entry`=35492;
-INSERT INTO `script_waypoint` VALUES
+REPLACE INTO `script_waypoint` VALUES
 (35492,1,741.067078, 634.471558, 411.569366,0,''),
 (35492,2,735.726196, 639.247498, 414.725555,0,''),
 (35492,3,730.187256, 653.250977, 418.913269,0,''),
@@ -1561,7 +1561,7 @@ INSERT INTO `script_waypoint` VALUES
 -- Spawn Announcer in normal/heroic mode
 DELETE FROM `creature` WHERE `id`=35004;
 DELETE FROM `creature` WHERE `guid`=130961;
-INSERT INTO `creature` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`DeathState`,`MovementType`) VALUES
+REPLACE INTO `creature` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`DeathState`,`MovementType`) VALUES
 (130961, 35004, 650, 3, 1, 0, 0, 746.626, 618.54, 411.09, 4.63158, 86400, 0, 0, 10635, 0, 0, 0);
 
 -- Daсo
@@ -1572,7 +1572,7 @@ UPDATE `creature_template` SET `dmg_multiplier`= (dmg_multiplier*2) WHERE `entry
 
 -- CREATURES SPAWN TRIAL OF CHAMPION MAP 650
 DELETE FROM `creature` WHERE `map`=650;
-INSERT INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `modelid`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `spawndist`, `currentwaypoint`, `curhealth`, `curmana`, `DeathState`, `MovementType`) VALUES 
+REPLACE INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `modelid`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `spawndist`, `currentwaypoint`, `curhealth`, `curmana`, `DeathState`, `MovementType`) VALUES 
 
 -- monturas
 -- http://es.wowhead.com/npc=36558 Huargo de batalla Argenta
@@ -1744,7 +1744,7 @@ INSERT INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `modelid`
 -- cajas que las spawnea el core
 DELETE FROM `gameobject_template` WHERE `entry` IN (195709, 195374, 195323); -- modo normal
 DELETE FROM `gameobject_template` WHERE `entry` IN (195710, 195375, 195324); -- modo heroico
-INSERT INTO `gameobject_template` (`entry`, `type`, `displayId`, `name`, `IconName`, `castBarCaption`, `unk1`, `faction`, `flags`, `size`, `questItem1`, `questItem2`, `questItem3`, `questItem4`, `questItem5`, `questItem6`, `data0`, `data1`, `data2`, `data3`, `data4`, `data5`, `data6`, `data7`, `data8`, `data9`, `data10`, `data11`, `data12`, `data13`, `data14`, `data15`, `data16`, `data17`, `data18`, `data19`, `data20`, `data21`, `data22`, `data23`, `ScriptName`, `WDBVerified`) VALUES 
+REPLACE INTO `gameobject_template` (`entry`, `type`, `displayId`, `name`, `IconName`, `castBarCaption`, `unk1`, `faction`, `flags`, `size`, `questItem1`, `questItem2`, `questItem3`, `questItem4`, `questItem5`, `questItem6`, `data0`, `data1`, `data2`, `data3`, `data4`, `data5`, `data6`, `data7`, `data8`, `data9`, `data10`, `data11`, `data12`, `data13`, `data14`, `data15`, `data16`, `data17`, `data18`, `data19`, `data20`, `data21`, `data22`, `data23`, `ScriptName`, `WDBVerified`) VALUES 
 ('195323','3','9069','Confessor\'s Cache','','','','0','0','2','0','0','0','0','0','0','1634','195323','0','1','0','0','0','0','0','0','0','1','0','1','0','1','0','0','0','0','0','0','0','0','','11723'),
 ('195324','3','9069','Confessor\'s Cache','','','','0','0','2','0','0','0','0','0','0','1634','195324','0','1','0','0','0','0','0','0','0','1','0','1','0','1','0','0','0','0','0','0','0','0','','11723'),
 ('195374','3','9069','Eadric\'s Cache','','','','0','0','2','0','0','0','0','0','0','1634','195374','0','1','0','0','0','0','0','0','0','1','0','1','0','1','0','0','0','0','0','0','0','0','','11723'),
@@ -1754,7 +1754,7 @@ INSERT INTO `gameobject_template` (`entry`, `type`, `displayId`, `name`, `IconNa
 
 -- GAMEOBJECTS SPAWN TRIAL OF CHAMPION MAP 650
 DELETE FROM `gameobject` WHERE `map`=650;
-INSERT INTO `gameobject` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`, `rotation0`, `rotation1`, `rotation2`, `rotation3`, `spawntimesecs`, `animprogress`, `state`) VALUES 
+REPLACE INTO `gameobject` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`, `rotation0`, `rotation1`, `rotation2`, `rotation3`, `spawntimesecs`, `animprogress`, `state`) VALUES 
 ('150063','196398','650','3','1','801.663','624.806','412.344','-1.3439','0','0','0','0','0','0','0'),
 ('150064','196398','650','3','1','784.533','660.238','412.389','-0.715585','0','0','0','0','0','0','0'),
 ('150065','196398','650','3','1','710.325','660.708','412.387','0.698132','0','0','0','0','0','0','0'),
@@ -1799,7 +1799,7 @@ DELETE FROM `gameobject` WHERE `id` IN (195709, 195374, 195323, 195710, 195375, 
 DELETE FROM `reference_loot_template` WHERE `entry` IN (47497, 47177);
 -- drop and conditions
 DELETE FROM `conditions` WHERE `SourceGroup` IN (35451, 35490, 195323, 195324, 195374, 195375, 195709, 195710); 
-INSERT INTO `conditions` VALUES
+REPLACE INTO `conditions` VALUES
 (1, 35451, 43228, 0, 1, 57940, 0, 0, 0, '', NULL),
 (1, 35490, 43228, 0, 1, 57940, 0, 0, 0, '', NULL),
 (4, 195323, 43228, 0, 1, 57940, 0, 0, 0, '', NULL),
@@ -1814,7 +1814,7 @@ INSERT INTO `conditions` VALUES
 -- Normal
 -- Fix drops rates
 DELETE FROM `creature_loot_template` WHERE (`entry`=35451);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (35451, 47216, 16.666, 1, 2, 1, 1),
 (35451, 47215, 16.666, 1, 2, 1, 1),
 (35451, 47226, 16.666, 1, 2, 1, 1),
@@ -1833,7 +1833,7 @@ INSERT INTO `creature_loot_template` VALUES
 -- Hero
 -- Fix rates and drops and some missing
 DELETE FROM `creature_loot_template` WHERE (`entry`=35490);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (35490, 47565, 14.285, 1, 2, 1, 1),
 (35490, 47568, 14.285, 1, 2, 1, 1),
 (35490, 47569, 14.285, 1, 2, 1, 1),
@@ -1859,7 +1859,7 @@ INSERT INTO `creature_loot_template` VALUES
 -- Normal (Entry: 195323)
 -- fix drops rates and groups
 DELETE FROM `gameobject_loot_template` WHERE (`entry`=195323);
-INSERT INTO `gameobject_loot_template` VALUES 
+REPLACE INTO `gameobject_loot_template` VALUES 
 (195323, 43228, 100, 1, 0, 3, 3),
 (195323, 47176, 8.333, 1, 1, 1, 1),
 (195323, 47177, 8.333, 1, 1, 1, 1),
@@ -1879,7 +1879,7 @@ INSERT INTO `gameobject_loot_template` VALUES
 -- Fix rates and groups
 UPDATE `gameobject_template` SET `data1`='195324' WHERE entry='195324';
 DELETE FROM `gameobject_loot_template` WHERE (`entry`=195324);
-INSERT INTO `gameobject_loot_template` VALUES 
+REPLACE INTO `gameobject_loot_template` VALUES 
 (195324, 47514, 8.333, 1, 1, 1, 1),
 (195324, 47512, 8.333, 1, 1, 1, 1),
 (195324, 47511, 8.333, 1, 1, 1, 1),
@@ -1902,7 +1902,7 @@ INSERT INTO `gameobject_loot_template` VALUES
 -- Normal (entry: 195374)
 -- Fix groups and drops
 DELETE FROM `gameobject_loot_template` WHERE (`entry`=195374);
-INSERT INTO `gameobject_loot_template` VALUES 
+REPLACE INTO `gameobject_loot_template` VALUES 
 (195374, 47176, 8.333, 1, 1, 1, 1),
 (195374, 47200, 8.333, 1, 1, 1, 1),
 (195374, 47178, 8.333, 1, 1, 1, 1),
@@ -1921,7 +1921,7 @@ INSERT INTO `gameobject_loot_template` VALUES
 -- Hero (Entry: 195375)
 -- Fix groups and rates
 DELETE FROM `gameobject_loot_template` WHERE (`entry`=195375);
-INSERT INTO `gameobject_loot_template` VALUES 
+REPLACE INTO `gameobject_loot_template` VALUES 
 (195375, 47509, 8.333, 1, 1, 1, 1),
 (195375, 47508, 8.333, 1, 1, 1, 1),
 (195375, 47504, 8.333, 1, 1, 1, 1),
@@ -1944,7 +1944,7 @@ INSERT INTO `gameobject_loot_template` VALUES
 -- Normal (Entry: 195709)
 -- Fix rates
 DELETE FROM `gameobject_loot_template` WHERE (`entry`=195709);
-INSERT INTO `gameobject_loot_template` VALUES 
+REPLACE INTO `gameobject_loot_template` VALUES 
 (195709, 43228, 24, 1, 0, 3, 3),
 (195709, 47172, 16.666, 1, 1, 1, 1),
 (195709, 47171, 16.666, 1, 1, 1, 1),
@@ -1957,7 +1957,7 @@ INSERT INTO `gameobject_loot_template` VALUES
 -- (Entry: 195710)
 -- Fix rates
 DELETE FROM `gameobject_loot_template` WHERE (`entry`=195710);
-INSERT INTO `gameobject_loot_template` VALUES 
+REPLACE INTO `gameobject_loot_template` VALUES 
 (195710, 44990, 43, 1, 0, 1, 1),
 (195710, 47241, 100, 1, 0, 1, 1),
 (195710, 34057, 1.3, 1, 0, 1, 1),
@@ -1972,14 +1972,14 @@ INSERT INTO `gameobject_loot_template` VALUES
 -- Loot for creature Thunder Bluff Champion
 -- http://www.wowhead.com/npc=35305#drops:mode=normal
 DELETE FROM `creature_loot_template` WHERE (`entry`=35305);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (35305, 47172, 20, 1, 0, 1, 7),
 (35305, 47170, 14, 1, 0, 1, 1);
 
 -- Thunder Bluff Champion
 -- Some one, a very nice person, delete this lines for give to us a double work :P
 DELETE FROM `creature_loot_template` WHERE (`entry`=35325);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (35325, 47172, 33, 1, 0, 1, 2),
 (35325, 47170, 25, 1, 0, 1, 1);
 
@@ -1987,31 +1987,31 @@ INSERT INTO `creature_loot_template` VALUES
 
 -- 01_trial_of_the_crusader
 -- Spell DBC
-INSERT INTO `spelldifficulty_dbc` VALUES ('6000', '66331', '67478', '67477', '67479'); -- Gormok Impale
-INSERT INTO `spelldifficulty_dbc` VALUES ('6001', '66330', '67647', '67648', '67649'); -- Gormok Staggering Stomp
-INSERT INTO `spelldifficulty_dbc` VALUES ('6002', '66689', '67650', '67651', '67652'); -- Icehowl Artic Breath
-INSERT INTO `spelldifficulty_dbc` VALUES ('6003', '66683', '67660', '67660', '67662'); -- Icehowl Massic Crash
-INSERT INTO `spelldifficulty_dbc` VALUES ('6004', '67345', '67663', '67663', '67665'); -- Icehowl Whirl
-INSERT INTO `spelldifficulty_dbc` VALUES ('6005', '66770', '67655', '67654', '67656'); -- Icehowl Ferocious Butt
-INSERT INTO `spelldifficulty_dbc` VALUES ('6006', '66879', '67624', '67625', '67626'); -- Dreadscale Burning Bite
-INSERT INTO `spelldifficulty_dbc` VALUES ('6007', '66820', '67636', '67635', '67637'); -- Dreadscale Molten Spew
-INSERT INTO `spelldifficulty_dbc` VALUES ('6020', '66237', '67049', '67050', '67051'); -- Jaraxxus Incinerate Flesh
-INSERT INTO `spelldifficulty_dbc` VALUES ('6021', '66528', '67029', '67030', '67031'); -- Jaraxxus Fel Lighting
-INSERT INTO `spelldifficulty_dbc` VALUES ('6022', '68124', '68126', '68127', '68128'); -- Jaraxxus Legion Flame
-INSERT INTO `spelldifficulty_dbc` VALUES ('6023', '66532', '66963', '66964', '66965'); -- Jaraxxus Fel Fireball
-INSERT INTO `spelldifficulty_dbc` VALUES ('6024', '66258', '66258', '67903', '67903'); -- Jaraxxus Summon Volcan
-INSERT INTO `spelldifficulty_dbc` VALUES ('6025', '67103', '67103', '67104', '67105'); -- Portal Summon Guardian
+REPLACE INTO `spelldifficulty_dbc` VALUES ('6000', '66331', '67478', '67477', '67479'); -- Gormok Impale
+REPLACE INTO `spelldifficulty_dbc` VALUES ('6001', '66330', '67647', '67648', '67649'); -- Gormok Staggering Stomp
+REPLACE INTO `spelldifficulty_dbc` VALUES ('6002', '66689', '67650', '67651', '67652'); -- Icehowl Artic Breath
+REPLACE INTO `spelldifficulty_dbc` VALUES ('6003', '66683', '67660', '67660', '67662'); -- Icehowl Massic Crash
+REPLACE INTO `spelldifficulty_dbc` VALUES ('6004', '67345', '67663', '67663', '67665'); -- Icehowl Whirl
+REPLACE INTO `spelldifficulty_dbc` VALUES ('6005', '66770', '67655', '67654', '67656'); -- Icehowl Ferocious Butt
+REPLACE INTO `spelldifficulty_dbc` VALUES ('6006', '66879', '67624', '67625', '67626'); -- Dreadscale Burning Bite
+REPLACE INTO `spelldifficulty_dbc` VALUES ('6007', '66820', '67636', '67635', '67637'); -- Dreadscale Molten Spew
+REPLACE INTO `spelldifficulty_dbc` VALUES ('6020', '66237', '67049', '67050', '67051'); -- Jaraxxus Incinerate Flesh
+REPLACE INTO `spelldifficulty_dbc` VALUES ('6021', '66528', '67029', '67030', '67031'); -- Jaraxxus Fel Lighting
+REPLACE INTO `spelldifficulty_dbc` VALUES ('6022', '68124', '68126', '68127', '68128'); -- Jaraxxus Legion Flame
+REPLACE INTO `spelldifficulty_dbc` VALUES ('6023', '66532', '66963', '66964', '66965'); -- Jaraxxus Fel Fireball
+REPLACE INTO `spelldifficulty_dbc` VALUES ('6024', '66258', '66258', '67903', '67903'); -- Jaraxxus Summon Volcan
+REPLACE INTO `spelldifficulty_dbc` VALUES ('6025', '67103', '67103', '67104', '67105'); -- Portal Summon Guardian
 
 UPDATE `creature_template` SET `scale`='2' WHERE `entry`=34825;
 
 -- correct little error to start core not really importants
 DELETE FROM `creature_template` WHERE `entry`=41000;
-INSERT INTO `creature_template` VALUES ('41000','0','0','0','0','0','169','11686','169','0','Wilfred Portal Trigger','','','0','81','81','0','14','14','0','1','1','0','1','2','0','0','1','2000','2000','1','1','0','0','0','0','0','0','1','2','0','10','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','1','1','1','1','0','0','0','0','0','0','0','0','1','0','0','2','0','','11159');
+REPLACE INTO `creature_template` VALUES ('41000','0','0','0','0','0','169','11686','169','0','Wilfred Portal Trigger','','','0','81','81','0','14','14','0','1','1','0','1','2','0','0','1','2000','2000','1','1','0','0','0','0','0','0','1','2','0','10','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','1','1','1','1','0','0','0','0','0','0','0','0','1','0','0','2','0','','11159');
 
 -- Gormok
 UPDATE `creature_template` SET `scale`='1.5', `faction_A`='16', `faction_H`='16' WHERE (`entry`='34854');
 UPDATE `creature_template` SET unit_flags= 33554434, faction_A =14, faction_H=14 WHERE `entry` IN (34628, 34630);
-INSERT INTO `npc_spellclick_spells` VALUES (34567, 65684, 0, 0, 0, 1, 0, 0, 0), (34568, 65686, 0, 0, 0, 1, 0, 0, 0); -- dark/light "portals"
+REPLACE INTO `npc_spellclick_spells` VALUES (34567, 65684, 0, 0, 0, 1, 0, 0, 0), (34568, 65686, 0, 0, 0, 1, 0, 0, 0); -- dark/light "portals"
 
 
 
@@ -2021,7 +2021,7 @@ INSERT INTO `npc_spellclick_spells` VALUES (34567, 65684, 0, 0, 0, 1, 0, 0, 0), 
 -- Trial of the Crusader 
 -- achievement_reward
 DELETE FROM achievement_reward WHERE `entry` IN (4078,4080,4156,4079);
-INSERT INTO achievement_reward
+REPLACE INTO achievement_reward
 (`entry`,`title_A`,`title_H`,`item`,`sender`,`subject`,`text`)
 VALUES
 (4078,170,170,0,0, '', ''),
@@ -2031,7 +2031,7 @@ VALUES
 
 -- achievement_criteria_data
 DELETE FROM achievement_criteria_data WHERE `criteria_id` IN (11542,11546,11547,11549,11678,11679,11680,11681,11682,11683,11684,11685,11686,11687,11688,11689,11690,11691,11692,11693,11778,11779,11780,11799,11800,11801,11802,11803,11804,11818,11838,11839,11860,11861,11862,12116,12198,12258,12278,12279,12280,12281,12338,12339,12340,12341,12342,12343,12344,12345,12346,12347,12348,12349,12350,12358,12359,12360);
-INSERT INTO achievement_criteria_data
+REPLACE INTO achievement_criteria_data
 (`criteria_id`,`type`,`value1`,`value2`)
 VALUES
 (11779,12,0,0),-- Upper Back Pain (10 player); Icehowl - mode check
@@ -2109,7 +2109,7 @@ VALUES
 
 -- disables
 DELETE FROM `disables` WHERE `entry` IN (12345,12346,12348,12340,12342,12339) AND `sourceType`=4;
-INSERT INTO `disables` (`sourceType`,`entry`,`flags`,`comment`) VALUES
+REPLACE INTO `disables` (`sourceType`,`entry`,`flags`,`comment`) VALUES
 (4,12345,0, 'A Tribute to Skill (10 player)'),
 (4,12346,0, 'A Tribute to Skill (10 player)'),
 (4,12348,0, 'A Tribute to Mad Skill (10 player)'),
@@ -2119,7 +2119,7 @@ INSERT INTO `disables` (`sourceType`,`entry`,`flags`,`comment`) VALUES
 
 -- conditions
 DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId`=13 AND `SourceEntry` IN (67888,66332,67755,67756,67757,66129,66170,66181);
-INSERT INTO `conditions` (`SourceTypeOrReferenceId`,`SourceEntry`,`ConditionTypeOrReference`,`ConditionValue1`,`ConditionValue2`,`Comment`) VALUES
+REPLACE INTO `conditions` (`SourceTypeOrReferenceId`,`SourceEntry`,`ConditionTypeOrReference`,`ConditionValue1`,`ConditionValue2`,`Comment`) VALUES
 (13,67888,18,1,35458, 'Target for Jaraxxus Lightning killing Fizzlebang'),
 (13,66332,18,1,34862, 'Target for Anub\'arak summon Nerubian Burrowers'),
 (13,67755,18,1,34862, 'Target for Anub\'arak summon Nerubian Burrowers'),
@@ -2153,7 +2153,7 @@ UPDATE `creature_template` SET `dynamicflags`=0 WHERE `entry`=35877;
 -- Frost Sphere & Nerubian Burrower && Anubarak Spike Faction (so Permafrost can hit players and creatures)
 -- In ytdb does not exist hero 3 and 4 mode
 DELETE FROM creature_template WHERE `entry` IN (34606,34649,3460602,3460603);
-INSERT INTO `creature_template` VALUES 
+REPLACE INTO `creature_template` VALUES 
 ('34606','34649','3460602','3460603','0','0','1126','25144','0','0','Frost Sphere','','','0','79','80','2','1925','1925','0','1','1.14286','1','0','422','586','0','642','1','0','0','1','32768','8','0','0','0','0','0','345','509','103','8','64','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','','0','3','0.238095','1','1','0','0','0','0','0','0','0','721','1','0','0','0','mob_frost_sphere','12340'),
 ('34649','0','0','0','0','0','1126','25144','0','0','Frost Sphere (1)','','','0','79','80','2','1925','1925','0','1','1.14286','1','0','422','586','0','642','1','0','0','1','32768','8','0','0','0','0','0','345','509','103','8','64','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','','0','3','0.238095','1','1','0','0','0','0','0','0','0','721','1','0','0','0','','12340'),
 ('3460602','0','0','0','0','0','1126','25144','0','0','Frost Sphere (2)','','','0','79','80','2','1925','1925','0','1','1.14286','1','0','422','586','0','642','1','0','0','1','32768','8','0','0','0','0','0','345','509','103','8','64','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','','0','3','0.238095','1','1','0','0','0','0','0','0','0','721','1','0','0','0','','1'), -- provisional
@@ -2164,7 +2164,7 @@ UPDATE `creature_template` SET `modelid1`=11686 WHERE `creature_template`.`entry
 
 -- Text for gossips (obviously wrong!)
 DELETE FROM `npc_text` WHERE `ID` IN (724001,724002,724003,724004,724005,724006); 
-INSERT INTO `npc_text` (`ID`,`Text0_0`) VALUES
+REPLACE INTO `npc_text` (`ID`,`Text0_0`) VALUES
 (724001, 'Greetings $N! Are you ready to be tested in Crusaders Coliseum?'),
 (724002, 'Are you ready for the next stage?'),
 (724003, 'Are you ready to fight the champions of the Silver vanguard?'),
@@ -2176,7 +2176,7 @@ INSERT INTO `npc_text` (`ID`,`Text0_0`) VALUES
 UPDATE `creature_template` SET  `faction_A`=1770,`faction_H`=1770 WHERE `entry`=35458;
 
 
--- INSERT INTO `spell_script_target` VALUES (65875, 1, 34497), (65876, 1, 34496);
+-- REPLACE INTO `spell_script_target` VALUES (65875, 1, 34497), (65876, 1, 34496);
 
 -- ------------------------------------------------------------------------------------------------------------------------------------ --
 -- ACORDING WITH THE LAST SCRIPTS OF TC ANUB'ARAK IS NOT ATTACKABLE, THIS IS THE SOLUTION
@@ -2191,7 +2191,7 @@ UPDATE creature_template SET unit_flags = 0, type_flags= 8, dynamicflags = 0, fl
 DELETE FROM `areatrigger_scripts` WHERE `entry` IN (5369,5423);
 
 DELETE FROM areatrigger_scripts WHERE `entry`=4156;
-INSERT INTO areatrigger_scripts VALUES (4156,'at_naxxramas_frostwyrm_wing');
+REPLACE INTO areatrigger_scripts VALUES (4156,'at_naxxramas_frostwyrm_wing');
 
 UPDATE `creature_template` SET `spell1`=62402 WHERE `entry`=33142;
 UPDATE `creature_template` SET `spell1`=62402 WHERE `entry`=33139;
@@ -2208,11 +2208,11 @@ UPDATE `creature_template` SET `vehicleId` = 318 WHERE `entry` = 33118;
 
 -- 7792
 DELETE FROM `creature_template` WHERE `entry` IN (33119);
-INSERT INTO `creature_template` VALUES
+REPLACE INTO `creature_template` VALUES
 ('33119','0','0','0','0','0','13069','0','0','0','Scorch trigger','',NULL,'0','83','83','2','16','16','0','2','2','85','3','0','0','0','0','0','0','0','8','34340934','0','0','0','0','0','0','0','0','0','7','0','0','0','0','0','0','0','0','0','0','62548','0','0','0','0','0','0','0','0','0','1305000','1595000','EventAI','0','3','310','30','1','0','0','0','0','0','0','0','169','1','0','617299803','1','trigger_periodic','0');
 
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=33119);
-INSERT INTO `creature_ai_scripts` VALUES 
+REPLACE INTO `creature_ai_scripts` VALUES 
 ( 10033119, 33119, 0, 0, 100, 3, 1000, 1000, 1000, 1000, 11, 62548, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 'Scorch Ground');
 
 UPDATE `creature_template` SET `faction_A` = 35, `faction_H` = 35, `unit_flags` = 33554434, `flags_extra` = 0 WHERE `entry` = 33121;
@@ -2222,25 +2222,25 @@ UPDATE `creature_template` SET `vehicleId` = 332 WHERE `entry` = 33293;
 
 -- 7930_leviathan_trigger
 DELETE FROM `creature_template` WHERE `entry` IN (33115);
-INSERT INTO `creature_template` VALUES
+REPLACE INTO `creature_template` VALUES
 ('33115','0','0','0','0','0','13069','0','0','0','Leviathan trigger','',NULL,'0','83','83','2','16','16','0','2','2','1','3','0','0','0','0','0','0','0','8','34340934','0','0','0','0','0','0','0','0','0','7','0','0','0','0','0','0','0','0','0','0','62548','0','0','0','0','0','0','0','0','0','1305000','1595000','','0','3','310','30','1','0','0','0','0','0','0','0','169','1','0','617299803','1','flame_leviathan_trigger','0');
 
 DELETE FROM creature WHERE `id` IN (33115, 33060, 33062, 33109);
-INSERT INTO `creature` (`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`DeathState`,`MovementType`) VALUES (33115,603,1,1,0,0,-784.969,-135.608,429.774,0.351076,480000,0,0,3458360,279750,0,0);
+REPLACE INTO `creature` (`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`DeathState`,`MovementType`) VALUES (33115,603,1,1,0,0,-784.969,-135.608,429.774,0.351076,480000,0,0,3458360,279750,0,0);
 
 -- 8042_boss_leviathan
 DELETE FROM `creature_template` WHERE `entry` IN (33240);
-INSERT INTO `creature_template` (`entry`, `difficulty_entry_1`, `difficulty_entry_2`, `difficulty_entry_3`, `KillCredit1`, `KillCredit2`, `modelid1`, `modelid2`, `modelid3`, `modelid4`, `name`, `subname`, `IconName`, `gossip_menu_id`, `minlevel`, `maxlevel`, `exp`, `faction_A`, `faction_H`, `npcflag`, `speed_walk`, `speed_run`, `scale`, `rank`, `mindmg`, `maxdmg`, `dmgschool`, `attackpower`, `dmg_multiplier`, `baseattacktime`, `rangeattacktime`, `unit_class`, `unit_flags`, `dynamicflags`, `family`, `trainer_type`, `trainer_spell`, `trainer_class`, `trainer_race`, `minrangedmg`, `maxrangedmg`, `rangedattackpower`, `type`, `type_flags`, `lootid`, `pickpocketloot`, `skinloot`, `resistance1`, `resistance2`, `resistance3`, `resistance4`, `resistance5`, `resistance6`, `spell1`, `spell2`, `spell3`, `spell4`, `spell5`, `spell6`, `spell7`, `spell8`, `PetSpellDataId`, `VehicleId`, `mingold`, `maxgold`, `AIName`, `MovementType`, `InhabitType`, `Health_mod`, `Mana_mod`, `Armor_mod`, `RacialLeader`, `questItem1`, `questItem2`, `questItem3`, `questItem4`, `questItem5`, `questItem6`, `movementId`, `RegenHealth`, `equipment_id`, `mechanic_immune_mask`, `flags_extra`, `ScriptName`, `WDBVerified`) VALUES('33240','33240','0','0','0','0','28517','0','0','0','Ulduar Colossus','','','0','80','80','2','1692','1692','0','1.2','1.14286','1','1','422','586','0','642','7.5','2000','0','1','32832','0','0','0','0','0','0','345','509','103','5','524352','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','','0','3','125','1','1','0','0','0','0','0','0','0','124','1','0','0','0','mob_colossus','11403');
+REPLACE INTO `creature_template` (`entry`, `difficulty_entry_1`, `difficulty_entry_2`, `difficulty_entry_3`, `KillCredit1`, `KillCredit2`, `modelid1`, `modelid2`, `modelid3`, `modelid4`, `name`, `subname`, `IconName`, `gossip_menu_id`, `minlevel`, `maxlevel`, `exp`, `faction_A`, `faction_H`, `npcflag`, `speed_walk`, `speed_run`, `scale`, `rank`, `mindmg`, `maxdmg`, `dmgschool`, `attackpower`, `dmg_multiplier`, `baseattacktime`, `rangeattacktime`, `unit_class`, `unit_flags`, `dynamicflags`, `family`, `trainer_type`, `trainer_spell`, `trainer_class`, `trainer_race`, `minrangedmg`, `maxrangedmg`, `rangedattackpower`, `type`, `type_flags`, `lootid`, `pickpocketloot`, `skinloot`, `resistance1`, `resistance2`, `resistance3`, `resistance4`, `resistance5`, `resistance6`, `spell1`, `spell2`, `spell3`, `spell4`, `spell5`, `spell6`, `spell7`, `spell8`, `PetSpellDataId`, `VehicleId`, `mingold`, `maxgold`, `AIName`, `MovementType`, `InhabitType`, `Health_mod`, `Mana_mod`, `Armor_mod`, `RacialLeader`, `questItem1`, `questItem2`, `questItem3`, `questItem4`, `questItem5`, `questItem6`, `movementId`, `RegenHealth`, `equipment_id`, `mechanic_immune_mask`, `flags_extra`, `ScriptName`, `WDBVerified`) VALUES('33240','33240','0','0','0','0','28517','0','0','0','Ulduar Colossus','','','0','80','80','2','1692','1692','0','1.2','1.14286','1','1','422','586','0','642','7.5','2000','0','1','32832','0','0','0','0','0','0','345','509','103','5','524352','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','','0','3','125','1','1','0','0','0','0','0','0','0','124','1','0','0','0','mob_colossus','11403');
 -- ubicaciуn Leviathan
 DELETE FROM `creature` WHERE `id`=33113;
-INSERT INTO `creature` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`DeathState`,`MovementType`) VALUES
+REPLACE INTO `creature` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`DeathState`,`MovementType`) VALUES
 (94374, 33113, 603, 1, 1, 0, 0, 435.89, -8.417, 409.886, 3.12723, 480000, 0, 0, 23009250, 0, 0, 0);
 -- Refuerzo orbital
 UPDATE `creature_template` SET `unit_flags` = 33685510, `type_flags` = 0 WHERE `entry` = 34286;
 
 -- 8047_ignis_scorchground
 DELETE FROM `creature_template` WHERE `entry` IN (33119);
-INSERT INTO `creature_template` VALUES
+REPLACE INTO `creature_template` VALUES
 ('33119','0','0','0','0','0','13069','0','0','0','Scorch trigger','','','0','80','80','2','16','16','0','1','1.14286','85','1','0','0','0','0','1','2000','0','1','0','0','0','0','0','0','0','0','0','0','4','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','','0','3','4','1','1','0','0','0','0','0','0','0','94','1','0','0','0','mob_scorch_ground','11159');
 
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=33119);
@@ -2273,7 +2273,7 @@ UPDATE `creature_template` SET `equipment_id` = 2500 WHERE `entry` = 33515;
 UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16 WHERE `entry` = 34096;
 
 DELETE FROM `creature_equip_template` WHERE entry = 2500;
-INSERT INTO `creature_equip_template` VALUES ('2500','45315','0','0');
+REPLACE INTO `creature_equip_template` VALUES ('2500','45315','0','0');
 
 -- 9130_auriaya_fix
 UPDATE `creature` SET `MovementType` = 2 WHERE `id` = 33515;
@@ -2294,7 +2294,7 @@ UPDATE `creature_template` SET `modelid1` = 15880, `modelid2` = 0 WHERE `entry` 
 UPDATE `gameobject_template` SET `flags` = 4 WHERE `entry` = 194173;
 
 DELETE FROM `spell_linked_spell` WHERE `spell_trigger` = 61990;
-INSERT INTO `spell_linked_spell` VALUES 
+REPLACE INTO `spell_linked_spell` VALUES 
 (61990, -62457, 2, "Ice Shards Immunity (Hodir)"),
 (61990, -65370, 2, "Ice Shards Immunity (Hodir)");
 
@@ -2307,7 +2307,7 @@ DELETE FROM `creature` WHERE `id` = 32938;
 
 -- 8153_razorscale_event
 DELETE FROM `creature` WHERE `id`=33186;
-INSERT INTO `creature` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`DeathState`,`MovementType`) VALUES
+REPLACE INTO `creature` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`DeathState`,`MovementType`) VALUES
 (94373, 33186, 603, 1, 1, 0, 0, 587.073, -203.205, 441.237, 1.60532, 604800, 0, 0, 3555975, 0, 0, 0);
 
 UPDATE `creature_template` SET `unit_flags` = 33554438 WHERE `entry` = 33184;
@@ -2333,7 +2333,7 @@ UPDATE `script_texts` SET `type` = 2  WHERE `entry` = -1603214;
 
 -- 8166_hodir_flashfreeze
 DELETE FROM `spell_linked_spell` WHERE `spell_trigger` IN (61990, -61990);
-INSERT INTO `spell_linked_spell` VALUES 
+REPLACE INTO `spell_linked_spell` VALUES 
 (61990, 7940, 2, "Hodir Flash Freeze immunity");
 
 -- 8172_freya_elders
@@ -2341,7 +2341,7 @@ UPDATE `creature_template` SET `unit_flags` = 33685510, `modelid1` = 11686, `mod
 UPDATE `creature_template` SET `faction_A` = 16, `faction_H` = 16, `unit_flags` = 393220 WHERE `entry` = 33168;
 
 DELETE FROM `spell_linked_spell` WHERE `spell_effect` = -62243;
-INSERT INTO `spell_linked_spell` (`spell_trigger`, `spell_effect`, `type`, `comment`) VALUES
+REPLACE INTO `spell_linked_spell` (`spell_trigger`, `spell_effect`, `type`, `comment`) VALUES
 (62217, -62243, 1, 'cancels the effects of Unstable Sun Beam'),
 (62922, -62243, 1, 'cancels the effects of Unstable Sun Beam');
 
@@ -2355,7 +2355,7 @@ UPDATE `creature_template` SET `unit_flags` = 33686022 WHERE `entry` =33215;
 DELETE FROM `creature` WHERE `guid` = 136607;
 
 DELETE FROM `spell_linked_spell` WHERE `spell_effect` = -62532;
-INSERT INTO `spell_linked_spell` (`spell_trigger`, `spell_effect`, `type`, `comment`) VALUES
+REPLACE INTO `spell_linked_spell` (`spell_trigger`, `spell_effect`, `type`, `comment`) VALUES
 (64321, -62532, 1, 'Potent Pheromones ward off the Conservator''s Grip'),
 (62619, -62532, 1, 'Pheromones ward off the Conservator''s Grip');
 
@@ -2364,7 +2364,7 @@ UPDATE `creature_template` SET `modelid1` = 11686, `modelid2` = 0, `unit_flags` 
 
 -- 8199_ulduar_cleanup
 DELETE FROM `gameobject` WHERE `id` = '194905';
-INSERT INTO `gameobject` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`, `rotation0`, `rotation1`, `rotation2`, `rotation3`, `spawntimesecs`, `animprogress`, `state`) VALUES
+REPLACE INTO `gameobject` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`, `rotation0`, `rotation1`, `rotation2`, `rotation3`, `spawntimesecs`, `animprogress`, `state`) VALUES
 ('270000','194905','603','1','1','401.308','-13.8236','409.524','3.14159','0','0','0','1','180','255','0');
 
 UPDATE `creature_template` SET `speed_walk` = 0.5 WHERE `entry` = 33113;
@@ -2379,7 +2379,7 @@ DELETE FROM `creature_template` WHERE `entry` = 33119;
 -- no es neesario, las puertas se abren sin ningun script
 /*
 DELETE FROM `gameobject_scripts` WHERE `id`=55194;
-INSERT INTO `gameobject_scripts` (`id`, `delay`, `command`, `datalong`, `datalong2`, `dataint`, `x`, `y`, `z`, `o`) VALUES 
+REPLACE INTO `gameobject_scripts` (`id`, `delay`, `command`, `datalong`, `datalong2`, `dataint`, `x`, `y`, `z`, `o`) VALUES 
 (55194, 0, 11, 34155, 15, '0', 0, 0, 0, 0);
 */
 
@@ -2397,13 +2397,13 @@ DELETE FROM `creature` WHERE `id` IN (32882, 32908, 32885, 32879, 33140, 33141);
 UPDATE `creature_template` SET `flags_extra` = 2 WHERE `entry` IN (32892, 32879, 32780, 33140, 33141);
 
 DELETE FROM `spell_linked_spell` WHERE `spell_trigger`=62042;
-INSERT INTO `spell_linked_spell` (`spell_trigger`, `spell_effect`, `type`, `comment`) VALUES
+REPLACE INTO `spell_linked_spell` (`spell_trigger`, `spell_effect`, `type`, `comment`) VALUES
 ('62042','62470','1','Thorim: Deafening Thunder');
 
 UPDATE `creature_template` SET `unit_flags` = 33686020 WHERE `entry` = 33378;
 
 DELETE FROM `creature` WHERE `id` IN (33378, 32892);
-INSERT INTO `creature` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`DeathState`,`MovementType`) VALUES
+REPLACE INTO `creature` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`DeathState`,`MovementType`) VALUES
 (131835, 33378, 603, 1, 1, 16925, 0, 2104.99, -233.484, 433.573, 5.49779, 604800, 0, 0, 12600, 0, 0, 1),
 (131836, 33378, 603, 1, 1, 16925, 0, 2092.64, -262.594, 433.576, 6.26573, 604800, 0, 0, 12600, 0, 0, 1),
 (131837, 33378, 603, 1, 1, 16925, 0, 2104.76, -292.719, 433.181, 0.785398, 604800, 0, 0, 12600, 0, 0, 1),
@@ -2414,7 +2414,7 @@ INSERT INTO `creature` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equ
 
 /*
 DELETE FROM `spell_script_target` WHERE `entry`=62016;
-INSERT INTO `spell_script_target` (`entry`, `type`, `targetEntry`) VALUES('62016','1','33378');
+REPLACE INTO `spell_script_target` (`entry`, `type`, `targetEntry`) VALUES('62016','1','33378');
 */
 UPDATE `creature_template` SET `unit_flags` = 0 WHERE `entry` = 32872;
 UPDATE `creature_template` SET `unit_flags` = 0 WHERE `entry` = 32873;
@@ -2427,7 +2427,7 @@ UPDATE `creature_template` SET `modelid1` = 16925, `modelid2` = 0 WHERE `entry`I
 
 DELETE FROM `creature` WHERE `id` IN (32922, 32923, 32925);
 SET @GUID := 200400;
-INSERT INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `modelid`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `spawndist`, `currentwaypoint`, `curhealth`, `curmana`, `DeathState`, `MovementType`) values 
+REPLACE INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `modelid`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `spawndist`, `currentwaypoint`, `curhealth`, `curmana`, `DeathState`, `MovementType`) values 
 (@GUID,32922,603,1,1,25984,0,2110.24,-213.923,436.857,5.16617,604800,0,0,80886,0,0,0),
 (@GUID+1,32922,603,1,1,25984,0,2095.97,-213.634,445.036,5.37561,604800,0,0,80886,0,0,0),
 (@GUID+2,32922,603,1,1,25984,0,2076.95,-244.528,442.998,5.96903,604800,0,0,80886,0,0,0),
@@ -2523,23 +2523,23 @@ INSERT INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `modelid`
 (@GUID+92,32925,603,1,1,28581,0,2197.29,-272.726,445.048,3.00197,604800,0,0,40443,4169,0,0);
 
 DELETE FROM `gameobject_template` WHERE `entry`=194265;
-INSERT INTO `gameobject_template` (`entry`, `type`, `displayId`, `name`, `IconName`, `castBarCaption`, `unk1`, `faction`, `flags`, `size`, `questItem1`, `questItem2`, `questItem3`, `questItem4`, `questItem5`, `questItem6`, `data0`, `data1`, `data2`, `data3`, `data4`, `data5`, `data6`, `data7`, `data8`, `data9`, `data10`, `data11`, `data12`, `data13`, `data14`, `data15`, `data16`, `data17`, `data18`, `data19`, `data20`, `data21`, `data22`, `data23`, `ScriptName`, `WDBVerified`) VALUES
+REPLACE INTO `gameobject_template` (`entry`, `type`, `displayId`, `name`, `IconName`, `castBarCaption`, `unk1`, `faction`, `flags`, `size`, `questItem1`, `questItem2`, `questItem3`, `questItem4`, `questItem5`, `questItem6`, `data0`, `data1`, `data2`, `data3`, `data4`, `data5`, `data6`, `data7`, `data8`, `data9`, `data10`, `data11`, `data12`, `data13`, `data14`, `data15`, `data16`, `data17`, `data18`, `data19`, `data20`, `data21`, `data22`, `data23`, `ScriptName`, `WDBVerified`) VALUES
 ('194265','1','295','Lever','','','','0','16','3','0','0','0','0','0','0','0','0','6000','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','','11403');
 DELETE FROM `gameobject` WHERE `id`=194265;
-INSERT INTO `gameobject` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`position_x`,`position_y`,`position_z`,`orientation`,`rotation0`,`rotation1`,`rotation2`,`rotation3`,`spawntimesecs`,`animprogress`,`state`) VALUES
+REPLACE INTO `gameobject` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`position_x`,`position_y`,`position_z`,`orientation`,`rotation0`,`rotation1`,`rotation2`,`rotation3`,`spawntimesecs`,`animprogress`,`state`) VALUES
 (2002365, 194265, 603, 1, 64, 2173.24, -252.985, 420.146, 5.27078, 0, 0, 1, 0, 7200, 100, 1);
 
 UPDATE `gameobject` SET `id` = 194265, `rotation2` = 1, `rotation3` = 0, `spawntimesecs` = 7200, `animprogress` = 100 WHERE `guid` = 2002365;
 
 DELETE FROM `creature` WHERE `guid`=131934;
-INSERT INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `modelid`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `spawndist`, `currentwaypoint`, `curhealth`, `curmana`, `DeathState`, `MovementType`) VALUES
+REPLACE INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `modelid`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `spawndist`, `currentwaypoint`, `curhealth`, `curmana`, `DeathState`, `MovementType`) VALUES
 ('131934','33725','603','1','1','16925','0','2134.93','-339.696','437.311','0','604800','0','0','12600','0','0','0');
 
 
 UPDATE `creature_template` SET `flags_extra` = 2 WHERE `entry` = 32892;
 
 DELETE FROM `creature_addon` WHERE `guid`IN (131817, 131934);
-INSERT INTO `creature_addon` (`guid`, `path_id`, `mount`, `bytes1`, `bytes2`, `emote`, `auras`) VALUES
+REPLACE INTO `creature_addon` (`guid`, `path_id`, `mount`, `bytes1`, `bytes2`, `emote`, `auras`) VALUES
 ('131817','0','0','0','1','0','40775 0'),
 ('131934','0','0','0','1','0','40775 0');
 
@@ -2549,12 +2549,12 @@ UPDATE `creature_template` SET `mindmg` = 488, `maxdmg` = 642, `attackpower` = 4
 
 -- 8265_thorim_chest
 DELETE FROM `gameobject` WHERE `id`=194314;
-INSERT INTO `gameobject` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`position_x`,`position_y`,`position_z`,`orientation`,`rotation0`,`rotation1`,`rotation2`,`rotation3`,`spawntimesecs`,`animprogress`,`state`) VALUES
+REPLACE INTO `gameobject` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`position_x`,`position_y`,`position_z`,`orientation`,`rotation0`,`rotation1`,`rotation2`,`rotation3`,`spawntimesecs`,`animprogress`,`state`) VALUES
 (7143, 194314, 603, 1, 1, 2134.58, -286.908, 419.495, 1.55988, 0, 0, 0.703237, 0.710955, -604800, 0, 1);
 
 -- 8266_thorim_hardmode
 DELETE FROM creature_template WHERE `entry` IN (33196, 33234);
-INSERT INTO `creature_template`  values
+REPLACE INTO `creature_template`  values
 ('33196','33234','0','0','0','0','28488','0','0','0','Sif','','','0','83','83','2','16','16','0','1','1.14286','1','3','370','531','4','343','35','2000','0','8','33587202','8','0','0','0','0','0','365','542','84','7','4','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','','0','3','350','1','1','0','0','0','0','0','0','0','0','1','850','0','0','npc_sif','11159'),
 ('33234','0','0','0','0','0','28488','0','0','0','Sif (1)','','','0','83','83','2','35','35','0','1','1.14286','1','3','370','531','0','343','70','2000','0','8','0','8','0','0','0','0','0','365','542','84','7','4','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','','0','3','350','1','1','0','0','0','0','0','0','0','0','1','0','0','0','','1');
 
@@ -2564,15 +2564,15 @@ UPDATE `creature_template` SET `modelid1` = 16925, `modelid2` = 0, `flags_extra`
 -- 8274_thorim_tram
 UPDATE `gameobject_template` SET `flags` = 32, `data2` = 3000 WHERE `entry` IN (194914, 194912, 194437);
 DELETE FROM gameobject WHERE id = '194437';
-INSERT INTO `gameobject` (`guid`,`id`, `map`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`, `rotation0`, `rotation1`, `rotation2`, `rotation3`, `spawntimesecs`, `animprogress`, `state`) VALUES
+REPLACE INTO `gameobject` (`guid`,`id`, `map`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`, `rotation0`, `rotation1`, `rotation2`, `rotation3`, `spawntimesecs`, `animprogress`, `state`) VALUES
 (' 270010','194437','603','1','1','2306.87','274.237','424.288','1.52255','0','0','0.689847','0.723956','300','0','1');
 
 -- 8275_tram_packets
 DELETE FROM gameobject_template WHERE entry = '194438';
-INSERT INTO `gameobject_template` (`entry`, `type`, `displayId`, `name`, `IconName`, `castBarCaption`, `unk1`, `faction`, `flags`, `size`, `questItem1`, `questItem2`, `questItem3`, `questItem4`, `questItem5`, `questItem6`, `data0`, `data1`, `data2`, `data3`, `data4`, `data5`, `data6`, `data7`, `data8`, `data9`, `data10`, `data11`, `data12`, `data13`, `data14`, `data15`, `data16`, `data17`, `data18`, `data19`, `data20`, `data21`, `data22`, `data23`, `ScriptName`, `WDBVerified`) VALUES
+REPLACE INTO `gameobject_template` (`entry`, `type`, `displayId`, `name`, `IconName`, `castBarCaption`, `unk1`, `faction`, `flags`, `size`, `questItem1`, `questItem2`, `questItem3`, `questItem4`, `questItem5`, `questItem6`, `data0`, `data1`, `data2`, `data3`, `data4`, `data5`, `data6`, `data7`, `data8`, `data9`, `data10`, `data11`, `data12`, `data13`, `data14`, `data15`, `data16`, `data17`, `data18`, `data19`, `data20`, `data21`, `data22`, `data23`, `ScriptName`, `WDBVerified`) VALUES
 ('194438','1','8504','Activate Tram','','','','0','32','1','0','0','0','0','0','0','0','0','3000','0','0','1','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','go_call_tram','11159');
 DELETE FROM gameobject WHERE id = '194438';
-INSERT INTO `gameobject` (`guid`,`id`, `map`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`, `rotation0`, `rotation1`, `rotation2`, `rotation3`, `spawntimesecs`, `animprogress`, `state`) VALUES
+REPLACE INTO `gameobject` (`guid`,`id`, `map`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`, `rotation0`, `rotation1`, `rotation2`, `rotation3`, `spawntimesecs`, `animprogress`, `state`) VALUES
 (270011, 194438, 603, 1,1,2306.99, 2589.35, 424.382, 4.71676, 0, 0, 0.705559, -0.708651, 300, 0, 1);
 
 -- 8277_ignis_vehicle
@@ -2588,7 +2588,7 @@ UPDATE `creature_template` SET `modelid1` = 11686, `modelid2` = 0, `flags_extra`
 
 -- 8289_kologarn_arms
 DELETE FROM `creature_model_info` WHERE `modelid` IN (28638, 28821, 28822);
-INSERT INTO `creature_model_info` (`modelid`, `bounding_radius`, `combat_reach`, `gender`, `modelid_other_gender`) VALUES
+REPLACE INTO `creature_model_info` (`modelid`, `bounding_radius`, `combat_reach`, `gender`, `modelid_other_gender`) VALUES
 (28638, 0.15, 20, 2, 0),
 (28821, 0.35, 20, 2, 0),
 (28822, 0.35, 20, 2, 0);
@@ -2600,14 +2600,14 @@ UPDATE `creature_template` SET `resistance4` = 1000 WHERE `entry` IN (33325, 329
 UPDATE `creature_template` SET `vehicleId` = 336 WHERE `entry` = 33432; -- Leviathan Mk II
 DELETE FROM creature WHERE id = 34071;
 DELETE FROM vehicle_accessory WHERE entry = 33432;
-INSERT INTO vehicle_accessory VALUE (33432, 34071, 7, 1, 'Leviathan Mk II turret');
+REPLACE INTO vehicle_accessory VALUE (33432, 34071, 7, 1, 'Leviathan Mk II turret');
 DELETE FROM `creature_model_info` WHERE `modelid`=28831;
-INSERT INTO `creature_model_info` (`modelid`, `bounding_radius`, `combat_reach`, `gender`, `modelid_other_gender`) VALUES
+REPLACE INTO `creature_model_info` (`modelid`, `bounding_radius`, `combat_reach`, `gender`, `modelid_other_gender`) VALUES
 (28831, 0.5, 7, 2, 0);
 
 -- 8320 mimiron_encounter
 DELETE FROM `creature_model_info` WHERE `modelid`=28831;
-INSERT INTO `creature_model_info` (`modelid`, `bounding_radius`, `combat_reach`, `gender`, `modelid_other_gender`) VALUES
+REPLACE INTO `creature_model_info` (`modelid`, `bounding_radius`, `combat_reach`, `gender`, `modelid_other_gender`) VALUES
 (28831, 0, 0, 2, 0);
 UPDATE `creature_template` SET `flags_extra` = 2 WHERE `entry` IN (33856, 34143, 34050);
 UPDATE `creature_template` SET `unit_flags` = 33686018 WHERE `entry` = 34050;
@@ -2618,31 +2618,31 @@ UPDATE `creature_template` SET `vehicleid` = 370, `Health_mod` = 156.185 WHERE `
 UPDATE `creature_template` SET `Health_mod` = 156.185 WHERE `entry` = 34071;
 
 DELETE FROM vehicle_accessory WHERE entry = 33432;
-INSERT INTO vehicle_accessory VALUE (33432, 34071, 3, 1, 'Leviathan Mk II turret');
+REPLACE INTO vehicle_accessory VALUE (33432, 34071, 3, 1, 'Leviathan Mk II turret');
 UPDATE `creature_template` SET `modelid1` = 17188, `modelid2` = 0 WHERE `entry` = 25171;
 UPDATE `creature_template` SET `speed_walk` = 0.5, `speed_run` = 0.5 WHERE `entry` = 33836;
 
 DELETE FROM `creature` WHERE `id`=33651;
-INSERT INTO `creature` (`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`DeathState`,`MovementType`) VALUES
+REPLACE INTO `creature` (`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`DeathState`,`MovementType`) VALUES
 (33651, 603, 1, 1, 28841, 0, 2744.65, 2569.46, 364.397, 3.14159, 604800, 0, 0, 1742400, 0, 0, 0);
 UPDATE `creature_template` SET `unit_flags` = 33686020, `flags_extra` = 2 WHERE `entry` = 34047;
 
 DELETE FROM `creature` WHERE `id`=33670;
-INSERT INTO `creature` (`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`DeathState`,`MovementType`) VALUES
+REPLACE INTO `creature` (`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`DeathState`,`MovementType`) VALUES
 (33670, 603, 1, 1, 28979, 0, 2744.65, 2569.46, 380.040, 3.14159, 604800, 0, 0, 1742400, 0, 0, 0);
 
 UPDATE `creature_template` SET `unit_flags` = 33686020, `type_flags` = 0, `flags_extra` = 2 WHERE `entry` = 34068;
 -- 8334_mimiron_chest
 UPDATE `gameobject_template` SET `size` = 1.5 WHERE `entry` = 194956;
 DELETE FROM `gameobject` WHERE `id`=194956;
-INSERT INTO `gameobject` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`position_x`,`position_y`,`position_z`,`orientation`,`rotation0`,`rotation1`,`rotation2`,`rotation3`,`spawntimesecs`,`animprogress`,`state`) VALUES
+REPLACE INTO `gameobject` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`position_x`,`position_y`,`position_z`,`orientation`,`rotation0`,`rotation1`,`rotation2`,`rotation3`,`spawntimesecs`,`animprogress`,`state`) VALUES
 (5868, 194956, 603, 1, 1, 2744.65, 2569.46, 364.397, 3.14159, 0, 0, 0.703237, 0.710955, -604800, 0, 1);
 
 UPDATE `creature_template` SET `mechanic_immune_mask` = 650854235, `flags_extra` = 1 WHERE `entry` IN (33432, 33651, 33670);
 
 -- 8338_ulduar_teleports
 DELETE FROM `gameobject` WHERE `id`=194569;
-INSERT INTO `gameobject` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`position_x`,`position_y`,`position_z`,`orientation`,`rotation0`,`rotation1`,`rotation2`,`rotation3`,`spawntimesecs`,`animprogress`,`state`) VALUES
+REPLACE INTO `gameobject` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`position_x`,`position_y`,`position_z`,`orientation`,`rotation0`,`rotation1`,`rotation2`,`rotation3`,`spawntimesecs`,`animprogress`,`state`) VALUES
 (21679, 194569, 603, 1, 1, 2086.26, -23.9948, 421.316, 0, 0, 0, 0, 1, 180, 255, 0),
 (21684, 194569, 603, 1, 1, 1498.05, -24.3509, 420.966, 0, 0, 0, 0, 1, 180, 255, 0),
 (49422, 194569, 603, 1, 1, 1859.65, -24.9121, 448.811, 0, 0, 0, 0, 1, 180, 255, 0),
@@ -2658,7 +2658,7 @@ UPDATE `creature_template` SET `flags_extra` = 2 WHERE `entry` = 33184;
 -- Runeforged Sentry
 UPDATE `creature_template` SET `spell1` = 64852, `spell2` = 64870, `spell3` = 64847, `AIName` = 'EventAI' WHERE `entry` = 34234;
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=34234);
-INSERT INTO `creature_ai_scripts` VALUES 
+REPLACE INTO `creature_ai_scripts` VALUES 
 (3423401, 34234, 0, 0, 100, 3, 2000, 2000, 10000, 10000, 11, 64852, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Runeforged Sentry - Cast Flaming Rune 10'),
 (3423402, 34234, 0, 0, 100, 5, 2000, 2000, 10000, 10000, 11, 64852, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Runeforged Sentry - Cast Flaming Rune 25'),
 (3423403, 34234, 0, 0, 100, 3, 3000, 5000, 5000, 7000, 11, 64870, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Runeforged Sentry - Cast Lava Burst 10'),
@@ -2670,7 +2670,7 @@ INSERT INTO `creature_ai_scripts` VALUES
 UPDATE `creature_template` SET `spell1` = 62845, `spell2` = 57780, `spell3` = 50370, `AIName` = 'EventAI' WHERE `entry` = 33236;
 UPDATE `creature` SET `spawntimesecs` = 604800 WHERE `id` IN (33236, 33838);
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=33236);
-INSERT INTO `creature_ai_scripts` VALUES 
+REPLACE INTO `creature_ai_scripts` VALUES 
 (3323601, 33236, 0, 0, 100, 3, 4000, 6000, 15000, 20000, 11, 62845, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Steelforged Defender - Cast Hamstring 10'),
 (3323602, 33236, 0, 0, 100, 5, 4000, 6000, 15000, 20000, 11, 62845, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Steelforged Defender - Cast Hamstring 25'),
 (3323603, 33236, 0, 0, 100, 3, 0, 4000, 6000, 8000, 11, 57780, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Steelforged Defender - Cast Lightning Bolt 10'),
@@ -2681,7 +2681,7 @@ INSERT INTO `creature_ai_scripts` VALUES
 -- Mechagnome Battletank
 UPDATE `creature_template` SET `spell1` = 64693, `spell2` = 64953, `mindmg` = 417, `maxdmg` = 582, `attackpower` = 968, `minrangedmg` = 341, `maxrangedmg` = 506, `AIName` = 'EventAI' WHERE `entry` = 34164;
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=34164);
-INSERT INTO `creature_ai_scripts` VALUES 
+REPLACE INTO `creature_ai_scripts` VALUES 
 (3416401, 34164, 0, 0, 100, 3, 3000, 4000, 6000, 8000, 11, 64693, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Mechagnome Battletank - Cast Flame Cannon 10'),
 (3416402, 34164, 0, 0, 100, 5, 3000, 4000, 6000, 8000, 11, 64693, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Mechagnome Battletank - Cast Flame Cannon 25'),
 (3416403, 34164, 0, 0, 100, 3, 10000, 10000, 15000, 20000, 11, 64953, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Mechagnome Battletank - Cast Jump Attack 10'),
@@ -2690,7 +2690,7 @@ INSERT INTO `creature_ai_scripts` VALUES
 -- Ulduar Colossus
 UPDATE `creature_template` SET `spell1` = 62625, `attackpower` = 987, `AIName` = 'EventAI' WHERE `entry` = 33237;
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=33237);
-INSERT INTO `creature_ai_scripts` VALUES 
+REPLACE INTO `creature_ai_scripts` VALUES 
 (3323701, 33237, 0, 0, 100, 3, 8000, 10000, 20000, 25000, 11, 62625, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Ulduar Colossus - Cast Ground Slam 10'),
 (3323702, 33237, 0, 0, 100, 5, 8000, 10000, 20000, 25000, 11, 62625, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Ulduar Colossus - Cast Ground Slam 25');
 
@@ -2700,7 +2700,7 @@ UPDATE `creature_template` SET `flags_extra` = 2 WHERE `entry` IN (33377, 33742,
 -- Molten Colossus
 UPDATE `creature_template` SET `spell1` = 64697, `spell2` = 64698, `attackpower` = 982, `dmg_multiplier` = 30, `mingold` = 7100, `maxgold` = 7600, `AIName` = 'EventAI' WHERE `entry` = 34069;
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=34069);
-INSERT INTO `creature_ai_scripts` VALUES 
+REPLACE INTO `creature_ai_scripts` VALUES 
 (3406901, 34069, 0, 0, 100, 3, 6000, 10000, 10000, 12000, 11, 64697, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Molten Colossus - Cast Earthquake 10'),
 (3406902, 34069, 0, 0, 100, 5, 6000, 10000, 10000, 12000, 11, 64697, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Molten Colossus - Cast Earthquake 25'),
 (3406903, 34069, 0, 0, 100, 3, 2000, 4000, 6000, 9000, 11, 64698, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Molten Colossus - Cast Pyroblast 10'),
@@ -2709,21 +2709,21 @@ INSERT INTO `creature_ai_scripts` VALUES
 -- Magma Rager
 UPDATE `creature_template` SET `spell1` = 64773, `spell2` = 64746, `dmg_multiplier` = 20, `mingold` = 7100, `maxgold` = 7600, `AIName` = 'EventAI' WHERE `entry` = 34086;
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=34086);
-INSERT INTO `creature_ai_scripts` VALUES 
+REPLACE INTO `creature_ai_scripts` VALUES 
 (3408601, 34086, 0, 0, 100, 3, 2000, 40000, 6000, 8000, 11, 64773, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Magma Rager - Cast Fire Blast 10'),
 (3408602, 34086, 0, 0, 100, 5, 2000, 40000, 6000, 8000, 11, 64773, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Magma Rager - Cast Fire Blast 25'),
 (3408603, 34086, 0, 0, 100, 3, 8000, 16000, 15000, 25000, 11, 64746, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Magma Rager - Cast Superheated winds 10'),
 (3408604, 34086, 0, 0, 100, 5, 8000, 16000, 15000, 25000, 11, 64746, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Magma Rager - Cast Superheated winds 25');
 UPDATE `creature_template` SET `unit_flags` = 33718790, modelid1 = 11686, modelid2 = 0, `spell1` = 64724, `AIName` = 'EventAI' WHERE `entry` = 34194;
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=34194);
-INSERT INTO `creature_ai_scripts` VALUES 
+REPLACE INTO `creature_ai_scripts` VALUES 
 (3419401, 34194, 0, 0, 100, 3, 0, 0, 10000, 10000, 11, 64724, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Superheated Winds'),
 (3419402, 34194, 0, 0, 100, 5, 0, 0, 10000, 10000, 11, 64724, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Superheated Winds');
 
 -- Forge Construct
 UPDATE `creature_template` SET `spell1` = 64719, `spell2` = 64720, `dmg_multiplier` = 20, `mingold` = 7100, `maxgold` = 7600, `AIName` = 'EventAI' WHERE `entry` = 34085;
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=34085);
-INSERT INTO `creature_ai_scripts` VALUES 
+REPLACE INTO `creature_ai_scripts` VALUES 
 (3408501, 34085, 0, 0, 100, 3, 8000, 12000, 10000, 15000, 11, 64719, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Forge Construct - Cast Charge 10'),
 (3408502, 34085, 0, 0, 100, 5, 8000, 12000, 10000, 15000, 11, 64719, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Forge Construct - Cast Charge 25'),
 (3408503, 34085, 0, 0, 100, 3, 2000, 6000, 6000, 9000, 11, 64720, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Forge Construct - Cast Flame Emission 10'),
@@ -2732,7 +2732,7 @@ INSERT INTO `creature_ai_scripts` VALUES
 -- XB-488 Disposalbot 
 UPDATE `creature_template` SET `spell1` = 65080, `spell2` = 65084, `dmg_multiplier` = 20, `mingold` = 7100, `maxgold` = 7600, `AIName` = 'EventAI' WHERE `entry` = 34273; 
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=34273);
-INSERT INTO `creature_ai_scripts` VALUES
+REPLACE INTO `creature_ai_scripts` VALUES
 (3427301, 34273, 2, 0, 100, 30, 20, 0, 0, 0, 11, 65084, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'XB-488 Disposalbot - Cast Self Destruct at 20% HP on 10 and 25 normal and heroic'),
 (3427303, 34273, 0, 0, 100, 11, 2000, 6000, 10000, 15000, 11, 65080, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'XB-488 Disposalbot - Cast Cut Scrap Metal 10 normal and heroic'),
 (3427304, 34273, 0, 0, 100, 21, 2000, 6000, 10000, 15000, 11, 65104, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'XB-488 Disposalbot - Cast Cut Scrap Metal 25 normal and heroic');
@@ -2740,7 +2740,7 @@ INSERT INTO `creature_ai_scripts` VALUES
 -- Parts Recovery Technician
 UPDATE `creature_template` SET `spell1` = 65071, `spell2` = 65070, `dmg_multiplier` = 15, `mingold` = 7100, `maxgold` = 7600, `mechanic_immune_mask` = 33554432, `AIName` = 'EventAI' WHERE `entry` = 34267;
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=34267);
-INSERT INTO `creature_ai_scripts` VALUES 
+REPLACE INTO `creature_ai_scripts` VALUES 
 (3426701, 34267, 0, 0, 100, 3, 8000, 12000, 10000, 15000, 11, 65071, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Parts Recovery Technician - Cast Mechano Kick 10'),
 (3426702, 34267, 0, 0, 100, 5, 8000, 12000, 10000, 15000, 11, 65071, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Parts Recovery Technician - Cast Mechano Kick 25'),
 (3426703, 34267, 0, 0, 100, 3, 6000, 8000, 25000, 30000, 11, 65070, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Parts Recovery Technician - Cast Defense Matrix 10'),
@@ -2750,21 +2750,21 @@ INSERT INTO `creature_ai_scripts` VALUES
 UPDATE `creature_template` SET `spell1` = 65073, `spell2` = 65106, `dmg_multiplier` = 20, `mingold` = 7100, `maxgold` = 7600, `AIName` = 'EventAI' WHERE `entry` = 34271;
 UPDATE `creature_template` SET `dmg_multiplier` = 20, `mingold` = 7100, `maxgold` = 7600 WHERE `entry` = 34269;
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=34271);
-INSERT INTO `creature_ai_scripts` VALUES 
+REPLACE INTO `creature_ai_scripts` VALUES 
 (3427101, 34271, 0, 0, 100, 3, 8000, 12000, 15000, 20000, 11, 65073, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'XD-175 Compactobot - Cast Trash Compactor 10'),
 (3427102, 34271, 0, 0, 100, 5, 8000, 12000, 15000, 20000, 11, 65106, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'XD-175 Compactobot - Cast Trash Compactor 25');
 
 -- Lightning Charged Iron Dwarf
 UPDATE `creature_template` SET `spell1` = 64889, `spell2` = 64975, `dmg_multiplier` = 20, `mingold` = 7100, `maxgold` = 7600, `AIName` = 'EventAI' WHERE `entry` = 34199;
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=34199);
-INSERT INTO `creature_ai_scripts` VALUES 
+REPLACE INTO `creature_ai_scripts` VALUES 
 (3419901, 34199, 0, 0, 100, 3, 0, 0, 10000, 15000, 11, 64889, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Lightning Charged Iron Dwarf - Cast Lightning Charged 10'),
 (3419902, 34199, 0, 0, 100, 5, 0, 0, 10000, 15000, 11, 64975, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Lightning Charged Iron Dwarf - Cast Lightning Charged 25');
 
 -- Hardened Iron Golem
 UPDATE `creature_template` SET `spell1` = 64877, `spell2` = 64874, `dmg_multiplier` = 25, `mingold` = 7100, `maxgold` = 7600, `mechanic_immune_mask` = 33554496, `AIName` = 'EventAI' WHERE `entry` = 34190;
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=34190);
-INSERT INTO `creature_ai_scripts` VALUES 
+REPLACE INTO `creature_ai_scripts` VALUES 
 (3419001, 34190, 0, 0, 100, 3, 4000, 8000, 25000, 30000, 11, 64877, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Hardened Iron Golem - Cast Harden Fists 10'),
 (3419002, 34190, 0, 0, 100, 5, 4000, 8000, 25000, 30000, 11, 64877, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Hardened Iron Golem - Cast Harden Fists 25'),
 (3419003, 34190, 0, 0, 100, 3, 5000, 7000, 20000, 30000, 11, 64874, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Hardened Iron Golem - Cast Rune Punch 10'),
@@ -2773,7 +2773,7 @@ INSERT INTO `creature_ai_scripts` VALUES
 -- Iron Mender
 UPDATE `creature_template` SET `spell1` = 64918, `spell2` = 64903, `spell3` = 64897, `dmg_multiplier` = 25, `mechanic_immune_mask` = 33554496, `mingold` = 7100, `maxgold` = 7600, `AIName` = 'EventAI' WHERE `entry` = 34198;
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=34198);
-INSERT INTO `creature_ai_scripts` VALUES 
+REPLACE INTO `creature_ai_scripts` VALUES 
 (3419801, 34198, 0, 0, 100, 3, 2000, 4000, 4000, 6000, 11, 64918, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Iron Mender - Cast Electro Shock 10'),
 (3419802, 34198, 0, 0, 100, 5, 2000, 4000, 4000, 6000, 11, 64971, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Iron Mender - Cast Electro Shock 25'),
 (3419803, 34198, 0, 0, 100, 3, 3000, 6000, 10000, 15000, 11, 64903, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Iron Mender - Cast Fuse Lightning 10'),
@@ -2784,7 +2784,7 @@ INSERT INTO `creature_ai_scripts` VALUES
 -- Rune Etched Sentry
 UPDATE `creature_template` SET `spell1` = 64852, `spell2` = 64870, `spell3` = 64847, `mechanic_immune_mask` = 33554496, `dmg_multiplier` = 20, `mingold` = 7100, `maxgold` = 7600, `AIName` = 'EventAI' WHERE `entry` = 34196;
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=34196);
-INSERT INTO `creature_ai_scripts` VALUES 
+REPLACE INTO `creature_ai_scripts` VALUES 
 (3419601, 34196, 0, 0, 100, 3, 2000, 2000, 10000, 10000, 11, 64852, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Rune Etched Sentry - Cast Flaming Rune 10'),
 (3419602, 34196, 0, 0, 100, 5, 2000, 2000, 10000, 10000, 11, 64852, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Rune Etched Sentry - Cast Flaming Rune 25'),
 (3419603, 34196, 0, 0, 100, 3, 3000, 5000, 5000, 7000, 11, 64870, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Rune Etched Sentry - Cast Lava Burst 10'),
@@ -2795,7 +2795,7 @@ INSERT INTO `creature_ai_scripts` VALUES
 -- Chamber Overseer
 UPDATE `creature_template` SET `spell1` = 64820, `spell2` = 64825, `dmg_multiplier` = 55, `mingold` = 7100, `maxgold` = 7600, `mechanic_immune_mask` = 33554496, `AIName` = 'EventAI' WHERE `entry` = 34197;
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=34197);
-INSERT INTO `creature_ai_scripts` VALUES 
+REPLACE INTO `creature_ai_scripts` VALUES 
 (3419701, 34197, 0, 0, 100, 3, 4000, 8000, 6000, 9000, 11, 64820, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Chamber Overseer - Cast Devastating Leap 10'),
 (3419702, 34197, 0, 0, 100, 5, 4000, 8000, 6000, 9000, 11, 64943, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Chamber Overseer - Cast Devastating Leap 25'),
 (3419703, 34197, 0, 0, 100, 3, 10000, 12000, 8000, 12000, 11, 64825, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Chamber Overseer - Cast Staggering Roar 10'),
@@ -2804,7 +2804,7 @@ INSERT INTO `creature_ai_scripts` VALUES
 -- Storm Tempered Keeper
 UPDATE `creature_template` SET `spell1` = 63541, `spell2` = 63630, `dmg_multiplier` = 45, `mingold` = 7100, `maxgold` = 7600, `mechanic_immune_mask` = 33554496, `AIName` = 'EventAI' WHERE `entry` = 33722;
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=33722);
-INSERT INTO `creature_ai_scripts` VALUES 
+REPLACE INTO `creature_ai_scripts` VALUES 
 (3372201, 33722, 0, 0, 100, 3, 120000, 120000, 120000, 150000, 11, 63630, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Storm Tempered Keeper - Cast Vengeful Surge 10'),
 (3372202, 33722, 0, 0, 100, 5, 120000, 120000, 120000, 150000, 11, 63630, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Storm Tempered Keeper - Cast Vengeful Surge 25'),
 (3372203, 33722, 0, 0, 100, 3, 3000, 6000, 10000, 15000, 11, 63541, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Storm Tempered Keeper - Cast Forked Lightning 10'),
@@ -2813,7 +2813,7 @@ INSERT INTO `creature_ai_scripts` VALUES
 -- Storm Tempered Keeper
 UPDATE `creature_template` SET `spell1` = 63541, `spell2` = 63630, `dmg_multiplier` = 45, `mingold` = 7100, `maxgold` = 7600, `mechanic_immune_mask` = 33554496, `AIName` = 'EventAI' WHERE `entry` = 33699;
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=33699);
-INSERT INTO `creature_ai_scripts` VALUES 
+REPLACE INTO `creature_ai_scripts` VALUES 
 (3369901, 33699, 0, 0, 100, 3, 120000, 120000, 120000, 150000, 11, 63630, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Storm Tempered Keeper - Cast Vengeful Surge 10'),
 (3369902, 33699, 0, 0, 100, 5, 120000, 120000, 120000, 150000, 11, 63630, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Storm Tempered Keeper - Cast Vengeful Surge 25'),
 (3369903, 33699, 0, 0, 100, 3, 3000, 6000, 10000, 15000, 11, 63541, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Storm Tempered Keeper - Cast Forked Lightning 10'),
@@ -2822,7 +2822,7 @@ INSERT INTO `creature_ai_scripts` VALUES
 -- Champion of Hodir
 UPDATE `creature_template` SET `spell1` = 64639, `dmg_multiplier` = 55, `mingold` = 7100, `maxgold` = 7600, `AIName` = 'EventAI' WHERE `entry` = 34133;
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=34133);
-INSERT INTO `creature_ai_scripts` VALUES 
+REPLACE INTO `creature_ai_scripts` VALUES 
 (3413301, 34133, 0, 0, 100, 3, 3000, 6000, 12000, 16000, 11, 64639, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Champion of Hodir - Cast Stomp 10'),
 (3413302, 34133, 0, 0, 100, 5, 3000, 6000, 12000, 16000, 11, 64652, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Champion of Hodir - Cast Stomp 25');
 DELETE FROM `creature` WHERE `guid` IN (136293, 136294, 136295, 136292, 136313, 136314, 136312, 136321, 136319, 136320, 136322, 136346, 136343, 136536, 136533, 137563);
@@ -2830,7 +2830,7 @@ DELETE FROM `creature` WHERE `guid` IN (136293, 136294, 136295, 136292, 136313, 
 -- Winter Jormungar
 UPDATE `creature_template` SET `spell1` = 64638, `mingold` = 7100, `maxgold` = 7600, `AIName` = 'EventAI' WHERE `entry` = 34137;
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=34137);
-INSERT INTO `creature_ai_scripts` VALUES 
+REPLACE INTO `creature_ai_scripts` VALUES 
 (3413701, 34137, 0, 0, 100, 3, 3000, 6000, 6000, 9000, 11, 64638, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Winter Jormungar - Cast Acidic Bite 10'),
 (3413702, 34137, 0, 0, 100, 5, 3000, 6000, 6000, 9000, 11, 64638, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Winter Jormungar - Cast Acidic Bite 25');
 UPDATE `creature` SET `spawndist` = 2 WHERE `id` = 34137;
@@ -2838,7 +2838,7 @@ UPDATE `creature` SET `spawndist` = 2 WHERE `id` = 34137;
 -- Winter Revenant
 UPDATE `creature_template` SET `spell1` = 64642, `spell2` = 64643, `spell3` = 64644, `mechanic_immune_mask` = 33554496, `dmg_multiplier` = 25, `mingold` = 7100, `maxgold` = 7600, `AIName` = 'EventAI' WHERE `entry` = 34134;
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=34134);
-INSERT INTO `creature_ai_scripts` VALUES 
+REPLACE INTO `creature_ai_scripts` VALUES 
 (3413401, 34134, 0, 0, 100, 3, 8000, 12000, 15000, 20000, 11, 64642, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Winter Revenant - Cast Blizzard 10'),
 (3413402, 34134, 0, 0, 100, 5, 8000, 12000, 15000, 20000, 11, 64653, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Winter Revenant - Cast Blizzard 25'),
 (3413403, 34134, 0, 0, 100, 3, 3000, 5000, 10000, 12000, 11, 64643, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Winter Revenant - Cast Whirling Strike 10'),
@@ -2849,7 +2849,7 @@ INSERT INTO `creature_ai_scripts` VALUES
 -- Winter Rumbler
 UPDATE `creature_template` SET `spell1` = 64645, `spell2` = 64647, `dmg_multiplier` = 15, `mingold` = 7100, `maxgold` = 7600, `mechanic_immune_mask` = 33554496, `AIName` = 'EventAI' WHERE `entry` = 34135;
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=34135);
-INSERT INTO `creature_ai_scripts` VALUES 
+REPLACE INTO `creature_ai_scripts` VALUES 
 (3413501, 34135, 0, 0, 100, 3, 6000, 12000, 10000, 16000, 11, 64645, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Winter Rumbler - Cast Cone of Cold 10'),
 (3413502, 34135, 0, 0, 100, 5, 6000, 12000, 10000, 16000, 11, 64655, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Winter Rumbler - Cast Cone of Cold 25'),
 (3413503, 34135, 0, 0, 100, 3, 3000, 6000, 8000, 12000, 11, 64647, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Winter Rumbler - Cast Snow Blindness 10'),
@@ -2858,25 +2858,25 @@ INSERT INTO `creature_ai_scripts` VALUES
 -- Guardian Lasher
 UPDATE `creature_template` SET `spell1` = 63007, `spell2` = 63047, `dmg_multiplier` = 25, `mingold` = 7100, `maxgold` = 7600, `mechanic_immune_mask` = 33554496, `AIName` = 'EventAI' WHERE `entry` = 33430;
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=33430);
-INSERT INTO `creature_ai_scripts` VALUES
+REPLACE INTO `creature_ai_scripts` VALUES
 (3343001, 33430, 4, 0, 100, 30, 0, 0, 0, 0, 11, 63007, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Guardian Lasher - Cast Guardian Pheromones 10 and 25'),
 (3343003, 33430, 0, 0, 100, 31, 3000, 6000, 10000, 14000, 11, 63047, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Guardian Lasher - Cast Guardian''s Lash 10 and 25');
 
 -- Forest Swarmer
 UPDATE `creature_template` SET `spell1` = 63059, `mingold` = 7100, `maxgold` = 7600, `AIName` = 'EventAI' WHERE `entry` = 33431;
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=33431);
-INSERT INTO `creature_ai_scripts` VALUES 
+REPLACE INTO `creature_ai_scripts` VALUES 
 (3343101, 33431, 0, 0, 100, 3, 3000, 9000, 10000, 20000, 11, 63059, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Forest Swarmer - Cast Pollinate 10'),
 (3343102, 33431, 0, 0, 100, 5, 3000, 9000, 10000, 20000, 11, 63059, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Forest Swarmer - Cast Pollinate 25');
 /*
 DELETE FROM `spell_script_target` WHERE `entry`=63059;
-INSERT INTO `spell_script_target` (`entry`, `type`, `targetEntry`) VALUES('63059','1','33430');
+REPLACE INTO `spell_script_target` (`entry`, `type`, `targetEntry`) VALUES('63059','1','33430');
 */
 
 -- Guardian of Life
 UPDATE `creature_template` SET `spell1` = 63226, `mingold` = 7100, `maxgold` = 7600, `dmg_multiplier` = 15, `AIName` = 'EventAI' WHERE `entry` = 33528;
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=33528);
-INSERT INTO `creature_ai_scripts` VALUES 
+REPLACE INTO `creature_ai_scripts` VALUES 
 (3352801, 33528, 0, 0, 100, 3, 3000, 9000, 15000, 20000, 11, 63226, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Guardian of Life - Cast Poison Breath 10'),
 (3352802, 33528, 0, 0, 100, 5, 3000, 9000, 15000, 20000, 11, 63551, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Guardian of Life - Cast Poison Breath 25');
 
@@ -2887,14 +2887,14 @@ DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=33527);
 -- Ironroot Lasher
 UPDATE `creature_template` SET `spell1` = 63240, `mingold` = 7100, `maxgold` = 7600, `dmg_multiplier` = 15, `AIName` = 'EventAI' WHERE `entry` = 33526;
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=33526);
-INSERT INTO `creature_ai_scripts` VALUES 
+REPLACE INTO `creature_ai_scripts` VALUES 
 (3352601, 33526, 0, 0, 100, 3, 3000, 8000, 12000, 16000, 11, 63240, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Ironroot Lasher - Cast Ironroot Thorns 10'),
 (3352602, 33526, 0, 0, 100, 5, 3000, 8000, 12000, 16000, 11, 63553, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Ironroot Lasher - Cast Ironroot Thorns 25');
 
 -- Mangrove Ent
 UPDATE `creature_template` SET `spell1` = 63272, `spell2` = 63242, `spell3` = 63241, `dmg_multiplier` = 15, `mingold` = 7100, `maxgold` = 7600, `AIName` = 'EventAI' WHERE `entry` = 33525;
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=33525);
-INSERT INTO `creature_ai_scripts` VALUES 
+REPLACE INTO `creature_ai_scripts` VALUES 
 (3352501, 33525, 0, 0, 100, 3, 8000, 12000, 25000, 30000, 11, 63272, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Mangrove Ent - Cast Hurricane 10'),
 (3352502, 33525, 0, 0, 100, 5, 8000, 12000, 25000, 30000, 11, 63272, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Mangrove Ent - Cast Hurricane 25'),
 (3352503, 33525, 0, 0, 100, 3, 12000, 16000, 12000, 16000, 11, 63242, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Mangrove Ent - Cast Nourish 10'),
@@ -2905,7 +2905,7 @@ INSERT INTO `creature_ai_scripts` VALUES
 -- Misguided Nymph
 UPDATE `creature_template` SET `spell1` = 63082, `spell2` = 63111, `spell3` = 63136, `dmg_multiplier` = 15, `mingold` = 7100, `maxgold` = 7600, `AIName` = 'EventAI' WHERE `entry` = 33355;
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=33355);
-INSERT INTO `creature_ai_scripts` VALUES 
+REPLACE INTO `creature_ai_scripts` VALUES 
 (3335501, 33355, 0, 0, 100, 3, 8000, 12000, 25000, 30000, 11, 63082, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Misguided Nymph - Cast Bind Life 10'),
 (3335502, 33355, 0, 0, 100, 5, 8000, 12000, 25000, 30000, 11, 63559, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Misguided Nymph - Cast Bind Life 25'),
 (3335503, 33355, 0, 0, 100, 3, 4000, 6000, 12000, 16000, 11, 63111, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Misguided Nymph - Cast Frost Spear 10'),
@@ -2916,7 +2916,7 @@ INSERT INTO `creature_ai_scripts` VALUES
 -- Corrupted Servitor
 UPDATE `creature_template` SET `spell1` = 63169, `spell2` = 63149, `dmg_multiplier` = 25, `mingold` = 7100, `maxgold` = 7600, `mechanic_immune_mask` = 33554496, `AIName` = 'EventAI' WHERE `entry` = 33354;
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=33354);
-INSERT INTO `creature_ai_scripts` VALUES 
+REPLACE INTO `creature_ai_scripts` VALUES 
 (3335401, 33354, 0, 0, 100, 3, 2000, 4000, 20000, 25000, 11, 63169, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Corrupted Servitor - Cast Petrify Joints 10'),
 (3335402, 33354, 0, 0, 100, 5, 2000, 4000, 20000, 25000, 11, 63549, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Corrupted Servitor - Cast Petrify Joints 25'),
 (3335403, 33354, 0, 0, 100, 3, 6000, 8000, 12000, 16000, 11, 63149, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Corrupted Servitor - Cast Violent Earth 10'),
@@ -2932,7 +2932,7 @@ UPDATE `creature_template` SET `dmg_multiplier` = 45, `mechanic_immune_mask` = 6
 -- Arachnopod Destroyer
 UPDATE `creature_template` SET `spell1` = 64717, `spell2` = 64776, `dmg_multiplier` = 30, `mingold` = 7100, `maxgold` = 7600, `mechanic_immune_mask` = 33554496, `AIName` = 'EventAI' WHERE `entry` = 34183;
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=34183);
-INSERT INTO `creature_ai_scripts` VALUES 
+REPLACE INTO `creature_ai_scripts` VALUES 
 (3418301, 34183, 0, 0, 100, 3, 2000, 4000, 12000, 16000, 11, 64717, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Arachnopod Destroyer - Cast Flame Spray 10'),
 (3418302, 34183, 0, 0, 100, 5, 2000, 4000, 12000, 16000, 11, 64717, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Arachnopod Destroyer - Cast Flame Spray 25'),
 (3418303, 34183, 0, 0, 100, 3, 8000, 10000, 12000, 16000, 11, 64776, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Arachnopod Destroyer - Cast Machine Gun 10'),
@@ -2947,21 +2947,21 @@ UPDATE `creature_template` SET `dmg_multiplier` = 10 WHERE `entry` = 34191;
 -- Boomer XP-500
 UPDATE `creature_template` SET `spell1` = 55714, `dmg_multiplier` = 15, `AIName` = 'EventAI' WHERE `entry` = 34192;
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=34192);
-INSERT INTO `creature_ai_scripts` VALUES 
+REPLACE INTO `creature_ai_scripts` VALUES 
 (3419201, 34192, 9, 0, 100, 3, 0, 3, 0, 0, 11, 55714, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Boomer XP-500 - Explode 10'),
 (3419202, 34192, 9, 0, 100, 5, 0, 3, 0, 0, 11, 55714, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Boomer XP-500 - Explode 25');
 
 -- Clockwork Sapper
 UPDATE `creature_template` SET `spell1` = 64740, `mindmg` = 464, `maxdmg` = 604, `attackpower` = 708, `dmg_multiplier` = 20, `minrangedmg` = 353, `maxrangedmg` = 512, `rangedattackpower` = 112, `mingold` = 7100, `maxgold` = 7600, `mechanic_immune_mask` = 33554496, `AIName` = 'EventAI' WHERE `entry` = 34193;
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=34193);
-INSERT INTO `creature_ai_scripts` VALUES 
+REPLACE INTO `creature_ai_scripts` VALUES 
 (3419301, 34193, 0, 0, 100, 3, 2000, 6000, 12000, 16000, 11, 64740, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Clockwork Sapper - Cast Energy Sap 10'),
 (3419302, 34193, 0, 0, 100, 5, 2000, 6000, 12000, 16000, 11, 64740, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Clockwork Sapper - Cast Energy Sap 25');
 
 -- Twilight Adherent
 UPDATE `creature_template` SET `spell1` = 64663, `spell2` = 63760, `spell3` = 13704, `equipment_id` = 1848, `mechanic_immune_mask` = 33554513, `unit_class` = 2, `dmg_multiplier` = 20, `mingold` = 7100, `maxgold` = 7600, `AIName` = 'EventAI' WHERE `entry` = 33818;
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=33818);
-INSERT INTO `creature_ai_scripts` VALUES 
+REPLACE INTO `creature_ai_scripts` VALUES 
 (3381801, 33818, 0, 0, 100, 3, 10000, 16000, 20000, 25000, 11, 64663, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Twilight Adherent - Cast Arcane Burst 10'),
 (3381802, 33818, 0, 0, 100, 5, 10000, 16000, 20000, 25000, 11, 64663, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Twilight Adherent - Cast Arcane Burst 25'),
 (3381803, 33818, 0, 0, 100, 3, 18000, 24000, 20000, 24000, 11, 63760, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Twilight Adherent - Cast Greater Heal 10'),
@@ -2972,7 +2972,7 @@ INSERT INTO `creature_ai_scripts` VALUES
 -- Twilight Guardian
 UPDATE `creature_template` SET `spell1` = 52719, `spell2` = 62317, `spell3` = 63757, `mechanic_immune_mask` = 33554513, `equipment_id` = 1852, `dmg_multiplier` = 40, `mingold` = 7100, `maxgold` = 7600, `AIName` = 'EventAI' WHERE `entry` = 33822;
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=33822);
-INSERT INTO `creature_ai_scripts` VALUES 
+REPLACE INTO `creature_ai_scripts` VALUES 
 (3382201, 33822, 0, 0, 100, 3, 6000, 10000, 8000, 10000, 11, 52719, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Twilight Guardian - Cast Concussion Blow 10'),
 (3382202, 33822, 0, 0, 100, 5, 6000, 10000, 8000, 10000, 11, 52719, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Twilight Guardian - Cast Concussion Blow 25'),
 (3382203, 33822, 0, 0, 100, 3, 2000, 3000, 3000, 6000, 11, 62317, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Twilight Guardian - Cast Devastate 10'),
@@ -2983,14 +2983,14 @@ INSERT INTO `creature_ai_scripts` VALUES
 -- Twilight Shadowblade
 UPDATE `creature_template` SET `spell1` = 63753, `mechanic_immune_mask` = 33554513,  `equipment_id` = 1862, `dmg_multiplier` = 25, `baseattacktime` = 1000, `mingold` = 7100, `maxgold` = 7600, `AIName` = 'EventAI' WHERE `entry` = 33824;
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=33824);
-INSERT INTO `creature_ai_scripts` VALUES 
+REPLACE INTO `creature_ai_scripts` VALUES 
 (3382401, 33824, 0, 0, 100, 3, 6000, 8000, 14000, 16000, 11, 63753, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Twilight Shadowblade - Cast Fan of Knives 10'),
 (3382402, 33824, 0, 0, 100, 5, 6000, 8000, 14000, 16000, 11, 63753, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Twilight Shadowblade - Cast Fan of Knives 25');
 
 -- Twilight Slayer
 UPDATE `creature_template` SET `spell1` = 63784, `spell2` = 35054, `mechanic_immune_mask` = 33554513, `equipment_id` = 1847, `dmg_multiplier` = 50, `mingold` = 7100, `maxgold` = 7600, `AIName` = 'EventAI' WHERE `entry` = 33823;
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=33823);
-INSERT INTO `creature_ai_scripts` VALUES 
+REPLACE INTO `creature_ai_scripts` VALUES 
 (3382301, 33823, 0, 0, 100, 3, 3000, 5000, 16000, 20000, 11, 35054, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Twilight Slayer - Cast Mortal Strike 10'),
 (3382302, 33823, 0, 0, 100, 5, 3000, 5000, 8000, 10000, 11, 35054, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Twilight Slayer - Cast Mortal Strike 25'),
 (3382303, 33823, 0, 0, 100, 3, 9000, 12000, 28000, 34000, 11, 63784, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Twilight Slayer - Cast Bladestorm 10'),
@@ -3003,7 +3003,7 @@ UPDATE `creature_template` SET `equipment_id` = 1850 WHERE `entry` = 32908;
 -- Faceless Horror
 UPDATE `creature_template` SET `spell1` = 64429, `spell2` = 63722, `spell3` = 63710, `spell4` = 63703, `mechanic_immune_mask` = 33554513, `dmg_multiplier` = 65, `mingold` = 7100, `maxgold` = 7600, `AIName` = 'EventAI' WHERE `entry` = 33772;
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=33772); 
-INSERT INTO `creature_ai_scripts` VALUES
+REPLACE INTO `creature_ai_scripts` VALUES
 (3377201, 33772, 0, 0, 100, 31, 18000, 22000, 15000, 20000, 11, 64429, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Faceless Horror - Cast Death Grip 10 and 25'),
 (3377203, 33772, 0, 0, 100, 31, 2000, 4000, 10000, 12000, 11, 63722, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Faceless Horror - Cast Shadow Crash 10 and 25'),
 (3377205, 33772, 4, 0, 100, 30, 0, 0, 0, 0, 11, 63703, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Faceless Horror - Cast Void Wave 10 and 25');
@@ -3011,7 +3011,7 @@ INSERT INTO `creature_ai_scripts` VALUES
 -- Twilight Frost Mage
 UPDATE `creature_template` SET `spell1` = 64663, `spell2` = 63758, `spell3` = 63912, `spell4` = 63913, `equipment_id` = 1849, `mechanic_immune_mask` = 33554513, `unit_class` = 2, `dmg_multiplier` = 20, `mingold` = 7100, `maxgold` = 7600, `AIName` = 'EventAI' WHERE `entry` = 33819;
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=33819);
-INSERT INTO `creature_ai_scripts` VALUES 
+REPLACE INTO `creature_ai_scripts` VALUES 
 (3381901, 33819, 0, 0, 100, 3, 10000, 16000, 20000, 25000, 11, 64663, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Twilight Frost Mage - Cast Arcane Burst 10'),
 (3381902, 33819, 0, 0, 100, 5, 10000, 16000, 20000, 25000, 11, 64663, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Twilight Frost Mage - Cast Arcane Burst 25'),
 (3381903, 33819, 0, 0, 100, 3, 1000, 2000, 6000, 8000, 11, 63913, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Twilight Frost Mage - Cast Frostbolt 10'),
@@ -3024,7 +3024,7 @@ INSERT INTO `creature_ai_scripts` VALUES
 -- Twilight Pyromancer
 UPDATE `creature_template` SET `spell1` = 64663, `spell2` = 63789, `spell3` = 63775, `equipment_id` = 1848, `mechanic_immune_mask` = 33554513, `unit_class` = 2, `dmg_multiplier` = 20, `mingold` = 7100, `maxgold` = 7600, `AIName` = 'EventAI' WHERE `entry` = 33820;
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=33820);
-INSERT INTO `creature_ai_scripts` VALUES 
+REPLACE INTO `creature_ai_scripts` VALUES 
 (3382001, 33820, 0, 0, 100, 3, 10000, 16000, 20000, 25000, 11, 64663, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Twilight Pyromancer - Cast Arcane Burst 10'),
 (3382002, 33820, 0, 0, 100, 5, 10000, 16000, 20000, 25000, 11, 64663, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Twilight Pyromancer - Cast Arcane Burst 25'),
 (3382003, 33820, 0, 0, 100, 3, 1000, 2000, 6000, 8000, 11, 63789, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Twilight Pyromancer - Cast Fireball 10'),
@@ -3035,7 +3035,7 @@ INSERT INTO `creature_ai_scripts` VALUES
 -- Enslaved Fire Elemental
 UPDATE `creature_template` SET `spell1` = 38064, `spell2` = 63778, `mechanic_immune_mask` = 33554513, `dmg_multiplier` = 15, `mingold` = 7100, `maxgold` = 7600, `AIName` = 'EventAI' WHERE `entry` = 33838;
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=33838);
-INSERT INTO `creature_ai_scripts` VALUES
+REPLACE INTO `creature_ai_scripts` VALUES
 (3383801, 33838, 0, 0, 100, 31, 4000, 8000, 12000, 14000, 11, 38064, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Enslaved Fire Elemental - Cast Blast Wave 10 and 25'),
 (3383803, 33838, 4, 0, 100, 30, 0, 0, 0, 0, 11, 63778, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Enslaved Fire Elemental - Cast Fire Shield 10 and 25 normal and heroic');
 
@@ -3175,11 +3175,11 @@ UPDATE creature_template SET mindmg = 422, maxdmg = 586, attackpower = 642, dmg_
 
 -- 8429_leviathan_encounter
 DELETE FROM `spell_linked_spell` WHERE `spell_trigger`=62475;
-INSERT INTO `spell_linked_spell` (`spell_trigger`, `spell_effect`, `type`, `comment`) VALUES
+REPLACE INTO `spell_linked_spell` (`spell_trigger`, `spell_effect`, `type`, `comment`) VALUES
 ('62475','9032','2','System Shutdown');
 
 DELETE FROM areatrigger_scripts WHERE entry IN (5369, 5423);
-INSERT INTO areatrigger_scripts VALUES
+REPLACE INTO areatrigger_scripts VALUES
 (5369,'at_RX_214_repair_o_matic_station'),
 (5423,'at_RX_214_repair_o_matic_station');
 
@@ -3188,7 +3188,7 @@ UPDATE `gameobject_template` SET `type` = 22, `data0` = 53141, `data2` = 1, `dat
 
 -- 8440_achievement_antechamber
 DELETE FROM `achievement_criteria_data` WHERE `criteria_id` IN (10578, 10579, 10580, 10581);
-INSERT INTO `achievement_criteria_data` (`criteria_id`,`type`,`value1`,`value2`) VALUES
+REPLACE INTO `achievement_criteria_data` (`criteria_id`,`type`,`value1`,`value2`) VALUES
 (10578, 12, 0, 0),
 (10580, 12, 0, 0),
 (10579, 12, 1, 0),
@@ -3207,7 +3207,7 @@ UPDATE `creature_template` SET flags_extra = 1 WHERE entry IN (32867, 32927, 328
 
 -- 8441_achievement_keepers
 DELETE FROM `achievement_criteria_data` WHERE `criteria_id` IN (10559, 10444, 10563, 10455, 10558, 10438, 10561, 10454, 10408, 10560, 10453, 10562);
-INSERT INTO `achievement_criteria_data` (`criteria_id`,`type`,`value1`,`value2`) VALUES
+REPLACE INTO `achievement_criteria_data` (`criteria_id`,`type`,`value1`,`value2`) VALUES
 -- Freya
 (10559, 12, 0, 0),
 (10444, 12, 0, 0),
@@ -3247,7 +3247,7 @@ UPDATE `creature_template` SET `RegenHealth` = 0 WHERE `entry` IN (33060, 33062,
 -- 8452_keepers_images
 -- Ulduar Keepers Images
 DELETE FROM `creature` WHERE `id` IN (33213, 33241, 33242, 33244);
-INSERT INTO `creature` (`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`DeathState`,`MovementType`) VALUES
+REPLACE INTO `creature` (`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`DeathState`,`MovementType`) VALUES
 (33241, 603, 1, 1, 0, 0, 2057.81, -24.0768, 421.532, 3.12904, 604800, 0, 0, 14433075, 0, 0, 0),
 (33242, 603, 1, 1, 0, 0, 2036.81, -73.7053, 411.353, 2.43575, 604800, 0, 0, 14433075, 0, 0, 0),
 (33244, 603, 1, 1, 0, 0, 2036.74, 25.4642, 411.357, 3.81412, 604800, 0, 0, 14433075, 0, 0, 0),
@@ -3273,7 +3273,7 @@ UPDATE `creature_template` SET `mechanic_immune_mask` = 650854239 WHERE `entry` 
 
 -- Keepers (Yogg Saron Encounter)
 DELETE FROM `creature` WHERE `id` IN (33410, 33411, 33412, 33413);
-INSERT INTO `creature` (`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`DeathState`,`MovementType`) VALUES
+REPLACE INTO `creature` (`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`DeathState`,`MovementType`) VALUES
 (33410, 603, 1, 1, 0, 0, 2036.739, 25.464, 338.296, 3.814, 604800, 0, 0, 14433075, 0, 0, 0),
 (33411, 603, 1, 1, 0, 0, 1939.094, -90.699, 338.296, 1.026, 604800, 0, 0, 14433075, 0, 0, 0),
 (33412, 603, 1, 1, 0, 0, 1939.094, 42.534, 338.296, 5.321, 604800, 0, 0, 14433075, 0, 0, 0),
@@ -3301,7 +3301,7 @@ UPDATE `gameobject` SET `spawnMask` = 3 WHERE `map` = 603;
 
 -- .tele Uld (teleporta davanti Ulduar)
 DELETE FROM `game_tele` WHERE `name` = "Uld";
-INSERT INTO `game_tele` VALUES
+REPLACE INTO `game_tele` VALUES
 (NULL, 9347.78, -1114.88, 1245.09, 6.278, 571, 'Uld');
 
 -- Salvaged Chopper has no heroic entry
@@ -3388,7 +3388,7 @@ DELETE FROM `gameobject` WHERE `id` IN (194307, 194308, 195046, 195047);
 -- Normal (10P)
 -- Fix rates and drops adding new groups and patters correction about some 25P drops including on 10P
 DELETE FROM `creature_loot_template` WHERE (`entry`=33113);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (33113, 34057, 1.3, 1, 0, 1, 2),
 (33113, 47241, 100, 1, 0, 1, 3),
 (33113, 45135, 12.5, 1, 1, 1, 1),
@@ -3443,7 +3443,7 @@ INSERT INTO `creature_loot_template` VALUES
 -- Normal (25P) 
 -- Fix drops rates and including missing dops with groups and rates
 DELETE FROM `creature_loot_template` WHERE (`entry`=34003);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (34003, 45038, 7.8, 1, 0, 1, 3),
 (34003, 45089, 1.3, 1, 0, -45089, 1),
 (34003, 47241, 100, 1, 0, 1, 3),
@@ -3486,7 +3486,7 @@ INSERT INTO `creature_loot_template` VALUES
 -- Normal (10P)
 -- Fix rates
 DELETE FROM `creature_loot_template` WHERE (`entry`=33186);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (33186, 47241, 100, 1, 0, 1, 1),
 (33186, 45303, 20, 1, 1, 1, 1),
 (33186, 45306, 20, 1, 1, 1, 1),
@@ -3504,7 +3504,7 @@ INSERT INTO `creature_loot_template` VALUES
 -- Normal (25P)
 -- Fix drops and rates also removing patters from loot list cos its not correct
 DELETE FROM `creature_loot_template` WHERE (`entry`=33724);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (33724, 45038, 10, 1, 0, 1, 3),
 (33724, 47241, 100, 1, 0, 1, 1),
 (33724, 45138, 20, 1, 1, 1, 1),
@@ -3533,7 +3533,7 @@ INSERT INTO `creature_loot_template` VALUES
 -- Normal (10P)
 -- Fix drops and rates also removing some drops from 25P including on 10P 
 DELETE FROM `creature_loot_template` WHERE (`entry`=33118);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (33118, 47241, 100, 1, 0, 1, 1),
 (33118, 45310, 20, 1, 1, 1, 1),
 (33118, 45311, 20, 1, 1, 1, 1),
@@ -3551,7 +3551,7 @@ INSERT INTO `creature_loot_template` VALUES
 -- Normal (25P)
 -- Redone drops and rates redone ref for this drops also including some miss drops
 DELETE FROM `creature_loot_template` WHERE (`entry`=33190);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (33190, 45038, 10, 1, 0, 1, 1),
 (33190, 45087, 33, 1, 0, 1, 1),
 (33190, 45089, 1.3, 1, 0, -45089, 1),
@@ -3583,7 +3583,7 @@ INSERT INTO `creature_loot_template` VALUES
 -- Normal (10P)
 -- Fix drops rates also remove lots of drops for 25P including on 10P adding some miss drops and trasth drops 
 DELETE FROM `creature_loot_template` WHERE (`entry`=33293);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (33293, 47241, 100, 1, 0, 1, 1),
 (33293, 45675, 20, 1, 1, 1, 1),
 (33293, 45685, 20, 1, 1, 1, 1),
@@ -3611,7 +3611,7 @@ INSERT INTO `creature_loot_template` VALUES
 -- Normal (25P)
 -- Fix rates and drops including lots of missing items remove some drops from 10P including on 25P 
 DELETE FROM `creature_loot_template` WHERE (`entry`=33885);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (33885, 45087, 10, 1, 0, 1, 1),
 (33885, 45089, 1.3, 1, 0, -45089, 1),
 (33885, 47241, 100, 1, 0, 1, 1),
@@ -3646,7 +3646,7 @@ INSERT INTO `creature_loot_template` VALUES
 -- Normal (10P)
 -- Fix drops and rates adding some miss drops
 DELETE FROM `creature_loot_template` WHERE (`entry`=32867);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (32867, 45506, 100, 1, 0, 1, 1),
 (32867, 47241, 100, 1, 0, 1, 1),
 (32867, 45330, 20, 1, 1, 1, 1),
@@ -3670,7 +3670,7 @@ INSERT INTO `creature_loot_template` VALUES
 -- Normal (25P) 
 -- Fix drops and rates including formulas on drop
 DELETE FROM `creature_loot_template` WHERE (`entry`=33693);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (33693, 45089, 1.3, 1, 0, -45089, 1),
 (33693, 45857, 100, 1, 0, 1, 1),
 (33693, 47241, 100, 1, 0, 1, 1),
@@ -3708,7 +3708,7 @@ INSERT INTO `creature_loot_template` VALUES
 -- Normal (10P)
 -- Fix drops and rates deleting some drops form 25P including on 10P
 DELETE FROM `creature_loot_template` WHERE (`entry`=33515);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (33515, 47241, 100, 1, 0, 1, 1),
 (33515, 45708, 20, 1, 1, 1, 1),
 (33515, 45712, 20, 1, 1, 1, 1),
@@ -3726,7 +3726,7 @@ INSERT INTO `creature_loot_template` VALUES
 -- Normal (25P)
 -- Fix drops and rates miss some items includind on SQL
 DELETE FROM `creature_loot_template` WHERE (`entry`=34175);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (34175, 47241, 100, 1, 0, 1, 1),
 (34175, 45038, 10, 1, 0, 1, 1),
 (34175, 45089, 1.3, 1, 0, -45089, 1),
@@ -3755,7 +3755,7 @@ INSERT INTO `creature_loot_template` VALUES
 -- Normal (10P)
 -- Fix drops and rates deleting some drops form 25P including on 10P
 DELETE FROM `creature_loot_template` WHERE (`entry`=33271);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (33271, 47241, 100, 1, 0, 1, 1),
 (33271, 46035, 12.5, 1, 1, 1, 1),
 (33271, 46009, 12.5, 1, 1, 1, 1),
@@ -3778,7 +3778,7 @@ INSERT INTO `creature_loot_template` VALUES
 -- Normal (25P)
 -- Fix drops and rates miss some items includind on SQL
 DELETE FROM `creature_loot_template` WHERE (`entry`=33449);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (33449, 47241, 100, 1, 0, 1, 1), -- Emblem of Triumph
 (33449, 45038, 10, 1, 0, 1, 1), -- Fragment of Val'anyr
 (33449, 45087, 33, 1, 0, 1, 1), -- Runed Orb
@@ -3812,7 +3812,7 @@ INSERT INTO `creature_loot_template` VALUES
 -- Normal (10P)
 -- Miss lots of drops (like 17 itms no on list)
 DELETE FROM `creature_loot_template` WHERE (`entry`=33288);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (33288, 45087, 25, 1, 0, 1, 3), -- Runed Orb
 (33288, 47241, 100, 1, 0, 1, 2), -- Emblem of Triumph
 (33288, 46018, 12.5, 1, 1, 1, 1),
@@ -3839,7 +3839,7 @@ INSERT INTO `creature_loot_template` VALUES
 -- Normal (25P)
 -- Miss lots of drops (like 17 itms no on list)
 DELETE FROM `creature_loot_template` WHERE (`entry`=33955);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (33955, 45087, 25, 1, 0, 1, 3), -- Runed Orb
 (33955, 47241, 100, 1, 0, 2, 2), -- Emblem of Triumph
 (33955, 45897, 1.8, 1, 0, 1, 1), -- Reforged Hammer of Ancient Kings
@@ -3869,7 +3869,7 @@ INSERT INTO `creature_loot_template` VALUES
 
 -- Redone ref 
 DELETE FROM `reference_loot_template` WHERE `entry`='45089';
-INSERT INTO `reference_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `lootmode`, `groupid`, `mincountOrRef`, `maxcount`) VALUES
+REPLACE INTO `reference_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `lootmode`, `groupid`, `mincountOrRef`, `maxcount`) VALUES
 ('45089','45100','0','1','1','1','1'),
 ('45089','45094','0','1','1','1','1'),
 ('45089','45096','0','1','1','1','1'),
@@ -3891,14 +3891,14 @@ INSERT INTO `reference_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `
 
 -- Redone ref for TIER
 DELETE FROM `reference_loot_template` WHERE `entry`='45481';
-INSERT INTO `reference_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `lootmode`, `groupid`, `mincountOrRef`, `maxcount`) VALUES
+REPLACE INTO `reference_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `lootmode`, `groupid`, `mincountOrRef`, `maxcount`) VALUES
 ('45481','45644','0','1','1','1','1'),
 ('45481','45645','0','1','1','1','1'),
 ('45481','45646','0','1','1','1','1');
 
 -- Redone ref for TIER
 DELETE FROM `reference_loot_template` WHERE `entry`='33955';
-INSERT INTO `reference_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `lootmode`, `groupid`, `mincountOrRef`, `maxcount`) VALUES
+REPLACE INTO `reference_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `lootmode`, `groupid`, `mincountOrRef`, `maxcount`) VALUES
 ('33955','45658','0','1','1','1','1'),
 ('33955','45657','0','1','1','1','1'),
 ('33955','45656','0','1','1','1','1');
@@ -3915,7 +3915,7 @@ INSERT INTO `reference_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `
 -- Normal (10P)
 -- Fix rates and drops removing some drops from 25P including on 10P also including some miss drop
 DELETE FROM `gameobject_loot_template` WHERE (`entry`=195046);
-INSERT INTO `gameobject_loot_template` VALUES 
+REPLACE INTO `gameobject_loot_template` VALUES 
 (195046, 34057, 1.3, 1, 0, 1, 2),
 (195046, 47241, 100, 1, 0, 1, 1),
 (195046, 45695, 20, 1, 1, 1, 1),
@@ -3934,7 +3934,7 @@ INSERT INTO `gameobject_loot_template` VALUES
 -- Normal (25P)
 -- Fix drops and rates also including some miss drops
 DELETE FROM `gameobject_loot_template` WHERE (`entry`=195047);
-INSERT INTO `gameobject_loot_template` VALUES 
+REPLACE INTO `gameobject_loot_template` VALUES 
 (195047, 47241, 100, 1, 0, 1, 1),
 (195047, 45038, 10, 1, 0, 1, 1),
 (195047, 45089, 1.3, 1, 0, -45089, 1),
@@ -3966,20 +3966,20 @@ DELETE FROM `reference_loot_template` WHERE `entry` IN (45636,45658);
 -- To help the correct kill of this bosses I give to they a new locs
 -- New locs for Steelbreaker
 DELETE FROM `creature` WHERE `guid`='94382';
-INSERT INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `modelid`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `spawndist`, `currentwaypoint`, `curhealth`, `curmana`, `DeathState`, `MovementType`) VALUES ('94382','32867','603','3','65535','0','0','1552.15','120.145','427.277','6.20744','604800','0','0','2998175','0','0','0');
+REPLACE INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `modelid`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `spawndist`, `currentwaypoint`, `curhealth`, `curmana`, `DeathState`, `MovementType`) VALUES ('94382','32867','603','3','65535','0','0','1552.15','120.145','427.277','6.20744','604800','0','0','2998175','0','0','0');
 
 DELETE FROM `creature` WHERE `guid`='94387';
-INSERT INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `modelid`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `spawndist`, `currentwaypoint`, `curhealth`, `curmana`, `DeathState`, `MovementType`) VALUES ('94387','32927','603','3','65535','0','0','1596.43','105.539','427.273','0.759136','604800','0','0','2998175','4258','0','0');
+REPLACE INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `modelid`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `spawndist`, `currentwaypoint`, `curhealth`, `curmana`, `DeathState`, `MovementType`) VALUES ('94387','32927','603','3','65535','0','0','1596.43','105.539','427.273','0.759136','604800','0','0','2998175','4258','0','0');
 
 DELETE FROM `creature` WHERE `guid`='94390';
-INSERT INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `modelid`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `spawndist`, `currentwaypoint`, `curhealth`, `curmana`, `DeathState`, `MovementType`) VALUES ('94390','32857','603','3','65535','0','0','1596.37','134.229','427.271','5.65217','604800','0','0','2998175','212900','0','0');
+REPLACE INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `modelid`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `spawndist`, `currentwaypoint`, `curhealth`, `curmana`, `DeathState`, `MovementType`) VALUES ('94390','32857','603','3','65535','0','0','1596.37','134.229','427.271','5.65217','604800','0','0','2998175','212900','0','0');
 
 -- 8642_ulduar_hodir
 UPDATE `creature_template` SET `difficulty_entry_1` = 33909, `unit_flags` = 0 WHERE `entry` = 32930;
 UPDATE `creature_template` SET `ScriptName` = 'mob_snowpacked_icicle' WHERE `entry` = 33174;
 -- toasty fire immunities
 DELETE FROM spell_linked_spell WHERE spell_trigger=65280;
-INSERT INTO spell_linked_spell VALUES
+REPLACE INTO spell_linked_spell VALUES
 (65280,-62469,2,'Toasty fire - Freeze imunity'),
 (65280,-62039,2,'Toasty fire - Biting cold imunity');
 
@@ -4152,7 +4152,7 @@ UPDATE `creature_template` SET `minlevel` = 83, `maxlevel` = 83, `faction_A` = 1
 -- Archivum Data Disc drop
 UPDATE `creature_template` SET `lootid` = 32927 WHERE `entry` = 32927;
 DELETE FROM `creature_loot_template` WHERE entry IN (32927, 32867) AND item = 45506;
-INSERT INTO `creature_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `lootmode`, `groupid`, `mincountOrRef`, `maxcount`) VALUES
+REPLACE INTO `creature_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `lootmode`, `groupid`, `mincountOrRef`, `maxcount`) VALUES
 (32927, 45506, 100, 1, 0, 1, 1),
 (32867, 45506, 100, 1, 0, 1, 1);
 */
@@ -4162,7 +4162,7 @@ INSERT INTO `creature_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `l
 /*
 -- Runed Orb ai keepers
 DELETE FROM `gameobject_loot_template` WHERE entry IN (27085, 27086, 27068, 27073,27074) AND item = 45087;
-INSERT INTO `gameobject_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `lootmode`, `groupid`, `mincountOrRef`, `maxcount`, `lootcondition`, `condition_value1`, `condition_value2`) VALUES
+REPLACE INTO `gameobject_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `lootmode`, `groupid`, `mincountOrRef`, `maxcount`, `lootcondition`, `condition_value1`, `condition_value2`) VALUES
 (27085,45087,'75','1','0','1','1'),
 ('27086','45087','75','1','0','1','1'),
 ('27068','45087','75','1','0','1','1'),
@@ -4176,7 +4176,7 @@ UPDATE `creature_template` SET `difficulty_entry_1` = 33352, `modelid1` = 25865,
 UPDATE `creature_template` SET `difficulty_entry_1` = 33353, `mechanic_immune_mask` = 612597599 WHERE `entry` = 32938;
 UPDATE `creature_template` SET `modelid1` = 25865, `modelid2` = 0, `faction_A` = 14, `faction_H` = 14, `unit_flags` = 393220, `mechanic_immune_mask` = 612597599, `flags_extra` = 0 WHERE `entry` IN (33352, 33353);
 DELETE FROM `spell_linked_spell` WHERE `spell_trigger` IN (61969, 61990);
-INSERT INTO `spell_linked_spell` VALUES
+REPLACE INTO `spell_linked_spell` VALUES
 (61969, 7940, 2, "Hodir Flash Freeze immunity"),
 (61990, 7940, 2, "Hodir Flash Freeze immunity");
 
@@ -4190,14 +4190,14 @@ INSERT INTO `spell_linked_spell` VALUES
 DELETE FROM gameobject WHERE id = 194555;
 -- phaseMask here is set in "1" but in ytdb is in "65535", IT NEED TESTING. (same case)
 /*
-INSERT INTO gameobject VALUES (21680, 194555, 603, 3, 1, 1435.56, 118.954, 423.641, 0, 0, 0, 0, 1, 300, 0, 1);
+REPLACE INTO gameobject VALUES (21680, 194555, 603, 3, 1, 1435.56, 118.954, 423.641, 0, 0, 0, 0, 1, 300, 0, 1);
 DELETE FROM creature WHERE id = 33956;
-INSERT INTO creature VALUES (129497, 33956, 603, 3, 1, 0, 0, 1443.61, 119.143, 423.641, 3.1675, 300, 0, 0, 75600, 0, 0, 0);
+REPLACE INTO creature VALUES (129497, 33956, 603, 3, 1, 0, 0, 1443.61, 119.143, 423.641, 3.1675, 300, 0, 0, 75600, 0, 0, 0);
 */
 -- este drop tiene una referencia que ya se cambio a la tabla conditions: POR REVISAR MISIMOUSE
 /*
 DELETE FROM `gameobject_loot_template` WHERE entry IN (27074, 27086) AND item IN (45784, 45787);
-INSERT INTO `gameobject_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `lootmode`, `groupid`, `mincountOrRef`, `maxcount`, `lootcondition`, `condition_value1`, `condition_value2`) VALUES
+REPLACE INTO `gameobject_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `lootmode`, `groupid`, `mincountOrRef`, `maxcount`, `lootcondition`, `condition_value1`, `condition_value2`) VALUES
 ('27074','45784','-100','1','0','1','1','9','13610','0'),
 ('27086','45787','-100','1','0','1','1','9','13611','0');
 */
@@ -4205,11 +4205,11 @@ UPDATE `quest_template` SET `PrevQuestId` = 13607, `NextQuestId` = 13614, `Exclu
 -- NOTE: ytdb is ussing areatrigger_involvedrelatio id "5401" for quest "13607" and id  "5400" is ussing quest 13816
 -- Both are the same name quest. I leave this comment just in case to use like it was.
 DELETE FROM `areatrigger_involvedrelation` WHERE `id` = 5400;
-INSERT INTO `areatrigger_involvedrelation` (`id`, `quest`) VALUES (5400, 13607);
+REPLACE INTO `areatrigger_involvedrelation` (`id`, `quest`) VALUES (5400, 13607);
 -- This drop is ok, any way... Misimouse will have a look.
 /*
 DELETE FROM `item_loot_template` WHERE entry = 45875;
-INSERT INTO `item_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `lootmode`, `groupid`, `mincountOrRef`, `maxcount`, `lootcondition`, `condition_value1`, `condition_value2`) VALUES
+REPLACE INTO `item_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `lootmode`, `groupid`, `mincountOrRef`, `maxcount`, `lootcondition`, `condition_value1`, `condition_value2`) VALUES
 ('45875','45087','100','1','0','1','1'),
 ('45875','45624','100','1','0','5','5');
 */
@@ -4230,7 +4230,7 @@ DELETE FROM `spell_script_names` WHERE `spell_id` IN (69075,70834,70835,70836) A
 DELETE FROM `spell_script_names` WHERE `spell_id` IN (70903,71236) AND `ScriptName`='spell_cultist_dark_martyrdom';
 
 DELETE FROM `creature_template` WHERE `entry` IN (36823, 36824);
-INSERT INTO `creature_template` VALUES
+REPLACE INTO `creature_template` VALUES
 ('36823','0','0','0','0','0','31021','0','0','0','Terenas Menethil','','','0','80','80','2','35','35','0','1','1.14286','1','1','391','585','0','146','2.2','2000','2000','2','524288','0','0','0','0','0','0','313','468','117','7','4096','0','0','0','0','0','0','0','0','0','69382','72595','0','0','0','0','0','0','0','0','0','0','','0','3','25','15','1','0','0','0','0','0','0','0','0','1','0','0','0','npc_terenas_menethil','1'),
 ('36824','39296','0','0','0','38121','31471','0','0','0','Spirit Warden','','','0','80','80','2','14','14','0','1','1.14286','1','1','391','585','0','146','2','2000','2000','2','524288','0','0','0','0','0','0','313','468','117','6','4096','0','0','0','0','0','0','0','0','0','69383','74086','69397','0','0','0','0','0','0','0','0','0','','0','3','20','15','1','0','0','0','0','0','0','0','0','1','0','1758157559','0','npc_spirit_warden','1');
 
@@ -4251,7 +4251,7 @@ UPDATE `gameobject_template` SET `flags` = 32 WHERE `entry` = 202242;
 
 -- Halion Flame Ring
 DELETE FROM `gameobject` WHERE `id`=203624;
-INSERT INTO `gameobject` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`position_x`,`position_y`,`position_z`,`orientation`,`rotation0`,`rotation1`,`rotation2`,`rotation3`,`spawntimesecs`,`animprogress`,`state`) VALUES
+REPLACE INTO `gameobject` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`position_x`,`position_y`,`position_z`,`orientation`,`rotation0`,`rotation1`,`rotation2`,`rotation3`,`spawntimesecs`,`animprogress`,`state`) VALUES
 (2151041, 203624, 724, 1, 32, 3154.56, 535.418, 72.8889, 5.53401, 0, 0, 0.36589, -0.930658, 3000, 0, 1);
 
 REPLACE INTO `gameobject_template` (`entry`, `type`, `displayId`, `name`, `IconName`, `castBarCaption`, `unk1`, `faction`, `flags`, `size`, `questItem1`, `questItem2`, `questItem3`, `questItem4`, `questItem5`, `questItem6`, `data0`, `data1`, `data2`, `data3`, `data4`, `data5`, `data6`, `data7`, `data8`, `data9`, `data10`, `data11`, `data12`, `data13`, `data14`, `data15`, `data16`, `data17`, `data18`, `data19`, `data20`, `data21`, `data22`, `data23`, `ScriptName`) VALUES (202796, 10, 1327, 'Twilight Portal', '', '', '', 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 74812, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '');
@@ -4260,19 +4260,19 @@ REPLACE INTO `gameobject_template` (`entry`, `type`, `displayId`, `name`, `IconN
 /*
 -- Icc Platform Positions
 DELETE FROM `gameobject_template` WHERE (`entry`=202078);
-INSERT INTO `gameobject_template` VALUES (202078, 14, 9256, 'Arthas Precipice', '', '', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 3000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', 11723);
+REPLACE INTO `gameobject_template` VALUES (202078, 14, 9256, 'Arthas Precipice', '', '', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 3000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', 11723);
 DELETE FROM `gameobject_template` WHERE (`entry`=202161);
-INSERT INTO `gameobject_template` VALUES (202161, 14, 9276, 'Arthas Platform',  '', '', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 3000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', 11723);
+REPLACE INTO `gameobject_template` VALUES (202161, 14, 9276, 'Arthas Platform',  '', '', '', 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 3000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', 11723);
 */
 
 -- Some creature_ai_scripts
 -- Some events cant be repetables set to 0 to can be repeteable
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=34606);
-INSERT INTO `creature_ai_scripts` VALUES 
+REPLACE INTO `creature_ai_scripts` VALUES 
 (270000, 34606, 0, 0, 100, 7, 0, 0, 0, 0, 11, 66193, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Force Cast');
 
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=38879);
-INSERT INTO `creature_ai_scripts` VALUES 
+REPLACE INTO `creature_ai_scripts` VALUES 
 (3887900, 38879, 9, 0, 100, 6, 1, 25, 15000, 20000, 11, 70460, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Putricide Trap Trigger');
 
 -- Some fix for NPCs 
@@ -4288,41 +4288,41 @@ UPDATE `creature_ai_scripts` SET `action1_param1` = 71258 WHERE `id` = 26021102;
 -- creatures not existing in db (not make changes
 /*
 DELETE FROM `creature_template_addon` where `entry` IN (5542668,5542667);
-INSERT INTO `creature_template_addon` (`entry`,`mount`,`bytes2`) VALUES ('5542668', '36476', '4097');
-INSERT INTO `creature_template_addon` (`entry`,`mount`,`bytes2`) VALUES ('5542667', '36661', '4097');
+REPLACE INTO `creature_template_addon` (`entry`,`mount`,`bytes2`) VALUES ('5542668', '36476', '4097');
+REPLACE INTO `creature_template_addon` (`entry`,`mount`,`bytes2`) VALUES ('5542667', '36661', '4097');
 */
 -- where is the npc 500202 to use creature_ai_scripts?....
 /*
 UPDATE `creature_template` SET `baseattacktime` = 3000, `Health_mod` = 100, `Mana_mod` = 100 WHERE `entry` = 500202;
 UPDATE `creature_template` SET `type` = 3 WHERE `entry` = 500202;
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=500202);
-INSERT INTO `creature_ai_scripts` VALUES 
+REPLACE INTO `creature_ai_scripts` VALUES 
 ( 50020211, 500202, 0, 0, 100, 7, 10000, 20000, 15000, 30000, 11, 59971, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Rain of fire'),
 (50020212, 500202, 2, 0, 100, 7, 10, 10, 0, 0, 11, 59971, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 'Hellfire');
 */
 -- you can put an arm or mount but not cloth an npc
 /*
 DELETE FROM `creature_equip_template` WHERE `entry` IN (500203, 500204);
-INSERT INTO `creature_equip_template` (`entry`, `equipentry1`, `equipentry2`, `equipentry3`) VALUES (500203, 20033, 20009, 9060);
+REPLACE INTO `creature_equip_template` (`entry`, `equipentry1`, `equipentry2`, `equipentry3`) VALUES (500203, 20033, 20009, 9060);
 */
 -- what is this update for?... this NPC does not exist in db use to check: SELECT * FROM `creature_template` WHERE `entry` IN (500203, 500204, 500206, 500208);
 /*
 UPDATE `creature_template` SET `type` = 3 WHERE `entry` = 500203;
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=500203);
-INSERT INTO `creature_ai_scripts` VALUES 
+REPLACE INTO `creature_ai_scripts` VALUES 
 (50020301, 500203, 0, 0, 100, 7, 10000, 10000, 10000, 10000, 11, 13009, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Knockback');
 
 UPDATE `creature_template` SET `type` = 3 WHERE `entry` = 500204;
 UPDATE `creature_template` SET `spell2` = 69389 WHERE `entry` = 500204;
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=500204);
-INSERT INTO `creature_ai_scripts` VALUES 
+REPLACE INTO `creature_ai_scripts` VALUES 
 (50020401, 500204, 0, 0, 100, 7, 1000, 2000, 3000, 3000, 11, 70281, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Emp Shadow Bolt');
 UPDATE `creature_template` SET `mindmg` = 20000, `maxdmg` = 25000 WHERE `entry` = 500206;
 DELETE FROM `creature_equip_template` WHERE (`entry`=500206);
-INSERT INTO `creature_equip_template` (`entry`, `equipentry1`, `equipentry2`, `equipentry3`) VALUES (500206, 19352, 0, 0);
+REPLACE INTO `creature_equip_template` (`entry`, `equipentry1`, `equipentry2`, `equipentry3`) VALUES (500206, 19352, 0, 0);
 UPDATE `creature_template` SET `spell1` = 17012 WHERE `entry` = 500208;
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=500208);
-INSERT INTO `creature_ai_scripts` VALUES 
+REPLACE INTO `creature_ai_scripts` VALUES 
 (50020801, 500208, 0, 0, 100, 7, 10000, 10000, 10000, 15000, 11, 17012, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Devour Magic');
 */
 
@@ -4377,7 +4377,7 @@ UPDATE `gameobject_template` SET `flags`=0x28 WHERE `entry`=202220; -- Lady Deat
 
 -- Conditions
 DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId`=13 AND `SourceEntry` IN (70572,72202);
-INSERT INTO `conditions` (`SourceTypeOrReferenceId`,`SourceGroup`,`SourceEntry`,`ElseGroup`,`ConditionTypeOrReference`,`ConditionValue1`,`ConditionValue2`,`ConditionValue3`,`ErrorTextId`,`ScriptName`,`Comment`) VALUES 
+REPLACE INTO `conditions` (`SourceTypeOrReferenceId`,`SourceGroup`,`SourceEntry`,`ElseGroup`,`ConditionTypeOrReference`,`ConditionValue1`,`ConditionValue2`,`ConditionValue3`,`ErrorTextId`,`ScriptName`,`Comment`) VALUES 
 (13,0,70572,0,18,1,37920,0,0, '', 'Deathbringer Saurfang - Grip of Agony'),
 (13,0,70572,0,18,1,37200,0,0, '', 'Deathbringer Saurfang - Grip of Agony'),
 (13,0,70572,0,18,1,37187,0,0, '', 'Deathbringer Saurfang - Grip of Agony'),
@@ -4387,7 +4387,7 @@ INSERT INTO `conditions` (`SourceTypeOrReferenceId`,`SourceGroup`,`SourceEntry`,
 -- Deathbringer's Cache
 -- blizzlike position
 DELETE FROM `gameobject` WHERE `id` IN (@DeathbringerCache10N,@DeathbringerCache25N,@DeathbringerCache10H,@DeathbringerCache25H);
-INSERT INTO `gameobject` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`position_x`,`position_y`,`position_z`,`orientation`,`rotation0`,`rotation1`,`rotation2`,`rotation3`,`spawntimesecs`,`animprogress`,`state`) VALUES
+REPLACE INTO `gameobject` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`position_x`,`position_y`,`position_z`,`orientation`,`rotation0`,`rotation1`,`rotation2`,`rotation3`,`spawntimesecs`,`animprogress`,`state`) VALUES
 (2753,@DeathbringerCache10N,631,1,1,-489.7205,2172.06763,539.289368,2.652894,0,0,0,0,-120,0,1),
 (2761,@DeathbringerCache25N,631,2,1,-489.7205,2172.06763,539.289368,2.652894,0,0,0,0,-120,0,1),
 (2724,@DeathbringerCache10H,631,4,1,-489.7205,2172.06763,539.289368,2.652894,0,0,0,0,-120,0,1),
@@ -4395,7 +4395,7 @@ INSERT INTO `gameobject` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`position_x`
 
 -- Achievements
 DELETE FROM `achievement_criteria_data` WHERE `criteria_id` IN (12776,12997,12995,12998,12778,13036,13035,13037) AND `type`!=11;
-INSERT INTO `achievement_criteria_data` (`criteria_id`,`type`,`value1`,`value2`,`ScriptName`) VALUES
+REPLACE INTO `achievement_criteria_data` (`criteria_id`,`type`,`value1`,`value2`,`ScriptName`) VALUES
 (12776,12,0,0, ''), -- Full House (10 player) N
 (12997,12,1,0, ''), -- Full House (25 player) N
 (12995,12,2,0, ''), -- Full House (10 player) H
@@ -4408,19 +4408,19 @@ INSERT INTO `achievement_criteria_data` (`criteria_id`,`type`,`value1`,`value2`,
 -- Creature templates
 DELETE FROM `creature_template` WHERE `entry` IN (3718701,3718702,3718703); -- delete invalid
 DELETE FROM `creature_template` WHERE `entry` IN (@NPCOverlord25N,@NPCOverlord10H,@NPCOverlord25H); -- delete before insert
-INSERT INTO `creature_template` (`entry`,`difficulty_entry_1`,`difficulty_entry_2`,`difficulty_entry_3`,`KillCredit1`,`KillCredit2`,`modelid1`,`modelid2`,`modelid3`,`modelid4`,`name`,`subname`,`IconName`,`gossip_menu_id`,`minlevel`,`maxlevel`,`exp`,`faction_A`,`faction_H`,`npcflag`,`speed_walk`,`speed_run`,`scale`,`rank`,`mindmg`,`maxdmg`,`dmgschool`,`attackpower`,`dmg_multiplier`,`baseattacktime`,`rangeattacktime`,`unit_class`,`unit_flags`,`dynamicflags`,`family`,`trainer_type`,`trainer_spell`,`trainer_class`,`trainer_race`,`minrangedmg`,`maxrangedmg`,`rangedattackpower`,`type`,`type_flags`,`lootid`,`pickpocketloot`,`skinloot`,`resistance1`,`resistance2`,`resistance3`,`resistance4`,`resistance5`,`resistance6`,`spell1`,`spell2`,`spell3`,`spell4`,`spell5`,`spell6`,`spell7`,`spell8`,`PetSpellDataId`,`VehicleId`,`mingold`,`maxgold`,`AIName`,`MovementType`,`InhabitType`,`Health_mod`,`Mana_mod`,`Armor_mod`,`RacialLeader`,`questItem1`,`questItem2`,`questItem3`,`questItem4`,`questItem5`,`questItem6`,`movementId`,`RegenHealth`,`equipment_id`,`mechanic_immune_mask`,`flags_extra`,`ScriptName`,`WDBVerified`) VALUES
+REPLACE INTO `creature_template` (`entry`,`difficulty_entry_1`,`difficulty_entry_2`,`difficulty_entry_3`,`KillCredit1`,`KillCredit2`,`modelid1`,`modelid2`,`modelid3`,`modelid4`,`name`,`subname`,`IconName`,`gossip_menu_id`,`minlevel`,`maxlevel`,`exp`,`faction_A`,`faction_H`,`npcflag`,`speed_walk`,`speed_run`,`scale`,`rank`,`mindmg`,`maxdmg`,`dmgschool`,`attackpower`,`dmg_multiplier`,`baseattacktime`,`rangeattacktime`,`unit_class`,`unit_flags`,`dynamicflags`,`family`,`trainer_type`,`trainer_spell`,`trainer_class`,`trainer_race`,`minrangedmg`,`maxrangedmg`,`rangedattackpower`,`type`,`type_flags`,`lootid`,`pickpocketloot`,`skinloot`,`resistance1`,`resistance2`,`resistance3`,`resistance4`,`resistance5`,`resistance6`,`spell1`,`spell2`,`spell3`,`spell4`,`spell5`,`spell6`,`spell7`,`spell8`,`PetSpellDataId`,`VehicleId`,`mingold`,`maxgold`,`AIName`,`MovementType`,`InhabitType`,`Health_mod`,`Mana_mod`,`Armor_mod`,`RacialLeader`,`questItem1`,`questItem2`,`questItem3`,`questItem4`,`questItem5`,`questItem6`,`movementId`,`RegenHealth`,`equipment_id`,`mechanic_immune_mask`,`flags_extra`,`ScriptName`,`WDBVerified`) VALUES
 (@NPCOverlord25N,0,0,0,0,0,30583,0,0,0, 'High Overlord Saurfang (1)', '', '',0,83,83,2,1735,1735,1,1,1.14286,1,3,509,683,0,805,35,0,0,1,33600,8,0,0,0,0,0,371,535,135,7,12,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,599,0,0, '',0,3,300,1,1,0,0,0,0,0,0,0,164,1,0,0,0, '',1),
 (@NPCOverlord10H,0,0,0,0,0,30583,0,0,0, 'High Overlord Saurfang (2)', '', '',0,83,83,2,1735,1735,1,1,1.14286,1,3,509,683,0,805,35,0,0,1,33600,8,0,0,0,0,0,371,535,135,7,12,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,599,0,0, '',0,3,300,1,1,0,0,0,0,0,0,0,164,1,0,0,0, '',1),
 (@NPCOverlord25H,0,0,0,0,0,30583,0,0,0, 'High Overlord Saurfang (3)', '', '',0,83,83,2,1735,1735,1,1,1.14286,1,3,509,683,0,805,35,0,0,1,33600,8,0,0,0,0,0,371,535,135,7,12,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,599,0,0, '',0,3,300,1,1,0,0,0,0,0,0,0,164,1,0,0,0, '',1);
 
 -- info for tc 9607 Deathbringer Saurfang - additional data missed in previous topic
 DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId`=13 AND `SourceEntry`=72260;
-INSERT INTO `conditions` (`SourceTypeOrReferenceId`,`SourceGroup`,`SourceEntry`,`ElseGroup`,`ConditionTypeOrReference`,`ConditionValue1`,`ConditionValue2`,`ConditionValue3`,`ErrorTextId`,`ScriptName`,`Comment`) VALUES
+REPLACE INTO `conditions` (`SourceTypeOrReferenceId`,`SourceGroup`,`SourceEntry`,`ElseGroup`,`ConditionTypeOrReference`,`ConditionValue1`,`ConditionValue2`,`ConditionValue3`,`ErrorTextId`,`ScriptName`,`Comment`) VALUES
 (13,0,72260,0,18,1,37920,0,0, '', 'Deathbringer Saurfang - Mark of the Fallen Champion heal');
 
 -- Equip templates
 DELETE FROM `creature_equip_template` WHERE (`entry`=500207);
-INSERT INTO `creature_equip_template` (`entry`, `equipentry1`, `equipentry2`, `equipentry3`) VALUES (500207, 25210, 0, 0);
+REPLACE INTO `creature_equip_template` (`entry`, `equipentry1`, `equipentry2`, `equipentry3`) VALUES (500207, 25210, 0, 0);
 UPDATE `creature_template` SET `mindmg` = 15000, `maxdmg` = 20000 WHERE `entry` = 500207;
 
 -- Fix for vehicles
@@ -4430,7 +4430,7 @@ UPDATE `creature_template` SET `VehicleId` = '639' WHERE `entry` = '38583';
 
 -- Some loots
 DELETE FROM `creature_loot_template` WHERE (`entry`=500209) AND (`item`=50307);
-INSERT INTO `creature_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `mincountOrRef`, `maxcount`) VALUES (500209, 50307, 100,  '1', '1');
+REPLACE INTO `creature_loot_template` (`entry`, `item`, `ChanceOrQuestChance`, `mincountOrRef`, `maxcount`) VALUES (500209, 50307, 100,  '1', '1');
 UPDATE `creature_template` SET `lootid` = '500209' WHERE `entry` = '38248';
 
 -- First declaring scripts names
@@ -4499,11 +4499,11 @@ UPDATE `creature_template` SET `ScriptName`='npc_gas_cloud_icc' WHERE `entry` = 
 UPDATE `creature_template` SET `ScriptName`='lanathel_intro' WHERE (`entry`='38004');
 -- Inserting NPC's on world
 DELETE FROM `creature` WHERE `id`=38004;
-INSERT INTO `creature` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`DeathState`,`MovementType`) VALUES
+REPLACE INTO `creature` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`DeathState`,`MovementType`) VALUES
 (1084973, 38004, 631, 1, 128, 0, 0, 4689.4, 2766.9, 383.049, 3.47957, 300, 0, 0, 861, 60, 0, 0);
 
 DELETE FROM `creature` WHERE `id`=37985;
-INSERT INTO `creature` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`DeathState`,`MovementType`) VALUES
+REPLACE INTO `creature` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`DeathState`,`MovementType`) VALUES
 (506554, 37985, 631, 15, 16, 0, 0, 4243.66, 2484.51, 364.872, 5.31148, 100, 0, 0, 2136800, 0, 0, 0),
 (506475, 37985, 631, 15, 16, 0, 0, 4236.5, 2497.72, 364.535, 3.20033, 100, 0, 0, 2136800, 0, 0, 0),
 (506471, 37985, 631, 15, 16, 0, 0, 4239.48, 2490.41, 364.872, 0.948594, 100, 0, 0, 2136800, 0, 0, 0),
@@ -4530,19 +4530,19 @@ UPDATE `creature` SET `spawnMask`='3' where `id`='37985' and `map`='631';
 -- Why if this is ths update of ICC you are spawning 2 creatures in map 658 <--- NOT ICC MAP, is PoS
 /*
 DELETE FROM `creature` WHERE `id`=36658;
-INSERT INTO `creature` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`DeathState`,`MovementType`) VALUES
+REPLACE INTO `creature` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`DeathState`,`MovementType`) VALUES
 (5543011, 36658, 658 <--- NOT ICC MAP, 15, 3, 0, 2013, 969.309, 180.069, 628.156, 5.95328, 300, 0, 0, 653829, 0, 0, 0);
 DELETE FROM `creature` WHERE `id`=36661;
-INSERT INTO `creature` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`DeathState`,`MovementType`) VALUES
+REPLACE INTO `creature` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`DeathState`,`MovementType`) VALUES
 (5543609, 36661, 658 <--- NOT ICC MAP, 1, 3, 0, 0, 967.121, 181.192, 639.719, 5.84175, 300, 0, 0, 3235440, 41690, 0, 0);
 */
 
 DELETE FROM `creature` WHERE `id`=36823;
-INSERT INTO `creature` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`DeathState`,`MovementType`) VALUES
+REPLACE INTO `creature` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`DeathState`,`MovementType`) VALUES
 (5566038, 36823, 631, 1, 64, 0, 0, 505.56, -2522.96, 1249.87, 3.12086, 300, 0, 0, 315000, 59910, 0, 0);
 
 DELETE FROM `creature` WHERE `id`=36824;
-INSERT INTO `creature` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`DeathState`,`MovementType`) VALUES
+REPLACE INTO `creature` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`DeathState`,`MovementType`) VALUES
 (5565952, 36824, 631, 1, 64, 0, 0, 482.812, -2523.32, 1249.87, 6.24047, 300, 0, 0, 252000, 59910, 0, 0);
 
 -- Deleting scripts text
@@ -4552,7 +4552,7 @@ DELETE FROM script_texts WHERE entry <= -1810001 AND entry >= -1810031;
 -- Scripts texts
 
 # 3
-INSERT INTO `script_texts` (`npc_entry`,`entry`,`content_default`,`content_loc1`,`content_loc2`,`content_loc3`,`content_loc4`,`content_loc5`,`content_loc6`,`content_loc7`,`content_loc8`,`sound`,`type`,`language`,`emote`,`comment`) VALUES
+REPLACE INTO `script_texts` (`npc_entry`,`entry`,`content_default`,`content_loc1`,`content_loc2`,`content_loc3`,`content_loc4`,`content_loc5`,`content_loc6`,`content_loc7`,`content_loc8`,`sound`,`type`,`language`,`emote`,`comment`) VALUES
 (0,-1665919,'Thank the spirits for you, brothers and sisters. The Skybreaker has already left. Quickly now, to Orgrim''s Hammer! If you leave soon, you may be able to catch them.',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,0,''),
 (0,-1665920,'This should be helpin''ya!',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,0,''),
 (0,-1665921,'Aka''Magosh, brave warriors. The alliance is in great number here.',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,1,0,0,''),
@@ -4596,7 +4596,7 @@ INSERT INTO `script_texts` (`npc_entry`,`entry`,`content_default`,`content_loc1`
 (0,-1665959,'Captain Bartlett, get us out of here! We''re taken too much damage to stay afloat!',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,1,0,0,'');
 
 # 5
-INSERT INTO `script_texts` (`npc_entry`,`entry`,`content_default`,`content_loc1`,`content_loc2`,`content_loc3`,`content_loc4`,`content_loc5`,`content_loc6`,`content_loc7`,`content_loc8`,`sound`,`type`,`language`,`emote`,`comment`) VALUES
+REPLACE INTO `script_texts` (`npc_entry`,`entry`,`content_default`,`content_loc1`,`content_loc2`,`content_loc3`,`content_loc4`,`content_loc5`,`content_loc6`,`content_loc7`,`content_loc8`,`sound`,`type`,`language`,`emote`,`comment`) VALUES
 (0,-1666004,'NOOOO! You kill Stinky! You pay!',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16907,1,0,0,''),
 (0,-1666005,'Fun time!',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16901,1,0,0,''),
 (0,-1666006,'Just an ordinary gas cloud. But watch out, because that''s no ordinary gas cloud!',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,17119,1,0,0,''),
@@ -4610,7 +4610,7 @@ INSERT INTO `script_texts` (`npc_entry`,`entry`,`content_default`,`content_loc1`
 (0,-1666014,'Oh, Festergut. You were always my favorite. Next to Rotface. The good news is you left behind so much gas, I can practically taste it!',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,17124,1,0,0,'');
 
 # 6
-INSERT INTO `script_texts` (`npc_entry`,`entry`,`content_default`,`content_loc1`,`content_loc2`,`content_loc3`,`content_loc4`,`content_loc5`,`content_loc6`,`content_loc7`,`content_loc8`,`sound`,`type`,`language`,`emote`,`comment`) VALUES
+REPLACE INTO `script_texts` (`npc_entry`,`entry`,`content_default`,`content_loc1`,`content_loc2`,`content_loc3`,`content_loc4`,`content_loc5`,`content_loc6`,`content_loc7`,`content_loc8`,`sound`,`type`,`language`,`emote`,`comment`) VALUES
 (0,-1666015,'What? Precious? Noooooooooo!!!',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16993,1,0,0,''),
 (0,-1666016,'WEEEEEE!',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16986,1,0,0,''),
 (0,-1666017,'Icky sticky.',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16991,1,0,0,''),
@@ -4624,7 +4624,7 @@ INSERT INTO `script_texts` (`npc_entry`,`entry`,`content_default`,`content_loc1`
 (0,-1666025,' Terrible news, everyone, Rotface is dead! But great news everyone, he left behind plenty of ooze for me to use! Whaa...? I''m a poet, and I didn''t know it? Astounding!',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,17146,1,0,0,'');
 
 # 7
-INSERT INTO `script_texts`(`npc_entry`,`entry`,`content_default`,`content_loc1`,`content_loc2`,`content_loc3`,`content_loc4`,`content_loc5`,`content_loc6`,`content_loc7`,`content_loc8`,`sound`,`type`,`language`,`emote`,`comment`) VALUES
+REPLACE INTO `script_texts`(`npc_entry`,`entry`,`content_default`,`content_loc1`,`content_loc2`,`content_loc3`,`content_loc4`,`content_loc5`,`content_loc6`,`content_loc7`,`content_loc8`,`sound`,`type`,`language`,`emote`,`comment`) VALUES
 (0,-1666026,'Good news, everyone! I think I perfected a plague that will destroy all life on Azeroth!',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,17114,1,0,0,''),
 (0,-1666027,'You can''t come in here all dirty like that! You need that nasty flesh scrubbed off first!',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,17125,1,0,0,''),
 (0,-1666028,'Two oozes, one room! So many delightful possibilities...',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,17122,1,0,0,''),
@@ -4637,7 +4637,7 @@ INSERT INTO `script_texts`(`npc_entry`,`entry`,`content_default`,`content_loc1`,
 
 # 8
 DELETE FROM `script_texts` where `entry` IN (-1999926);
-INSERT INTO `script_texts`(`npc_entry`,`entry`,`content_default`,`content_loc1`,`content_loc2`,`content_loc3`,`content_loc4`,`content_loc5`,`content_loc6`,`content_loc7`,`content_loc8`,`sound`,`type`,`language`,`emote`,`comment`) VALUES
+REPLACE INTO `script_texts`(`npc_entry`,`entry`,`content_default`,`content_loc1`,`content_loc2`,`content_loc3`,`content_loc4`,`content_loc5`,`content_loc6`,`content_loc7`,`content_loc8`,`sound`,`type`,`language`,`emote`,`comment`) VALUES
 (0,-1666035,'Foolish mortals. You thought us defeated so easily? The San''layn are the Lich King''s immortal soldiers! Now you shall face their might combined!',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16795,1,0,0,''),
 (0,-1666036,'Rise up, brothers, and destroy our enemies.',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16797,1,0,0,''),
 (0,-1666037,'Such wondrous power! The Darkfallen Orb has made me INVINCIBLE!',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16727,1,0,0,''),
@@ -4663,7 +4663,7 @@ INSERT INTO `script_texts`(`npc_entry`,`entry`,`content_default`,`content_loc1`,
 (0,-1666053,'...why...?',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16683,1,0,0,'');
 
 # 9
-INSERT INTO `script_texts`(`npc_entry`,`entry`,`content_default`,`content_loc1`,`content_loc2`,`content_loc3`,`content_loc4`,`content_loc5`,`content_loc6`,`content_loc7`,`content_loc8`,`sound`,`type`,`language`,`emote`,`comment`) VALUES
+REPLACE INTO `script_texts`(`npc_entry`,`entry`,`content_default`,`content_loc1`,`content_loc2`,`content_loc3`,`content_loc4`,`content_loc5`,`content_loc6`,`content_loc7`,`content_loc8`,`sound`,`type`,`language`,`emote`,`comment`) VALUES
 (0,-1666054,'You have made an... unwise... decision.',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16782,1,0,0,''),
 (0,-1666055,'Just a taste...',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16783,1,0,0,''),
 (0,-1666056,'Know my hunger!',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16784,1,0,0,''),
@@ -4675,7 +4675,7 @@ INSERT INTO `script_texts`(`npc_entry`,`entry`,`content_default`,`content_loc1`,
 (0,-1666062,'But... we were getting along... so well...',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,16794,1,0,0,'');
 
 # 10
-INSERT INTO `script_texts`(`npc_entry`,`entry`,`content_default`,`content_loc1`,`content_loc2`,`content_loc3`,`content_loc4`,`content_loc5`,`content_loc6`,`content_loc7`,`content_loc8`,`sound`,`type`,`language`,`emote`,`comment`) VALUES
+REPLACE INTO `script_texts`(`npc_entry`,`entry`,`content_default`,`content_loc1`,`content_loc2`,`content_loc3`,`content_loc4`,`content_loc5`,`content_loc6`,`content_loc7`,`content_loc8`,`sound`,`type`,`language`,`emote`,`comment`) VALUES
 (0,-1666063,'Heroes, lend me your aid! I... I cannot hold them off much longer! You must heal my wounds!',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,17064,1,0,0,''),
 (0,-1666064,'I have opened a portal into the Emerald Dream. Your salvation lies within, heroes.',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,17068,1,0,0,''),
 (0,-1666065,'My strength is returning! Press on, heroes!',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,17070,1,0,0,''),
@@ -4686,7 +4686,7 @@ INSERT INTO `script_texts`(`npc_entry`,`entry`,`content_default`,`content_loc1`,
 (0,-1666070,'I am renewed! Ysera grants me the favor to lay these foul creatures to rest!',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,17071,1,0,0,'');
 
 # 11
-INSERT INTO `script_texts`(`npc_entry`,`entry`,`content_default`,`content_loc1`,`content_loc2`,`content_loc3`,`content_loc4`,`content_loc5`,`content_loc6`,`content_loc7`,`content_loc8`,`sound`,`type`,`language`,`emote`,`comment`) VALUES
+REPLACE INTO `script_texts`(`npc_entry`,`entry`,`content_default`,`content_loc1`,`content_loc2`,`content_loc3`,`content_loc4`,`content_loc5`,`content_loc6`,`content_loc7`,`content_loc8`,`sound`,`type`,`language`,`emote`,`comment`) VALUES
 (0,-1666071,'You are fools who have come to this place! The icy winds of Northrend will consume your souls!',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,17007,1,0,0,''),
 (0,-1666072,'Suffer, mortals, as your pathetic magic betrays you!',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,17014,1,0,0,''),
 (0,-1666073,'Can you feel the cold hand of death upon your heart?',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,17013,1,0,0,''),
@@ -4699,7 +4699,7 @@ INSERT INTO `script_texts`(`npc_entry`,`entry`,`content_default`,`content_loc1`,
 (0,-1666080,'Free...at last...',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,17010,1,0,0,'');
 
 # 12
-INSERT INTO script_texts (entry,content_default,content_loc1,content_loc2,content_loc3,content_loc4,content_loc5,content_loc6,content_loc7,content_loc8,sound,type,language,emote,comment)VALUES
+REPLACE INTO script_texts (entry,content_default,content_loc1,content_loc2,content_loc3,content_loc4,content_loc5,content_loc6,content_loc7,content_loc8,sound,type,language,emote,comment)VALUES
 (-1810001, 'So...the Light''s vaunted justice has finally arrived. Shall I lay down Frostmourne and throw myself at your mercy, Fordring?',null,null,null,null,null,null,null,null,17349,1,0,0,''),
 (-1810002, 'We will grant you a swift death, Arthas. More than can be said for the thousands you''ve tortured and slain.',null,null,null,null,null,null,null,null,17390,1,0,0,''),
 (-1810003, 'You will learn of that first hand. When my work is complete, you will beg for mercy -- and I will deny you. Your anguished cries will be testament to my unbridled power.',null,null,null,null,null,null,null,null,17350,1,0,0,''),
@@ -4734,7 +4734,7 @@ INSERT INTO script_texts (entry,content_default,content_loc1,content_loc2,conten
 
 # 13
 DELETE FROM script_texts where `entry` in (-1900001,-1900002,-1900003,-1900004,-1900005,-1900006,-1900007);
-INSERT INTO script_texts (entry,content_default,content_loc1,content_loc2,content_loc3,content_loc4,content_loc5,content_loc6,content_loc7,content_loc8,sound,type,language,emote,comment)VALUES
+REPLACE INTO script_texts (entry,content_default,content_loc1,content_loc2,content_loc3,content_loc4,content_loc5,content_loc6,content_loc7,content_loc8,sound,type,language,emote,comment)VALUES
 (-1900001, 'You may have once fought beside me, Crok, but now you are nothing more than a traitor. Come, your second death approaches!',null,null,null,null,null,null,null,null,17017,1,0,0,''),
 (-1900002, 'Miserable creatures, Die!',null,null,null,null,null,null,null,null,17018,1,0,0,''),
 (-1900003, 'Foolish Crok, you brought my reinforcements with you! Arise Argent Champions and serve the Lich King in death!',null,null,null,null,null,null,null,null,17019,1,0,0,''),
@@ -4746,7 +4746,7 @@ INSERT INTO script_texts (entry,content_default,content_loc1,content_loc2,conten
 -- Archivement criteria for ICC
 -- 10 Normal
 DELETE FROM `achievement_criteria_data` WHERE `criteria_id` IN (11684,11685,11686,11687,11688,12281,12280,11804,11803,12258,11778,12116,11838,11861,11802,11779);
-INSERT INTO `achievement_criteria_data` (`criteria_id`,`type`,`value1`,`value2`) VALUES
+REPLACE INTO `achievement_criteria_data` (`criteria_id`,`type`,`value1`,`value2`) VALUES
 -- Call of the Crusade (10 player)
 (11684,12,0,0),
 (11685,12,0,0),
@@ -4773,7 +4773,7 @@ INSERT INTO `achievement_criteria_data` (`criteria_id`,`type`,`value1`,`value2`)
 
 -- 10 Hero
 DELETE FROM `achievement_criteria_data` WHERE `criteria_id` IN (11690,11689,11682,11693,11691,12345,12346,12344,12347,12348,12349,12360);
-INSERT INTO `achievement_criteria_data` (`criteria_id`,`type`,`value1`,`value2`) VALUES
+REPLACE INTO `achievement_criteria_data` (`criteria_id`,`type`,`value1`,`value2`) VALUES
 -- Call of the Grand Crusade (10 player)
 (11690,12,2,0),
 (11689,12,2,0),
@@ -4794,7 +4794,7 @@ INSERT INTO `achievement_criteria_data` (`criteria_id`,`type`,`value1`,`value2`)
 
 -- 25 normal
 DELETE FROM `achievement_criteria_data` WHERE `criteria_id` IN (11679,11683,11680,11682,11681,12278,12279,11800,11799,11860,11818,12198,11839,11862,11801,11780);
-INSERT INTO `achievement_criteria_data` (`criteria_id`,`type`,`value1`,`value2`) VALUES
+REPLACE INTO `achievement_criteria_data` (`criteria_id`,`type`,`value1`,`value2`) VALUES
 -- Call of the Crusade (25 player)
 (11679,12,1,0),
 (11683,12,1,0),
@@ -4821,7 +4821,7 @@ INSERT INTO `achievement_criteria_data` (`criteria_id`,`type`,`value1`,`value2`)
 
 -- 25 Hero
 DELETE FROM `achievement_criteria_data` WHERE `criteria_id` IN (11542,11546,11547,11549,11678,12340,12338,12339,12342,12341,12343,12359,12358,12350);
-INSERT INTO `achievement_criteria_data` (`criteria_id`,`type`,`value1`,`value2`) VALUES
+REPLACE INTO `achievement_criteria_data` (`criteria_id`,`type`,`value1`,`value2`) VALUES
 -- Call of the Grand Crusade (25 player)
 (11542,12,3,0),
 (11546,12,3,0),
@@ -4847,7 +4847,7 @@ INSERT INTO `achievement_criteria_data` (`criteria_id`,`type`,`value1`,`value2`)
 UPDATE `creature_template` SET `unit_flags` = 528386, `type_flags` = 138, `mechanic_immune_mask` = 646658835 WHERE `entry` = 38456;
 UPDATE `creature_template` SET `modelid1` = 11686, `modelid3` = 11686, `AIName` = 'EventAI' WHERE `entry` = 38879;
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=38879);
-INSERT INTO `creature_ai_scripts` VALUES  (3887900, 38879, 9, 0, 100, 6, 1, 30, 8000, 10000, 11, 70460, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, '');
+REPLACE INTO `creature_ai_scripts` VALUES  (3887900, 38879, 9, 0, 100, 6, 1, 30, 8000, 10000, 11, 70460, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, '');
 
 -- OTHER
 UPDATE `creature_template` SET `flags_extra`=`flags_extra`|128,minlevel=80,maxlevel=80 WHERE `entry`=36672;
@@ -4893,7 +4893,7 @@ UPDATE `creature_template` SET `difficulty_entry_1`=@dFa1, `difficulty_entry_2`=
 
 -- Difficulty templates for Lady Deathwhisper adds
 DELETE FROM `creature_template` WHERE `entry` IN (@rAd1,@rAd2,@rAd3,@eAd1,@eAd2,@eAd3,@rFa1,@rFa2,@rFa3,@dFa1,@dFa2,@dFa3);
-INSERT INTO `creature_template` (`entry`,`difficulty_entry_1`,`difficulty_entry_2`,`difficulty_entry_3`,`KillCredit1`,`KillCredit2`,`modelid1`,`modelid2`,`modelid3`,`modelid4`,`name`,`subname`,`IconName`,`gossip_menu_id`,`minlevel`,`maxlevel`,`exp`,`faction_A`,`faction_H`,`npcflag`,`speed_walk`,`speed_run`,`scale`,`rank`,`mindmg`,`maxdmg`,`dmgschool`,`attackpower`,`dmg_multiplier`,`baseattacktime`,`rangeattacktime`,`unit_class`,`unit_flags`,`dynamicflags`,`family`,`trainer_type`,`trainer_spell`,`trainer_class`,`trainer_race`,`minrangedmg`,`maxrangedmg`,`rangedattackpower`,`type`,`type_flags`,`lootid`,`pickpocketloot`,`skinloot`,`resistance1`,`resistance2`,`resistance3`,`resistance4`,`resistance5`,`resistance6`,`spell1`,`spell2`,`spell3`,`spell4`,`spell5`,`spell6`,`spell7`,`spell8`,`PetSpellDataId`,`VehicleId`,`mingold`,`maxgold`,`AIName`,`MovementType`,`InhabitType`,`Health_mod`,`Mana_mod`,`Armor_mod`,`RacialLeader`,`questItem1`,`questItem2`,`questItem3`,`questItem4`,`questItem5`,`questItem6`,`movementId`,`RegenHealth`,`equipment_id`,`mechanic_immune_mask`,`flags_extra`,`ScriptName`,`WDBVerified`) VALUES
+REPLACE INTO `creature_template` (`entry`,`difficulty_entry_1`,`difficulty_entry_2`,`difficulty_entry_3`,`KillCredit1`,`KillCredit2`,`modelid1`,`modelid2`,`modelid3`,`modelid4`,`name`,`subname`,`IconName`,`gossip_menu_id`,`minlevel`,`maxlevel`,`exp`,`faction_A`,`faction_H`,`npcflag`,`speed_walk`,`speed_run`,`scale`,`rank`,`mindmg`,`maxdmg`,`dmgschool`,`attackpower`,`dmg_multiplier`,`baseattacktime`,`rangeattacktime`,`unit_class`,`unit_flags`,`dynamicflags`,`family`,`trainer_type`,`trainer_spell`,`trainer_class`,`trainer_race`,`minrangedmg`,`maxrangedmg`,`rangedattackpower`,`type`,`type_flags`,`lootid`,`pickpocketloot`,`skinloot`,`resistance1`,`resistance2`,`resistance3`,`resistance4`,`resistance5`,`resistance6`,`spell1`,`spell2`,`spell3`,`spell4`,`spell5`,`spell6`,`spell7`,`spell8`,`PetSpellDataId`,`VehicleId`,`mingold`,`maxgold`,`AIName`,`MovementType`,`InhabitType`,`Health_mod`,`Mana_mod`,`Armor_mod`,`RacialLeader`,`questItem1`,`questItem2`,`questItem3`,`questItem4`,`questItem5`,`questItem6`,`movementId`,`RegenHealth`,`equipment_id`,`mechanic_immune_mask`,`flags_extra`,`ScriptName`,`WDBVerified`) VALUES
 (@rAd1,0,0,0,0,0,30966,0,0,0, 'Reanimated Adherent (1)', '', '',0,80,80,2,21,21,0,1,1.14286,1,1,417,582,0,608,7.5,0,0,2,0,8,0,0,0,0,0,341,506,80,6,1032,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, '',0,3,10,10,1,0,0,0,0,0,0,0,0,1,0,0,0, '',1),
 (@rAd2,0,0,0,0,0,30966,0,0,0, 'Reanimated Adherent (2)', '', '',0,80,80,2,21,21,0,1,1.14286,1,1,417,582,0,608,7.5,0,0,2,0,8,0,0,0,0,0,341,506,80,6,1032,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, '',0,3,10,10,1,0,0,0,0,0,0,0,0,1,0,0,0, '',1),
 (@rAd3,0,0,0,0,0,30966,0,0,0, 'Reanimated Adherent (3)', '', '',0,80,80,2,21,21,0,1,1.14286,1,1,417,582,0,608,7.5,0,0,2,0,8,0,0,0,0,0,341,506,80,6,1032,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, '',0,3,10,10,1,0,0,0,0,0,0,0,0,1,0,0,0, '',1),
@@ -4912,7 +4912,7 @@ UPDATE `gameobject_template` SET `flags`=`flags`|0x1 WHERE `entry` IN (201910,20
 
 -- Achievements
 DELETE FROM `achievement_criteria_data` WHERE `criteria_id` IN (12775,12775,13393,13393,12962,12962,13394,13394,12770,12771,12772,12773,12945,12946,12947,12948,13039,13040,13041,13042,13050,13051,13052,13053);
-INSERT INTO `achievement_criteria_data` (`criteria_id`,`type`,`value1`,`value2`) VALUES
+REPLACE INTO `achievement_criteria_data` (`criteria_id`,`type`,`value1`,`value2`) VALUES
 (12775,12,0,0), -- Boned (10 player) mode requirement (10N)
 (12775,18,0,0), -- Boned (10 player) script requirement
 (13393,12,2,0), -- Boned (10 player) mode requirement (10H)
@@ -4941,29 +4941,29 @@ INSERT INTO `achievement_criteria_data` (`criteria_id`,`type`,`value1`,`value2`)
 UPDATE `creature_template` SET `unit_flags` = 528386, `type_flags` = 138, `mechanic_immune_mask` = 646658835 WHERE `entry` = 38456;
 UPDATE `creature_template` SET `modelid1` = 11686, `modelid3` = 11686, `AIName` = 'EventAI' WHERE `entry` = 38879;
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=38879);
-INSERT INTO `creature_ai_scripts` VALUES 
+REPLACE INTO `creature_ai_scripts` VALUES 
 (3887900, 38879, 9, 0, 100, 6, 1, 30, 8000, 10000, 11, 70460, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, '');
 UPDATE `creature_template` SET `spell4` = 34873, `spell5` = 60534 WHERE `entry` = 27258;
 DELETE FROM `creature_questrelation` WHERE `quest` = 12779;
 DELETE FROM `gameobject_questrelation` WHERE `quest` = 12779;
 UPDATE `item_template` SET `StartQuest`=0 WHERE `StartQuest` = 12779;
-INSERT INTO `creature_questrelation` (`id`, `quest`) VALUES (29110, 12779);
+REPLACE INTO `creature_questrelation` (`id`, `quest`) VALUES (29110, 12779);
 UPDATE `creature_template` SET `npcflag`=`npcflag`|2 WHERE `entry` = 29110;
-INSERT INTO `creature_questrelation` (`id`, `quest`) VALUES (25462, 12779);
+REPLACE INTO `creature_questrelation` (`id`, `quest`) VALUES (25462, 12779);
 UPDATE `creature_template` SET `npcflag`=`npcflag`|2 WHERE `entry` = 25462;
 DELETE FROM `creature_involvedrelation` WHERE `quest` = 12779;
 DELETE FROM `gameobject_involvedrelation` WHERE `quest` = 12779;
-INSERT INTO `creature_involvedrelation` (`id`, `quest`) VALUES (29110, 12779);
+REPLACE INTO `creature_involvedrelation` (`id`, `quest`) VALUES (29110, 12779);
 UPDATE `creature_template` SET `npcflag`=`npcflag`|2 WHERE `entry`=29110;
-INSERT INTO `creature_involvedrelation` (`id`, `quest`) VALUES (25462, 12779);
+REPLACE INTO `creature_involvedrelation` (`id`, `quest`) VALUES (25462, 12779);
 UPDATE `creature_template` SET `npcflag`=`npcflag`|2 WHERE `entry`=25462;
 DELETE FROM `creature` WHERE `id`=25462;
-INSERT INTO `creature` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`DeathState`,`MovementType`) VALUES
+REPLACE INTO `creature` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`DeathState`,`MovementType`) VALUES
 (96146, 25462, 609, 1, 7, 0, 0, 2345.3, -5671.36, 426.03, 3.78, 120, 0, 0, 27890000, 0, 0, 0),
 (5683368, 25462, 609, 1, 64, 0, 0, 2310.21, -5741.9, 161.147, 0.561972, 300, 0, 0, 17964000, 0, 0, 0);
 DELETE FROM `creature` WHERE `id`=25462;
 
-INSERT INTO `creature` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`DeathState`,`MovementType`) VALUES
+REPLACE INTO `creature` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`DeathState`,`MovementType`) VALUES
 (96146, 25462, 609, 1, 7, 0, 0, 2345.3, -5671.36, 426.03, 3.78, 120, 0, 0, 27890000, 0, 0, 0),
 (5683368, 25462, 609, 1, 64, 0, 0, 2310.21, -5741.9, 161.147, 0.561972, 300, 0, 0, 17964000, 0, 0, 0);
 
@@ -5001,10 +5001,10 @@ DELETE FROM `creature_addon` WHERE `guid` = 136107;
 DELETE FROM `creature_template_addon` WHERE `entry`= 37690;
 DELETE FROM `creature_template_addon` WHERE `entry`= 37672;
 
-INSERT INTO creature_addon (`guid`, `path_id`, `mount`, `bytes1`, `bytes2`, `emote`, `auras`) VALUES
+REPLACE INTO creature_addon (`guid`, `path_id`, `mount`, `bytes1`, `bytes2`, `emote`, `auras`) VALUES
 (136107, 0, 0, 0, 1, 0, '18950 0 18950 1 72242 0');
 
-INSERT INTO `creature_template_addon` (`entry`, `path_id`, `mount`, `bytes1`, `bytes2`, `emote`, `auras`) VALUES
+REPLACE INTO `creature_template_addon` (`entry`, `path_id`, `mount`, `bytes1`, `bytes2`, `emote`, `auras`) VALUES
 (37690, 0, 0, 0, 0, 0, '70345 0  70343 0'),
 (37672, 0, 0, 0, 0, 0, '70385 0 70405 0');
 
@@ -5014,7 +5014,7 @@ INSERT INTO `creature_template_addon` (`entry`, `path_id`, `mount`, `bytes1`, `b
 
 DELETE FROM `conditions` WHERE `SourceEntry` IN (69508,69785,69788,70881,69248,69240,70341,70360,71617);
 
-INSERT INTO `conditions` (`SourceTypeOrReferenceId`,`SourceGroup`,`SourceEntry`,`ElseGroup`,`ConditionTypeOrReference`,`ConditionValue1`,`ConditionValue2`,`ConditionValue3`) VALUES
+REPLACE INTO `conditions` (`SourceTypeOrReferenceId`,`SourceGroup`,`SourceEntry`,`ElseGroup`,`ConditionTypeOrReference`,`ConditionValue1`,`ConditionValue2`,`ConditionValue3`) VALUES
 (13,0,69508,0,18,1,37986,0),
 (13,0,70881,0,18,1,37986,0),
 (13,0,70360,0,18,1,37690,0);
@@ -5022,7 +5022,7 @@ INSERT INTO `conditions` (`SourceTypeOrReferenceId`,`SourceGroup`,`SourceEntry`,
 #creature
 
 DELETE FROM `creature` WHERE `id`=37013;
-INSERT INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `modelid`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `spawndist`, `currentwaypoint`, `curhealth`, `curmana`, `DeathState`, `MovementType`) VALUES
+REPLACE INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `modelid`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `spawndist`, `currentwaypoint`, `curhealth`, `curmana`, `DeathState`, `MovementType`) VALUES
 (48969,37013,631,1,1,11686,0,4291.18,3092.92,372.97,2.33874,300,0,0,25200,0,0,0),
 (48971,37013,631,1,1,11686,0,4312.14,3112.98,372.97,2.51327,300,0,0,25200,0,0,0),
 (48973,37013,631,1,1,11686,0,4244.04,3092.66,372.97,0.97738,300,0,0,25200,0,0,0),
@@ -5033,60 +5033,60 @@ INSERT INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `modelid`
 (48990,37013,631,1,1,11686,0,4291.45,3181.25,372.97,4.10152,300,0,0,25200,0,0,0);
 
 DELETE FROM `spell_proc_event` WHERE `entry` IN (70107);
-INSERT INTO `spell_proc_event` VALUES (70107, 0x08, 0x00, 0x00000000, 0x00000000, 0x00000000, 0x00000054, 0x00000000, 0, 20, 0);
+REPLACE INTO `spell_proc_event` VALUES (70107, 0x08, 0x00, 0x00000000, 0x00000000, 0x00000000, 0x00000054, 0x00000000, 0, 20, 0);
 
 DELETE FROM `spell_proc_event` WHERE `entry` IN (69762);
-INSERT INTO `spell_proc_event` VALUES (69762, 0x00, 0x00, 0x00000000, 0x00000000, 0x00000000, 0x00014000, 0x00000000, 0, 101, 0);
+REPLACE INTO `spell_proc_event` VALUES (69762, 0x00, 0x00, 0x00000000, 0x00000000, 0x00000000, 0x00014000, 0x00000000, 0, 101, 0);
 
 DELETE FROM `spell_proc_event` WHERE `entry` IN (72178);
-INSERT INTO `spell_proc_event` VALUES (72178, 0x01, 0x00, 0x00000000, 0x00000000, 0x00000000, 0x00055510, 0x00000000, 0, 100, 0);
+REPLACE INTO `spell_proc_event` VALUES (72178, 0x01, 0x00, 0x00000000, 0x00000000, 0x00000000, 0x00055510, 0x00000000, 0, 100, 0);
 
 DELETE FROM `spell_proc_event` WHERE `entry` IN (72176);
-INSERT INTO `spell_proc_event` VALUES (72176, 0x01, 0x00, 0x00000000, 0x00000000, 0x00000000, 0x00051154, 0x00000000, 0, 100, 0);
+REPLACE INTO `spell_proc_event` VALUES (72176, 0x01, 0x00, 0x00000000, 0x00000000, 0x00000000, 0x00051154, 0x00000000, 0, 100, 0);
 
 DELETE FROM `spell_proc_event` WHERE `entry` IN (70602);
-INSERT INTO `spell_proc_event` VALUES (70602, 0x20, 0x00, 0x00000000, 0x00000000, 0x00000000, 0x000AAA20, 0x00000000, 0, 100, 0);
+REPLACE INTO `spell_proc_event` VALUES (70602, 0x20, 0x00, 0x00000000, 0x00000000, 0x00000000, 0x000AAA20, 0x00000000, 0, 100, 0);
 
 DELETE FROM `spell_proc_event` WHERE `entry` IN (71494);
-INSERT INTO `spell_proc_event` VALUES (71494, 0x01, 0x00, 0x00000000, 0x00000000, 0x00000000, 0x00000004, 0x00000000, 0, 101, 0);
+REPLACE INTO `spell_proc_event` VALUES (71494, 0x01, 0x00, 0x00000000, 0x00000000, 0x00000000, 0x00000004, 0x00000000, 0, 101, 0);
 
 DELETE FROM `spell_proc_event` WHERE `entry` IN (72176);
-INSERT INTO `spell_proc_event` VALUES (72176, 0x01, 0x00, 0x00000000, 0x00000000, 0x00000000, 0x00051154, 0x00000000, 0, 100, 0);
+REPLACE INTO `spell_proc_event` VALUES (72176, 0x01, 0x00, 0x00000000, 0x00000000, 0x00000000, 0x00051154, 0x00000000, 0, 100, 0);
 
 DELETE FROM `spell_proc_event` WHERE `entry` IN (72178);
-INSERT INTO `spell_proc_event` VALUES (72178, 0x01, 0x00, 0x00000000, 0x00000000, 0x00000000, 0x00055510, 0x00000000, 0, 100, 0);
+REPLACE INTO `spell_proc_event` VALUES (72178, 0x01, 0x00, 0x00000000, 0x00000000, 0x00000000, 0x00055510, 0x00000000, 0, 100, 0);
 
 DELETE FROM `spell_proc_event` WHERE `entry` IN (71604);
-INSERT INTO `spell_proc_event` VALUES (71604, 0x01, 0x00, 0x00000000, 0x00000000, 0x00000000, 0x00000004, 0x00000000, 0, 100, 0);
+REPLACE INTO `spell_proc_event` VALUES (71604, 0x01, 0x00, 0x00000000, 0x00000000, 0x00000000, 0x00000004, 0x00000000, 0, 100, 0);
 
 DELETE FROM `spell_proc_event` WHERE `entry` IN (70001);
-INSERT INTO `spell_proc_event` VALUES (70001, 0x01, 0x00, 0x00000000, 0x00000000, 0x00000000, 0x00000004, 0x00000000, 0, 100, 0);
+REPLACE INTO `spell_proc_event` VALUES (70001, 0x01, 0x00, 0x00000000, 0x00000000, 0x00000000, 0x00000004, 0x00000000, 0, 100, 0);
 
 DELETE FROM `spell_proc_event` WHERE `entry` IN (71971);
-INSERT INTO `spell_proc_event` VALUES (71971, 0x01, 0x00, 0x00000000, 0x00000000, 0x00000000, 0x00000004, 0x00000000, 0, 100, 0);
+REPLACE INTO `spell_proc_event` VALUES (71971, 0x01, 0x00, 0x00000000, 0x00000000, 0x00000000, 0x00000004, 0x00000000, 0, 100, 0);
 
 DELETE FROM `spell_proc_event` WHERE `entry` IN (72256);
-INSERT INTO `spell_proc_event` VALUES (72256, 0x01, 0x00, 0x00000000, 0x00000000, 0x00000000, 0x00000004, 0x00000000, 0, 100, 0);
+REPLACE INTO `spell_proc_event` VALUES (72256, 0x01, 0x00, 0x00000000, 0x00000000, 0x00000000, 0x00000004, 0x00000000, 0, 100, 0);
 
 DELETE FROM `spell_proc_event` WHERE `entry` IN (72408);
-INSERT INTO `spell_proc_event` VALUES (72408, 0x01, 0x00, 0x00000000, 0x00000000, 0x00000000, 0x00000008, 0x00000000, 0, 100, 0);
+REPLACE INTO `spell_proc_event` VALUES (72408, 0x01, 0x00, 0x00000000, 0x00000000, 0x00000000, 0x00000008, 0x00000000, 0, 100, 0);
 
 DELETE FROM `spell_proc_event` WHERE `entry` IN (72455);
-INSERT INTO `spell_proc_event` VALUES (72455, 0x01, 0x00, 0x00000000, 0x00000000, 0x00000000, 0x00000008, 0x00000000, 0, 100, 0);
+REPLACE INTO `spell_proc_event` VALUES (72455, 0x01, 0x00, 0x00000000, 0x00000000, 0x00000000, 0x00000008, 0x00000000, 0, 100, 0);
 
 UPDATE `creature_template` SET `ScriptName`='npc_bloodbeast' WHERE `entry` = 38508;
 
 UPDATE `creature_template` SET `faction_A` = 21, `faction_H` = 21, `unit_flags` = 33600, `vehicleId` = 639 WHERE `entry` IN (37813,38402,38582,38583);
 
 DELETE FROM `creature` WHERE `id`=37813;
-INSERT INTO `creature` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`DeathState`,`MovementType`) VALUES
+REPLACE INTO `creature` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`DeathState`,`MovementType`) VALUES
 (136107, 37813, 631, 15, 1, 30790, 0, -461.512, 2211.11, 541.197, 3.14159, 300, 0, 0, 12299490, 0, 0, 0);
 
 #Linked spell
 
 DELETE FROM `spell_linked_spell` WHERE `spell_trigger` = 72202;
 DELETE FROM `spell_linked_spell` WHERE `spell_effect` IN(72202,69166,70347,72380);
-INSERT INTO `spell_linked_spell` (`spell_trigger`,`spell_effect`,`type`,`comment`) VALUES
+REPLACE INTO `spell_linked_spell` (`spell_trigger`,`spell_effect`,`type`,`comment`) VALUES
 (70360,70347,0,'Eat Ooze'),
 (72379,72380,0,'Blood Nova'),
 (72380,72202,0,'Blood Nova 10N'),
@@ -5187,13 +5187,13 @@ REPLACE INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `modelid
 REPLACE INTO `gameobject` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`, `rotation0`, `rotation1`, `rotation2`, `rotation3`, `spawntimesecs`, `animprogress`, `state`) VALUES (14531739, 201596, 668, 1, 128, 5275.28, 1694.23, 786.147, 0.981225, 0, 0, 0.471166, 0.882044, 25, 0, 1);
 
 DELETE from `creature` WHERE `id`=36955;
-INSERT INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `modelid`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `spawndist`, `currentwaypoint`, `curhealth`, `curmana`, `DeathState`, `MovementType`) VALUES (135349, 36955, 668, 3, 128, 0, 0, 5547.27, 2256.95, 733.011, 0.835987, 7200, 0, 0, 252000, 881400, 0, 0);
+REPLACE INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `modelid`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `spawndist`, `currentwaypoint`, `curhealth`, `curmana`, `DeathState`, `MovementType`) VALUES (135349, 36955, 668, 3, 128, 0, 0, 5547.27, 2256.95, 733.011, 0.835987, 7200, 0, 0, 252000, 881400, 0, 0);
 
 DELETE from `creature` WHERE `id`=37554;
-INSERT INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `modelid`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `spawndist`, `currentwaypoint`, `curhealth`, `curmana`, `DeathState`, `MovementType`) VALUES (135345, 37554, 668, 3, 64, 0, 0, 5547.27, 2256.95, 733.011, 0.835987, 7200, 0, 0, 252000, 881400, 0, 0);
+REPLACE INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `modelid`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `spawndist`, `currentwaypoint`, `curhealth`, `curmana`, `DeathState`, `MovementType`) VALUES (135345, 37554, 668, 3, 64, 0, 0, 5547.27, 2256.95, 733.011, 0.835987, 7200, 0, 0, 252000, 881400, 0, 0);
 
 DELETE from `creature` WHERE `id`=37226;
-INSERT INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `modelid`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `spawndist`, `currentwaypoint`, `curhealth`, `curmana`, `DeathState`, `MovementType`) VALUES (135344, 37226, 668, 3, 1, 0, 0, 5551.29, 2261.33, 733.012, 4.0452, 604800, 0, 0, 27890000, 0, 0, 0);
+REPLACE INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `modelid`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `spawndist`, `currentwaypoint`, `curhealth`, `curmana`, `DeathState`, `MovementType`) VALUES (135344, 37226, 668, 3, 1, 0, 0, 5551.29, 2261.33, 733.012, 4.0452, 604800, 0, 0, 27890000, 0, 0, 0);
 
 UPDATE `creature_template` SET `modelid1` = 11686, `modelid2` = 11686, `modelid3` = 11686, `modelid4` = 11686 WHERE `entry` IN (37014,37704);
 
@@ -5205,14 +5205,14 @@ UPDATE `gameobject` SET `state` = '1' WHERE `id` IN (197341,197342,197343);
 -- Captains chest (override)
 DELETE FROM `gameobject` WHERE `id` IN (202212,201710,202337,202336);
 UPDATE `gameobject_template` SET `flags` = 0 WHERE `gameobject_template`.`entry` IN (202212,201710,202337,202336);
-INSERT INTO `gameobject` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`, `rotation0`, `rotation1`, `rotation2`, `rotation3`, `spawntimesecs`, `animprogress`, `state`) VALUES
+REPLACE INTO `gameobject` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`, `rotation0`, `rotation1`, `rotation2`, `rotation3`, `spawntimesecs`, `animprogress`, `state`) VALUES
 (972561, 202212, 668, 1, 65535,  5241.047, 1663.4364, 784.295166, 0.54, 0, 0, 0, 0, -604800, 100, 1),
 (972562, 201710, 668, 1, 65535,  5241.047, 1663.4364, 784.295166, 0.54, 0, 0, 0, 0, -604800, 100, 1),
 (972563, 202337, 668, 2, 65535,  5241.047, 1663.4364, 784.295166, 0.54, 0, 0, 0, 0, -604800, 100, 1),
 (972564, 202336, 668, 2, 65535,  5241.047, 1663.4364, 784.295166, 0.54, 0, 0, 0, 0, -604800, 100, 1);
 -- Dalaran portal (override)
 DELETE FROM `gameobject` WHERE `guid` IN (972565);
-INSERT INTO `gameobject` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`, `rotation0`, `rotation1`, `rotation2`, `rotation3`, `spawntimesecs`, `animprogress`, `state`) VALUES
+REPLACE INTO `gameobject` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`, `rotation0`, `rotation1`, `rotation2`, `rotation3`, `spawntimesecs`, `animprogress`, `state`) VALUES
 (972565, 202079, 668, 3, 65535, 5250.959961, 1639.359985, 784.302, 0, 0, 0, 0, 0, -604800, 100, 1);
 
 REPLACE INTO `script_texts` (`entry`,`content_default`,`content_loc8`,`sound`,`type`,`language`,`emote`,`comment`) VALUES
@@ -5331,7 +5331,7 @@ DELETE FROM script_waypoint WHERE entry=36955;
 DELETE FROM script_waypoint WHERE entry=37226;
 DELETE FROM script_waypoint WHERE entry=37554;
 
-INSERT INTO script_waypoint VALUES
+REPLACE INTO script_waypoint VALUES
 -- Jaina
 
    (36955, 0, 5587.682,2228.586,733.011, 0, 'WP1'),
@@ -5415,9 +5415,9 @@ ALTER TABLE db_version CHANGE COLUMN required_187_world_halls_of_reflection requ
 
 DELETE FROM `creature` where `id` IN (38161,38160);
 -- Lady Sylvanas Windrunner
-INSERT INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `curhealth`) VALUES ('82810', '38161', '632', '3', '64', '5614.04', '2447.03', '705.852', '0.952404', '7200', '5040000');
+REPLACE INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `curhealth`) VALUES ('82810', '38161', '632', '3', '64', '5614.04', '2447.03', '705.852', '0.952404', '7200', '5040000');
 -- Lady Jaina Proudmoore
-INSERT INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `curhealth`) VALUES ('82809', '38160', '632', '3', '128', '5614.04', '2447.03', '705.852', '0.952404', '7200', '5040000');
+REPLACE INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `curhealth`) VALUES ('82809', '38160', '632', '3', '128', '5614.04', '2447.03', '705.852', '0.952404', '7200', '5040000');
 
 
 
@@ -5427,21 +5427,21 @@ ALTER TABLE db_version CHANGE COLUMN required_295_world_forge_of_souls required_
 -- need checkin with entries
 -- Isle Of Conquest 
 /*
-INSERT INTO `trinity_string` VALUES ('752', 'The battle will begin in two minutes!', null, null, null, null, null, null, null, null);
-INSERT INTO `trinity_string` VALUES ('753', 'The battle will begin in one minute!', null, null, null, null, null, null, null, null);
-INSERT INTO `trinity_string` VALUES ('754', 'The battle will begin in 30 seconds!', null, null, null, null, null, null, null, null);
-INSERT INTO `trinity_string` VALUES ('755', 'The battle has begun!', null, null, null, null, null, null, null, null);
-INSERT INTO `trinity_string` VALUES ('756', 'Hangar', null, null, null, null, null, null, null, null);
-INSERT INTO `trinity_string` VALUES ('757', 'Quarry', null, null, null, null, null, null, null, null);
-INSERT INTO `trinity_string` VALUES ('758', 'Refinery', null, null, null, null, null, null, null, null);
-INSERT INTO `trinity_string` VALUES ('759', 'Docks', null, null, null, null, null, null, null, null);
-INSERT INTO `trinity_string` VALUES ('760', 'Workshop', null, null, null, null, null, null, null, null);
-INSERT INTO `trinity_string` VALUES ('761', 'The %s has taken the %s', null, null, null, null, null, null, null, null);
-INSERT INTO `trinity_string` VALUES ('762', 'Horde', null, null, null, null, null, null, null, null);
-INSERT INTO `trinity_string` VALUES ('763', 'Alliance', null, null, null, null, null, null, null, null);
-INSERT INTO `trinity_string` VALUES ('764', '$n claims the %s! If left unchallenged, the %s will control it in 1 minute!', '', null, null, null, null, null, null, null);
-INSERT INTO `trinity_string` VALUES ('765', '$n has defended the %s', '', '', '', '', '', '', '', '');
-INSERT INTO `trinity_string` VALUES ('766', '$n has assaulted the %s', '', '', '', '', '', '', '', '');
+REPLACE INTO `trinity_string` VALUES ('752', 'The battle will begin in two minutes!', null, null, null, null, null, null, null, null);
+REPLACE INTO `trinity_string` VALUES ('753', 'The battle will begin in one minute!', null, null, null, null, null, null, null, null);
+REPLACE INTO `trinity_string` VALUES ('754', 'The battle will begin in 30 seconds!', null, null, null, null, null, null, null, null);
+REPLACE INTO `trinity_string` VALUES ('755', 'The battle has begun!', null, null, null, null, null, null, null, null);
+REPLACE INTO `trinity_string` VALUES ('756', 'Hangar', null, null, null, null, null, null, null, null);
+REPLACE INTO `trinity_string` VALUES ('757', 'Quarry', null, null, null, null, null, null, null, null);
+REPLACE INTO `trinity_string` VALUES ('758', 'Refinery', null, null, null, null, null, null, null, null);
+REPLACE INTO `trinity_string` VALUES ('759', 'Docks', null, null, null, null, null, null, null, null);
+REPLACE INTO `trinity_string` VALUES ('760', 'Workshop', null, null, null, null, null, null, null, null);
+REPLACE INTO `trinity_string` VALUES ('761', 'The %s has taken the %s', null, null, null, null, null, null, null, null);
+REPLACE INTO `trinity_string` VALUES ('762', 'Horde', null, null, null, null, null, null, null, null);
+REPLACE INTO `trinity_string` VALUES ('763', 'Alliance', null, null, null, null, null, null, null, null);
+REPLACE INTO `trinity_string` VALUES ('764', '$n claims the %s! If left unchallenged, the %s will control it in 1 minute!', '', null, null, null, null, null, null, null);
+REPLACE INTO `trinity_string` VALUES ('765', '$n has defended the %s', '', '', '', '', '', '', '', '');
+REPLACE INTO `trinity_string` VALUES ('766', '$n has assaulted the %s', '', '', '', '', '', '', '', '');
 */
 
 
@@ -5452,7 +5452,7 @@ ALTER TABLE db_version CHANGE COLUMN required_423_world_isle_of_conquest require
 -- Horde
 -- The argent tournament Premier
 DELETE FROM `creature_questrelation` WHERE `quest`=13668;
-INSERT INTO `creature_questrelation` (`id`, `quest`) VALUES (33817, 13668);
+REPLACE INTO `creature_questrelation` (`id`, `quest`) VALUES (33817, 13668);
 -- Icone monture de la horde
 UPDATE `creature_template` SET IconName='vehichleCursor' WHERE entry IN (33842,33796,33798,33791,33792,33799);
 -- Vehicule id des monture 
@@ -5466,7 +5466,7 @@ UPDATE `creature_template` SET `mechanic_immune_mask` = `mechanic_immune_mask` |
 
 -- Ajouts des spellclick_spells pour les montures а l'йcurie
 DELETE FROM `npc_spellclick_spells` WHERE npc_entry IN (33842,33796,33798,33791,33792,33799);
-INSERT INTO `npc_spellclick_spells` (`npc_entry`, `spell_id`, `quest_start`, `quest_start_active`, `quest_end`, `cast_flags`, `aura_required`, `aura_forbidden`, `user_type`) VALUES
+REPLACE INTO `npc_spellclick_spells` (`npc_entry`, `spell_id`, `quest_start`, `quest_start_active`, `quest_end`, `cast_flags`, `aura_required`, `aura_forbidden`, `user_type`) VALUES
 (33842, 63791, 13668, 1, 13680, 1, 0, 0, 0), -- Aspirant
 -- Orgrimmar
 (33799, 62783, 13726, 0, 0, 1, 0, 0, 0), -- Champion Of Orgrimmar
@@ -5564,7 +5564,7 @@ UPDATE `quest_template` SET `RequiredRaces`=690 WHERE `entry` IN (13736, 13737, 
 -- Alliance
 -- Premiere quete : Le tournoi d'argent
 DELETE FROM `creature_questrelation` WHERE `quest`=13667;
-INSERT INTO `creature_questrelation` (`id`, `quest`) VALUES (33817, 13667);
+REPLACE INTO `creature_questrelation` (`id`, `quest`) VALUES (33817, 13667);
 -- Icone monture de la horde
 UPDATE `creature_template` SET IconName='vehichleCursor' WHERE `entry` IN (33843,33794,33800,33793,33795,33790);
 -- Vehicule id des montures
@@ -5579,7 +5579,7 @@ UPDATE `creature_template` SET `mechanic_immune_mask` = `mechanic_immune_mask` |
 -- Ajouts des spellclick_spells pour les montures а l'йcurie
 DELETE FROM `npc_spellclick_spells` WHERE npc_entry IN (33843,33800,33795,33790,33793,33794);
 
-INSERT INTO `npc_spellclick_spells` (`npc_entry`, `spell_id`, `quest_start`, `quest_start_active`, `quest_end`, `cast_flags`, `aura_required`, `aura_forbidden`, `user_type`) VALUES
+REPLACE INTO `npc_spellclick_spells` (`npc_entry`, `spell_id`, `quest_start`, `quest_start_active`, `quest_end`, `cast_flags`, `aura_required`, `aura_forbidden`, `user_type`) VALUES
 (33843, 63792, 13667, 1, 13679, 1, 0, 0, 0), -- Aspirant
 -- Darnassus
 (33794, 62782, 13725, 0, 0, 1, 0, 0, 0), -- Champion Of Darnassus
@@ -5766,7 +5766,7 @@ UPDATE `quest_template` SET `SkillOrClassMask`=-1503 WHERE `entry` IN (13794, 13
 
 -- Teleports Locations
 DELETE FROM `spell_target_position` WHERE `id` IN (63986,63987);
-INSERT INTO `spell_target_position` (`id`,`target_map`,`target_position_x`,`target_position_y`,`target_position_z`,`target_orientation`) VALUES
+REPLACE INTO `spell_target_position` (`id`,`target_map`,`target_position_x`,`target_position_y`,`target_position_z`,`target_orientation`) VALUES
 (63986,571,8574.87,700.595,547.29,5.48),
 (63987,571,8460,700,547.4,3.839);
 
@@ -5787,25 +5787,25 @@ UPDATE creature_template SET speed_walk = 1.6 WHERE entry = 33211;
 
 -- Quest : Le fil de l'hiver
 DELETE FROM creature WHERE guid = '336364';
-INSERT INTO creature VALUES  (336364,33289,571,1,1,0,0,5136.74,-83.3769,347.326,1.44434,300,0,0,12600,3994,0,0);
+REPLACE INTO creature VALUES  (336364,33289,571,1,1,0,0,5136.74,-83.3769,347.326,1.44434,300,0,0,12600,3994,0,0);
 DELETE FROM `creature_loot_template` WHERE `entry`=33289 AND `item`=45005;
-INSERT INTO `creature_loot_template` (`entry`, `item`, `ChanceOrQuestChance`) VALUES (33289, 45005, -100);
+REPLACE INTO `creature_loot_template` (`entry`, `item`, `ChanceOrQuestChance`) VALUES (33289, 45005, -100);
 
 -- Quete : Une arme remarquable
 DELETE FROM `script_texts` WHERE `entry` IN (-1850000,-1850001,-1850002,-1850003);
-INSERT INTO `script_texts` (`npc_entry`, `entry`, `content_default`, `content_loc2`,`comment`) VALUES
+REPLACE INTO `script_texts` (`npc_entry`, `entry`, `content_default`, `content_loc2`,`comment`) VALUES
 (0, -1850000, 'Oh, ce sont des jacinthes d\'hiver ? Pour moi ?', 'Oh, ce sont des jacinthes d\'hiver ? Pour moi ?',''),
 (0, -1850001, 'On ne m\'avait pas apportй de fleurs ici depuis si longtemps.', 'On ne m\'avait pas apportй de fleurs ici depuis si longtemps.',''),
 (0, -1850002, 'Le lac est un endroit bien solitaire depuis quelques annйes. Les voyageurs n\'y viennent plus, et le mal en a envahi les eaux.', 'Le lac est un endroit bien solitaire depuis quelques annйes. Les voyageurs n\'y viennent plus, et le mal en a envahi les eaux.',''),
 (0, -1850003, 'Votre cadeau rйvиle une rare bontй, voyageur. Je vous en prie, prenez cette lame en gage de ma gratitude. Il y a bien longtemps, c\'est un autre voyageur qui l\'avait laissйe ici, mais je n\'en ai pas l\'utilitй.', 'Votre cadeau rйvиle une rare bontй, voyageur. Je vous en prie, prenez cette lame en gage de ma gratitude. Il y a bien longtemps, c\'est un autre voyageur qui l\'avait laissйe ici, mais je n\'en ai pas l\'utilitй.','');
 DELETE FROM `event_scripts` WHERE `id`=20990;
-INSERT INTO `event_scripts` (`id`, `delay`, `command`, `datalong`, `datalong2`, `x`, `y`, `z`, `o`) VALUES (20990, 0, 10, 33273, 42000, 4602.977, -1600.141, 156.7834, 0.7504916);
+REPLACE INTO `event_scripts` (`id`, `delay`, `command`, `datalong`, `datalong2`, `x`, `y`, `z`, `o`) VALUES (20990, 0, 10, 33273, 42000, 4602.977, -1600.141, 156.7834, 0.7504916);
 DELETE FROM `creature_template_addon` WHERE `entry`=33273;
-INSERT INTO `creature_template_addon` (`entry`, `emote`) VALUES (33273, 13); -- 13 = EMOTE_STATE_SIT
+REPLACE INTO `creature_template_addon` (`entry`, `emote`) VALUES (33273, 13); -- 13 = EMOTE_STATE_SIT
 
 -- Quete Entrainement sur le terrain:
 UPDATE `creature_template` SET `faction_A`=16,`faction_H`=16 WHERE entry IN (29720,29719,29722);
-INSERT INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `modelid`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `spawndist`, `currentwaypoint`, `curhealth`, `curmana`, `DeathState`, `MovementType`) VALUES
+REPLACE INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `modelid`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `spawndist`, `currentwaypoint`, `curhealth`, `curmana`, `DeathState`, `MovementType`) VALUES
 (NULL, 29720, 571, 1, 1, 0, 0, 8562.48, 2771.93, 759.958, 6.10672, 300, 15, 0, 12175, 0, 0, 1),
 (NULL, 29720, 571, 1, 1, 0, 0, 8584.64, 2760.8, 759.958, 2.59599, 300, 15, 0, 12600, 0, 0, 1),
 (NULL, 29720, 571, 1, 1, 0, 0, 8617.49, 2735.11, 759.958, 2.32895, 300, 15, 0, 12175, 0, 0, 1),
@@ -5821,22 +5821,22 @@ INSERT INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `modelid`
 
 -- Quest : A Worthy Weapon
 DELETE FROM `script_texts` WHERE `entry` IN (-1850000,-1850001,-1850002,-1850003);
-INSERT INTO `script_texts` (`npc_entry`, `entry`, `content_default`, `content_loc2`,`comment`) VALUES
+REPLACE INTO `script_texts` (`npc_entry`, `entry`, `content_default`, `content_loc2`,`comment`) VALUES
 (0, -1850000, 'Oh, these are hyacinths \ winter? For me ?', 'Oh, these are hyacinths \ winter? For me  ?',''),
 (0, -1850001, 'We don\'t had not brought flowers here for so long.', 'We don\'t had not brought flowers here for so long.',''),
 (0, -1850002, 'The lake is a lonely spot some years. Travelers to come over, and evil has invaded the waters.', 'The lake is a lonely spot some years. Travelers to come over, and evil has invaded the waters.',''),
 (0, -1850003, 'Your gift shows a rare kindness, traveler. Please, take this blade as a token of my gratitude. There has long, is another traveler who had left here, but I do not need. ',' Your gift reveals a rare kindness, traveler. Please, take this blade as a token of my gratitude. Long ago, another passenger who had left here, but I have no use.','');
 DELETE FROM `event_scripts` WHERE `id`=20990;
-INSERT INTO `event_scripts` (`id`, `delay`, `command`, `datalong`, `datalong2`, `x`, `y`, `z`, `o`) VALUES (20990, 0, 10, 33273, 42000, 4602.977, -1600.141, 156.7834, 0.7504916);
+REPLACE INTO `event_scripts` (`id`, `delay`, `command`, `datalong`, `datalong2`, `x`, `y`, `z`, `o`) VALUES (20990, 0, 10, 33273, 42000, 4602.977, -1600.141, 156.7834, 0.7504916);
 
 DELETE FROM `creature_template_addon` WHERE `entry`=33273;
-INSERT INTO `creature_template_addon` (`entry`, `emote`) VALUES (33273, 13); -- 13 = EMOTE_STATE_SIT
+REPLACE INTO `creature_template_addon` (`entry`, `emote`) VALUES (33273, 13); -- 13 = EMOTE_STATE_SIT
 
 
 -- Text campioni
 -- Quest : A Worthy Weapon
 DELETE FROM `script_texts` WHERE `entry` IN (-1850000,-1850001,-1850002,-1850003);
-INSERT INTO `script_texts` (`npc_entry`, `entry`, `content_default`, `content_loc2`,`comment`) VALUES
+REPLACE INTO `script_texts` (`npc_entry`, `entry`, `content_default`, `content_loc2`,`comment`) VALUES
 (0, -1850004, 'Stand ready !', 'Stand ready !',''),
 (0, -1850005, 'Let the battle begins !', 'Let the battle begins !',''),
 (0, -1850006, 'Prepare your self !', 'Prepare your self! !',''),
@@ -5854,11 +5854,11 @@ ALTER TABLE db_version CHANGE COLUMN required_424_argent_quests required_436_wor
 
 -- Achievement lookup & add
 DELETE FROM command WHERE NAME IN ('lookup achievement', 'achievement add', 'achievement remove');
-INSERT INTO command (name, security, help) VALUES
+REPLACE INTO command (name, security, help) VALUES
 ('lookup achievement', 1, 'Syntax: .lookup achievement $achievementname\r\n\r\nLooks up an achievement by $achievementname, and returns all matches with their Achievement ID\'s.');
-INSERT INTO command (name, security, help) VALUES
+REPLACE INTO command (name, security, help) VALUES
 ('achievement add', 2, 'Syntax: .achievement add $achievementID\r\n\r\Adds the achievement with selected ID\'s.');
-INSERT INTO command (name, security, help) VALUES
+REPLACE INTO command (name, security, help) VALUES
 ('achievement remove', 2, 'Syntax: .achievement remove $achievementID\r\n\r\removes the achievement with selected ID\'s.');
 
 
@@ -5867,36 +5867,36 @@ INSERT INTO command (name, security, help) VALUES
 ALTER TABLE db_version CHANGE COLUMN required_436_world_command required_507_world_wintergrasp bit;
 
 DELETE FROM `trinity_string` WHERE entry IN (756,757,758,759,760,761,762,763,764,765,766,767,768,769,770,771,772,780,781);
-INSERT INTO `trinity_string` VALUES ('756', 'Battle begins!', '', '', '', '', '', '', '', 'Битва началась');
-INSERT INTO `trinity_string` VALUES ('757', '%s has successfully defended the fortress!', '', '', '', '', '', '', '', '');
-INSERT INTO `trinity_string` VALUES ('758', '%s has taken over the fortress!', '', '', '', '', '', '', '', '');
-INSERT INTO `trinity_string` VALUES ('759', 'The %s siege workshop has been damaged by the %s!', '', '', '', '', '', '', '', '');
-INSERT INTO `trinity_string` VALUES ('760', 'The %s siege workshop has been destroyed by the %s!', '', '', '', '', '', '', '', '');
-INSERT INTO `trinity_string` VALUES ('761', 'The %s tower has been damaged!', '', '', '', '', '', '', '', '%s башня повреждена');
-INSERT INTO `trinity_string` VALUES ('762', 'The %s tower has been destroyed!', '', '', '', '', '', '', '', '%s башня уничтожена!');
-INSERT INTO `trinity_string` VALUES ('763', 'Wintergrasp fortress is under attack!', '', '', '', '', '', '', '', '');
-INSERT INTO `trinity_string` VALUES ('764', 'Wintergrasp is now under the control of the %s.', '', '', '', '', '', '', '', '');
-INSERT INTO `trinity_string` VALUES ('765', 'Wintergrasp timer set to %s.', '', '', '', '', '', '', '', '');
-INSERT INTO `trinity_string` VALUES ('766', 'Wintergrasp battle started.', '', '', '', '', '', '', '', '');
-INSERT INTO `trinity_string` VALUES ('767', 'Wintergrasp battle finished.', '', '', '', '', '', '', '', '');
-INSERT INTO `trinity_string` VALUES ('768', 'Wintergrasp info: %s controlled. Timer: %s. Wartime: %s. Number of Players: (Horde: %u, Alliance: %u)', '', '', '', '', '', '', '', '');
-INSERT INTO `trinity_string` VALUES ('769', 'Wintergrasp outdoorPvP is disabled.', '', '', '', '', '', '', '', '');
-INSERT INTO `trinity_string` VALUES ('770', 'Wintergrasp outdoorPvP is enabled.', '', '', '', '', '', '', '', '');
-INSERT INTO `trinity_string` VALUES ('771', 'You have reached Rank 1: Corporal', '', '', '', '', '', '', '', 'Вы достигли Ранга 1: Капрал');
-INSERT INTO `trinity_string` VALUES ('772', 'You have reached Rank 2: First Lieutenant', '', '', '', '', '', '', '', 'Вы достигли Ранга 2: Лейтенант');
+REPLACE INTO `trinity_string` VALUES ('756', 'Battle begins!', '', '', '', '', '', '', '', 'Битва началась');
+REPLACE INTO `trinity_string` VALUES ('757', '%s has successfully defended the fortress!', '', '', '', '', '', '', '', '');
+REPLACE INTO `trinity_string` VALUES ('758', '%s has taken over the fortress!', '', '', '', '', '', '', '', '');
+REPLACE INTO `trinity_string` VALUES ('759', 'The %s siege workshop has been damaged by the %s!', '', '', '', '', '', '', '', '');
+REPLACE INTO `trinity_string` VALUES ('760', 'The %s siege workshop has been destroyed by the %s!', '', '', '', '', '', '', '', '');
+REPLACE INTO `trinity_string` VALUES ('761', 'The %s tower has been damaged!', '', '', '', '', '', '', '', '%s башня повреждена');
+REPLACE INTO `trinity_string` VALUES ('762', 'The %s tower has been destroyed!', '', '', '', '', '', '', '', '%s башня уничтожена!');
+REPLACE INTO `trinity_string` VALUES ('763', 'Wintergrasp fortress is under attack!', '', '', '', '', '', '', '', '');
+REPLACE INTO `trinity_string` VALUES ('764', 'Wintergrasp is now under the control of the %s.', '', '', '', '', '', '', '', '');
+REPLACE INTO `trinity_string` VALUES ('765', 'Wintergrasp timer set to %s.', '', '', '', '', '', '', '', '');
+REPLACE INTO `trinity_string` VALUES ('766', 'Wintergrasp battle started.', '', '', '', '', '', '', '', '');
+REPLACE INTO `trinity_string` VALUES ('767', 'Wintergrasp battle finished.', '', '', '', '', '', '', '', '');
+REPLACE INTO `trinity_string` VALUES ('768', 'Wintergrasp info: %s controlled. Timer: %s. Wartime: %s. Number of Players: (Horde: %u, Alliance: %u)', '', '', '', '', '', '', '', '');
+REPLACE INTO `trinity_string` VALUES ('769', 'Wintergrasp outdoorPvP is disabled.', '', '', '', '', '', '', '', '');
+REPLACE INTO `trinity_string` VALUES ('770', 'Wintergrasp outdoorPvP is enabled.', '', '', '', '', '', '', '', '');
+REPLACE INTO `trinity_string` VALUES ('771', 'You have reached Rank 1: Corporal', '', '', '', '', '', '', '', 'Вы достигли Ранга 1: Капрал');
+REPLACE INTO `trinity_string` VALUES ('772', 'You have reached Rank 2: First Lieutenant', '', '', '', '', '', '', '', 'Вы достигли Ранга 2: Лейтенант');
 REPLACE INTO `trinity_string` VALUES ('780', 'Before the Battle of  Wintergrasp left 30 minutes!', '', '', '', '', '', '', '', 'До битвы на  Озере Ледяных Оков осталось 30 минут!');
 REPLACE INTO `trinity_string` VALUES ('781', 'Before the Battle of  Wintergrasp left 10 minutes!', '', '', '', '', '', '', '', 'До битвы на  Озере Ледяных Оков осталось 10 минут!');
 REPLACE INTO `trinity_string` VALUES ('782', 'The battle for Wintergrasp  has stopped! Not enough defenders. Wintergrasp Fortress remains  Attackers.', '', '', '', '', '', '', '', 'Битва за Озеро Ледяных Оков Остановлена. Не хватает защитников. Крепость переходит атакующей  стороне.');
 REPLACE INTO `trinity_string` VALUES ('783', 'The battle for Wintergrasp  has stopped! Not enough attackers. Wintergrasp Fortress remains  Defenders.', '', '', '', '', '', '', '', 'Битва за Озеро Ледяных Оков Остановлена. Не хватает нападающих. Крепость остается защитникам.');
 
 DELETE FROM `command` WHERE name IN ('wg','wg enable','wg start','wg status','wg stop','wg switch','wg timer');
-INSERT INTO `command` VALUES ('wg', '3', 'Syntax: .wg $subcommand.');
-INSERT INTO `command` VALUES ('wg enable', '3', 'Syntax: .wg enable [on/off] Enable/Disable Wintergrasp outdoorPvP.');
-INSERT INTO `command` VALUES ('wg start', '3', 'Syntax: .wg start\r\nForce Wintergrasp battle start.');
-INSERT INTO `command` VALUES ('wg status', '3', 'Syntax: .wg status\r\nWintergrasp info, defender, timer, wartime.');
-INSERT INTO `command` VALUES ('wg stop', '3', 'Syntax: .wg stop\r\nForce Wintergrasp battle stop (No rewards).');
-INSERT INTO `command` VALUES ('wg switch', '3', 'Syntax: .wg switch\r\nSwitchs Wintergrasp defender team.');
-INSERT INTO `command` VALUES ('wg timer', '3', 'Syntax: .wg timer $minutes\r\nChange the current timer. Min value = 1, Max value 60 (Wartime), 1440 (Not Wartime)');
+REPLACE INTO `command` VALUES ('wg', '3', 'Syntax: .wg $subcommand.');
+REPLACE INTO `command` VALUES ('wg enable', '3', 'Syntax: .wg enable [on/off] Enable/Disable Wintergrasp outdoorPvP.');
+REPLACE INTO `command` VALUES ('wg start', '3', 'Syntax: .wg start\r\nForce Wintergrasp battle start.');
+REPLACE INTO `command` VALUES ('wg status', '3', 'Syntax: .wg status\r\nWintergrasp info, defender, timer, wartime.');
+REPLACE INTO `command` VALUES ('wg stop', '3', 'Syntax: .wg stop\r\nForce Wintergrasp battle stop (No rewards).');
+REPLACE INTO `command` VALUES ('wg switch', '3', 'Syntax: .wg switch\r\nSwitchs Wintergrasp defender team.');
+REPLACE INTO `command` VALUES ('wg timer', '3', 'Syntax: .wg timer $minutes\r\nChange the current timer. Min value = 1, Max value 60 (Wartime), 1440 (Not Wartime)');
 
 /* Temp removed gameobject stopping you getting to the relic
 * 60070 - [Wintergrasp Keep Collision Wall X:5396.209961 Y:2840.010010 Z:432.268005 MapId:571
@@ -5916,7 +5916,7 @@ REPLACE INTO `spell_target_position` VALUES ('60035', '571', '5325.06', '2843.36
 ALTER TABLE db_version CHANGE COLUMN required_507_world_wintergrasp required_525_world_spell_scripts bit;
 
 DELETE FROM `spell_scripts` WHERE id IN (44997,45030,49625,49634,53343,53341);
-INSERT INTO `spell_scripts`(`id`,`effIndex`,`delay`,`command`,`datalong`,`datalong2`,`dataint`,`x`,`y`,`z`,`o`) VALUES 
+REPLACE INTO `spell_scripts`(`id`,`effIndex`,`delay`,`command`,`datalong`,`datalong2`,`dataint`,`x`,`y`,`z`,`o`) VALUES 
 (44997,0,0,15,45009,1,1,0,0,0,0), -- Converting Sentry
 (45030,1,0,15,45088,1,1,0,0,0,0), -- Impale Emissary
 (49625,0,0,15,43106,1,1,0,0,0,0), -- Brave's Flare
@@ -5942,7 +5942,7 @@ CREATE TABLE `pool_quest` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED COMMENT='Daily / Weekly Quest Pool System';
 
 -- Only some data to start the table not empty. ;)
-INSERT INTO `pool_quest`(`entry`,`quest`,`daily`,`enabled`,`comment`) VALUES
+REPLACE INTO `pool_quest`(`entry`,`quest`,`daily`,`enabled`,`comment`) VALUES
 -- Weekly raid quests of Archmage Lan'dalock
 (20735,24579,0,1,'Dalaran - Weekly raid quest of Archmage Lan\'dalock'),
 (20735,24580,0,1,'Dalaran - Weekly raid quest of Archmage Lan\'dalock'),
@@ -6019,7 +6019,7 @@ CREATE TABLE `player_factionchange_spells` (
 
 
 -- data for wolrd_plater_factionchange_tc9784
-INSERT INTO `player_factionchange_achievement` (`alliance_id`, `horde_id`) VALUES
+REPLACE INTO `player_factionchange_achievement` (`alliance_id`, `horde_id`) VALUES
 ('33','1358'),
 ('34','1356'),
 ('37','1357'),
@@ -6055,7 +6055,7 @@ INSERT INTO `player_factionchange_achievement` (`alliance_id`, `horde_id`) VALUE
 ('2421','2420'),
 ('3556','3557');
 
-INSERT INTO `player_factionchange_reputations` (`alliance_id`, `horde_id`) VALUES
+REPLACE INTO `player_factionchange_reputations` (`alliance_id`, `horde_id`) VALUES
 ('47','530'),
 ('54','81'),
 ('69','68'),
@@ -6071,7 +6071,7 @@ INSERT INTO `player_factionchange_reputations` (`alliance_id`, `horde_id`) VALUE
 ('1068','1064'),
 ('1126','1067');
 
-INSERT INTO `player_factionchange_spells` (`alliance_id`, `horde_id`) values
+REPLACE INTO `player_factionchange_spells` (`alliance_id`, `horde_id`) values
 ('458','6654'),
 ('470','64658'),
 ('472','580'),
@@ -6937,7 +6937,7 @@ UPDATE `creature_template` SET `AIName`= 'EventAI' WHERE `entry` IN (27979,27982
 /*
 -- EventAi
 DELETE FROM `creature_ai_scripts` WHERE `creature_id` IN (27979,27982,27983,27984,27985);
-INSERT INTO `creature_ai_scripts` (`id`, `creature_id`, `event_type`, `event_inverse_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `action1_type`, `action1_param1`, `action1_param2`, `action1_param3`, `action2_type`, `action2_param1`, `action2_param2`, `action2_param3`, `action3_type`, `action3_param1`, `action3_param2`, `action3_param3`, `comment`) 
+REPLACE INTO `creature_ai_scripts` (`id`, `creature_id`, `event_type`, `event_inverse_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `action1_type`, `action1_param1`, `action1_param2`, `action1_param3`, `action2_type`, `action2_param1`, `action2_param2`, `action2_param3`, `action3_type`, `action3_param1`, `action3_param2`, `action3_param3`, `comment`) 
 VALUES
 ('2798401','27984','0','0','100','3','7000','10000','7000','10000','11','12167','4','1','0','0','0','0','0','0','0','0','Dark Rune Stormcaller (Normal) - Cast Lightning Bolt'),
 ('2798402','27984','0','0','100','5','7000','10000','7000','10000','11','59863','4','1','0','0','0','0','0','0','0','0','Dark Rune Stormcaller (Heroic) - Cast Lightning Bolt'),
@@ -6959,17 +6959,17 @@ VALUES
 -- Hero mode
 -- http://www.wowhead.com/npc=27983
 DELETE FROM `creature_ai_scripts` WHERE `creature_id`=31876;
-INSERT INTO `creature_ai_scripts` (`id`, `creature_id`, `event_type`, `event_inverse_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `action1_type`, `action1_param1`, `action1_param2`, `action1_param3`, `action2_type`, `action2_param1`, `action2_param2`, `action2_param3`, `action3_type`, `action3_param1`, `action3_param2`, `action3_param3`, `comment`) VALUES 
+REPLACE INTO `creature_ai_scripts` (`id`, `creature_id`, `event_type`, `event_inverse_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `action1_type`, `action1_param1`, `action1_param2`, `action1_param3`, `action2_type`, `action2_param1`, `action2_param2`, `action2_param3`, `action3_type`, `action3_param1`, `action3_param2`, `action3_param3`, `comment`) VALUES 
 (3187601, 31876, 0, 0, 100, 5, 1000, 3000, 3000, 6000, 11, 22120, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'spell'),
 (3187602, 31876, 0, 0, 100, 5, 1000, 3000, 3000, 6000, 11, 42724, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'spell');
 -- http://www.wowhead.com/npc=27984
 DELETE FROM `creature_ai_scripts` WHERE `creature_id`=31877;
-INSERT INTO `creature_ai_scripts` (`id`, `creature_id`, `event_type`, `event_inverse_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `action1_type`, `action1_param1`, `action1_param2`, `action1_param3`, `action2_type`, `action2_param1`, `action2_param2`, `action2_param3`, `action3_type`, `action3_param1`, `action3_param2`, `action3_param3`, `comment`) VALUES 
+REPLACE INTO `creature_ai_scripts` (`id`, `creature_id`, `event_type`, `event_inverse_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `action1_type`, `action1_param1`, `action1_param2`, `action1_param3`, `action2_type`, `action2_param1`, `action2_param2`, `action2_param3`, `action3_type`, `action3_param1`, `action3_param2`, `action3_param3`, `comment`) VALUES 
 (3187701, 31877, 0, 0, 100, 5, 1000, 3000, 3000, 6000, 11, 59863, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'spell'),
 (3187702, 31877, 0, 0, 100, 5, 1000, 3000, 3000, 6000, 11, 59864, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'spell');
 -- http://www.wowhead.com/npc=27985
 DELETE FROM `creature_ai_scripts` WHERE `creature_id`=31380;
-INSERT INTO `creature_ai_scripts` (`id`, `creature_id`, `event_type`, `event_inverse_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `action1_type`, `action1_param1`, `action1_param2`, `action1_param3`, `action2_type`, `action2_param1`, `action2_param2`, `action2_param3`, `action3_type`, `action3_param1`, `action3_param2`, `action3_param3`, `comment`) VALUES 
+REPLACE INTO `creature_ai_scripts` (`id`, `creature_id`, `event_type`, `event_inverse_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `action1_type`, `action1_param1`, `action1_param2`, `action1_param3`, `action2_type`, `action2_param1`, `action2_param2`, `action2_param3`, `action3_type`, `action3_param1`, `action3_param2`, `action3_param3`, `comment`) VALUES 
 (3138001, 31380, 0, 0, 100, 5, 1000, 3000, 3000, 6000, 11, 33661, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'spell'),
 (3138002, 31380, 0, 0, 100, 5, 1000, 3000, 3000, 6000, 11, 59865, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'spell');
 
@@ -6984,7 +6984,7 @@ UPDATE `creature_template` SET `faction_A`=7, `faction_H`=7 WHERE `entry`=29932;
 
 -- DB spawn eck (serverdown issues, in case of crash do not appear again).
 DELETE FROM `creature` WHERE `id`=29932;
-INSERT INTO `creature` (`guid`,`id`, `map`, `spawnMask`, `phaseMask`, `modelid`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `spawndist`, `currentwaypoint`, `curhealth`, `curmana`, `DeathState`, `MovementType`) VALUES 
+REPLACE INTO `creature` (`guid`,`id`, `map`, `spawnMask`, `phaseMask`, `modelid`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `spawndist`, `currentwaypoint`, `curhealth`, `curmana`, `DeathState`, `MovementType`) VALUES 
 ('81823','29932','604','2','1','26644','0','1640.008423','931.781738','107.357620','0.668432','86400','0','0','431392','0','0','0');
 
 -- dont spawn drakkari colossus related living mojo, remove respawn links
@@ -6998,14 +6998,14 @@ update `creature_template` set `VehicleId` = '169' where `entry` in ('29306','31
 
 -- Trigger Eck residue: Eck Spit http://www.wowhead.com/spell=55814 to Eck Residue http://www.wowhead.com/spell=55817
 DELETE FROM `spell_linked_spell` WHERE `spell_trigger` = '55814';
-INSERT INTO `spell_linked_spell` (`spell_trigger`, `spell_effect`, `type`, `comment`) VALUES 
+REPLACE INTO `spell_linked_spell` (`spell_trigger`, `spell_effect`, `type`, `comment`) VALUES 
 ('55814','55817','1','Eck Spit - Apply Eck Residue');
 
 -- Gundrak script text data (sd2)
 -- Cleaning 
 DELETE FROM `script_texts` WHERE `entry` BETWEEN '-1604030' AND '-1604000';
 -- -1 604 000 GUNDRAK
-INSERT INTO script_texts (npc_entry,entry,content_default,sound,TYPE,LANGUAGE,emote,COMMENT) VALUES
+REPLACE INTO script_texts (npc_entry,entry,content_default,sound,TYPE,LANGUAGE,emote,COMMENT) VALUES
 (29304,-1604000,'Drakkari gonna kill anybody who trespass on these lands!',14443,1,0,0,'sladran SAY_AGGRO'),
 (29304,-1604001,'Minions of the scale, heed my call!',14444,1,0,0,'sladran SAY_SUMMON_SNAKE'),
 (29304,-1604002,'Our thousand fangs gonna rend your flesh! ',14445,1,0,0,'sladran SAY_SUMMON_CONSTRICTOR'),
@@ -7066,7 +7066,7 @@ update `creature_template` set `minlevel` = '78', `maxlevel` = '82' where `entry
 -- Creature_ai_scripts
 -- Change spitting cobra events
 DELETE FROM `creature_ai_scripts` WHERE `creature_id` = '29774';
-INSERT INTO `creature_ai_scripts` (`id`, `creature_id`, `event_type`, `event_inverse_phase_mask`, `event_chance`, `event_flags`, 
+REPLACE INTO `creature_ai_scripts` (`id`, `creature_id`, `event_type`, `event_inverse_phase_mask`, `event_chance`, `event_flags`, 
 `event_param1`, `event_param2`, `event_param3`, `event_param4`, `action1_type`, `action1_param1`, `action1_param2`, `action1_param3`, 
 `action2_type`, `action2_param1`, `action2_param2`, `action2_param3`, `action3_type`, `action3_param1`, `action3_param2`, `action3_param3`, `comment`) VALUES 
 ('2977401','29774','1','0','100','6','0','0','0','0','21','0','0','0','22','0','0','0','0','0','0','0','Spitting Cobra - Prevent Combat Movement and Set Phase to 0 on Spawn'),
@@ -7084,22 +7084,22 @@ INSERT INTO `creature_ai_scripts` (`id`, `creature_id`, `event_type`, `event_inv
 ('2977413','29774','7','0','100','6','0','0','0','0','22','0','0','0','0','0','0','0','0','0','0','0','Spitting Cobra - Set Phase to 0 on Evade');
 /*
 DELETE FROM `creature_ai_scripts` WHERE `creature_id` = '29774';
-INSERT INTO `creature_ai_scripts` (`id`, `creature_id`, `event_type`, `event_inverse_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `action1_type`, `action1_param1`, `action1_param2`, `action1_param3`, `action2_type`, `action2_param1`, `action2_param2`, `action2_param3`, `action3_type`, `action3_param1`, `action3_param2`, `action3_param3`, `comment`) VALUES 
+REPLACE INTO `creature_ai_scripts` (`id`, `creature_id`, `event_type`, `event_inverse_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `action1_type`, `action1_param1`, `action1_param2`, `action1_param3`, `action2_type`, `action2_param1`, `action2_param2`, `action2_param3`, `action3_type`, `action3_param1`, `action3_param2`, `action3_param3`, `comment`) VALUES 
 ('2977401','29774','4','0','100','2','0','0','0','0','11','55700','1','0','0','0','0','0','0','0','0','0','Spitting Cobra (Normal) - Cast Venom Spit on Aggro');
-INSERT INTO `creature_ai_scripts` (`id`, `creature_id`, `event_type`, `event_inverse_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `action1_type`, `action1_param1`, `action1_param2`, `action1_param3`, `action2_type`, `action2_param1`, `action2_param2`, `action2_param3`, `action3_type`, `action3_param1`, `action3_param2`, `action3_param3`, `comment`) VALUES 
+REPLACE INTO `creature_ai_scripts` (`id`, `creature_id`, `event_type`, `event_inverse_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `action1_type`, `action1_param1`, `action1_param2`, `action1_param3`, `action2_type`, `action2_param1`, `action2_param2`, `action2_param3`, `action3_type`, `action3_param1`, `action3_param2`, `action3_param3`, `comment`) VALUES 
 ('2977402','29774','4','0','100','4','0','0','0','0','11','59019','1','0','0','0','0','0','0','0','0','0','Spitting Cobra (Heroic) - Cast Venom Spit on Aggro');
-INSERT INTO `creature_ai_scripts` (`id`, `creature_id`, `event_type`, `event_inverse_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `action1_type`, `action1_param1`, `action1_param2`, `action1_param3`, `action2_type`, `action2_param1`, `action2_param2`, `action2_param3`, `action3_type`, `action3_param1`, `action3_param2`, `action3_param3`, `comment`) VALUES 
+REPLACE INTO `creature_ai_scripts` (`id`, `creature_id`, `event_type`, `event_inverse_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `action1_type`, `action1_param1`, `action1_param2`, `action1_param3`, `action2_type`, `action2_param1`, `action2_param2`, `action2_param3`, `action3_type`, `action3_param1`, `action3_param2`, `action3_param3`, `comment`) VALUES 
 ('2977403','29774','9','0','100','3','5','30','2300','5000','11','55700','1','0','0','0','0','0','0','0','0','0','Spitting Cobra (Normal) - Cast Venom Spit');
-INSERT INTO `creature_ai_scripts` (`id`, `creature_id`, `event_type`, `event_inverse_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `action1_type`, `action1_param1`, `action1_param2`, `action1_param3`, `action2_type`, `action2_param1`, `action2_param2`, `action2_param3`, `action3_type`, `action3_param1`, `action3_param2`, `action3_param3`, `comment`) VALUES 
+REPLACE INTO `creature_ai_scripts` (`id`, `creature_id`, `event_type`, `event_inverse_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `action1_type`, `action1_param1`, `action1_param2`, `action1_param3`, `action2_type`, `action2_param1`, `action2_param2`, `action2_param3`, `action3_type`, `action3_param1`, `action3_param2`, `action3_param3`, `comment`) VALUES 
 ('2977404','29774','9','0','100','5','5','30','2300','5000','11','59019','1','0','0','0','0','0','0','0','0','0','Spitting Cobra (Heroic) - Cast Venom Spit');
-INSERT INTO `creature_ai_scripts` (`id`, `creature_id`, `event_type`, `event_inverse_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `action1_type`, `action1_param1`, `action1_param2`, `action1_param3`, `action2_type`, `action2_param1`, `action2_param2`, `action2_param3`, `action3_type`, `action3_param1`, `action3_param2`, `action3_param3`, `comment`) VALUES 
+REPLACE INTO `creature_ai_scripts` (`id`, `creature_id`, `event_type`, `event_inverse_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `action1_type`, `action1_param1`, `action1_param2`, `action1_param3`, `action2_type`, `action2_param1`, `action2_param2`, `action2_param3`, `action3_type`, `action3_param1`, `action3_param2`, `action3_param3`, `comment`) VALUES 
 ('2977405','29774','9','0','100','3','0','5','5000','9000','11','55703','1','0','0','0','0','0','0','0','0','0','Spitting Cobra (Normal) - Cast Cobra Strike');
-INSERT INTO `creature_ai_scripts` (`id`, `creature_id`, `event_type`, `event_inverse_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `action1_type`, `action1_param1`, `action1_param2`, `action1_param3`, `action2_type`, `action2_param1`, `action2_param2`, `action2_param3`, `action3_type`, `action3_param1`, `action3_param2`, `action3_param3`, `comment`) VALUES 
+REPLACE INTO `creature_ai_scripts` (`id`, `creature_id`, `event_type`, `event_inverse_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `action1_type`, `action1_param1`, `action1_param2`, `action1_param3`, `action2_type`, `action2_param1`, `action2_param2`, `action2_param3`, `action3_type`, `action3_param1`, `action3_param2`, `action3_param3`, `comment`) VALUES 
 ('2977406','29774','9','0','100','5','0','5','5000','9000','11','59020','1','0','0','0','0','0','0','0','0','0','Spitting Cobra (Heroic) - Cast Cobra Strike');
 */
 -- Add selfheal to drakkari medicine man
 DELETE FROM `creature_ai_scripts` WHERE `creature_id` = '29826';
-INSERT INTO `creature_ai_scripts` (`id`, `creature_id`, `event_type`, `event_inverse_phase_mask`, `event_chance`, `event_flags`, 
+REPLACE INTO `creature_ai_scripts` (`id`, `creature_id`, `event_type`, `event_inverse_phase_mask`, `event_chance`, `event_flags`, 
 `event_param1`, `event_param2`, `event_param3`, `event_param4`, `action1_type`, `action1_param1`, `action1_param2`, `action1_param3`, 
 `action2_type`, `action2_param1`, `action2_param2`, `action2_param3`, `action3_type`, `action3_param1`, `action3_param2`, `action3_param3`, `comment`) VALUES 
 ('2982601','29826','14','0','100','7','10000','30','12000','15000','11','55598','6','0','0','0','0','0','0','0','0','0','Drakkari Medecine Man - Cast Cleanse Magic on Friendlies'),
@@ -7118,27 +7118,27 @@ INSERT INTO `creature_ai_scripts` (`id`, `creature_id`, `event_type`, `event_inv
 
 UPDATE spell_proc_event SET procFlags = 20, procEx = 2 WHERE entry IN (53486, 53488);
 DELETE FROM `spell_bonus_data` where entry=50444;
-INSERT INTO `spell_bonus_data`(`entry`, `direct_bonus`, `dot_bonus`, `ap_bonus`, `comments`) VALUES (50444, 0, 0, 0.105, "Death Knight - Corpse Explosion Triggered");
+REPLACE INTO `spell_bonus_data`(`entry`, `direct_bonus`, `dot_bonus`, `ap_bonus`, `comments`) VALUES (50444, 0, 0, 0.105, "Death Knight - Corpse Explosion Triggered");
 
 -- DK's should now be immune to Psychic Horror when they are affected by Anti-Magic Shell.
 -- by Andu
 -- Fixed Psychic Horror piercing through Anti-Magic Shell
 DELETE FROM `spell_linked_spell` WHERE `spell_trigger`= 48707;
-INSERT INTO `spell_linked_spell` VALUES (48707, -64044, 2, 'Anti-Magic Shell immune to Psychic Horror');
+REPLACE INTO `spell_linked_spell` VALUES (48707, -64044, 2, 'Anti-Magic Shell immune to Psychic Horror');
 
 -- Paladins should now be immune to Cyclone when they are affected by Divine Shield
 DELETE FROM `spell_linked_spell` WHERE `spell_trigger`= 642;
-INSERT INTO `spell_linked_spell` VALUES (642, -33786, 2, 'Divine Shield immune to Cyclone');
+REPLACE INTO `spell_linked_spell` VALUES (642, -33786, 2, 'Divine Shield immune to Cyclone');
 
 -- Fingers of Frost
 DELETE FROM `spell_linked_spell` WHERE `spell_trigger` IN ('44544', '-44544');
-INSERT INTO `spell_linked_spell` (`spell_trigger`, `spell_effect`, `type`, `comment`) VALUES
+REPLACE INTO `spell_linked_spell` (`spell_trigger`, `spell_effect`, `type`, `comment`) VALUES
 ('44544','74396','0','Fingers of Frost (ADD)'),
 ('-44544','-74396','0','Fingers of Frost (REMOVE)');
 
 -- Vanish
 DELETE FROM `spell_linked_spell` WHERE `spell_trigger` = -1784;
-INSERT INTO `spell_linked_spell` (`spell_trigger`, `spell_effect`, `type`, `comment`) VALUES
+REPLACE INTO `spell_linked_spell` (`spell_trigger`, `spell_effect`, `type`, `comment`) VALUES
 (-1784, -11327, 0, 'Vanish - Rank 1'),
 (-1784, -11329, 0, 'Vanish - Rank 2'),
 (-1784, -26888, 0, 'Vanish - Rank 3');
@@ -7157,7 +7157,7 @@ DELETE FROM `creature` WHERE `guid`= 81815;
 
 -- Svala respawn (provisional).
 DELETE FROM `creature` WHERE `id`= 26668;
-INSERT INTO `creature` (`id`, `map`, `spawnMask`, `phaseMask`, `modelid`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `spawndist`, `currentwaypoint`, `curhealth`, `curmana`, `DeathState`, `MovementType`) VALUES 
+REPLACE INTO `creature` (`id`, `map`, `spawnMask`, `phaseMask`, `modelid`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `spawndist`, `currentwaypoint`, `curhealth`, `curmana`, `DeathState`, `MovementType`) VALUES 
 ('26668','575','2','1','0','685','296.679','-346.313','90.5481','1.57858','300','0','0','431392','0','0','0');
 
 
@@ -7231,7 +7231,7 @@ REPLACE `spell_script_names` SET `ScriptName` = 'spell_halion_portal', `spell_id
 -- Here does not exist the NPC, the we fix the script_name in this way
 -- Later we will fix in the right way
 DELETE FROM `creature_template` WHERE `entry` in (35591,35592);
-INSERT INTO `creature_template` (`entry`, `difficulty_entry_1`, `difficulty_entry_2`, `difficulty_entry_3`, `KillCredit1`, `KillCredit2`, `modelid1`, `modelid2`, `modelid3`, `modelid4`, `name`, `subname`, `IconName`, `gossip_menu_id`, `minlevel`, `maxlevel`, `exp`, `faction_A`, `faction_H`, `npcflag`, `speed_run`, `scale`, `rank`, `mindmg`, `maxdmg`, `dmgschool`, `attackpower`, `dmg_multiplier`, `baseattacktime`, `rangeattacktime`, `unit_class`, `unit_flags`, `dynamicflags`, `family`, `trainer_type`, `trainer_spell`, `trainer_class`, `trainer_race`, `minrangedmg`, `maxrangedmg`, `rangedattackpower`, `type`, `type_flags`, `lootid`, `pickpocketloot`, `skinloot`, `resistance1`, `resistance2`, `resistance3`, `resistance4`, `resistance5`, `resistance6`, `spell1`, `spell2`, `spell3`, `spell4`, `spell5`, `spell6`, `spell7`, `spell8`, `PetSpellDataId`, `VehicleId`, `mingold`, `maxgold`, `AIName`, `MovementType`, `InhabitType`, `Health_mod`, `Mana_mod`, `RacialLeader`, `questItem1`, `questItem2`, `questItem3`, `questItem4`, `questItem5`, `questItem6`, `movementId`, `RegenHealth`, `equipment_id`, `mechanic_immune_mask`, `flags_extra`, `ScriptName`) VALUES 
+REPLACE INTO `creature_template` (`entry`, `difficulty_entry_1`, `difficulty_entry_2`, `difficulty_entry_3`, `KillCredit1`, `KillCredit2`, `modelid1`, `modelid2`, `modelid3`, `modelid4`, `name`, `subname`, `IconName`, `gossip_menu_id`, `minlevel`, `maxlevel`, `exp`, `faction_A`, `faction_H`, `npcflag`, `speed_run`, `scale`, `rank`, `mindmg`, `maxdmg`, `dmgschool`, `attackpower`, `dmg_multiplier`, `baseattacktime`, `rangeattacktime`, `unit_class`, `unit_flags`, `dynamicflags`, `family`, `trainer_type`, `trainer_spell`, `trainer_class`, `trainer_race`, `minrangedmg`, `maxrangedmg`, `rangedattackpower`, `type`, `type_flags`, `lootid`, `pickpocketloot`, `skinloot`, `resistance1`, `resistance2`, `resistance3`, `resistance4`, `resistance5`, `resistance6`, `spell1`, `spell2`, `spell3`, `spell4`, `spell5`, `spell6`, `spell7`, `spell8`, `PetSpellDataId`, `VehicleId`, `mingold`, `maxgold`, `AIName`, `MovementType`, `InhabitType`, `Health_mod`, `Mana_mod`, `RacialLeader`, `questItem1`, `questItem2`, `questItem3`, `questItem4`, `questItem5`, `questItem6`, `movementId`, `RegenHealth`, `equipment_id`, `mechanic_immune_mask`, `flags_extra`, `ScriptName`) VALUES 
 (35591, 0, 0, 0, 0, 0, 29894, 0, 0, 0, 'Jaeren Sunsworn', '', '', 0, 75, 75, 2, 14, 14, 0, 1, 1, 0, 0, 0, 0, 0, 1, 2000, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', 0, 3, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 'npc_anstart'),
 (35592, 0, 0, 0, 0, 0, 29893, 0, 0, 0, 'Arelas Brightstar', '', '', 0, 75, 75, 2, 14, 14, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 512, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', 0, 3, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 'npc_anstart');
 
@@ -7556,7 +7556,7 @@ UPDATE `instance_template` SET `script`='instance_trial_of_the_crusader' WHERE `
 
 -- Is fix here if not "error" - Lo implemento aqui sino da error
 DELETE FROM gameobject_template WHERE entry = '194438';
-INSERT INTO `gameobject_template` (`entry`, `type`, `displayId`, `name`, `IconName`, `castBarCaption`, `unk1`, `faction`, `flags`, `size`, `questItem1`, `questItem2`, `questItem3`, `questItem4`, `questItem5`, `questItem6`, `data0`, `data1`, `data2`, `data3`, `data4`, `data5`, `data6`, `data7`, `data8`, `data9`, `data10`, `data11`, `data12`, `data13`, `data14`, `data15`, `data16`, `data17`, `data18`, `data19`, `data20`, `data21`, `data22`, `data23`, `ScriptName`, `WDBVerified`) VALUES
+REPLACE INTO `gameobject_template` (`entry`, `type`, `displayId`, `name`, `IconName`, `castBarCaption`, `unk1`, `faction`, `flags`, `size`, `questItem1`, `questItem2`, `questItem3`, `questItem4`, `questItem5`, `questItem6`, `data0`, `data1`, `data2`, `data3`, `data4`, `data5`, `data6`, `data7`, `data8`, `data9`, `data10`, `data11`, `data12`, `data13`, `data14`, `data15`, `data16`, `data17`, `data18`, `data19`, `data20`, `data21`, `data22`, `data23`, `ScriptName`, `WDBVerified`) VALUES
 ('194438','1','8504','Activate Tram','','','','0','32','1','0','0','0','0','0','0','0','0','3000','0','0','1','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','go_call_tram','11159');
 
 -- Gameobject
@@ -7571,7 +7571,7 @@ UPDATE `gameobject_template` SET `ScriptName` = 'not_push_button' WHERE `entry` 
 
 -- WG
 DELETE FROM `outdoorpvp_template` WHERE `TypeId` IN (7);
-INSERT INTO `outdoorpvp_template` (`TypeId`, `ScriptName`, `Comment`) VALUES (7, 'outdoorpvp_wg', 'Wintergrasp');
+REPLACE INTO `outdoorpvp_template` (`TypeId`, `ScriptName`, `Comment`) VALUES (7, 'outdoorpvp_wg', 'Wintergrasp');
 
 -- Clean error from started
 -- This delete was on Ulduar sql but i move here for start server with any error
@@ -7579,7 +7579,7 @@ DELETE FROM `script_waypoint` WHERE `entry`=33370;
 -- provisional
 -- error: thorim_phase_trigger
 DELETE FROM `creature_template` WHERE entry=5555555;
-INSERT INTO `creature_template` (`entry`, `difficulty_entry_1`, `difficulty_entry_2`, `difficulty_entry_3`, `KillCredit1`, `KillCredit2`, `modelid1`, `modelid2`, `modelid3`, `modelid4`, `name`, `subname`, `IconName`, `gossip_menu_id`, `minlevel`, `maxlevel`, `exp`, `faction_A`, `faction_H`, `npcflag`, `speed_walk`, `speed_run`, `scale`, `rank`, `mindmg`, `maxdmg`, `dmgschool`, `attackpower`, `dmg_multiplier`, `baseattacktime`, `rangeattacktime`, `unit_class`, `unit_flags`, `dynamicflags`, `family`, `trainer_type`, `trainer_spell`, `trainer_class`, `trainer_race`, `minrangedmg`, `maxrangedmg`, `rangedattackpower`, `type`, `type_flags`, `lootid`, `pickpocketloot`, `skinloot`, `resistance1`, `resistance2`, `resistance3`, `resistance4`, `resistance5`, `resistance6`, `spell1`, `spell2`, `spell3`, `spell4`, `spell5`, `spell6`, `spell7`, `spell8`, `PetSpellDataId`, `VehicleId`, `mingold`, `maxgold`, `AIName`, `MovementType`, `InhabitType`, `Health_mod`, `Mana_mod`, `Armor_mod`, `RacialLeader`, `questItem1`, `questItem2`, `questItem3`, `questItem4`, `questItem5`, `questItem6`, `movementId`, `RegenHealth`, `equipment_id`, `mechanic_immune_mask`, `flags_extra`, `ScriptName`, `WDBVerified`) VALUES
+REPLACE INTO `creature_template` (`entry`, `difficulty_entry_1`, `difficulty_entry_2`, `difficulty_entry_3`, `KillCredit1`, `KillCredit2`, `modelid1`, `modelid2`, `modelid3`, `modelid4`, `name`, `subname`, `IconName`, `gossip_menu_id`, `minlevel`, `maxlevel`, `exp`, `faction_A`, `faction_H`, `npcflag`, `speed_walk`, `speed_run`, `scale`, `rank`, `mindmg`, `maxdmg`, `dmgschool`, `attackpower`, `dmg_multiplier`, `baseattacktime`, `rangeattacktime`, `unit_class`, `unit_flags`, `dynamicflags`, `family`, `trainer_type`, `trainer_spell`, `trainer_class`, `trainer_race`, `minrangedmg`, `maxrangedmg`, `rangedattackpower`, `type`, `type_flags`, `lootid`, `pickpocketloot`, `skinloot`, `resistance1`, `resistance2`, `resistance3`, `resistance4`, `resistance5`, `resistance6`, `spell1`, `spell2`, `spell3`, `spell4`, `spell5`, `spell6`, `spell7`, `spell8`, `PetSpellDataId`, `VehicleId`, `mingold`, `maxgold`, `AIName`, `MovementType`, `InhabitType`, `Health_mod`, `Mana_mod`, `Armor_mod`, `RacialLeader`, `questItem1`, `questItem2`, `questItem3`, `questItem4`, `questItem5`, `questItem6`, `movementId`, `RegenHealth`, `equipment_id`, `mechanic_immune_mask`, `flags_extra`, `ScriptName`, `WDBVerified`) VALUES
 ('5555555','0','0','0','0','0','169','16925','0','0','Thorim Event Bunny','','','0','80','80','2','14','14','0','1','1.14286','1','1','422','586','0','642','7.5','2000','0','1','33554432','8','0','0','0','0','0','345','509','103','10','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','','0','3','1','1','1','0','0','0','0','0','0','0','0','1','0','0','0','thorim_phase_trigger','11723');
 
 

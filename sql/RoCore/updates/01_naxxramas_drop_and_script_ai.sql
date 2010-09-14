@@ -6,7 +6,7 @@
 -- some naxx loot and script_ai
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=16017);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (16017, 33470, 33, 1, 0, 2, 7),
 (16017, 43852, 17, 1, 0, 1, 1),
 (16017, 35947, 7, 1, 0, 1, 1),
@@ -14,7 +14,7 @@ INSERT INTO `creature_loot_template` VALUES
 (16017, 33447, 2, 1, 0, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=29347);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (29347, 33470, 33, 1, 0, 2, 7),
 (29347, 43852, 17, 1, 0, 1, 1),
 (29347, 35947, 7, 1, 0, 1, 1),
@@ -25,7 +25,7 @@ INSERT INTO `creature_loot_template` VALUES
 (29347, 40406, 1.5, 1, 1, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=16018);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (16018, 33470, 33, 1, 0, 2, 7),
 (16018, 43852, 17, 1, 0, 1, 1),
 (16018, 35947, 7, 1, 0, 1, 1),
@@ -34,7 +34,7 @@ INSERT INTO `creature_loot_template` VALUES
 (16018, 39470, 1.5, 1, 1, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=29353);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (29353, 33470, 33, 1, 0, 2, 7),
 (29353, 43852, 17, 1, 0, 1, 1),
 (29353, 35947, 7, 1, 0, 1, 1),
@@ -46,7 +46,7 @@ INSERT INTO `creature_loot_template` VALUES
 (29353, 40406, 1.5, 1, 1, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=16029);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (16029, 33470, 33, 1, 0, 2, 7),
 (16029, 43852, 17, 1, 0, 1, 1),
 (16029, 35947, 7, 1, 0, 1, 1),
@@ -54,7 +54,7 @@ INSERT INTO `creature_loot_template` VALUES
 (16029, 33447, 2, 1, 0, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=29356);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (29356, 33470, 33, 1, 0, 2, 7),
 (29356, 43852, 17, 1, 0, 1, 1),
 (29356, 35947, 7, 1, 0, 1, 1),
@@ -66,7 +66,7 @@ INSERT INTO `creature_loot_template` VALUES
 (29356, 40410, 1.5, 1, 1, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=16020);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (16020, 33470, 33, 1, 0, 2, 7),
 (16020, 43852, 17, 1, 0, 1, 1),
 (16020, 35947, 7, 1, 0, 1, 1),
@@ -74,7 +74,7 @@ INSERT INTO `creature_loot_template` VALUES
 (16020, 33447, 2, 1, 0, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=29362);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (29362, 33470, 33, 1, 0, 2, 7),
 (29362, 43852, 17, 1, 0, 1, 1),
 (29362, 35947, 7, 1, 0, 1, 1),
@@ -87,7 +87,7 @@ INSERT INTO `creature_loot_template` VALUES
 (29362, 40410, 1.5, 1, 1, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=16022);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (16022, 33470, 33, 1, 0, 2, 7),
 (16022, 43852, 17, 1, 0, 1, 1),
 (16022, 35947, 7, 1, 0, 1, 1),
@@ -95,7 +95,7 @@ INSERT INTO `creature_loot_template` VALUES
 (16022, 33447, 2, 1, 0, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=29363);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (29363, 33470, 33, 1, 0, 2, 7),
 (29363, 43852, 17, 1, 0, 1, 1),
 (29363, 35947, 7, 1, 0, 1, 1),
@@ -103,7 +103,7 @@ INSERT INTO `creature_loot_template` VALUES
 (29363, 33447, 2, 1, 0, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=16021);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (16021, 33470, 33, 1, 0, 2, 7),
 (16021, 43852, 17, 1, 0, 1, 1),
 (16021, 35947, 7, 1, 0, 1, 1),
@@ -111,7 +111,7 @@ INSERT INTO `creature_loot_template` VALUES
 (16021, 33447, 2, 1, 0, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=29359);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (29359, 33470, 33, 1, 0, 2, 7),
 (29359, 43852, 17, 1, 0, 1, 1),
 (29359, 35947, 7, 1, 0, 1, 1),
@@ -124,7 +124,7 @@ INSERT INTO `creature_loot_template` VALUES
 
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=16025);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (16025, 33470, 33, 1, 0, 2, 7),
 (16025, 43852, 17, 1, 0, 1, 1),
 (16025, 35947, 7, 1, 0, 1, 1),
@@ -132,7 +132,7 @@ INSERT INTO `creature_loot_template` VALUES
 (16025, 33447, 2, 1, 0, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=29371);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (29371, 33470, 33, 1, 0, 2, 7),
 (29371, 43852, 17, 1, 0, 1, 1),
 (29371, 35947, 7, 1, 0, 1, 1),
@@ -141,7 +141,7 @@ INSERT INTO `creature_loot_template` VALUES
 (29371, 40409, 1.5, 1, 1, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=30071);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (30071, 33470, 33, 1, 0, 2, 7),
 (30071, 43852, 17, 1, 0, 1, 1),
 (30071, 35947, 7, 1, 0, 1, 1),
@@ -150,7 +150,7 @@ INSERT INTO `creature_loot_template` VALUES
 (30071, 40409, 1.5, 1, 1, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=30075);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (30075, 33470, 33, 1, 0, 2, 7),
 (30075, 43852, 17, 1, 0, 1, 1),
 (30075, 35947, 7, 1, 0, 1, 1),
@@ -162,7 +162,7 @@ INSERT INTO `creature_loot_template` VALUES
 (30075, 40410, 1.5, 1, 1, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=16146);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (16146, 33470, 33, 1, 0, 2, 7),
 (16146, 43852, 17, 1, 0, 1, 1),
 (16146, 35947, 7, 1, 0, 1, 1),
@@ -171,7 +171,7 @@ INSERT INTO `creature_loot_template` VALUES
 (16146, 40409, 1.5, 1, 1, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=29823);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (29823, 33470, 33, 1, 0, 2, 7),
 (29823, 43852, 17, 1, 0, 1, 1),
 (29823, 35947, 7, 1, 0, 1, 1),
@@ -183,7 +183,7 @@ INSERT INTO `creature_loot_template` VALUES
 (29823, 40409, 1.5, 1, 2, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=16165);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (16165, 33470, 33, 1, 0, 2, 7),
 (16165, 43852, 17, 1, 0, 1, 1),
 (16165, 35947, 7, 1, 0, 1, 1),
@@ -192,7 +192,7 @@ INSERT INTO `creature_loot_template` VALUES
 (16165, 40409, 1.5, 1, 1, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=29828);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (29828, 33470, 33, 1, 0, 2, 7),
 (29828, 43852, 17, 1, 0, 1, 1),
 (29828, 35947, 7, 1, 0, 1, 1),
@@ -204,7 +204,7 @@ INSERT INTO `creature_loot_template` VALUES
 (29828, 40407, 1.5, 1, 2, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=16164);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (16164, 33470, 33, 1, 0, 2, 7),
 (16164, 43852, 17, 1, 0, 1, 1),
 (16164, 35947, 7, 1, 0, 1, 1),
@@ -213,7 +213,7 @@ INSERT INTO `creature_loot_template` VALUES
 (16164, 40409, 1.5, 1, 1, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=29825);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (29825, 33470, 33, 1, 0, 2, 7),
 (29825, 43852, 17, 1, 0, 1, 1),
 (29825, 35947, 7, 1, 0, 1, 1),
@@ -222,7 +222,7 @@ INSERT INTO `creature_loot_template` VALUES
 (29825, 40409, 1.5, 1, 1, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=16145);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (16145, 33470, 33, 1, 0, 2, 7),
 (16145, 43852, 17, 1, 0, 1, 1),
 (16145, 35947, 7, 1, 0, 1, 1),
@@ -231,7 +231,7 @@ INSERT INTO `creature_loot_template` VALUES
 (16145, 40409, 1.5, 1, 1, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=29824);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (29824, 33470, 33, 1, 0, 2, 7),
 (29824, 43852, 17, 1, 0, 1, 1),
 (29824, 35947, 7, 1, 0, 1, 1),
@@ -244,7 +244,7 @@ INSERT INTO `creature_loot_template` VALUES
 (29824, 40407, 1.5, 1, 2, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=16167);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (16167, 33470, 33, 1, 0, 2, 7),
 (16167, 43852, 17, 1, 0, 1, 1),
 (16167, 35947, 7, 1, 0, 1, 1),
@@ -254,7 +254,7 @@ INSERT INTO `creature_loot_template` VALUES
 (16167, 39427, 1.1, 1, 1, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=29835);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (29835, 33470, 33, 1, 0, 2, 7),
 (29835, 43852, 17, 1, 0, 1, 1),
 (29835, 35947, 7, 1, 0, 1, 1),
@@ -268,7 +268,7 @@ INSERT INTO `creature_loot_template` VALUES
 (29835, 39152, 1.1, 1, 1, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=16193);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (16193, 33470, 33, 1, 0, 2, 7),
 (16193, 43852, 17, 1, 0, 1, 1),
 (16193, 35947, 7, 1, 0, 1, 1),
@@ -277,7 +277,7 @@ INSERT INTO `creature_loot_template` VALUES
 (16193, 40409, 1.5, 1, 1, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=29837);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (29837, 33470, 33, 1, 0, 2, 7),
 (29837, 43852, 17, 1, 0, 1, 1),
 (29837, 35947, 7, 1, 0, 1, 1),
@@ -290,7 +290,7 @@ INSERT INTO `creature_loot_template` VALUES
 (29837, 40407, 1.5, 1, 2, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=16163);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (16163, 33470, 33, 1, 0, 2, 7),
 (16163, 43852, 17, 1, 0, 1, 1),
 (16163, 35947, 7, 1, 0, 1, 1),
@@ -298,7 +298,7 @@ INSERT INTO `creature_loot_template` VALUES
 (16163, 33447, 2, 1, 0, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=29842);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (29842, 33470, 33, 1, 0, 2, 7),
 (29842, 43852, 17, 1, 0, 1, 1),
 (29842, 35947, 7, 1, 0, 1, 1),
@@ -311,7 +311,7 @@ INSERT INTO `creature_loot_template` VALUES
 (29842, 40407, 1.5, 1, 2, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=16067);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (16067, 33470, 33, 1, 0, 2, 7),
 (16067, 43852, 17, 1, 0, 1, 1),
 (16067, 35947, 7, 1, 0, 1, 1),
@@ -320,7 +320,7 @@ INSERT INTO `creature_loot_template` VALUES
 (16067, 33447, 2, 1, 0, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=29852);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (29852, 33470, 33, 1, 0, 2, 7),
 (29852, 43852, 17, 1, 0, 1, 1),
 (29852, 35947, 7, 1, 0, 1, 1),
@@ -329,7 +329,7 @@ INSERT INTO `creature_loot_template` VALUES
 (29852, 33447, 2, 1, 0, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=16154);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (16154, 33470, 33, 1, 0, 2, 7),
 (16154, 43852, 17, 1, 0, 1, 1),
 (16154, 35947, 7, 1, 0, 1, 1),
@@ -339,7 +339,7 @@ INSERT INTO `creature_loot_template` VALUES
 (16154, 33447, 2, 1, 0, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=29831);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (29831, 33470, 33, 1, 0, 2, 7),
 (29831, 43852, 17, 1, 0, 1, 1),
 (29831, 35947, 7, 1, 0, 1, 1),
@@ -349,7 +349,7 @@ INSERT INTO `creature_loot_template` VALUES
 (29831, 40410, 1.5, 1, 1, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=16194);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (16194, 33470, 33, 1, 0, 2, 7),
 (16194, 43852, 17, 1, 0, 1, 1),
 (16194, 35947, 7, 1, 0, 1, 1),
@@ -357,7 +357,7 @@ INSERT INTO `creature_loot_template` VALUES
 (16194, 33447, 2, 1, 0, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=29898);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (29898, 33470, 33, 1, 0, 2, 7),
 (29898, 43852, 17, 1, 0, 1, 1),
 (29898, 35947, 7, 1, 0, 1, 1),
@@ -365,7 +365,7 @@ INSERT INTO `creature_loot_template` VALUES
 (29898, 33447, 2, 1, 0, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=16215);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (16215, 33470, 33, 1, 0, 2, 7),
 (16215, 43852, 17, 1, 0, 1, 1),
 (16215, 35947, 7, 1, 0, 1, 1),
@@ -373,7 +373,7 @@ INSERT INTO `creature_loot_template` VALUES
 (16215, 33447, 2, 1, 0, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=29899);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (29899, 33470, 33, 1, 0, 2, 7),
 (29899, 43852, 17, 1, 0, 1, 1),
 (29899, 35947, 7, 1, 0, 1, 1),
@@ -381,7 +381,7 @@ INSERT INTO `creature_loot_template` VALUES
 (29899, 33447, 2, 1, 0, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=16216);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (16216, 33470, 33, 1, 0, 2, 7),
 (16216, 43852, 17, 1, 0, 1, 1),
 (16216, 35947, 7, 1, 0, 1, 1),
@@ -389,7 +389,7 @@ INSERT INTO `creature_loot_template` VALUES
 (16216, 33447, 2, 1, 0, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=29900);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (29900, 33470, 33, 1, 0, 2, 7),
 (29900, 43852, 17, 1, 0, 1, 1),
 (29900, 35947, 7, 1, 0, 1, 1),
@@ -397,53 +397,53 @@ INSERT INTO `creature_loot_template` VALUES
 (29900, 33447, 2, 1, 0, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=15974);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (15974, 44758, 70, 1, 0, 2, 4),
 (15974, 42253, 30, 1, 1, 1, 3),
 (15974, 44759, 15, 1, 0, 2, 3);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=29242);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (29242, 44758, 70, 1, 0, 2, 4),
 (29242, 42253, 30, 1, 1, 1, 3),
 (29242, 44759, 15, 1, 0, 2, 3);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=15975);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (15975, 44758, 70, 1, 0, 2, 4),
 (15975, 42253, 30, 1, 1, 1, 3),
 (15975, 44759, 15, 1, 0, 2, 3);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=29241);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (29241, 44758, 70, 1, 0, 2, 4),
 (29241, 42253, 30, 1, 1, 1, 3),
 (29241, 44759, 15, 1, 0, 2, 3);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=15976);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (15976, 44758, 70, 1, 0, 2, 4),
 (15976, 42253, 30, 1, 1, 1, 3),
 (15976, 44759, 15, 1, 0, 2, 3);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=29243);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (29243, 44758, 70, 1, 0, 2, 4),
 (29243, 42253, 30, 1, 1, 1, 3),
 (29243, 44759, 15, 1, 0, 2, 3);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=15978);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (15978, 44758, 70, 1, 0, 2, 4),
 (15978, 44759, 15, 1, 0, 2, 3);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=30389);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (30389, 44758, 70, 1, 0, 2, 4),
 (30389, 44759, 15, 1, 0, 2, 3);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=15980);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (15980, 33470, 40, 1, 0, 2, 7),
 (15980, 43852, 17, 1, 0, 1, 1),
 (15980, 35947, 7, 1, 0, 1, 1),
@@ -452,7 +452,7 @@ INSERT INTO `creature_loot_template` VALUES
 (15980, 39470, 1.5, 1, 1, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=29247);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (29247, 33470, 40, 1, 0, 2, 7),
 (29247, 43852, 17, 1, 0, 1, 1),
 (29247, 35947, 7, 1, 0, 1, 1),
@@ -461,7 +461,7 @@ INSERT INTO `creature_loot_template` VALUES
 (29247, 39470, 1.5, 1, 1, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=15981);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (15981, 33470, 40, 1, 0, 2, 7),
 (15981, 43852, 17, 1, 0, 1, 1),
 (15981, 35947, 7, 1, 0, 1, 1),
@@ -470,7 +470,7 @@ INSERT INTO `creature_loot_template` VALUES
 (15981, 39470, 1.5, 1, 1, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=29248);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (29248, 33470, 40, 1, 0, 2, 7),
 (29248, 43852, 17, 1, 0, 1, 1),
 (29248, 35947, 7, 1, 0, 1, 1),
@@ -479,17 +479,17 @@ INSERT INTO `creature_loot_template` VALUES
 (29248, 39470, 1.5, 1, 1, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=15979);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (15979, 44758, 70, 1, 0, 2, 4),
 (15979, 44759, 15, 1, 0, 2, 3);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=29286);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (29286, 44758, 70, 1, 0, 2, 4),
 (29286, 44759, 15, 1, 0, 2, 3);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=16244);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (16244, 33470, 40, 1, 0, 2, 7),
 (16244, 43852, 17, 1, 0, 1, 1),
 (16244, 35947, 7, 1, 0, 1, 1),
@@ -498,7 +498,7 @@ INSERT INTO `creature_loot_template` VALUES
 (16244, 39470, 1.5, 1, 1, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=29574);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (29574, 33470, 33, 1, 0, 2, 7),
 (29574, 43852, 17, 1, 0, 1, 1),
 (29574, 35947, 7, 1, 0, 1, 1),
@@ -510,7 +510,7 @@ INSERT INTO `creature_loot_template` VALUES
 (29574, 40406, 1.5, 1, 1, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=16243);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (16243, 33470, 40, 1, 0, 2, 7),
 (16243, 43852, 17, 1, 0, 1, 1),
 (16243, 35947, 7, 1, 0, 1, 1),
@@ -519,7 +519,7 @@ INSERT INTO `creature_loot_template` VALUES
 (16243, 39470, 1.5, 1, 1, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=29575);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (29575, 33470, 33, 1, 0, 2, 7),
 (29575, 43852, 17, 1, 0, 1, 1),
 (29575, 35947, 7, 1, 0, 1, 1),
@@ -531,7 +531,7 @@ INSERT INTO `creature_loot_template` VALUES
 (29575, 40406, 1.5, 1, 1, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=16168);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (16168, 33470, 40, 1, 0, 2, 7),
 (16168, 43852, 17, 1, 0, 1, 1),
 (16168, 35947, 7, 1, 0, 1, 1),
@@ -540,7 +540,7 @@ INSERT INTO `creature_loot_template` VALUES
 (16168, 39470, 1.5, 1, 1, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=29576);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (29576, 33470, 33, 1, 0, 2, 7),
 (29576, 43852, 17, 1, 0, 1, 1),
 (29576, 35947, 7, 1, 0, 1, 1),
@@ -552,7 +552,7 @@ INSERT INTO `creature_loot_template` VALUES
 (29576, 40406, 1.5, 1, 1, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=16297);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (16297, 33470, 40, 1, 0, 2, 7),
 (16297, 43852, 17, 1, 0, 1, 1),
 (16297, 35947, 7, 1, 0, 1, 1),
@@ -561,7 +561,7 @@ INSERT INTO `creature_loot_template` VALUES
 (16297, 39470, 1.5, 1, 1, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=29601);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (29601, 33470, 33, 1, 0, 2, 7),
 (29601, 43852, 17, 1, 0, 1, 1),
 (29601, 35947, 7, 1, 0, 1, 1),
@@ -573,7 +573,7 @@ INSERT INTO `creature_loot_template` VALUES
 (29601, 40406, 1.5, 1, 1, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=16036);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (16036, 33470, 40, 1, 0, 2, 7),
 (16036, 43852, 17, 1, 0, 1, 1),
 (16036, 35947, 7, 1, 0, 1, 1),
@@ -582,7 +582,7 @@ INSERT INTO `creature_loot_template` VALUES
 (16036, 39470, 1.5, 1, 1, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=29608);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (29608, 33470, 33, 1, 0, 2, 7),
 (29608, 43852, 17, 1, 0, 1, 1),
 (29608, 35947, 7, 1, 0, 1, 1),
@@ -594,7 +594,7 @@ INSERT INTO `creature_loot_template` VALUES
 (29608, 40406, 1.5, 1, 1, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=16034);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (16034, 33470, 40, 1, 0, 2, 7),
 (16034, 43852, 17, 1, 0, 1, 1),
 (16034, 35947, 7, 1, 0, 1, 1),
@@ -603,21 +603,21 @@ INSERT INTO `creature_loot_template` VALUES
 (16034, 39470, 1.5, 1, 1, 1, 1);
 
 DELETE FROM `creature_loot_template` WHERE (`entry`=29609);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (29609, 33470, 33, 1, 0, 2, 7),
 (29609, 43852, 17, 1, 0, 1, 1),
 (29609, 35947, 7, 1, 0, 1, 1),
 (29609, 33445, 4, 1, 0, 1, 1);
 
 DELETE FROM `creature_ai_scripts` WHERE (`id`=16427020);
-INSERT INTO `creature_ai_scripts` VALUES 
+REPLACE INTO `creature_ai_scripts` VALUES 
 (16427020, 16236, 0, 0, 100, 3, 1000, 3000, 3000, 6000, 11, 29407, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Spell N');
 DELETE FROM `creature_ai_scripts` WHERE (`id`=16427021);
-INSERT INTO `creature_ai_scripts` VALUES 
+REPLACE INTO `creature_ai_scripts` VALUES 
 (16427021, 16236, 0, 0, 100, 5, 1000, 3000, 3000, 6000, 11, 54805, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Spell H');
 
 DELETE FROM `creature_loot_template` WHERE `item` IN (39467, 39472, 39470, 39427, 39468, 39473);
-INSERT INTO `creature_loot_template` VALUES 
+REPLACE INTO `creature_loot_template` VALUES 
 (16017, 39467, 1.5, 1, 1, 1, 1),
 (16017, 39472, 1.5, 1, 1, 1, 1),
 (16017, 39470, 1.5, 1, 1, 1, 1),
@@ -821,7 +821,7 @@ UPDATE `creature_template` SET `unit_flags` = 131074 WHERE `entry` = 16211;
 
 -- some scripts_ai
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=29256);
-INSERT INTO `creature_ai_scripts` VALUES 
+REPLACE INTO `creature_ai_scripts` VALUES 
 ( 100000100, 29256, 0, 0, 100, 2, 0, 0, 0, 0, 11, 28969, 4, 32, 0, 0, 0, 0, 0, 0, 0, 0, 'Crypt Guard (Normal) - Cast Acid Spit on Aggro'),
 ( 100000101, 29256, 0, 0, 100, 4, 0, 0, 0, 0, 11, 56098, 4, 32, 0, 0, 0, 0, 0, 0, 0, 0, 'Crypt Guard (Heroic) - Cast Acid Spit on Aggro'),
 ( 100000102, 29256, 0, 0, 100, 3, 4000, 6000, 4000, 7000, 11, 28969, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Crypt Guard (Normal) - Cast Acid Spit'),
@@ -832,13 +832,13 @@ INSERT INTO `creature_ai_scripts` VALUES
 
 UPDATE `creature_template` SET `spell1` = 55765, `AIName` = 'EventAI' WHERE `entry` = 16429;
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=16429);
-INSERT INTO `creature_ai_scripts` VALUES 
+REPLACE INTO `creature_ai_scripts` VALUES 
 (100000108, 16429, 9, 0, 100, 3, 0, 3, 500, 1000, 11, 55765, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Wail of Souls - Normal'),
 (100000109, 16429, 9, 0, 100, 5, 0, 3, 500, 1000, 11, 55765, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Wail of Souls - Hero');
 
 
 UPDATE `creature_template` SET `spell1` = 28457, `AIName` = 'EventAI', `spell2` = 55714 WHERE `entry` = 16427;
 DELETE FROM `creature_ai_scripts` WHERE (`creature_id`=16427);
-INSERT INTO `creature_ai_scripts` VALUES 
+REPLACE INTO `creature_ai_scripts` VALUES 
 (100000110, 16427, 9, 0, 100, 3, 0, 3, 0, 0, 11, 28457, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Explode - Normal'),
 (100000111, 16427, 9, 0, 100, 5, 0, 3, 0, 0, 11, 55714, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'Explode - Hero');

@@ -13,7 +13,7 @@ CREATE TABLE `pool_quest` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED COMMENT='Daily / Weekly Quest Pool System';
 
 -- Only some data to start the table not empty. ;)
-INSERT INTO `pool_quest`(`entry`,`quest`,`daily`,`enabled`,`comment`) VALUES
+REPLACE INTO `pool_quest`(`entry`,`quest`,`daily`,`enabled`,`comment`) VALUES
 -- Weekly raid quests of Archmage Lan'dalock
 (20735,24579,0,1,'Dalaran - Weekly raid quest of Archmage Lan\'dalock'),
 (20735,24580,0,1,'Dalaran - Weekly raid quest of Archmage Lan\'dalock'),

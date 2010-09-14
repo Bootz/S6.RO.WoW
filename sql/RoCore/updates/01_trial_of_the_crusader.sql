@@ -1,29 +1,29 @@
 -- Spell DBC
-INSERT INTO `spelldifficulty_dbc` VALUES ('6000', '66331', '67478', '67477', '67479'); -- Gormok Impale
-INSERT INTO `spelldifficulty_dbc` VALUES ('6001', '66330', '67647', '67648', '67649'); -- Gormok Staggering Stomp
-INSERT INTO `spelldifficulty_dbc` VALUES ('6002', '66689', '67650', '67651', '67652'); -- Icehowl Artic Breath
-INSERT INTO `spelldifficulty_dbc` VALUES ('6003', '66683', '67660', '67660', '67662'); -- Icehowl Massic Crash
-INSERT INTO `spelldifficulty_dbc` VALUES ('6004', '67345', '67663', '67663', '67665'); -- Icehowl Whirl
-INSERT INTO `spelldifficulty_dbc` VALUES ('6005', '66770', '67655', '67654', '67656'); -- Icehowl Ferocious Butt
-INSERT INTO `spelldifficulty_dbc` VALUES ('6006', '66879', '67624', '67625', '67626'); -- Dreadscale Burning Bite
-INSERT INTO `spelldifficulty_dbc` VALUES ('6007', '66820', '67636', '67635', '67637'); -- Dreadscale Molten Spew
-INSERT INTO `spelldifficulty_dbc` VALUES ('6020', '66237', '67049', '67050', '67051'); -- Jaraxxus Incinerate Flesh
-INSERT INTO `spelldifficulty_dbc` VALUES ('6021', '66528', '67029', '67030', '67031'); -- Jaraxxus Fel Lighting
-INSERT INTO `spelldifficulty_dbc` VALUES ('6022', '68124', '68126', '68127', '68128'); -- Jaraxxus Legion Flame
-INSERT INTO `spelldifficulty_dbc` VALUES ('6023', '66532', '66963', '66964', '66965'); -- Jaraxxus Fel Fireball
-INSERT INTO `spelldifficulty_dbc` VALUES ('6024', '66258', '66258', '67903', '67903'); -- Jaraxxus Summon Volcan
-INSERT INTO `spelldifficulty_dbc` VALUES ('6025', '67103', '67103', '67104', '67105'); -- Portal Summon Guardian
+REPLACE INTO `spelldifficulty_dbc` VALUES ('6000', '66331', '67478', '67477', '67479'); -- Gormok Impale
+REPLACE INTO `spelldifficulty_dbc` VALUES ('6001', '66330', '67647', '67648', '67649'); -- Gormok Staggering Stomp
+REPLACE INTO `spelldifficulty_dbc` VALUES ('6002', '66689', '67650', '67651', '67652'); -- Icehowl Artic Breath
+REPLACE INTO `spelldifficulty_dbc` VALUES ('6003', '66683', '67660', '67660', '67662'); -- Icehowl Massic Crash
+REPLACE INTO `spelldifficulty_dbc` VALUES ('6004', '67345', '67663', '67663', '67665'); -- Icehowl Whirl
+REPLACE INTO `spelldifficulty_dbc` VALUES ('6005', '66770', '67655', '67654', '67656'); -- Icehowl Ferocious Butt
+REPLACE INTO `spelldifficulty_dbc` VALUES ('6006', '66879', '67624', '67625', '67626'); -- Dreadscale Burning Bite
+REPLACE INTO `spelldifficulty_dbc` VALUES ('6007', '66820', '67636', '67635', '67637'); -- Dreadscale Molten Spew
+REPLACE INTO `spelldifficulty_dbc` VALUES ('6020', '66237', '67049', '67050', '67051'); -- Jaraxxus Incinerate Flesh
+REPLACE INTO `spelldifficulty_dbc` VALUES ('6021', '66528', '67029', '67030', '67031'); -- Jaraxxus Fel Lighting
+REPLACE INTO `spelldifficulty_dbc` VALUES ('6022', '68124', '68126', '68127', '68128'); -- Jaraxxus Legion Flame
+REPLACE INTO `spelldifficulty_dbc` VALUES ('6023', '66532', '66963', '66964', '66965'); -- Jaraxxus Fel Fireball
+REPLACE INTO `spelldifficulty_dbc` VALUES ('6024', '66258', '66258', '67903', '67903'); -- Jaraxxus Summon Volcan
+REPLACE INTO `spelldifficulty_dbc` VALUES ('6025', '67103', '67103', '67104', '67105'); -- Portal Summon Guardian
 
 UPDATE `creature_template` SET `scale`='2' WHERE `entry`=34825;
 
 -- correct little error to start core not really importants
 DELETE FROM `creature_template` WHERE `entry`=41000;
-INSERT INTO `creature_template` VALUES ('41000','0','0','0','0','0','169','11686','169','0','Wilfred Portal Trigger','','','0','81','81','0','14','14','0','1','1','0','1','2','0','0','1','2000','2000','1','1','0','0','0','0','0','0','1','2','0','10','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','1','1','1','1','0','0','0','0','0','0','0','0','1','0','0','2','0','','11159');
+REPLACE INTO `creature_template` VALUES ('41000','0','0','0','0','0','169','11686','169','0','Wilfred Portal Trigger','','','0','81','81','0','14','14','0','1','1','0','1','2','0','0','1','2000','2000','1','1','0','0','0','0','0','0','1','2','0','10','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','1','1','1','1','0','0','0','0','0','0','0','0','1','0','0','2','0','','11159');
 
 -- Gormok
 UPDATE `creature_template` SET `scale`='1.5', `faction_A`='16', `faction_H`='16' WHERE (`entry`='34854');
 UPDATE `creature_template` SET unit_flags= 33554434, faction_A =14, faction_H=14 WHERE `entry` IN (34628, 34630);
-INSERT INTO `npc_spellclick_spells` VALUES (34567, 65684, 0, 0, 0, 1, 0, 0, 0), (34568, 65686, 0, 0, 0, 1, 0, 0, 0); -- dark/light "portals"
+REPLACE INTO `npc_spellclick_spells` VALUES (34567, 65684, 0, 0, 0, 1, 0, 0, 0), (34568, 65686, 0, 0, 0, 1, 0, 0, 0); -- dark/light "portals"
 
 
 
@@ -33,7 +33,7 @@ INSERT INTO `npc_spellclick_spells` VALUES (34567, 65684, 0, 0, 0, 1, 0, 0, 0), 
 -- Trial of the Crusader 
 -- achievement_reward
 DELETE FROM achievement_reward WHERE `entry` IN (4078,4080,4156,4079);
-INSERT INTO achievement_reward
+REPLACE INTO achievement_reward
 (`entry`,`title_A`,`title_H`,`item`,`sender`,`subject`,`text`)
 VALUES
 (4078,170,170,0,0, '', ''),
@@ -43,7 +43,7 @@ VALUES
 
 -- achievement_criteria_data
 DELETE FROM achievement_criteria_data WHERE `criteria_id` IN (11542,11546,11547,11549,11678,11679,11680,11681,11682,11683,11684,11685,11686,11687,11688,11689,11690,11691,11692,11693,11778,11779,11780,11799,11800,11801,11802,11803,11804,11818,11838,11839,11860,11861,11862,12116,12198,12258,12278,12279,12280,12281,12338,12339,12340,12341,12342,12343,12344,12345,12346,12347,12348,12349,12350,12358,12359,12360);
-INSERT INTO achievement_criteria_data
+REPLACE INTO achievement_criteria_data
 (`criteria_id`,`type`,`value1`,`value2`)
 VALUES
 (11779,12,0,0),-- Upper Back Pain (10 player); Icehowl - mode check
@@ -121,7 +121,7 @@ VALUES
 
 -- disables
 DELETE FROM `disables` WHERE `entry` IN (12345,12346,12348,12340,12342,12339) AND `sourceType`=4;
-INSERT INTO `disables` (`sourceType`,`entry`,`flags`,`comment`) VALUES
+REPLACE INTO `disables` (`sourceType`,`entry`,`flags`,`comment`) VALUES
 (4,12345,0, 'A Tribute to Skill (10 player)'),
 (4,12346,0, 'A Tribute to Skill (10 player)'),
 (4,12348,0, 'A Tribute to Mad Skill (10 player)'),
@@ -131,7 +131,7 @@ INSERT INTO `disables` (`sourceType`,`entry`,`flags`,`comment`) VALUES
 
 -- conditions
 DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId`=13 AND `SourceEntry` IN (67888,66332,67755,67756,67757,66129,66170,66181);
-INSERT INTO `conditions` (`SourceTypeOrReferenceId`,`SourceEntry`,`ConditionTypeOrReference`,`ConditionValue1`,`ConditionValue2`,`Comment`) VALUES
+REPLACE INTO `conditions` (`SourceTypeOrReferenceId`,`SourceEntry`,`ConditionTypeOrReference`,`ConditionValue1`,`ConditionValue2`,`Comment`) VALUES
 (13,67888,18,1,35458, 'Target for Jaraxxus Lightning killing Fizzlebang'),
 (13,66332,18,1,34862, 'Target for Anub\'arak summon Nerubian Burrowers'),
 (13,67755,18,1,34862, 'Target for Anub\'arak summon Nerubian Burrowers'),
@@ -165,7 +165,7 @@ UPDATE `creature_template` SET `dynamicflags`=0 WHERE `entry`=35877;
 -- Frost Sphere & Nerubian Burrower && Anubarak Spike Faction (so Permafrost can hit players and creatures)
 -- In ytdb does not exist hero 3 and 4 mode
 DELETE FROM creature_template WHERE `entry` IN (34606,34649,3460602,3460603);
-INSERT INTO `creature_template` VALUES 
+REPLACE INTO `creature_template` VALUES 
 ('34606','34649','3460602','3460603','0','0','1126','25144','0','0','Frost Sphere','','','0','79','80','2','1925','1925','0','1','1.14286','1','0','422','586','0','642','1','0','0','1','32768','8','0','0','0','0','0','345','509','103','8','64','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','','0','3','0.238095','1','1','0','0','0','0','0','0','0','721','1','0','0','0','mob_frost_sphere','12340'),
 ('34649','0','0','0','0','0','1126','25144','0','0','Frost Sphere (1)','','','0','79','80','2','1925','1925','0','1','1.14286','1','0','422','586','0','642','1','0','0','1','32768','8','0','0','0','0','0','345','509','103','8','64','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','','0','3','0.238095','1','1','0','0','0','0','0','0','0','721','1','0','0','0','','12340'),
 ('3460602','0','0','0','0','0','1126','25144','0','0','Frost Sphere (2)','','','0','79','80','2','1925','1925','0','1','1.14286','1','0','422','586','0','642','1','0','0','1','32768','8','0','0','0','0','0','345','509','103','8','64','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','','0','3','0.238095','1','1','0','0','0','0','0','0','0','721','1','0','0','0','','1'), -- provisional
@@ -176,7 +176,7 @@ UPDATE `creature_template` SET `modelid1`=11686 WHERE `creature_template`.`entry
 
 -- Text for gossips (obviously wrong!)
 DELETE FROM `npc_text` WHERE `ID` IN (724001,724002,724003,724004,724005,724006); 
-INSERT INTO `npc_text` (`ID`,`Text0_0`) VALUES
+REPLACE INTO `npc_text` (`ID`,`Text0_0`) VALUES
 (724001, 'Greetings $N! Are you ready to be tested in Crusaders Coliseum?'),
 (724002, 'Are you ready for the next stage?'),
 (724003, 'Are you ready to fight the champions of the Silver vanguard?'),
@@ -188,7 +188,7 @@ INSERT INTO `npc_text` (`ID`,`Text0_0`) VALUES
 UPDATE `creature_template` SET  `faction_A`=1770,`faction_H`=1770 WHERE `entry`=35458;
 
 
--- INSERT INTO `spell_script_target` VALUES (65875, 1, 34497), (65876, 1, 34496);
+-- REPLACE INTO `spell_script_target` VALUES (65875, 1, 34497), (65876, 1, 34496);
 
 -- ------------------------------------------------------------------------------------------------------------------------------------ --
 -- ACORDING WITH THE LAST SCRIPTS OF TC ANUB'ARAK IS NOT ATTACKABLE, THIS IS THE SOLUTION

@@ -5,7 +5,7 @@ UPDATE gameobject SET state = 0 WHERE id = 194618; -- Lance Rack (I really dont 
 -- Why loot to a gameobject type 22?
 /*
 DELETE FROM `gameobject_loot_template` WHERE entry = 194618; -- http://www.wowhead.com/item=46070 why? I cant undestant why you put Horde Lance like drop? that's a spell just when you click on rack'
-INSERT INTO `gameobject_loot_template` VALUES
+REPLACE INTO `gameobject_loot_template` VALUES
 (194618, 46070, 100, 1, 0, 1, 1);
 */
 
