@@ -3684,6 +3684,8 @@ void SpellMgr::LoadSpellCustomAttr()
         case 45761: // Shoot
         case 42611: // Shoot
         case 62374: // Pursued
+        case 50988: // Glare of the Tribunal (nh)
+        case 59870: // Glare of the Tribunal (hc)
             spellInfo->MaxAffectedTargets = 1;
             count++;
             break;
