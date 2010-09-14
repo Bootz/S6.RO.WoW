@@ -703,7 +703,7 @@ public:
 
 };
 
-class npc_quest_givers_argent_tournament : public CreatureScript
+/*class npc_quest_givers_argent_tournament : public CreatureScript
 {
 public:
     npc_quest_givers_argent_tournament() : CreatureScript("npc_quest_givers_argent_tournament") { }
@@ -715,7 +715,7 @@ public:
         if (pCreature->isQuestGiver())
     	{	
     		Object *pObject = (Object*)pCreature;
-    		QuestRelations* pObjectQR = &sObjectMgr.mCreatureQuestRelations;
+    		QQuestRelations* GetCreatureQuestRelationMap(pObjectQR);
     		QuestRelations* pObjectQIR = &sObjectMgr.mCreatureQuestInvolvedRelations;
 
     		QuestMenu &qm = pPlayer->PlayerTalkClass->GetQuestMenu();
@@ -789,7 +789,7 @@ public:
         return true;
     }
 
-};
+};*/
 
 /*
 	npc_training_dummy_argent
@@ -936,7 +936,7 @@ public:
 
 };
 
-class npc_crusader_rhydalla : public CreatureScript
+/*class npc_crusader_rhydalla : public CreatureScript
 {
 public:
     npc_crusader_rhydalla() : CreatureScript("npc_crusader_rhydalla") { }
@@ -1002,9 +1002,9 @@ public:
         return true;
     }
 
-};
+};*/
 
-class npc_eadric_the_pure : public CreatureScript
+/*class npc_eadric_the_pure : public CreatureScript
 {
 public:
     npc_eadric_the_pure() : CreatureScript("npc_eadric_the_pure") { }
@@ -1071,9 +1071,9 @@ public:
         return true;
     }
 
-};
+};*/
 
-class npc_justicar_mariel_trueheart : public CreatureScript
+/*class npc_justicar_mariel_trueheart : public CreatureScript
 {
 public:
     npc_justicar_mariel_trueheart() : CreatureScript("npc_justicar_mariel_trueheart") { }
@@ -1139,9 +1139,9 @@ public:
         return true;
     }
 
-};
+};*/
 
-class npc_crok_scourgebane : public CreatureScript
+/*class npc_crok_scourgebane : public CreatureScript
 {
 public:
     npc_crok_scourgebane() : CreatureScript("npc_crok_scourgebane") { }
@@ -1208,9 +1208,8 @@ public:
         return true;
     }
 
-};
+};*/
 
-/*
 * Npc Jeran Lockwood (33973)
 */
 #define JERAN_DEFAULT_TEXTID 14453
@@ -1219,6 +1218,7 @@ public:
 #define GOSSIP_HELLO_JERAN_1 "Montrez-moi comment m'entraîner sur une cible de mêlée."
 #define GOSSIP_HELLO_JERAN_2 "Parlez-moi de la défense et du coup de lance."
 #define SPELL_CREDIT_JERAN 64113
+
 class npc_jeran_lockwood : public CreatureScript
 {
 public:
@@ -1226,7 +1226,7 @@ public:
 
     bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
     {
-        pPlayer->PlayerTalkClass->ClearMenus();
+       pPlayer->PlayerTalkClass->ClearMenus();
     	switch(uiAction)
     	{
     		case GOSSIP_ACTION_INFO_DEF+1:
@@ -1268,6 +1268,7 @@ public:
 #define GOSSIP_HELLO_RUGAN_1 "Montrez-moi comment m'entraîner sur une cible de charge."
 #define GOSSIP_HELLO_RUGAN_2 "Parlez-moi de la charge"
 #define SPELL_CREDIT_RUGAN 64114
+
 class npc_rugan_steelbelly : public CreatureScript
 {
 public:
@@ -1275,7 +1276,7 @@ public:
 
     bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 uiSender, uint32 uiAction)
     {
-        pPlayer->PlayerTalkClass->ClearMenus();
+       pPlayer->PlayerTalkClass->ClearMenus();
     	switch(uiAction)
     	{
     		case GOSSIP_ACTION_INFO_DEF+1:
@@ -1317,6 +1318,7 @@ public:
 #define GOSSIP_HELLO_VALIS_1 "Montrez-moi comment m'entraîner sur une cible � distance."
 #define GOSSIP_HELLO_VALIS_2 "Expliquez-moi comment utiliser le brise-bouclier."
 #define SPELL_CREDIT_VALIS 64115
+
 class npc_valis_windchaser : public CreatureScript
 {
 public:
@@ -1478,13 +1480,13 @@ void AddSC_icecrown()
     new npc_alorah_and_grimmin;
     new npc_guardian_pavilion;
     new npc_vendor_argent_tournament;
-    new npc_quest_givers_argent_tournament;
+ //   new npc_quest_givers_argent_tournament;
     new npc_training_dummy_argent;
     new npc_quest_givers_for_crusaders;
-    new npc_justicar_mariel_trueheart;
-    new npc_crusader_rhydalla;
-    new npc_eadric_the_pure;
-    new npc_crok_scourgebane;
+//    new npc_justicar_mariel_trueheart;
+//    new npc_crusader_rhydalla;
+//    new npc_eadric_the_pure;
+//    new npc_crok_scourgebane;
     new npc_valis_windchaser;
     new npc_rugan_steelbelly;
     new npc_jeran_lockwood;
