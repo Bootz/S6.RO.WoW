@@ -1260,8 +1260,8 @@ INSERT INTO spell_linked_spell VALUES (-74792, 74800, 0, 'Soul Consumption remov
 DELETE FROM creature WHERE `id`=39863 and `map`=724;
 INSERT INTO creature VALUES (null,39863,724,15,1,0,0,3144.93,527.233,72.8887,0.110395,300,0,0,11156000,0,0,0);
 
-
-
+UPDATE `gameobject_template` SET `data10`=74807 WHERE `entry`=202794;
+UPDATE `gameobject_template` SET `data10`=74812 WHERE `entry`=202796;
 
 -- 01_trial_of_the_champion
 -- Moturas
