@@ -50,6 +50,9 @@ UPDATE `creature_template` SET `ScriptName` = 'npc_xerestrasza' WHERE `entry` = 
 UPDATE `creature_template` SET `ScriptName` = 'boss_zarithrian' WHERE `entry` = '39746';
 UPDATE `creature_template` SET `ScriptName` = 'boss_ragefire' WHERE `entry` = '39747';
 UPDATE `creature_template` SET `ScriptName` = 'boss_halion' WHERE `entry`= '39863';
+UPDATE `creature_template` SET `ScriptName` = 'npc_meteor_strike, `flags_extra`=128' WHERE `entry` = '40041';
+UPDATE `creature_template` SET `ScriptName` = 'npc_meteor_flame', `flags_extra`=128 WHERE `entry` = '40042';
+UPDATE `creature_template` SET `ScriptName` = 'npc_spell_meteor_strike', `flags_extra`=128 WHERE `entry` = '40029';
 
 
 DELETE FROM `spell_linked_spell` WHERE (`spell_trigger`='-74562') AND (`spell_effect`='74610');

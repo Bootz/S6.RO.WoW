@@ -33,6 +33,8 @@ enum eTexts
 
 enum eSpells
 {
+    SPELL_FIRE_PILLAR               = 76006,
+    SPELL_FIERY_EXPLOSION           = 76010,
     //All
     SPELL_TWILIGHT_PRECISION        = 78243,
     SPELL_CLEAVE                    = 74524,
@@ -40,6 +42,11 @@ enum eSpells
     SPELL_BERSEK                    = 26662,
     SPELL_TWILIGHT_DIVISION         = 75063,
     SPELL_SUMMON_TWILIGHT_PORTAL    = 74809,
+
+    SPELL_METEOR_TARGET             = 74641,
+    SPELL_METEOR_STRIKE             = 74637,
+    SPELL_METEOR_DAMAGE             = 74648,
+    SPELL_METEOR_FLAME              = 74713,
 
     //halion
     SPELL_FLAME_BREATH_10_NORMAL    = 74525,
@@ -92,7 +99,11 @@ enum eEvents
     EVENT_CAST_DUSK_SHROUD          = 8,
     EVENT_FLAME_WALL                = 9,
     EVENT_CAST_BERSEK               = 10,
-    EVENT_DPS                       = 11
+    EVENT_DPS                       = 11,
+    EVENT_METEOR_STRIKE             = 12,
+    EVENT_METEOR_DAMAGE             = 13,
+    EVENT_METEOR_FLAME              = 14,
+    EVENT_FIRE_PILLAR               = 15
 };
 
 enum ePhases
@@ -111,7 +122,6 @@ Creature* pHalion;
 Creature* pTwilight;
 uint32 HalionDamage, TwilightDamage;
 uint32 HalionAura, TwilightAura;
-static const Position SpawnPos = {3144.93f, 527.233f, 72.8887f, 0.110395f};
 
 class boss_halion : public CreatureScript
 {
@@ -140,6 +150,7 @@ class boss_halion : public CreatureScript
                 events.ScheduleEvent(EVENT_CAST_TAIL_LASH, urand(10000,15000));
                 events.ScheduleEvent(EVENT_CAST_FLAME_BREATH, urand(20000,25000));
                 events.ScheduleEvent(EVENT_CAST_FIERY_COMBUSTION, 15000);
+                events.ScheduleEvent(EVENT_METEOR_STRIKE, 20000);
                 events.ScheduleEvent(SPELL_BERSEK, 9999999);
                 PercentDamage = 0;
                 HalionDamage = 0;
@@ -149,20 +160,29 @@ class boss_halion : public CreatureScript
 
             void RemoveAllGO()
             {
-                if (go_flame)
+                if (GameObject* flame = instance->instance->GetGameObject(instance->GetData64(GO_FLAME_WALLS2)))
                 {
-                    go_flame->Delete();
+                    flame->Delete();
                 }
-                if (instance->GetData64(GO_TWILIGHT_PORTAL1)>0)
-                    if (GameObject* portal1 = instance->instance->GetGameObject(instance->GetData64(GO_TWILIGHT_PORTAL1)))
-                    {
-                        portal1->Delete();
-                    }
-                if (instance->GetData64(GO_TWILIGHT_PORTAL2)>0)
-                    if (GameObject* portal2 = instance->instance->GetGameObject(instance->GetData64(GO_TWILIGHT_PORTAL2)))
-                    {
-                        portal2->Delete();
-                    }
+                if (GameObject* portal1 = instance->instance->GetGameObject(instance->GetData64(GO_TWILIGHT_PORTAL1)))
+                {
+                    portal1->Delete();
+                }
+                if (GameObject* portal2 = instance->instance->GetGameObject(instance->GetData64(GO_TWILIGHT_PORTAL2)))
+                {
+                    portal2->Delete();
+                }
+            }
+
+            void MeteorStrike()
+            {
+                float x,y,z;
+                Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM,0);
+                if (pTarget)
+                {
+                    pTarget->GetPosition(x,y,z);
+                    me->SummonCreature(NPC_METEOR_STRIKE, x, y, z, 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 999999);
+                }
             }
 
             void EnterCombat(Unit*)
@@ -221,6 +241,10 @@ class boss_halion : public CreatureScript
                                 DoCast(SPELL_CLEAVE);
                                 events.ScheduleEvent(EVENT_CAST_CLEAVE, 15000);
                                 break;
+                            case EVENT_METEOR_STRIKE:
+                                MeteorStrike();
+                                events.ScheduleEvent(EVENT_METEOR_STRIKE, 20000);
+                                break;
                             case EVENT_CAST_FLAME_BREATH:
                                 DoCast(RAID_MODE(SPELL_FLAME_BREATH_10_NORMAL, SPELL_FLAME_BREATH_25_NORMAL, SPELL_FLAME_BREATH_10_HEROIC, SPELL_FLAME_BREATH_25_HEROIC));
                                 events.ScheduleEvent(EVENT_CAST_FLAME_BREATH, urand(20000,25000));break;
@@ -248,7 +272,7 @@ class boss_halion : public CreatureScript
                     me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                     DoCast(me, SPELL_SUMMON_TWILIGHT_PORTAL);
                     DoCast(me, SPELL_TWILIGHT_DIVISION);
-                    me->SummonCreature(NPC_TWILIGHT_HALION,SpawnPos);
+                    me->SummonCreature(NPC_TWILIGHT_HALION,SpawnPosHalion);
                     me->SetVisibility(VISIBILITY_OFF);
                 }
                 DoMeleeAttackIfReady();
@@ -355,8 +379,8 @@ class boss_halion : public CreatureScript
                 if (summon->GetEntry()==NPC_TWILIGHT_HALION)
                 {
                     summon->SetPhaseMask(32,true);
+                    summons.Summon(summon);
                 }
-                summons.Summon(summon);
             }
 
             void KilledUnit(Unit* /*victim*/)
@@ -569,10 +593,185 @@ class spell_halion_portal : public SpellScriptLoader
         }
 };
 
+class npc_meteor_strike : public CreatureScript
+{
+    public:
+        npc_meteor_strike() : CreatureScript("npc_meteor_strike") { }
+
+        struct npc_meteor_strikeAI : public ScriptedAI
+        {
+            npc_meteor_strikeAI(Creature *pCreature) : ScriptedAI(pCreature){}
+
+            void Reset()
+            {
+                me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+                me->SetReactState(REACT_PASSIVE);
+                DoCast(me, SPELL_METEOR_STRIKE);
+                events.Reset();
+                events.ScheduleEvent(EVENT_METEOR_DAMAGE, 7000);
+                events.ScheduleEvent(EVENT_METEOR_STRIKE, 1000);
+                me->ForcedDespawn(15000);
+                angle = (float)(urand(0,62)/10);
+                dist = 0;
+                count = 0;
+            }
+
+            void UpdateAI(const uint32 diff)
+            {
+                events.Update(diff);
+
+                while (uint32 eventId = events.ExecuteEvent())
+                {
+                    switch (eventId)
+                    {
+                        case EVENT_METEOR_STRIKE:
+                            DoCastAOE(SPELL_METEOR_TARGET);
+                            break;
+                        case EVENT_METEOR_DAMAGE:
+                            DoCastAOE(SPELL_METEOR_DAMAGE);
+                            events.ScheduleEvent(EVENT_METEOR_FLAME, 1000);
+                            break;
+                        case EVENT_METEOR_FLAME:
+                            float x, y;
+                            dist += 5;
+                            count ++;
+                            me->GetNearPoint2D(x, y, dist, angle);
+                            me->SummonCreature(NPC_METEOR_FLAME,x,y,me->GetPositionZ(),0,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,999999);
+                            me->GetNearPoint2D(x, y, dist, angle+M_PI);
+                            me->SummonCreature(NPC_METEOR_FLAME,x,y,me->GetPositionZ(),0,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,999999);
+                            me->GetNearPoint2D(x, y, dist, angle+3*M_PI/2);
+                            me->SummonCreature(NPC_METEOR_FLAME,x,y,me->GetPositionZ(),0,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,999999);
+                            me->GetNearPoint2D(x, y, dist, angle+M_PI/2);
+                            me->SummonCreature(NPC_METEOR_FLAME,x,y,me->GetPositionZ(),0,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,999999);
+                            if (count < 8)
+                                events.ScheduleEvent(EVENT_METEOR_FLAME, 1000);
+                            break;
+                    }
+                }
+            }
+
+        private:
+            EventMap events;
+            float dist, angle;
+            uint8 count;
+
+        };
+        
+        CreatureAI* GetAI(Creature *pCreature) const
+        {
+            return new npc_meteor_strikeAI(pCreature);
+        }
+};
+
+class npc_spell_meteor_strike : public CreatureScript
+{
+    public:
+        npc_spell_meteor_strike() : CreatureScript("npc_spell_meteor_strike") { }
+
+        struct npc_spell_meteor_strikeAI : public ScriptedAI
+        {
+            npc_spell_meteor_strikeAI(Creature *pCreature) : ScriptedAI(pCreature){}
+
+            void Reset()
+            {
+                me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+                me->SetReactState(REACT_PASSIVE);
+                me->ForcedDespawn(10000);
+            }
+
+        };
+        
+        CreatureAI* GetAI(Creature *pCreature) const
+        {
+            return new npc_spell_meteor_strikeAI(pCreature);
+        }
+};
+
+class npc_meteor_flame : public CreatureScript
+{
+    public:
+        npc_meteor_flame() : CreatureScript("npc_meteor_flame") { }
+
+        struct npc_meteor_flameAI : public ScriptedAI
+        {
+            npc_meteor_flameAI(Creature *pCreature) : ScriptedAI(pCreature){}
+
+            void Reset()
+            {
+                me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+                me->SetReactState(REACT_PASSIVE);
+                DoCast(me,SPELL_METEOR_FLAME);
+ 
+                me->ForcedDespawn(10000);
+            }
+        };
+        
+        CreatureAI* GetAI(Creature *pCreature) const
+        {
+            return new npc_meteor_flameAI(pCreature);
+        }
+};
+
+class npc_summon_halion : public CreatureScript
+{
+    public:
+        npc_summon_halion() : CreatureScript("npc_summon_halion") { }
+
+        struct npc_summon_halionAI : public ScriptedAI
+        {
+            npc_summon_halionAI(Creature *pCreature) : ScriptedAI(pCreature){}
+
+            void Reset()
+            {
+                me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+                me->SetReactState(REACT_PASSIVE);
+                events.Reset();
+                events.ScheduleEvent(EVENT_FIRE_PILLAR, 10000);
+                DoCast(me,SPELL_FIRE_PILLAR);
+ 
+                me->ForcedDespawn(20000);
+            }
+
+            void UpdateAI(const uint32 diff)
+            {
+                events.Update(diff);
+
+                while (uint32 eventId = events.ExecuteEvent())
+                {
+                    switch (eventId)
+                    {
+                        case EVENT_FIRE_PILLAR:
+                            DoCastAOE(SPELL_FIERY_EXPLOSION);
+                            pHalion->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+                            pHalion->SetVisibility(VISIBILITY_ON);
+                            pHalion->SetReactState(REACT_AGGRESSIVE);
+                            break;
+                    }
+                }
+            }
+
+        private:
+            EventMap events;
+
+        };
+        
+        CreatureAI* GetAI(Creature *pCreature) const
+        {
+            return new npc_summon_halionAI(pCreature);
+        }
+};
 
 void AddSC_boss_halion()
 {
     new boss_halion;
     new boss_twilight_halion;
     new spell_halion_portal;
+    new npc_meteor_strike;
+    new npc_spell_meteor_strike;
+    new npc_meteor_flame;
+    new npc_summon_halion;
 }

@@ -51,6 +51,7 @@ class instance_ruby_sanctum : public InstanceMapScript
                 m_uiHalionGUID = 0;
                 m_uiXerestraszaGUID = 0;
                 m_uiTwilightHalionGUID = 0;
+                m_uiGOFlameWallsGUID = 0;
             }
 
             void OnCreatureCreate(Creature *pCreature, bool  /*add*/)
@@ -103,6 +104,7 @@ class instance_ruby_sanctum : public InstanceMapScript
                         break;
                     case GO_TWILIGHT_PORTAL1: m_uiHalionPortalGUID = pGo->GetGUID(); break;
                     case GO_TWILIGHT_PORTAL2: m_uiTwilightPortalGUID = pGo->GetGUID(); break;
+                    case GO_FLAME_WALLS2:     m_uiGOFlameWallsGUID = pGo->GetGUID(); break;
                     default: break;
                 }
             }
@@ -169,9 +171,7 @@ class instance_ruby_sanctum : public InstanceMapScript
                             {
                                 if (Creature* halion = instance->GetCreature(GetData64(DATA_HALION)))
                                 {
-                                    halion->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                                    halion->SetVisibility(VISIBILITY_ON);
-                                    halion->SetReactState(REACT_AGGRESSIVE);
+                                    halion->SummonCreature(NPC_SUMMON_HALIOH,SpawnPosHalion,TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT,20000);
                                 }
                             }
                         }
@@ -193,7 +193,8 @@ class instance_ruby_sanctum : public InstanceMapScript
                     case DATA_TWILIGHT_HALION: return m_uiTwilightHalionGUID; break;
                     case DATA_XERESTRASZA:     return m_uiXerestraszaGUID;    break;
                     case GO_TWILIGHT_PORTAL1:  return m_uiHalionPortalGUID;   break;
-                    case GO_TWILIGHT_PORTAL2:  return m_uiTwilightPortalGUID;   break;
+                    case GO_TWILIGHT_PORTAL2:  return m_uiTwilightPortalGUID; break;
+                    case GO_FLAME_WALLS2:      return m_uiGOFlameWallsGUID;   break;  
                     default: break;
                 }
                 return 0;
@@ -241,6 +242,7 @@ class instance_ruby_sanctum : public InstanceMapScript
                 uint64 m_uiTwilightHalionGUID;
                 uint64 m_uiHalionPortalGUID;
                 uint64 m_uiTwilightPortalGUID;
+                uint64 m_uiGOFlameWallsGUID;
         };
         
         InstanceScript* GetInstanceScript (InstanceMap *pMap) const

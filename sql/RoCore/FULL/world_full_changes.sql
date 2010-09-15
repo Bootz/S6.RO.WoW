@@ -1263,6 +1263,8 @@ REPLACE INTO creature VALUES (null,39863,724,15,1,0,0,3144.93,527.233,72.8887,0.
 UPDATE `gameobject_template` SET `data10`=74807 WHERE `entry`=202794;
 UPDATE `gameobject_template` SET `data10`=74812 WHERE `entry`=202796;
 
+
+
 -- 01_trial_of_the_champion
 -- Moturas
 DELETE FROM `vehicle_accessory` WHERE `entry` in (35491,33299,33418,33409,33300,33408,33301,33414,33297,33416,33298);
@@ -7220,6 +7222,9 @@ UPDATE `creature_template` SET `ScriptName` = 'boss_zarithrian' WHERE `entry` = 
 UPDATE `creature_template` SET `ScriptName` = 'boss_ragefire' WHERE `entry` = '39747';
 UPDATE `creature_template` SET `ScriptName` = 'boss_halion' WHERE `entry`= '39863';
 UPDATE `creature_template` SET `ScriptName` = 'boss_twilight_halion' WHERE `entry` = '40142';
+UPDATE `creature_template` SET `ScriptName` = 'npc_meteor_strike, `flags_extra`=128' WHERE `entry` = '40041';
+UPDATE `creature_template` SET `ScriptName` = 'npc_meteor_flame', `flags_extra`=128 WHERE `entry` = '40042';
+UPDATE `creature_template` SET `ScriptName` = 'npc_spell_meteor_strike', `flags_extra`=128 WHERE `entry` = '40029';
 UPDATE `creature_template` SET `ScriptName` = 'npc_onyx_flamecaller' WHERE `entry` = '39814';
 UPDATE `creature_template` SET `ScriptName` = 'npc_meteor_strike' WHERE `entry` = '40055';
 UPDATE `creature_template` SET `ScriptName` = 'npc_combustion' WHERE `entry` = '40001';

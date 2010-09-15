@@ -17,6 +17,8 @@
 #ifndef DEF_RUBY_SANCTUM_H
 #define DEF_RUBY_SANCTUM_H
 
+static const Position SpawnPosHalion = {3144.93f, 527.233f, 72.8887f, 0.110395f};
+
 enum eData
 {
     DATA_BALTHARUS       = 0,
@@ -46,7 +48,11 @@ enum eCreature
     NPC_HALION           = 39863,
     NPC_TWILIGHT_HALION  = 40142,
     NPC_XERESTRASZA      = 40429,
-    NPC_ONYX_FLAMECALLER = 39814
+    NPC_ONYX_FLAMECALLER = 39814,
+    NPC_METEOR_STRIKE    = 40041,//40029
+    NPC_METEOR_FLAME     = 40042,
+    NPC_SUMMON_HALIOH    = 40044,
+    //возгорание         = 40001
 };
 
 enum eGameObject
