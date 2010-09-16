@@ -374,14 +374,4 @@ struct QuestStatusData
     uint32 m_itemcount[ QUEST_ITEM_OBJECTIVES_COUNT ];
     uint32 m_creatureOrGOcount[ QUEST_OBJECTIVES_COUNT ];
 };
-
-struct TimedQuestStatusData
-{
-    bool    daily;  // Is the quest a daily? (if not it's a weekly!)
-    time_t  ltime;  // Time of last complete of this quest
-
-    TimedQuestStatusData() : daily(0), ltime(0) {}
-    TimedQuestStatusData(bool _daily, time_t _ltime) : daily(_daily), ltime(_ltime) {}
-};
-
 #endif

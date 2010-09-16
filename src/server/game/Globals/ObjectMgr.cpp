@@ -7800,7 +7800,9 @@ bool ObjectMgr::LoadTrinityStrings(char const* table, int32 min_value, int32 max
         data.Content.resize(1);
         ++count;
 
-        data.Default = fields[1].GetCppString();
+        // 0 -> default, idx in to idx+1
+        data.Content[0] = fields[1].GetCppString();
+
         for (uint8 i = 1; i < MAX_LOCALE; ++i)
         {
             std::string str = fields[i + 1].GetCppString();
@@ -7819,11 +7821,15 @@ bool ObjectMgr::LoadTrinityStrings(char const* table, int32 min_value, int32 max
 
 const char *ObjectMgr::GetTrinityString(int32 entry, int locale_idx) const
 {
+    // locale_idx == -1 -> default, locale_idx >= 0 in to idx+1
+    // Content[0] always exist if exist TrinityStringLocale
     if (TrinityStringLocale const *msl = GetTrinityStringLocale(entry))
     {
-        std::string s = msl->Default;
-        GetLocaleString(msl->Content, locale_idx, s);
-        return s.c_str();
+        int idx = locale_idx + 1;
+        if (int(msl->Content.size()) > idx && !msl->Content[idx].empty())
+            return msl->Content[idx].c_str();
+        else
+            return msl->Content[0].c_str();
     }
 
     if (entry > 0)
