@@ -858,7 +858,7 @@ void AchievementMgr::UpdateAchievementCriteria(AchievementCriteriaTypes type, ui
             }
             case ACHIEVEMENT_CRITERIA_TYPE_COMPLETE_DAILY_QUEST_DAILY:
             {
-                time_t nextDailyResetTime = sWorld.GetNextDailyQuestReset();
+                time_t nextDailyResetTime = sWorld.GetNextDailyQuestsResetTime();
                 CriteriaProgress *progress = GetCriteriaProgress(achievementCriteria);
 
                 if (!miscvalue1) // Login case.
