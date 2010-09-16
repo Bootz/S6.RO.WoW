@@ -2148,6 +2148,23 @@ CharDelete.KeepDays = 30
 #        Default: 0 - off
 #                 1 - on
 #
+#   DuelResetCooldown
+#	Reseting cooldown and restore health to start duel
+#	Default: 0 - Disable
+#		 1 - Enable
+#
+#   ShowInfoPlayer.mute
+#       Enable or disable show mute Nick characters for all Players
+#
+#   ShowInfoPlayer.kick
+#       Enable or disable show kick Nick characters for all Players
+#
+#   ShowInfoPlayer.ban
+#       Enable or disable show ban Nick characters for all Players
+#
+#   StartCommandSendToGraveyar
+#       Enable or disable start command send palyer to graveyar
+#
 ###############################################################################
 
 PlayerStart.AllReputation = 0
@@ -2182,3 +2199,8 @@ LevelReq.Ticket = 1
 LevelReq.Auction = 1
 LevelReq.Mail = 1
 DungeonFinder.Enable = 0
+DuelResetCooldown = 0
+ShowInfoPlayer.mute = 0
+ShowInfoPlayer.kick = 0
+ShowInfoPlayer.ban = 0
+StartCommandSendToGraveyar = 0
