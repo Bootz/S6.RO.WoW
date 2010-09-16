@@ -144,30 +144,6 @@ LOCK TABLES `character_queststatus_weekly` WRITE;
 /*!40000 ALTER TABLE `character_queststatus_weekly` ENABLE KEYS */;
 UNLOCK TABLES;
 
--- Table structure for table `worldstates`
---
-
-DROP TABLE IF EXISTS `worldstates`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `worldstates` (
-  `entry` mediumint(11) UNSIGNED NOT NULL DEFAULT '0',
-  `value` bigint(40) UNSIGNED NOT NULL DEFAULT '0',
-  `comment` text,
-  PRIMARY KEY  (`entry`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='Variable Saves';
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `worldstates`
---
-
-LOCK TABLES `worldstates` WRITE;
-/*!40000 ALTER TABLE `worldstates` DISABLE KEYS */;
+DELETE FROM `worldstates` WHERE `entry` IN (90101,90102);
 INSERT INTO `worldstates` (`entry`,`value`, `comment`) VALUES 
-(20001, 0, 'NextArenaPointDistributionTime'),
-(20002, 0, 'NextWeeklyQuestResetTime'),
-(20003, 0, 'NextBGRandomDailyResetTime'),
-(20004, 0, 'cleaning_flags');
-/*!40000 ALTER TABLE `worldstates` ENABLE KEYS */;
-UNLOCK TABLES;
+(20002, 0, 'NextWeeklyQuestResetTime');
