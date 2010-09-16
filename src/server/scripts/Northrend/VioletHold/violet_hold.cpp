@@ -441,6 +441,9 @@ public:
         bool bHasGotMovingPoints;
         uint32 uiBoss;
 
+        void AttackStart(Unit* /*who*/) {}
+        void MoveInLineOfSight(Unit* /*who*/) {}
+
         void Reset()
         {
             if (pInstance && !uiBoss)

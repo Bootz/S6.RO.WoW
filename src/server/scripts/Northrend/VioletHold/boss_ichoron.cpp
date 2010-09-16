@@ -29,6 +29,7 @@ enum Spells
     SPELL_WATER_BOLT_VOLLEY                     = 54241,
     SPELL_WATER_BOLT_VOLLEY_H                   = 59521,
     SPELL_SPLASH                                = 59516,
+    SPELL_BURST                                 = 54379,
 };
 
 enum IchoronCreatures
@@ -94,6 +95,7 @@ public:
 
         uint32 uiBubbleCheckerTimer;
         uint32 uiWaterBoltVolleyTimer;
+        uint32 uiWaterBlastTimer;
 
         InstanceScript* pInstance;
 
@@ -106,6 +108,7 @@ public:
             bAchievement = true;
             uiBubbleCheckerTimer = 1000;
             uiWaterBoltVolleyTimer = urand(10000, 15000);
+            uiWaterBlastTimer = urand(10000, 15000);
 
             me->SetVisibility(VISIBILITY_ON);
             DespawnWaterElements();
@@ -209,7 +212,7 @@ public:
             if (!bIsFrenzy && HealthBelowPct(25) && !bIsExploded)
             {
                 DoScriptText(SAY_ENRAGE, me);
-                DoCast(me, SPELL_FRENZY, true);
+                DoCast(me, DUNGEON_MODE(SPELL_FRENZY,SPELL_FRENZY_H), true);
                 bIsFrenzy = true;
             }
 
@@ -222,8 +225,8 @@ public:
                         if (!me->HasAura(SPELL_PROTECTIVE_BUBBLE, 0))
                         {
                             DoScriptText(SAY_SHATTER, me);
-                            DoCast(me, SPELL_WATER_BLAST);
                             DoCast(me, SPELL_DRAINED);
+                            DoCast(me, SPELL_BURST, true);
                             bIsExploded = true;
                             me->AttackStop();
                             me->SetVisibility(VISIBILITY_OFF);
@@ -260,10 +263,23 @@ public:
             {
                 if (uiWaterBoltVolleyTimer <= uiDiff)
                 {
-                    DoCast(me, SPELL_WATER_BOLT_VOLLEY);
+                    if(!me->IsNonMeleeSpellCasted(false))
+                    {
+                        DoCast(me, DUNGEON_MODE(SPELL_WATER_BOLT_VOLLEY,SPELL_WATER_BOLT_VOLLEY_H));
                     uiWaterBoltVolleyTimer = urand(10000, 15000);
+                    }
                 }
                 else uiWaterBoltVolleyTimer -= uiDiff;
+
+                if (uiWaterBlastTimer <= uiDiff)
+                {
+                    if(!me->IsNonMeleeSpellCasted(false))
+                    {
+                        DoCast(me->getVictim(), DUNGEON_MODE(SPELL_WATER_BLAST,SPELL_WATER_BLAST_H));
+                        uiWaterBlastTimer = urand(10000, 15000);
+                    }
+                }
+                else uiWaterBlastTimer -= uiDiff;
 
                 DoMeleeAttackIfReady();
             }
@@ -288,11 +304,17 @@ public:
 
                 if (pInstance->GetData(DATA_WAVE_COUNT) == 6)
                 {
+                    if(IsHeroic() && pInstance->GetData(DATA_1ST_BOSS_EVENT) == DONE)
+                        me->RemoveFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE);
+
                     pInstance->SetData(DATA_1ST_BOSS_EVENT, DONE);
                     pInstance->SetData(DATA_WAVE_COUNT, 7);
                 }
                 else if (pInstance->GetData(DATA_WAVE_COUNT) == 12)
                 {
+                    if(IsHeroic() && pInstance->GetData(DATA_2ND_BOSS_EVENT) == DONE)
+                        me->RemoveFlag(UNIT_DYNAMIC_FLAGS, UNIT_DYNFLAG_LOOTABLE);
+
                     pInstance->SetData(DATA_2ND_BOSS_EVENT, DONE);
                     pInstance->SetData(DATA_WAVE_COUNT, 13);
                 }
