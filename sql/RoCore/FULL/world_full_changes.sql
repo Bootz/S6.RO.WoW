@@ -1260,6 +1260,9 @@ REPLACE INTO spell_linked_spell VALUES (-74792, 74800, 0, 'Soul Consumption remo
 DELETE FROM creature WHERE `id`=39863 and `map`=724;
 REPLACE INTO creature VALUES (null,39863,724,15,1,0,0,3144.93,527.233,72.8887,0.110395,300,0,0,11156000,0,0,0);
 
+-- Added effect on summon halioh http://www.wowhead.com/npc=40044
+UPDATE `creature_template` SET `name`='summon halion', `ScriptName` = 'npc_summon_halion', `flags_extra`=128 WHERE `entry` = '40044';
+
 UPDATE `gameobject_template` SET `data10`=74807 WHERE `entry`=202794;
 UPDATE `gameobject_template` SET `data10`=74812 WHERE `entry`=202796;
 
