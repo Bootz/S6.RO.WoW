@@ -7015,7 +7015,7 @@ void Player::UpdateZone(uint32 newZone, uint32 newArea)
     // zone changed, so area changed as well, update it
     UpdateArea(newArea);
 
-    AreaTableEntry const* zone = GetAreaEntryByAreaID(newZone);
+    AreaTableEntry const* zone = GetAreaEntryByAreaFlagAndMap(GetMap()->GetAreaFlag(GetPositionX(), GetPositionY(), GetPositionZ()), GetMapId());
     if (!zone)
         return;
 
