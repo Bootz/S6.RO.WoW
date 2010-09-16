@@ -174,7 +174,8 @@ typedef UNORDERED_MAP<uint64/*(instance,guid) pair*/,time_t> RespawnTimes;
 
 struct TrinityStringLocale
 {
-    StringVector Content;                       // 0 -> default, i -> i-1 locale index
+    std::string Default;
+    StringVector Content;
 };
 
 typedef std::map<uint32,uint32> CreatureLinkedRespawnMap;
@@ -1120,7 +1121,7 @@ class ObjectMgr
         void CheckScripts(ScriptsType type, std::set<int32>& ids);
         void LoadCreatureAddons(SQLStorage& creatureaddons, char const* entryName, char const* comment);
         void ConvertCreatureAddonAuras(CreatureDataAddon* addon, char const* table, char const* guidEntryStr);
-        void LoadQuestRelationsHelper(QuestRelations& map,char const* table);
+        void LoadQuestRelationsHelper(QuestRelations& map, std::string table, bool starter, bool go);
         void PlayerCreateInfoAddItemHelper(uint32 race_, uint32 class_, uint32 itemId, int32 count);
 
         MailLevelRewardMap m_mailLevelRewardMap;

@@ -467,6 +467,7 @@ void World::LoadConfigSettings(bool reload)
     rate_values[RATE_DROP_ITEM_LEGENDARY]  = sConfig.GetFloatDefault("Rate.Drop.Item.Legendary", 1.0f);
     rate_values[RATE_DROP_ITEM_ARTIFACT]   = sConfig.GetFloatDefault("Rate.Drop.Item.Artifact", 1.0f);
     rate_values[RATE_DROP_ITEM_REFERENCED] = sConfig.GetFloatDefault("Rate.Drop.Item.Referenced", 1.0f);
+    rate_values[RATE_DROP_ITEM_REFERENCED_AMOUNT] = sConfig.GetFloatDefault("Rate.Drop.Item.ReferencedAmount", 1.0f);
     rate_values[RATE_DROP_MONEY]  = sConfig.GetFloatDefault("Rate.Drop.Money", 1.0f);
     rate_values[RATE_XP_KILL]     = sConfig.GetFloatDefault("Rate.XP.Kill", 1.0f);
     rate_values[RATE_XP_QUEST]    = sConfig.GetFloatDefault("Rate.XP.Quest", 1.0f);
@@ -1432,9 +1433,6 @@ void World::SetInitialWorldSettings()
     sLog.outString("Loading Objects Pooling Data...");
     sPoolMgr.LoadFromDB();
 
-    sLog.outString("Loading Game Event Data...");
-    sGameEventMgr.LoadFromDB();
-
     sLog.outString("Loading Weather Data...");
     sWeatherMgr.LoadWeatherData();
 
@@ -1447,11 +1445,14 @@ void World::SetInitialWorldSettings()
     sLog.outString("Loading Quest POI");
     sObjectMgr.LoadQuestPOI();
 
-    sLog.outString("Loading Quest Pool...");
-    sObjectMgr.LoadQuestPool();                                 // must be loaded after quests and before relations!
-
     sLog.outString("Loading Quests Relations...");
     sObjectMgr.LoadQuestRelations();                            // must be after quest load
+
+    sLog.outString("Loading Quest Pooling Data...");
+    sPoolMgr.LoadQuestPools();
+
+    sLog.outString("Loading Game Event Data...");               // must be after loading pools fully
+    sGameEventMgr.LoadFromDB();
 
     sLog.outString("Loading Dungeon boss data...");
     sLFGMgr.LoadDungeonEncounters();
@@ -1736,14 +1737,17 @@ void World::SetInitialWorldSettings()
     sLog.outString("Deleting expired bans...");
     LoginDatabase.Execute("DELETE FROM ip_banned WHERE unbandate <= UNIX_TIMESTAMP() AND unbandate<>bandate");
 
-    sLog.outString("Calculating next daily/weekly quest reset times...");
-    InitTimedQuestResetTime();
+    sLog.outString("Starting objects Pooling system...");
+    sPoolMgr.Initialize();
+
+    sLog.outString("Calculate next daily quest reset time...");
+    InitDailyQuestResetTime();
+
+    sLog.outString("Calculate next weekly quest reset time..." );
+    InitWeeklyQuestResetTime();
 
     sLog.outString("Calculate random battleground reset time..." );
     InitRandomBGResetTime();
-
-    sLog.outString("Starting objects Pooling system...");
-    sPoolMgr.Initialize();
 
     // possibly enable db logging; avoid massive startup spam by doing it here.
     if (sLog.GetLogDBLater())
@@ -1896,13 +1900,15 @@ void World::Update(uint32 diff)
     ///- Update the game time and check for shutdown time
     _UpdateGameTime();
 
-    /// Handle daily quest reset time
-    if (m_gameTime >= m_NextDailyQuestReset)
-        ResetTimedQuests(true);
+    /// Handle daily quests reset time
+    if (m_gameTime > m_NextDailyQuestReset)
+    {
+        ResetDailyQuests();
+        m_NextDailyQuestReset += DAY;
+    }
 
-    /// Handle weekly quest reset time
-    if (m_gameTime >= m_NextWeeklyQuestReset)
-        ResetTimedQuests(false);
+    if (m_gameTime > m_NextWeeklyQuestReset)
+        ResetWeeklyQuests();
 
     if (m_gameTime > m_NextRandomBGReset)
         ResetRandomBG();
@@ -2530,48 +2536,49 @@ void World::_UpdateRealmCharCount(QueryResult resultCharCount, uint32 accountId)
     }
 }
 
-void World::InitTimedQuestResetTime()
+void World::InitWeeklyQuestResetTime()
 {
+    time_t wstime = uint64(sWorld.getWorldState(WS_WEEKLY_QUEST_RESET_TIME));
+    time_t curtime = time(NULL);
+    m_NextWeeklyQuestReset = wstime < curtime ? curtime : time_t(wstime);
+}
+
+void World::InitDailyQuestResetTime()
+{
+    time_t mostRecentQuestTime;
+
+    QueryResult result = CharacterDatabase.Query("SELECT MAX(time) FROM character_queststatus_daily");
+    if (result)
+    {
+        Field *fields = result->Fetch();
+
+        mostRecentQuestTime = (time_t)fields[0].GetUInt64();
+    }
+    else
+        mostRecentQuestTime = 0;
+
+    // client built-in time for reset is 6:00 AM
+    // FIX ME: client not show day start time
     time_t curTime = time(NULL);
     tm localTm = *localtime(&curTime);
-    time_t nextDayResetTime = mktime(&localTm);
-    time_t nextWeekResetTime = mktime(&localTm);
-
-    m_NextDailyQuestReset = (time_t)getWorldState(WS_NEXT_TIME_DAILY);
-    m_NextWeeklyQuestReset = (time_t)getWorldState(WS_NEXT_TIME_WEEKLY);
-
-    // Daily
-    // -----
-
-    // Current day reset time
-    localTm.tm_hour = sConfig.GetIntDefault("Quest.Daily.ResetHour", 4);
+    localTm.tm_hour = 6;
     localTm.tm_min  = 0;
     localTm.tm_sec  = 0;
 
-    // Next daily reset time before current moment
-    if (curTime >= nextDayResetTime)
-        nextDayResetTime += DAY;
+    // current day reset time
+    time_t curDayResetTime = mktime(&localTm);
 
-    // Normalize daily reset time
-    m_NextDailyQuestReset = m_NextDailyQuestReset < curTime ? nextDayResetTime - DAY : nextDayResetTime;
+    // last reset time before current moment
+    time_t resetTime = (curTime < curDayResetTime) ? curDayResetTime - DAY : curDayResetTime;
 
-    // Weekly
-    // ------
-
-    int32 WeekdayOffset = localTm.tm_wday - sConfig.GetIntDefault("Quest.Weekly.ResetDay", 3); // Wednesday since 3.3.3.11723
-    nextWeekResetTime -= WeekdayOffset * DAY; // Move time to proper day
-
-    // Current week reset time
-    localTm.tm_hour = sConfig.GetIntDefault("Quest.Weekly.ResetHour", 4);
-    localTm.tm_min  = 0;
-    localTm.tm_sec  = 0;
-
-    // Next weekly reset time before current moment
-    if (curTime >= nextWeekResetTime)
-        nextWeekResetTime += WEEK;
-
-    // Normalize weekly reset time
-    m_NextWeeklyQuestReset = m_NextWeeklyQuestReset < curTime ? nextWeekResetTime - WEEK : nextWeekResetTime;
+    // need reset (if we have quest time before last reset time (not processed by some reason)
+    if (mostRecentQuestTime && mostRecentQuestTime <= resetTime)
+        m_NextDailyQuestReset = mostRecentQuestTime;
+    else
+    {
+        // plan next reset time
+        m_NextDailyQuestReset = (curTime >= curDayResetTime) ? curDayResetTime + DAY : curDayResetTime;
+    }
 }
 
 void World::InitRandomBGResetTime()
@@ -2601,31 +2608,16 @@ void World::InitRandomBGResetTime()
         sWorld.setWorldState(WS_BG_DAILY_RESET_TIME, uint64(m_NextRandomBGReset));
 }
 
-void World::ResetTimedQuests(bool daily)
+void World::ResetDailyQuests()
 {
-    if (daily)
-    {
-        sLog.outDetail("Reset of the daily quests.");
-        CharacterDatabase.DirectPExecute("DELETE FROM character_queststatus_timed WHERE daily='1' AND time<'%lu'", uint64(m_NextDailyQuestReset-DAY));
-
-        // Reset player daily slots for online chars - offline chars get their reset @ login
+    sLog.outDetail("Daily quests reset for all characters.");
+    CharacterDatabase.Execute("DELETE FROM character_queststatus_daily");
     for (SessionMap::const_iterator itr = m_sessions.begin(); itr != m_sessions.end(); ++itr)
         if (itr->second->GetPlayer())
             itr->second->GetPlayer()->ResetDailyQuestStatus();
 
-        m_NextDailyQuestReset += DAY;
-        setWorldState(WS_NEXT_TIME_DAILY, uint64(m_NextDailyQuestReset));
-    }
-    // Weekly
-    else
-    {
-        sLog.outDetail("Reset of the weekly quests.");
-        CharacterDatabase.DirectPExecute("DELETE FROM character_queststatus_timed WHERE daily='0' AND time<'%lu'", uint64(m_NextWeeklyQuestReset));
-
-        m_NextWeeklyQuestReset += WEEK;
-        setWorldState(WS_NEXT_TIME_WEEKLY, uint64(m_NextWeeklyQuestReset));
-    }
-    sObjectMgr.ResetQuestPool(daily);
+    // change available dailies
+    sPoolMgr.ChangeDailyQuests();
 }
 
 void World::LoadDBAllowedSecurityLevel()
@@ -2644,11 +2636,24 @@ void World::SetPlayerSecurityLimit(AccountTypes _sec)
         KickAllLess(m_allowedSecurityLevel);
 }
 
+void World::ResetWeeklyQuests()
+{
+    CharacterDatabase.Execute("DELETE FROM character_queststatus_weekly");
+    for (SessionMap::const_iterator itr = m_sessions.begin(); itr != m_sessions.end(); ++itr)
+        if (itr->second->GetPlayer())
+            itr->second->GetPlayer()->ResetWeeklyQuestStatus();
+
+    m_NextWeeklyQuestReset = time_t(m_NextWeeklyQuestReset + WEEK);
+    sWorld.setWorldState(WS_WEEKLY_QUEST_RESET_TIME, uint64(m_NextWeeklyQuestReset));
+
+    // change available weeklies
+    sPoolMgr.ChangeWeeklyQuests();
+}
+
 void World::ResetRandomBG()
 {
     sLog.outDetail("Random BG status reset for all characters.");
     CharacterDatabase.Execute("DELETE FROM character_battleground_random");
-
     for(SessionMap::const_iterator itr = m_sessions.begin(); itr != m_sessions.end(); ++itr)
         if (itr->second->GetPlayer())
             itr->second->GetPlayer()->SetRandomWinner(false);

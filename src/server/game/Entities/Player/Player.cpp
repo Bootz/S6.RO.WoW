@@ -2591,15 +2591,16 @@ void Player::UninviteFromGroup()
     }
 }
 
-void Player::RemoveFromGroup(Group* group, uint64 guid)
+void Player::RemoveFromGroup(Group* group, uint64 guid, RemoveMethod method /* = GROUP_REMOVEMETHOD_DEFAULT*/)
 {
     if (group)
     {
-        if (group->RemoveMember(guid) <= 1)
+        if (group->RemoveMember(guid, method) <= 1)
         {
             // group->Disband(); already disbanded in RemoveMember
             sObjectMgr.RemoveGroup(group);
             delete group;
+            group = NULL;
             // removemember sets the player's group pointer to NULL
         }
     }
@@ -2633,6 +2634,9 @@ void Player::GiveXP(uint32 xp, Unit *victim, float group_rate)
         return;
 
     if (HasFlag(PLAYER_FLAGS, PLAYER_FLAGS_NO_XP_GAIN))
+        return;
+
+    if (victim && victim->GetTypeId() == TYPEID_UNIT && !victim->ToCreature()->hasLootRecipient())
         return;
 
     uint8 level = getLevel();
@@ -8474,8 +8478,8 @@ void Player::SendLoot(uint64 guid, LootType loot_type)
         }
         else
         {
+            // the player whose group may loot the corpse
             Player *recipient = creature->GetLootRecipient();
-
             if (!recipient)
                 return;
 
@@ -16529,16 +16533,10 @@ bool Player::isAllowedToLoot(const Creature* creature)
     if (loot->isLooted()) // nothing to loot or everything looted.
         return false;
 
-    Player* recipient = creature->GetLootRecipient();
-    if (!recipient)
-        return false;
-
-    Group* recipientGroup = recipient->GetGroup();
-    if (!recipientGroup)
-        return (this == recipient);
-
     Group* thisGroup = GetGroup();
-    if (!thisGroup || thisGroup != recipientGroup)
+    if (!thisGroup)
+        return this == creature->GetLootRecipient();
+    else if (thisGroup != creature->GetLootRecipientGroup())
         return false;
 
     switch(thisGroup->GetLootMethod())

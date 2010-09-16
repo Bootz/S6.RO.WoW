@@ -23,9 +23,11 @@
 #include "DatabaseEnv.h"
 #include "DBCStores.h"
 #include "ObjectMgr.h"
+#include "OutdoorPvPMgr.h"
 #include "ProgressBar.h"
 #include "ScriptLoader.h"
 #include "ScriptSystem.h"
+#include "Transport.h"
 
 // Utility macros to refer to the script registry.
 #define SCR_REG_MAP(T) ScriptRegistry<T>::ScriptMap
@@ -171,6 +173,7 @@ ScriptMgr::~ScriptMgr()
     SCR_CLEAR(AchievementCriteriaScript);
     SCR_CLEAR(PlayerScript);
     SCR_CLEAR(GuildScript);
+    SCR_CLEAR(GroupScript);
 
     #undef SCR_CLEAR
 }
@@ -1171,6 +1174,26 @@ void ScriptMgr::OnPlayerSpellCast(Player *player, Spell *spell, bool skipCheck)
     FOREACH_SCRIPT(PlayerScript)->OnSpellCast(player, spell, skipCheck);
 }
 
+void ScriptMgr::OnPlayerLogin(Player *player)
+{
+    FOREACH_SCRIPT(PlayerScript)->OnLogin(player);
+}
+
+void ScriptMgr::OnPlayerLogout(Player *player)
+{
+    FOREACH_SCRIPT(PlayerScript)->OnLogout(player);
+}
+
+void ScriptMgr::OnPlayerCreate(Player *player)
+{
+    FOREACH_SCRIPT(PlayerScript)->OnCreate(player);
+}
+
+void ScriptMgr::OnPlayerDelete(uint64 guid)
+{
+    FOREACH_SCRIPT(PlayerScript)->OnDelete(guid);
+}
+
 void ScriptMgr::OnGuildAddMember(Guild *guild, Player *player, uint32& plRank)
 {
     FOREACH_SCRIPT(GuildScript)->OnAddMember(guild, player, plRank);
@@ -1194,6 +1217,36 @@ void ScriptMgr::OnGuildInfoChanged(Guild *guild, std::string newGInfo)
 void ScriptMgr::OnGuildDisband(Guild *guild)
 {
     FOREACH_SCRIPT(GuildScript)->OnDisband(guild);
+}
+
+void ScriptMgr::OnGroupAddMember(Group* group, uint64 guid)
+{
+	ASSERT(group);
+    FOREACH_SCRIPT(GroupScript)->OnAddMember(group, guid);
+}
+
+void ScriptMgr::OnGroupInviteMember(Group* group, uint64 guid)
+{
+	ASSERT(group);
+    FOREACH_SCRIPT(GroupScript)->OnInviteMember(group, guid);
+}
+
+void ScriptMgr::OnGroupRemoveMember(Group* group, uint64 guid, RemoveMethod method)
+{
+	ASSERT(group);
+    FOREACH_SCRIPT(GroupScript)->OnRemoveMember(group, guid, method);
+}
+
+void ScriptMgr::OnGroupChangeLeader(Group* group, uint64 newLeaderGuid, uint64 oldLeaderGuid)
+{
+	ASSERT(group);
+    FOREACH_SCRIPT(GroupScript)->OnChangeLeader(group, newLeaderGuid, oldLeaderGuid);
+}
+
+void ScriptMgr::OnGroupDisband(Group* group)
+{
+	ASSERT(group);
+    FOREACH_SCRIPT(GroupScript)->OnDisband(group);
 }
 
 SpellScriptLoader::SpellScriptLoader(const char* name)
@@ -1343,6 +1396,12 @@ GuildScript::GuildScript(const char* name)
     ScriptMgr::ScriptRegistry<GuildScript>::AddScript(this);
 }
 
+GroupScript::GroupScript(const char* name)
+    : ScriptObject(name)
+{
+    ScriptMgr::ScriptRegistry<GroupScript>::AddScript(this);
+}
+
 // Instantiate static members of ScriptMgr::ScriptRegistry.
 template<class TScript> std::map<uint32, TScript*> ScriptMgr::ScriptRegistry<TScript>::ScriptPointerList;
 template<class TScript> uint32 ScriptMgr::ScriptRegistry<TScript>::_scriptIdCounter = 0;
@@ -1369,6 +1428,9 @@ template class ScriptMgr::ScriptRegistry<VehicleScript>;
 template class ScriptMgr::ScriptRegistry<DynamicObjectScript>;
 template class ScriptMgr::ScriptRegistry<TransportScript>;
 template class ScriptMgr::ScriptRegistry<AchievementCriteriaScript>;
+template class ScriptMgr::ScriptRegistry<PlayerScript>;
+template class ScriptMgr::ScriptRegistry<GuildScript>;
+template class ScriptMgr::ScriptRegistry<GroupScript>;
 
 // Undefine utility macros.
 #undef GET_SCRIPT_RET

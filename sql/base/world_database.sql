@@ -16106,6 +16106,31 @@ LOCK TABLES `pool_pool` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `pool_quest`
+--
+
+DROP TABLE IF EXISTS `pool_quest`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `pool_quest` (
+  `entry` int(10) unsigned NOT NULL DEFAULT '0',
+  `pool_entry` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `description` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`entry`),
+  KEY `idx_guid` (`entry`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `pool_quest`
+--
+
+LOCK TABLES `pool_quest` WRITE;
+/*!40000 ALTER TABLE `pool_quest` DISABLE KEYS */;
+/*!40000 ALTER TABLE `pool_quest` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `pool_template`
 --
 
@@ -26768,10 +26793,13 @@ INSERT INTO `spell_script_names` (`spell_id`,`ScriptName`) VALUES
 -- quest
 (  8913, 'spell_q55_sacred_cleansing'),
 ( 17271, 'spell_q5206_test_fetid_skull'),
+( 19512, 'spell_q6124_6129_apply_salve'),
 ( 34665, 'spell_q10255_administer_antidote'),
 ( 44936, 'spell_q11515_fel_siphon_dummy'),
 ( 45449, 'spell_q11587_arcane_prisoner_rescue'),
 ( 46023, 'spell_q11730_ultrasonic_screwdriver'),
+( 49587, 'spell_q12459_seeds_of_natures_wrath'),
+( 51840, 'spell_q12634_despawn_fruit_tosser'),
 ( 52308, 'spell_q12683_take_sputum_sample'),
 ( 55804, 'spell_q12937_relief_for_the_fallen'),
 -- item

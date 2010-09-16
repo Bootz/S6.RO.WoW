@@ -48,6 +48,7 @@
 #include "DisableMgr.h"
 #include "ScriptMgr.h"
 #include "SpellScript.h"
+#include "PoolMgr.h"
 
 ScriptMapMap sQuestEndScripts;
 ScriptMapMap sQuestStartScripts;
@@ -4407,193 +4408,6 @@ void ObjectMgr::LoadQuests()
     sLog.outString(">> Loaded %lu quests definitions", (unsigned long)mQuestTemplates.size());
 }
 
-void ObjectMgr::LoadQuestPool(bool reset, bool daily)
-{
-    // For reload/reset case
-    if (reset)
-    {
-        if (daily)
-            mDailyQuestPoolMap.clear();
-        else
-            mWeeklyQuestPoolMap.clear();
-    }
-    else
-    {
-        mDailyQuestPoolMap.clear();
-        mWeeklyQuestPoolMap.clear();
-    }
-
-    mDisabledQuestPoolMap.clear();
-
-    QueryResult result;
-
-    // Create a list with all disabled entries for the relations load...
-    // Must be splitted - else we get a problem to set the new random quests in ResetQuestPool()!
-    //                                   0      1
-    result = WorldDatabase.Query("SELECT entry, quest FROM pool_quest WHERE enabled='0'");
-
-    if (result)
-    {
-        do
-        {
-            Field *fields = result->Fetch();
-            QuestPool pool;
-
-            uint32 npcId    = fields[0].GetUInt32();    // NPC entry
-            pool.quest      = fields[1].GetUInt32();    // Quest entry
-
-            mDisabledQuestPoolMap[npcId].pool.push_back(pool);
-        }
-        while (result->NextRow());
-    }
-
-    // Create the important two lists... :-)
-    if (reset)
-        //                                    0      1      2      3
-        result = WorldDatabase.PQuery("SELECT entry, quest, daily, active FROM pool_quest WHERE enabled='1' AND daily='%u'", daily);
-    else
-        //                                   0      1      2      3
-        result = WorldDatabase.Query("SELECT entry, quest, daily, active FROM pool_quest WHERE enabled='1'");
-
-    if (result == NULL)
-    {
-        barGoLink bar(1);
-        bar.step();
-
-        sLog.outString();
-        sLog.outString( ">> Loaded 0 quest pool definitions" );
-        sLog.outErrorDb("`pool_quest` table is empty or has no enabled quests!");
-
-        return;
-    }
-
-    uint32 count = 0;
-
-    barGoLink bar(result->GetRowCount());
-
-    do
-    {
-        bar.step();
-
-        Field *fields = result->Fetch();
-        QuestPool pool;
-
-        uint32 npcId    = fields[0].GetUInt32();    // NPC entry
-        pool.quest      = fields[1].GetUInt32();    // Quest entry
-        pool.daily      = fields[2].GetBool();      // Whether it is daily (if not it's a weekly)
-        pool.active     = fields[3].GetBool();      // Is this quest active atm?
-
-        Quest const* quest = GetQuestTemplate(pool.quest);
-
-        if (!quest)
-        {
-            sLog.outErrorDb("The quest %u which is assigned to the npc %u within the `pool_quest` table doesn't exists! Skipped!", pool.quest, npcId);
-            continue;
-        }
-
-        if (!quest->IsDaily() && !quest->IsWeekly())
-        {
-            sLog.outErrorDb("The quest %u doesn't have daily or weekly questflags but has an entry for the npc %u within the `pool_quest` table! Skipped!", pool.quest, npcId);
-            continue;
-        }
-
-        if (pool.daily && !quest->IsDaily())
-        {
-            sLog.outErrorDb("The quest %u is marked as daily within the `pool_quest` table but the `quest_template` has not daily questflags for it! Skipped!", pool.quest);
-            continue;
-        }
-
-        if (!pool.daily && !quest->IsWeekly())
-        {
-            sLog.outErrorDb("The quest %u is marked as weekly within the `pool_quest` table but the `quest_template` has not weekly questflags for it! Skipped!", pool.quest);
-            continue;
-        }
-
-        if (pool.daily)
-        {
-            mDailyQuestPoolMap[npcId].pool.push_back(pool);
-            ++mDailyQuestPoolMap[npcId].qnum;
-        }
-        else
-        {
-            mWeeklyQuestPoolMap[npcId].pool.push_back(pool);
-            ++mWeeklyQuestPoolMap[npcId].qnum;
-        }
-        ++count;
-    }
-    while (result->NextRow());
-
-    sLog.outString();
-
-    if (reset)
-    {
-        if (daily)
-            sLog.outString( ">> Daily quest reset: %u dailies reloaded.", count);
-        else
-            sLog.outString( ">> Weekly quest reset: %u weeklies reloaded.", count);
-    }
-    else
-        sLog.outString( ">> Loaded %u quest pool definitions", count);
-
-    sLog.outString();
-
-    if (reset)
-    {
-        // Reload relations to show new random quest as available one
-        LoadCreatureQuestRelations();
-        // Must also be reloaded - else you can't complete a quest after a reset of the dailies/weeklies!
-        LoadCreatureInvolvedRelations();
-    }
-}
-
-void ObjectMgr::ResetQuestPool(bool daily)
-{
-    if (daily)
-    {
-        WorldDatabase.DirectExecute("UPDATE pool_quest SET active='0' WHERE daily='1'");
-
-        for (QuestPoolMap::const_iterator itr = mDailyQuestPoolMap.begin(); itr != mDailyQuestPoolMap.end(); ++itr)
-        {
-            uint32 rndQuest = urand(1, mDailyQuestPoolMap[itr->first].qnum);
-            uint32 num = 0;
-
-            for (QuestPoolVector::const_iterator itr2 = mDailyQuestPoolMap[itr->first].pool.begin(); itr2 != mDailyQuestPoolMap[itr->first].pool.end(); ++itr2)
-            {
-                ++num;
-
-                if (num == rndQuest)
-                {
-                    WorldDatabase.DirectPExecute("UPDATE pool_quest SET active='1' WHERE entry='%u' AND quest='%u'", itr->first, (*itr2).quest);
-                    break;
-                }
-            }
-        }
-    }
-    // Weekly
-    else
-    {
-        WorldDatabase.DirectExecute("UPDATE pool_quest SET active='0' WHERE daily='0'");
-
-        for (QuestPoolMap::const_iterator itr = mWeeklyQuestPoolMap.begin(); itr != mWeeklyQuestPoolMap.end(); ++itr)
-        {
-            uint32 rndQuest = urand(1, mWeeklyQuestPoolMap[itr->first].qnum);
-            uint32 num = 0;
-
-            for (QuestPoolVector::const_iterator itr2 = mWeeklyQuestPoolMap[itr->first].pool.begin(); itr2 != mWeeklyQuestPoolMap[itr->first].pool.end(); ++itr2)
-            {
-                ++num;
-
-                if (num == rndQuest)
-                {
-                    WorldDatabase.DirectPExecute("UPDATE pool_quest SET active='1' WHERE entry='%u' AND quest='%u'", itr->first, (*itr2).quest);
-                    break;
-                }
-            }
-        }
-    }
-    LoadQuestPool(true, daily);
-}
-
 void ObjectMgr::LoadQuestLocales()
 {
     mQuestLocaleMap.clear();                                // need for reload case
@@ -4919,7 +4733,6 @@ void ObjectMgr::LoadScripts(ScriptsType type)
                 }
                 break;
             }
-
             case SCRIPT_COMMAND_CAST_SPELL:
             {
                 if (!sSpellStore.LookupEntry(tmp.datalong))
@@ -5070,6 +4883,7 @@ void ObjectMgr::LoadEventScripts()
             }
         }
     }
+
     for(size_t path_idx = 0; path_idx < sTaxiPathNodesByPath.size(); ++path_idx)
     {
         for(size_t node_idx = 0; node_idx < sTaxiPathNodesByPath[path_idx].size(); ++node_idx)
@@ -7518,13 +7332,13 @@ void ObjectMgr::DeleteCorpseCellData(uint32 mapid, uint32 cellid, uint32 player_
     cell_guids.corpses.erase(player_guid);
 }
 
-void ObjectMgr::LoadQuestRelationsHelper(QuestRelations& map,char const* table)
+void ObjectMgr::LoadQuestRelationsHelper(QuestRelations& map, std::string table, bool starter, bool go)
 {
     map.clear();                                            // need for reload case
 
     uint32 count = 0;
 
-    QueryResult result = WorldDatabase.PQuery("SELECT id,quest FROM %s",table);
+    QueryResult result = WorldDatabase.PQuery("SELECT id, quest, pool_entry FROM %s qr LEFT JOIN pool_quest pq ON qr.quest = pq.entry", table.c_str());
 
     if (!result)
     {
@@ -7533,85 +7347,45 @@ void ObjectMgr::LoadQuestRelationsHelper(QuestRelations& map,char const* table)
         bar.step();
 
         sLog.outString();
-        sLog.outErrorDb(">> Loaded 0 quest relations from %s. DB table `%s` is empty.",table,table);
+        sLog.outErrorDb(">> Loaded 0 quest relations from %s, table is empty.", table.c_str());
         return;
     }
 
     barGoLink bar(result->GetRowCount());
 
+    PooledQuestRelation* poolRelationMap = go ? &sPoolMgr.mQuestGORelation : &sPoolMgr.mQuestCreatureRelation;
+    if (starter)
+        poolRelationMap->clear();
+
     do
     {
-        Field *fields = result->Fetch();
         bar.step();
 
-        uint32 id    = fields[0].GetUInt32();
-        uint32 quest = fields[1].GetUInt32();
+        uint32 id     = result->Fetch()[0].GetUInt32();
+        uint32 quest  = result->Fetch()[1].GetUInt32();
+        uint32 poolId = result->Fetch()[2].GetUInt32();
 
         if (mQuestTemplates.find(quest) == mQuestTemplates.end())
         {
-            sLog.outErrorDb("Table `%s: Quest %u listed for entry %u does not exist.",table,quest,id);
+            sLog.outErrorDb("Table `%s: Quest %u listed for entry %u does not exist.", table.c_str(), quest, id);
             continue;
         }
 
-        // Check the daily/weekly pool for the quest
-        // If it's not active or disabled we _must not add_ it to the relations!
-        Quest const* pQuest = GetQuestTemplate(quest);
-        QuestPoolMap qpm;
-
-        if (pQuest && (pQuest->IsDaily() || pQuest->IsWeekly()))
-        {
-            uint32 qId = pQuest->GetQuestId();
-
-            if (pQuest->IsDaily())
-                qpm = mDailyQuestPoolMap;
-            else
-                qpm = mWeeklyQuestPoolMap;
-
-            bool canadd = true;
-
-            // Do not show disabled quests!
-            for (QuestPoolMap::const_iterator itr = mDisabledQuestPoolMap.begin(); itr != mDisabledQuestPoolMap.end(); ++itr)
-            {
-                for (QuestPoolVector::const_iterator itr2 = mDisabledQuestPoolMap[itr->first].pool.begin(); itr2 != mDisabledQuestPoolMap[itr->first].pool.end(); ++itr2)
-                {
-                    if ((*itr2).quest == qId)
-                    {
-                        canadd = false;
-                        break;
-                    }
-                }
-                if (!canadd)
-                    break;
-            }
-
-            // Do not show inactive quests!
-            for (QuestPoolMap::const_iterator itr = qpm.begin(); itr != qpm.end(); ++itr)
-            {
-                for (QuestPoolVector::const_iterator itr2 = qpm[itr->first].pool.begin(); itr2 != qpm[itr->first].pool.end(); ++itr2)
-                {
-                    if ((*itr2).quest == qId && !(*itr2).active)
-                    {
-                        canadd = false;
-                        break;
-                    }
-                }
-                if (!canadd)
-                    break;
-            }
-            if (!canadd)
-                continue;
-        }
+        if (!poolId || !starter)
         map.insert(QuestRelations::value_type(id,quest));
+        else if (starter)
+            poolRelationMap->insert(PooledQuestRelation::value_type(quest, id));
+
         ++count;
     } while (result->NextRow());
 
     sLog.outString();
-    sLog.outString(">> Loaded %u quest relations from %s", count,table);
+    sLog.outString(">> Loaded %u quest relations from %s", count, table.c_str());
 }
 
 void ObjectMgr::LoadGameobjectQuestRelations()
 {
-    LoadQuestRelationsHelper(mGOQuestRelations,"gameobject_questrelation");
+    LoadQuestRelationsHelper(mGOQuestRelations, "gameobject_questrelation", true, true);
 
     for (QuestRelations::iterator itr = mGOQuestRelations.begin(); itr != mGOQuestRelations.end(); ++itr)
     {
@@ -7625,7 +7399,7 @@ void ObjectMgr::LoadGameobjectQuestRelations()
 
 void ObjectMgr::LoadGameobjectInvolvedRelations()
 {
-    LoadQuestRelationsHelper(mGOQuestInvolvedRelations,"gameobject_involvedrelation");
+    LoadQuestRelationsHelper(mGOQuestInvolvedRelations, "gameobject_involvedrelation", false, true);
 
     for (QuestRelations::iterator itr = mGOQuestInvolvedRelations.begin(); itr != mGOQuestInvolvedRelations.end(); ++itr)
     {
@@ -7639,7 +7413,7 @@ void ObjectMgr::LoadGameobjectInvolvedRelations()
 
 void ObjectMgr::LoadCreatureQuestRelations()
 {
-    LoadQuestRelationsHelper(mCreatureQuestRelations,"creature_questrelation");
+    LoadQuestRelationsHelper(mCreatureQuestRelations, "creature_questrelation", true, false);
 
     for (QuestRelations::iterator itr = mCreatureQuestRelations.begin(); itr != mCreatureQuestRelations.end(); ++itr)
     {
@@ -7653,7 +7427,7 @@ void ObjectMgr::LoadCreatureQuestRelations()
 
 void ObjectMgr::LoadCreatureInvolvedRelations()
 {
-    LoadQuestRelationsHelper(mCreatureQuestInvolvedRelations,"creature_involvedrelation");
+    LoadQuestRelationsHelper(mCreatureQuestInvolvedRelations, "creature_involvedrelation", false, false);
 
     for (QuestRelations::iterator itr = mCreatureQuestInvolvedRelations.begin(); itr != mCreatureQuestInvolvedRelations.end(); ++itr)
     {
@@ -8026,12 +7800,10 @@ bool ObjectMgr::LoadTrinityStrings(char const* table, int32 min_value, int32 max
         data.Content.resize(1);
         ++count;
 
-        // 0 -> default, idx in to idx+1
-        data.Content[0] = fields[1].GetCppString();
-
+        data.Default = fields[1].GetCppString();
         for (uint8 i = 1; i < MAX_LOCALE; ++i)
         {
-            std::string str = fields[i+1].GetCppString();
+            std::string str = fields[i + 1].GetCppString();
             AddLocaleString(str, LocaleConstant(i), data.Content);
         }
     } while (result->NextRow());
@@ -8047,15 +7819,11 @@ bool ObjectMgr::LoadTrinityStrings(char const* table, int32 min_value, int32 max
 
 const char *ObjectMgr::GetTrinityString(int32 entry, int locale_idx) const
 {
-    // locale_idx == -1 -> default, locale_idx >= 0 in to idx+1
-    // Content[0] always exist if exist TrinityStringLocale
     if (TrinityStringLocale const *msl = GetTrinityStringLocale(entry))
     {
-        int idx = locale_idx + 1;
-        if (int(msl->Content.size()) > idx && !msl->Content[idx].empty())
-            return msl->Content[idx].c_str();
-        else
-            return msl->Content[0].c_str();
+        std::string s = msl->Default;
+        GetLocaleString(msl->Content, locale_idx, s);
+        return s.c_str();
     }
 
     if (entry > 0)

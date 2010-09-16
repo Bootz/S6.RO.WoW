@@ -1413,7 +1413,7 @@ class Unit : public WorldObject
         bool isFrozen() const;
 
         bool isTargetableForAttack() const;
-        bool isAttackableByAOE() const;
+        bool isAttackableByAOE(bool requireDeadTarget = false) const;
         bool canAttack(Unit const* target, bool force = true) const;
         virtual bool IsInWater() const;
         virtual bool IsUnderWater() const;
@@ -1641,6 +1641,10 @@ class Unit : public WorldObject
         bool HasAuraTypeWithAffectMask(AuraType auratype, SpellEntry const * affectedSpell) const;
         bool HasAuraTypeWithValue(AuraType auratype, int32 value) const;
         bool HasNegativeAuraWithInterruptFlag(uint32 flag, uint64 guid = 0);
+        bool HasCrowdControl() {
+            return (HasAuraType(SPELL_AURA_MOD_CONFUSE) || HasAuraType(SPELL_AURA_MOD_FEAR) || HasAuraType(SPELL_AURA_MOD_STUN) ||
+                    HasAuraType(SPELL_AURA_MOD_ROOT) || HasAuraType(SPELL_AURA_TRANSFORM));
+        }
 
         AuraEffect * IsScriptOverriden(SpellEntry const * spell, int32 script) const;
         uint32 GetDiseasesByCaster(uint64 casterGUID, bool remove = false);
