@@ -6345,7 +6345,7 @@ UPDATE `creature_template` SET `ScriptName` = 'npc_onyx_flamecaller' WHERE `entr
 UPDATE `creature_template` SET `ScriptName` = 'npc_meteor_strike' WHERE `entry` = '40055';
 UPDATE `creature_template` SET `ScriptName` = 'npc_combustion' WHERE `entry` = '40001';
 UPDATE `creature_template` SET `ScriptName` = 'npc_consumption' WHERE `entry` = '40135';
-UPDATE `creature_template` SET `ScriptName` = 'npc_meteor_flame' WHERE `entry` = '40044';
+UPDATE `creature_template` SET `ScriptName` = 'npc_summon_halion' WHERE `entry` = '40044';
 REPLACE `spell_script_names` SET `ScriptName` = 'spell_halion_portal', `spell_id`=74812;
 
 -- Anuncios al comienzo del evento.
