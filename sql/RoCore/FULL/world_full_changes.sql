@@ -6338,7 +6338,7 @@ UPDATE `creature_template` SET `ScriptName` = 'boss_zarithrian' WHERE `entry` = 
 UPDATE `creature_template` SET `ScriptName` = 'boss_ragefire' WHERE `entry` = '39747';
 UPDATE `creature_template` SET `ScriptName` = 'boss_halion' WHERE `entry`= '39863';
 UPDATE `creature_template` SET `ScriptName` = 'boss_twilight_halion' WHERE `entry` = '40142';
-UPDATE `creature_template` SET `ScriptName` = 'npc_meteor_strike, `flags_extra`=128' WHERE `entry` = '40041';
+UPDATE `creature_template` SET `ScriptName` = 'npc_meteor_strike', `flags_extra`='128' WHERE `entry` = '40041';
 UPDATE `creature_template` SET `ScriptName` = 'npc_meteor_flame', `flags_extra`=128 WHERE `entry` = '40042';
 UPDATE `creature_template` SET `ScriptName` = 'npc_spell_meteor_strike', `flags_extra`=128 WHERE `entry` = '40029';
 UPDATE `creature_template` SET `ScriptName` = 'npc_onyx_flamecaller' WHERE `entry` = '39814';
