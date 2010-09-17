@@ -5573,7 +5573,7 @@ bool Unit::HandleDummyAuraProc(Unit *pVictim, uint32 damage, AuraEffect* trigger
                 case 71903: 
                 { 
                     Aura *aur = GetAura(71905, 0); 
-                    if (aur && aur->GetStackAmount() + 1 >= aur->GetSpellProto()->StackAmount)
+                    if (aur && uint32(aur->GetStackAmount() + 1) >= aur->GetSpellProto()->StackAmount)
                     { 
                         RemoveAurasDueToSpell(71905); 
 						RemoveAurasDueToSpell(72521);
