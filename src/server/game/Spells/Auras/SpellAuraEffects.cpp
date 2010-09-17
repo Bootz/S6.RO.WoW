@@ -6051,6 +6051,19 @@ void AuraEffect::HandleAuraDummy(AuraApplication const * aurApp, uint8 mode, boo
                     if (GetId() == 61777)
                         target->CastSpell(target,m_spellProto->EffectTriggerSpell[m_effIndex],true);
                     break;
+                case SPELLFAMILY_ROGUE:
+                {
+                    switch(GetId())
+                    {
+                        // Tricks of the Trade
+                        case 59628:
+                            caster->SetReducedThreatPercent(0, 0);
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                }
                 default:
                     break;
             }
