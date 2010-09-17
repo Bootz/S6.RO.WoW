@@ -367,18 +367,18 @@ Map::EnsureGridLoadedAtEnter(const Cell &cell, Player *player)
     NGridType *grid = getNGrid(cell.GridX(), cell.GridY());
     ASSERT(grid != NULL);
 
-    if (player)
-    {
-        sLog.outStaticDebug("Player %s enter cell[%u,%u] triggers loading of grid[%u,%u] on map %u", player->GetName(), cell.CellX(), cell.CellY(), cell.GridX(), cell.GridY(), GetId());
-    }
-    else
-    {
-        sLog.outStaticDebug("Active object nearby triggers loading of grid [%u,%u] on map %u", cell.GridX(), cell.GridY(), GetId());
-    }
-
     // refresh grid state & timer
     if (grid->GetGridState() != GRID_STATE_ACTIVE)
     {
+        if (player)
+        {
+            sLog.outStaticDebug("Player %s enter cell[%u,%u] triggers loading of grid[%u,%u] on map %u", player->GetName(), cell.CellX(), cell.CellY(), cell.GridX(), cell.GridY(), GetId());
+        }
+        else
+        {
+            sLog.outStaticDebug("Active object nearby triggers loading of grid [%u,%u] on map %u", cell.GridX(), cell.GridY(), GetId());
+        }
+
         ResetGridExpiry(*grid, 0.1f);
         grid->SetGridState(GRID_STATE_ACTIVE);
     }
@@ -3040,7 +3040,7 @@ void Map::ScriptsProcess()
                     if (Player *pSource = _GetScriptPlayerSourceOrTarget(source, target, step.script))
                     {
                         uint64 targetGUID = target ? target->GetGUID() : 0;
-                        int loc_idx = pSource->GetSession()->GetSessionDbLocaleIndex();
+                        LocaleConstant loc_idx = pSource->GetSession()->GetSessionDbLocaleIndex();
                         const std::string text(sObjectMgr.GetTrinityString(step.script->dataint, loc_idx));
 
                         switch (step.script->datalong)

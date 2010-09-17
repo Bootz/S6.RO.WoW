@@ -287,7 +287,7 @@ class WorldSession
 
         // Locales
         LocaleConstant GetSessionDbcLocale() const { return m_sessionDbcLocale; }
-        int GetSessionDbLocaleIndex() const { return m_sessionDbLocaleIndex; }
+        LocaleConstant GetSessionDbLocaleIndex() const { return m_sessionDbLocaleIndex; }
         const char *GetTrinityString(int32 entry) const;
 
         uint32 GetLatency() const { return m_latency; }
@@ -854,7 +854,7 @@ class WorldSession
         bool m_playerRecentlyLogout;
         bool m_playerSave;
         LocaleConstant m_sessionDbcLocale;
-        int m_sessionDbLocaleIndex;
+        LocaleConstant m_sessionDbLocaleIndex;
         uint32 m_latency;
         AccountData m_accountData[NUM_ACCOUNT_DATA_TYPES];
         uint32 m_Tutorials[8];
