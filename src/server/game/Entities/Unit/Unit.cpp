@@ -7522,11 +7522,14 @@ bool Unit::HandleDummyAuraProc(Unit *pVictim, uint32 damage, AuraEffect* trigger
                 case 58877:
                 {
                     // Cast on owner
-                    target = GetOwner();
-                    if (!target)
+                    Unit *targetOwner = this->GetOwner();
+                    if (!targetOwner)
                         return false;
-                    basepoints0 = triggerAmount * damage / 100;
+                    basepoints0 = uint32(damage * 1.50);
+                    target = this;
                     triggered_spell_id = 58879;
+                    //cast on owner aswell
+                    this->CastCustomSpell(targetOwner,58879,&basepoints0,0,0,true);
                     break;
                 }
                 // Shaman T8 Elemental 4P Bonus
