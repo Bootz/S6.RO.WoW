@@ -738,7 +738,30 @@ int32 AuraEffect::CalculateAmount(Unit * caster)
         DoneActualBenefit *= caster->CalculateLevelPenalty(GetSpellProto());
         amount += (int32)DoneActualBenefit;
     }
-
+    if (GetAuraType() == SPELL_AURA_SCHOOL_ABSORB)
+        switch (m_spellProto->SpellFamilyName)
+        {
+        case SPELLFAMILY_PRIEST:
+            // Power Word: Shield
+            if (GetSpellProto()->SpellFamilyFlags[0] & 0x1 && GetSpellProto()->SpellFamilyFlags[2] & 0x400)
+            {
+                auto &owner = *m_base->GetUnitOwner();
+                if (owner.GetMap()->IsBattlegroundOrArena()
+                        || owner.GetZoneId() == 4197 /* Wintergrasp */)
+                    amount = (amount * (100 - 10) + 50) / 100;
+            }
+            break;
+        case SPELLFAMILY_PALADIN:
+            // Sacred Shield
+            if (m_spellProto->SpellFamilyFlags[1] & 0x80000)
+            {
+                auto &owner = *m_base->GetUnitOwner();
+                if (owner.GetMap()->IsBattlegroundOrArena()
+                        || owner.GetZoneId() == 4197 /* Wintergrasp */)
+                    amount = (amount * (100 - 10) + 50) / 100;
+            }
+            break;
+        }
     GetBase()->CallScriptEffectCalcAmountHandlers(const_cast<AuraEffect const *>(this), amount, m_canBeRecalculated);
     amount *= GetBase()->GetStackAmount();
     return amount;
