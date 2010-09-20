@@ -6097,23 +6097,24 @@ bool Unit::HandleDummyAuraProc(Unit *pVictim, uint32 damage, AuraEffect* trigger
             // Hot Streak
             if (dummySpell->SpellIconID == 2999)
             {
-                if (effIndex != 0)
+                if (effIndex != EFFECT_0)
                     return false;
-                AuraEffect *counter = triggeredByAura->GetBase()->GetEffect(1);
-                if (!counter)
-                    return true;
+
+                AuraEffect * aurEff = triggeredByAura->GetBase()->GetEffect(EFFECT_1);
+                if (!aurEff)
+                    return false;
 
                 // Count spell criticals in a row in second aura
                 if (procEx & PROC_EX_CRITICAL_HIT)
                 {
-                    counter->SetAmount(counter->GetAmount()*2);
-                    if (counter->GetAmount() < 100) // not enough
+                    aurEff->SetAmount(aurEff->GetAmount() * 2);
+                    if (aurEff->GetAmount() < 100) // not enough
                         return true;
-                    // Crititcal counted -> roll chance
-                    if (roll_chance_i(triggerAmount))
+                    if ((triggerAmount >= 100) || roll_chance_i(triggerAmount))
                        CastSpell(this, 48108, true, castItem, triggeredByAura);
                 }
-                counter->SetAmount(25);
+                aurEff->SetAmount(SpellMgr::CalculateSpellEffectAmount(dummySpell, 1));
+
                 return true;
             }
             // Burnout

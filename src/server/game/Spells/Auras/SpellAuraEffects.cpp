@@ -5989,7 +5989,8 @@ void AuraEffect::HandleAuraDummy(AuraApplication const * aurApp, uint8 mode, boo
                     if (m_spellProto->SpellFamilyFlags[1] & 0x20000)
                     {
                         AuraRemoveMode mode = aurApp->GetRemoveMode();
-                        if (caster && (mode == AURA_REMOVE_BY_ENEMY_SPELL || mode == AURA_REMOVE_BY_EXPIRE))
+                        if ((mode == AURA_REMOVE_BY_ENEMY_SPELL) ||
+                            (mode == AURA_REMOVE_BY_EXPIRE))
                             caster->CastSpell(target, GetAmount(), true);
                     }
                     break;
