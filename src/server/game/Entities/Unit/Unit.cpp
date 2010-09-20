@@ -631,6 +631,7 @@ uint32 Unit::DealDamage(Unit *pVictim, uint32 damage, CleanDamage const* cleanDa
             SpellEntry const * spell = (*i)->GetSpellProto();
 
             uint32 share = uint32(damage * (float((*i)->GetAmount()) / 100.0f));
+
             // TODO: check packets if damage is done by pVictim, or by attacker of pVicitm
             DealDamageMods(shareDamageTarget, share, NULL);
             DealDamage(shareDamageTarget, share, NULL, NODAMAGE, GetSpellSchoolMask(spell), spell, false);
@@ -2974,7 +2975,24 @@ SpellMissInfo Unit::MagicSpellHitResult(Unit *pVictim, SpellEntry const *spell)
     tmp += resist_chance;
 
  // Chance resist debuff
-    tmp -= pVictim->GetTotalAuraModifierByMiscValue(SPELL_AURA_MOD_DEBUFF_RESISTANCE, int32(spell->Dispel));
+    if (!IsPositiveSpell(spell->Id))
+    {
+        bool bNegativeAura = false;
+        for (uint8 i = 0; i < 3; ++i)
+        {
+            if (spell->EffectApplyAuraName[i] != 0)
+            {
+                bNegativeAura = true;
+                break;
+            }
+        }
+
+        if (bNegativeAura)
+        {
+            tmp += pVictim->GetMaxPositiveAuraModifierByMiscValue(SPELL_AURA_MOD_DEBUFF_RESISTANCE, int32(spell->Dispel)) * 100;
+            tmp += pVictim->GetMaxNegativeAuraModifierByMiscValue(SPELL_AURA_MOD_DEBUFF_RESISTANCE, int32(spell->Dispel)) * 100;
+        }
+    }
     // Chaos Bolt cannot be Resisted/Deflected
     if (spell->SpellFamilyName == 5 && spell->SpellFamilyFlags[1] & 0x20000)
         return SPELL_MISS_NONE;
