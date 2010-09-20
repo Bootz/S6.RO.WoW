@@ -1757,6 +1757,25 @@ void Spell::EffectDummy(SpellEffIndex effIndex)
                 spell_id = CalculateDamage(0, NULL);
                 break;
             }
+
+        case SPELLFAMILY_MAGE:
+        {
+            switch (m_spellInfo->Id)
+            {
+                case 44450: // Burnout
+                {
+                    if (!unitTarget)
+                        return;
+
+                    unitTarget->ModifyPower(POWER_MANA, -damage);
+                    return;
+                }
+                default:
+                    break;
+            }
+            break;
+        }
+        default:
             break;
     }
 
