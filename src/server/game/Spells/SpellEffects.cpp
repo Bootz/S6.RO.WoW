@@ -2111,6 +2111,7 @@ void Spell::EffectJump(SpellEffIndex effIndex)
     if (m_targets.getUnitTarget())
     {
         m_targets.getUnitTarget()->GetContactPoint(m_caster,x,y,z,CONTACT_DISTANCE);
+		m_targets.getUnitTarget()->InterruptNonMeleeSpells(true);
         o = m_caster->GetOrientation();
     }
     else if (m_targets.getGOTarget())
