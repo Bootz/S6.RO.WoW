@@ -7070,7 +7070,6 @@ bool Unit::HandleDummyAuraProc(Unit *pVictim, uint32 damage, AuraEffect* trigger
                     {
                         basepoints0 = int32(float(damage)/12.0f);
                         CastCustomSpell(this,66922,&basepoints0,NULL,NULL,true,0,triggeredByAura, pVictim->GetGUID());
-                        pVictim->ToPlayer()->AddSpellCooldown(66922,0,time(NULL)+6);
                         return true;
                     }
                     else
@@ -9030,6 +9029,15 @@ bool Unit::HandleProcTriggerSpell(Unit *pVictim, uint32 damage, AuraEffect* trig
         case 72176:
             basepoints0 = 3;
             break;
+        case 44543: //Fingers of Frost (Rank 1)
+        case 44545: //Fingers of Frost (Rank 2)
+        //Frostbite
+        if (AuraEffect * aurEff = GetAuraEffect(SPELL_AURA_ADD_TARGET_TRIGGER, SPELLFAMILY_MAGE, 0, 0x200, 0, GetGUID()))
+        {
+            int chance = triggerAmount - aurEff->GetAmount();
+            if ((chance <= 0) || !roll_chance_i(chance))
+            return false;
+        }            
     }
 
       // Glyph of Death Grip
