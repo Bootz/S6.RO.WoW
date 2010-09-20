@@ -6208,18 +6208,23 @@ UPDATE `creature_template` SET `faction_A` = 14, `faction_H` = 14, `unit_flags` 
 -- Kel Thuzad immunity http://www.wowhead.com/npc=15990
 UPDATE `creature_template` SET `mechanic_immune_mask` = 617299839 WHERE `entry` IN (15990, 30061);
 
--- Mage: T7 P2 Bonus Mage
+-- rc 934 Mage: T7 P2 Bonus Mage
 -- Improved Mana Gems 
 DELETE FROM `spell_proc_event` WHERE `entry` IN (37447, 61062);
 INSERT INTO `spell_proc_event` (`entry`,`SchoolMask`,`SpellFamilyName`,`SpellFamilyMask0`,`SpellFamilyMask1`,`SpellFamilyMask2`,`procFlags`,`procEx`,`ppmRate`,`CustomChance`,`Cooldown`) VALUES 
 (37447, 0, 3, 0, 0x00000100, 0, 0x04000, 0, 0, 0, 0), -- Serpent-Coil Braid
 (61062, 0, 3, 0, 0x00000100, 0, 0x04000, 0, 0, 0, 0); -- 2/5 Frostfire Garb
 
--- Rogue: Deadly Poison
+-- rc 937 Rogue: Deadly Poison
 REPLACE INTO `spell_bonus_data` (`entry`, `direct_bonus`, `dot_bonus`, `ap_bonus`, `ap_dot_bonus`, `comments`) VALUES
 ('2818','0','0','0','0.03','Rogue - Deadly Poison Rank 1($AP*0.12 / number of ticks)');
 REPLACE INTO `spell_script_names` (`spell_id`, `ScriptName`) VALUES 
 ('-2818','spell_rog_deadly_poison');
+
+
+-- rc 938 Priest: Mana Burn
+REPLACE INTO `spell_script_names` (`spell_id`, `ScriptName`) VALUES
+('-8129','spell_pri_mana_burn');
 
 -- ----------------- --
 -- Utgarde Pinnacle. --
