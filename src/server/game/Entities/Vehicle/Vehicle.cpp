@@ -248,6 +248,19 @@ void Vehicle::InstallAccessory(uint32 entry, int8 seatId, bool minion)
         passenger->ExitVehicle(); // this should not happen
     }
 
+    if(entry == 35451)
+    {
+        if (Creature *accessory = me->SummonCreature(entry, *me, TEMPSUMMON_MANUAL_DESPAWN, 0))
+        {
+            if (minion)
+                accessory->AddUnitTypeMask(UNIT_MASK_ACCESSORY);
+            accessory->EnterVehicle(this, seatId);
+            // This is not good, we have to send update twice
+            accessory->SendMovementFlagUpdate();
+        }
+    }
+    else
+    {
     //TODO: accessory should be minion
     if (Creature *accessory = me->SummonCreature(entry, *me, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 30000))
     {
@@ -260,6 +273,7 @@ void Vehicle::InstallAccessory(uint32 entry, int8 seatId, bool minion)
         if (GetBase()->GetTypeId() == TYPEID_UNIT)
             sScriptMgr.OnInstallAccessory(this, accessory);
     }
+}
 }
 
 bool Vehicle::AddPassenger(Unit *unit, int8 seatId)
