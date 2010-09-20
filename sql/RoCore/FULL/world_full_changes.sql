@@ -6190,6 +6190,15 @@ REPLACE INTO `spell_linked_spell` VALUES (48707, -64044, 2, 'Anti-Magic Shell im
 DELETE FROM `spell_linked_spell` WHERE `spell_trigger`= 642;
 REPLACE INTO `spell_linked_spell` VALUES (642, -33786, 2, 'Divine Shield immune to Cyclone');
 
+-- Paladin: Righteous Vengeance should proc with Divine Storm, Judgements and Crusader Strike criticals
+UPDATE `spell_proc_event` SET `SpellFamilyMask1`=163840 WHERE `entry`=53380;
+UPDATE `spell_proc_event` SET `SpellFamilyMask1`=163840 WHERE `entry`=53381;
+UPDATE `spell_proc_event` SET `SpellFamilyMask1`=163840 WHERE `entry`=53382;
+
+-- Paladin: Seal of Righteousness
+REPLACE INTO `spell_bonus_data` (`entry`, `direct_bonus`, `dot_bonus`, `ap_bonus`, `ap_dot_bonus`, `comments`) VALUES
+('25742','0','0','0','0','Paladin - Seal of Righteousness Dummy Proc'); 
+
 -- Fingers of Frost
 DELETE FROM `spell_linked_spell` WHERE `spell_trigger` IN ('44544', '-44544');
 REPLACE INTO `spell_linked_spell` (`spell_trigger`, `spell_effect`, `type`, `comment`) VALUES
