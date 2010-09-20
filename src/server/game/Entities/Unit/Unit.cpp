@@ -7070,6 +7070,7 @@ bool Unit::HandleDummyAuraProc(Unit *pVictim, uint32 damage, AuraEffect* trigger
                     {
                         basepoints0 = int32(float(damage)/12.0f);
                         CastCustomSpell(this,66922,&basepoints0,NULL,NULL,true,0,triggeredByAura, pVictim->GetGUID());
+                        pVictim->ToPlayer()->AddSpellCooldown(66922,0,time(NULL)+6);
                         return true;
                     }
                     else
