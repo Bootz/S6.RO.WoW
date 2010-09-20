@@ -3848,9 +3848,15 @@ void SpellMgr::LoadSpellCustomAttr()
             spellInfo->Targets |= TARGET_FLAG_UNIT_CASTER;
             count++;
             break;
+        case 16834: // Shapeshifter
+        case 16835:
+			spellInfo->DurationIndex = 21;
+			count++;
+			break;
         case 51735: // Ebon Plague
         case 51734:
         case 51726:
+            spellInfo->AttributesEx3 |= SPELL_ATTR_EX3_STACK_FOR_DIFF_CASTERS;
             spellInfo->SpellFamilyFlags[2] = 0x10;
             count++;
             break;
