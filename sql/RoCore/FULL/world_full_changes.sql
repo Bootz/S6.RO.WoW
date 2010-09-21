@@ -6224,12 +6224,6 @@ INSERT INTO `spell_proc_event` (`entry`,`SchoolMask`,`SpellFamilyName`,`SpellFam
 (37447, 0, 3, 0, 0x00000100, 0, 0x04000, 0, 0, 0, 0), -- Serpent-Coil Braid
 (61062, 0, 3, 0, 0x00000100, 0, 0x04000, 0, 0, 0, 0); -- 2/5 Frostfire Garb
 
--- rc 937 Rogue: Deadly Poison
-REPLACE INTO `spell_bonus_data` (`entry`, `direct_bonus`, `dot_bonus`, `ap_bonus`, `ap_dot_bonus`, `comments`) VALUES
-('2818','0','0','0','0.03','Rogue - Deadly Poison Rank 1($AP*0.12 / number of ticks)');
-REPLACE INTO `spell_script_names` (`spell_id`, `ScriptName`) VALUES 
-('-2818','spell_rog_deadly_poison');
-
 -- rc 938 Priest: Mana Burn
 REPLACE INTO `spell_script_names` (`spell_id`, `ScriptName`) VALUES
 ('-8129','spell_pri_mana_burn');
@@ -6264,6 +6258,12 @@ REPLACE INTO `spell_linked_spell` (`spell_trigger`, `spell_effect`, `type`, `com
 REPLACE INTO `spell_proc_event` (`entry`, `SchoolMask`, `SpellFamilyName`, `SpellFamilyMask0`, `SpellFamilyMask1`, `SpellFamilyMask2`, `procFlags`, `procEx`, `ppmRate`, `CustomChance`, `Cooldown`) VALUES
 ('44543','0','3','1049120','4096','0','65536','0','0','0','0'),
 ('44545','0','3','1049120','4096','0','65536','0','0','0','0');
+
+-- rc 952 Rogue: Deadly Poison
+REPLACE INTO `spell_bonus_data` (`entry`, `direct_bonus`, `dot_bonus`, `ap_bonus`, `ap_dot_bonus`, `comments`) VALUES
+('2818','0','0','0','0.03','Rogue - Deadly Poison Rank 1($AP*0.12 / number of ticks)');
+REPLACE INTO `spell_script_names` (`spell_id`, `ScriptName`) VALUES 
+('-2818','spell_rog_deadly_poison');
 
 -- ----------------- --
 -- Utgarde Pinnacle. --
