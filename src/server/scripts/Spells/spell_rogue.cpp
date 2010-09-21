@@ -22,6 +22,7 @@
  */
 
 #include "ScriptPCH.h"
+#include "SpellAuraEffects.h"
 
 enum RogueSpells
 {
@@ -196,10 +197,108 @@ class spell_rog_shiv : public SpellScriptLoader
         }
 };
 
+class spell_rog_deadly_poison : public SpellScriptLoader
+{
+    public:
+        spell_rog_deadly_poison() : SpellScriptLoader("spell_rog_deadly_poison") { }
+
+        class spell_rog_deadly_poison_SpellScript : public SpellScript
+        {
+        private:
+            uint8 stackAmount;
+        public:
+            spell_rog_deadly_poison_SpellScript() : stackAmount(0) { }
+
+            bool Validate(SpellEntry const * /*spellEntry*/)
+            {
+                return true;
+            }
+
+            void HandleBeforeHit()
+            {
+                Player * player = GetCaster()->ToPlayer();
+                Unit * target = GetHitUnit();
+                if (!player || !target)
+                    return;
+
+                if (AuraEffect * aurEff =
+                    target->GetAuraEffect(SPELL_AURA_PERIODIC_DAMAGE, SPELLFAMILY_ROGUE, 0x00010000, 0x00080000, 0, player->GetGUID()))
+                    stackAmount = aurEff->GetBase()->GetStackAmount();
+            }
+
+            void HandleAfterHit()
+            {
+                if (stackAmount < 5)
+                    return;
+
+                Player * player = GetCaster()->ToPlayer();
+                Unit * target = GetHitUnit();
+                Item * castItem = GetCastItem();
+                if (!player || !target || !castItem)
+                    return;
+
+                Item * item = player->GetItemByPos(INVENTORY_SLOT_BAG_0, EQUIPMENT_SLOT_MAINHAND);
+                if (item == castItem)
+                    item = player->GetItemByPos(INVENTORY_SLOT_BAG_0, EQUIPMENT_SLOT_OFFHAND);
+                if (!item)
+                    return;
+
+                // item combat enchantments
+                for (uint8 e_slot = 0; e_slot < MAX_ENCHANTMENT_SLOT; ++e_slot)
+                {
+                    uint32 enchant_id = item->GetEnchantmentId(EnchantmentSlot(e_slot));
+                    SpellItemEnchantmentEntry const * pEnchant = sSpellItemEnchantmentStore.LookupEntry(enchant_id);
+                    if (!pEnchant)
+                        continue;
+
+                    for (uint8 s = 0; s < 3; ++s)
+                    {
+                        if (pEnchant->type[s] != ITEM_ENCHANTMENT_TYPE_COMBAT_SPELL)
+                            continue;
+
+                        SpellEntry const *spellInfo = sSpellStore.LookupEntry(pEnchant->spellid[s]);
+                        if (!spellInfo)
+                        {
+                            sLog.outError("Player::CastItemCombatSpell Enchant %i, cast unknown spell %i", pEnchant->ID, pEnchant->spellid[s]);
+                            continue;
+                        }
+
+                        // Proc only rogue poisons and do not reproc deadly
+                        if (spellInfo->SpellFamilyName == SPELLFAMILY_ROGUE)
+                        {
+                            if (spellInfo->SpellFamilyFlags.IsEqual(0x00010000, 0x00080000, 0) ||
+                                (spellInfo->Dispel != DISPEL_POISON))
+                                continue;
+                        }
+                        else
+                            continue;
+
+                        if (IsPositiveSpell(pEnchant->spellid[s]))
+                            player->CastSpell(player, pEnchant->spellid[s], true, item);
+                        else
+                            player->CastSpell(target, pEnchant->spellid[s], true, item);
+                    }
+                }
+            }
+
+            void Register()
+            {
+                BeforeHit += SpellHitFn(spell_rog_deadly_poison_SpellScript::HandleBeforeHit);
+                AfterHit += SpellHitFn(spell_rog_deadly_poison_SpellScript::HandleAfterHit);
+            }
+        };
+
+        SpellScript *GetSpellScript() const
+        {
+            return new spell_rog_deadly_poison_SpellScript();
+        }
+};
+
 void AddSC_rogue_spell_scripts()
 {
     new spell_rog_cheat_death;
     new spell_rog_hunger_for_blood;
     new spell_rog_preparation;
     new spell_rog_shiv;
+    new spell_rog_deadly_poison;
 }
