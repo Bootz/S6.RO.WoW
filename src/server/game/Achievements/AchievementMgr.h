@@ -243,6 +243,7 @@ class AchievementMgr
 
         void Reset();
         static void DeleteFromDB(uint32 lowguid);
+        void DeleteAchievementFromDB(uint32 lowguid, uint32 achi_id);
         void LoadFromDB(PreparedQueryResult achievementResult, PreparedQueryResult criteriaResult);
         void SaveToDB(SQLTransaction& trans);
         void ResetAchievementCriteria(AchievementCriteriaTypes type, uint32 miscvalue1 = 0, uint32 miscvalue2 = 0, bool evenIfCriteriaComplete = false);
