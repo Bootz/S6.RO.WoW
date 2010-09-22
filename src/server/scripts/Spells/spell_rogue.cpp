@@ -26,77 +26,9 @@
 
 enum RogueSpells
 {
-    ROGUE_SPELL_HUNGER_FOR_BLOOD_BUFF            = 63848,
     ROGUE_SPELL_SHIV_TRIGGERED                   = 5940,
-    ROGUE_SPELL_CHEATING_DEATH                   = 45182,
     ROGUE_SPELL_GLYPH_OF_PREPARATION             = 56819,
     ROGUE_SPELL_PREY_ON_THE_WEAK                 = 58670,
-};
-
-class spell_rog_cheat_death : public SpellScriptLoader
-{
-    public:
-        spell_rog_cheat_death() : SpellScriptLoader("spell_rog_cheat_death") { }
-
-        class spell_rog_cheat_death_SpellScript : public SpellScript
-        {
-            bool Validate(SpellEntry const * /*spellEntry*/)
-            {
-                if (!sSpellStore.LookupEntry(ROGUE_SPELL_CHEATING_DEATH))
-                    return false;
-                return true;
-            }
-
-            void HandleDummy(SpellEffIndex /*effIndex*/)
-            {
-                Unit *caster = GetCaster();
-                caster->CastSpell(caster, ROGUE_SPELL_CHEATING_DEATH, true);
-            }
-
-            void Register()
-            {
-                // add dummy effect spell handler to Cheat Death
-                OnEffect += SpellEffectFn(spell_rog_cheat_death_SpellScript::HandleDummy, EFFECT_0, SPELL_EFFECT_DUMMY);
-            }
-        };
-
-        SpellScript *GetSpellScript() const
-        {
-            return new spell_rog_cheat_death_SpellScript;
-        }
-};
-
-class spell_rog_hunger_for_blood : public SpellScriptLoader
-{
-    public:
-        spell_rog_hunger_for_blood() : SpellScriptLoader("spell_rog_hunger_for_blood") { }
-
-        class spell_rog_hunger_for_blood_SpellScript : public SpellScript
-        {
-            bool Validate(SpellEntry const * /*spellEntry*/)
-            {
-                if (!sSpellStore.LookupEntry(ROGUE_SPELL_HUNGER_FOR_BLOOD_BUFF))
-                    return false;
-                return true;
-            }
-
-            void HandleDummy(SpellEffIndex /*effIndex*/)
-            {
-                Unit *caster = GetCaster();
-                caster->CastSpell(caster, ROGUE_SPELL_HUNGER_FOR_BLOOD_BUFF, true);
-            }
-
-            void Register()
-            {
-                // add dummy effect spell handler to Hunger for Blood
-                OnEffect += SpellEffectFn(spell_rog_hunger_for_blood_SpellScript::HandleDummy, EFFECT_0, SPELL_EFFECT_DUMMY);
-            }
-        };
-
-        SpellScript *GetSpellScript() const
-        {
-            return new spell_rog_hunger_for_blood_SpellScript();
-        }
 };
 
 class spell_rog_preparation : public SpellScriptLoader
@@ -343,10 +275,8 @@ class spell_rog_deadly_poison : public SpellScriptLoader
 
 void AddSC_rogue_spell_scripts()
 {
-    new spell_rog_cheat_death;
-    new spell_rog_hunger_for_blood;
-    new spell_rog_preparation;		  
-	new spell_rog_prey_on_the_weak;
-    new spell_rog_shiv;
-    new spell_rog_deadly_poison;
+    new spell_rog_preparation();
+    new spell_rog_prey_on_the_weak();
+    new spell_rog_shiv();
+    new spell_rog_deadly_poison();
 }
