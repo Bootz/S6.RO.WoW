@@ -30,6 +30,7 @@ enum RogueSpells
     ROGUE_SPELL_SHIV_TRIGGERED                   = 5940,
     ROGUE_SPELL_CHEATING_DEATH                   = 45182,
     ROGUE_SPELL_GLYPH_OF_PREPARATION             = 56819,
+    ROGUE_SPELL_PREY_ON_THE_WEAK                 = 58670,
 };
 
 class spell_rog_cheat_death : public SpellScriptLoader
@@ -159,6 +160,52 @@ class spell_rog_preparation : public SpellScriptLoader
             return new spell_rog_preparation_SpellScript();
         }
 };
+
+// 51685-51689 Prey on the Weak
+class spell_rog_prey_on_the_weak : public SpellScriptLoader
+{
+public:
+    spell_rog_prey_on_the_weak() : SpellScriptLoader("spell_rog_prey_on_the_weak") { }
+
+    class spell_rog_prey_on_the_weak_AuraScript : public AuraScript
+    {
+        bool Validate(SpellEntry const * /*spellEntry*/)
+        {
+            if (!sSpellStore.LookupEntry(ROGUE_SPELL_PREY_ON_THE_WEAK))
+                return false;
+            return true;
+        }
+
+        void HandleEffectPeriodic(AuraEffect const * /*aurEff*/, AuraApplication const * aurApp)
+        {
+            if (Unit* pTarget = aurApp->GetTarget())
+            {
+                Unit* pVictim = pTarget->getVictim();
+                if (pVictim && (pTarget->GetHealthPct() > pVictim->GetHealthPct()))
+                {
+                    if (!pTarget->HasAura(ROGUE_SPELL_PREY_ON_THE_WEAK))
+                    {
+                        int32 bp = SpellMgr::CalculateSpellEffectAmount(GetSpellProto(), 0);
+                        pTarget->CastCustomSpell(pTarget, ROGUE_SPELL_PREY_ON_THE_WEAK, &bp, 0, 0, true);
+                    }
+                }
+                else
+                    pTarget->RemoveAurasDueToSpell(ROGUE_SPELL_PREY_ON_THE_WEAK);
+            }
+        }
+
+        void Register()
+        {
+            OnEffectPeriodic += AuraEffectPeriodicFn(spell_rog_prey_on_the_weak_AuraScript::HandleEffectPeriodic, EFFECT_0, SPELL_AURA_PERIODIC_DUMMY);
+        }
+    };
+
+    AuraScript *GetAuraScript() const
+    {
+        return new spell_rog_prey_on_the_weak_AuraScript();
+    }
+};
+
 
 class spell_rog_shiv : public SpellScriptLoader
 {
@@ -298,7 +345,8 @@ void AddSC_rogue_spell_scripts()
 {
     new spell_rog_cheat_death;
     new spell_rog_hunger_for_blood;
-    new spell_rog_preparation;
+    new spell_rog_preparation;		  
+	new spell_rog_prey_on_the_weak;
     new spell_rog_shiv;
     new spell_rog_deadly_poison;
 }
