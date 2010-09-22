@@ -16,544 +16,289 @@
  */
 
 /*
- * Scripts for spells with SPELLFAMILY_GENERIC spells used for quests.
- * Ordered alphabetically using questId and scriptname.
- * Scriptnames of files in this file should be prefixed with "spell_q#questID_".
+ * Scripts for spells with SPELLFAMILY_ROGUE and SPELLFAMILY_GENERIC spells used by rogue players.
+ * Ordered alphabetically using scriptname.
+ * Scriptnames of files in this file should be prefixed with "spell_rog_".
  */
 
 #include "ScriptPCH.h"
+#include "SpellAuraEffects.h"
 
-class spell_generic_quest_update_entry_SpellScript : public SpellScript
+enum RogueSpells
 {
-private:
-    uint32 _spellEffect;
-    uint8 _effIndex;
-    uint32 _originalEntry;
-    uint32 _newEntry;
-    bool _shouldAttack;
-    uint32 _despawnTime;
-
-    public:
-    spell_generic_quest_update_entry_SpellScript(uint32 spellEffect, uint8 effIndex, uint32 originalEntry, uint32 newEntry, bool shouldAttack, uint32 despawnTime = 0) :
-        SpellScript(), _spellEffect(spellEffect), _effIndex(effIndex), _originalEntry(originalEntry),
-        _newEntry(newEntry), _shouldAttack(shouldAttack), _despawnTime(despawnTime) { }
-
-            void HandleDummy(SpellEffIndex /*effIndex*/)
-            {
-        if (Creature* pCreatureTarget = GetHitCreature())
-            if (!pCreatureTarget->isPet() && pCreatureTarget->GetEntry() == _originalEntry)
-            {
-                pCreatureTarget->UpdateEntry(_newEntry);
-                if (_shouldAttack && pCreatureTarget->IsAIEnabled)
-                    pCreatureTarget->AI()->AttackStart(GetCaster());
-
-                if (_despawnTime)
-                    pCreatureTarget->ForcedDespawn(_despawnTime);
-            }
-            }
-
-            void Register()
-            {
-        OnEffect += SpellEffectFn(spell_generic_quest_update_entry_SpellScript::HandleDummy, _effIndex, _spellEffect);
-            }
-        };
-
-// http://www.wowhead.com/quest=55 Morbent Fel
-// 8913 Sacred Cleansing
-enum eQuest55Data
-{
-    NPC_MORBENT             = 1200,
-    NPC_WEAKENED_MORBENT    = 24782,
+    ROGUE_SPELL_HUNGER_FOR_BLOOD_BUFF            = 63848,
+    ROGUE_SPELL_SHIV_TRIGGERED                   = 5940,
+    ROGUE_SPELL_CHEATING_DEATH                   = 45182,
+    ROGUE_SPELL_GLYPH_OF_PREPARATION             = 56819,
 };
 
-class spell_q55_sacred_cleansing : public SpellScriptLoader
+class spell_rog_cheat_death : public SpellScriptLoader
 {
     public:
-    spell_q55_sacred_cleansing() : SpellScriptLoader("spell_q55_sacred_cleansing") { }
+        spell_rog_cheat_death() : SpellScriptLoader("spell_rog_cheat_death") { }
 
-    SpellScript* GetSpellScript() const
-    {
-        return new spell_generic_quest_update_entry_SpellScript(SPELL_EFFECT_DUMMY, EFFECT_1, NPC_MORBENT, NPC_WEAKENED_MORBENT, true);
-            }
-        };
-
-// http://www.wowhead.com/quest=5206 Marauders of Darrowshire
-// 17271 Test Fetid Skull
-enum eQuest5206Data
-{
-    SPELL_CREATE_RESONATING_SKULL = 17269,
-    SPELL_CREATE_BONE_DUST = 17270
-};
-
-class spell_q5206_test_fetid_skull : public SpellScriptLoader
-{
-    public:
-    spell_q5206_test_fetid_skull() : SpellScriptLoader("spell_q5206_test_fetid_skull") { }
-
-    class spell_q5206_test_fetid_skull_SpellScript : public SpellScript
+        class spell_rog_cheat_death_SpellScript : public SpellScript
         {
             bool Validate(SpellEntry const * /*spellEntry*/)
             {
-            if (!sSpellStore.LookupEntry(SPELL_CREATE_RESONATING_SKULL))
+                if (!sSpellStore.LookupEntry(ROGUE_SPELL_CHEATING_DEATH))
                     return false;
-            if (!sSpellStore.LookupEntry(SPELL_CREATE_BONE_DUST))
-                return false;
                 return true;
             }
 
             void HandleDummy(SpellEffIndex /*effIndex*/)
             {
-            Unit* pCaster = GetCaster();
-            if (pCaster->GetTypeId() == TYPEID_PLAYER)
-            {
-                uint32 spellId = roll_chance_i(50) ? SPELL_CREATE_RESONATING_SKULL : SPELL_CREATE_BONE_DUST;
-                pCaster->CastSpell(pCaster, spellId, true, NULL);
-                }
-            }
-
-            void Register()
-            {
-            OnEffect += SpellEffectFn(spell_q5206_test_fetid_skull_SpellScript::HandleDummy, EFFECT_0, SPELL_EFFECT_DUMMY);
-            }
-        };
-
-        SpellScript *GetSpellScript() const
-        {
-        return new spell_q5206_test_fetid_skull_SpellScript();
-        }
-};
-
-// http://www.wowhead.com/quest=6124 Curing the Sick (A)
-// http://www.wowhead.com/quest=6129 Curing the Sick (H)
-// 19512 Apply Salve
-enum eQuests6124_6129Data
-{
-    NPC_SICKLY_GAZELLE  = 12296,
-    NPC_CURED_GAZELLE   = 12297,
-    NPC_SICKLY_DEER     = 12298,
-    NPC_CURED_DEER      = 12299,
-    DESPAWN_TIME        = 30000
-};
-
-class spell_q6124_6129_apply_salve : public SpellScriptLoader
-{
-    public:
-    spell_q6124_6129_apply_salve() : SpellScriptLoader("spell_q6124_6129_apply_salve") { }
-
-    class spell_q6124_6129_apply_salve_SpellScript : public SpellScript
-    {
-            void HandleDummy(SpellEffIndex /*effIndex*/)
-            {
-            if (GetCastItem())
-                if (Player* pCaster = GetCaster()->ToPlayer())
-                    if (Creature* pCreatureTarget = GetHitCreature())
-                    {
-                        uint32 uiNewEntry = 0;
-                        switch (pCaster->GetTeam())
-                        {
-                            case HORDE:
-                                if (pCreatureTarget->GetEntry() == NPC_SICKLY_GAZELLE)
-                                    uiNewEntry = NPC_CURED_GAZELLE;
-                                break;
-                            case ALLIANCE:
-                                if (pCreatureTarget->GetEntry() == NPC_SICKLY_DEER)
-                                    uiNewEntry = NPC_CURED_DEER;
-                                break;
-                        }
-                        if (uiNewEntry)
-                        {
-                            pCreatureTarget->UpdateEntry(uiNewEntry);
-                            pCreatureTarget->ForcedDespawn(DESPAWN_TIME);
-                        }
-                    }
-        }
-
-        void Register()
-        {
-            OnEffect += SpellEffectFn(spell_q6124_6129_apply_salve_SpellScript::HandleDummy, EFFECT_0, SPELL_EFFECT_DUMMY);
-        }
-    };
-
-    SpellScript* GetSpellScript() const
-    {
-        return new spell_q6124_6129_apply_salve_SpellScript();
-    }
-};
-
-// http://www.wowhead.com/quest=10255 Testing the Antidote
-// 34665 Administer Antidote
-enum eQuest10255Data
-{
-    NPC_HELBOAR     = 16880,
-    NPC_DREADTUSK   = 16992,
-};
-
-class spell_q10255_administer_antidote : public SpellScriptLoader
-{
-public:
-    spell_q10255_administer_antidote() : SpellScriptLoader("spell_q10255_administer_antidote") { }
-
-    SpellScript* GetSpellScript() const
-    {
-        return new spell_generic_quest_update_entry_SpellScript(SPELL_EFFECT_DUMMY, EFFECT_0, NPC_HELBOAR, NPC_DREADTUSK, true);
-    }
-};
-
-// http://www.wowhead.com/quest=11515 Blood for Blood
-// 44936 Quest - Fel Siphon Dummy
-enum eQuest11515Data
-{
-    NPC_FELBLOOD_INITIATE   = 24918,
-    NPC_EMACIATED_FELBLOOD  = 24955
-};
-
-class spell_q11515_fel_siphon_dummy : public SpellScriptLoader
-{
-public:
-    spell_q11515_fel_siphon_dummy() : SpellScriptLoader("spell_q11515_fel_siphon_dummy") { }
-
-    SpellScript* GetSpellScript() const
-    {
-        return new spell_generic_quest_update_entry_SpellScript(SPELL_EFFECT_DUMMY, EFFECT_0, NPC_FELBLOOD_INITIATE, NPC_EMACIATED_FELBLOOD, true);
-    }
-};
-
-// http://www.wowhead.com/quest=11587 Prison Break
-// 45449 Arcane Prisoner Rescue
-enum eQuest11587Data
-{
-    SPELL_SUMMON_ARCANE_PRISONER_MALE    = 45446,    // Summon Arcane Prisoner - Male
-    SPELL_SUMMON_ARCANE_PRISONER_FEMALE  = 45448,    // Summon Arcane Prisoner - Female
-    SPELL_ARCANE_PRISONER_KILL_CREDIT    = 45456     // Arcane Prisoner Kill Credit
-};
-
-class spell_q11587_arcane_prisoner_rescue : public SpellScriptLoader
-{
-public:
-    spell_q11587_arcane_prisoner_rescue() : SpellScriptLoader("spell_q11587_arcane_prisoner_rescue") { }
-
-    class spell_q11587_arcane_prisoner_rescue_SpellScript : public SpellScript
-    {
-        bool Validate(SpellEntry const * /*spellEntry*/)
-        {
-            if (!sSpellStore.LookupEntry(SPELL_SUMMON_ARCANE_PRISONER_MALE))
-                return false;
-            if (!sSpellStore.LookupEntry(SPELL_SUMMON_ARCANE_PRISONER_FEMALE))
-                return false;
-            if (!sSpellStore.LookupEntry(SPELL_ARCANE_PRISONER_KILL_CREDIT))
-                return false;
-            return true;
-        }
-
-        void HandleDummy(SpellEffIndex /*effIndex*/)
-        {
                 Unit *caster = GetCaster();
-                if (Unit *unitTarget = GetHitUnit())
-            {
-                uint32 spellId = SPELL_SUMMON_ARCANE_PRISONER_MALE;
-                if (rand() % 2)
-                    spellId = SPELL_SUMMON_ARCANE_PRISONER_FEMALE;
-                caster->CastSpell(caster, spellId, true);
-                unitTarget->CastSpell(caster, SPELL_ARCANE_PRISONER_KILL_CREDIT, true);
-            }
+                caster->CastSpell(caster, ROGUE_SPELL_CHEATING_DEATH, true);
             }
 
             void Register()
             {
-            OnEffect += SpellEffectFn(spell_q11587_arcane_prisoner_rescue_SpellScript::HandleDummy, EFFECT_0, SPELL_EFFECT_DUMMY);
+                // add dummy effect spell handler to Cheat Death
+                OnEffect += SpellEffectFn(spell_rog_cheat_death_SpellScript::HandleDummy, EFFECT_0, SPELL_EFFECT_DUMMY);
             }
         };
 
         SpellScript *GetSpellScript() const
         {
-        return new spell_q11587_arcane_prisoner_rescue_SpellScript();
+            return new spell_rog_cheat_death_SpellScript;
         }
 };
 
-// http://www.wowhead.com/quest=11730 Master and Servant
-// 46023 The Ultrasonic Screwdriver
-enum eQuest11730Data
-{
-    SPELL_SUMMON_SCAVENGEBOT_004A8  = 46063,
-    SPELL_SUMMON_SENTRYBOT_57K      = 46068,
-    SPELL_SUMMON_DEFENDOTANK_66D    = 46058,
-    SPELL_SUMMON_SCAVENGEBOT_005B6  = 46066,
-    SPELL_SUMMON_55D_COLLECTATRON   = 46034,
-    SPELL_ROBOT_KILL_CREDIT         = 46027,
-    NPC_SCAVENGEBOT_004A8           = 25752,
-    NPC_SENTRYBOT_57K               = 25753,
-    NPC_DEFENDOTANK_66D             = 25758,
-    NPC_SCAVENGEBOT_005B6           = 25792,
-    NPC_55D_COLLECTATRON            = 25793
-};
-
-class spell_q11730_ultrasonic_screwdriver : public SpellScriptLoader
+class spell_rog_hunger_for_blood : public SpellScriptLoader
 {
     public:
-    spell_q11730_ultrasonic_screwdriver() : SpellScriptLoader("spell_q11730_ultrasonic_screwdriver") { }
+        spell_rog_hunger_for_blood() : SpellScriptLoader("spell_rog_hunger_for_blood") { }
 
-    class spell_q11730_ultrasonic_screwdriver_SpellScript : public SpellScript
-    {
+        class spell_rog_hunger_for_blood_SpellScript : public SpellScript
+        {
             bool Validate(SpellEntry const * /*spellEntry*/)
             {
-            if (!sSpellStore.LookupEntry(SPELL_SUMMON_SCAVENGEBOT_004A8))
-                return false;
-            if (!sSpellStore.LookupEntry(SPELL_SUMMON_SENTRYBOT_57K))
-                return false;
-            if (!sSpellStore.LookupEntry(SPELL_SUMMON_DEFENDOTANK_66D))
-                return false;
-            if (!sSpellStore.LookupEntry(SPELL_SUMMON_SCAVENGEBOT_005B6))
-                return false;
-            if (!sSpellStore.LookupEntry(SPELL_SUMMON_55D_COLLECTATRON))
-                return false;
-            if (!sSpellStore.LookupEntry(SPELL_ROBOT_KILL_CREDIT))
-                return false;
+                if (!sSpellStore.LookupEntry(ROGUE_SPELL_HUNGER_FOR_BLOOD_BUFF))
+                    return false;
                 return true;
             }
 
-        void HandleDummy(SpellEffIndex /*effIndex*/)
-        {
-                Item * castItem = GetCastItem();
-            if (!castItem)
-                    return;
-
-            Unit* pCaster = GetCaster();
-            if (pCaster->GetTypeId() != TYPEID_PLAYER)
-                    return;
-
-            Creature* pTarget = GetHitCreature();
-            if (!pTarget)
-                return;
-
-            uint32 spellId = 0;
-            switch (pTarget->GetEntry())
+            void HandleDummy(SpellEffIndex /*effIndex*/)
             {
-                case NPC_SCAVENGEBOT_004A8: spellId = SPELL_SUMMON_SCAVENGEBOT_004A8;    break;
-                case NPC_SENTRYBOT_57K:     spellId = SPELL_SUMMON_SENTRYBOT_57K;        break;
-                case NPC_DEFENDOTANK_66D:   spellId = SPELL_SUMMON_DEFENDOTANK_66D;      break;
-                case NPC_SCAVENGEBOT_005B6: spellId = SPELL_SUMMON_SCAVENGEBOT_005B6;    break;
-                case NPC_55D_COLLECTATRON:  spellId = SPELL_SUMMON_55D_COLLECTATRON;     break;
-                default:
-                    return;
-            }
-            pCaster->CastSpell(pCaster, spellId, true, castItem);
-            pCaster->CastSpell(pCaster, SPELL_ROBOT_KILL_CREDIT, true);
-            pTarget->ForcedDespawn();
+                Unit *caster = GetCaster();
+                caster->CastSpell(caster, ROGUE_SPELL_HUNGER_FOR_BLOOD_BUFF, true);
             }
 
             void Register()
             {
-            OnEffect += SpellEffectFn(spell_q11730_ultrasonic_screwdriver_SpellScript::HandleDummy, EFFECT_0, SPELL_EFFECT_DUMMY);
+                // add dummy effect spell handler to Hunger for Blood
+                OnEffect += SpellEffectFn(spell_rog_hunger_for_blood_SpellScript::HandleDummy, EFFECT_0, SPELL_EFFECT_DUMMY);
             }
         };
 
         SpellScript *GetSpellScript() const
         {
-        return new spell_q11730_ultrasonic_screwdriver_SpellScript();
+            return new spell_rog_hunger_for_blood_SpellScript();
         }
 };
 
-// http://www.wowhead.com/quest=12459 That Which Creates Can Also Destroy
-// 49587 Seeds of Nature's Wrath
-enum eQuest12459Data
+class spell_rog_preparation : public SpellScriptLoader
 {
-    NPC_REANIMATED_FROSTWYRM        = 26841,
-    NPC_WEAK_REANIMATED_FROSTWYRM   = 27821,
-
-    NPC_TURGID                      = 27808,
-    NPC_WEAK_TURGID                 = 27809,
-
-    NPC_DEATHGAZE                   = 27122,
-    NPC_WEAK_DEATHGAZE              = 27807,
-};
-
-class spell_q12459_seeds_of_natures_wrath : public SpellScriptLoader
-{
-public:
-    spell_q12459_seeds_of_natures_wrath() : SpellScriptLoader("spell_q12459_seeds_of_natures_wrath") { }
-
-    class spell_q12459_seeds_of_natures_wrath_SpellScript : public SpellScript
-    {
     public:
-        void HandleDummy(SpellEffIndex /*effIndex*/)
+        spell_rog_preparation() : SpellScriptLoader("spell_rog_preparation") { }
+
+        class spell_rog_preparation_SpellScript : public SpellScript
         {
-            if (Creature* pCreatureTarget = GetHitCreature())
+            bool Validate(SpellEntry const * /*spellEntry*/)
             {
-                uint32 uiNewEntry = 0;
-                switch (pCreatureTarget->GetEntry())
+                if (!sSpellStore.LookupEntry(ROGUE_SPELL_GLYPH_OF_PREPARATION))
+                    return false;
+                return true;
+            }
+
+            void HandleDummy(SpellEffIndex /*effIndex*/)
+            {
+                Unit *caster = GetCaster();
+                if (caster->GetTypeId() != TYPEID_PLAYER)
+                    return;
+
+                //immediately finishes the cooldown on certain Rogue abilities
+                const SpellCooldowns& cm = caster->ToPlayer()->GetSpellCooldownMap();
+                for (SpellCooldowns::const_iterator itr = cm.begin(); itr != cm.end();)
                 {
-                    case NPC_REANIMATED_FROSTWYRM:  uiNewEntry = NPC_WEAK_REANIMATED_FROSTWYRM; break;
-                    case NPC_TURGID:                uiNewEntry = NPC_WEAK_TURGID;               break;
-                    case NPC_DEATHGAZE:             uiNewEntry = NPC_WEAK_DEATHGAZE;            break;
-                }
-                if (uiNewEntry)
-                    pCreatureTarget->UpdateEntry(uiNewEntry);
-            }
-        }
+                    SpellEntry const *spellInfo = sSpellStore.LookupEntry(itr->first);
 
-        void Register()
-        {
-            OnEffect += SpellEffectFn(spell_q12459_seeds_of_natures_wrath_SpellScript::HandleDummy, EFFECT_0, SPELL_EFFECT_DUMMY);
-        }
-    };
-
-    SpellScript* GetSpellScript() const
-    {
-        return new spell_q12459_seeds_of_natures_wrath_SpellScript();
-    }
-};
-
-// http://www.wowhead.com/quest=12634 Some Make Lemonade, Some Make Liquor
-// 51840 Despawn Fruit Tosser
-enum eQuest12634Data
-{
-    SPELL_BANANAS_FALL_TO_GROUND    = 51836,
-    SPELL_ORANGE_FALLS_TO_GROUND    = 51837,
-    SPELL_PAPAYA_FALLS_TO_GROUND    = 51839,
-    SPELL_SUMMON_ADVENTUROUS_DWARF  = 52070
-};
-
-class spell_q12634_despawn_fruit_tosser : public SpellScriptLoader
-{
-public:
-    spell_q12634_despawn_fruit_tosser() : SpellScriptLoader("spell_q12634_despawn_fruit_tosser") { }
-
-    class spell_q12634_despawn_fruit_tosser_SpellScript : public SpellScript
-    {
-    public:
-        bool Validate(SpellEntry const * /*spellEntry*/)
-        {
-            if (!sSpellStore.LookupEntry(SPELL_BANANAS_FALL_TO_GROUND))
-                return false;
-            if (!sSpellStore.LookupEntry(SPELL_ORANGE_FALLS_TO_GROUND))
-                return false;
-            if (!sSpellStore.LookupEntry(SPELL_PAPAYA_FALLS_TO_GROUND))
-                return false;
-            if (!sSpellStore.LookupEntry(SPELL_SUMMON_ADVENTUROUS_DWARF))
-                return false;
-            return true;
-        }
-
-        void HandleDummy(SpellEffIndex /*effIndex*/)
-        {
-            uint32 spellId = SPELL_BANANAS_FALL_TO_GROUND;
-            switch (urand(0, 3))
-            {
-                case 1: spellId = SPELL_ORANGE_FALLS_TO_GROUND; break;
-                case 2: spellId = SPELL_PAPAYA_FALLS_TO_GROUND; break;
-            }
-            // sometimes, if you're lucky, you get a dwarf
-            if (roll_chance_i(5))
-                spellId = SPELL_SUMMON_ADVENTUROUS_DWARF;
-            GetCaster()->CastSpell(GetCaster(), spellId, true, NULL);
-        }
-
-        void Register()
-        {
-            OnEffect += SpellEffectFn(spell_q12634_despawn_fruit_tosser_SpellScript::HandleDummy, EFFECT_0, SPELL_EFFECT_DUMMY);
-        }
-    };
-
-    SpellScript* GetSpellScript() const
-    {
-        return new spell_q12634_despawn_fruit_tosser_SpellScript();
-    }
-};
-
-// http://www.wowhead.com/quest=12683 Burning to Help
-// 52308 Take Sputum Sample
-class spell_q12683_take_sputum_sample : public SpellScriptLoader
-{
-public:
-    spell_q12683_take_sputum_sample() : SpellScriptLoader("spell_q12683_take_sputum_sample") { }
-
-    class spell_q12683_take_sputum_sample_SpellScript : public SpellScript
-    {
-    public:
-        void HandleDummy(SpellEffIndex /*effIndex*/)
-        {
-            uint32 reqAuraId = SpellMgr::CalculateSpellEffectAmount(GetSpellInfo(), 1);
-
-            Unit* pCaster = GetCaster();
-            if (pCaster->HasAuraEffect(reqAuraId, 0))
-            {
-                uint32 spellId = SpellMgr::CalculateSpellEffectAmount(GetSpellInfo(), 0);
-                pCaster->CastSpell(pCaster, spellId, true, NULL);
-            }
-        }
-
-        void Register()
-        {
-            OnEffect += SpellEffectFn(spell_q12683_take_sputum_sample_SpellScript::HandleDummy, EFFECT_0, SPELL_EFFECT_DUMMY);
-        }
-    };
-
-    SpellScript* GetSpellScript() const
-    {
-        return new spell_q12683_take_sputum_sample_SpellScript();
-    }
-};
-
-// http://www.wowhead.com/quest=12937 Relief for the Fallen
-// 55804 Healing Finished
-enum eQuest12937Data
-{
-    SPELL_TRIGGER_AID_OF_THE_EARTHEN    = 55809,
-    NPC_FALLEN_EARTHEN_DEFENDER         = 30035,
-};
-
-class spell_q12937_relief_for_the_fallen : public SpellScriptLoader
-{
-public:
-    spell_q12937_relief_for_the_fallen() : SpellScriptLoader("spell_q12937_relief_for_the_fallen") { }
-
-    class spell_q12937_relief_for_the_fallen_SpellScript : public SpellScript
-    {
-    public:
-        bool Validate(SpellEntry const * /*spellEntry*/)
-        {
-            if (!sSpellStore.LookupEntry(SPELL_TRIGGER_AID_OF_THE_EARTHEN))
-                return false;
-            return true;
-        }
-
-        void HandleDummy(SpellEffIndex /*effIndex*/)
-        {
-            Unit* pCaster = GetCaster();
-            if (Player* pPlayer = pCaster->ToPlayer())
-            {
-                if(Creature* pTarget = GetHitCreature())
-                {
-                    pPlayer->CastSpell(pPlayer, SPELL_TRIGGER_AID_OF_THE_EARTHEN, true, NULL);
-                    pPlayer->KilledMonsterCredit(NPC_FALLEN_EARTHEN_DEFENDER, 0);
-                    pTarget->ForcedDespawn();
+                    if (spellInfo->SpellFamilyName == SPELLFAMILY_ROGUE)
+                    {
+                        if (spellInfo->SpellFamilyFlags[1] & SPELLFAMILYFLAG1_ROGUE_COLDB_SHADOWSTEP ||      // Cold Blood, Shadowstep
+                            spellInfo->SpellFamilyFlags[0] & SPELLFAMILYFLAG_ROGUE_VAN_EVAS_SPRINT)           // Vanish, Evasion, Sprint
+                            caster->ToPlayer()->RemoveSpellCooldown((itr++)->first, true);
+                        else if (caster->HasAura(ROGUE_SPELL_GLYPH_OF_PREPARATION))
+                        {
+                            if (spellInfo->SpellFamilyFlags[1] & SPELLFAMILYFLAG1_ROGUE_DISMANTLE ||         // Dismantle
+                                spellInfo->SpellFamilyFlags[0] & SPELLFAMILYFLAG_ROGUE_KICK ||               // Kick
+                                (spellInfo->SpellFamilyFlags[0] & SPELLFAMILYFLAG_ROGUE_BLADE_FLURRY &&     // Blade Flurry
+                                spellInfo->SpellFamilyFlags[1] & SPELLFAMILYFLAG1_ROGUE_BLADE_FLURRY))
+                                caster->ToPlayer()->RemoveSpellCooldown((itr++)->first, true);
+                            else
+                                ++itr;
+                        }
+                        else
+                            ++itr;
+                    }
+                    else
+                        ++itr;
                 }
             }
-        }
 
-        void Register()
+            void Register()
+            {
+                // add dummy effect spell handler to Preparation
+                OnEffect += SpellEffectFn(spell_rog_preparation_SpellScript::HandleDummy, EFFECT_0, SPELL_EFFECT_DUMMY);
+            }
+        };
+
+        SpellScript *GetSpellScript() const
         {
-            OnEffect += SpellEffectFn(spell_q12937_relief_for_the_fallen_SpellScript::HandleDummy, EFFECT_0, SPELL_EFFECT_DUMMY);
+            return new spell_rog_preparation_SpellScript();
         }
-    };
-
-    SpellScript* GetSpellScript() const
-    {
-        return new spell_q12937_relief_for_the_fallen_SpellScript();
-    }
 };
 
-void AddSC_quest_spell_scripts()
+class spell_rog_shiv : public SpellScriptLoader
 {
-    new spell_q55_sacred_cleansing();
-    new spell_q5206_test_fetid_skull();
-    new spell_q6124_6129_apply_salve();
-    new spell_q10255_administer_antidote();
-    new spell_q11515_fel_siphon_dummy();
-    new spell_q11587_arcane_prisoner_rescue();
-    new spell_q11730_ultrasonic_screwdriver();
-    new spell_q12459_seeds_of_natures_wrath();
-    new spell_q12634_despawn_fruit_tosser();
-    new spell_q12683_take_sputum_sample();
-    new spell_q12937_relief_for_the_fallen();
+    public:
+        spell_rog_shiv() : SpellScriptLoader("spell_rog_shiv") { }
+
+        class spell_rog_shiv_SpellScript : public SpellScript
+        {
+            bool Validate(SpellEntry const * /*spellEntry*/)
+            {
+                if (!sSpellStore.LookupEntry(ROGUE_SPELL_SHIV_TRIGGERED))
+                    return false;
+                return true;
+            }
+
+            void HandleDummy(SpellEffIndex /*effIndex*/)
+            {
+                Unit *caster = GetCaster();
+                if (caster->GetTypeId() != TYPEID_PLAYER)
+                    return;
+
+                if (Unit *unitTarget = GetHitUnit())
+                    caster->CastSpell(unitTarget, ROGUE_SPELL_SHIV_TRIGGERED, true);
+            }
+
+            void Register()
+            {
+                // add dummy effect spell handler to Shiv
+                OnEffect += SpellEffectFn(spell_rog_shiv_SpellScript::HandleDummy, EFFECT_0, SPELL_EFFECT_DUMMY);
+            }
+        };
+
+        SpellScript *GetSpellScript() const
+        {
+            return new spell_rog_shiv_SpellScript();
+        }
+};
+
+class spell_rog_deadly_poison : public SpellScriptLoader
+{
+    public:
+        spell_rog_deadly_poison() : SpellScriptLoader("spell_rog_deadly_poison") { }
+
+        class spell_rog_deadly_poison_SpellScript : public SpellScript
+        {
+        private:
+            uint8 stackAmount;
+        public:
+            spell_rog_deadly_poison_SpellScript() : stackAmount(0) { }
+
+            bool Validate(SpellEntry const * /*spellEntry*/)
+            {
+                return true;
+            }
+
+            void HandleBeforeHit()
+            {
+                Player * player = GetCaster()->ToPlayer();
+                Unit * target = GetHitUnit();
+                if (!player || !target)
+                    return;
+
+                if (AuraEffect * aurEff =
+                    target->GetAuraEffect(SPELL_AURA_PERIODIC_DAMAGE, SPELLFAMILY_ROGUE, 0x00010000, 0x00080000, 0, player->GetGUID()))
+                    stackAmount = aurEff->GetBase()->GetStackAmount();
+            }
+
+            void HandleAfterHit()
+            {
+                if (stackAmount < 5)
+                    return;
+
+                Player * player = GetCaster()->ToPlayer();
+                Unit * target = GetHitUnit();
+                Item * castItem = GetCastItem();
+                if (!player || !target || !castItem)
+                    return;
+
+                Item * item = player->GetItemByPos(INVENTORY_SLOT_BAG_0, EQUIPMENT_SLOT_MAINHAND);
+                if (item == castItem)
+                    item = player->GetItemByPos(INVENTORY_SLOT_BAG_0, EQUIPMENT_SLOT_OFFHAND);
+                if (!item)
+                    return;
+
+                // item combat enchantments
+                for (uint8 e_slot = 0; e_slot < MAX_ENCHANTMENT_SLOT; ++e_slot)
+                {
+                    uint32 enchant_id = item->GetEnchantmentId(EnchantmentSlot(e_slot));
+                    SpellItemEnchantmentEntry const * pEnchant = sSpellItemEnchantmentStore.LookupEntry(enchant_id);
+                    if (!pEnchant)
+                        continue;
+
+                    for (uint8 s = 0; s < 3; ++s)
+                    {
+                        if (pEnchant->type[s] != ITEM_ENCHANTMENT_TYPE_COMBAT_SPELL)
+                            continue;
+
+                        SpellEntry const *spellInfo = sSpellStore.LookupEntry(pEnchant->spellid[s]);
+                        if (!spellInfo)
+                        {
+                            sLog.outError("Player::CastItemCombatSpell Enchant %i, cast unknown spell %i", pEnchant->ID, pEnchant->spellid[s]);
+                            continue;
+                        }
+
+                        // Proc only rogue poisons and do not reproc deadly
+                        if (spellInfo->SpellFamilyName == SPELLFAMILY_ROGUE)
+                        {
+                            if (spellInfo->SpellFamilyFlags.IsEqual(0x00010000, 0x00080000, 0) ||
+                                (spellInfo->Dispel != DISPEL_POISON))
+                                continue;
+                        }
+                        else
+                            continue;
+
+                        if (IsPositiveSpell(pEnchant->spellid[s]))
+                            player->CastSpell(player, pEnchant->spellid[s], true, item);
+                        else
+                            player->CastSpell(target, pEnchant->spellid[s], true, item);
+                    }
+                }
+            }
+
+            void Register()
+            {
+                BeforeHit += SpellHitFn(spell_rog_deadly_poison_SpellScript::HandleBeforeHit);
+                AfterHit += SpellHitFn(spell_rog_deadly_poison_SpellScript::HandleAfterHit);
+            }
+        };
+
+        SpellScript *GetSpellScript() const
+        {
+            return new spell_rog_deadly_poison_SpellScript();
+        }
+};
+
+void AddSC_rogue_spell_scripts()
+{
+    new spell_rog_cheat_death;
+    new spell_rog_hunger_for_blood;
+    new spell_rog_preparation;
+    new spell_rog_shiv;
+    new spell_rog_deadly_poison;
 }
