@@ -1058,46 +1058,12 @@ void AuraEffect::UpdatePeriodic(Unit * caster)
 {
     switch(GetAuraType())
     {
-        case SPELL_AURA_PERIODIC_DAMAGE:
-            switch (GetId())
-            {
-                case 41337: // Aura of Anger
-                    if (AuraEffect * aurEff = GetBase()->GetEffect(1))
-                        aurEff->ChangeAmount(aurEff->GetAmount()+5);
-                    SetAmount(100 * m_tickNumber);
-                    break;
-                case 46394: // Brutallus Burn
-                    if (m_tickNumber % 11 == 0)
-                        SetAmount(GetAmount() * 2);
-                    break;
-                default:
-                    break;
-            }
-            break;
         case SPELL_AURA_DUMMY:
             // Haunting Spirits
             if (GetId() == 7057)
             {
                 m_amplitude = irand (0 , 60) + 30;
                 m_amplitude *= IN_MILLISECONDS;
-            }
-            break;
-        case SPELL_AURA_PERIODIC_TRIGGER_SPELL:
-            switch (GetId())
-            {
-                // Sniper training
-                case 53302:
-                case 53303:
-                case 53304:
-                    Unit * target = GetBase()->GetUnitOwner();
-                    if (target->GetTypeId() != TYPEID_PLAYER)
-                        break;
-
-                    if (target->ToPlayer()->isMoving())
-                        m_amount = target->CalculateSpellDamage(target, m_spellProto,m_effIndex, &m_baseAmount);
-                    else
-                        --m_amount;
-                    break;
             }
             break;
         case SPELL_AURA_PERIODIC_DUMMY:
@@ -1187,20 +1153,6 @@ void AuraEffect::UpdatePeriodic(Unit * caster)
                                 slow->ChangeAmount(newAmount);
                             }
                             break; 
-                       /* case 62038: // Biting Cold
-                            UnitList targetList;
-                            GetTargetList(targetList);
-                            for (UnitList::iterator target = targetList.begin(); target != targetList.end(); ++target)
-                            {
-                                if ((*target)->GetTypeId() != TYPEID_PLAYER)
-                                    break;
-                                    
-                                if ((*target)->ToPlayer()->isMoving())
-                                    m_amount = 4; // DoT stacks when the target remains stationary for 4 seconds
-                                else
-                                    --m_amount;
-                            }					
-                            break;*/								
                         default:
                             break;
                     }
@@ -1332,10 +1284,8 @@ void AuraEffect::PeriodicTick(Unit * target, Unit * caster) const
             {
                 damage = caster->SpellDamageBonus(target, GetSpellProto(), damage, DOT, GetBase()->GetStackAmount());
 
-                // Calculate armor mitigation if it is a physical spell
-                // But not for bleed mechanic spells
-                if (GetSpellSchoolMask(GetSpellProto()) & SPELL_SCHOOL_MASK_NORMAL &&
-                     GetEffectMechanic(GetSpellProto(), m_effIndex) != MECHANIC_BLEED)
+                // Calculate armor mitigation
+                if (Unit::IsDamageReducedByArmor(GetSpellSchoolMask(GetSpellProto()), GetSpellProto(), m_effIndex))
                 {
                     uint32 damageReductedArmor = caster->CalcArmorReducedDamage(target, damage, GetSpellProto());
                     cleanDamage.mitigated_damage += damage - damageReductedArmor;
@@ -1448,8 +1398,8 @@ void AuraEffect::PeriodicTick(Unit * target, Unit * caster) const
             if (crit)
                 damage = caster->SpellCriticalDamageBonus(m_spellProto, damage, target);
 
-            //Calculate armor mitigation if it is a physical spell
-            if (GetSpellSchoolMask(GetSpellProto()) & SPELL_SCHOOL_MASK_NORMAL)
+            // Calculate armor mitigation
+            if (Unit::IsDamageReducedByArmor(GetSpellSchoolMask(GetSpellProto()), GetSpellProto(), m_effIndex))
             {
                 uint32 damageReductedArmor = caster->CalcArmorReducedDamage(target, damage, GetSpellProto());
                 cleanDamage.mitigated_damage += damage - damageReductedArmor;
@@ -1932,32 +1882,6 @@ void AuraEffect::PeriodicDummyTick(Unit * target, Unit * caster) const
                 // 7053 Forsaken Skill: Shadow
                 return;
             }
-            case 45472: // Parachute
-                if (target->GetTypeId() == TYPEID_PLAYER)
-                {
-                    Player *plr = (Player*)target;
-                    if (plr->IsFalling())
-                    {
-                        plr->RemoveAurasDueToSpell(45472);
-                        plr->CastSpell(plr, 44795, true);
-                    }
-                }
-                break;
-
-            case 51685: // Prey on the Weak
-            case 51686:
-            case 51687:
-            case 51688:
-            case 51689:
-                if (target->getVictim() && (target->GetHealthPct() > target->getVictim()->GetHealthPct())) {
-                    if (!target->HasAura(58670)) {
-                        int32 basepoints = SpellMgr::CalculateSpellEffectAmount(GetSpellProto(), 0);
-                        target->CastCustomSpell(target, 58670, &basepoints, 0, 0, true);
-                    }
-                }
-                else
-                    target->RemoveAurasDueToSpell(58670);
-                break;
             case 58730: // No Fly Zone - Wintergrasp
 				{
 			    if (pvpWG->isWarTime()==false) break;
@@ -1987,65 +1911,6 @@ void AuraEffect::PeriodicDummyTick(Unit * target, Unit * caster) const
                     target->RemoveAura(64821);
                 }
                 break;
-            case 66118: // Leeching Swarm (Anub'arak)
-                int32 lifeLeeched = target->GetHealth() * GetAmount() / 100;
-                if (lifeLeeched < 250) lifeLeeched = 250;
-                // Damage
-                caster->CastCustomSpell(target, 66240, &lifeLeeched, 0, 0, false);
-                // Heal
-                caster->CastCustomSpell(caster, 66125, &lifeLeeched, 0, 0, false);
-                break;
-          /*  case 63276: // Mark of the Faceless
-                if (caster) {
-                    uint32 count = 0;
-                    Position *pos = target;
-                    std::list<Unit*> unitList;
-                    Trinity::SpellNotifierCreatureAndPlayer notifier(caster, unitList, 15, PUSH_DST_CENTER, SPELL_TARGETS_ENEMY, pos, 0);
-                    caster->GetMap()->VisitAll(pos->m_positionX, pos->m_positionY, 15, notifier);
-                    int32 bp = GetAmount();
-                    for (std::list<Unit*>::iterator itr = unitList.begin(); itr != unitList.end(); ++itr)
-                    {
-                        if (*itr == target)
-                            continue;
-                        caster->CastCustomSpell(*itr, 63278, NULL, &bp, NULL, true, NULL);
-                        count++;
-                    }
-                    if (count > 0 && caster->isAlive()) // prevent healing after death
-                        caster->DealHeal(caster, bp * 20, GetSpellProto());
-                }
-                break;
-            case 67039: // argent squire mount
-                if (caster && caster->GetOwner())
-                {
-                    if (caster->GetOwner()->IsMounted())
-                    {
-                        if (!caster->IsMounted())
-                            caster->Mount(29736);
-                    }
-                    else caster->Unmount();
-                }
-                break;
-            case 63382: // Rapid Burst
-                {
-                    caster->CastSpell(target, (target->GetMap()->IsHeroic() ? (urand(0,1) ? 64531 : 64532) : (urand(0,1) ? 63387 : 64019)), true);
-                }
-                break;
-            case 62038: // Biting Cold
-                if (target->GetTypeId() == TYPEID_PLAYER)
-                {
-                    if (GetAmount() < 1 || !target->GetAura(62039))
-                        target->AddAura(62039, target);
-                    else if (target->GetAura(62039)->GetStackAmount() > 1 && target->isMoving())
-                        target->RemoveAuraFromStack(62039);
-                }
-                break;
-            case 62039: // Biting Cold damage
-            {
-                uint8 stackAmount = target->GetAura(62039)->GetStackAmount();
-                int32 damage = (int32)(200 * pow(2.0f,stackAmount));
-                target->CastCustomSpell(target,62188,&damage,0,0,true);
-                break;
-            }*/
         }
         break;
         case SPELLFAMILY_MAGE:
@@ -2410,27 +2275,6 @@ void AuraEffect::TriggerSpell(Unit * target, Unit * caster) const
                     // triggerSpellId not set and unknown effect triggered in this case, ignoring for while
                     case 768:
                         return;
-                }
-                break;
-            }
-            case SPELLFAMILY_HUNTER:
-            {
-                switch (auraId)
-                {
-                    // Sniper training
-                    case 53302:
-                    case 53303:
-                    case 53304:
-                        // We are standing at the moment
-                        if (GetAmount() > 0)
-                            return;
-
-                        triggerSpellId = 64418 + auraId - 53302;
-
-                        // If aura is active - no need to continue
-                        if (target->HasAura(triggerSpellId))
-                            return;
-                       break;
                 }
                 break;
             }
@@ -6295,8 +6139,8 @@ void AuraEffect::HandleAuraDummy(AuraApplication const * aurApp, uint8 mode, boo
             break;
         }
         case SPELLFAMILY_PALADIN:
-            if (!(mode & AURA_EFFECT_HANDLE_REAL))
-                break;
+//            if (!(mode & AURA_EFFECT_HANDLE_REAL))
+ //               break;
             switch (GetSpellProto()->SpellIconID)
             {
                 // Blessing of Sanctuary
