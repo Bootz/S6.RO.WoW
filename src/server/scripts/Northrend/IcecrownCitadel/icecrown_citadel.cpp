@@ -54,7 +54,7 @@ enum TeleportSpells
     QUEEN         = 70861,
     LICHKING      = 70860
 };
-
+/*
 class npc_cult_fanatic_and_adherent : public CreatureScript
 {
 public:
@@ -199,7 +199,7 @@ public:
 	{
             return new npc_cult_fanatic_and_adherentAI(pCreature);
 	}
-};
+};*/
 
 class go_icecrown_teleporter : public GameObjectScript
 {
@@ -290,6 +290,6 @@ class go_icecrown_teleporter : public GameObjectScript
 
 void AddSC_icecrown_citadel()
 {
-    new npc_cult_fanatic_and_adherent;
+    //new npc_cult_fanatic_and_adherent;
     new go_icecrown_teleporter;
 }
