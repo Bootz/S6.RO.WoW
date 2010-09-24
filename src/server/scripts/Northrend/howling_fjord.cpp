@@ -341,10 +341,81 @@ public:
     }
 };
 
+/*######
+ ## mob_plague_dragonflayer
+ ######*/
+
+#define SPELL_PLAGUE_SPRAY                  43381
+#define ENTRY_SPRAYED_TARGET_CREDIT         24281
+
+class mob_plague_dragonflayer : public CreatureScript
+{
+public:
+    mob_plague_dragonflayer() : CreatureScript("mob_plague_dragonflayer") { }
+
+    struct mob_plague_dragonflayerAI: public ScriptedAI
+    {
+        mob_plague_dragonflayerAI(Creature *c) : ScriptedAI(c) {}
+
+        bool isPlagued;
+        uint32 check_Timer;
+
+        void Reset() 
+        {
+            isPlagued = false;
+            check_Timer = 5000;
+        }
+
+        void SpellHit(Unit* caster, const SpellEntry* spell)
+        {
+            if (!caster || caster->GetTypeId() != TYPEID_PLAYER)
+                return;
+
+            if (isPlagued)
+                return;
+
+            if (spell->Id == SPELL_PLAGUE_SPRAY)
+            {
+                isPlagued = true;
+                caster->ToPlayer()->KilledMonsterCredit(ENTRY_SPRAYED_TARGET_CREDIT, me->GetGUID());
+                Creature *target = me->FindNearestCreature(RAND(23564, 24198, 24199), 50, true);
+                if (target)
+                    me->Attack(target, true);
+            }
+        }
+
+        void UpdateAI(const uint32 diff)
+        {
+            if (!UpdateVictim())
+                return;
+
+            if (check_Timer <= diff) 
+            {
+                if (!me->HasAuraEffect(SPELL_PLAGUE_SPRAY, 0))
+                    isPlagued = false;
+                check_Timer = 5000;
+
+            } else
+                check_Timer -= diff;
+
+            DoMeleeAttackIfReady();
+        }
+
+        void EnterCombat(Unit *who) {}
+    };
+
+    CreatureAI* GetAI(Creature *_Creature) const
+    {
+        return new mob_plague_dragonflayerAI(_Creature);
+    }
+
+};
+
 void AddSC_howling_fjord()
 {
     new npc_apothecary_hanes();
     new npc_plaguehound_tracker();
     new npc_razael_and_lyana();
     new npc_mcgoyver();
+    new mob_plague_dragonflayer();
  }

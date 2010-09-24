@@ -6309,6 +6309,8 @@ UPDATE `creature_template` SET `ScriptName` = 'npc_7th_legion_siege_engineer' WH
 UPDATE `creature_template` SET `ScriptName` = 'vehicle_alliance_steamtank' WHERE `entry` = 27587; -- Alliance Steam Tank http://www.wowhead.com/npc=27587
 UPDATE `creature_template` SET `ScriptName` = 'mob_woodlands_walker', `npc_flag` = npcflag|1 `entry` = 26421; -- Woodlands Walker http://www.wowhead.com/npc=26421
 
+-- Howling Fjord
+UPDATE `creature_template` SET `ScriptName` = 'mob_plague_dragonflayer' WHERE `entry` IN (23564,24198,24199); -- Plagued Dragonflayer: Tribesman, Rune-Caster & Handler
 
     
 -- Eye of eternity
