@@ -160,9 +160,13 @@ class boss_halion : public CreatureScript
 
             void RemoveAllGO()
             {
-                if (GameObject* flame = instance->instance->GetGameObject(instance->GetData64(GO_FLAME_WALLS2)))
+                if (GameObject* flame1 = instance->instance->GetGameObject(instance->GetData64(GO_FLAME_WALLS2)))
                 {
-                    flame->Delete();
+                    flame1->Delete();
+                }
+                if (GameObject* flame2 = instance->instance->GetGameObject(instance->GetData64(GO_FLAME_WALLS3)))
+                {
+                    flame2->Delete();
                 }
                 if (GameObject* portal1 = instance->instance->GetGameObject(instance->GetData64(GO_TWILIGHT_PORTAL1)))
                 {
@@ -228,9 +232,13 @@ class boss_halion : public CreatureScript
                                 me->AddAura(SPELL_TWILIGHT_PRECISION, me); //test
                                 break;
                             case EVENT_FLAME_WALL:
-                                if (go_flame = me->SummonGameObject(GO_FLAME_WALLS2, 3154.56f, 535.418f, 72.8889f, 4.47206f, 0, 0, 0.786772f, -0.617243f, 999999))
+                                if (GameObject* go_flame1 = me->SummonGameObject(GO_FLAME_WALLS2, 3154.56f, 535.418f, 72.8889f, 4.47206f, 0, 0, 0.786772f, -0.617243f, 999999))
                                 {
-                                    go_flame->SetPhaseMask(33,true);
+                                    go_flame1->SetPhaseMask(1,true);
+                                }
+                                if (GameObject* go_flame2 = me->SummonGameObject(GO_FLAME_WALLS3, 3154.56f, 535.418f, 72.8889f, 4.47206f, 0, 0, 0.786772f, -0.617243f, 999999))
+                                {
+                                    go_flame2->SetPhaseMask(32,true);
                                 }
                                 break;
                             case EVENT_CAST_TAIL_LASH:
@@ -403,11 +411,21 @@ class boss_halion : public CreatureScript
                 instance->DoRemoveAurasDueToSpellOnPlayers(SPELL_AURE_TWILIGHT);
                 RemoveAllGO();
                 DoScriptText(SAY_DEATH, me);
+                switch(instance->instance->GetDifficulty())
+                {
+                    case RAID_DIFFICULTY_10MAN_NORMAL:
+                        instance->DoCompleteAchievement(TWILIGHT_DESTROYER_NORMAL_10);
+                    case RAID_DIFFICULTY_10MAN_HEROIC:
+                        instance->DoCompleteAchievement(TWILIGHT_DESTROYER_HEROIC_10);
+                    case RAID_DIFFICULTY_25MAN_NORMAL:
+                        instance->DoCompleteAchievement(TWILIGHT_DESTROYER_NORMAL_25);
+                    case RAID_DIFFICULTY_25MAN_HEROIC:
+                        instance->DoCompleteAchievement(TWILIGHT_DESTROYER_HEROIC_25);
+                }
             }
 
         private:
             uint32 PercentDamage;
-            GameObject* go_flame;
         };
 
         CreatureAI* GetAI(Creature *pCreature) const

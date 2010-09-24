@@ -52,6 +52,7 @@ class instance_ruby_sanctum : public InstanceMapScript
                 m_uiXerestraszaGUID = 0;
                 m_uiTwilightHalionGUID = 0;
                 m_uiGOFlameWallsGUID = 0;
+                m_uiGOTwilightWallsGUID = 0;
             }
 
             void OnCreatureCreate(Creature *pCreature, bool  /*add*/)
@@ -105,6 +106,7 @@ class instance_ruby_sanctum : public InstanceMapScript
                     case GO_TWILIGHT_PORTAL1: m_uiHalionPortalGUID = pGo->GetGUID(); break;
                     case GO_TWILIGHT_PORTAL2: m_uiTwilightPortalGUID = pGo->GetGUID(); break;
                     case GO_FLAME_WALLS2:     m_uiGOFlameWallsGUID = pGo->GetGUID(); break;
+                    case GO_FLAME_WALLS3:     m_uiGOTwilightWallsGUID = pGo->GetGUID(); break;
                     default: break;
                 }
             }
@@ -195,6 +197,7 @@ class instance_ruby_sanctum : public InstanceMapScript
                     case GO_TWILIGHT_PORTAL1:  return m_uiHalionPortalGUID;   break;
                     case GO_TWILIGHT_PORTAL2:  return m_uiTwilightPortalGUID; break;
                     case GO_FLAME_WALLS2:      return m_uiGOFlameWallsGUID;   break;  
+                    case GO_FLAME_WALLS3:      return m_uiGOTwilightWallsGUID;   break; 
                     default: break;
                 }
                 return 0;
@@ -243,6 +246,7 @@ class instance_ruby_sanctum : public InstanceMapScript
                 uint64 m_uiHalionPortalGUID;
                 uint64 m_uiTwilightPortalGUID;
                 uint64 m_uiGOFlameWallsGUID;
+                uint64 m_uiGOTwilightWallsGUID;
         };
         
         InstanceScript* GetInstanceScript (InstanceMap *pMap) const
