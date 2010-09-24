@@ -6288,7 +6288,8 @@ UPDATE `creature_template` SET `ScriptName` = 'npc_argent_champion' WHERE entry 
 UPDATE `creature_template` SET `ScriptName` = 'npc_fizzcrank_fullthrottle' WHERE entry = 25590; -- Fizzcrank Fullthrottle
 UPDATE `creature_template` SET `ScriptName` = 'npc_surristrasz' WHERE entry =24795; -- Surristrasz
 UPDATE `creature_template` SET `ScriptName` = 'npc_tiare' WHERE entry =30051; -- Librarian Tiare
-UPDATE `creature_template` SET `scriptname` = 'vehicle_wyrmrest_skytalon' WHERE entry = 32535; -- http://www.wowhead.com/npc=32535
+UPDATE `creature_template` SET `scriptname` = 'vehicle_wyrmrest_skytalon' WHERE entry = 32535; -- Wyrmrest Skytalon http://www.wowhead.com/npc=32535
+UPDATE `creature_template` SET `scriptname` = 'npc_cultist_for_hunt' WHERE entry in (25828,25827,25248); -- Guard Mitchells, Tom Hegger &  "Salty" John Thorpe
 
 -- Eye of eternity
 UPDATE `creature_template` SET `ScriptName` = 'boss_malygos', unit_flags = unit_flags & ~256 WHERE entry = 28859;

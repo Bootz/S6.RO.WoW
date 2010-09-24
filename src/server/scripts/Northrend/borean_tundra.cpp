@@ -2622,6 +2622,77 @@ public:
 
 };
 
+/*######
+## npc_cultist_for_hunt
+######*/
+
+#define QUEST_THE_HUNT_IS_ON            11794
+#define SPELL_RIGHTEOUS_VISION          46078
+
+#define GOSSIP_CULTIST_EVENT    "[PH] I have exposed you, Cultist."
+
+class npc_cultist_for_hunt : public CreatureScript
+{
+public:
+    npc_cultist_for_hunt() : CreatureScript("npc_cultist_for_hunt") { }
+
+    struct npc_cultist_for_huntAI : public Scripted_NoMovementAI
+    {
+        npc_cultist_for_huntAI(Creature* pCreature) : Scripted_NoMovementAI(pCreature){}
+
+        void Reset()
+        {
+            me->setFaction(35);
+        }
+
+        void Aggro(Unit* /*pWho*/) {}
+
+        void AttackStart(Unit* /*pWho*/) {}
+
+        void UpdateAI(const uint32 uiDiff)
+        {
+            if (!UpdateVictim())
+                return;
+
+            DoMeleeAttackIfReady();
+        }
+    };
+
+    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action )
+    {
+        switch(action)
+        {
+        case GOSSIP_ACTION_TRADE:
+            pPlayer->SEND_VENDORLIST( pCreature->GetGUID() );
+            break;
+        case GOSSIP_ACTION_INFO_DEF+1:
+            pCreature->setFaction(14);
+            break;
+        }
+        pPlayer->CLOSE_GOSSIP_MENU();
+        return true;
+    }
+
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
+    {
+        // Verkaeufer
+        if( pCreature->isVendor() )
+           pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_VENDOR, GOSSIP_TEXT_BROWSE_GOODS, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_TRADE);
+
+        if(pPlayer->GetQuestStatus(QUEST_THE_HUNT_IS_ON) == QUEST_STATUS_INCOMPLETE && pPlayer->HasAuraEffect(SPELL_RIGHTEOUS_VISION,0))
+           pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_CULTIST_EVENT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+
+        pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
+        return true;
+    }
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_cultist_for_huntAI(pCreature);
+    }
+
+};
+
 
 void AddSC_borean_tundra()
 {
@@ -2655,4 +2726,5 @@ void AddSC_borean_tundra()
     new npc_seaforium_depth_charge;
     new npc_valiance_keep_cannoneer;
     new npc_warmage_coldarra;
+    new npc_cultist_for_hunt();
 }
