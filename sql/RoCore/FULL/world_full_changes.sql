@@ -6291,6 +6291,10 @@ UPDATE `creature_template` SET `ScriptName` = 'npc_tiare' WHERE entry =30051; --
 UPDATE `creature_template` SET `scriptname` = 'vehicle_wyrmrest_skytalon' WHERE entry = 32535; -- Wyrmrest Skytalon http://www.wowhead.com/npc=32535
 UPDATE `creature_template` SET `scriptname` = 'npc_cultist_for_hunt' WHERE entry in (25828,25827,25248); -- Guard Mitchells, Tom Hegger &  "Salty" John Thorpe
 
+-- Dalaran
+UPDATE creature_template SET scriptname = 'npc_archmage_vargoth' WHERE entry = 19481; -- Archmage Vargoth <Kirin Tor> http://www.wowhead.com/npc=19481
+INSERT INTO npc_text (ID,text0_0) VALUES (40000,'Amazing! There are passages in here that I have never seen before. This must have taken quite a while for you to track down. If you ever find anymore books like this, I would like to be notified immediately. $B$BPlease take one of my Kirin Tor Familiars with you just in case you stumble across anything.');
+    
 -- Eye of eternity
 UPDATE `creature_template` SET `ScriptName` = 'boss_malygos', unit_flags = unit_flags & ~256 WHERE entry = 28859;
 UPDATE `creature_template` SET `ScriptName` = 'mob_nexus_lord' WHERE entry = 30245; -- Nexus Lord
