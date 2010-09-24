@@ -476,7 +476,387 @@ public:
     }
 };
 
+/*######
+ ## npc_high_oracle_soo_say
+ ######*/
 
+enum o_npc_high_oracle_soo_say
+{
+
+    ITEM_JALOOTS_FAVORITE_CRYSTAL = 38623,
+    ITEM_LAFOOS_BUG_BAG = 38622,
+    ITEM_MOODLES_STRESS_BALL = 38624,
+
+    QUEST_APPEASING_THE_GREAT_RAIN_STONE = 12704, //Alle
+    QUEST_GODS_LIKE_SHINEY_THINGS = 12572, //Lafoo
+    QUEST_MAKE_THE_BAD_SNAKE_GO_AWAY = 12571, //Lafoo
+    //QUEST_FORTUNATE_MISUNDERSTANDINGS = 12570,
+    //QUEST_MAKING_PEACE = 12573, //Lafoo
+    QUEST_BACK_SO_SOON = 12574, //Jaloo
+    QUEST_FORCED_HAND = 12576, //Jaloo
+    QUEST_THE_LOST_MISTWHISPER_TRESURE = 12575, //Jaloo
+    QUEST_THE_ANGRY_GORLOC = 12578, //Moodle
+    QUEST_A_HEROS_BURDEN = 12581, //Moodle
+};
+
+#define GOSSIP_LAFOO_ITEM       "I need to find Lafoo, do you have his bug bag?"
+#define GOSSIP_JALOOT_ITEM      "I need to find Jaloot, do you have his favorite crystal?"
+#define GOSSIP_MOODLE_ITEM      "I need to find Moodle, do you have his stressball?"
+
+//This function is called when the player opens the gossip menubool
+
+class npc_high_oracle_soo_say : public CreatureScript
+{
+public:
+    npc_high_oracle_soo_say() : CreatureScript("npc_high_oracle_soo_say") { }
+
+    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+    {
+        ItemPosCountVec dest;
+        uint32 ToStoreItem;
+
+        switch (uiAction)
+        {
+            case GOSSIP_ACTION_INFO_DEF + 1:
+                ToStoreItem = ITEM_LAFOOS_BUG_BAG;
+                break;
+            case GOSSIP_ACTION_INFO_DEF + 2:
+                ToStoreItem = ITEM_JALOOTS_FAVORITE_CRYSTAL;
+                break;
+            case GOSSIP_ACTION_INFO_DEF + 3:
+                ToStoreItem = ITEM_MOODLES_STRESS_BALL;
+                break;
+        }
+
+        if (ToStoreItem > 0)
+        {
+            uint8 canStoreNewItem = pPlayer->CanStoreNewItem(NULL_BAG, NULL_SLOT, dest, ToStoreItem, 1);
+            if (canStoreNewItem == EQUIP_ERR_OK) {
+                Item *newItem = NULL;
+                newItem = pPlayer->StoreNewItem(dest, ToStoreItem, 1, true);
+                pPlayer->SendNewItem(newItem, 1, true, false);
+            }
+            pPlayer->CLOSE_GOSSIP_MENU();
+        }
+        return true;
+    }
+
+
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
+    {
+        if (pCreature->isQuestGiver())
+            pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+
+        if (pPlayer->GetQuestStatus(QUEST_APPEASING_THE_GREAT_RAIN_STONE) == QUEST_STATUS_INCOMPLETE)
+        {
+            pPlayer->ADD_GOSSIP_ITEM_EXTENDED(0, GOSSIP_LAFOO_ITEM, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1, "", 0, false);
+            pPlayer->ADD_GOSSIP_ITEM_EXTENDED(0, GOSSIP_JALOOT_ITEM, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2, "", 0, false);
+            pPlayer->ADD_GOSSIP_ITEM_EXTENDED(0, GOSSIP_MOODLE_ITEM, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3, "", 0, false);
+
+            pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature),pCreature->GetGUID());
+            return true;
+        }
+
+        if (pPlayer->GetQuestStatus(QUEST_MAKE_THE_BAD_SNAKE_GO_AWAY) == QUEST_STATUS_INCOMPLETE
+            || (pPlayer->GetQuestStatus(QUEST_GODS_LIKE_SHINEY_THINGS) == QUEST_STATUS_INCOMPLETE
+            || pPlayer->GetQuestStatus(QUEST_GODS_LIKE_SHINEY_THINGS) == QUEST_STATUS_NONE)
+            || pPlayer->GetQuestStatus(QUEST_MAKING_PEACE) == QUEST_STATUS_INCOMPLETE)
+            pPlayer->ADD_GOSSIP_ITEM_EXTENDED(0, GOSSIP_LAFOO_ITEM, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1, "", 0, false);
+   
+        if (pPlayer->GetQuestStatus(QUEST_BACK_SO_SOON) == QUEST_STATUS_INCOMPLETE
+            || pPlayer->GetQuestStatus(QUEST_FORCED_HAND) == QUEST_STATUS_INCOMPLETE
+            || pPlayer->GetQuestStatus(QUEST_THE_LOST_MISTWHISPER_TRESURE) == QUEST_STATUS_INCOMPLETE)
+            pPlayer->ADD_GOSSIP_ITEM_EXTENDED(0, GOSSIP_JALOOT_ITEM, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2, "", 0, false);
+
+        if (pPlayer->GetQuestStatus(QUEST_THE_ANGRY_GORLOC) == QUEST_STATUS_INCOMPLETE
+            || (pPlayer->GetQuestStatus(QUEST_THE_ANGRY_GORLOC) == QUEST_STATUS_COMPLETE
+            && pPlayer->GetQuestStatus(QUEST_A_HEROS_BURDEN) == QUEST_STATUS_NONE))
+            pPlayer->ADD_GOSSIP_ITEM_EXTENDED(0, GOSSIP_MOODLE_ITEM, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3, "", 0, false);
+
+        pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature),pCreature->GetGUID());
+        return true;
+    }
+
+};
+
+
+/*######
+## oracle_frenzyheart_switch
+######*/
+
+#define D_QUEST_FRENZYHEART_CHAMPION            12582
+#define D_QUEST_HAND_OF_THE_ORACLES             12689
+
+class oracle_frenzyheart_switch : public CreatureScript
+{
+public:
+    oracle_frenzyheart_switch() : CreatureScript("oracle_frenzyheart_switch") { }
+
+    bool OnQuestReward(Player *player, Creature *_Creature, Quest const *_Quest, uint32 /*item*/)
+    {
+        switch(_Quest->GetQuestId())
+        {
+        case D_QUEST_FRENZYHEART_CHAMPION:
+            player->GetReputationMgr().SetReputation(sFactionStore.LookupEntry(FACTION_FRENZYHEART),9000);
+            //player->GetReputationMgr().SetReputation(sFactionStore.LookupEntry(FACTION_ORCLES),-4200);
+            break;
+        case D_QUEST_HAND_OF_THE_ORACLES:
+            player->GetReputationMgr().SetReputation(sFactionStore.LookupEntry(FACTION_ORCLES),9000);
+            //player->GetReputationMgr().SetReputation(sFactionStore.LookupEntry(FACTION_FRENZYHEART),-4200);
+            break;
+        }
+        return true;
+    }
+};
+
+/*######
+## npc_frenzyheart_zepik
+######*/
+
+#define QUEST_A_ROUGH_RIDE                      12536
+#define AREA_MISTWHISPER_REFUGE                 4306
+
+class npc_frenzyheart_zepik : public CreatureScript
+{
+public:
+    npc_frenzyheart_zepik() : CreatureScript("npc_frenzyheart_zepik") { }
+
+    struct npc_frenzyheart_zepikAI: public ScriptedAI
+    {
+        npc_frenzyheart_zepikAI(Creature* pCreature) : ScriptedAI(pCreature) {}
+
+        uint32 check_Timer;
+
+        void Reset()
+        {
+            check_Timer = 5000;
+            if(me->GetOwner() && me->GetOwner()->ToPlayer())
+                me->GetMotionMaster()->MoveFollow(me->GetOwner()->ToPlayer(), PET_FOLLOW_DIST, PET_FOLLOW_ANGLE);
+        }
+
+        void Aggro(){}
+
+        void UpdateAI(const uint32 diff)
+        {
+            if(check_Timer <= diff)
+            {
+                if(me->GetAreaId() == AREA_MISTWHISPER_REFUGE)
+                    if(me->GetOwner() && me->GetOwner()->ToPlayer())
+                    {
+                        if(me->GetOwner()->ToPlayer()->GetQuestStatus(QUEST_A_ROUGH_RIDE) == QUEST_STATUS_INCOMPLETE)
+                            me->GetOwner()->ToPlayer()->CompleteQuest(QUEST_A_ROUGH_RIDE);
+                    }
+                check_Timer = 5000;
+            }else check_Timer -= diff;
+        }
+    };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_frenzyheart_zepikAI(pCreature);
+    }
+};
+
+/*######
+## npc_mosswalker_victim
+######*/
+
+#define SPELL_MOSSWALKER_QUEST_CREDIT               52157
+#define QUEST_THE_MOSSWALKER_SAVIOR                 12580
+
+static const char * dead_sayings[5] =
+{
+    "Please take... my shinies. All done...",
+    "We not do anything... to them... I no understand.",
+    "Use my shinies... make weather good again... make undead things go away.",
+    "We gave shinies to shrine... we not greedy... why this happen?",
+    "I do something bad? I sorry..."
+};
+static const char * survive_sayings[4] =
+{
+    "We saved. You nice, dryskin.",
+    "Maybe you make weather better too?",
+    "You save us! Yay for you!",
+    "Thank you! You good!"
+};
+
+#define GOSSIP_EVENT            "<Check for pulse.>"
+
+class npc_mosswalker_victim : public CreatureScript
+{
+public:
+    npc_mosswalker_victim() : CreatureScript("npc_mosswalker_victim") { }
+
+    struct npc_mosswalker_victimAI: public ScriptedAI
+    {
+        npc_mosswalker_victimAI(Creature* pCreature) : ScriptedAI(pCreature) {}
+
+        bool PulseChecked;
+        bool hasSurvived;
+        bool doReset;
+        uint32 action_Timer;
+
+        void Reset()
+        {
+            PulseChecked = false;
+            action_Timer = 5000;
+            doReset = false;
+        }
+
+        void CheckPulse(Player *pPlayer)
+        {
+            PulseChecked = true;
+            hasSurvived = (urand(0,1) == 0);
+            uint32 checkrand;
+            if(hasSurvived)
+            {
+                checkrand = urand(0,3);
+                me->CastSpell(pPlayer,SPELL_MOSSWALKER_QUEST_CREDIT,true);
+                me->MonsterSay(survive_sayings[checkrand],LANG_UNIVERSAL, NULL);
+                action_Timer = 15000;
+            }
+            else
+            {
+                checkrand = urand(0,4);
+                me->MonsterSay(dead_sayings[checkrand],LANG_UNIVERSAL, NULL);
+                action_Timer = 2000;
+            }
+        }
+
+        void Aggro() {}
+        void MoveInLineOfSight(Unit *who) {}
+        void AttackStart(Unit *who) {}
+        void UpdateAI(const uint32 diff)
+        {
+            if(PulseChecked)
+            {
+                if(action_Timer <= diff)
+                {
+                    if(hasSurvived)
+                    {
+                        me->DealDamage(me,me->GetHealth());
+                        me->RemoveCorpse();
+                    }else
+                    {
+                        //Spell for GO fehlt noch
+                        me->DealDamage(me,me->GetHealth());
+                    }
+                    action_Timer = 9999999;
+                }else action_Timer -= diff;
+            }
+        }
+    };
+
+    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 sender, uint32 action )
+    {
+        switch(action)
+        {
+        case GOSSIP_ACTION_INFO_DEF+1:
+            CAST_AI(npc_mosswalker_victim::npc_mosswalker_victimAI,pCreature->AI())->CheckPulse(pPlayer);
+            break;
+        }
+        pPlayer->CLOSE_GOSSIP_MENU();
+        return true;
+    }
+
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
+    {
+        if(pPlayer->GetQuestStatus(QUEST_THE_MOSSWALKER_SAVIOR) == QUEST_STATUS_INCOMPLETE && !CAST_AI(npc_mosswalker_victim::npc_mosswalker_victimAI,pCreature->AI())->PulseChecked)
+           pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_EVENT, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+
+        pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
+        return true;
+    }
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_mosswalker_victimAI(pCreature);
+    }
+
+};
+
+/*######
+## npc_artruis_the_heartless
+######*/
+
+#define SPELL_ARTRUIS_FROST_NOVA            11831
+#define SPELL_ARTRUIS_FROST_BOLT            15530
+#define SPELL_ARTRUIS_ICY_VEINS             54792
+#define SPELL_ARTRUIS_ICE_LANCE             54261
+
+#define ENTRY_ARTRUIS_URN                   190777
+
+class npc_artruis_the_heartless : public CreatureScript
+{
+public:
+    npc_artruis_the_heartless() : CreatureScript("npc_artruis_the_heartless") { }
+
+    struct npc_artruis_the_heartlessAI: public ScriptedAI
+    {
+        npc_artruis_the_heartlessAI(Creature* pCreature) : ScriptedAI(pCreature) {}
+
+        uint32 shoot_Timer;
+        uint32 nova_Timer;
+        uint32 veins_Timer;
+
+        void Reset()
+        {
+            shoot_Timer = 2000;
+            nova_Timer = urand(20000,40000);
+            veins_Timer = urand(20000,40000);
+        }
+
+        bool TryDoCast(Unit *victim, uint32 spellId, bool triggered = false)
+        {
+            if(me->IsNonMeleeSpellCasted(false)) return false;
+
+            DoCast(victim,spellId,triggered);
+            return true;
+        }
+
+        void Aggro() 
+        {
+
+        }
+
+        void JustDied(Unit *killer)
+        {
+            GameObject* object = me->SummonGameObject(ENTRY_ARTRUIS_URN,me->GetPositionX(),me->GetPositionY(),me->GetPositionZ(),0,0,0,0,0,600);
+        }
+
+        void UpdateAI(const uint32 diff)
+        {
+            if (!UpdateVictim())
+                return;
+
+            if(nova_Timer <= diff)
+            {
+                if(TryDoCast(me,SPELL_ARTRUIS_FROST_NOVA))
+                    nova_Timer = urand(20000,40000);
+            }else nova_Timer -= diff;
+
+            if(veins_Timer <= diff)
+            {
+                if(TryDoCast(me->getVictim(),SPELL_ARTRUIS_ICY_VEINS))
+                    veins_Timer = urand(20000,40000);
+            }else veins_Timer -= diff;
+
+            if(shoot_Timer <= diff)
+            {
+                if(TryDoCast(me->getVictim(),RAND(SPELL_ARTRUIS_FROST_BOLT,SPELL_ARTRUIS_ICE_LANCE)))
+                    shoot_Timer = 2000;
+            }else shoot_Timer -= diff;
+
+            DoMeleeAttackIfReady();
+        }
+    };
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_artruis_the_heartlessAI(pCreature);
+    }
+
+};
 
 /*######
 ## npc_adventurous_dwarf
@@ -550,6 +930,173 @@ public:
     }
 };
 
+/*######
+## npc_tipsy_mcmanus
+######*/
+
+enum eTipsy_mcmanus
+{
+    QUEST_STILL_AT_IT = 12644,
+    GOSSIP_TIPSY_MCMANUS_TEXT = 13288,
+    JUNGLE_PUNCH_ENTRY = 190643
+};
+
+static const uint32 GOEntry[5] = 
+{   
+    190635,
+    190636,
+    190637,
+    190638,
+    190639
+};
+
+static const char * Instructions[6] =
+{
+    "Benutze das Druckventil!",
+    "Heize die Kohlenpfanne an!",
+    "Wirf noch eine Orange hinein, schnell!",
+    "Misch ein paar Bananen hinzu!",
+    "Schnell, eine Papaya!",
+    "Nein, das war falsch! Wir muessen noch einmal beginnen."
+};
+
+#define GOSSIP_ITEM_TIPSY  "Ich bin bereit, lass uns anfangen."
+
+class npc_tipsy_mcmanus : public CreatureScript
+{
+public:
+    npc_tipsy_mcmanus() : CreatureScript("npc_tipsy_mcmanus") { }
+
+    struct npc_tipsy_mcmanusAI : public ScriptedAI
+    {
+        npc_tipsy_mcmanusAI(Creature *c) : ScriptedAI(c) {}
+
+        bool Event;
+        bool choice;
+        uint8 count;
+        uint32 rnd;
+        uint32 react_Timer;
+
+        void Reset()
+        {
+            Event = false;
+            choice = true;
+            rnd = 0;
+            count = 0;
+            react_Timer = 10*IN_MILLISECONDS;
+ 
+            me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+        }
+
+        void GOUsed(uint32 entry) 
+        {
+            if ((!choice) && (entry == GOEntry[rnd]))   //used correct GO
+            {
+                me->HandleEmoteCommand(EMOTE_ONESHOT_CHEER);     
+                choice = true;
+
+                react_Timer = urand(5*IN_MILLISECONDS, 7*IN_MILLISECONDS);
+            }
+        }
+
+        void UpdateAI(const uint32 diff)
+        {
+            if (UpdateVictim())
+            {
+                DoMeleeAttackIfReady();
+                return;
+            }
+        
+            if (Event)  //active
+            {
+
+                if(react_Timer <= diff)
+                {
+                    if (choice)    //used correct GO
+                    {
+                        ++count;
+
+                        if (count > 10)    //spawn quest reward and reset
+                        {
+                            float x, y, z;
+                            me->GetPosition(x, y, z);         
+                            me->SummonGameObject(JUNGLE_PUNCH_ENTRY, x + 1.2f, y + 0.8f, z - 0.23f, 0, 0, 0, 0, 0, 60);
+                            Reset();
+                            return;
+                        }
+                           
+                        rnd = urand(0, 4);
+                    
+                        me->MonsterSay(Instructions[rnd], LANG_UNIVERSAL, 0);   //give new instructions
+                        me->HandleEmoteCommand(RAND(EMOTE_ONESHOT_EXCLAMATION, EMOTE_ONESHOT_POINT));
+                    
+                        choice = false;  //reset choice
+
+                    }else          //failed -> reset and try again
+                    {
+                        me->MonsterSay(Instructions[5], LANG_UNIVERSAL, 0);
+                        me->HandleEmoteCommand(EMOTE_ONESHOT_EXCLAMATION);
+                        Reset();
+                    }
+                    react_Timer = 10*IN_MILLISECONDS;
+
+                }else react_Timer -= diff;
+            }
+        }
+    };
+
+    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+    {
+        if (uiAction == GOSSIP_ACTION_INFO_DEF +1)
+        {
+            pPlayer->CLOSE_GOSSIP_MENU();
+            CAST_AI(npc_tipsy_mcmanus::npc_tipsy_mcmanusAI, pCreature->AI())->Event = true;
+            pCreature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+        }
+        return true;
+    }
+
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
+    {
+        if (pPlayer->GetQuestStatus(QUEST_STILL_AT_IT) == QUEST_STATUS_INCOMPLETE)
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_TIPSY, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+
+        pPlayer->SEND_GOSSIP_MENU(GOSSIP_TIPSY_MCMANUS_TEXT, pCreature->GetGUID());
+        return true;
+    }
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_tipsy_mcmanusAI (pCreature);
+    }
+
+};
+
+/*######
+## go_brew_event
+######*/
+
+enum eBrewEventGO
+{
+    NPC_TIPSY_MCMANUS    = 28566
+};
+
+class go_brew_event : public GameObjectScript
+{
+public:
+    go_brew_event() : GameObjectScript("go_brew_event") { }
+
+    bool OnGossipHello (Player *pPlayer, GameObject *pGO)
+    {
+        uint32 entry = pGO->GetEntry();
+
+        if (Creature* pTipsy = GetClosestCreatureWithEntry(pPlayer, NPC_TIPSY_MCMANUS, 30.0f))
+            CAST_AI(npc_tipsy_mcmanus::npc_tipsy_mcmanusAI, pTipsy->AI())->GOUsed(entry);
+
+        return false;
+    }
+};
+
 void AddSC_sholazar_basin()
 {
     new npc_injured_rainspeaker_oracle();
@@ -557,5 +1104,12 @@ void AddSC_sholazar_basin()
     new npc_avatar_of_freya();
     new npc_bushwhacker();
     new npc_engineer_helice();
+    new npc_high_oracle_soo_say();
+    new oracle_frenzyheart_switch();
+    new npc_frenzyheart_zepik();
+    new npc_mosswalker_victim();
+    new npc_artruis_the_heartless();
     new npc_adventurous_dwarf();
+    new npc_tipsy_mcmanus();
+    new go_brew_event();
 }
