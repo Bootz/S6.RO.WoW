@@ -339,6 +339,7 @@ public:
         }
         return true;
     }
+
 };
 
 /*######
@@ -411,6 +412,86 @@ public:
 
 };
 
+/*######
+ ## npc_bjorn_halgurdsson
+ ######*/
+
+#define SPELL_CRUSH_ARMOR                   33661
+#define SPELL_MORTAL_STRIKE                 32736
+#define ENTRY_BJORN_KILL_CREDIT             24275
+
+class npc_bjorn_halgurdsson : public CreatureScript
+{
+public:
+    npc_bjorn_halgurdsson() : CreatureScript("npc_bjorn_halgurdsson") { }
+
+    struct npc_bjorn_halgurdssonAI: public ScriptedAI
+    {
+        npc_bjorn_halgurdssonAI(Creature *c) : ScriptedAI(c) {}
+
+        uint32 crush_Timer;
+        uint32 strike_Timer;
+
+        void Reset()
+        {
+            me->SetReactState(REACT_DEFENSIVE);
+
+            strike_Timer = 15000;
+            crush_Timer = 11000;
+        }
+
+        void EnterCombat(Unit *who) {}
+        void SpellHit(Unit *caster, const SpellEntry *spell)
+        {
+            if (spell->Id == 43315)
+                me->SetReactState(REACT_AGGRESSIVE);
+        }
+        void DamageTaken(Unit *attacker, uint32 &damage)
+        {
+            if (damage >= me->GetHealth()) 
+            {
+                std::list<HostileReference*>& threatList = me->getThreatManager().getThreatList();
+                for (std::list<HostileReference*>::iterator i = threatList.begin(); i != threatList.end(); ++i)
+                    if (Unit* Temp = Unit::GetUnit(*me,(*i)->getUnitGuid())) 
+                    {
+                        if (Temp->GetTypeId() == TYPEID_PLAYER)
+                        {
+                            Temp->ToPlayer()->KilledMonsterCredit(ENTRY_BJORN_KILL_CREDIT, me->GetGUID());
+                        }
+                    }
+            }
+        }
+
+        void UpdateAI(const uint32 diff) 
+        {
+            if (!UpdateVictim())
+                return;
+
+            if (strike_Timer <= diff) 
+            {
+                DoCast(me->getVictim(), SPELL_MORTAL_STRIKE);
+                strike_Timer = 10000 + rand() % 5000;
+            } else
+                strike_Timer -= diff;
+
+            if (crush_Timer <= diff) 
+            {
+                DoCast(me->getVictim(), SPELL_CRUSH_ARMOR);
+                crush_Timer = 10000 + rand() % 5000;
+            } else
+                crush_Timer -= diff;
+
+            DoMeleeAttackIfReady();
+        }
+    };
+
+    CreatureAI* GetAI(Creature *_Creature) const
+    {
+        return new npc_bjorn_halgurdssonAI(_Creature);
+    }
+
+};
+
 void AddSC_howling_fjord()
 {
     new npc_apothecary_hanes();
@@ -418,4 +499,5 @@ void AddSC_howling_fjord()
     new npc_razael_and_lyana();
     new npc_mcgoyver();
     new mob_plague_dragonflayer();
+    new npc_bjorn_halgurdsson();
  }
