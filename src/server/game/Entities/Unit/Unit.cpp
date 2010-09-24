@@ -1689,14 +1689,66 @@ void Unit::CalcAbsorbResist(Unit *pVictim, SpellSchoolMask schoolMask, DamageEff
     // Incanter's Absorption, for converting to spell power
     int32 incanterAbsorption = 0;
 
+    // Ignore Absorption Auras
+    int32 auraAbsorbMod = 0;
+    AuraEffectList const& AbsIgnoreAurasA = GetAuraEffectsByType(SPELL_AURA_MOD_TARGET_ABSORB_SCHOOL);
+    for (AuraEffectList::const_iterator i = AbsIgnoreAurasA.begin(); i != AbsIgnoreAurasA.end(); ++i)
+    {
+        if (!((*i)->GetMiscValue() & schoolMask))
+            continue;
+        if ((*i)->GetAmount() > auraAbsorbMod)
+            auraAbsorbMod = (*i)->GetAmount();
+    }
+    AuraEffectList const& AbsIgnoreAurasB = GetAuraEffectsByType(SPELL_AURA_MOD_TARGET_ABILITY_ABSORB_SCHOOL);
+    for (AuraEffectList::const_iterator i = AbsIgnoreAurasB.begin(); i != AbsIgnoreAurasB.end(); ++i)
+    {
+        if (!((*i)->GetMiscValue() & schoolMask))
+            continue;
+        if (((*i)->GetAmount() > auraAbsorbMod) && ((*i)->IsAffectedOnSpell(spellInfo)))
+            auraAbsorbMod = (*i)->GetAmount();
+    }
+
     // absorb without mana cost
-    AuraEffectList const& vSchoolAbsorb = pVictim->GetAuraEffectsByType(SPELL_AURA_SCHOOL_ABSORB);
-    for (AuraEffectList::const_iterator i = vSchoolAbsorb.begin(); i != vSchoolAbsorb.end() && RemainingDamage > 0; ++i)
+    AuraEffectList const& vsa = pVictim->GetAuraEffectsByType(SPELL_AURA_SCHOOL_ABSORB);
+    AuraEffectList vSchoolAbsorb;
+    for (AuraEffectList::const_iterator i = vsa.begin(); i != vsa.end(); ++i)
+    {
+        SpellEntry const* spellProto = (*i)->GetSpellProto();
+        // Fire and Frost Wards should have the priority according to Shieldmonitor
+        // http://www.wowinterface.com/downloads/info11413-Shieldmonitor.html
+        if ((spellProto->SpellFamilyName == SPELLFAMILY_MAGE) &&
+            (spellProto->SpellFamilyFlags[0] & 0x00000108) &&
+            (spellProto->SpellFamilyFlags[2] & 0x00000008))
+            vSchoolAbsorb.push_front((*i));
+        else
+            vSchoolAbsorb.push_back((*i));
+    }
+    for (AuraEffectList::const_iterator i = vSchoolAbsorb.begin(); i != vSchoolAbsorb.end(); ++i)
     {
         if (!((*i)->GetMiscValue() & schoolMask))
             continue;
 
         SpellEntry const* spellProto = (*i)->GetSpellProto();
+
+        // Frost Warding
+        // Reason for this code here is that for example Chaos Bolt ignore the absorption
+        // but still proc Frost Warding mana return
+        if ((spellProto->SpellFamilyName == SPELLFAMILY_MAGE) &&
+            (spellProto->SpellFamilyFlags[0] & 0x00000108) &&
+            (spellProto->SpellFamilyFlags[2] & 0x00000008))
+            if (AuraEffect * aurEff = GetAuraEffect(SPELL_AURA_ADD_PCT_MODIFIER, SPELLFAMILY_MAGE, 501, EFFECT_0))
+            {
+                int32 chance = SpellMgr::CalculateSpellEffectAmount(aurEff->GetSpellProto(), EFFECT_1);
+                if (roll_chance_i(chance))
+                {
+                    triggeredSpells.push_back(TriggeredSpellInfo(57776, this, this, RemainingDamage, (*i)));
+                    RemainingDamage = RemainingDamage * auraAbsorbMod / 100;
+                    continue;
+                }
+            }
+
+        if (auraAbsorbMod >= 100) // Do nothing if 100% absorb ignore
+            continue;
 
         // Max Amount can be absorbed by this aura
         int32  currentAbsorb = (*i)->GetAmount();
@@ -1706,6 +1758,8 @@ void Unit::CalcAbsorbResist(Unit *pVictim, SpellSchoolMask schoolMask, DamageEff
             existExpired = true;
             continue;
         }
+        currentAbsorb = (100 - auraAbsorbMod) * currentAbsorb / 100;
+
         // Handle custom absorb auras
         // TODO: try find better way
         switch (spellProto->SpellFamilyName)
@@ -2006,6 +2060,7 @@ void Unit::CalcAbsorbResist(Unit *pVictim, SpellSchoolMask schoolMask, DamageEff
 
     // absorb by mana cost
     AuraEffectList const& vManaShield = pVictim->GetAuraEffectsByType(SPELL_AURA_MANA_SHIELD);
+    if (auraAbsorbMod < 100) // Do nothing if 100% absorb ignore
     for (AuraEffectList::const_iterator i = vManaShield.begin(), next; i != vManaShield.end() && RemainingDamage > 0; i = next)
     {
         next = i; ++next;
@@ -2019,6 +2074,7 @@ void Unit::CalcAbsorbResist(Unit *pVictim, SpellSchoolMask schoolMask, DamageEff
             currentAbsorb = (*i)->GetAmount();
         else
             currentAbsorb = RemainingDamage;
+        currentAbsorb = (100 - auraAbsorbMod) * currentAbsorb / 100;
 
          if (float manaMultiplier = SpellMgr::CalculateSpellEffectValueMultiplier((*i)->GetSpellProto(), (*i)->GetEffIndex(), (*i)->GetCaster()))
         {
@@ -2036,7 +2092,7 @@ void Unit::CalcAbsorbResist(Unit *pVictim, SpellSchoolMask schoolMask, DamageEff
             incanterAbsorption += currentAbsorb;
 
         (*i)->SetAmount((*i)->GetAmount()-currentAbsorb);
-        if ((*i)->GetAmount() <= 0)
+        if (((*i)->GetAmount() <= 0) || (pVictim->GetPower(POWER_MANA) <= 1))
         {
             (*i)->GetBase()->Remove(AURA_REMOVE_BY_ENEMY_SPELL);
             next = vManaShield.begin();
@@ -2046,6 +2102,7 @@ void Unit::CalcAbsorbResist(Unit *pVictim, SpellSchoolMask schoolMask, DamageEff
     }
 
     // only split damage if not damaging yourself
+    if (auraAbsorbMod < 100) // Do nothing if 100% absorb ignore
     if (pVictim != this)
     {
         AuraEffectList const& vSplitDamageFlat = pVictim->GetAuraEffectsByType(SPELL_AURA_SPLIT_DAMAGE_FLAT);
@@ -2067,6 +2124,7 @@ void Unit::CalcAbsorbResist(Unit *pVictim, SpellSchoolMask schoolMask, DamageEff
                 currentAbsorb = (*i)->GetAmount();
             else
                 currentAbsorb = RemainingDamage;
+            currentAbsorb = (100 - auraAbsorbMod) * currentAbsorb / 100;
 
             RemainingDamage -= currentAbsorb;
 
@@ -2096,6 +2154,7 @@ void Unit::CalcAbsorbResist(Unit *pVictim, SpellSchoolMask schoolMask, DamageEff
                 continue;
 
             uint32 splitted = uint32(RemainingDamage * (*i)->GetAmount() / 100.0f);
+            splitted = (100 - auraAbsorbMod) * splitted / 100;
 
             RemainingDamage -=  int32(splitted);
 
@@ -2110,20 +2169,9 @@ void Unit::CalcAbsorbResist(Unit *pVictim, SpellSchoolMask schoolMask, DamageEff
     }
 
     TotalAbsorb = (TotalAbsorb - RemainingDamage > 0) ? TotalAbsorb - RemainingDamage : 0;
-    // TODO: School should be checked for absorbing auras or for attacks?
-    int32 auraAbsorbMod = GetMaxPositiveAuraModifier(SPELL_AURA_MOD_TARGET_ABSORB_SCHOOL);
-    AuraEffectList const& AbsIgnoreAurasAb = GetAuraEffectsByType(SPELL_AURA_MOD_TARGET_ABILITY_ABSORB_SCHOOL);
-    for (AuraEffectList::const_iterator i = AbsIgnoreAurasAb.begin(); i != AbsIgnoreAurasAb.end(); ++i)
-    {
-        if ((*i)->GetAmount() > auraAbsorbMod
-            && (*i)->IsAffectedOnSpell(spellInfo))
-            auraAbsorbMod = (*i)->GetAmount();
-    }
-
-    // Ignore absorb - add reduced amount again to damage
-    RemainingDamage += auraAbsorbMod * TotalAbsorb / 100;
 
     // Apply death prevention spells effects
+    if (auraAbsorbMod < 100) // Do nothing if 100% absorb ignore
     if (preventDeathSpell && RemainingDamage >= int32(pVictim->GetHealth()))
     {
         switch(preventDeathSpell->SpellFamilyName)
@@ -2135,6 +2183,7 @@ void Unit::CalcAbsorbResist(Unit *pVictim, SpellSchoolMask schoolMask, DamageEff
                 {
                     pVictim->CastSpell(pVictim,31231,true);
                     pVictim->ToPlayer()->AddSpellCooldown(31231,0,time(NULL)+60);
+
                     // with health > 10% lost health until health == 10%, in other case no losses
                     uint32 health10 = pVictim->CountPctFromMaxHealth(10);
                     RemainingDamage = pVictim->GetHealth() > health10 ? pVictim->GetHealth() - health10 : 0;
@@ -2812,6 +2861,7 @@ SpellMissInfo Unit::MagicSpellHitResult(Unit *pVictim, SpellEntry const *spell)
     // Decrease hit chance from victim rating bonus
     if (pVictim->GetTypeId() == TYPEID_PLAYER)
         HitChance -= int32(pVictim->ToPlayer()->GetRatingBonusValue(CR_HIT_TAKEN_SPELL) * 100.0f);
+
     if (HitChance < 100)
         HitChance = 100;
     else if (HitChance > 10000)
