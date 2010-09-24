@@ -492,6 +492,166 @@ public:
 
 };
 
+/*######
+ ## mob_decomposing_ghoul
+ ######*/
+
+enum decomposing_ghoul
+{
+    QUEST_SHINING_LIGHT = 11288,
+    SPELL_SHINING_LIGHT = 43202,
+    SPELL_SHINING_LIGHT_HIT = 43203,
+    SPELL_SELF_FEAR = 31365,
+    FEAR_RESET_DIST = 50,
+    FEAR_DISTANCE = 10
+};
+
+class mob_decomposing_ghoul : public CreatureScript
+{
+public:
+    mob_decomposing_ghoul() : CreatureScript("mob_decomposing_ghoul") { }
+
+    struct mob_decomposing_ghoulAI: public ScriptedAI
+    {
+        mob_decomposing_ghoulAI(Creature *c) : ScriptedAI(c) {}
+
+        uint32 check_timer;
+        bool Self_Feared;
+
+        void Reset()
+        {
+            check_timer = 1000;
+            Self_Feared = false;
+            me->RemoveAura(SPELL_SELF_FEAR);
+            me->CombatStop(true);
+            me->SetReactState(REACT_AGGRESSIVE);
+        }
+
+        void EnterCombat(Unit *who) 
+        {
+        }
+
+        void SpellHit(Unit *caster, const SpellEntry *spell)
+        {
+            if (spell->Id == SPELL_SHINING_LIGHT_HIT) 
+            {
+                DoCast(me, SPELL_SELF_FEAR);
+                me->SetReactState(REACT_PASSIVE);
+                Self_Feared = true;
+                check_timer = 8000;
+            }
+        }
+
+        void UpdateAI(const uint32 diff)
+        {
+            if (check_timer <= diff)
+            {
+                if (Self_Feared && me->getVictim() && !me->IsWithinDistInMap(me->getVictim(), me->GetAttackDistance(me->getVictim()), true))
+                    EnterEvadeMode();
+
+                check_timer = 1000;
+            } else
+                check_timer -= diff;
+
+            if (me->getVictim() && ((me->getVictim()->ToPlayer() && !me->getVictim()->ToPlayer()->HasAura(SPELL_SHINING_LIGHT)) || me->getVictim()->ToCreature()))
+                DoMeleeAttackIfReady();
+
+            if (!UpdateVictim())
+                return;
+        }
+    };
+
+    CreatureAI* GetAI(Creature *_Creature) const
+    {
+        return new mob_decomposing_ghoulAI(_Creature);
+    }
+
+};
+
+/*######
+ ## npc_alliance_banner
+ ######*/
+
+enum alliance_banner
+{
+    ENTRY_WINTERSCORN_DEFENDER = 24015,
+    DROP_IT_THEN_ROCK_IT = 11429,
+    WINTERSCRON_DESPAWN_TIME = 60000,
+    SPELL_BANNER_DEFENDED = 44124,
+};
+
+const Position WINTERSCORN_DEFENDER1 = { 1526.36f, -5305.72f, 198.158f, 3.592f };
+const Position WINTERSCORN_DEFENDER2 = { 1508.58f, -5331.28f, 197.336f, 1.488f };
+const Position WINTERSCORN_DEFENDER3 = { 1493.72f, -5316.14f, 195.236f, 0.392f };
+
+class npc_alliance_banner : public CreatureScript
+{
+public:
+    npc_alliance_banner() : CreatureScript("npc_alliance_banner") { }
+
+    struct npc_alliance_bannerAI: public Scripted_NoMovementAI
+    {
+        npc_alliance_bannerAI(Creature *c) : Scripted_NoMovementAI(c)
+        {
+            part = 1;
+            part_Timer = 5000;
+        }
+
+        uint32 part_Timer;
+        uint32 part;
+
+        void Reset() {
+            me->SetReactState(REACT_PASSIVE);
+        }
+
+        void UpdateAI(const uint32 diff) 
+        {
+            if (part > 4 || me->isDead())
+                return;
+
+            if (part_Timer <= diff)
+            {
+                Unit* tmp;
+                switch (part)
+                {
+                    case 1:
+                        tmp = me->SummonCreature(ENTRY_WINTERSCORN_DEFENDER, WINTERSCORN_DEFENDER1, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, WINTERSCRON_DESPAWN_TIME);
+                        if (tmp)
+                            tmp->Attack(me, false);
+                        break;
+                    case 2:
+                        tmp = me->SummonCreature(ENTRY_WINTERSCORN_DEFENDER, WINTERSCORN_DEFENDER2, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, WINTERSCRON_DESPAWN_TIME);
+                        if (tmp)
+                            tmp->Attack(me, false);
+                        break;
+                    case 3:
+                        tmp = me->SummonCreature(ENTRY_WINTERSCORN_DEFENDER, WINTERSCORN_DEFENDER3, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, WINTERSCRON_DESPAWN_TIME);
+                        if (tmp)
+                            tmp->Attack(me, false);
+                        break;
+                    case 4:
+                        Unit* owner = me->GetCharmerOrOwnerOrSelf();
+                        if (owner && owner->GetTypeId() == TYPEID_PLAYER)
+                        {
+                            me->CastSpell(me, SPELL_BANNER_DEFENDED, true);
+                        }
+                        break;
+                }
+
+                part++;
+                part_Timer = 55000;
+            } else
+                part_Timer -= diff;
+        }
+    };
+
+    CreatureAI* GetAI(Creature *_Creature) const
+    {
+        return new npc_alliance_bannerAI(_Creature);
+    }
+
+};
+
 void AddSC_howling_fjord()
 {
     new npc_apothecary_hanes();
@@ -500,4 +660,6 @@ void AddSC_howling_fjord()
     new npc_mcgoyver();
     new mob_plague_dragonflayer();
     new npc_bjorn_halgurdsson();
+    new mob_decomposing_ghoul();
+    new npc_alliance_banner();
  }
