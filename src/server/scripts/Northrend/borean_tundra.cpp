@@ -1,3 +1,4 @@
+
 /* Copyright (C) 2008 - 2010 Trinity <http://www.trinitycore.org/>
  * Copyright (C) 2006 - 2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  * This program is free software; you can redistribute it and/or modify
@@ -331,13 +332,11 @@ public:
 
     };
 
-    CreatureAI* GetAI(Creature* pCreature) const
+    CreatureAI *GetAI(Creature *creature) const
     {
-        return new npc_sinkhole_kill_creditAI(pCreature);
+        return new npc_sinkhole_kill_creditAI(creature);
     }
-
 };
-
 
 /*######
 ## npc_khunok_the_behemoth
@@ -373,13 +372,11 @@ public:
         }
     };
 
-    CreatureAI* GetAI(Creature* pCreature) const
+    CreatureAI *GetAI(Creature *creature) const
     {
-        return new npc_khunok_the_behemothAI(pCreature);
+        return new npc_khunok_the_behemothAI(creature);
     }
-
 };
-
 
 /*######
 ## npc_keristrasza
@@ -397,18 +394,6 @@ class npc_keristrasza : public CreatureScript
 public:
     npc_keristrasza() : CreatureScript("npc_keristrasza") { }
 
-    bool OnGossipSelect(Player* pPlayer, Creature* /*pCreature*/, uint32 /*uiSender*/, uint32 uiAction)
-    {
-        pPlayer->PlayerTalkClass->ClearMenus();
-        if (uiAction == GOSSIP_ACTION_INFO_DEF + 1)
-        {
-            pPlayer->CLOSE_GOSSIP_MENU();
-            pPlayer->CastSpell(pPlayer, SPELL_TELEPORT_TO_SARAGOSA, true);
-        }
-
-        return true;
-    }
-
     bool OnGossipHello(Player* pPlayer, Creature* pCreature)
     {
         if (pCreature->isQuestGiver())
@@ -422,8 +407,18 @@ public:
         return true;
     }
 
-};
+    bool OnGossipSelect(Player* pPlayer, Creature* /*pCreature*/, uint32 /*uiSender*/, uint32 uiAction)
+    {
+        pPlayer->PlayerTalkClass->ClearMenus();
+        if (uiAction == GOSSIP_ACTION_INFO_DEF + 1)
+        {
+            pPlayer->CLOSE_GOSSIP_MENU();
+            pPlayer->CastSpell(pPlayer, SPELL_TELEPORT_TO_SARAGOSA, true);
+        }
 
+        return true;
+    }
+};
 
 /*######
 ## npc_corastrasza
@@ -445,6 +440,18 @@ class npc_corastrasza : public CreatureScript
 public:
     npc_corastrasza() : CreatureScript("npc_corastrasza") { }
 
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
+    {
+        if (pCreature->isQuestGiver())
+            pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+
+        if (pPlayer->GetQuestStatus(QUEST_ACES_HIGH) == QUEST_STATUS_INCOMPLETE || pPlayer->GetQuestStatus(QUEST_ACES_HIGH_DAILY) == QUEST_STATUS_INCOMPLETE) //It's the same dragon for both quests.
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_C_1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+
+        pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
+        return true;
+    }
+
     bool OnGossipSelect(Player* pPlayer, Creature* /*pCreature*/, uint32 /*uiSender*/, uint32 uiAction)
     {
         pPlayer->PlayerTalkClass->ClearMenus();
@@ -459,19 +466,6 @@ public:
 
         return true;
     }
-
-    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
-    {
-        if (pCreature->isQuestGiver())
-            pPlayer->PrepareQuestMenu(pCreature->GetGUID());
-
-        if (pPlayer->GetQuestStatus(QUEST_ACES_HIGH) == QUEST_STATUS_INCOMPLETE || pPlayer->GetQuestStatus(QUEST_ACES_HIGH_DAILY) == QUEST_STATUS_INCOMPLETE) //It's the same dragon for both quests.
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_C_1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-
-        pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
-        return true;
-    }
-
 };
 
 
@@ -493,6 +487,16 @@ class npc_iruk : public CreatureScript
 public:
     npc_iruk() : CreatureScript("npc_iruk") { }
 
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
+    {
+
+        if (pPlayer->GetQuestStatus(QUEST_SPIRITS_WATCH_OVER_US) == QUEST_STATUS_INCOMPLETE)
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_I, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+
+        pPlayer->PlayerTalkClass->SendGossipMenu(GOSSIP_TEXT_I, pCreature->GetGUID());
+        return true;
+    }
+
     bool OnGossipSelect(Player* pPlayer, Creature* /*pCreature*/, uint32 /*uiSender*/, uint32 uiAction)
     {
         pPlayer->PlayerTalkClass->ClearMenus();
@@ -506,17 +510,6 @@ public:
         }
         return true;
     }
-
-    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
-    {
-
-        if (pPlayer->GetQuestStatus(QUEST_SPIRITS_WATCH_OVER_US) == QUEST_STATUS_INCOMPLETE)
-            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_ITEM_I, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
-
-        pPlayer->PlayerTalkClass->SendGossipMenu(GOSSIP_TEXT_I, pCreature->GetGUID());
-        return true;
-    }
-
 };
 
 /*######
@@ -529,6 +522,7 @@ const uint32 nerubarVictims[3] =
 {
     45526, 45527, 45514
 };
+
 class mob_nerubar_victim : public CreatureScript
 {
 public:
@@ -561,12 +555,12 @@ public:
         }
     };
 
-    CreatureAI* GetAI(Creature *pCreature) const
+    CreatureAI *GetAI(Creature *creature) const
     {
-        return new mob_nerubar_victimAI (pCreature);
+        return new mob_nerubar_victimAI(creature);
     }
-
 };
+
 /*######
 ## npc_scourge_prisoner
 ######*/
@@ -596,16 +590,16 @@ public:
 
     };
 
-    CreatureAI* GetAI(Creature* pCreature) const
+    CreatureAI *GetAI(Creature *creature) const
     {
-        return new npc_scourge_prisonerAI(pCreature);
+        return new npc_scourge_prisonerAI(creature);
     }
-
 };
 
 /*######
 ## npc_jenny
 ######*/
+
 enum eJenny
 {
     QUEST_LOADER_UP             = 11881,
@@ -669,13 +663,11 @@ public:
         }
     };
 
-    CreatureAI* GetAI(Creature *pCreature) const
+    CreatureAI *GetAI(Creature *creature) const
     {
-        return new npc_jennyAI (pCreature);
+        return new npc_jennyAI (creature);
     }
-
 };
-
 
 /*######
 ## npc_fezzix_geartwist
@@ -715,13 +707,11 @@ public:
         }
     };
 
-    CreatureAI* GetAI(Creature* pCreature) const
+    CreatureAI *GetAI(Creature *creature) const
     {
-        return new npc_fezzix_geartwistAI(pCreature);
+        return new npc_fezzix_geartwistAI(creature);
     }
-
 };
-
 
 /*######
 ## npc_nesingwary_trapper
@@ -872,13 +862,11 @@ public:
         }
     };
 
-    CreatureAI* GetAI(Creature *pCreature) const
+    CreatureAI *GetAI(Creature *creature) const
     {
-        return new npc_nesingwary_trapperAI (pCreature);
+        return new npc_nesingwary_trapperAI(creature);
     }
-
 };
-
 
 /*######
 ## npc_lurgglbr
@@ -990,7 +978,13 @@ public:
                 return;
         }
     };
-    bool QuestAccept(Player* pPlayer, Creature* pCreature, Quest const *pQuest)
+
+    CreatureAI *GetAI(Creature *creature) const
+    {
+        return new npc_lurgglbrAI(creature);
+    }
+
+    bool OnQuestAccept(Player* pPlayer, Creature* pCreature, Quest const *pQuest)
     {
         if (pQuest->GetQuestId() == QUEST_ESCAPE_WINTERFIN_CAVERNS)
         {
@@ -1001,7 +995,7 @@ public:
                 pGo->UseDoorOrButton(20);
             }
 
-            if (npc_escortAI* pEscortAI = CAST_AI(npc_lurgglbrAI, pCreature->AI()))
+            if (npc_escortAI* pEscortAI = CAST_AI(npc_lurgglbr::npc_lurgglbrAI, pCreature->AI()))
                 pEscortAI->Start(true, false, pPlayer->GetGUID());
 
             switch (pPlayer->GetTeam())
@@ -1019,12 +1013,6 @@ public:
         }
         return false;
     }
-
-    CreatureAI* GetAI(Creature* pCreature) const
-    {
-        return new npc_lurgglbrAI(pCreature);
-    }
-
 };
 
 /*######
@@ -1125,13 +1113,11 @@ public:
         }
     };
 
-    CreatureAI* GetAI(Creature* pCreature) const
+    CreatureAI *GetAI(Creature *creature) const
     {
-        return new npc_nexus_drake_hatchlingAI(pCreature);
+        return new npc_nexus_drake_hatchlingAI(creature);
     }
-
 };
-
 
 /*######
 ## npc_thassarian
@@ -1447,19 +1433,6 @@ public:
         }
     };
 
-    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
-    {
-        pPlayer->PlayerTalkClass->ClearMenus();
-        switch (uiAction)
-        {
-            case GOSSIP_ACTION_INFO_DEF+1:
-                CAST_AI(npc_escortAI, (pCreature->AI()))->Start(true, false, pPlayer->GetGUID());
-                CAST_AI(npc_escortAI, (pCreature->AI()))->SetMaxPlayerDistance(200.0f);
-                break;
-        }
-        return true;
-    }
-
     bool OnGossipHello(Player* pPlayer, Creature* pCreature)
     {
         if (pCreature->isQuestGiver())
@@ -1473,11 +1446,23 @@ public:
         return true;
     }
 
-    CreatureAI* GetAI(Creature *pCreature) const
+    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
     {
-        return new npc_thassarianAI (pCreature);
+        pPlayer->PlayerTalkClass->ClearMenus();
+        switch (uiAction)
+        {
+            case GOSSIP_ACTION_INFO_DEF+1:
+                CAST_AI(npc_escortAI, (pCreature->AI()))->Start(true, false, pPlayer->GetGUID());
+                CAST_AI(npc_escortAI, (pCreature->AI()))->SetMaxPlayerDistance(200.0f);
+                break;
+        }
+        return true;
     }
 
+    CreatureAI *GetAI(Creature *creature) const
+    {
+        return new npc_thassarianAI(creature);
+    }
 };
 
 /*######
@@ -1509,13 +1494,11 @@ public:
         }
     };
 
-    CreatureAI* GetAI(Creature* pCreature) const
+    CreatureAI *GetAI(Creature *creature) const
     {
-        return new npc_image_lich_kingAI (pCreature);
+        return new npc_image_lich_kingAI(creature);
     }
-
 };
-
 
 /*######
 ## npc_general_arlos
@@ -1543,13 +1526,11 @@ public:
         }
     };
 
-    CreatureAI* GetAI(Creature *pCreature) const
+    CreatureAI *GetAI(Creature *creature) const
     {
-        return new npc_general_arlosAI(pCreature);
+        return new npc_general_arlosAI(creature);
     }
-
 };
-
 
 /*######
 ## npc_counselor_talbot
@@ -1615,7 +1596,7 @@ public:
             if (!UpdateVictim())
                 return;
 
-            if (me->GetAreaId() == 4125)
+            if (me->GetAreaId() == 4128)
             {
                 if (uiShadowBoltTimer <= uiDiff)
                 {
@@ -1663,13 +1644,11 @@ public:
         }
     };
 
-    CreatureAI* GetAI(Creature* pCreature) const
+    CreatureAI *GetAI(Creature *creature) const
     {
-        return new npc_counselor_talbotAI (pCreature);
+        return new npc_counselor_talbotAI(creature);
     }
-
 };
-
 
 /*######
 ## npc_leryssa
@@ -1790,13 +1769,11 @@ public:
         }
     };
 
-    CreatureAI* GetAI(Creature *pCreature) const
+    CreatureAI *GetAI(Creature *creature) const
     {
-        return new npc_leryssaAI (pCreature);
+        return new npc_leryssaAI(creature);
     }
-
 };
-
 
 /*######
 ## npc_beryl_sorcerer
@@ -1869,13 +1846,11 @@ public:
         }
     };
 
-    CreatureAI* GetAI(Creature* pCreature) const
+    CreatureAI *GetAI(Creature *creature) const
     {
-        return new npc_beryl_sorcererAI(pCreature);
+        return new npc_beryl_sorcererAI(creature);
     }
-
 };
-
 
 /*######
 ## npc_imprisoned_beryl_sorcerer
@@ -1919,7 +1894,6 @@ public:
 
         void EnterCombat(Unit* /*pWho*/)
         {
-            return;
         }
 
         void SpellHit(Unit* pUnit, const SpellEntry* pSpell)
@@ -2007,13 +1981,11 @@ public:
         }
     };
 
-    CreatureAI* GetAI(Creature* pCreature) const
+    CreatureAI *GetAI(Creature *creature) const
     {
-        return new npc_imprisoned_beryl_sorcererAI(pCreature);
+        return new npc_imprisoned_beryl_sorcererAI(creature);
     }
-
 };
-
 
 /*######
 ## npc_mootoo_the_younger
@@ -2031,10 +2003,30 @@ enum Mootoo_the_Younger_Entries
     NPC_MOOTOO_THE_YOUNGER          =25504,
     QUEST_ESCAPING_THE_MIST         =11664
 };
+
 class npc_mootoo_the_younger : public CreatureScript
 {
 public:
     npc_mootoo_the_younger() : CreatureScript("npc_mootoo_the_younger") { }
+
+    bool OnQuestAccept(Player* pPlayer, Creature* pCreature, Quest const* quest)
+    {
+        if (quest->GetQuestId() == QUEST_ESCAPING_THE_MIST)
+        {
+            switch (pPlayer->GetTeam())
+            {
+            case ALLIANCE:
+                pCreature->setFaction(FACTION_ESCORTEE_A);
+                break;
+            case HORDE:
+                pCreature->setFaction(FACTION_ESCORTEE_H);
+                break;
+            }
+            DoScriptText(SAY_1, pCreature);
+            CAST_AI(npc_escortAI, (pCreature->AI()))->Start(true, false, pPlayer->GetGUID());
+        }
+        return true;
+    }
 
     struct npc_mootoo_the_youngerAI : public npc_escortAI
     {
@@ -2083,30 +2075,11 @@ public:
             }
         }
     };
-    bool QuestAccept(Player* pPlayer, Creature* pCreature, Quest const* quest)
-    {
-        if (quest->GetQuestId() == QUEST_ESCAPING_THE_MIST)
-        {
-            switch (pPlayer->GetTeam())
-            {
-            case ALLIANCE:
-                pCreature->setFaction(FACTION_ESCORTEE_A);
-                break;
-            case HORDE:
-                pCreature->setFaction(FACTION_ESCORTEE_H);
-                break;
-            }
-            DoScriptText(SAY_1, pCreature);
-            CAST_AI(npc_escortAI, (pCreature->AI()))->Start(true, false, pPlayer->GetGUID());
-        }
-        return true;
-    }
 
-    CreatureAI* GetAI(Creature* pCreature) const
+    CreatureAI *GetAI(Creature *creature) const
     {
-        return new npc_mootoo_the_youngerAI(pCreature);
+        return new npc_mootoo_the_youngerAI(creature);
     }
-
 };
 
 /*######
@@ -2128,6 +2101,25 @@ class npc_bonker_togglevolt : public CreatureScript
 {
 public:
     npc_bonker_togglevolt() : CreatureScript("npc_bonker_togglevolt") { }
+
+    bool OnQuestAccept(Player* pPlayer, Creature* pCreature, Quest const* quest)
+    {
+        if (quest->GetQuestId() == QUEST_GET_ME_OUTA_HERE)
+        {
+            switch (pPlayer->GetTeam())
+            {
+            case ALLIANCE:
+                    pCreature->setFaction(FACTION_ESCORTEE_A);
+                    break;
+            case HORDE:
+                    pCreature->setFaction(FACTION_ESCORTEE_H);
+                    break;
+            }
+            DoScriptText(SAY_bonker_2, pCreature, pPlayer);
+            CAST_AI(npc_escortAI, (pCreature->AI()))->Start(true, true, pPlayer->GetGUID());
+        }
+        return true;
+    }
 
     struct npc_bonker_togglevoltAI : public npc_escortAI
     {
@@ -2177,30 +2169,10 @@ public:
         }
     };
 
-    bool QuestAccept(Player* pPlayer, Creature* pCreature, Quest const* quest)
+    CreatureAI *GetAI(Creature *creature) const
     {
-        if (quest->GetQuestId() == QUEST_GET_ME_OUTA_HERE)
-        {
-            switch (pPlayer->GetTeam())
-            {
-            case ALLIANCE:
-                    pCreature->setFaction(FACTION_ESCORTEE_A);
-                    break;
-            case HORDE:
-                    pCreature->setFaction(FACTION_ESCORTEE_H);
-                    break;
-            }
-            DoScriptText(SAY_bonker_2, pCreature, pPlayer);
-            CAST_AI(npc_escortAI, (pCreature->AI()))->Start(true, true, pPlayer->GetGUID());
-        }
-        return true;
+        return new npc_bonker_togglevoltAI(creature);
     }
-
-    CreatureAI* GetAI(Creature* pCreature) const
-    {
-        return new npc_bonker_togglevoltAI(pCreature);
-    }
-
 };
 
 /*######
@@ -2342,13 +2314,11 @@ public:
         }
     };
 
-    CreatureAI* GetAI(Creature* pCreature) const
+    CreatureAI *GetAI(Creature *creature) const
     {
-        return new npc_trapped_mammoth_calfAI(pCreature);
+        return new npc_trapped_mammoth_calfAI(creature);
     }
-
 };
-
 
 /*######
 ## Quest 11653: Hah... You're Not So Big Now!
@@ -2386,13 +2356,11 @@ public:
         }
     };
 
-    CreatureAI* GetAI(Creature* pCreature) const
+    CreatureAI *GetAI(Creature *creature) const
     {
-        return new npc_magmoth_crusherAI(pCreature);
+        return new npc_magmoth_crusherAI(creature);
     }
-
 };
-
 
 /*######
 ## Quest 11608: Bury Those Cockroaches!
@@ -2438,13 +2406,11 @@ public:
         }
     };
 
-    CreatureAI* GetAI(Creature* pCreature) const
+    CreatureAI *GetAI(Creature *creature) const
     {
-        return new npc_seaforium_depth_chargeAI(pCreature);
+        return new npc_seaforium_depth_chargeAI(creature);
     }
-
 };
-
 
 /*######
 ## Help Those That Cannot Help Themselves, Quest 11876
@@ -2492,13 +2458,11 @@ public:
 
     };
 
-    CreatureAI* GetAI(Creature* pCreature) const
+    CreatureAI *GetAI(Creature *creature) const
     {
-        return new npc_valiance_keep_cannoneerAI(pCreature);
+        return new npc_valiance_keep_cannoneerAI(creature);
     }
-
 };
-
 
 /*******************************************************
  * npc_warmage_coldarra
