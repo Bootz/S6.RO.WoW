@@ -69,6 +69,7 @@ public:
     struct npc_Apothecary_HanesAI : public npc_escortAI
     {
         npc_Apothecary_HanesAI(Creature* pCreature) : npc_escortAI(pCreature){}
+
         uint32 PotTimer;
 
         void Reset ()
@@ -92,6 +93,7 @@ public:
                     DoCast(me, 17534, true);
                     PotTimer = 10000;
                 } else PotTimer -= diff;
+                PotTimer -= diff;
             }
             if (GetAttack() && UpdateVictim())
                 DoMeleeAttackIfReady();
@@ -246,6 +248,7 @@ public:
             pPlayer->PrepareQuestMenu(pCreature->GetGUID());
 
         if (pPlayer->GetQuestStatus(QUEST_REPORTS_FROM_THE_FIELD) == QUEST_STATUS_INCOMPLETE)
+    {
             switch (pCreature->GetEntry())
             {
                 case NPC_RAZAEL:
@@ -265,6 +268,7 @@ public:
                     }
                 break;
             }
+    }
         pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
         return true;
     }
@@ -339,8 +343,8 @@ public:
 
 void AddSC_howling_fjord()
 {
-    new npc_apothecary_hanes;
-    new npc_plaguehound_tracker;
-    new npc_razael_and_lyana;
-    new npc_mcgoyver;
+    new npc_apothecary_hanes();
+    new npc_plaguehound_tracker();
+    new npc_razael_and_lyana();
+    new npc_mcgoyver();
  }
