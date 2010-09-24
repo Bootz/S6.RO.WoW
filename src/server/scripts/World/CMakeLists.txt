@@ -15,6 +15,8 @@ set(scripts_STAT_SRCS
   World/go_scripts.cpp
   World/npc_innkeeper.cpp
   World/achievement_scripts.cpp
+  World/ChatLog/ChatLog.cpp
+  World/ChatLog/ChatLexicsCutter.cpp
   World/npc_mount.cpp
 )
 

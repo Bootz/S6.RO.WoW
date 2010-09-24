@@ -580,6 +580,7 @@ void AddSC_outdoorpvp_wg();
 
 // player
 void AddSC_chat_log();
+void AddSC_lexics_chat_log();
 
 #endif
 
@@ -643,6 +644,7 @@ void AddWorldScripts()
     AddSC_achievement_scripts();
     AddSC_npc_mount();                      // rocore_963 npc mount
     AddSC_chat_log();
+	AddSC_lexics_chat_log();
 #endif
 }
 
