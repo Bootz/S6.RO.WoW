@@ -6307,14 +6307,26 @@ UPDATE `creature_template` SET `ScriptName` = 'npc_high_abbot_landgren' WHERE `e
 UPDATE `creature_template` SET `ScriptName` = 'npc_agent_skully' WHERE `entry` = 27350; -- Agent Skully <Onslaught Caretaker> http://www.wowhead.com/npc=27350
 UPDATE `creature_template` SET `ScriptName` = 'npc_7th_legion_siege_engineer' WHERE `entry` = 27163; -- 7th Legion Siege Engineer http://www.wowhead.com/npc=27163
 UPDATE `creature_template` SET `ScriptName` = 'vehicle_alliance_steamtank' WHERE `entry` = 27587; -- Alliance Steam Tank http://www.wowhead.com/npc=27587
-UPDATE `creature_template` SET `ScriptName` = 'mob_woodlands_walker', `npc_flag` = npcflag|1 `entry` = 26421; -- Woodlands Walker http://www.wowhead.com/npc=26421
+UPDATE `creature_template` SET `scriptname` = 'mob_woodlands_walker', `npcflag` = npcflag|1 WHERE `entry` = 26421; -- Woodlands Walker http://www.wowhead.com/npc=26421
 
 -- Howling Fjord
 UPDATE `creature_template` SET `ScriptName` = 'mob_plague_dragonflayer' WHERE `entry` IN (23564,24198,24199); -- Plagued Dragonflayer: Tribesman, Rune-Caster & Handler
 UPDATE `creature_template` SET `ScriptName` = 'npc_bjorn_halgurdsson' WHERE `entry` = 24238; -- Bjorn Halgurdsson <Winterskorn Chieftain> http://www.wowhead.com/npc=24238
 UPDATE `creature_template` SET `ScriptName` = 'mob_decomposing_ghoul' WHERE `entry` = 24177; -- Decomposing Ghoul http://www.wowhead.com/npc=24177
 UPDATE `creature_template` SET `ScriptName` = 'npc_alliance_banner' WHERE `entry` = 24640; -- Alliance Banner http://www.wowhead.com/npc=24640
-    
+
+-- Sholozar Basin
+UPDATE `creature_template` SET `ScriptName` = 'npc_high_oracle_soo_say' WHERE `entry` = 28027; -- High-Oracle Soo-say http://www.wowhead.com/npc=28027
+UPDATE `creature_template` SET `ScriptName` = 'oracle_frenzyheart_switch' WHERE `entry` in (28667,28668); -- Jaloot & Zepik the Gorloc Hunter
+UPDATE `creature_template` SET `ScriptName` = 'npc_frenzyheart_zepik' WHERE `entry` = 28216; -- Zepik the Gorloc Hunter http://www.wowhead.com/npc=28216
+UPDATE `creature_template` SET `ScriptName` = 'npc_mosswalker_victim' WHERE `entry` = 28113; -- Mosswalker Victim http://www.wowhead.com/npc=28113
+UPDATE `creature_template` SET `ScriptName` = 'npc_artruis_the_heartless' WHERE `entry` = 28659; -- Artruis the Heartless http://www.wowhead.com/npc=28659
+UPDATE `creature_template` SET `ScriptName` = 'npc_tipsy_mcmanus' WHERE `entry` = 28566; -- "Tipsy" McManus <Grimbooze's Assistant> http://www.wowhead.com/npc=28566
+UPDATE `gameobject_template` SET scriptname = 'go_brew_event' WHERE `entry` IN (190635,190636,190637,190638,190639); -- Pressure Valve, Brazier, Barrel of Oranges, Barrel of Bananas & Barrel of Papayas 
+
+-- The Scarlet Enclave
+UPDATE `creature_template` SET `ScriptName` = 'npc_acherus_teleporter' WHERE `entry` IN (29580,29581,29588,29589); -- Teleport
+
 -- Eye of eternity
 UPDATE `creature_template` SET `ScriptName` = 'boss_malygos', unit_flags = unit_flags & ~256 WHERE entry = 28859;
 UPDATE `creature_template` SET `ScriptName` = 'mob_nexus_lord' WHERE entry = 30245; -- Nexus Lord
