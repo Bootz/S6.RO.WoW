@@ -6280,20 +6280,36 @@ REPLACE INTO `creature` (`id`, `map`, `spawnMask`, `phaseMask`, `modelid`, `equi
 
 -- Script_names of RoCore update files
 -- Argent tournament
-UPDATE `creature_template` SET `ScriptName` = 'npc_squire_danny' WHERE entry = 33518;
-UPDATE `creature_template` SET `ScriptName` = 'npc_argent_valiant' WHERE entry = 33448;
-UPDATE `creature_template` SET `ScriptName` = 'npc_argent_champion' WHERE entry = 33707;
+UPDATE `creature_template` SET `ScriptName` = 'npc_squire_danny' WHERE `entry` = 33518;
+UPDATE `creature_template` SET `ScriptName` = 'npc_argent_valiant' WHERE `entry` = 33448;
+UPDATE `creature_template` SET `ScriptName` = 'npc_argent_champion' WHERE `entry` = 33707;
 
 -- Borean tundra
-UPDATE `creature_template` SET `ScriptName` = 'npc_fizzcrank_fullthrottle' WHERE entry = 25590; -- Fizzcrank Fullthrottle
-UPDATE `creature_template` SET `ScriptName` = 'npc_surristrasz' WHERE entry =24795; -- Surristrasz
-UPDATE `creature_template` SET `ScriptName` = 'npc_tiare' WHERE entry =30051; -- Librarian Tiare
+UPDATE `creature_template` SET `ScriptName` = 'npc_fizzcrank_fullthrottle' WHERE `entry` = 25590; -- Fizzcrank Fullthrottle
+UPDATE `creature_template` SET `ScriptName` = 'npc_surristrasz' WHERE `entry` = 24795; -- Surristrasz
+UPDATE `creature_template` SET `ScriptName` = 'npc_tiare' WHERE `entry` = 30051; -- Librarian Tiare
 UPDATE `creature_template` SET `scriptname` = 'vehicle_wyrmrest_skytalon' WHERE entry = 32535; -- Wyrmrest Skytalon http://www.wowhead.com/npc=32535
 UPDATE `creature_template` SET `scriptname` = 'npc_cultist_for_hunt' WHERE entry in (25828,25827,25248); -- Guard Mitchells, Tom Hegger &  "Salty" John Thorpe
 
 -- Dalaran
-UPDATE creature_template SET scriptname = 'npc_archmage_vargoth' WHERE entry = 19481; -- Archmage Vargoth <Kirin Tor> http://www.wowhead.com/npc=19481
+UPDATE `creature_template` SET scriptname = 'npc_archmage_vargoth' WHERE `entry` = 19481; -- Archmage Vargoth <Kirin Tor> http://www.wowhead.com/npc=19481
 INSERT INTO npc_text (ID,text0_0) VALUES (40000,'Amazing! There are passages in here that I have never seen before. This must have taken quite a while for you to track down. If you ever find anymore books like this, I would like to be notified immediately. $B$BPlease take one of my Kirin Tor Familiars with you just in case you stumble across anything.');
+
+-- Dragonblight
+UPDATE `creature_template` SET `ScriptName` = 'npc_denouncement_target' WHERE `entry` IN (27237,27235,27234,27236); -- Blacksmith Goodman, Lead Cannoneer Zierhut, Stable Master Mercer & Commander Jordan.
+UPDATE `creature_template` SET `ScriptName` = 'vehicle_forsaken_blight_spreader' WHERE `entry` = 26523; -- Forsaken Blight Spreader http://www.wowhead.com/npc=26523
+UPDATE `creature_template` SET `speed_run` = 1.60, VehicleId = 36, spell1 = 48211 WHERE `entry` = 26523; 
+UPDATE `creature_template` SET `ScriptName` = 'npc_warsong_battle_standard' WHERE `entry` = 26678; -- Warsong Battle Standard http://www.wowhead.com/npc=26678
+UPDATE `creature_template` SET `ScriptName` = 'npc_emissary_brighthoof' WHERE `entry` = 26181; -- Emissary Brighthoof <Tauren Emissary> http://www.wowhead.com/npc=26181
+UPDATE `creature_template` SET `ScriptName` = 'npc_wintergarde_mine_bomb' WHERE `entry` = 27435; -- Wintergarde Mine Bomb http://www.wowhead.com/npc=27435
+UPDATE `creature_template` SET `ScriptName` = 'npc_devout_bodyguard' WHERE `entry` = 27247; -- Devout Bodyguard http://www.wowhead.com/npc=27247
+UPDATE `creature_template` SET `ScriptName` = 'npc_high_abbot_landgren' WHERE `entry` IN (27245,27439); -- High Abbot Landgren
+UPDATE `creature_template` SET `ScriptName` = 'npc_agent_skully' WHERE `entry` = 27350; -- Agent Skully <Onslaught Caretaker> http://www.wowhead.com/npc=27350
+UPDATE `creature_template` SET `ScriptName` = 'npc_7th_legion_siege_engineer' WHERE `entry` = 27163; -- 7th Legion Siege Engineer http://www.wowhead.com/npc=27163
+UPDATE `creature_template` SET `ScriptName` = 'vehicle_alliance_steamtank' WHERE `entry` = 27587; -- Alliance Steam Tank http://www.wowhead.com/npc=27587
+UPDATE `creature_template` SET `ScriptName` = 'mob_woodlands_walker', `npc_flag` = npcflag|1 `entry` = 26421; -- Woodlands Walker http://www.wowhead.com/npc=26421
+
+
     
 -- Eye of eternity
 UPDATE `creature_template` SET `ScriptName` = 'boss_malygos', unit_flags = unit_flags & ~256 WHERE entry = 28859;
