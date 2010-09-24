@@ -987,6 +987,18 @@ public:
 
 };
 
+//OnLogin not implemented yet
+class AFallFromGracePlayerScript : public PlayerScript
+{
+public:
+    AFallFromGracePlayerScript() : PlayerScript("AFallFromGracePlayerScript") { }
+
+    void OnPlayerLogin (Player * pPlayer)
+    {
+        if(pPlayer->GetQuestStatus(QUEST_A_FALL_FROM_GRACE) == QUEST_STATUS_INCOMPLETE)
+            pPlayer->FailQuest(QUEST_A_FALL_FROM_GRACE);
+    }
+};
 
 
 //This function is called when the player opens the gossip menubool
@@ -1286,6 +1298,7 @@ void AddSC_dragonblight()
     new npc_devout_bodyguard();
     new npc_high_abbot_landgren();
     new npc_agent_skully();
+    new AFallFromGracePlayerScript();
     new npc_7th_legion_siege_engineer();
     new vehicle_alliance_steamtank();
     new mob_woodlands_walker();
