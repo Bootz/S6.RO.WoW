@@ -6285,9 +6285,10 @@ UPDATE `creature_template` SET `ScriptName` = 'npc_argent_valiant' WHERE entry =
 UPDATE `creature_template` SET `ScriptName` = 'npc_argent_champion' WHERE entry = 33707;
 
 -- Borean tundra
-UPDATE `creature_template` SET  `ScriptName` = 'npc_fizzcrank_fullthrottle' WHERE entry = 25590; -- Fizzcrank Fullthrottle
-UPDATE `creature_template` SET  `ScriptName` = 'npc_surristrasz' WHERE entry =24795; -- Surristrasz
-UPDATE `creature_template` SET  `ScriptName` = 'npc_tiare' WHERE entry =30051; -- Librarian Tiare
+UPDATE `creature_template` SET `ScriptName` = 'npc_fizzcrank_fullthrottle' WHERE entry = 25590; -- Fizzcrank Fullthrottle
+UPDATE `creature_template` SET `ScriptName` = 'npc_surristrasz' WHERE entry =24795; -- Surristrasz
+UPDATE `creature_template` SET `ScriptName` = 'npc_tiare' WHERE entry =30051; -- Librarian Tiare
+UPDATE `creature_template` SET `scriptname` = 'vehicle_wyrmrest_skytalon' WHERE entry = 32535; -- http://www.wowhead.com/npc=32535
 
 -- Eye of eternity
 UPDATE `creature_template` SET `ScriptName` = 'boss_malygos', unit_flags = unit_flags & ~256 WHERE entry = 28859;

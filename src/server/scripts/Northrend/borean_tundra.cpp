@@ -468,6 +468,58 @@ public:
     }
 };
 
+/*######
+## vehicle_wyrmrest_skytalon
+######*/
+
+class vehicle_wyrmrest_skytalon : public CreatureScript
+{
+public:
+    vehicle_wyrmrest_skytalon() : CreatureScript("vehicle_wyrmrest_skytalon") { }
+
+    struct vehicle_wyrmrest_skytalonAI : public VehicleAI
+    {
+        vehicle_wyrmrest_skytalonAI(Creature *c) : VehicleAI(c) { }
+
+        uint32 check_Timer;
+        bool isInUse;
+
+        void Reset()
+        {
+            check_Timer = 6000;
+        }
+
+        void OnCharmed(bool apply)
+        {
+            isInUse = apply;
+
+            if(!apply)
+                check_Timer = 30000;
+        }
+
+        void UpdateAI(const uint32 diff)
+        {
+            if(!me->IsVehicle())
+                return;
+
+            if(!isInUse)
+            {
+                if(check_Timer < diff)
+                {
+                    me->DealDamage(me,me->GetHealth());
+                    check_Timer = 6000;
+                }else check_Timer -= diff;
+            }
+        }
+
+    };
+
+    CreatureAI* GetAI(Creature *_Creature) const
+    {
+        return new  vehicle_wyrmrest_skytalonAI(_Creature);
+    }
+
+};
 
 /*######
 ## npc_iruk
@@ -2580,6 +2632,7 @@ void AddSC_borean_tundra()
     new npc_khunok_the_behemoth;
     new npc_keristrasza;
     new npc_corastrasza;
+    new vehicle_wyrmrest_skytalon();
     new npc_iruk;
     new mob_nerubar_victim;
     new npc_scourge_prisoner;
