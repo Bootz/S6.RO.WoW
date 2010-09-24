@@ -6311,7 +6311,7 @@ UPDATE `creature_template` SET `ScriptName` = 'mob_woodlands_walker', `npc_flag`
 
 -- Howling Fjord
 UPDATE `creature_template` SET `ScriptName` = 'mob_plague_dragonflayer' WHERE `entry` IN (23564,24198,24199); -- Plagued Dragonflayer: Tribesman, Rune-Caster & Handler
-
+UPDATE `creature_template` SET `ScriptName` = 'npc_bjorn_halgurdsson' WHERE `entry` = 24238; -- Bjorn Halgurdsson <Winterskorn Chieftain> http://www.wowhead.com/npc=24238
     
 -- Eye of eternity
 UPDATE `creature_template` SET `ScriptName` = 'boss_malygos', unit_flags = unit_flags & ~256 WHERE entry = 28859;
