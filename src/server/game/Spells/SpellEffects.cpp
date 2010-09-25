@@ -1317,6 +1317,25 @@ void Spell::EffectDummy(SpellEffIndex effIndex)
                     }
                     return;
                 }
+                case 51962:                                 //Offer Jungle Punch
+                {
+                    if (!unitTarget || m_caster->GetTypeId() != TYPEID_PLAYER || unitTarget->GetTypeId() != TYPEID_UNIT)
+                        return;
+                    
+                    if (uint32 entry = unitTarget->ToCreature()->GetEntry())
+                    {
+                        switch(entry)
+                        {
+                            case 27986:
+                            case 28047:
+                            case 28568:
+                            {
+                                m_caster->ToPlayer()->KilledMonsterCredit(entry, 0);
+                            }
+                        }
+                    }
+                    return;
+                }
                 case 52759:                                 // Ancestral Awakening
                     if (!unitTarget)
                         return;
