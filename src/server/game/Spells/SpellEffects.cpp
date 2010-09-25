@@ -1341,6 +1341,22 @@ void Spell::EffectDummy(SpellEffIndex effIndex)
                         return;
                     m_caster->CastCustomSpell(unitTarget, 52752, &damage, NULL, NULL, true);
                     return;
+                case 53808:                                 // Pygmy Oil
+                {
+                    if (m_caster->GetTypeId() != TYPEID_PLAYER)
+                        return;
+
+                    uint32 spell_id = 0;
+                    switch (urand(1, 2))
+                    {
+                        case 1: spell_id = 53805; break;    // 	You feel a little smaller.
+                        case 2: spell_id = 53806; break;    //	Pygmified!
+                        default:spell_id = 0; break;
+                    }
+
+                    m_caster->CastSpell(m_caster, spell_id, true, NULL);
+                    return;
+                } 
                 case 54171:                                   //Divine Storm
                 {
                     m_caster->CastCustomSpell(unitTarget, 54172, &damage, 0, 0, true);
