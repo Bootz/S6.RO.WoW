@@ -6326,7 +6326,7 @@ UPDATE `gameobject_template` SET scriptname = 'go_brew_event' WHERE `entry` IN (
 
 -- Zuldrak
 UPDATE `creature_template` SET `ScriptName` = 'npc_captain_brandon' WHERE `entry` = 28042; -- Captain Brandon http://www.wowhead.com/npc=28042
-
+UPDATE `creature_template` SET `ScriptName` = 'npc_alchemist_finklestein' WHERE `entry` = 28205; -- Alchemist Finklestein http://www.wowhead.com/npc=28205
 -- The Scarlet Enclave
 UPDATE `creature_template` SET `ScriptName` = 'npc_acherus_teleporter' WHERE `entry` IN (29580,29581,29588,29589); -- Teleport
 
