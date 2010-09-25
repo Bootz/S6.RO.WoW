@@ -1800,6 +1800,124 @@ public:
     }
 };
 
+
+/*######
+## npc_bloodrose_datura
+######*/
+
+//TODO DB-Einträge erstellen
+#define GOSSIP_BLOODROSE                 "Stefan told me you would demonstrate the purpose of this item."
+#define TEXT1                            "Indeed. Watch this, $R."
+#define TEXT2                            "Here, troll... a gift!"
+#define TEXT3                            "For me? Really, mon?"
+#define TEXT4                            "It....it be beautiful!"
+#define TEXT5                            "Ugh... disgusting!"
+
+#define QUEST_NEAR_MISS                  12637
+#define QUEST_CLOSE_CALL                 12638
+#define NPC_CAPTURED_DRAKKARI_SCOUT      28541
+#define NPC_WITHERED_TROLL               28519
+#define ENTRY_BLOODROSE_CREDIT           28532
+
+class npc_bloodrose_datura : public CreatureScript
+{
+public:
+    npc_bloodrose_datura() : CreatureScript("npc_bloodrose_datura") { }
+
+    struct npc_bloodrose_daturaAI : public ScriptedAI
+    {
+        npc_bloodrose_daturaAI(Creature* pCreature) : ScriptedAI(pCreature) {}
+
+        uint32 uiTimer;
+        uint8 uiStep;
+        bool stepping;
+
+        void Reset()
+        {
+            stepping = false;
+            uiTimer = 0;
+            uiStep = 0;
+        }
+
+        void UpdateAI(const uint32 uiDiff)
+        {
+            if (stepping)
+            {
+                if (uiTimer < uiDiff)
+                {
+                    Creature* pScout = me->FindNearestCreature(NPC_CAPTURED_DRAKKARI_SCOUT, 10.0f);
+                    Creature* pTroll = me->FindNearestCreature(NPC_WITHERED_TROLL, 2.0f);
+
+                    if(pScout || pTroll)
+                    {
+                        switch (uiStep)
+                        {
+                            case 1:
+                                me->AddUnitMovementFlag(MOVEMENTFLAG_WALKING);
+                                me->GetMotionMaster()->MovePoint(0, 5203.73f, -1317.08f, 242.767f);
+                                uiTimer = 3000;
+                                uiStep = 2;
+                                break;
+                            case 2:
+                                pScout->UpdateEntry(NPC_WITHERED_TROLL);
+                                uiTimer = 5000;
+                                uiStep = 3;
+                                break;
+                            case 3:
+                                me->DealDamage(pTroll, pTroll->GetMaxHealth());
+                                me->GetMotionMaster()->MoveTargetedHome();
+                                stepping = false;
+                                uiStep = 0;
+                                break;
+                        }
+                    } else Reset();
+
+                } else uiTimer -= uiDiff;
+            }
+        }
+    };
+
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
+    {
+        if (pCreature->isQuestGiver())
+            pPlayer->PrepareQuestMenu(pCreature->GetGUID());
+
+        if ((pPlayer->GetQuestStatus(QUEST_NEAR_MISS) == QUEST_STATUS_INCOMPLETE) || (pPlayer->GetQuestStatus(QUEST_CLOSE_CALL) == QUEST_STATUS_INCOMPLETE))
+        {
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_BLOODROSE, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+            pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
+        }
+        else
+            pPlayer->SEND_GOSSIP_MENU(13289, pCreature->GetGUID());
+        return true;
+    }
+
+    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+    {
+        npc_bloodrose_daturaAI* pAI = CAST_AI(npc_bloodrose_datura::npc_bloodrose_daturaAI, pCreature->AI());
+
+        if (!pAI)
+            return false;
+
+        if (uiAction == GOSSIP_ACTION_INFO_DEF +1)
+        {
+            pPlayer->CLOSE_GOSSIP_MENU();
+            pPlayer->KilledMonsterCredit(ENTRY_BLOODROSE_CREDIT, pCreature->GetGUID());
+         
+            pAI->stepping = true;
+            pAI->uiStep = 1;
+        }
+
+        return true;
+    }
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_bloodrose_daturaAI (pCreature);
+    }
+};
+
+
 void AddSC_zuldrak()
 {
     new npc_drakuru_shackles();
@@ -1817,4 +1935,6 @@ void AddSC_zuldrak()
     new npc_captain_brandon();
     new npc_alchemist_finklestein();
     new npc_argent_soldier_12504();
+    new go_scourge_enclosure();
+    new npc_bloodrose_datura();
 }
