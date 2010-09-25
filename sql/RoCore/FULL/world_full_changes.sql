@@ -6327,6 +6327,9 @@ UPDATE `gameobject_template` SET scriptname = 'go_brew_event' WHERE `entry` IN (
 -- Zuldrak
 UPDATE `creature_template` SET `ScriptName` = 'npc_captain_brandon' WHERE `entry` = 28042; -- Captain Brandon http://www.wowhead.com/npc=28042
 UPDATE `creature_template` SET `ScriptName` = 'npc_alchemist_finklestein' WHERE `entry` = 28205; -- Alchemist Finklestein http://www.wowhead.com/npc=28205
+UPDATE `gameobject` SET `spawntimesecs` = 10 WHERE `id` IN (190480,190482,190466,190478,190467,190477,190481,190476,190470,190479,190473,190468,190469,190459,190464,190472,191180,191182,190462,190474,190465,190463,191181,190471);
+UPDATE `creature_template` SET `ScriptName` = 'npc_argent_soldier_12504' WHERE `entry` = 25041; -- Argent Soldier http://www.wowhead.com/npc=28041
+
 -- The Scarlet Enclave
 UPDATE `creature_template` SET `ScriptName` = 'npc_acherus_teleporter' WHERE `entry` IN (29580,29581,29588,29589); -- Teleport
 

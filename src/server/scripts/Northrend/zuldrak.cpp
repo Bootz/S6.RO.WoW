@@ -1687,6 +1687,87 @@ public:
     }
 
 };
+
+/*######
+## npc_argent_soldier_12504
+######*/
+
+#define GOSSIP_LEAVING                      "Soldier, you have new orders. You're to pull back and report to the sergeant!"
+#define QUEST_WE_ARE_LEAVING                12504
+#define ENTRY_ARGENT_SOLDIER_CREDIT         28041
+
+#define SPELL_ARGENT_SUNDER_ARMOR           50370
+
+class npc_argent_soldier_12504 : public CreatureScript
+{
+public:
+    npc_argent_soldier_12504() : CreatureScript("npc_argent_soldier_12504") { }
+
+    struct npc_argent_soldier_12504AI : public ScriptedAI
+    {
+        npc_argent_soldier_12504AI(Creature* pCreature) : ScriptedAI(pCreature) {}
+
+        uint32 m_uiTimer;
+        uint32 sunder_Timer;
+
+        void Reset()
+        {
+            m_uiTimer = 10000;
+            sunder_Timer = urand(10000,15000);
+        }
+
+        void UpdateAI(const uint32 diff)
+        {
+            if(!me->HasFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP))
+            {
+                if(m_uiTimer <= diff)
+                {
+                    me->DealDamage(me, me->GetHealth());
+                    m_uiTimer = 30000;
+                }else m_uiTimer -= diff;
+            }
+
+            if (!UpdateVictim())
+                return;
+
+            if( sunder_Timer <= diff)
+            {
+                DoCast(me->getVictim(),SPELL_ARGENT_SUNDER_ARMOR);
+                sunder_Timer = urand(10000,15000);
+            }else sunder_Timer -= diff;
+
+            DoMeleeAttackIfReady();
+        }
+    };
+
+    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+    {
+        if (uiAction == GOSSIP_ACTION_INFO_DEF +1)
+        {
+            pPlayer->KilledMonsterCredit(ENTRY_ARGENT_SOLDIER_CREDIT,pCreature->GetGUID());
+            pCreature->RemoveFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
+        }
+        pPlayer->CLOSE_GOSSIP_MENU();
+        return true;
+    }
+
+    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
+    {
+        if (pPlayer->GetQuestStatus(QUEST_WE_ARE_LEAVING) == QUEST_STATUS_INCOMPLETE && !pCreature->isInCombat())
+            pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_LEAVING, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+
+        pPlayer->SEND_GOSSIP_MENU(pPlayer->GetGossipTextId(pCreature), pCreature->GetGUID());
+        return true;
+    }
+
+    CreatureAI* GetAI(Creature* pCreature) const
+    {
+        return new npc_argent_soldier_12504AI (pCreature);
+    }
+
+};
+
+/*######
 ## Quest 12916: Our Only Hope!
 ## go_scourge_enclosure
 ######*/
@@ -1735,4 +1816,5 @@ void AddSC_zuldrak()
     new npc_fiend_elemental();
     new npc_captain_brandon();
     new npc_alchemist_finklestein();
+    new npc_argent_soldier_12504();
 }
