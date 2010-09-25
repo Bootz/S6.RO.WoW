@@ -6324,6 +6324,9 @@ UPDATE `creature_template` SET `ScriptName` = 'npc_artruis_the_heartless' WHERE 
 UPDATE `creature_template` SET `ScriptName` = 'npc_tipsy_mcmanus' WHERE `entry` = 28566; -- "Tipsy" McManus <Grimbooze's Assistant> http://www.wowhead.com/npc=28566
 UPDATE `gameobject_template` SET scriptname = 'go_brew_event' WHERE `entry` IN (190635,190636,190637,190638,190639); -- Pressure Valve, Brazier, Barrel of Oranges, Barrel of Bananas & Barrel of Papayas 
 
+-- Zuldrak
+UPDATE `creature_template` SET `ScriptName` = 'npc_captain_brandon' WHERE `entry` = 28042; -- Captain Brandon http://www.wowhead.com/npc=28042
+
 -- The Scarlet Enclave
 UPDATE `creature_template` SET `ScriptName` = 'npc_acherus_teleporter' WHERE `entry` IN (29580,29581,29588,29589); -- Teleport
 

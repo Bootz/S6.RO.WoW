@@ -81,6 +81,9 @@ public:
             DoCast(Rageclaw, SPELL_FREE_RAGECLAW, true);
 
             me->setDeathState(DEAD);
+
+        if(pWho->GetTypeId() == TYPEID_PLAYER)
+            pWho->ToPlayer()->KilledMonsterCredit(NPC_RAGECLAW,RageclawGUID);
         }
 
         void SpellHit(Unit* pCaster, const SpellEntry* pSpell)
@@ -1355,11 +1358,6 @@ public:
         }
     };
 
-    CreatureAI *GetAI(Creature *creature) const
-    {
-        return new npc_crusade_recruitAI(creature);
-    }
-
     bool OnGossipHello(Player* pPlayer, Creature* pCreature)
     {
         if (pPlayer->GetQuestStatus(QUEST_TROLL_PATROL_INTESTINAL_FORTITUDE) == QUEST_STATUS_INCOMPLETE)
@@ -1383,6 +1381,44 @@ public:
 
         return true;
     }
+
+    CreatureAI *GetAI(Creature *creature) const
+    {
+        return new npc_crusade_recruitAI(creature);
+    }
+
+};
+
+/*######
+## npc_captain_brandon
+######*/
+
+#define QUEST_SOMETHING_FOR_THE_PAIN                12597
+#define QUEST_CAN_YOU_DIG_IT                        12588
+#define QUEST_HIGH_STANDARDS                        12502
+#define QUEST_D_SOMETHING_FOR_THE_PAIN              12564
+
+#define TROLL_PATROL_KILL_CREDIT                    28042
+
+class npc_captain_brandon : public CreatureScript
+{
+public:
+    npc_captain_brandon() : CreatureScript("npc_captain_brandon") { }
+
+    bool OnQuestReward(Player *player, Creature *_Creature, Quest const *_Quest, uint32 /*item*/)
+    {
+        switch(_Quest->GetQuestId())
+        {
+        case QUEST_SOMETHING_FOR_THE_PAIN:
+        case QUEST_CAN_YOU_DIG_IT:
+        case QUEST_HIGH_STANDARDS:
+        case QUEST_D_SOMETHING_FOR_THE_PAIN:
+            player->KilledMonsterCredit(TROLL_PATROL_KILL_CREDIT,_Creature->GetGUID());
+            break;
+        }
+        return true;
+    }
+
 };
 
 /*######
@@ -1433,4 +1469,5 @@ void AddSC_zuldrak()
     new npc_elemental_lord;
     new npc_fiend_elemental;
     new go_scourge_enclosure;
+    new npc_captain_brandon();
 }
