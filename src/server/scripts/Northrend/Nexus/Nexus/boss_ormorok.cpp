@@ -26,7 +26,6 @@ enum Spells
     SPELL_CRYSTALL_SPIKE_DAMAGE                   = 47944,
     H_SPELL_CRYSTALL_SPIKE_DAMAGE                 = 57067,
     SPELL_CRYSTAL_SPIKE_PREVISUAL                 = 50442,
-    MOB_CRYSTAL_SPIKE                             = 27099,
     SPELL_SPELL_REFLECTION                        = 47981,
     SPELL_TRAMPLE                                 = 48016,
     H_SPELL_TRAMPLE                               = 57066,
@@ -34,6 +33,7 @@ enum Spells
     SPELL_SUMMON_CRYSTALLINE_TANGLER              = 61564, //summons npc 32665
     SPELL_ROOTS                                   = 28858  //proper spell id is unknown
 };
+
 enum Yells
 {
     SAY_AGGRO                                     = -1576020,
@@ -42,8 +42,10 @@ enum Yells
     SAY_CRYSTAL_SPIKES                            = -1576023,
     SAY_KILL                                      = -1576024
 };
+
 enum Creatures
 {
+    MOB_CRYSTAL_SPIKE                             = 27099,
     MOB_CRYSTALLINE_TANGLER                       = 32665
 };
 
@@ -70,6 +72,7 @@ public:
 
         bool bFrenzy;
         bool bCrystalSpikes;
+        bool breflect;
         uint8 uiCrystalSpikesCount;
         float fBaseX;
         float fBaseY;
@@ -82,7 +85,10 @@ public:
         uint32 uiTrampleTimer;
         uint32 uiFrenzyTimer;
         uint32 uiSpellReflectionTimer;
+        uint32 uiReflect;
         uint32 uiSummonCrystallineTanglerTimer;
+
+        uint8 uiReflectCount;
 
         void Reset()
         {
@@ -92,6 +98,8 @@ public:
             uiSummonCrystallineTanglerTimer = 17*IN_MILLISECONDS;
             bFrenzy = false;
             bCrystalSpikes = false;
+            uiReflect=14500;
+            uiReflectCount=4;
 
             if (pInstance)
                 pInstance->SetData(DATA_ORMOROK_EVENT, NOT_STARTED);
@@ -118,6 +126,14 @@ public:
             DoScriptText(SAY_KILL, me);
         }
 
+        void SpellHit(Unit* /*pCaster*/, const SpellEntry* pSpell)
+        {
+            if (me->HasAura(SPELL_SPELL_REFLECTION))
+                uiReflectCount--;
+            if (uiReflectCount==0)
+                me->RemoveAura(SPELL_SPELL_REFLECTION,0,0,AURA_REMOVE_BY_EXPIRE);
+        }
+
         void UpdateAI(const uint32 diff)
         {
             if (!UpdateVictim())
@@ -138,7 +154,7 @@ public:
                     fSpikeXY[3][1] = fBaseY-(SPIKE_DISTANCE*uiCrystalSpikesCount*sin(fBaseO-(M_PI/2)));
                     for (uint8 i = 0; i < 4; ++i)
                         me->SummonCreature(MOB_CRYSTAL_SPIKE, fSpikeXY[i][0], fSpikeXY[i][1], fBaseZ, 0, TEMPSUMMON_TIMED_DESPAWN, 7*IN_MILLISECONDS);
-                    if (++uiCrystalSpikesCount >= 13)
+                    if (++uiCrystalSpikesCount >= 15)
                         bCrystalSpikes = false;
                     uiCrystalSpikesTimer2 = 200;
                 } else uiCrystalSpikesTimer2 -= diff;
@@ -152,7 +168,7 @@ public:
 
             if (uiTrampleTimer <= diff)
             {
-                DoCast(me, SPELL_TRAMPLE);
+                DoCast(me, DUNGEON_MODE(SPELL_TRAMPLE,H_SPELL_TRAMPLE));
                 uiTrampleTimer = 10*IN_MILLISECONDS;
             } else uiTrampleTimer -= diff;
 
@@ -161,7 +177,15 @@ public:
                 DoScriptText(SAY_REFLECT, me);
                 DoCast(me, SPELL_SPELL_REFLECTION);
                 uiSpellReflectionTimer = 30*IN_MILLISECONDS;
+                uiReflectCount=4;
             } else uiSpellReflectionTimer -= diff;
+
+            if (breflect)
+                if (uiReflect<=diff)
+                {
+                    me->RemoveAura(SPELL_SPELL_REFLECTION,0,0,AURA_REMOVE_BY_EXPIRE);
+                    uiReflect=14500;
+                } else uiReflect-=diff;
 
             if (uiCrystalSpikesTimer <= diff)
             {
@@ -257,7 +281,7 @@ public:
 
             if (SpellCrystalSpikeDamageTimer <= diff)
             {
-                DoCast(me, SPELL_CRYSTALL_SPIKE_DAMAGE);
+            DoCast(me, DUNGEON_MODE(SPELL_CRYSTALL_SPIKE_DAMAGE,H_SPELL_CRYSTALL_SPIKE_DAMAGE));
                 SpellCrystalSpikeDamageTimer = 10*IN_MILLISECONDS;
             } else SpellCrystalSpikeDamageTimer -= diff;
         }
@@ -293,7 +317,7 @@ public:
                 if (me->IsWithinDist(me->getVictim(), 5.0f, false))
                 {
                     DoCast(me->getVictim(), SPELL_ROOTS);
-                    uiRootsTimer = 15*IN_MILLISECONDS;
+                    uiRootsTimer = 10*IN_MILLISECONDS;
                 }
             } else uiRootsTimer -= diff;
         }

@@ -6201,6 +6201,9 @@ UPDATE item_template SET Duration = 30 WHERE entry IN (38340,38335,38346,38336,3
 -- Set Scriptname
 UPDATE creature_template SET scriptname = 'npc_alchemist_finklestein' WHERE entry = 28205;
 
+-- 1016_nexus
+UPDATE creature_template SET AIName = '', ScriptName = 'boss_magus_telestra_arcane' WHERE entry = 26929;
+
 -- ro_world_extra_fixes
 -- HERE WILL BE ADD ALL LITTLE SPELL FIXES AND EXTRA FIXES FOR ROCORE JUST NOT TO HAVE MANY FILES IN UPDATE FOLDER
 
