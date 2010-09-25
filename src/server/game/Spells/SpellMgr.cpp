@@ -3946,7 +3946,9 @@ void SpellMgr::LoadSpellCustomAttr()
         case 49749: // Piercing Blow
         case 52890: // Penetrating Strike
         case 53454: // Impale
+        case 55276: // Puncture
         case 59446: // Impale
+        case 59826: // Puncture
         case 62383: // Shatter
         case 64777: // Machine Gun
         case 65239: // Machine Gun
