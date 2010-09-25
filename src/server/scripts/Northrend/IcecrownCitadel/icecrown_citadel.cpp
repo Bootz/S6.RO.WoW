@@ -19,28 +19,6 @@
 #include "ScriptPCH.h"
 #include "icecrown_citadel.h"
 
-enum Spells
-{
-    SPELL_ON_ORGRIMS_HAMMER_DECK   = 70121, //maybe for gunship battle
-    SPELL_DARKMARTYRDOM_FANATIC     = 71236,
-    SPELL_DARKMARTYRDOM_ADHERENT    = 70903,
-	SPELL_DARKTRANSFORMATION          = 70900,
-    SPELL_NECROTICSTRIKE            = 70659,
-    SPELL_SHADOWCLEAVE              = 70670,
-	SPELL_VAMPIRICMIGHT               = 70674,
-    SPELL_FANATIC_DETERMINATION     = 71235,
-    SPELL_ADHERENT_DETERMINATION    = 71234,
-    SPELL_EMPOWEREMENT              = 70901,
-    SPELL_FROST_FEVER               = 67767,
-    SPELL_DEATHCHILL_BLAST          = 70906,
-    SPELL_DEATHCHILL_BOLT           = 70594,
-    SPELL_CURSE_OF_TORPOR           = 71237,
-    SPELL_SHORUD_OF_THE_OCCULT      = 70768,
-    SPELL_DARK_TRANSFORMATION_T     = 70895,
-    SPELL_DARK_EMPOWERMENT_T        = 70896,
-    SPELL_STANDART_HORDE            = 69811
-};
-
 enum TeleportSpells
 {
     HAMMER        = 70781,
@@ -54,152 +32,6 @@ enum TeleportSpells
     QUEEN         = 70861,
     LICHKING      = 70860
 };
-/*
-class npc_cult_fanatic_and_adherent : public CreatureScript
-{
-public:
-        npc_cult_fanatic_and_adherent() : CreatureScript("npc_cult_fanatic_and_adherent") { }
-
-        struct npc_cult_fanatic_and_adherentAI : public ScriptedAI
-        {
-            npc_cult_fanatic_and_adherentAI(Creature *pCreature) : ScriptedAI(pCreature) { }
-
-		void Reset()
-		{
-                m_uiStrikeTimer = urand(8000, 11000);
-                m_uiVampirTimer = urand(19000, 22000);
-                m_uiCleaveTimer = urand(7000, 9000);
-                m_uiMartyrdomTimer = urand(24000, 30000);
-                m_uiFrostFeverTimer = urand(9000, 11000);
-                m_uiDeathchillTimer = urand(10000, 12000);
-                m_uiCurseTimer = urand(8000, 10000);
-                m_uiOccultTimer = urand(25000, 29000);
-
-                bEmpowerement = false;
-
-                if(me->GetEntry() == CREATURE_REANIMATED_ADHERENT)
-                    DoCast(me, SPELL_ADHERENT_DETERMINATION);
-                if(me->GetEntry() == CREATURE_REANIMATED_FANATIC)
-                    DoCast(me, SPELL_FANATIC_DETERMINATION);
-            }
-
-            void JustDied(Unit* /*who*/) { }
-
-            void SpellHit(Unit* /*caster*/, const SpellEntry * spell)
-            {
-                if(me->GetEntry() == CREATURE_ADHERENT)
-                {
-                    if (spell->Id == SPELL_EMPOWEREMENT)
-                        me->UpdateEntry(CREATURE_EMPOWERED_ADHERENT);
-                    else if (spell->Id == SPELL_DARK_EMPOWERMENT_T)
-                    {
-                        DoCast(me, SPELL_EMPOWEREMENT);
-                        bEmpowerement = true;
-                    }
-                }
-                if(me->GetEntry() == CREATURE_FANATIC)
-                {
-                    if (spell->Id == SPELL_DARKTRANSFORMATION)
-                        me->UpdateEntry(CREATURE_DEFORMED_FANATIC);
-                    else if (spell->Id == SPELL_DARK_TRANSFORMATION_T)
-                    {
-                        DoCast(me, SPELL_DARKTRANSFORMATION);
-                    }
-                }
-            }
-
-            void UpdateAI(const uint32 uiDiff)
-		{
-			if (!UpdateVictim())
-				return;
-
-                if (me->hasUnitState(UNIT_STAT_CASTING))
-				return;
-
-                if((me->GetEntry() == CREATURE_ADHERENT) || (me->GetEntry() == CREATURE_EMPOWERED_ADHERENT) || (me->GetEntry() == CREATURE_REANIMATED_ADHERENT))
-                {
-                    if (m_uiMartyrdomTimer <= uiDiff && !bEmpowerement)
-                    {
-                        DoCast(me, SPELL_DARKMARTYRDOM_ADHERENT);
-                        m_uiMartyrdomTimer = urand(24000, 30000);
-                    } else m_uiMartyrdomTimer -= uiDiff;
-
-                    if (m_uiFrostFeverTimer <= uiDiff)
-                    {
-                        DoCast(me->getVictim(), SPELL_FROST_FEVER);
-                        m_uiFrostFeverTimer = urand(9000, 11000);
-                    } else m_uiFrostFeverTimer -= uiDiff;
-
-                    if (m_uiDeathchillTimer <= uiDiff)
-                    {
-                        if (me->GetEntry() == CREATURE_EMPOWERED_ADHERENT)
-                            DoCast(me->getVictim(), SPELL_DEATHCHILL_BLAST);
-                        else
-                            DoCast(me->getVictim(), SPELL_DEATHCHILL_BOLT);
-                        m_uiDeathchillTimer = urand(10000, 12000);
-                    } else m_uiDeathchillTimer -= uiDiff;
-
-                    if (m_uiCurseTimer <= uiDiff)
-                    {
-                        if (Unit* pTarget = SelectUnit(SELECT_TARGET_RANDOM, 1))
-                            DoCast(pTarget, SPELL_CURSE_OF_TORPOR);
-                        m_uiCurseTimer = urand(8000, 10000);
-                    } else m_uiCurseTimer -= uiDiff;
-
-                    if (m_uiOccultTimer <= uiDiff)
-                    {
-                        DoCast(me, SPELL_SHORUD_OF_THE_OCCULT);
-                        m_uiOccultTimer = urand(25000, 29000);
-                    } else m_uiOccultTimer -= uiDiff;
-                }
-                if((me->GetEntry() == CREATURE_FANATIC) || (me->GetEntry() == CREATURE_REANIMATED_FANATIC) || (me->GetEntry() == CREATURE_DEFORMED_FANATIC))
-                {
-                    if (m_uiMartyrdomTimer <= uiDiff)
-                    {
-                        DoCast(me, SPELL_DARKMARTYRDOM_FANATIC);
-                        m_uiMartyrdomTimer = urand(24000, 30000);
-                    } else m_uiMartyrdomTimer -= uiDiff;
-
-                    if (m_uiStrikeTimer <= uiDiff)
-                    {
-                        DoCast(me, SPELL_NECROTICSTRIKE);
-                        m_uiStrikeTimer = urand(8000, 11000);
-                    } else m_uiStrikeTimer -= uiDiff;
-
-                    if (m_uiCleaveTimer <= uiDiff)
-			{
-				DoCast(me, SPELL_SHADOWCLEAVE);
-                        m_uiCleaveTimer = urand(7000, 9000);
-                    } else m_uiCleaveTimer -= uiDiff;
-
-                    if (m_uiVampirTimer <= uiDiff)
-                    {
-                        DoCast(me, SPELL_VAMPIRICMIGHT);
-                        m_uiVampirTimer = urand(19000, 22000);
-                    } else m_uiVampirTimer -= uiDiff;
-                }
-
-			DoMeleeAttackIfReady();
-		}
-
-        private:
-		uint32 m_uiStrikeTimer;
-		uint32 m_uiCleaveTimer;
-		uint32 m_uiVampirTimer;
-            uint32 m_uiMartyrdomTimer;
-            uint32 m_uiFrostFeverTimer;
-            uint32 m_uiDeathchillTimer;
-            uint32 m_uiCurseTimer;
-            uint32 m_uiOccultTimer;
-
-            bool bEmpowerement;
-	};
-
-	CreatureAI* GetAI(Creature* pCreature) const
-	{
-            return new npc_cult_fanatic_and_adherentAI(pCreature);
-	}
-};*/
 
 class go_icecrown_teleporter : public GameObjectScript
 {
@@ -290,6 +122,5 @@ class go_icecrown_teleporter : public GameObjectScript
 
 void AddSC_icecrown_citadel()
 {
-    //new npc_cult_fanatic_and_adherent;
     new go_icecrown_teleporter;
 }

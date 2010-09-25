@@ -96,6 +96,7 @@ public:
                 uiCitadelTp             = 0;
                 uiSindragossaTp         = 0;
                 uiLichTp                = 0;
+                isBonedEligible = false;
 
                 memset(&uiEncounter, 0, sizeof(uiEncounter));
 		};
@@ -452,6 +453,9 @@ public:
                         }
                         uiEncounter[0] = data;
                         break;
+                    case COMMAND_FAIL_BONED:
+                        isBonedEligible = data ? true : false;
+                        break;
                     case DATA_DEATHWHISPER_EVENT:
                         switch(data)
                         {
@@ -748,6 +752,22 @@ public:
                 return 0;
             }
 
+            bool CheckAchievementCriteriaMeet(uint32 criteria_id, Player const* /*source*/, Unit const* /*target*/, uint32 /*miscvalue1*/)
+            {
+                switch (criteria_id)
+                {
+                    case CRITERIA_BONED_10N:
+                    case CRITERIA_BONED_25N:
+                    case CRITERIA_BONED_10H:
+                    case CRITERIA_BONED_25H:
+                        return isBonedEligible;
+                    default:
+                        break;
+                }
+
+                return false;
+            }
+
             std::string GetSaveData()
             {
                 OUT_SAVE_INST_DATA;
@@ -802,6 +822,7 @@ public:
             }
 
         private:
+            bool isBonedEligible;
     uint64 uiLordMarrowgar;
     uint64 uiLadyDeathwhisper;
     uint64 uiGunship;

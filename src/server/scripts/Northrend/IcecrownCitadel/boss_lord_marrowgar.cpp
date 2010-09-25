@@ -80,7 +80,7 @@ class boss_lord_marrowgar : public CreatureScript
 
         struct boss_lord_marrowgarAI : public BossAI
         {
-            boss_lord_marrowgarAI(Creature *pCreature) : BossAI(pCreature, DATA_LORD_MARROWGAR)
+            boss_lord_marrowgarAI(Creature *pCreature) : BossAI(pCreature, DATA_MARROWGAR_EVENT)
             {
                 ASSERT(instance);
                 bIntroDone = false;
@@ -101,26 +101,26 @@ class boss_lord_marrowgar : public CreatureScript
                 events.ScheduleEvent(EVENT_COLDFLAME, urand(10000, 15000));
                 events.ScheduleEvent(EVENT_WARN_BONE_STORM, urand(35000, 50000));
                 events.ScheduleEvent(EVENT_ENRAGE, 600000);
-                instance->SetBossState(DATA_LORD_MARROWGAR, NOT_STARTED);
+                instance->SetBossState(DATA_MARROWGAR_EVENT, NOT_STARTED);
             }
 
             void EnterCombat(Unit* /*who*/)
             {
                 DoScriptText(SAY_AGGRO, me);
 
-                instance->SetBossState(DATA_LORD_MARROWGAR, IN_PROGRESS);
+                instance->SetBossState(DATA_MARROWGAR_EVENT, IN_PROGRESS);
             }
 
             void JustDied(Unit* /*killer*/)
             {
                 DoScriptText(SAY_DEATH, me);
 
-                instance->SetBossState(DATA_LORD_MARROWGAR, DONE);
+                instance->SetBossState(DATA_MARROWGAR_EVENT, DONE);
             }
 
             void JustReachedHome()
             {
-                instance->SetBossState(DATA_LORD_MARROWGAR, FAIL);
+                instance->SetBossState(DATA_MARROWGAR_EVENT, FAIL);
             }
 
             void KilledUnit(Unit *victim)
@@ -425,7 +425,7 @@ class spell_marrowgar_coldflame : public SpellScriptLoader
 
             bool Load()
             {
-                if (GetCaster()->GetEntry() != NPC_LORD_MARROWGAR)
+                if (GetCaster()->GetEntry() != CREATURE_MARROWGAR)
                     return false;
                 return true;
             }
@@ -459,7 +459,7 @@ class spell_marrowgar_bone_spike_graveyard : public SpellScriptLoader
                         break;
                     yell = true;
                     //marrowgarAI->DoCast(*itr, SPELL_IMPALE);    // this is the proper spell but if we use it we dont have any way to assign a victim to it
-                    Creature* pBone = GetCaster()->SummonCreature(NPC_BONE_SPIKE, target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0, TEMPSUMMON_CORPSE_DESPAWN);
+                    Creature* pBone = GetCaster()->SummonCreature(CREATURE_BONE_SPIKE, target->GetPositionX(), target->GetPositionY(), target->GetPositionZ(), 0, TEMPSUMMON_CORPSE_DESPAWN);
                     CAST_AI(npc_bone_spike::npc_bone_spikeAI, pBone->AI())->SetTrappedUnit(target);
                 }
 
@@ -474,7 +474,7 @@ class spell_marrowgar_bone_spike_graveyard : public SpellScriptLoader
 
             bool Load()
             {
-                if (GetCaster()->GetEntry() != NPC_LORD_MARROWGAR)
+                if (GetCaster()->GetEntry() != CREATURE_MARROWGAR)
                     return false;
                 return true;
             }
@@ -511,7 +511,7 @@ class spell_marrowgar_bone_storm : public SpellScriptLoader
 
             bool Load()
             {
-                if (GetCaster()->GetEntry() != NPC_LORD_MARROWGAR)
+                if (GetCaster()->GetEntry() != CREATURE_MARROWGAR)
                     return false;
                 return true;
             }

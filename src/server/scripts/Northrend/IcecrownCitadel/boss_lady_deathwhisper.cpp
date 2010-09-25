@@ -139,7 +139,7 @@ enum ePhases
     PHASE_ONE_MASK      = 1 << PHASE_ONE,
 };
 
-static const uint32 uiAddEntries[2] = {NPC_CULT_FANATIC, NPC_CULT_ADHERENT};
+static const uint32 uiAddEntries[2] = {CREATURE_FANATIC, CREATURE_ADHERENT};
 
 static const Position addSpawnPos[7] =
 {
@@ -159,7 +159,7 @@ class boss_lady_deathwhisper : public CreatureScript
 
         struct boss_lady_deathwhisperAI : public BossAI
         {
-            boss_lady_deathwhisperAI(Creature* pCreature) : BossAI(pCreature, DATA_LADY_DEATHWHISPER)
+            boss_lady_deathwhisperAI(Creature* pCreature) : BossAI(pCreature, DATA_DEATHWHISPER_EVENT)
             {
                 ASSERT(instance);
                 bIntroDone = false;
@@ -179,7 +179,7 @@ class boss_lady_deathwhisper : public CreatureScript
                 me->RemoveAurasDueToSpell(SPELL_MANA_BARRIER);
                 me->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_TAUNT, false);
                 me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_ATTACK_ME, false);
-                instance->SetBossState(DATA_LADY_DEATHWHISPER, NOT_STARTED);
+                instance->SetBossState(DATA_DEATHWHISPER_EVENT, NOT_STARTED);
             }
 
             void MoveInLineOfSight(Unit* who)
@@ -228,20 +228,20 @@ class boss_lady_deathwhisper : public CreatureScript
                 me->RemoveAurasDueToSpell(SPELL_SHADOW_CHANNELING);
                 DoCast(me, SPELL_MANA_BARRIER, true);
 
-                instance->SetBossState(DATA_LADY_DEATHWHISPER, IN_PROGRESS);
+                instance->SetBossState(DATA_DEATHWHISPER_EVENT, IN_PROGRESS);
             }
 
             void JustDied(Unit* killer)
             {
                 DoScriptText(SAY_DEATH, me);
 
-                instance->SetBossState(DATA_LADY_DEATHWHISPER, DONE);
+                instance->SetBossState(DATA_DEATHWHISPER_EVENT, DONE);
 
                 std::set<uint32> livingAddEntries;
                 // Full House achievement
                 for (SummonList::iterator itr = summons.begin(); itr != summons.end(); ++itr)
                     if (Unit* unit = ObjectAccessor::GetUnit(*me, *itr))
-                        if (unit->isAlive() && unit->GetEntry() != NPC_VENGEFUL_SHADE)
+                        if (unit->isAlive() && unit->GetEntry() != CREATURE_SHADE)
                             livingAddEntries.insert(unit->GetEntry());
 
                 if (livingAddEntries.size() >= 5)
@@ -270,7 +270,7 @@ class boss_lady_deathwhisper : public CreatureScript
 
             void JustReachedHome()
             {
-                instance->SetBossState(DATA_LADY_DEATHWHISPER, FAIL);
+                instance->SetBossState(DATA_DEATHWHISPER_EVENT, FAIL);
 
                 summons.DespawnAll();
             }
@@ -311,7 +311,7 @@ class boss_lady_deathwhisper : public CreatureScript
             {
                 summons.push_back(summon->GetGUID());
                 Unit* target = NULL;
-                if (summon->GetEntry() == NPC_VENGEFUL_SHADE)
+                if (summon->GetEntry() == CREATURE_SHADE)
                 {
                     target = ObjectAccessor::GetUnit(*me, uiNextVengefulShadeTarget);   // Vengeful Shade
                     uiNextVengefulShadeTarget = 0;
@@ -320,9 +320,9 @@ class boss_lady_deathwhisper : public CreatureScript
                     target = SelectTarget(SELECT_TARGET_RANDOM);                        // Wave adds
 
                 summon->AI()->AttackStart(target);                                      // CAN be NULL
-                if (summon->GetEntry() == NPC_REANIMATED_FANATIC)
+                if (summon->GetEntry() == CREATURE_REANIMATED_FANATIC)
                     summon->AI()->DoCast(summon, SPELL_FANATIC_S_DETERMINATION);
-                else if (summon->GetEntry() == NPC_REANIMATED_ADHERENT)
+                else if (summon->GetEntry() == CREATURE_REANIMATED_ADHERENT)
                     summon->AI()->DoCast(summon, SPELL_ADHERENT_S_DETERMINATION);
             }
 
@@ -499,10 +499,10 @@ class boss_lady_deathwhisper : public CreatureScript
                 {
                     Position pos;
                     target->GetPosition(&pos);
-                    if (target->GetEntry() == NPC_CULT_FANATIC)
-                        me->SummonCreature(NPC_REANIMATED_FANATIC, pos, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000);
+                    if (target->GetEntry() == CREATURE_FANATIC)
+                        me->SummonCreature(CREATURE_REANIMATED_FANATIC, pos, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000);
                     else
-                        me->SummonCreature(NPC_REANIMATED_ADHERENT, pos, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000);
+                        me->SummonCreature(CREATURE_REANIMATED_ADHERENT, pos, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 10000);
 
                     if (TempSummon* summon = target->ToTempSummon())
                         summon->UnSummon();
@@ -517,7 +517,7 @@ class boss_lady_deathwhisper : public CreatureScript
                 std::list<Creature*> tmpList;
                 for (SummonList::iterator itr = summons.begin(); itr != summons.end(); ++itr)
                     if (Creature* cre = ObjectAccessor::GetCreature(*me, *itr))
-                        if (cre->isAlive() && (cre->GetEntry() == NPC_CULT_FANATIC || cre->GetEntry() == NPC_CULT_ADHERENT))
+                        if (cre->isAlive() && (cre->GetEntry() == CREATURE_FANATIC || cre->GetEntry() == CREATURE_ADHERENT))
                             tmpList.push_back(cre);
 
                 // noone to empower
@@ -529,8 +529,8 @@ class boss_lady_deathwhisper : public CreatureScript
                 std::advance(cultistItr, urand(0, tmpList.size()-1));
 
                 Creature* cultist = *cultistItr;
-                DoCast(cultist, cultist->GetEntry() == NPC_CULT_FANATIC ? SPELL_DARK_TRANSFORMATION_T : SPELL_DARK_EMPOWERMENT_T, true);
-                DoScriptText(cultist->GetEntry() == NPC_CULT_FANATIC ? SAY_DARK_TRANSFORMATION : SAY_DARK_EMPOWERMENT, me);
+                DoCast(cultist, cultist->GetEntry() == CREATURE_FANATIC ? SPELL_DARK_TRANSFORMATION_T : SPELL_DARK_EMPOWERMENT_T, true);
+                DoScriptText(cultist->GetEntry() == CREATURE_FANATIC ? SAY_DARK_TRANSFORMATION : SAY_DARK_EMPOWERMENT, me);
             }
 
         private:
@@ -562,14 +562,14 @@ class npc_cult_fanatic : public CreatureScript
                 events.ScheduleEvent(EVENT_FANATIC_NECROTIC_STRIKE, urand(10000, 12000));
                 events.ScheduleEvent(EVENT_FANATIC_SHADOW_CLEAVE, urand(14000, 16000));
                 events.ScheduleEvent(EVENT_FANATIC_VAMPIRIC_MIGHT, urand(20000, 27000));
-                if (me->GetEntry() == NPC_CULT_FANATIC)
+                if (me->GetEntry() == CREATURE_FANATIC)
                     events.ScheduleEvent(EVENT_CULTIST_DARK_MARTYRDOM, urand(18000, 32000));
             }
 
             void SpellHit(Unit* /*caster*/, const SpellEntry * spell)
             {
                 if (spell->Id == SPELL_DARK_TRANSFORMATION)
-                    me->UpdateEntry(NPC_DEFORMED_FANATIC);
+                    me->UpdateEntry(CREATURE_DEFORMED_FANATIC);
                 else if (spell->Id == SPELL_DARK_TRANSFORMATION_T)
                 {
                     events.CancelEvent(EVENT_CULTIST_DARK_MARTYRDOM);
@@ -640,14 +640,14 @@ class npc_cult_adherent : public CreatureScript
                 events.ScheduleEvent(EVENT_ADHERENT_DEATHCHILL, urand(14000, 16000));
                 events.ScheduleEvent(EVENT_ADHERENT_CURSE_OF_TORPOR, urand(14000, 16000));
                 events.ScheduleEvent(EVENT_ADHERENT_SHORUD_OF_THE_OCCULT, urand(32000, 39000));
-                if (me->GetEntry() == NPC_CULT_ADHERENT)
+                if (me->GetEntry() == CREATURE_ADHERENT)
                     events.ScheduleEvent(EVENT_CULTIST_DARK_MARTYRDOM, urand(18000, 32000));
             }
 
             void SpellHit(Unit* /*caster*/, const SpellEntry * spell)
             {
                 if (spell->Id == SPELL_DARK_EMPOWERMENT)
-                    me->UpdateEntry(NPC_EMPOWERED_ADHERENT);
+                    me->UpdateEntry(CREATURE_EMPOWERED_ADHERENT);
                 else if (spell->Id == SPELL_DARK_EMPOWERMENT_T)
                 {
                     events.CancelEvent(EVENT_CULTIST_DARK_MARTYRDOM);
@@ -675,7 +675,7 @@ class npc_cult_adherent : public CreatureScript
                             events.ScheduleEvent(EVENT_ADHERENT_FROST_FEVER, urand(9000, 13000));
                             break;
                         case EVENT_ADHERENT_DEATHCHILL:
-                            if (me->GetEntry() == NPC_EMPOWERED_ADHERENT)
+                            if (me->GetEntry() == CREATURE_EMPOWERED_ADHERENT)
                                 DoCastVictim(SPELL_DEATHCHILL_BLAST);
                             else
                                 DoCastVictim(SPELL_DEATHCHILL_BOLT);
@@ -779,7 +779,7 @@ class spell_cultist_dark_martyrdom : public SpellScriptLoader
             bool Validate(SpellEntry const* /*spellEntry*/)
             {
                 if (uint32 scriptId = sObjectMgr.GetScriptId("boss_lady_deathwhisper"))
-                    if (CreatureInfo const* creInfo = ObjectMgr::GetCreatureTemplate(NPC_LADY_DEATHWHISPER))
+                    if (CreatureInfo const* creInfo = ObjectMgr::GetCreatureTemplate(CREATURE_DEATHWHISPER))
                         if (creInfo->ScriptID == scriptId)
                             return true;
 
@@ -790,11 +790,11 @@ class spell_cultist_dark_martyrdom : public SpellScriptLoader
             {
                 if (GetCaster()->isSummon())
                     if (Unit* owner = GetCaster()->ToTempSummon()->GetSummoner())
-                        if (owner->GetEntry() == NPC_LADY_DEATHWHISPER)
+                        if (owner->GetEntry() == CREATURE_DEATHWHISPER)
                             CAST_AI(boss_lady_deathwhisper::boss_lady_deathwhisperAI, owner->ToCreature()->AI())->AddToReanimationQueue(GetCaster());
 
                 GetCaster()->Kill(GetCaster());
-                GetCaster()->SetDisplayId(GetCaster()->GetEntry() == NPC_CULT_FANATIC ? 38009 : 38010);
+                GetCaster()->SetDisplayId(GetCaster()->GetEntry() == CREATURE_FANATIC ? 38009 : 38010);
             }
 
             void Register()
