@@ -60,6 +60,12 @@ public:
         bool eruptDirection;
         Phases phase;
 
+        void Reset()
+        {
+            _Reset();
+            SetImmuneToDeathGrip();
+        }
+
         void KilledUnit(Unit* /*Victim*/)
         {
             if (!(rand()%5))
@@ -75,6 +81,7 @@ public:
         void EnterCombat(Unit * /*who*/)
         {
             _EnterCombat();
+            TeleportCheaters();
             DoScriptText(SAY_AGGRO, me);
             EnterPhase(PHASE_FIGHT);
         }
@@ -86,6 +93,7 @@ public:
             eruptSection = 3;
             if (phase == PHASE_FIGHT)
             {
+                me->GetMotionMaster()->MoveChase(me->getVictim());
                 events.ScheduleEvent(EVENT_DISRUPT, urand(10000, 25000));
                 events.ScheduleEvent(EVENT_FEVER, urand(15000, 20000));
                 events.ScheduleEvent(EVENT_PHASE, 90000);
@@ -96,6 +104,7 @@ public:
                 float x, y, z, o;
                 me->GetHomePosition(x, y, z, o);
                 me->NearTeleportTo(x, y, z, o);
+                me->GetMotionMaster()->MoveIdle();
                 DoCastAOE(SPELL_PLAGUE_CLOUD);
                 events.ScheduleEvent(EVENT_PHASE, 45000);
                 events.ScheduleEvent(EVENT_ERUPT, 8000);
@@ -136,7 +145,7 @@ public:
 
                         eruptDirection ? ++eruptSection : --eruptSection;
 
-                        events.ScheduleEvent(EVENT_ERUPT, phase == PHASE_FIGHT ? 10000 : 3000);
+                        events.ScheduleEvent(EVENT_ERUPT, phase == PHASE_FIGHT ? 10000 : 4000);
                         break;
                 }
             }

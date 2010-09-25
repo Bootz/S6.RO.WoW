@@ -70,11 +70,12 @@ public:
         void Reset()
         {
             _Reset();
+            SetImmuneToDeathGrip();
 
             hasTaunted = false;
 
-            if (getDifficulty() == RAID_DIFFICULTY_25MAN_NORMAL)
-            {
+            //if (getDifficulty() == RAID_DIFFICULTY_25MAN_NORMAL)
+            //{
                 Position pos;
 
                 // respawn guard using home position,
@@ -83,6 +84,8 @@ public:
                 pos.m_positionY -= 10.0f;
                 me->SummonCreature(MOB_CRYPT_GUARD, pos, TEMPSUMMON_CORPSE_DESPAWN);
 
+            if (getDifficulty() == RAID_DIFFICULTY_25MAN_NORMAL)
+            {
                 pos = me->GetHomePosition();
                 pos.m_positionY += 10.0f;
                 me->SummonCreature(MOB_CRYPT_GUARD, pos, TEMPSUMMON_CORPSE_DESPAWN);
@@ -107,15 +110,16 @@ public:
             if (instance)
                 instance->DoStartTimedAchievement(ACHIEVEMENT_TIMED_TYPE_EVENT, ACHIEV_TIMED_START_EVENT);
         }
+
         void EnterCombat(Unit * /*who*/)
         {
             _EnterCombat();
             DoScriptText(SAY_AGGRO, me);
             events.ScheduleEvent(EVENT_IMPALE, 10000 + rand()%10000);
-            events.ScheduleEvent(EVENT_LOCUST, 90000);
+            events.ScheduleEvent(EVENT_LOCUST, urand(80000,120000));
             events.ScheduleEvent(EVENT_BERSERK, 600000);
 
-            if (getDifficulty() == RAID_DIFFICULTY_10MAN_NORMAL)
+            //if (getDifficulty() == RAID_DIFFICULTY_10MAN_NORMAL)
                 events.ScheduleEvent(EVENT_SPAWN_GUARDIAN_NORMAL, urand(15000,20000));
         }
 
@@ -153,24 +157,31 @@ public:
                 switch(eventId)
                 {
                     case EVENT_IMPALE:
+                        if(!me->IsNonMeleeSpellCasted(false))
+                        {
                         //Cast Impale on a random target
                         //Do NOT cast it when we are afflicted by locust swarm
                         if (!me->HasAura(RAID_MODE(SPELL_LOCUST_SWARM_10,SPELL_LOCUST_SWARM_25)))
                             if (Unit *pTarget = SelectUnit(SELECT_TARGET_RANDOM, 0))
                                 DoCast(pTarget, RAID_MODE(SPELL_IMPALE_10,SPELL_IMPALE_25));
                         events.ScheduleEvent(EVENT_IMPALE, urand(10000,20000));
+                        }
                         break;
                     case EVENT_LOCUST:
+                        if(!me->IsNonMeleeSpellCasted(false))
+                        {
                         // TODO : Add Text
                         DoCast(me, RAID_MODE(SPELL_LOCUST_SWARM_10,SPELL_LOCUST_SWARM_25));
                         DoSummon(MOB_CRYPT_GUARD, GuardSummonPos, 0, TEMPSUMMON_CORPSE_DESPAWN);
-                        events.ScheduleEvent(EVENT_LOCUST, 90000);
+                            events.ScheduleEvent(EVENT_LOCUST, urand(85000,95000));
+                        }
                         break;
                     case EVENT_SPAWN_GUARDIAN_NORMAL:
                         // TODO : Add Text
                         DoSummon(MOB_CRYPT_GUARD, GuardSummonPos, 0, TEMPSUMMON_CORPSE_DESPAWN);
                         break;
                     case EVENT_BERSERK:
+                        if (getDifficulty() == RAID_DIFFICULTY_25MAN_NORMAL)
                         DoCast(me, SPELL_BERSERK, true);
                         events.ScheduleEvent(EVENT_BERSERK, 600000);
                         break;

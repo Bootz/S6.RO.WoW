@@ -307,6 +307,7 @@ struct BossAI : public ScriptedAI
         }
         bool CheckBoundary(Unit *who);
         void TeleportCheaters();
+        void SetImmuneToDeathGrip(bool set = true);
 };
 
 // SD2 grid searchers.

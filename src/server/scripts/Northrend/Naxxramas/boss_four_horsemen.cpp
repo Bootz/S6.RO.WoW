@@ -129,6 +129,7 @@ public:
             encounterActionReset = false;
             doDelayPunish = false;
             _Reset();
+            SetImmuneToDeathGrip();
         }
 
         bool DoEncounterAction(Unit *who, bool attack, bool reset, bool checkAllDead)
@@ -324,9 +325,19 @@ public:
             else
                 DoScriptText(SAY_AGGRO[id], me);
 
-            events.ScheduleEvent(EVENT_MARK, 15000);
+            events.ScheduleEvent(EVENT_MARK, 24000);
             events.ScheduleEvent(EVENT_CAST, 20000+rand()%5000);
             events.ScheduleEvent(EVENT_BERSERK, 15*100*1000);
+        }
+
+        void SpellHitTarget(Unit* target, const SpellEntry *spell)
+        {
+            if(target->GetTypeId() != TYPEID_PLAYER)
+                return;
+
+            if(spell->Id == SPELL_MARK[0] || spell->Id == SPELL_MARK[1] || spell->Id == SPELL_MARK[2] || spell->Id == SPELL_MARK[3])
+                me->getThreatManager().modifyThreatPercent(target,-50);
+
         }
 
         void UpdateAI(const uint32 diff)
@@ -350,12 +361,17 @@ public:
                 switch(eventId)
                 {
                     case EVENT_MARK:
+                        if(!me->IsNonMeleeSpellCasted(false))
+                        {
                         if (!(rand()%5))
                             DoScriptText(SAY_SPECIAL[id], me);
                         DoCastAOE(SPELL_MARK[id]);
-                        events.ScheduleEvent(EVENT_MARK, 15000);
+                            events.ScheduleEvent(EVENT_MARK, caster ? 15000 : 12000);
+                        }
                         break;
                     case EVENT_CAST:
+                        if(!me->IsNonMeleeSpellCasted(false))
+                        {
                         if (!(rand()%5))
                             DoScriptText(SAY_TAUNT[rand()%3][id], me);
 
@@ -368,10 +384,11 @@ public:
                             DoCast(me->getVictim(), SPELL_PRIMARY(id));
 
                         events.ScheduleEvent(EVENT_CAST, 15000);
+                        }
                         break;
                     case EVENT_BERSERK:
                         DoScriptText(SAY_SPECIAL[id], me);
-                        DoCast(me, EVENT_BERSERK);
+                        DoCast(me, SPELL_BERSERK, true);
                         break;
                 }
             }

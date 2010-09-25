@@ -137,6 +137,35 @@ public:
         bool checkFeugenAlive;
         uint32 uiAddsTimer;
 
+        void Reset()
+        {
+            _Reset();
+
+            if (Creature *pFeugen = me->GetCreature(*me, instance->GetData64(DATA_FEUGEN)))
+            {
+                pFeugen->Respawn(true);
+                checkFeugenAlive = pFeugen->isAlive();
+            }
+
+            if (Creature *pStalagg = me->GetCreature(*me, instance->GetData64(DATA_STALAGG)))
+            {
+                pStalagg->Respawn(true);
+                checkStalaggAlive = pStalagg->isAlive();
+            }
+
+            if (!checkFeugenAlive && !checkStalaggAlive)
+            {
+                me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_STUNNED);
+                me->SetReactState(REACT_AGGRESSIVE);
+            }
+            else
+            {
+                me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_STUNNED);
+                me->SetReactState(REACT_PASSIVE);
+            }
+            SetImmuneToDeathGrip();
+        }
+
         void KilledUnit(Unit* /*victim*/)
         {
             if (!(rand()%5))
@@ -240,6 +269,7 @@ public:
                         events.ScheduleEvent(EVENT_CHAIN, urand(10000,20000));
                         return;
                     case EVENT_BERSERK:
+                        me->InterruptNonMeleeSpells(false);
                         DoCast(me, SPELL_BERSERK);
                         return;
                 }
@@ -318,9 +348,11 @@ public:
 
                         // reset aggro to be sure that feugen will not follow the jump
                         pFeugen->getThreatManager().modifyThreatPercent(pFeugenVictim, -100);
+                        pFeugen->getThreatManager().modifyThreatPercent(pStalaggVictim, 100);
                         pFeugenVictim->JumpTo(me, 0.3f);
 
                         me->getThreatManager().modifyThreatPercent(pStalaggVictim, -100);
+                        me->getThreatManager().modifyThreatPercent(pFeugenVictim, 100);
                         pStalaggVictim->JumpTo(pFeugen, 0.3f);
                     }
                 }

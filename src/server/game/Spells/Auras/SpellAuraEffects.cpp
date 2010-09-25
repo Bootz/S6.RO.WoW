@@ -5720,14 +5720,14 @@ void AuraEffect::HandleAuraDummy(AuraApplication const * aurApp, uint8 mode, boo
                         {
                             case 1: damage = 0;     break;
                             case 2: damage = 500;   break;
-                            case 3: damage = 1000;  break;
-                            case 4: damage = 1500;  break;
-                            case 5: damage = 4000;  break;
-                            case 6: damage = 12000; break;
-                            default:damage = 20000 + 1000 * (GetBase()->GetStackAmount() - 7); break;
+                            case 3: damage = 1500;  break;
+                            case 4: damage = 4000;  break;
+                            case 5: damage = 12000; break;
+                            case 6: damage = 20000; break;
+                            default:damage = 20000 + 1000 * (GetBase()->GetStackAmount() - 6); break;
                         }
                         if (damage)
-                            caster->CastCustomSpell(28836, SPELLVALUE_BASE_POINT0, damage, target);
+                            caster->CastCustomSpell(28836, SPELLVALUE_BASE_POINT0, damage, target, true);
                     }
                     break;
 

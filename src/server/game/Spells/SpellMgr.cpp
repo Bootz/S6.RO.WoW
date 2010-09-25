@@ -3709,6 +3709,12 @@ void SpellMgr::LoadSpellCustomAttr()
             spellInfo->EffectImplicitTargetA[1] = TARGET_DST_CASTER;
             count++;
             break;
+        case 28836: //Mark - should not be resistet
+        case 28786: //Locust Swarm
+        case 54022: //Locust Swarm
+            spellInfo->AttributesEx4 |= SPELL_ATTR_EX4_FIXED_DAMAGE;
+            count++;
+            break;
         case 41376: // Spite
         case 39992: // Needle Spine
         case 29576: // Multi-Shot
@@ -3737,6 +3743,7 @@ void SpellMgr::LoadSpellCustomAttr()
         case 45641: // Fire Bloom
         case 55665: // Life Drain - Sapphiron (H)
         case 28796: // Poison Bolt Volly - Faerlina
+        case 29232: // Fungal Creep - Loatheb Spore - Dont know if needed
             spellInfo->MaxAffectedTargets = 5;
             count++;
             break;
@@ -3950,6 +3957,10 @@ void SpellMgr::LoadSpellCustomAttr()
         case 69293: // Wing Buffet
         case 74439: // Machine Gun
             mSpellCustomAttr[i] |= SPELL_ATTR_CU_IGNORE_ARMOR;
+            count++;
+            break;
+        case 28299:
+            spellInfo->Attributes |= SPELL_ATTR_UNAFFECTED_BY_INVULNERABILITY;
             count++;
             break;
         // THESE SPELLS ARE WORKING CORRECTLY EVEN WITHOUT THIS HACK

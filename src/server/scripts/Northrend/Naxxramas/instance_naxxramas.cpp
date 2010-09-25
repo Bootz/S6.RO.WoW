@@ -51,6 +51,7 @@ const MinionData minionData[] =
 {
     //{16573,     BOSS_ANUBREKHAN},     there is no spawn point in db, so we do not add them here
     {16506,     BOSS_FAERLINA},
+    {16505,     BOSS_FAERLINA},
     {16803,     BOSS_RAZUVIOUS},
     {16063,     BOSS_HORSEMEN},
     {16064,     BOSS_HORSEMEN},
@@ -119,6 +120,7 @@ public:
             SetBossNumber(MAX_BOSS_NUMBER);
             LoadDoorData(doorData);
             LoadMinionData(minionData);
+            gothikDoorState = GO_STATE_READY;
         }
 
         std::set<uint64> HeiganEruptionGUID[4];
@@ -328,16 +330,25 @@ public:
         std::string GetSaveData()
         {
             std::ostringstream saveStream;
-            saveStream << GetBossSaveData() << " " << gothikDoorState;
+            saveStream << "N X " << GetBossSaveData() << " " << gothikDoorState;
             return saveStream.str();
         }
 
         void Load(const char * data)
         {
+            std::istringstream loadStream(data);
+            char dataHead1, dataHead2;
+            loadStream >> dataHead1 >> dataHead2;
+
+            if(dataHead1 == 'N' && dataHead2 == 'X')
+            {
             std::istringstream loadStream(LoadBossState(data));
+
             uint32 buff;
+
             loadStream >> buff;
             gothikDoorState = GOState(buff);
+        }
         }
     };
 
