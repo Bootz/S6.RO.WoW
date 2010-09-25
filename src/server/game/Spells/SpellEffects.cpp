@@ -5179,6 +5179,13 @@ void Spell::EffectScriptEffect(SpellEffIndex effIndex)
                     m_caster->MonsterTextEmote(buf, 0);
                     break;
                 }
+                // Drop of Gnomes
+                case 49109:
+                {
+                    Position pos;
+                    m_caster->GetPosition(&pos);
+                    m_caster->SummonCreature(27163, pos,TEMPSUMMON_TIMED_DESPAWN,60000);
+                }
                 // Vigilance
                 case 50725:
                 {
