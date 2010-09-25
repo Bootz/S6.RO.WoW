@@ -4718,6 +4718,21 @@ void Spell::EffectScriptEffect(SpellEffIndex effIndex)
         {
             switch(m_spellInfo->Id)
             {
+                //Ebon Blade Banner
+                case 23301:
+                {
+                    if (!unitTarget || m_caster->GetTypeId() != TYPEID_PLAYER || unitTarget->GetTypeId() != TYPEID_UNIT)
+                        return;
+
+                    Player* plr = m_caster->ToPlayer();
+                    if (plr && unitTarget->isDead())
+                    {
+                        plr->KilledMonsterCredit(30220, 0);
+                        unitTarget->ToCreature()->ForcedDespawn(); //workaround for infinite credits
+                    }
+
+                    return;
+                }
 				//Teleport to Lake Wintergrasp
                 case 58622:
                 {
