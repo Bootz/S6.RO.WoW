@@ -6332,7 +6332,9 @@ UPDATE `creature_template` SET `scriptname` = 'npc_cultist_for_hunt' WHERE entry
 
 -- Dalaran
 UPDATE `creature_template` SET scriptname = 'npc_archmage_vargoth' WHERE `entry` = 19481; -- Archmage Vargoth <Kirin Tor> http://www.wowhead.com/npc=19481
-INSERT INTO npc_text (ID,text0_0) VALUES (40000,'Amazing! There are passages in here that I have never seen before. This must have taken quite a while for you to track down. If you ever find anymore books like this, I would like to be notified immediately. $B$BPlease take one of my Kirin Tor Familiars with you just in case you stumble across anything.');
+INSERT INTO `npc_gossip` (npc_guid,textid) VALUES 
+(117023,50000), -- set by burnham
+INSERT INTO npc_text (ID,text0_0) VALUES (50000,'Amazing! There are passages in here that I have never seen before. This must have taken quite a while for you to track down. If you ever find anymore books like this, I would like to be notified immediately. $B$BPlease take one of my Kirin Tor Familiars with you just in case you stumble across anything.');
 
 -- Dragonblight
 UPDATE `creature_template` SET `ScriptName` = 'npc_denouncement_target' WHERE `entry` IN (27237,27235,27234,27236); -- Blacksmith Goodman, Lead Cannoneer Zierhut, Stable Master Mercer & Commander Jordan.
