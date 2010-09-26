@@ -78,11 +78,12 @@ struct ChatLogInfo
 class ChatLog : public PlayerScript
 {
 public:
-    ChatLog();
-    ~ChatLog();
     static std::string GetChatNameByType(ChatLogType type);
     static std::string GetChatDescByType(ChatLogType type);
     static void OutTimestamp(FILE *file);
+
+    ChatLog();
+    ~ChatLog();
 
     void OnChat(Player* player, uint32 type, uint32 lang, std::string msg);
     void OnChat(Player *player, uint32 type, uint32 lang, std::string msg, Player *receiver);

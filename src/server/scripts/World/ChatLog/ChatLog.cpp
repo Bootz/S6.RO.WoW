@@ -136,13 +136,13 @@ ChatLog::~ChatLog()
 void ChatLog::_Initialize()
 {
     // determine, if the chat logs are enabled
-    m_bChatLogEnable = sConfig.GetBoolDefault("ChatLog.Enable", false);
-    m_bChatLogDateSplit = sConfig.GetBoolDefault("ChatLog.DateSplit", false);
-    m_bChatLogUTFHeader = sConfig.GetBoolDefault("ChatLog.UTFHeader", false);
-    m_bChatLogIgnoreUnprintable = sConfig.GetBoolDefault("ChatLog.IgnoreUnprintable", false);
+    m_bChatLogEnable = sConfig.GetBoolDefault("ChatLog.Enable", true);
+    m_bChatLogDateSplit = sConfig.GetBoolDefault("ChatLog.DateSplit", true);
+    m_bChatLogUTFHeader = sConfig.GetBoolDefault("ChatLog.UTFHeader", true);
+    m_bChatLogIgnoreUnprintable = sConfig.GetBoolDefault("ChatLog.Ignore.Unprintable", true);
 
     // lexics cutter
-    m_bLexicsEnable = sConfig.GetBoolDefault("ChatLog.Lexics.Enable", false);
+    m_bLexicsEnable = sConfig.GetBoolDefault("ChatLog.Lexics.Enable", true);
 
     for (uint32 i = CHAT_LOG_CHAT; i < CHAT_LOG_COUNT; i++)
         m_logs[i].Init(ChatLogType(i), m_bChatLogEnable, m_bLexicsEnable);
@@ -150,11 +150,10 @@ void ChatLog::_Initialize()
     if (m_bLexicsEnable)
     {
         // initialize lexics cutter parameters
-        m_bLexicsInnormativeCut = sConfig.GetBoolDefault("ChatLog.Lexics.InnormativeCut", true);
-        m_bLexicsIgnoreGM = sConfig.GetBoolDefault("ChatLog.Lexics.IgnoreGM", true);
-        m_sLexicsCutReplacement = sConfig.GetStringDefault("ChatLog.Lexics.CutReplacement", "&!@^%!^&*!!! [gibberish]");
+        m_bLexicsInnormativeCut = sConfig.GetBoolDefault("ChatLog.Lexics.Cut.Enable", true);
+        m_sLexicsCutReplacement = sConfig.GetStringDefault("ChatLog.Lexics.Cut.Replacement", "&!@^%!^&*!!!");
         m_LexicsAction = LexicsActions(sConfig.GetIntDefault("ChatLog.Lexics.Action", LEXICS_ACTION_LOG));
-        m_unLexicsActionDuration = sConfig.GetIntDefault("ChatLog.Lexics.ActionDuration", 60000);
+        m_unLexicsActionDuration = sConfig.GetIntDefault("ChatLog.Lexics.Action.Duration", 0);
 
         std::string sAnalogsFile = sConfig.GetStringDefault("ChatLog.Lexics.AnalogsFile", "");
         std::string sWordsFile = sConfig.GetStringDefault("ChatLog.Lexics.WordsFile", "");
@@ -168,14 +167,17 @@ void ChatLog::_Initialize()
             m_pLexics = new LexicsCutter();
             if (m_pLexics) 
             {
-                m_pLexics->ReadLetterAnalogs(sAnalogsFile);
-                m_pLexics->ReadInnormativeWords(sWordsFile);
+                if (m_pLexics->ReadInnormativeWords(sWordsFile))
+                    sLog.outError("CHAT LOG: Unable to open file with innormative words '%s'", sWordsFile);
+                if (m_pLexics->ReadLetterAnalogs(sAnalogsFile))
+                    sLog.outError("CHAT LOG: Unable to open file with letter analogs '%s'", sAnalogsFile);
                 m_pLexics->MapInnormativeWords();
             }
 
             // read additional parameters
-            m_pLexics->m_bIgnoreLetterRepeat = sConfig.GetBoolDefault("ChatLog.Lexics.IgnoreRepeats", true);
-            m_pLexics->m_bIgnoreMiddleSpaces = sConfig.GetBoolDefault("ChatLog.Lexics.IgnoreSpaces", true);
+            m_bLexicsIgnoreGM = sConfig.GetBoolDefault("ChatLog.Lexics.Ignore.GM", true);
+            m_pLexics->m_bIgnoreLetterRepeat = sConfig.GetBoolDefault("ChatLog.Lexics.Ignore.Repeats", true);
+            m_pLexics->m_bIgnoreMiddleSpaces = sConfig.GetBoolDefault("ChatLog.Lexics.Ignore.Spaces", true);
         }
     }
 

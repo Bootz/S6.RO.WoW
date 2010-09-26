@@ -59,6 +59,9 @@ bool LexicsCutter::ReadLetterAnalogs(std::string& fileName)
     std::string lanalog;
 
     FILE* file = fopen(fileName.c_str(), "rb");
+    if (!file)
+        return false;
+
     while (!feof(file))
     {
         line[0] = 0x0;
@@ -107,6 +110,9 @@ bool LexicsCutter::ReadInnormativeWords(std::string& fileName)
     std::string lchar;
 
     FILE* file = fopen(fileName.c_str(), "rb");
+    if (!file)
+        return false;
+
     while (!feof(file))
     {
         line[0] = 0x0;
