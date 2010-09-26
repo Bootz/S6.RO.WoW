@@ -6165,9 +6165,15 @@ REPLACE INTO `creature_ai_scripts` (`id`, `creature_id`, `event_type`, `event_in
 ('2982607','29826','2','0','100','3','75','0','10000','16000','11','55597','0','0','0','0','0','0','0','0','0','0','Drakkari Medecine Man (Normal) - Cast Healing Wave on Self'),
 ('2982608','29826','2','0','100','5','75','0','10000','16000','11','58980','0','0','0','0','0','0','0','0','0','0','Drakkari Medecine Man (Heroic) - Cast Healing Wave on Self');
 
+-- 986_mod_naxxramas
+UPDATE creature_template SET scriptname = 'mob_naxxramas_tash' WHERE entry IN (15974,15975,15976,15978,15979,15980,15981,30085);
+UPDATE creature_template SET scriptname = 'mob_naxxramas_tash' WHERE entry IN (16243,16244,16168,16297,16306,16236);
+UPDATE creature_template SET scriptname = 'mob_naxxramas_tash' WHERE entry IN (16017,16018,16020,16021,16022,16024,16025,30071);
+UPDATE creature_template SET scriptname = 'mob_naxxramas_tash' WHERE entry IN (16067,16145,16146,16154,16156,16163,16164,16167,16193,16194,16215,16216);
+
 -- 998_daily_troll_patrol_Alchemist
 -- Loot for Gameobjects
-DELETE FROM gameobject_loot_template WHERE entry IN 
+/*DELETE FROM gameobject_loot_template WHERE entry IN 
 (24319,24320,24321,24322,24323,24324,24325,24326,24327,24328,24329,24330,24331,24332,24333,24334,24335,24336,24337,24338,24339,24340,25026,25027,25028);
 INSERT INTO gameobject_loot_template (entry,item,ChanceOrQuestChance,lootmode,groupid,mincountOrRef,maxcount) VALUES
 ('24319','38340','100','1','0','1','1'),
@@ -6194,7 +6200,7 @@ INSERT INTO gameobject_loot_template (entry,item,ChanceOrQuestChance,lootmode,gr
 ('24340','38398','100','1','0','1','1'),
 ('25026','39668','100','1','0','1','1'),
 ('25027','39669','100','1','0','1','1'),
-('25028','39670','100','1','0','1','1');
+('25028','39670','100','1','0','1','1');*/
 -- Set Respawntime
 UPDATE gameobject SET spawntimesecs = 10 WHERE id IN (190480,190482,190466,190478,190467,190477,190481,190476,190470,190479,190473,190468,190469,190459,190464,190472,191180,191182,190462,190474,190465,190463,191181,190471);
 -- item Duration all to 30
