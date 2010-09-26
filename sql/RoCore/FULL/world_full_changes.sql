@@ -3680,6 +3680,7 @@ REPLACE INTO `creature_loot_template` VALUES
 (33693, 45857, 100, 1, 0, 1, 1),
 (33693, 47241, 100, 1, 0, 1, 1),
 (33693, 45038, 10, 1, 0, 1, 1),
+
 (33693, 45087, 33, 1, 0, 1, 3),
 (33693, 45193, 20, 1, 1, 1, 1),
 (33693, 45227, 20, 1, 1, 1, 1),
@@ -6343,11 +6344,11 @@ UPDATE `creature_template` SET `ScriptName` = 'npc_wintergarde_mine_bomb' WHERE 
 UPDATE `creature_template` SET `ScriptName` = 'npc_devout_bodyguard' WHERE `entry` = 27247; -- Devout Bodyguard http://www.wowhead.com/npc=27247
 UPDATE `creature_template` SET `ScriptName` = 'npc_high_abbot_landgren' WHERE `entry` IN (27245,27439); -- High Abbot Landgren
 UPDATE `creature_template` SET `ScriptName` = 'npc_agent_skully' WHERE `entry` = 27350; -- Agent Skully <Onslaught Caretaker> http://www.wowhead.com/npc=27350
-  -- Quest 12326
+-- Quest 12326
 UPDATE `creature_template` SET `ScriptName` = 'npc_7th_legion_siege_engineer' WHERE `entry` = 27163; -- 7th Legion Siege Engineer http://www.wowhead.com/npc=27163
 UPDATE `creature_template` SET `ScriptName` = 'vehicle_alliance_steamtank' WHERE `entry` = 27587; -- Alliance Steam Tank http://www.wowhead.com/npc=27587
-UPDATE creature_template SET spell1 = 49315, spell2 = 49333, spell3 = 49109, spell4 = 49081 WHERE entry = 27587
-UPDATE creature_template SET flags_extra = flags_extra | 2 WHERE entry = 27607;
+UPDATE `creature_template` SET spell1 = 49315, spell2 = 49333, spell3 = 49109, spell4 = 49081 WHERE `entry` = 27587;
+UPDATE `creature_template` SET `flags_extra` = flags_extra | 2 WHERE `entry` = 27607;
 INSERT INTO spell_area (`spell`,`area`,`autocast`) VALUES (49081,4246,0);
 
 UPDATE `creature_template` SET `scriptname` = 'mob_woodlands_walker', `npcflag` = npcflag|1 WHERE `entry` = 26421; -- Woodlands Walker http://www.wowhead.com/npc=26421
