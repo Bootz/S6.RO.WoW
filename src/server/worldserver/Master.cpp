@@ -121,25 +121,7 @@ public:
 class RARunnable : public ACE_Based::Runnable
 {
 public:
-    uint32 numLoops, loopCounter;
-
-    RARunnable ()
-    {
-        uint32 socketSelecttime = sWorld.getIntConfig(CONFIG_SOCKET_SELECTTIME);
-        numLoops = (sConfig.GetIntDefault ("MaxPingTime", 30) * (MINUTE * 1000000 / socketSelecttime));
-        loopCounter = 0;
-    }
-
-    void checkping ()
-    {
-        // ping if need
-        if ((++loopCounter) == numLoops)
-        {
-            loopCounter = 0;
-            sLog.outDetail ("Ping MySQL to keep connection alive");
-            LoginDatabase.KeepAlive();
-        }
-    }
+    RARunnable () {}
 
     void run ()
     {
@@ -148,7 +130,6 @@ public:
         // Launch the RA listener socket
         ListenSocket<RASocket> RAListenSocket (h);
         bool usera = sConfig.GetBoolDefault ("Ra.Enable", false);
-        bool needInit = true;
 
         if (usera)
         {
@@ -165,13 +146,6 @@ public:
 
                 sLog.outString ("Starting Remote access listner on port %d on %s", raport, stringip.c_str ());
             }
-            if ((LoginDatabase.GetBundleMask() & MYSQL_BUNDLE_RA))
-            {
-                LoginDatabase.Init_MySQL_Connection();
-                needInit = false;
-            }
-            if (needInit)
-                MySQL::Thread_Init();
         }
 
         // Socket Selet time is in microseconds , not miliseconds!!
@@ -181,23 +155,12 @@ public:
         if (usera)
         {
             while (!World::IsStopped())
-            {
                 h.Select (0, socketSelecttime);
-                checkping ();
-            }
-
-            if (!needInit)
-                LoginDatabase.End_MySQL_Connection();
-            else
-                MySQL::Thread_End();
         }
         else
         {
             while (!World::IsStopped())
-            {
                 ACE_Based::Thread::Sleep(static_cast<unsigned long> (socketSelecttime / 1000));
-                // checkping (); -- What?
-            }
         }
     }
 };
@@ -216,7 +179,7 @@ int Master::Run()
     BigNumber seed1;
     seed1.SetRand(16 * 8);
 
-    sLog.outString( "%s (core-daemon)", "TrinityCore Custom Revision: " REVISION_NR);
+    sLog.outString( "%s (core-daemon)", "RoCore Revision: " REVISION_NR);
     sLog.outString( "<Ctrl-C> to stop.\n" );
 
     sLog.outString( " ______                       __");
@@ -453,8 +416,7 @@ bool Master::_StartDB()
 {
     sLog.SetLogDB(false);
     std::string dbstring;
-    uint8 num_threads;
-    int32 mask;
+    uint8 async_threads, synch_threads;
 
     dbstring = sConfig.GetStringDefault("WorldDatabaseInfo", "");
     if (dbstring.empty())
@@ -463,26 +425,22 @@ bool Master::_StartDB()
         return false;
     }
 
-    num_threads = sConfig.GetIntDefault("WorldDatabase.WorkerThreads", 1);
-    if (num_threads < 1 || num_threads > 32)
+    async_threads = sConfig.GetIntDefault("WorldDatabase.WorkerThreads", 1);
+    if (async_threads < 1 || async_threads > 32)
     {
         sLog.outError("World database: invalid number of worker threads specified. "
             "Please pick a value between 1 and 32.");
         return false;
     }
 
-    mask = sConfig.GetIntDefault("WorldDatabase.ThreadBundleMask", MYSQL_BUNDLE_ALL);
+    synch_threads = sConfig.GetIntDefault("WorldDatabase.SynchThreads", 1);
 
     ///- Initialise the world database
-    if (!WorldDatabase.Open(dbstring, num_threads, MySQLThreadBundle(mask)))
+    if (!WorldDatabase.Open(dbstring, async_threads, synch_threads))
     {
         sLog.outError("Cannot connect to world database %s",dbstring.c_str());
         return false;
     }
-
-  /*  if(!WorldDatabase.CheckRequiredField("db_version",REVISION_DB_WORLD))
-        return false;*/
-
     ///- Get character database info from configuration file
     dbstring = sConfig.GetStringDefault("CharacterDatabaseInfo", "");
     if (dbstring.empty())
@@ -491,26 +449,22 @@ bool Master::_StartDB()
         return false;
     }
 
-    num_threads = sConfig.GetIntDefault("CharacterDatabase.WorkerThreads", 1);
-    if (num_threads < 1 || num_threads > 32)
+    async_threads = sConfig.GetIntDefault("CharacterDatabase.WorkerThreads", 1);
+    if (async_threads < 1 || async_threads > 32)
     {
         sLog.outError("Character database: invalid number of worker threads specified. "
             "Please pick a value between 1 and 32.");
         return false;
     }
 
-    mask = sConfig.GetIntDefault("CharacterDatabase.ThreadBundleMask", MYSQL_BUNDLE_ALL);
+    synch_threads = sConfig.GetIntDefault("CharacterDatabase.SynchThreads", 2);
 
     ///- Initialise the Character database
-    if (!CharacterDatabase.Open(dbstring, num_threads, MySQLThreadBundle(mask)))
+    if (!CharacterDatabase.Open(dbstring, async_threads, synch_threads))
     {
         sLog.outError("Cannot connect to Character database %s",dbstring.c_str());
         return false;
     }
-
-  /*  if(!CharacterDatabase.CheckRequiredField("character_db_version",REVISION_DB_CHARACTERS))
-        return false;*/
-
 
     ///- Get login database info from configuration file
     dbstring = sConfig.GetStringDefault("LoginDatabaseInfo", "");
@@ -520,26 +474,22 @@ bool Master::_StartDB()
         return false;
     }
 
-    num_threads = sConfig.GetIntDefault("LoginDatabase.WorkerThreads", 1);
-    if (num_threads < 1 || num_threads > 32)
+    async_threads = sConfig.GetIntDefault("LoginDatabase.WorkerThreads", 1);
+    if (async_threads < 1 || async_threads > 32)
     {
         sLog.outError("Login database: invalid number of worker threads specified. "
             "Please pick a value between 1 and 32.");
         return false;
     }
 
-    mask = sConfig.GetIntDefault("LoginDatabase.ThreadBundleMask", MYSQL_BUNDLE_ALL);
+    synch_threads = sConfig.GetIntDefault("LoginDatabase.SynchThreads", 1);
 
     ///- Initialise the login database
-    if (!LoginDatabase.Open(dbstring, num_threads, MySQLThreadBundle(mask)))
+    if (!LoginDatabase.Open(dbstring, async_threads, synch_threads))
     {
         sLog.outError("Cannot connect to login database %s",dbstring.c_str());
         return false;
     }
-
-  /*  if(!LoginDatabase.CheckRequiredField("realmd_db_version",REVISION_DB_REALMD))
-        return false;*/
-
     ///- Get the realm Id from the configuration file
     realmID = sConfig.GetIntDefault("RealmID", 0);
     if (!realmID)

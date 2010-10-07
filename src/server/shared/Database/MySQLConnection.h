@@ -18,6 +18,7 @@
 
 #include <ace/Activation_Queue.h>
 #include "DatabaseWorkerPool.h"
+#include "Util.h"
 
 #ifndef _MYSQLCONNECTION_H
 #define _MYSQLCONNECTION_H
@@ -25,17 +26,47 @@
 class DatabaseWorker;
 class PreparedStatement;
 class MySQLPreparedStatement;
+class PingOperation;
+
+struct MySQLConnectionInfo
+{
+    MySQLConnectionInfo() {}
+    MySQLConnectionInfo(const std::string& infoString)
+    {
+        Tokens tokens = StrSplit(infoString, ";");
+        Tokens::iterator iter = tokens.begin();
+
+        if (iter != tokens.end())
+            host = *iter++;
+        if (iter != tokens.end())
+            port_or_socket = *iter++;
+        if (iter != tokens.end())
+            user = *iter++;
+        if (iter != tokens.end())
+            password = *iter++;
+        if (iter != tokens.end())
+            database = *iter++;
+    }
+
+    std::string user;
+    std::string password;
+    std::string database;
+    std::string host;
+    std::string port_or_socket;
+};
 
 class MySQLConnection
 {
     template <class T> friend class DatabaseWorkerPool;
+    friend class PingOperation;
 
     public:
-        MySQLConnection();                                  //! Constructor for synchroneous connections.
-        MySQLConnection(ACE_Activation_Queue* queue);       //! Constructor for asynchroneous connections.
+        MySQLConnection(MySQLConnectionInfo& connInfo);                               //! Constructor for synchroneous connections.
+        MySQLConnection(ACE_Activation_Queue* queue, MySQLConnectionInfo& connInfo);  //! Constructor for asynchroneous connections.
         ~MySQLConnection();
 
-        virtual bool Open(const std::string& infoString);   //! Connection details.
+        virtual bool Open();
+        void Close();
 
     public:
         bool Execute(const char* sql);
@@ -43,7 +74,7 @@ class MySQLConnection
         ResultSet* Query(const char* sql);
         PreparedResultSet* Query(PreparedStatement* stmt);
         bool _Query(const char *sql, MYSQL_RES **pResult, MYSQL_FIELD **pFields, uint64* pRowCount, uint32* pFieldCount);
-        bool _Query(PreparedStatement* stmt, MYSQL_RES **pResult, MYSQL_FIELD **pFields, uint64* pRowCount, uint32* pFieldCount);
+        bool _Query(PreparedStatement* stmt, MYSQL_RES **pResult, uint64* pRowCount, uint32* pFieldCount);
 
         void BeginTransaction();
         void RollbackTransaction();
@@ -58,10 +89,24 @@ class MySQLConnection
         void PrepareStatement(uint32 index, const char* sql);
         std::vector<MySQLPreparedStatement*> m_stmts;       //! PreparedStatements storage
 
+        bool LockIfReady()
+        {
+            /// Tries to acquire lock. If lock is acquired by another thread
+            /// the calling parent will just try another connection
+            return m_Mutex.tryacquire() != -1;
+        }
+
+        void Unlock()
+        {
+            /// Called by parent databasepool. Will let other threads access this connection
+            m_Mutex.release();
+        }
+
     private:
         ACE_Activation_Queue* m_queue;                      //! Queue shared with other asynchroneous connections.
         DatabaseWorker*       m_worker;                     //! Core worker task.
         MYSQL *               m_Mysql;                      //! MySQL Handle.
+        MySQLConnectionInfo& m_connectionInfo;        //! Connection info (used for logging)
         ACE_Thread_Mutex      m_Mutex;
 };
 

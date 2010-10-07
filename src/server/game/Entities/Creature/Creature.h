@@ -68,6 +68,8 @@ enum CreatureFlagsExtra
 #define MAX_KILL_CREDIT 2
 #define CREATURE_REGEN_INTERVAL 2 * IN_MILLISECONDS
 
+#define MAX_CREATURE_QUEST_ITEMS 6
+
 // from `creature_template` table
 struct CreatureInfo
 {
@@ -133,7 +135,7 @@ struct CreatureInfo
     float   ModMana;
     float   ModArmor;
     bool    RacialLeader;
-    uint32  questItems[6];
+    uint32  questItems[MAX_CREATURE_QUEST_ITEMS];
     uint32  movementId;
     bool    RegenHealth;
     uint32  equipmentId;
@@ -294,7 +296,8 @@ enum ChatType
     CHAT_TYPE_BOSS_EMOTE        = 3,
     CHAT_TYPE_WHISPER           = 4,
     CHAT_TYPE_BOSS_WHISPER      = 5,
-    CHAT_TYPE_ZONE_YELL         = 6
+    CHAT_TYPE_ZONE_YELL         = 6,
+    CHAT_TYPE_END               = 255
 };
 
 // GCC have alternative #pragma pack() syntax and old gcc version not support pack(pop), also any gcc version not support it at some platform

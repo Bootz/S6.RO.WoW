@@ -30,66 +30,58 @@
 #include "SQLOperation.h"
 #include "PreparedStatement.h"
 #include "DatabaseWorker.h"
-#include "Util.h"
 #include "Timer.h"
 
-MySQLConnection::MySQLConnection() :
+MySQLConnection::MySQLConnection(MySQLConnectionInfo& connInfo) :
 m_queue(NULL),
 m_worker(NULL),
-m_Mysql(NULL)
+m_Mysql(NULL),
+m_connectionInfo(connInfo)
 {
 }
 
-MySQLConnection::MySQLConnection(ACE_Activation_Queue* queue) :
+MySQLConnection::MySQLConnection(ACE_Activation_Queue* queue, MySQLConnectionInfo& connInfo) :
 m_queue(queue),
-m_Mysql(NULL)
+m_Mysql(NULL),
+m_connectionInfo(connInfo)
 {
     m_worker = new DatabaseWorker(m_queue, this);
 }
 
 MySQLConnection::~MySQLConnection()
 {
+    ASSERT (m_Mysql); /// MySQL context must be present at this point
+
+    sLog.outSQLDriver("MySQLConnection::~MySQLConnection()");
     for (size_t i = 0; i < m_stmts.size(); ++i)
         delete m_stmts[i];
 
-    MySQL::Thread_End();
     mysql_close(m_Mysql);
+    Unlock();   /// Unlock while we die, how ironic
 }
 
-bool MySQLConnection::Open(const std::string& infoString)
+void MySQLConnection::Close()
+{
+    /// Only close us if we're not operating
+    delete this;
+}
+
+bool MySQLConnection::Open()
 {
     MYSQL *mysqlInit;
     mysqlInit = mysql_init(NULL);
     if (!mysqlInit)
     {
-        sLog.outError("Could not initialize Mysql connection");
+        sLog.outError("Could not initialize Mysql connection to database `%s`", m_connectionInfo.database.c_str());
         return false;
     }
 
-    Tokens tokens = StrSplit(infoString, ";");
-
-    Tokens::iterator iter;
-
-    std::string host, port_or_socket, user, password, database;
     int port;
     char const* unix_socket;
 
-    iter = tokens.begin();
-
-    if (iter != tokens.end())
-        host = *iter++;
-    if (iter != tokens.end())
-        port_or_socket = *iter++;
-    if (iter != tokens.end())
-        user = *iter++;
-    if (iter != tokens.end())
-        password = *iter++;
-    if (iter != tokens.end())
-        database = *iter++;
-
     mysql_options(mysqlInit, MYSQL_SET_CHARSET_NAME, "utf8");
     #ifdef _WIN32
-    if (host==".")                                           // named pipe use option (Windows)
+    if (m_connectionInfo.host == ".")                                           // named pipe use option (Windows)
     {
         unsigned int opt = MYSQL_PROTOCOL_PIPE;
         mysql_options(mysqlInit, MYSQL_OPT_PROTOCOL, (char const*)&opt);
@@ -98,27 +90,27 @@ bool MySQLConnection::Open(const std::string& infoString)
     }
     else                                                    // generic case
     {
-        port = atoi(port_or_socket.c_str());
+        port = atoi(m_connectionInfo.port_or_socket.c_str());
         unix_socket = 0;
     }
     #else
-    if (host==".")                                           // socket use option (Unix/Linux)
+    if (m_connectionInfo.host == ".")                                           // socket use option (Unix/Linux)
     {
         unsigned int opt = MYSQL_PROTOCOL_SOCKET;
         mysql_options(mysqlInit, MYSQL_OPT_PROTOCOL, (char const*)&opt);
-        host = "localhost";
+        m_connectionInfo.host = "localhost";
         port = 0;
-        unix_socket = port_or_socket.c_str();
+        unix_socket = m_connectionInfo.port_or_socket.c_str();
     }
     else                                                    // generic case
     {
-        port = atoi(port_or_socket.c_str());
+        port = atoi(m_connectionInfo.port_or_socket.c_str());
         unix_socket = 0;
     }
     #endif
 
-    m_Mysql = mysql_real_connect(mysqlInit, host.c_str(), user.c_str(),
-        password.c_str(), database.c_str(), port, unix_socket, 0);
+    m_Mysql = mysql_real_connect(mysqlInit, m_connectionInfo.host.c_str(), m_connectionInfo.user.c_str(),
+        m_connectionInfo.password.c_str(), m_connectionInfo.database.c_str(), port, unix_socket, 0);
 
     if (m_Mysql)
     {
@@ -127,7 +119,7 @@ bool MySQLConnection::Open(const std::string& infoString)
         if (mysql_get_server_version(m_Mysql) != mysql_get_client_version())
             sLog.outSQLDriver("[WARNING] MySQL client/server version mismatch; may conflict with behaviour of prepared statements.");
 
-        sLog.outDetail("Connected to MySQL database at %s", host.c_str());
+        sLog.outDetail("Connected to MySQL database at %s", m_connectionInfo.host.c_str());
         if (!mysql_autocommit(m_Mysql, 1))
             sLog.outSQLDriver("AUTOCOMMIT SUCCESSFULLY SET TO 1");
         else
@@ -151,7 +143,7 @@ bool MySQLConnection::Open(const std::string& infoString)
     }
     else
     {
-        sLog.outError("Could not connect to MySQL database at %s: %s\n", host.c_str(), mysql_error(mysqlInit));
+        sLog.outError("Could not connect to MySQL database at %s: %s\n", m_connectionInfo.host.c_str(), mysql_error(mysqlInit));
         mysql_close(mysqlInit);
         return false;
     }
@@ -163,9 +155,6 @@ bool MySQLConnection::Execute(const char* sql)
         return false;
 
     {
-        // guarded block for thread-safe mySQL request
-        ACE_Guard<ACE_Thread_Mutex> query_connection_guard(m_Mutex);
-
         #ifdef SQLQUERY_LOG
         uint32 _s = getMSTime();
         #endif
@@ -193,9 +182,6 @@ bool MySQLConnection::Execute(PreparedStatement* stmt)
 
     uint32 index = stmt->m_index;
     {
-        // guarded block for thread-safe mySQL request
-        ACE_Guard<ACE_Thread_Mutex> query_connection_guard(m_Mutex);
-
         MySQLPreparedStatement* m_mStmt = GetPreparedStatement(index);
         ASSERT(m_mStmt);            // Can only be null if preparation failed, server side error or bad query
         m_mStmt->m_stmt = stmt;     // Cross reference them for debug output
@@ -211,36 +197,36 @@ bool MySQLConnection::Execute(PreparedStatement* stmt)
         #endif
         if (mysql_stmt_bind_param(msql_STMT, msql_BIND))
         {
-            sLog.outSQLDriver("[ERROR]: PreparedStatement (id: %u) error binding params:  %s", index, mysql_stmt_error(msql_STMT));
+            sLog.outSQLDriver("[ERROR]: PreparedStatement (id: %u, database: `%s`) error binding params:  %s", 
+                index, m_connectionInfo.database.c_str(), mysql_stmt_error(msql_STMT));
             m_mStmt->ClearParameters();
             return false;
         }
 
         if (mysql_stmt_execute(msql_STMT))
         {
-            sLog.outSQLDriver("[ERROR]: PreparedStatement (id: %u) error executing:  %s", index, mysql_stmt_error(msql_STMT));
+            sLog.outSQLDriver("[ERROR]: PreparedStatement (id: %u, database: `%s`) error executing:  %s", 
+                index, m_connectionInfo.database.c_str(), mysql_stmt_error(msql_STMT));
             m_mStmt->ClearParameters();
             return false;
         }
 
         #ifdef SQLQUERY_LOG
-        sLog.outSQLDriver("[%u ms] Prepared SQL: %u", getMSTimeDiff(_s, getMSTime()), index);
+        sLog.outSQLDriver("[%u ms] Prepared SQL: %u on database `%s`", 
+            getMSTimeDiff(_s, getMSTime()), index, m_connectionInfo.database.c_str());
         #endif
         m_mStmt->ClearParameters();
         return true;
     }
 }
 
-bool MySQLConnection::_Query(PreparedStatement* stmt, MYSQL_RES **pResult, MYSQL_FIELD **pFields, uint64* pRowCount, uint32* pFieldCount)
+bool MySQLConnection::_Query(PreparedStatement* stmt, MYSQL_RES **pResult, uint64* pRowCount, uint32* pFieldCount)
 {
     if (!m_Mysql)
         return false;
 
     uint32 index = stmt->m_index;
     {
-        // guarded block for thread-safe mySQL request
-        ACE_Guard<ACE_Thread_Mutex> query_connection_guard(m_Mutex);
-
         MySQLPreparedStatement* m_mStmt = GetPreparedStatement(index);
         ASSERT(m_mStmt);            // Can only be null if preparation failed, server side error or bad query
         m_mStmt->m_stmt = stmt;     // Cross reference them for debug output
@@ -256,25 +242,28 @@ bool MySQLConnection::_Query(PreparedStatement* stmt, MYSQL_RES **pResult, MYSQL
         #endif
         if (mysql_stmt_bind_param(msql_STMT, msql_BIND))
         {
-            sLog.outSQLDriver("[ERROR]: PreparedStatement (id: %u) error binding params:  %s", index, mysql_stmt_error(msql_STMT));
+            sLog.outSQLDriver("[ERROR]: PreparedStatement (id: %u, database: `%s`) error binding params:  %s", 
+                index, m_connectionInfo.database.c_str(), mysql_stmt_error(msql_STMT));
             m_mStmt->ClearParameters();
             return false;
         }
 
         if (mysql_stmt_execute(msql_STMT))
         {
-            sLog.outSQLDriver("[ERROR]: PreparedStatement (id: %u) error executing:  %s", index, mysql_stmt_error(msql_STMT));
+            sLog.outSQLDriver("[ERROR]: PreparedStatement (id: %u, database: `%s`) error executing:  %s", 
+                index, m_connectionInfo.database.c_str(), mysql_stmt_error(msql_STMT));
             m_mStmt->ClearParameters();
             return false;
         }
 
         #ifdef SQLQUERY_LOG
-        sLog.outSQLDriver("[%u ms] Prepared SQL: %u", getMSTimeDiff(_s, getMSTime()), index);
+        sLog.outSQLDriver("[%u ms] Prepared SQL: %u on database `%s`", 
+            getMSTimeDiff(_s, getMSTime()), index, m_connectionInfo.database.c_str());
         #endif
         m_mStmt->ClearParameters();
 
         *pResult = mysql_stmt_result_metadata(msql_STMT);
-        *pRowCount = /*mysql_affected_rows(m_Mysql); //* or*/ mysql_stmt_num_rows(msql_STMT);
+        *pRowCount = mysql_stmt_num_rows(msql_STMT);
         *pFieldCount = mysql_stmt_field_count(msql_STMT);
 
         return true;
@@ -304,8 +293,6 @@ bool MySQLConnection::_Query(const char *sql, MYSQL_RES **pResult, MYSQL_FIELD *
         return false;
 
     {
-        // guarded block for thread-safe mySQL request
-        ACE_Guard<ACE_Thread_Mutex> query_connection_guard(m_Mutex);
         #ifdef SQLQUERY_LOG
         uint32 _s = getMSTime();
         #endif
@@ -386,16 +373,15 @@ void MySQLConnection::PrepareStatement(uint32 index, const char* sql)
 PreparedResultSet* MySQLConnection::Query(PreparedStatement* stmt)
 {
     MYSQL_RES *result = NULL;
-    MYSQL_FIELD *fields = NULL;
     uint64 rowCount = 0;
     uint32 fieldCount = 0;
 
-    if (!_Query(stmt, &result, &fields, &rowCount, &fieldCount))
+    if (!_Query(stmt, &result, &rowCount, &fieldCount))
         return NULL;
 
     if (mysql_more_results(m_Mysql))
     {
         mysql_next_result(m_Mysql);
     }
-    return new PreparedResultSet(stmt->m_stmt->GetSTMT(), result, fields, rowCount, fieldCount);
+    return new PreparedResultSet(stmt->m_stmt->GetSTMT(), result, rowCount, fieldCount);
 }

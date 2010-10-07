@@ -22,24 +22,24 @@
 #include "Log.h"
 
 ResultSet::ResultSet(MYSQL_RES *result, MYSQL_FIELD *fields, uint64 rowCount, uint32 fieldCount) :
-m_result(result),
-m_fields(fields),
 m_rowCount(rowCount),
-m_fieldCount(fieldCount)
+m_fieldCount(fieldCount),
+m_result(result),
+m_fields(fields)
 {
     m_currentRow = new Field[m_fieldCount];
     ASSERT(m_currentRow);
 }
 
-PreparedResultSet::PreparedResultSet(MYSQL_STMT* stmt, MYSQL_RES *result, MYSQL_FIELD *fields, uint64 rowCount, uint32 fieldCount) :
+PreparedResultSet::PreparedResultSet(MYSQL_STMT* stmt, MYSQL_RES *result, uint64 rowCount, uint32 fieldCount) :
+m_rowCount(rowCount),
+m_rowPosition(0),
+m_fieldCount(fieldCount),
 m_rBind(NULL),
 m_stmt(stmt),
 m_res(result),
 m_isNull(NULL),
-m_length(NULL),
-m_rowCount(rowCount),
-m_fieldCount(fieldCount),
-m_rowPosition(0)
+m_length(NULL)
 {
     if (!m_res)
         return;
@@ -53,7 +53,7 @@ m_rowPosition(0)
     m_rBind = new MYSQL_BIND[m_fieldCount];
     m_isNull = new my_bool[m_fieldCount];
     m_length = new unsigned long[m_fieldCount];
-    
+
     memset(m_isNull, 0, sizeof(my_bool) * m_fieldCount);
     memset(m_rBind, 0, sizeof(MYSQL_BIND) * m_fieldCount);
     memset(m_length, 0, sizeof(unsigned long) * m_fieldCount);
@@ -219,7 +219,7 @@ void PreparedResultSet::CleanUp()
     FreeBindBuffer();
     mysql_stmt_free_result(m_stmt);
 
-    delete[] m_rBind;    
+    delete[] m_rBind;
 }
 
 void PreparedResultSet::FreeBindBuffer()

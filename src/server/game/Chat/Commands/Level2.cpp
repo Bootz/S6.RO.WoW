@@ -836,7 +836,7 @@ bool ChatHandler::HandleGameObjectNearCommand(const char* args)
             if (!gInfo)
                 continue;
 
-            PSendSysMessage(LANG_GO_LIST_CHAT, guid, guid, gInfo->name, x, y, z, mapid);
+            PSendSysMessage(LANG_GO_LIST_CHAT, guid, entry, guid, gInfo->name, x, y, z, mapid);
 
             ++count;
         } while (result->NextRow());
@@ -3077,7 +3077,7 @@ bool ChatHandler::HandleWpShowCommand(const char* args)
             {
                 wpCreature->SetDisplayId(target->GetDisplayId());
                 wpCreature->SetFloatValue(OBJECT_FIELD_SCALE_X, 0.5);
-                wpCreature->SetLevel(point > MAX_LEVEL ? MAX_LEVEL : point);
+                wpCreature->SetLevel(point > STRONG_MAX_LEVEL ? STRONG_MAX_LEVEL : point);
             }
         }
         while (result->NextRow());
@@ -3781,7 +3781,7 @@ bool ChatHandler::HandleLearnAllRecipesCommand(const char* args)
         if (!Utf8FitTo(name, wnamepart))
         {
             loc = 0;
-            for (; loc < MAX_LOCALE; ++loc)
+            for (; loc < TOTAL_LOCALES; ++loc)
             {
                 if (loc == GetSessionDbcLocale())
                     continue;
@@ -3795,7 +3795,7 @@ bool ChatHandler::HandleLearnAllRecipesCommand(const char* args)
             }
         }
 
-        if (loc < MAX_LOCALE)
+        if (loc < TOTAL_LOCALES)
         {
             targetSkillInfo = skillInfo;
             break;
@@ -4495,7 +4495,7 @@ bool ChatHandler::HandleLookupTitleCommand(const char* args)
             if (!Utf8FitTo(name, wnamepart))
             {
                 loc = 0;
-                for (; loc < MAX_LOCALE; ++loc)
+                for (; loc < TOTAL_LOCALES; ++loc)
                 {
                     if (loc == GetSessionDbcLocale())
                         continue;
@@ -4509,7 +4509,7 @@ bool ChatHandler::HandleLookupTitleCommand(const char* args)
                 }
             }
 
-            if (loc < MAX_LOCALE)
+            if (loc < TOTAL_LOCALES)
             {
                 if (maxResults && counter == maxResults)
                 {

@@ -171,6 +171,7 @@ class ChatHandler
         bool HandleDebugSpellCheckCommand(const char* args);
         bool HandleDebugUpdateCommand(const char* args);
         bool HandleDebugUpdateWorldStateCommand(const char* args);
+        bool HandleDebugAreaTriggers(const char* args);
 
         bool HandleDebugSet32Bit(const char* args);
         bool HandleDebugThreatList(const char * args);
@@ -451,6 +452,7 @@ class ChatHandler
         bool HandleReloadAuctionsCommand(const char* args);
         bool HandleReloadWpScriptsCommand(const char* args);
         bool HandleReloadConditions(const char* args);
+        bool HandleReloadCreatureText(const char* args);
 
         bool HandleResetAchievementsCommand(const char * args);
         bool HandleResetAllCommand(const char * args);

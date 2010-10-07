@@ -98,18 +98,6 @@ bool Condition::Meets(Player * player, Unit* invoker)
             condMeets = (status == QUEST_STATUS_NONE);
             break;
         }
-        case CONDITION_AD_COMMISSION_AURA:
-        {
-            Unit::AuraApplicationMap const& auras = player->GetAppliedAuras();
-            for (Unit::AuraApplicationMap::const_iterator itr = auras.begin(); itr != auras.end(); ++itr)
-                if ((itr->second->GetBase()->GetSpellProto()->Attributes & 0x1000010) && itr->second->GetBase()->GetSpellProto()->SpellVisual[0] == 3580)
-                {
-                    condMeets = true;
-                    break;
-                }
-            condMeets = false;
-            break;
-        }
         case CONDITION_NO_AURA:
             condMeets = !player->HasAuraEffect(mConditionValue1, mConditionValue2);
             break;
@@ -165,6 +153,31 @@ bool Condition::Meets(Player * player, Unit* invoker)
         case CONDITION_SPELL:
             condMeets = player->HasSpell(mConditionValue1);
             break;
+        case CONDITION_NOITEM:
+            condMeets = !player->HasItemCount(mConditionValue1, 1, mConditionValue2 ? true : false);
+            break;
+        case CONDITION_LEVEL:
+            {
+                switch (mConditionValue2)
+                {
+                    case LVL_COND_EQ:
+                        condMeets = player->getLevel() == mConditionValue1;
+                        break;
+                    case LVL_COND_HIGH:
+                        condMeets = player->getLevel() > mConditionValue1;
+                        break;
+                    case LVL_COND_LOW:
+                        condMeets = player->getLevel() < mConditionValue1;
+                        break;
+                    case LVL_COND_HIGH_EQ:
+                        condMeets = player->getLevel() >= mConditionValue1;
+                        break;
+                    case LVL_COND_LOW_EQ:
+                        condMeets = player->getLevel() <= mConditionValue1;
+                        break;
+                }
+                break;
+            }
         default:
             condMeets = false;
             refId = 0;
@@ -792,7 +805,7 @@ bool ConditionMgr::isSourceTypeValid(Condition* cond)
             }
 
             bool targetfound = false;
-            for (uint8 i = 0; i < 3; ++i)
+            for (uint8 i = 0; i < MAX_SPELL_EFFECTS; ++i)
             {
                 if (spellProto->EffectImplicitTargetA[i] == TARGET_UNIT_AREA_ENTRY_SRC ||
                     spellProto->EffectImplicitTargetB[i] == TARGET_UNIT_AREA_ENTRY_SRC ||
@@ -875,7 +888,7 @@ bool ConditionMgr::isSourceTypeValid(Condition* cond)
                         if (!conditions.empty())
                             break;
 
-                        for (int j = 0; j < 3; ++j)
+                        for (int j = 0; j < MAX_SPELL_EFFECTS; ++j)
                         {
                             if (pSpellInfo->EffectImplicitTargetA[j] == TARGET_UNIT_TARGET_ENEMY ||
                                 pSpellInfo->EffectImplicitTargetB[j] == TARGET_UNIT_TARGET_ENEMY ||
@@ -1051,15 +1064,6 @@ bool ConditionMgr::isConditionTypeValid(Condition* cond)
                 sLog.outErrorDb("Quest condition specifies non-existing quest (%u), skipped", cond->mConditionValue1);
                 return false;
             }
-
-            if (cond->mConditionValue2)
-                sLog.outErrorDb("Quest condition has useless data in value2 (%u)!", cond->mConditionValue2);
-            break;
-        }
-        case CONDITION_AD_COMMISSION_AURA:
-        {
-            if (cond->mConditionValue1)
-                sLog.outErrorDb("Quest condition has useless data in value1 (%u)!", cond->mConditionValue1);
 
             if (cond->mConditionValue2)
                 sLog.outErrorDb("Quest condition has useless data in value2 (%u)!", cond->mConditionValue2);
@@ -1249,6 +1253,25 @@ bool ConditionMgr::isConditionTypeValid(Condition* cond)
                 sLog.outErrorDb("Spell condition has useless data in value2 (%u)!", cond->mConditionValue2);
             break;
         }
+        case CONDITION_NOITEM:
+        {
+            ItemPrototype const *proto = sObjectMgr.GetItemPrototype(cond->mConditionValue1);
+            if (!proto)
+            {
+                sLog.outErrorDb("NoItem condition has non existing item (%u), skipped", cond->mConditionValue1);
+                return false;
+            }
+            break;
+        }
+        case CONDITION_LEVEL:
+            {
+                if (cond->mConditionValue2 >= LVL_COND_MAX)
+                {
+                    sLog.outErrorDb("Level condition has invalid option (%u), skipped", cond->mConditionValue2);
+                    return false;
+                }
+                break;
+            }
         case CONDITION_AREAID:
         case CONDITION_INSTANCE_DATA:
             break;

@@ -29,7 +29,7 @@
 
 Vehicle::Vehicle(Unit *unit, VehicleEntry const *vehInfo) : me(unit), m_vehicleInfo(vehInfo), m_usableSeatNum(0), m_bonusHP(0)
 {
-    for (uint32 i = 0; i < 8; ++i)
+    for (uint32 i = 0; i < MAX_VEHICLE_SEATS; ++i)
     {
         if (uint32 seatId = m_vehicleInfo->m_seatID[i])
             if (VehicleSeatEntry const *veSeat = sVehicleSeatStore.LookupEntry(seatId))
@@ -56,7 +56,6 @@ Vehicle::Vehicle(Unit *unit, VehicleEntry const *vehInfo) : me(unit), m_vehicleI
             me->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_ROOT, true);
             me->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_DECREASE_SPEED, true);
             me->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_CONFUSE, true);
-            me->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_SCHOOL_ABSORB, true);
             me->ApplySpellImmune(0, IMMUNITY_ID, 49560, true); // Death Grip jump effect
             break;
         default:
@@ -249,19 +248,6 @@ void Vehicle::InstallAccessory(uint32 entry, int8 seatId, bool minion)
         passenger->ExitVehicle(); // this should not happen
     }
 
-    if(entry == 35451)
-    {
-        if (Creature *accessory = me->SummonCreature(entry, *me, TEMPSUMMON_MANUAL_DESPAWN, 0))
-        {
-            if (minion)
-                accessory->AddUnitTypeMask(UNIT_MASK_ACCESSORY);
-            accessory->EnterVehicle(this, seatId);
-            // This is not good, we have to send update twice
-            accessory->SendMovementFlagUpdate();
-        }
-    }
-    else
-    {
     //TODO: accessory should be minion
     if (Creature *accessory = me->SummonCreature(entry, *me, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 30000))
     {
@@ -274,7 +260,6 @@ void Vehicle::InstallAccessory(uint32 entry, int8 seatId, bool minion)
         if (GetBase()->GetTypeId() == TYPEID_UNIT)
             sScriptMgr.OnInstallAccessory(this, accessory);
     }
-}
 }
 
 bool Vehicle::AddPassenger(Unit *unit, int8 seatId)
@@ -324,7 +309,7 @@ bool Vehicle::AddPassenger(Unit *unit, int8 seatId)
         }
     }
 
-    if (seat->second.seatInfo->m_flags && !(seat->second.seatInfo->m_flags & 0x400))
+    if (seat->second.seatInfo->m_flags && !(seat->second.seatInfo->m_flags & VEHICLE_SEAT_FLAG_UNK11))
     {
         switch (GetVehicleInfo()->m_ID)
         {
@@ -337,8 +322,6 @@ bool Vehicle::AddPassenger(Unit *unit, int8 seatId)
                 break;
         }
     }
-    //SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_PLAYER_CONTROLLED);
-
     unit->AddUnitMovementFlag(MOVEMENTFLAG_ONTRANSPORT);
     VehicleSeatEntry const *veSeat = seat->second.seatInfo;
     unit->m_movementInfo.t_pos.m_positionX = veSeat->m_attachmentOffsetX;
@@ -350,7 +333,7 @@ bool Vehicle::AddPassenger(Unit *unit, int8 seatId)
 
     if (me->GetTypeId() == TYPEID_UNIT
         && unit->GetTypeId() == TYPEID_PLAYER
-        && seat->first == 0 && seat->second.seatInfo->m_flags & 0x800) // not right
+        && seat->first == 0 && seat->second.seatInfo->m_flags & VEHICLE_SEAT_FLAG_CAN_CONTROL)
     {
         if (!me->SetCharmedBy(unit, CHARM_TYPE_VEHICLE))
             ASSERT(false);
@@ -422,7 +405,7 @@ void Vehicle::RemovePassenger(Unit *unit)
 
     if (me->GetTypeId() == TYPEID_UNIT
         && unit->GetTypeId() == TYPEID_PLAYER
-        && seat->first == 0 && seat->second.seatInfo->m_flags & 0x800)
+        && seat->first == 0 && seat->second.seatInfo->m_flags & VEHICLE_SEAT_FLAG_CAN_CONTROL)
     {
         me->RemoveCharmedBy(unit);
 

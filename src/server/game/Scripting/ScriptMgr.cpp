@@ -223,7 +223,7 @@ void ScriptMgr::FillSpellSummary()
         if (!pTempSpell)
             continue;
 
-        for (uint32 j = 0; j < 3; ++j)
+        for (uint32 j = 0; j < MAX_SPELL_EFFECTS; ++j)
         {
             //Spell targets self
             if (pTempSpell->EffectImplicitTargetA[j] == TARGET_UNIT_CASTER)
@@ -307,6 +307,8 @@ void ScriptMgr::CreateSpellScripts(uint32 spell_id, std::list<SpellScript *> & s
         if (!script)
             continue;
 
+        script->_Init(&tmpscript->GetName(), spell_id);
+
         script_vector.push_back(script);
     }
 }
@@ -325,6 +327,8 @@ void ScriptMgr::CreateAuraScripts(uint32 spell_id, std::list<AuraScript *> & scr
 
         if (!script)
             continue;
+
+        script->_Init(&tmpscript->GetName(), spell_id);
 
         script_vector.push_back(script);
     }
@@ -1221,31 +1225,31 @@ void ScriptMgr::OnGuildDisband(Guild *guild)
 
 void ScriptMgr::OnGroupAddMember(Group* group, uint64 guid)
 {
-	ASSERT(group);
+    ASSERT(group);
     FOREACH_SCRIPT(GroupScript)->OnAddMember(group, guid);
 }
 
 void ScriptMgr::OnGroupInviteMember(Group* group, uint64 guid)
 {
-	ASSERT(group);
+    ASSERT(group);
     FOREACH_SCRIPT(GroupScript)->OnInviteMember(group, guid);
 }
 
 void ScriptMgr::OnGroupRemoveMember(Group* group, uint64 guid, RemoveMethod method)
 {
-	ASSERT(group);
+    ASSERT(group);
     FOREACH_SCRIPT(GroupScript)->OnRemoveMember(group, guid, method);
 }
 
 void ScriptMgr::OnGroupChangeLeader(Group* group, uint64 newLeaderGuid, uint64 oldLeaderGuid)
 {
-	ASSERT(group);
+    ASSERT(group);
     FOREACH_SCRIPT(GroupScript)->OnChangeLeader(group, newLeaderGuid, oldLeaderGuid);
 }
 
 void ScriptMgr::OnGroupDisband(Group* group)
 {
-	ASSERT(group);
+    ASSERT(group);
     FOREACH_SCRIPT(GroupScript)->OnDisband(group);
 }
 

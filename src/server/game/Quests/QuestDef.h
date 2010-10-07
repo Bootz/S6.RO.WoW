@@ -149,8 +149,9 @@ enum __QuestFlags
     QUEST_TRINITY_FLAGS_REPEATABLE           = 0x00100000,   // Set by 1 in SpecialFlags from DB
     QUEST_TRINITY_FLAGS_EXPLORATION_OR_EVENT = 0x00200000,   // Set by 2 in SpecialFlags from DB (if reequired area explore, spell SPELL_EFFECT_QUEST_COMPLETE casting, table `*_script` command SCRIPT_COMMAND_QUEST_EXPLORED use, set from script)
     QUEST_TRINITY_FLAGS_AUTO_ACCEPT          = 0x00400000,  // Set by 4 in SpecialFlags in DB if the quest is to be auto-accepted.
+    QUEST_TRINITY_FLAGS_DF_QUEST             = 0x00800000,  // Set by 8 in SpecialFlags in DB if the quest is used by Dungeon Finder.
 
-    QUEST_TRINITY_FLAGS_DB_ALLOWED = 0xFFFFF | QUEST_TRINITY_FLAGS_REPEATABLE | QUEST_TRINITY_FLAGS_EXPLORATION_OR_EVENT | QUEST_TRINITY_FLAGS_AUTO_ACCEPT,
+    QUEST_TRINITY_FLAGS_DB_ALLOWED = 0xFFFFF | QUEST_TRINITY_FLAGS_REPEATABLE | QUEST_TRINITY_FLAGS_EXPLORATION_OR_EVENT | QUEST_TRINITY_FLAGS_AUTO_ACCEPT | QUEST_TRINITY_FLAGS_DF_QUEST,
 
     // Trinity flags for internal use only
     QUEST_TRINITY_FLAGS_DELIVER              = 0x04000000,   // Internal flag computed only
@@ -251,6 +252,7 @@ class Quest
         bool   IsAutoAccept() const { return QuestFlags & QUEST_FLAGS_AUTO_ACCEPT; }
         bool   IsRaidQuest() const { return Type == QUEST_TYPE_RAID || Type == QUEST_TYPE_RAID_10 || Type == QUEST_TYPE_RAID_25; }
         bool   IsAllowedInRaid() const;
+        bool   IsDFQuest() const { return QuestFlags & QUEST_TRINITY_FLAGS_DF_QUEST; }
 
         // multiple values
         std::string ObjectiveText[QUEST_OBJECTIVES_COUNT];
@@ -363,8 +365,8 @@ struct QuestStatusData
         : m_status(QUEST_STATUS_NONE),m_rewarded(false),
         m_explored(false), m_timer(0), uState(QUEST_NEW)
     {
-        memset(m_itemcount, 0, QUEST_ITEM_OBJECTIVES_COUNT * sizeof(uint32));
-        memset(m_creatureOrGOcount, 0, QUEST_OBJECTIVES_COUNT * sizeof(uint32));
+        memset(m_itemcount, 0, QUEST_ITEM_OBJECTIVES_COUNT * sizeof(uint16));
+        memset(m_creatureOrGOcount, 0, QUEST_OBJECTIVES_COUNT * sizeof(uint16));
     }
 
     QuestStatus m_status;
@@ -373,7 +375,7 @@ struct QuestStatusData
     uint32 m_timer;
     QuestUpdateState uState;
 
-    uint32 m_itemcount[ QUEST_ITEM_OBJECTIVES_COUNT ];
-    uint32 m_creatureOrGOcount[ QUEST_OBJECTIVES_COUNT ];
+    uint16 m_itemcount[ QUEST_ITEM_OBJECTIVES_COUNT ];
+    uint16 m_creatureOrGOcount[ QUEST_OBJECTIVES_COUNT ];
 };
 #endif

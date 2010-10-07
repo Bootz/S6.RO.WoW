@@ -122,6 +122,8 @@ m_vehicleKit(NULL), m_unitTypeMask(UNIT_MASK_NONE), m_HostileRefManager(this)
     m_extraAttacks = 0;
     m_canDualWield = false;
 
+    m_rootTimes = 0;
+
     m_state = 0;
     m_form = FORM_NONE;
     m_deathState = ALIVE;
@@ -2882,7 +2884,7 @@ SpellMissInfo Unit::MagicSpellHitResult(Unit *pVictim, SpellEntry const *spell)
     if (!IsPositiveSpell(spell->Id))
     {
         bool bNegativeAura = false;
-        for (uint8 i = 0; i < 3; ++i)
+        for (uint8 i = 0; i < MAX_SPELL_EFFECTS; ++i)
         {
             if (spell->EffectApplyAuraName[i] != 0)
             {
@@ -4358,7 +4360,7 @@ void Unit::RemoveArenaAuras(bool onleave)
     {
         AuraApplication const * aurApp = iter->second;
         Aura const * aura = aurApp->GetBase();
-        if (!(aura->GetSpellProto()->AttributesEx4 & (1<<21)) // don't remove stances, shadowform, pally/hunter auras
+        if (!(aura->GetSpellProto()->AttributesEx4 & SPELL_ATTR_EX4_UNK21) // don't remove stances, shadowform, pally/hunter auras
             && !aura->IsPassive()                               // don't remove passive auras
             && (!(aura->GetSpellProto()->Attributes & SPELL_ATTR_UNAFFECTED_BY_INVULNERABILITY) || !(aura->GetSpellProto()->Attributes & SPELL_ATTR_UNK8))   // not unaffected by invulnerability auras or not having that unknown flag (that seemed the most probable)
             && (aurApp->IsPositive() ^ onleave))                   // remove positive buffs on enter, negative buffs on leave
@@ -5879,6 +5881,31 @@ bool Unit::HandleDummyAuraProc(Unit *pVictim, uint32 damage, AuraEffect* trigger
                         if (!ToPlayer()->HasSpellCooldown(*itr))
                             ToPlayer()->AddSpellCooldown(*itr,0,time(NULL) + cooldown);
                     }
+                    break;
+                }
+                // Item - Shadowmourne Legendary
+                case 71903:
+                {
+                    if (!pVictim || !pVictim->isAlive() || HasAura(73422))  // cant collect shards while under effect of Chaos Bane buff
+                        return false;
+
+                    CastSpell(this, 71905, true, NULL, triggeredByAura);
+
+                    // this can't be handled in AuraScript because we need to know pVictim
+                    Aura const* dummy = GetAura(71905);
+                    if (!dummy || dummy->GetStackAmount() < 10)
+                        return false;
+
+                    RemoveAurasDueToSpell(71905);
+                    triggered_spell_id = 71904;
+                    target = pVictim;
+                    break;
+                }
+                // Shadow's Fate (Shadowmourne questline)
+                case 71169:
+                {
+                    triggered_spell_id = 71203;
+                    target = triggeredByAura->GetCaster();
                     break;
                 }
             }
@@ -9082,6 +9109,18 @@ bool Unit::HandleProcTriggerSpell(Unit *pVictim, uint32 damage, AuraEffect* trig
         case 72202:
             target = FindNearestCreature(37813, 75.0f); // NPC_DEATHBRINGER_SAURFANG = 37813
             break;
+        // Shadow's Fate (Shadowmourne questline)
+        case 71169:
+            if (GetTypeId() != TYPEID_PLAYER)
+                return false;
+            if (ToPlayer()->GetQuestStatus(24547) != QUEST_STATUS_INCOMPLETE)   // A Feast of Souls
+                return false;
+            if (pVictim->GetTypeId() != TYPEID_UNIT)
+                return false;
+            // critters are not allowed
+            if (pVictim->GetCreatureType() == CREATURE_TYPE_CRITTER)
+                return false;
+            break;
     }
 
     if (cooldown && GetTypeId() == TYPEID_PLAYER && ToPlayer()->HasSpellCooldown(trigger_spell_id))
@@ -11547,7 +11586,7 @@ bool Unit::IsImmunedToSpell(SpellEntry const* spellInfo)
                 return true;
     }
 
-    for (int i=0;i<3;++i)
+    for (int i = 0; i < MAX_SPELL_EFFECTS; ++i)
     {
         // State/effect immunities applied by aura expect full spell immunity
         // Ignore effects with mechanic, they are supposed to be checked separately
@@ -13092,8 +13131,23 @@ int32 Unit::ModSpellDuration(SpellEntry const* spellProto, Unit const* target, i
         if (durationMod != 0)
             duration = int32(float(duration) * float(100.0f+durationMod) / 100.0f);
     }
-    //else positive mods here, there are no currently
-    //when there will be, change GetTotalAuraModifierByMiscValue to GetTotalPositiveAuraModifierByMiscValue
+    else
+    {
+        //else positive mods here, there are no currently
+        //when there will be, change GetTotalAuraModifierByMiscValue to GetTotalPositiveAuraModifierByMiscValue
+
+        // Mixology - duration boost
+        if (target->GetTypeId() == TYPEID_PLAYER)
+        {
+            if (spellProto->SpellFamilyName == SPELLFAMILY_POTION && (
+                sSpellMgr.IsSpellMemberOfSpellGroup(spellProto->Id, SPELL_GROUP_ELIXIR_BATTLE) ||
+                sSpellMgr.IsSpellMemberOfSpellGroup(spellProto->Id, SPELL_GROUP_ELIXIR_GUARDIAN)))
+            {
+                if (target->HasAura(53042) && target->HasSpell(spellProto->EffectTriggerSpell[0]))
+                    duration *= 2;
+            }
+        }
+    }
 
     // Glyphs which increase duration of selfcasted buffs
     if (target == this)
@@ -14156,6 +14210,7 @@ bool InitTriggerAuraData()
     isTriggerAura[SPELL_AURA_PROC_TRIGGER_SPELL_WITH_VALUE] = true;
     isTriggerAura[SPELL_AURA_MOD_DAMAGE_FROM_CASTER] = true;
     isTriggerAura[SPELL_AURA_MOD_SPELL_CRIT_CHANCE] = true;
+    isTriggerAura[SPELL_AURA_ABILITY_IGNORE_AURASTATE] = true;
 
     isNonTriggerAura[SPELL_AURA_MOD_POWER_REGEN]=true;
     isNonTriggerAura[SPELL_AURA_REDUCE_PUSHBACK]=true;
@@ -15665,11 +15720,14 @@ void Unit::SetRooted(bool apply)
 {
     if (apply)
     {
+        if (m_rootTimes > 0) //blizzard internal check?
+            m_rootTimes++;
+
 //        AddUnitMovementFlag(MOVEMENTFLAG_ROOT);
 
         WorldPacket data(SMSG_FORCE_MOVE_ROOT, 10);
         data.append(GetPackGUID());
-        data << (uint32)2;
+        data << m_rootTimes;
         SendMessageToSet(&data,true);
 
         if (GetTypeId() != TYPEID_PLAYER)
@@ -15679,9 +15737,11 @@ void Unit::SetRooted(bool apply)
     {
         if (!hasUnitState(UNIT_STAT_STUNNED))      // prevent allow move if have also stun effect
         {
+            m_rootTimes++; //blizzard internal check?
+
             WorldPacket data(SMSG_FORCE_MOVE_UNROOT, 10);
             data.append(GetPackGUID());
-            data << (uint32)2;
+            data << m_rootTimes;
             SendMessageToSet(&data,true);
 
 //            RemoveUnitMovementFlag(MOVEMENTFLAG_ROOT);

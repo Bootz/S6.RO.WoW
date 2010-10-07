@@ -516,7 +516,7 @@ SpellSpecific GetSpellSpecific(SpellEntry const * spellInfo)
             {
                 bool food = false;
                 bool drink = false;
-                for (int i = 0; i < 3; ++i)
+                for (int i = 0; i < MAX_SPELL_EFFECTS; ++i)
                 {
                     switch(spellInfo->EffectApplyAuraName[i])
                     {
@@ -652,7 +652,7 @@ SpellSpecific GetSpellSpecific(SpellEntry const * spellInfo)
             break;
     }
 
-    for (int i = 0; i < 3; ++i)
+    for (int i = 0; i < MAX_SPELL_EFFECTS; ++i)
     {
         if (spellInfo->Effect[i] == SPELL_EFFECT_APPLY_AURA)
         {
@@ -887,7 +887,7 @@ bool SpellMgr::_isPositiveEffect(uint32 spellId, uint32 effIndex, bool deep) con
                         if (spellTriggeredProto)
                         {
                             // non-positive targets of main spell return early
-                            for (int i = 0; i < 3; ++i)
+                            for (int i = 0; i < MAX_SPELL_EFFECTS; ++i)
                             {
                                 if (!spellTriggeredProto->Effect[i])
                                     continue;
@@ -927,7 +927,7 @@ bool SpellMgr::_isPositiveEffect(uint32 spellId, uint32 effIndex, bool deep) con
                     if (spellproto->EffectImplicitTargetA[effIndex] != TARGET_UNIT_CASTER)
                         return false;
                     // but not this if this first effect (didn't find better check)
-                    if (spellproto->Attributes & 0x4000000 && effIndex == 0)
+                    if (spellproto->Attributes & SPELL_ATTR_NEGATIVE_1 && effIndex == 0)
                         return false;
                     break;
                 case SPELL_AURA_MECHANIC_IMMUNITY:
@@ -1028,7 +1028,7 @@ bool SpellMgr::_isPositiveSpell(uint32 spellId, bool deep) const
 
     // spells with at least one negative effect are considered negative
     // some self-applied spells have negative effects but in self casting case negative check ignored.
-    for (int i = 0; i < 3; ++i)
+    for (int i = 0; i < MAX_SPELL_EFFECTS; ++i)
         if (!_isPositiveEffect(spellId, i, deep))
             return false;
     return true;
@@ -1190,7 +1190,7 @@ void SpellMgr::LoadSpellTargetPositions()
         }
 
         bool found = false;
-        for (int i = 0; i < 3; ++i)
+        for (int i = 0; i < MAX_SPELL_EFFECTS; ++i)
         {
             if (spellInfo->EffectImplicitTargetA[i] == TARGET_DST_DB || spellInfo->EffectImplicitTargetB[i] == TARGET_DST_DB)
             {
@@ -1228,7 +1228,7 @@ void SpellMgr::LoadSpellTargetPositions()
             continue;
 
         bool found = false;
-        for (int j = 0; j < 3; ++j)
+        for (int j = 0; j < MAX_SPELL_EFFECTS; ++j)
         {
             switch(spellInfo->EffectImplicitTargetA[j])
             {
@@ -1729,7 +1729,7 @@ bool SpellMgr::canStackSpellRanks(SpellEntry const *spellInfo)
         return false;
 
     // All stance spells. if any better way, change it.
-    for (int i = 0; i < 3; ++i)
+    for (int i = 0; i < MAX_SPELL_EFFECTS; ++i)
     {
         switch(spellInfo->SpellFamilyName)
         {
@@ -1945,7 +1945,7 @@ SpellEntry const* SpellMgr::SelectAuraRankForPlayerLevel(SpellEntry const* spell
         return spellInfo;
 
     bool needRankSelection = false;
-    for (int i=0; i<3; ++i)
+    for (int i = 0; i < MAX_SPELL_EFFECTS; ++i)
     {
         if (IsPositiveEffect(spellInfo->Id, i) && (
             spellInfo->Effect[i] == SPELL_EFFECT_APPLY_AURA ||
@@ -2393,7 +2393,7 @@ bool SpellMgr::IsSpellValid(SpellEntry const *spellInfo, Player *pl, bool msg)
     bool need_check_reagents = false;
 
     // check effects
-    for (uint8 i = 0; i < 3; ++i)
+    for (uint8 i = 0; i < MAX_SPELL_EFFECTS; ++i)
     {
         switch (spellInfo->Effect[i])
         {
@@ -2457,7 +2457,7 @@ bool SpellMgr::IsSpellValid(SpellEntry const *spellInfo, Player *pl, bool msg)
 
     if (need_check_reagents)
     {
-        for (uint8 j = 0; j < 8; ++j)
+        for (uint8 j = 0; j < MAX_SPELL_REAGENTS; ++j)
         {
             if (spellInfo->Reagent[j] > 0 && !ObjectMgr::GetItemPrototype(spellInfo->Reagent[j]))
             {
@@ -2692,7 +2692,7 @@ SpellCastResult SpellMgr::GetSpellAllowedInLocationError(SpellEntry const *spell
         AreaGroupEntry const* groupEntry = sAreaGroupStore.LookupEntry(spellInfo->AreaGroupId);
         while (groupEntry)
         {
-            for (uint8 i = 0; i < 6; ++i)
+            for (uint8 i = 0; i < MAX_GROUP_AREA_IDS; ++i)
                 if (groupEntry->AreaId[i] == zone_id || groupEntry->AreaId[i] == area_id)
                     found = true;
             if (found || !groupEntry->nextGroup)
@@ -2930,13 +2930,6 @@ DiminishingGroup GetDiminishingReturnsGroupForSpell(SpellEntry const* spellproto
                 return DIMINISHING_POLYMORPH;
             break;
         }
-        case SPELLFAMILY_PRIEST:
-        {
-            // Vampiric Embrace
-            if ((spellproto->SpellFamilyFlags[0] & 0x4) && spellproto->SpellIconID == 150)
-                return DIMINISHING_LIMITONLY;
-            break;
-        }
         case SPELLFAMILY_DEATHKNIGHT:
         {
             // Hungering Cold (no flags)
@@ -3021,13 +3014,6 @@ int32 GetDiminishingReturnsLimitDuration(DiminishingGroup group, SpellEntry cons
             // Faerie Fire - limit to 40 seconds in PvP (3.1)
             if (spellproto->SpellFamilyFlags[0] & 0x400)
                 return 40 * IN_MILLISECONDS;
-            break;
-        }
-        case SPELLFAMILY_PRIEST:
-        {
-            // Vampiric Embrace - limit to 60 seconds in PvP (3.1)
-            if ((spellproto->SpellFamilyFlags[0] & 0x4) && spellproto->SpellIconID == 150)
-                return 1800 * IN_MILLISECONDS;
             break;
         }
         default:
@@ -3127,28 +3113,6 @@ bool SpellArea::IsFitToRequirements(Player const* player, uint32 newZone, uint32
     if (auraSpell)                               // not have expected aura
         if (!player || (auraSpell > 0 && !player->HasAura(auraSpell)) || (auraSpell < 0 && player->HasAura(-auraSpell)))
             return false;
-    // Extra conditions
-    switch(spellId)
-    {
-        case 58600: // No fly Zone - Dalaran (Krasus Landing exception)
-            if (!player || player->GetAreaId() == 4564 || !player->HasAuraType(SPELL_AURA_MOD_INCREASE_MOUNTED_FLIGHT_SPEED) && !player->HasAuraType(SPELL_AURA_FLY)
-                || player->HasAura(44795))
-                return false;
-            break;
-        case 58730: // No fly Zone - Wintergrasp
-            if ((pvpWG->isWarTime()==false) || !player || !player->HasAuraType(SPELL_AURA_MOD_INCREASE_MOUNTED_FLIGHT_SPEED) && !player->HasAuraType(SPELL_AURA_FLY)
-               || player->HasAura(45472) || player->HasAura(44795))
-                return false;
-            break;
-       case 58045: // Essence of Wintergrasp - Wintergrasp
-        case 57940: // Essence of Wintergrasp - Northrend
-            if (!player || player->GetTeamId() != sWorld.getWorldState(WORLDSTATE_WINTERGRASP_CONTROLING_FACTION))
-                return false;
-            break;
-   }
-
-    return true; 
-
 
     // Extra conditions -- leaving the possibility add extra conditions...
     switch(spellId)
@@ -3665,6 +3629,7 @@ void SpellMgr::LoadSpellCustomAttr()
         case 45150:                             // Meteor Slash
         case 64422: case 64688:                 // Sonic Screech
         case 72373:                             // Shared Suffering
+        case 71904:                             // Chaos Bane
             // ONLY SPELLS WITH SPELLFAMILY_GENERIC and EFFECT_SCHOOL_DAMAGE
             mSpellCustomAttr[i] |= SPELL_ATTR_CU_SHARE_DAMAGE;
             count++;
@@ -3788,6 +3753,11 @@ void SpellMgr::LoadSpellCustomAttr()
         case 44544:    // Fingers of Frost
             spellInfo->procCharges = 2;
             spellInfo->EffectSpellClassMask[0] = flag96(685904631,1151048,0);
+            count++;
+            break;
+        case 74396:    // Fingers of Frost visual buff
+            spellInfo->procCharges = 2;
+            spellInfo->StackAmount = 0;
             count++;
             break;
         case 28200:    // Ascendance (Talisman of Ascendance trinket)
@@ -3936,11 +3906,18 @@ void SpellMgr::LoadSpellCustomAttr()
             spellInfo->AttributesEx |= SPELL_ATTR_EX_DISPEL_AURAS_ON_IMMUNITY;
             count++;
             break;
-        case 63623: // Avoidance shadow fiend
-        case 62137: // Avoidance summoned ghoul
-        case 32233: // Avoidance warlock pet
-        case 65220: // Avoidance hunter pet
-            spellInfo->EffectApplyAuraName[0] = SPELL_AURA_MOD_AOE_DAMAGE_AVOIDANCE;
+        case 69055:     // Saber Lash
+        case 70814:     // Saber Lash
+            spellInfo->EffectRadiusIndex[0] = 8;
+            count++;
+            break;
+        case 69075:     // Bone Storm
+        case 70834:     // Bone Storm
+        case 70835:     // Bone Storm
+        case 70836:     // Bone Storm
+            spellInfo->EffectRadiusIndex[0] = 12;
+            count++;
+            break;
         case 18500: // Wing Buffet
         case 33086: // Wild Bite
         case 49749: // Piercing Blow

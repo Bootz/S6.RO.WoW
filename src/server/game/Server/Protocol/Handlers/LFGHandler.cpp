@@ -186,7 +186,7 @@ void WorldSession::HandleLfgTeleportOpcode(WorldPacket &recv_data)
     recv_data >> out;
 
     sLog.outDebug("CMSG_LFG_TELEPORT [" UI64FMTD "] out: %u", GetPlayer()->GetGUID(), out ? 1 : 0);
-    sLFGMgr.TeleportPlayer(GetPlayer(), out);
+    sLFGMgr.TeleportPlayer(GetPlayer(), out, true);
 }
 
 void WorldSession::HandleLfgPlayerLockInfoRequestOpcode(WorldPacket &/*recv_data*/)
@@ -194,7 +194,6 @@ void WorldSession::HandleLfgPlayerLockInfoRequestOpcode(WorldPacket &/*recv_data
     sLog.outDebug("CMSG_LFD_PLAYER_LOCK_INFO_REQUEST [" UI64FMTD "]", GetPlayer()->GetGUID());
     uint32 rsize = 0;
     uint32 lsize = 0;
-    bool done;
     LfgDungeonSet* randomlist = sLFGMgr.GetRandomDungeons(GetPlayer()->getLevel(), GetPlayer()->GetSession()->Expansion());
     LfgLockStatusSet* lockSet = sLFGMgr.GetPlayerLockStatusDungeons(GetPlayer());
 
@@ -212,23 +211,34 @@ void WorldSession::HandleLfgPlayerLockInfoRequestOpcode(WorldPacket &/*recv_data
     {
         LfgReward const* reward = NULL;
         Quest const* qRew = NULL;
+        uint8 done;
 
         data << uint8(randomlist->size());                  // Random Dungeon count
         for (LfgDungeonSet::iterator it = randomlist->begin(); it != randomlist->end(); ++it)
         {
-            done = GetPlayer()->isLfgDungeonDone(*it);
-            reward = sLFGMgr.GetRandomDungeonReward(*it, GetPlayer()->getLevel());
             data << uint32(*it);                            // Entry
-            data << uint8(done);
+            reward = sLFGMgr.GetRandomDungeonReward(*it, GetPlayer()->getLevel());
+            qRew = NULL;
             if (reward)
             {
-                qRew = sObjectMgr.GetQuestTemplate(reward->reward[done].questId);
-                data << uint32(qRew ? qRew->GetRewOrReqMoney() : 0);
-                data << uint32(qRew ? qRew->XPValue(GetPlayer()) : 0);
+                qRew = sObjectMgr.GetQuestTemplate(reward->reward[0].questId);
+                if (qRew)
+                {
+                    done = !GetPlayer()->CanRewardQuest(qRew,false);
+                    if (done)
+                        qRew = sObjectMgr.GetQuestTemplate(reward->reward[1].questId);
+                }
+
+            }
+            if (qRew)
+            {
+                data << uint8(done);
+                data << uint32(qRew->GetRewOrReqMoney());
+                data << uint32(qRew->XPValue(GetPlayer()));
                 data << uint32(reward->reward[done].variableMoney);
                 data << uint32(reward->reward[done].variableXP);
-                data << uint8(qRew ? qRew->GetRewItemsCount() : 0);
-                if (qRew && qRew->GetRewItemsCount())
+                data << uint8(qRew->GetRewItemsCount());
+                if (qRew->GetRewItemsCount())
                 {
                     ItemPrototype const* iProto = NULL;
                     for (uint8 i = 0; i < QUEST_REWARDS_COUNT; ++i)
@@ -246,6 +256,7 @@ void WorldSession::HandleLfgPlayerLockInfoRequestOpcode(WorldPacket &/*recv_data
             }
             else
             {
+                data << uint8(0);
                 data << uint32(0);
                 data << uint32(0);
                 data << uint32(0);
@@ -548,7 +559,7 @@ void WorldSession::SendLfgBootPlayer(LfgPlayerBoot* pBoot)
     }
     uint64 victimguid = MAKE_NEW_GUID(pBoot->victimLowGuid, 0, HIGHGUID_PLAYER);
 
-    sLog.outDebug("SMSG_LFG_BOOT_PLAYER [" UI64FMTD "] inProgress: %u - didVote: %u - agree: %u - victim: [" UI64FMTD "] votes: %u - agrees: %u - left: %u - needed: %u - reason %s", 
+    sLog.outDebug("SMSG_LFG_BOOT_PLAYER [" UI64FMTD "] inProgress: %u - didVote: %u - agree: %u - victim: [" UI64FMTD "] votes: %u - agrees: %u - left: %u - needed: %u - reason %s",
         GetPlayer()->GetGUID(), uint8(pBoot->inProgress), uint8(playerVote != LFG_ANSWER_PENDING), uint8(playerVote == LFG_ANSWER_AGREE), victimguid, votesNum, agreeNum, secsleft, pBoot->votedNeeded, pBoot->reason.c_str());
     WorldPacket data(SMSG_LFG_BOOT_PLAYER, 1 + 1 + 1 + 8 + 4 + 4 + 4 + 4 + pBoot->reason.length());
     data << uint8(pBoot->inProgress);                       // Vote in progress

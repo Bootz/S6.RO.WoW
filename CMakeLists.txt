@@ -13,7 +13,7 @@ project(TrinityCore)
 
 # CMake policies (can not be handled elsewhere)
 cmake_minimum_required(VERSION 2.6)
-cmake_policy(SET CMP0005 OLD)
+cmake_policy(SET CMP0005 NEW)
 
 # Set RPATH-handing (CMake parameters)
 set(CMAKE_SKIP_BUILD_RPATH 0)
@@ -57,18 +57,11 @@ if( UNIX )
   find_package(BZip2)
 endif()
 
-# Find current revision of downloaded sourcetree
-execute_process(
-  COMMAND hg tip --template {rev}
-  WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
-  OUTPUT_VARIABLE HG_REVISION
-)
+# Find revision ID and hash of the sourcetree
+include(cmake/genrev.cmake)
 
 # print out the results before continuing
 include(cmake/showoptions.cmake)
-
-# add and generate revision.h
-add_subdirectory(src/genrevision)
 
 # add dependencies
 add_subdirectory(dep)
