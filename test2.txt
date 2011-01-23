@@ -1,1 +1,0 @@
-just needed to make sure i set up .git correctly so now i can fracken push pull stash
